@@ -1,0 +1,181 @@
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #172033;
+  background: #fbfbfd;
+  line-height: 1.65;
+}
+
+.site-header,
+.site-footer {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  border-bottom: 1px solid #e3e7ef;
+}
+
+.brand {
+  font-weight: 800;
+  color: #111827;
+  text-decoration: none;
+  letter-spacing: -0.03em;
+}
+
+.site-nav {
+  display: flex;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.site-nav a,
+.page a {
+  color: #1d4ed8;
+}
+
+.page {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 2rem 1.25rem 4rem;
+}
+
+.tool-doc-page .page {
+  max-width: 1180px;
+}
+
+.hero {
+  padding: 2rem;
+  border: 1px solid #e3e7ef;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, #ffffff, #eef4ff);
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1rem;
+  margin: 1.5rem 0;
+}
+
+.card {
+  padding: 1rem;
+  border: 1px solid #e3e7ef;
+  border-radius: 0.75rem;
+  background: #ffffff;
+}
+
+.card h3 {
+  margin-top: 0;
+}
+
+.notice {
+  padding: 1rem;
+  border-left: 4px solid #1d4ed8;
+  background: #eff6ff;
+}
+
+code,
+pre {
+  background: #f3f4f6;
+}
+
+pre {
+  overflow-x: auto;
+  padding: 1rem;
+  border-radius: 0.65rem;
+}
+
+.site-footer {
+  border-top: 1px solid #e3e7ef;
+  color: #6b7280;
+}
+
+/* Per-tool documentation layout: left nav + content. */
+.tool-layout {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 2.5rem;
+  align-items: start;
+}
+
+.tool-nav {
+  position: sticky;
+  top: 1rem;
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  font-size: 0.95rem;
+}
+
+.tool-nav-menu {
+  display: block;
+}
+
+.tool-nav-title {
+  display: block;
+  margin: 0 0 0.75rem;
+  font-weight: 700;
+  text-transform: lowercase;
+  color: #111827;
+  letter-spacing: -0.02em;
+  text-decoration: none;
+}
+
+.tool-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  border-left: 1px solid #e3e7ef;
+}
+
+.tool-nav li {
+  margin: 0;
+}
+
+.tool-nav ul a {
+  display: block;
+  padding: 0.35rem 0.75rem;
+  margin-left: -1px;
+  border-left: 2px solid transparent;
+  color: #374151;
+  text-decoration: none;
+  line-height: 1.4;
+}
+
+.tool-nav-title:hover,
+.tool-nav ul a:hover {
+  color: #1d4ed8;
+}
+
+.tool-nav ul a:hover {
+  background: #f3f4f6;
+}
+
+.tool-nav ul a.active {
+  color: #1d4ed8;
+  font-weight: 600;
+  border-left-color: #1d4ed8;
+  background: #eff6ff;
+}
+
+.tool-content {
+  min-width: 0;
+}
+
+@media (max-width: 720px) {
+  .tool-layout {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .tool-nav {
+    position: static;
+    max-height: none;
+    overflow: visible;
+  }
+}

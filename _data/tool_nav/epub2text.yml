@@ -1,0 +1,21 @@
+# GENERATED from epub2text/docs. Do not edit by hand.
+tool: epub2text
+entries:
+  - slug: index
+    title: "epub2text"
+    url: /tools/epub2text/
+  - slug: installation
+    title: "epub2text installation"
+    url: /tools/epub2text/installation/
+  - slug: usage
+    title: "epub2text usage guide"
+    url: /tools/epub2text/usage/
+  - slug: api
+    title: "epub2text Python API"
+    url: /tools/epub2text/api/
+  - slug: structured_extraction
+    title: "epub2text structured extraction"
+    url: /tools/epub2text/structured_extraction/
+  - slug: changelog
+    title: "epub2text changelog"
+    url: /tools/epub2text/changelog/

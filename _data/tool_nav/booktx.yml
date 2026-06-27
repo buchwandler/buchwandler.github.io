@@ -1,0 +1,48 @@
+# GENERATED from booktx/docs. Do not edit by hand.
+tool: booktx
+entries:
+  - slug: index
+    title: "booktx"
+    url: /tools/booktx/
+  - slug: quickstart
+    title: "booktx quickstart"
+    url: /tools/booktx/quickstart/
+  - slug: project-layout
+    title: "booktx project layout"
+    url: /tools/booktx/project-layout/
+  - slug: profiles
+    title: "booktx profiles"
+    url: /tools/booktx/profiles/
+  - slug: concepts
+    title: "booktx concepts"
+    url: /tools/booktx/concepts/
+  - slug: commands
+    title: "booktx commands"
+    url: /tools/booktx/commands/
+  - slug: context
+    title: "booktx context"
+    url: /tools/booktx/context/
+  - slug: agent-workflow
+    title: "booktx agent workflow"
+    url: /tools/booktx/agent-workflow/
+  - slug: translation-contract
+    title: "booktx translation contract"
+    url: /tools/booktx/translation-contract/
+  - slug: markdown
+    title: "booktx markdown handling"
+    url: /tools/booktx/markdown/
+  - slug: epub
+    title: "booktx EPUB handling"
+    url: /tools/booktx/epub/
+  - slug: architecture
+    title: "booktx architecture"
+    url: /tools/booktx/architecture/
+  - slug: api
+    title: "booktx Python API"
+    url: /tools/booktx/api/
+  - slug: development
+    title: "booktx development"
+    url: /tools/booktx/development/
+  - slug: troubleshooting
+    title: "booktx troubleshooting"
+    url: /tools/booktx/troubleshooting/

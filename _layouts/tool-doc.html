@@ -1,0 +1,34 @@
+---
+layout: default
+---
+{% assign nav = site.data.tool_nav[page.nav_tool] %}
+{% assign tool_prefix = page.nav_tool | append: ' ' %}
+<div class="tool-layout">
+  <aside class="tool-nav" aria-label="{{ page.nav_tool }} documentation navigation">
+    {% if nav and nav.entries %}
+    <nav class="tool-nav-menu">
+      <a class="tool-nav-title" href="{{ '/tools/' | append: page.nav_tool | append: '/' | relative_url }}">{{ page.nav_tool }}</a>
+      <ul>
+        {% for entry in nav.entries %}
+        {% assign label = entry.title %}
+        {% if entry.nav_title %}
+          {% assign label = entry.nav_title %}
+        {% elsif entry.label %}
+          {% assign label = entry.label %}
+        {% elsif entry.slug == 'index' %}
+          {% assign label = 'Overview' %}
+        {% else %}
+          {% assign label = entry.title | remove_first: tool_prefix %}
+        {% endif %}
+        <li>
+          <a href="{{ entry.url | relative_url }}"{% if page.url == entry.url %} class="active" aria-current="page"{% endif %}>{{ label }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </nav>
+    {% endif %}
+  </aside>
+  <article class="tool-content">
+    {{ content }}
+  </article>
+</div>

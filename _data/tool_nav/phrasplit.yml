@@ -1,0 +1,30 @@
+# GENERATED from phrasplit/docs. Do not edit by hand.
+tool: phrasplit
+entries:
+  - slug: index
+    title: "phrasplit"
+    url: /tools/phrasplit/
+  - slug: installation
+    title: "phrasplit installation"
+    url: /tools/phrasplit/installation/
+  - slug: usage
+    title: "phrasplit usage guide"
+    url: /tools/phrasplit/usage/
+  - slug: cli
+    title: "phrasplit command-line interface"
+    url: /tools/phrasplit/cli/
+  - slug: api
+    title: "phrasplit Python API"
+    url: /tools/phrasplit/api/
+  - slug: examples
+    title: "phrasplit examples"
+    url: /tools/phrasplit/examples/
+  - slug: integration
+    title: "phrasplit integration contract"
+    url: /tools/phrasplit/integration/
+  - slug: offsets
+    title: "phrasplit offset-preserving segmentation"
+    url: /tools/phrasplit/offsets/
+  - slug: streaming
+    title: "phrasplit streaming API"
+    url: /tools/phrasplit/streaming/

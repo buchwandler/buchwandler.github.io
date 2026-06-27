@@ -1,0 +1,143 @@
+---
+layout: tool-doc
+title: "text2epub getting started"
+description: "Install text2epub and build a first EPUB"
+permalink: /tools/text2epub/getting-started/
+nav_tool: text2epub
+generated_from: text2epub/docs
+source_path: docs/getting-started.md
+---
+<!-- GENERATED from text2epub/docs. Do not edit by hand. -->
+
+# Getting started
+
+## Install for development
+
+```bash
+python -m pip install -e .
+python -m pip install -e ".[dev]"
+```
+
+Install the documentation dependencies when building the Sphinx site:
+
+```bash
+python -m pip install -e ".[docs]"
+```
+
+## Create an EPUB from a folder
+
+Create a folder whose Markdown filenames define reading order:
+
+```text
+manuscript/
+├── 00-front-matter.md
+├── 01-introduction.md
+└── 02-chapter.md
+```
+
+The first file may include simple front matter:
+
+```markdown
+---
+title: Example Book
+language: en
+author: Ada Lovelace
+---
+
+# Introduction
+
+Hello world.
+```
+
+Build the EPUB from Python:
+
+```python
+from pathlib import Path
+
+from text2epub import BuildOptions, create_epub_from_markdown_folder
+
+create_epub_from_markdown_folder(
+    Path("manuscript"),
+    Path("example.epub"),
+    options=BuildOptions(
+        include_title_page=True,
+        include_toc_page=True,
+        toc_page_numbers=True,
+    ),
+)
+```
+
+Or use the CLI:
+
+```bash
+text2epub markdown manuscript/ -o example.epub --title-page --toc-page --toc-page-numbers
+```
+
+## Create an EPUB from one Markdown file
+
+Create a Markdown chapter:
+
+```markdown
+# Chapter One
+
+Hello world.
+```
+
+Build the EPUB from Python:
+
+```python
+from pathlib import Path
+
+from text2epub import BuildOptions, EpubMetadata, create_epub_from_markdown_files
+
+create_epub_from_markdown_files(
+    [Path("chapter-01.md")],
+    Path("example.epub"),
+    metadata=EpubMetadata(title="Example Book", language="en"),
+    options=BuildOptions(include_title_page=True, include_toc_page=True),
+)
+```
+
+Or use the CLI:
+
+```bash
+text2epub markdown chapter-01.md -o example.epub --title "Example Book" --language en --title-page --toc-page
+```
+
+## Validate output
+
+```bash
+text2epub validate example.epub
+```
+
+A successful response confirms that the archive has the expected EPUB ZIP basics
+and that known unresolved internal tokens were not found in text entries. Run
+EPUBCheck separately before publication.
+
+## Add a title page and visible contents page
+
+Set `include_title_page=True` to add a generated title page to the EPUB spine.
+Set `include_toc_page=True` to add a reader-visible table of contents page. The
+EPUB NAV file is still generated separately for reader navigation.
+
+`toc_page_numbers=True` requests automatic page numbers in the generated TOC page
+using CSS `target-counter()`. EPUB readers do not share one universal page model,
+so unsupported readers will show the linked entries without page numbers.
+
+## Safe inline XHTML
+
+By default, raw HTML in Markdown is escaped. Enable safe inline XHTML when source
+paragraphs intentionally contain EPUB-safe inline tags:
+
+```bash
+text2epub markdown manuscript/ -o example.epub --allow-inline-xhtml
+```
+
+```python
+from text2epub import BuildOptions
+
+options = BuildOptions(allow_inline_xhtml=True)
+```
+
+This preserves `This is <em>important</em>.` as XHTML. Raw block XHTML, scripts,
+event handler attributes, and `javascript:` links are rejected.

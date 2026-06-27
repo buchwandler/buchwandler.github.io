@@ -1,0 +1,24 @@
+# GENERATED from text2epub/docs. Do not edit by hand.
+tool: text2epub
+entries:
+  - slug: index
+    title: "text2epub"
+    url: /tools/text2epub/
+  - slug: getting-started
+    title: "text2epub getting started"
+    url: /tools/text2epub/getting-started/
+  - slug: markdown
+    title: "text2epub markdown to EPUB"
+    url: /tools/text2epub/markdown/
+  - slug: rebuild
+    title: "text2epub safe rebuilds"
+    url: /tools/text2epub/rebuild/
+  - slug: cli
+    title: "text2epub command-line interface"
+    url: /tools/text2epub/cli/
+  - slug: api
+    title: "text2epub Python API"
+    url: /tools/text2epub/api/
+  - slug: release-checklist
+    title: "text2epub release checklist"
+    url: /tools/text2epub/release-checklist/
