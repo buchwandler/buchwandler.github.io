@@ -126,6 +126,18 @@ pre {
   text-decoration: none;
 }
 
+.tool-nav-repo {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  font-size: 0.85rem;
+  color: #1d4ed8;
+  text-decoration: none;
+}
+
+.tool-nav-repo:hover {
+  text-decoration: underline;
+}
+
 .tool-nav ul {
   list-style: none;
   margin: 0;

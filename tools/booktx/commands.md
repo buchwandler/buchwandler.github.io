@@ -54,6 +54,23 @@ booktx context render ./book --profile de_gpt5_5 --write
 booktx context chapter-note ./book --profile de_gpt5_5 0010 --decision "Keep title literal"
 ```
 
+## Chapter detection and audit
+
+```bash
+booktx chapters ./book                       # detect, persist, and list chapter ranges
+booktx chapters ./book --audit               # audit EPUB TOC vs. extracted spans and map
+booktx chapters ./book --audit --json        # machine-readable audit output
+```
+
+`booktx chapters` refreshes `.booktx/chapter-map.json` and lists each chapter's
+chunk and record range. `--audit` is EPUB-only and read-only: it compares the
+visible contents page against extracted spans, navigation, and the chapter
+map, then writes `.booktx/reports/chapter-audit.json`. EPUB `booktx extract`
+already generates both files and prints a warning when findings exist; run
+`--audit` for details. `booktx status` recomputes the audit summary, and new
+work selection blocks only on `error` findings (warning-only findings stay
+non-blocking).
+
 ## Status and identity
 
 ```bash
@@ -81,6 +98,7 @@ booktx translation compare ./book --profile de_gpt5_5 74@38 --versions 1.1,1.2
 booktx translation activate ./book --profile de_gpt5_5 74@38 1.2
 booktx translation review ./book --profile de_gpt5_5 74@38 --activate 1.2 --note "Better rhythm"
 booktx translation revise-record ./book --profile de_gpt5_5 74@38 --target "Revised target text"
+booktx translation revise-block ./book --profile de_gpt5_5 --file ingest/fixes.block.txt --format block --activate
 booktx translate export ./book --profile de_gpt5_5
 booktx translate export-index ./book --profile de_gpt5_5
 booktx translate export-index ./book --profile de_gpt5_5 --kind source
@@ -179,6 +197,16 @@ translations/<profile>/reports/
 translations/<profile>/output/
 ```
 
+`check --epub-output` audits the existing expected EPUB output path against the
+resolved EPUB output policy **without building or modifying it**. It errors
+clearly when no output exists and emits the same findings in text and JSON
+modes. Use it after a build to confirm the output's language contract and
+review reported CSS cascade conflicts:
+
+```bash
+booktx check ./book --profile de_gpt5_5 --epub-output --json
+```
+
 ## Pass-through validation
 
 `booktx pass-through` generates source-as-target translated chunks from the
@@ -216,24 +244,21 @@ Questions start as `open`. Agents may store draft defaults with `context recomme
 
 ## Review commands (`booktx review`)
 
-- `booktx review status .` -- report review coverage by pass (eligible/reviewed/missing/stale/blocked)
-- `booktx review next . --pass 1` -- create the next durable review task for a pass
+- `booktx review configure . --show` -- show current quality review config
+- `booktx review configure . --enable --pass 1 --name "Flow review" --mode manual --enforce warn` -- enable review with one pass (see `docs/profiles.md` for all flags)
+- `booktx review configure . --disable` -- disable quality review entirely
+- `booktx review status .` -- report review coverage by pass (eligible/reviewed/missing/stale/blocked); JSON includes `next_command`, `first_missing_record`, `first_missing_chapter`
+- `booktx review next . --pass 1` -- create the next durable review task for a pass; supports `--selection missing|stale|reviewed|all|changed-base` and `--base active_translation|active_review|pass:N`
+- `booktx review next . --pass 1 --selection reviewed --base active_review` -- rerun a pass over already-reviewed records, creating `R1.2` from `R1.1`
 - `booktx review insert . --review-task-id TASK --file reviews/TASK.block.txt --format block` -- parse and accept a review submission
 - `booktx review activate . RECORD R1.2` -- manually activate an existing review candidate for a record
+- `booktx review deactivate . RECORD` -- deactivate the active review, falling back to the active translation version
+- `booktx review revise-record . RECORD --base-review R1.2 --stdin` -- revise an accepted review candidate by creating a new same-pass rerun
 
-Profile quality review must be enabled in `config.toml` for review commands to work:
+Enable quality review via CLI (preferred) or TOML:
 
-```toml
-[quality_review]
-enabled = true
-active_passes = [1]
-
-[[quality_review.passes]]
-pass_number = 1
-name = "Flow review"
-enforce = "warn"
-```
-
+````bash
+booktx review configure . --enable --pass 1 --name "Flow review" --mode manual --enforce warn
 ## Glossary repair and chapter note reset
 
 ```bash
@@ -265,3 +290,41 @@ booktx context chapter-note . 0006 \
   --decision "Keep Apt" \
   --open-issue "Check title rendering"
 ```
+
+## Series context packs
+
+Context is normally profile-local. Series-wide consistency is achieved by
+importing an explicit context pack, not by sharing profile state. A pack
+carries only reusable policy (style, global rules, glossary entries, approved
+reusable question answers); it never carries records, candidates, tasks,
+todos, stores, ledgers, identity, chapter contexts, or source state.
+
+```bash
+# Export from an approved profile context (dry-run-safe; refuses overwrite
+# without --force; requires ready unless --allow-not-ready).
+booktx context export-pack ./book1 \
+  --profile de_gpt5_5 \
+  --series-id shadows-of-apt \
+  --title "Shadows of the Apt / German policy" \
+  --output ./shadows-of-apt.en-de.booktx-context-pack.json
+
+# Import into another book's profile. Dry run by default; --write commits.
+booktx context import-pack ./book2 \
+  --profile de_gpt5_5 \
+  --file ./shadows-of-apt.en-de.booktx-context-pack.json
+
+booktx context import-pack ./book2 \
+  --profile de_gpt5_5 \
+  --file ./shadows-of-apt.en-de.booktx-context-pack.json \
+  --write
+```
+
+Import never mutates profile config, source state, identity, stores,
+ledgers, or tasks. When policy changes it clears readiness and regenerates
+`context.md`; run `booktx context mark-ready` again after approval. Conflicts
+are reported as findings and can be resolved with `--conflict
+fail|keep-local|replace`. A task created before a binding glossary import is
+rejected by the existing stale-policy guard; create a fresh task to use the
+imported policy. In profile-root isolated mode, pack input and output paths
+must resolve inside the current profile root.
+````

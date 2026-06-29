@@ -25,6 +25,8 @@ Documented via Sphinx autodoc in the source repository:
 - `text2epub.Replacement`
 - `text2epub.ReplacementPlan`
 - `text2epub.ReplacementReport`
+- `text2epub.OutputRewriteOptions`
+- `text2epub.OutputRewriteReport`
 ## Markdown builders
 
 Use these helpers for general-purpose Markdown projects.

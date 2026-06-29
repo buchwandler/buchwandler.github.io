@@ -213,3 +213,61 @@ booktx check . --chapter 0005 --fail-on-warnings
 The check output will show the exact record, chapter, source/target snippet, and
 suggested fix commands. File a booktx bug if check also misses the error that
 build catches.
+
+## TOC lists more chapters than chapter-map
+
+An EPUB contents page can advertise numbered chapters that were not extracted
+or not detected. Symptoms: `booktx validate` reports
+`epub_toc_chapter_missing_from_map` or `epub_toc_href_extracted_but_unmapped`,
+or the chapter map ends early (for example at `TEN` while the TOC lists
+`ONE` through `TWENTY-SIX`).
+
+Diagnose with the read-only audit:
+
+```bash
+booktx chapters . --audit
+```
+
+Interpret the findings:
+
+- `epub_toc_href_missing_from_extracted_spans` means the target XHTML was not
+  extracted. The source is likely a preview/truncated EPUB or extraction
+  skipped a spine document. Do not synthesize empty chapters; re-extract from a
+  complete source.
+- `epub_toc_href_extracted_but_unmapped` means the target was extracted but no
+  chapter boundary covers it, so translation would skip it. It is a blocking
+  `error` finding: `next`, `next-chapter`, `translate next --chapter`, and todo
+  creation will refuse new work until it is resolved. Re-extract to refresh
+  upstream block annotations, or inspect the source with `booktx epub inspect .`.
+- `epub_navigation_partial` indicates navigation is a strict subset of the
+  visible chapter signals.
+
+Run `booktx chapters .` to refresh the map after fixing the source or
+re-extracting.
+
+## Bad hyphenation in a translated EPUB, for example `le-icht`
+
+Build a complete output and inspect the reported EPUB policy:
+
+```bash
+booktx build ./book --profile de_default --require-complete
+```
+
+booktx writes the profile target locale to the publication metadata and content
+document language attributes. Automatic hyphenation still depends on the
+reading system and its dictionaries; booktx cannot guarantee identical breaks.
+
+If a reader continues to produce bad breaks, disable automatic hyphenation:
+
+```toml
+[epub_output]
+hyphenation = "none"
+```
+
+Then rebuild. Source CSS conflict warnings in the build report may identify
+styles that still override the generated policy. To audit an existing output
+without rebuilding, run:
+
+```bash
+booktx check ./book --profile de_default --epub-output --json
+```

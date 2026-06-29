@@ -137,6 +137,13 @@ Re-extracting the source updates the shared state for every profile at once.
 Profile-root isolated mode reads that shared source state only through booktx's
 brokered commands such as `booktx source ...` and `booktx translate next .`.
 
+Translation context is **not** shared across profiles. To keep style,
+global rules, glossary, and approved question answers consistent across
+several books in the same series, export a series context pack from one
+approved profile and import it into another with `booktx context export-pack`
+and `booktx context import-pack`. The pack carries reusable policy only; it
+never carries records, tasks, stores, ledgers, identity, or chapter contexts.
+
 ## When to create a new profile?
 
 Create a new profile whenever you want a hard isolation boundary:
@@ -238,6 +245,29 @@ legacy `config.toml` is removed only after all moves succeed.
 
 ## Quality review configuration
 
+Add or update quality review through the CLI (preferred) or by editing
+the profile `config.toml` directly:
+
+```bash
+# Show current config
+booktx review configure . --show
+
+# Enable with one pass
+booktx review configure . --enable --pass 1 --name "Flow review" \
+  --mode manual --enforce warn --base active_translation \
+  --before 2 --after 2 --batch-words 900 \
+  --instructions "Improve reading flow and pronoun continuity."
+
+# Add a second pass
+booktx review configure . --enable --pass 2 --name "Final polish" \
+  --base active_review --required-base-pass 1 --enforce error \
+  --instructions "Polish final prose. Prefer minimal edits."
+
+# Disable quality review entirely
+booktx review configure . --disable
+```
+
+Manual TOML equivalent (kept for reference):
 Add a `[quality_review]` table to the profile `config.toml`:
 
 ```toml

@@ -402,6 +402,7 @@ def render_nav_yaml(tool: str, entries: list[dict]) -> str:
     lines = [
         f"# GENERATED from {tool}/docs. Do not edit by hand.",
         f"tool: {tool}",
+        f"repo_url: {yaml_string(TOOL_REPOS[tool])}",
         "entries:",
     ]
     for entry in entries:

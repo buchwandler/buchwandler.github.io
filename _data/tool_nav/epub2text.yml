@@ -1,5 +1,6 @@
 # GENERATED from epub2text/docs. Do not edit by hand.
 tool: epub2text
+repo_url: "https://github.com/buchwandler/epub2text"
 entries:
   - slug: index
     title: "epub2text"
