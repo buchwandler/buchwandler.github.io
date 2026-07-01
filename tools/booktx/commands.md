@@ -38,6 +38,28 @@ booktx profile migrate-current ./book de_gpt5_5 --select
 booktx profile create-pass-through ./book passthrough_en --select
 ```
 
+## Generated AGENTS.md files
+
+Before starting an agent harness, write the matching harness instructions:
+
+```bash
+booktx agents write . --mode isolated --profile de_gpt5_5
+cd translations/de_gpt5_5
+```
+
+For project-root collaboration:
+
+```bash
+booktx agents write . --mode collaborative
+```
+
+`booktx agents status .` reports which `AGENTS.md` files are present and whether
+they are stale, and `booktx agents clean . --mode all` removes only the files
+booktx generated. booktx deletes only `AGENTS.md` files it generated itself;
+user-authored files are never silently overwritten or removed. In isolated
+profile-root mode, `agents status`/`clean`/errors expose only the local
+`AGENTS.md` and never print parent paths, `../`, or sibling profile names.
+
 ## Context commands
 
 All context files are profile-local:
@@ -52,7 +74,18 @@ booktx context approve ./book --profile de_gpt5_5 Q001 --text de-DE --approved-b
 booktx context mark-ready ./book --profile de_gpt5_5
 booktx context render ./book --profile de_gpt5_5 --write
 booktx context chapter-note ./book --profile de_gpt5_5 0010 --decision "Keep title literal"
+
+# Same-book policy sync across sibling profiles (dry run by default).
+booktx context sync ./book \
+  --from de_gpt5_5 \
+  --all-compatible \
+  --section glossary \
+  --term "Empire"
 ```
+
+`context export-pack` / `import-pack` move reusable policy between different
+books. `context sync` reuses the same merge semantics for sibling profiles
+inside one book project and is rejected in isolated profile-root mode.
 
 ## Chapter detection and audit
 
@@ -106,6 +139,11 @@ booktx translate export-index ./book --profile de_gpt5_5 --kind target
 booktx translate export-index ./book --profile de_gpt5_5 --kind source-target
 booktx translate export-index ./book --profile de_gpt5_5 --json
 booktx translate export-index ./book --profile de_gpt5_5 --fail-on-warn
+booktx translate search ./book --profile de_gpt5_5 --target "Wespen" --before 1 --after 1
+booktx translate search ./book --profile de_gpt5_5 --source "empire" --jsonl
+booktx translate migrate-inline-xhtml ./book --profile de_gpt5_5  # normalize inline XHTML in stored targets
+booktx source record ./book --profile de_gpt5_5 74@38            # inspect one source record
+booktx source chapter ./book --profile de_gpt5_5 0001            # inspect one source chapter
 ```
 
 `translate export` writes store-backed accepted translations as legacy-compatible chunk files under `translated/`.
@@ -178,6 +216,20 @@ Use `--json` for machine-readable output.
 
 `--fail-on-warnings` keeps default validate behavior unchanged unless you opt
 into warning-fatal automation.
+
+## QA scan and EPUB inspection
+
+```bash
+booktx qa-scan ./book --profile de_gpt5_5            # targeted QA scan of translated targets
+booktx epub inspect ./book --profile de_gpt5_5          # inspect built EPUB XHTML output
+booktx epub inspect ./book --profile de_gpt5_5 --chapter 0001 --contains "Wespen"
+booktx epub grep ./book --profile de_gpt5_5 "Wespen"   # grep built EPUB XHTML for text
+booktx epub extract-text ./book --profile de_gpt5_5     # extract plain text from built EPUB XHTML
+```
+
+`qa-scan` runs targeted quality checks (glossary/forbidden-term/regex) over
+effective translated targets without a full validate run. The `epub`
+commands read the profile-local `output/` directory produced by `booktx build`; run `booktx build .` first if `no EPUB output directory` is reported.
 
 ## `check` -- scoped build-preflight validation
 
@@ -254,11 +306,61 @@ Questions start as `open`. Agents may store draft defaults with `context recomme
 - `booktx review activate . RECORD R1.2` -- manually activate an existing review candidate for a record
 - `booktx review deactivate . RECORD` -- deactivate the active review, falling back to the active translation version
 - `booktx review revise-record . RECORD --base-review R1.2 --stdin` -- revise an accepted review candidate by creating a new same-pass rerun
+- `booktx review todo-next . --passes 1 --chapters 2 --batch-words 900 --write` -- create a bounded multi-pass review todo over chapters with review gaps (profile-local `review-todos/`)
+- `booktx review todo-status . --review-todo-id TODO` -- report progress for a durable review todo (remaining chapters/passes)
+- `booktx review todo-resume . --review-todo-id TODO --format block` -- emit the next review block for a durable review todo
 
 Enable quality review via CLI (preferred) or TOML:
 
-````bash
+```bash
 booktx review configure . --enable --pass 1 --name "Flow review" --mode manual --enforce warn
+```
+
+## Judge commands (`booktx judge`)
+
+Use judge commands from project-root collaborative mode only. They compare
+sibling profile outputs and write accepted choices into a selection profile.
+
+```bash
+booktx judge create-profile ./book de_judge_gpt5_5 \
+  --target de \
+  --target-locale de-DE \
+  --sources de_gpt5_5,de_glm_5_2 \
+  --model gpt-5.5 \
+  --select
+
+booktx context init ./book --profile de_judge_gpt5_5 --non-interactive
+booktx context sync ./book \
+  --from de_gpt5_5 \
+  --to de_judge_gpt5_5 \
+  --section glossary \
+  --section style \
+  --section global-rules \
+  --write
+booktx context mark-ready ./book --profile de_judge_gpt5_5
+
+booktx judge status ./book --profile de_judge_gpt5_5 --sources de_gpt5_5,de_glm_5_2
+
+booktx judge next ./book \
+  --profile de_judge_gpt5_5 \
+  --sources de_gpt5_5,de_glm_5_2 \
+  --unit chapter \
+  --chapter 0001 \
+  --max-words 900 \
+  --format block
+
+booktx judge record ./book \
+  --profile de_judge_gpt5_5 \
+  --sources de_gpt5_5,de_glm_5_2 \
+  --record 0001-000001
+
+booktx judge insert ./book \
+  --profile de_judge_gpt5_5 \
+  --judge-task-id TASK \
+  --file translations/de_judge_gpt5_5/judge-ingest/TASK.block.txt \
+  --format block
+```
+
 ## Glossary repair and chapter note reset
 
 ```bash
@@ -322,9 +424,13 @@ booktx context import-pack ./book2 \
 Import never mutates profile config, source state, identity, stores,
 ledgers, or tasks. When policy changes it clears readiness and regenerates
 `context.md`; run `booktx context mark-ready` again after approval. Conflicts
-are reported as findings and can be resolved with `--conflict
-fail|keep-local|replace`. A task created before a binding glossary import is
+are reported as findings and can be resolved with `--conflict fail|keep-local|replace`. A task created before a binding glossary import is
 rejected by the existing stale-policy guard; create a fresh task to use the
 imported policy. In profile-root isolated mode, pack input and output paths
 must resolve inside the current profile root.
-````
+
+## Terminology search and correction blocks
+
+`booktx translation search` supports `--match any` (default, compatibility) and `--match all` for requiring every populated positive group, plus `--source-regex`, `--target-regex`, `--exclude-source`, `--exclude-source-regex`, and `--write-block ingest/name.block.txt`. Generated correction blocks are editable target-only blocks suitable for `translation revise-block`; the companion `.sources.txt` file is reference-only.
+
+In isolated profile-root mode, generated and submitted block paths must be profile-local relative paths. Absolute paths, `..` traversal, and escaping paths are rejected.

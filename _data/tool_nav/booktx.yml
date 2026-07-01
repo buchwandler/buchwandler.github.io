@@ -47,3 +47,6 @@ entries:
   - slug: troubleshooting
     title: "booktx troubleshooting"
     url: /tools/booktx/troubleshooting/
+  - slug: mypy-baseline
+    title: "Mypy Baseline"
+    url: /tools/booktx/mypy-baseline/
