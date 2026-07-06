@@ -8,8 +8,11 @@ reviewable generated Jekyll projection in buchwandler.github.io/tools/<tool>/.
 from __future__ import annotations
 
 import argparse
+import json
 import re
 import shutil
+import urllib.error
+import urllib.request
 from pathlib import Path
 
 DEFAULT_TOOL = "booktx"
@@ -20,6 +23,8 @@ TOOL_REPOS = {
     "phrasplit": "https://github.com/buchwandler/phrasplit",
     "booktx": "https://github.com/buchwandler/booktx",
 }
+
+GITHUB_API_URL = "https://api.github.com/repos/buchwandler/{tool}/releases/latest"
 
 TITLE_OVERRIDES = {
     "epub2text": {
@@ -398,11 +403,36 @@ def nav_entries(tool: str, source_files: list[Path]) -> list[dict]:
     return entries
 
 
-def render_nav_yaml(tool: str, entries: list[dict]) -> str:
+def fetch_latest_release(tool: str) -> tuple[str, str]:
+    """Return the tag and web URL of a tool's latest published GitHub release."""
+    request = urllib.request.Request(
+        GITHUB_API_URL.format(tool=tool),
+        headers={
+            "Accept": "application/vnd.github+json",
+            "User-Agent": "buchwandler.github.io-doc-sync",
+            "X-GitHub-Api-Version": "2022-11-28",
+        },
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=15) as response:
+            release = json.load(response)
+    except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as exc:
+        raise SystemExit(f"could not fetch latest {tool} release from GitHub: {exc}") from exc
+
+    tag = release.get("tag_name")
+    url = release.get("html_url")
+    if not isinstance(tag, str) or not tag or not isinstance(url, str) or not url:
+        raise SystemExit(f"latest {tool} GitHub release has no tag_name or html_url")
+    return tag, url
+
+
+def render_nav_yaml(tool: str, entries: list[dict], release_tag: str, release_url: str) -> str:
     lines = [
         f"# GENERATED from {tool}/docs. Do not edit by hand.",
         f"tool: {tool}",
         f"repo_url: {yaml_string(TOOL_REPOS[tool])}",
+        f"release_tag: {yaml_string(release_tag)}",
+        f"release_url: {yaml_string(release_url)}",
         "entries:",
     ]
     for entry in entries:
@@ -412,11 +442,21 @@ def render_nav_yaml(tool: str, entries: list[dict]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def write_nav_data(tool: str, entries: list[dict], data_dir: Path) -> Path:
+def write_nav_data(
+    tool: str,
+    entries: list[dict],
+    data_dir: Path,
+    release_tag: str,
+    release_url: str,
+) -> Path:
     nav_dir = data_dir / "tool_nav"
     nav_dir.mkdir(parents=True, exist_ok=True)
     out = nav_dir / f"{tool}.yml"
-    out.write_text(render_nav_yaml(tool, entries), encoding="utf-8", newline="\n")
+    out.write_text(
+        render_nav_yaml(tool, entries, release_tag, release_url),
+        encoding="utf-8",
+        newline="\n",
+    )
     return out
 
 
@@ -431,6 +471,10 @@ def sync_docs(
         raise SystemExit(f"unsupported tool: {tool}")
     if not source_dir.is_dir():
         raise SystemExit(f"source docs directory does not exist: {source_dir}")
+
+    # Resolve external metadata before changing generated files, so a network
+    # failure cannot leave the destination partially refreshed.
+    release_tag, release_url = fetch_latest_release(tool)
 
     if data_dir is None:
         # tools/<tool> -> tools -> repo root -> _data
@@ -450,7 +494,13 @@ def sync_docs(
         out.write_text(render_page(src, tool), encoding="utf-8", newline="\n")
         written.append(out)
 
-    nav_file = write_nav_data(tool, nav_entries(tool, source_files), data_dir)
+    nav_file = write_nav_data(
+        tool,
+        nav_entries(tool, source_files),
+        data_dir,
+        release_tag,
+        release_url,
+    )
 
     return written, nav_file
 

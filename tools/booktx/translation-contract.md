@@ -72,7 +72,7 @@ submit it back. Example:
 
 ```text
 # booktx block submission
-# profile: de_gpt5_5
+# profile: PROFILE_A
 # task: bt-task-20260101T000000Z-ch01-0001r0001-a1b2c3d4
 # translation_version: 1.2
 >>> 0001-000001
@@ -97,7 +97,7 @@ Submissions may also be supplied as JSON (`schema_version` 2). Example:
 ```json
 {
   "schema_version": 2,
-  "profile": "de_gpt5_5",
+  "profile": "PROFILE_A",
   "task_id": "bt-task-...",
   "translation_version": "1.2",
   "records": [{ "id": "0001-000001", "target": "Translated text here." }]
@@ -130,3 +130,13 @@ Review candidates are stored under `translations/<profile>/reviews/`.
 ## Revision provenance
 
 `translation revise-record` and `translation revise-block` preserve provenance for revised candidates. The commands resolve the current translation version and baseline once, create chapter-scoped context-view snapshots for affected records, and write `baseline_ref`, `baseline_sha256`, `context_view_sha256`, `context_view_path`, and context-note scope metadata to the candidate. Revising an existing candidate at the same version amends that candidate; immutable correction-history references are not part of this contract.
+
+## Glossary phrase collisions
+
+When a glossary rejection is caused by a short term inside a longer source phrase, do not distort the target sentence merely to satisfy the literal target token. Prefer one of:
+
+1. natural apposition or rephrasing that contains the approved target naturally;
+2. a longer source phrase glossary entry, which shadows the shorter entry;
+3. an explicit forbidden target for the bad correction pattern.
+
+Example: `wasp` triggers for source `Wasp hunter`. Translating as `Wespe-Jäger` passes validation for the wrong reason and produces malformed German. Use apposition (`der Jäger, eine Wespe, ...`), add a phrase glossary entry, or forbid `Wespe-Jäger` as a target.

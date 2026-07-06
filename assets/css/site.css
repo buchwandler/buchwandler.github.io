@@ -127,14 +127,23 @@ pre {
 }
 
 .tool-nav-repo {
-  display: inline-block;
-  margin: 0 0 0.75rem;
+  display: block;
+  margin: 0;
   font-size: 0.85rem;
   color: #1d4ed8;
   text-decoration: none;
 }
 
-.tool-nav-repo:hover {
+.tool-nav-release {
+  display: block;
+  margin: 0 0 0.75rem;
+  font-size: 0.8rem;
+  color: #6b7280;
+  text-decoration: none;
+}
+
+.tool-nav-repo:hover,
+.tool-nav-release:hover {
   text-decoration: underline;
 }
 

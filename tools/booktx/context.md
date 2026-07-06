@@ -30,6 +30,48 @@ translations/<profile>/context-history/views/<sha>/{context.json,context.md,mani
 7. Chapter-note appends change the next task's effective context, but they do not create a new dotted version by themselves.
 8. Each new translation task snapshots its composed effective context view under `context-history/views/<sha>/` and accepted candidates preserve that task-time evidence.
 
+## Source of truth and organization doctor
+
+`context.json` is the source of truth. Structured `style`, `global_rules`, and
+glossary entries are active policy. Setup questions and chapter notes are
+provenance unless their decisions are promoted into structured policy with
+context commands such as `context approve`, `context mandate-term`,
+`context add-term`, or `context reset-term`.
+
+Use the report-only organization doctor to find duplicated or hidden policy:
+
+```bash
+booktx context doctor ./book --profile PROFILE
+booktx context doctor ./book --profile PROFILE --json
+booktx context doctor ./book --compare-profiles --json
+booktx context doctor ./book --profile PROFILE --write-report reports/context-organization-report.md
+```
+
+Single-profile doctor works in project-root and isolated profile-root mode.
+`--compare-profiles` is a same-book cross-profile workflow and is rejected in
+isolated profile-root mode. Cross-profile comparison skips non-translation
+profiles and compares only profiles with compatible source language, target
+language, and target locale. Doctor does not mutate context. It reports issues
+such as Q006 arrow terms, chapter-note terminology candidates, advisory entries
+that look binding, and sibling profile glossary drift. Report files must not be
+written under the system temp directory. In isolated profile-root mode report
+paths must be profile-local relative paths, for example
+`reports/context-organization-report.md`.
+
+`context render` supports explicit views:
+
+```bash
+booktx context render ./book --profile PROFILE --view full
+booktx context render ./book --profile PROFILE --view effective --stdout
+booktx context render ./book --profile PROFILE --view provenance --stdout
+```
+
+The default remains `full` for compatibility and it is the only view that can
+be written to `context.md`. Use `effective --stdout` to inspect a cleaner agent
+prompt that omits answered setup questions and treats chapter decisions as
+continuity memory, not current terminology policy. Use `provenance --stdout`
+to audit setup answers and chapter decisions.
+
 ## Same-book multi-profile context sync
 
 When several sibling profiles translate the same book and language pair, keep
@@ -38,7 +80,7 @@ collaborative mode:
 
 ```bash
 booktx context sync ./book \
-  --from de_gpt5_5 \
+  --from PROFILE_A \
   --all-compatible \
   --section glossary \
   --term "Empire"
@@ -59,17 +101,68 @@ Use `context export-pack` / `import-pack` when you need to move reusable policy
 between different books. Use `context sync` when the source and targets are
 sibling profiles inside the same book project.
 
+## Source-analysis review queue
+
+`booktx source analyze` is a source-review command, not a glossary approval
+command. The canonical JSON and generated Markdown are a translation-risk review
+queue for names, world-building terms, titles, and rare terms that may need a
+decision before translation starts.
+
+```bash
+booktx source analyze ./book --write
+booktx source analyze ./book --write --sync-profiles
+booktx source analysis ./book/translations/PROFILE
+```
+
+- The JSON report is authoritative; Markdown is a readable review queue.
+- Profile-root `source analysis` reads only the current profile snapshot. If it
+  says the snapshot is missing or stale, refresh from the project root with
+  `booktx source analyze . --write --sync-profiles`.
+- Default review buckets suppress ordinary vocabulary and contraction fragments.
+
+To turn reviewed candidates into durable context state, use explicit commands:
+
+```bash
+booktx context prefill ./book --profile PROFILE --from-source-analysis
+booktx context prefill ./book --profile PROFILE --from-source-analysis --include-advisory --write
+booktx context promote-candidate ./book CAND-... --profile PROFILE --as-question --write
+booktx context promote-candidate ./book CAND-... --profile PROFILE --target "TARGET" --require-target --enforce error --write
+booktx source ignore-candidate ./book CAND-... --reason "ordinary vocabulary" --write
+booktx source review-candidate ./book CAND-... --reason "checked, no glossary decision needed" --write
+```
+
+Default `context prefill --from-source-analysis` creates **review questions**
+for binding-glossary, name-policy, and invented/rare candidates. It does not
+open advisory glossary entries by default. Use `--include-advisory` only when
+you explicitly want low-priority phrase candidates to seed open glossary rows.
+
+### Source-policy interview
+
+Use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. The interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.
+
+```bash
+booktx source analyze BOOK --write --sync-profiles
+booktx source interview-plan BOOK --profile PROFILE --write
+booktx source interview-next BOOK --profile PROFILE --format markdown
+booktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write
+booktx source interview-skip BOOK CAND-... --profile PROFILE --disposition ignored --reason "REASON" --write
+booktx source interview-status BOOK --profile PROFILE --fail-if-open
+booktx context prefill BOOK --profile PROFILE --from-source-analysis --gate-readiness --write
+```
+
+Run `interview-status --fail-if-open` before marking context ready when the workflow requires all source-policy questions to be resolved.
+
 ## Typical workflow
 
 ```bash
-booktx context init ./book --profile de_gpt5_5 --non-interactive
-booktx context questions ./book --profile de_gpt5_5
-booktx context recommend ./book --profile de_gpt5_5 Q001 --text de-DE --reason "profile target locale"
-booktx context questionnaire ./book --profile de_gpt5_5 --stdout
+booktx context init ./book --profile PROFILE_A --non-interactive
+booktx context questions ./book --profile PROFILE_A
+booktx context recommend ./book --profile PROFILE_A Q001 --text de-DE --reason "profile target locale"
+booktx context questionnaire ./book --profile PROFILE_A --stdout
 # Stop for user approval, then record the approved answer.
-booktx context approve ./book --profile de_gpt5_5 Q001 --text de-DE --approved-by "user:<USER>"
-booktx context mark-ready ./book --profile de_gpt5_5
-booktx context render ./book --profile de_gpt5_5 --write
+booktx context approve ./book --profile PROFILE_A Q001 --text de-DE --approved-by "user:<USER>"
+booktx context mark-ready ./book --profile PROFILE_A
+booktx context render ./book --profile PROFILE_A --write
 ```
 
 When multiple profiles exist, always pass `--profile` unless the intended
@@ -131,3 +224,21 @@ booktx context chapter-note . 0006 \
 Rendered context separates glossary entries into binding, advisory, and disabled sections. A glossary entry is binding only when `enforce != "off"` and it has `require_target = true` or at least one `forbidden_targets` value. `enforce` alone does not create an enforceable rule.
 
 Source applicability uses longest-source-match spans across the whole glossary. Longer configured terms such as `Wasp-kinden` suppress contained shorter terms such as `wasp`; explicit plurals and hyphenated forms should be modeled with `source_variants`. When one record mixes a valid longer compound and a standalone shorter term, booktx may emit `glossary_alignment_ambiguous` because it cannot prove which target occurrence maps to which source occurrence.
+
+## Glossary phrase collisions
+
+When a glossary rejection is caused by a short term inside a longer source phrase, do not distort the target sentence merely to satisfy the literal target token. Prefer one of:
+
+1. natural apposition or rephrasing that contains the approved target naturally;
+2. a longer source phrase glossary entry, which shadows the shorter entry;
+3. an explicit forbidden target for the bad correction pattern.
+
+Example: `wasp` is a short glossary term. When the source contains `Wasp hunter`, the short `wasp` entry triggers. Translating this as `Wespe-Jäger` (forcing `Wespe` into a malformed German compound) is grammatically wrong and passes validation for the wrong reason. Instead, use an apposition like `der Jäger, eine Wespe, ...`, add a longer glossary entry for `Wasp hunter`, or add `Wespe-Jäger` as a forbidden target.
+
+`glossary_target_missing` findings include the matched source span, the source phrase context, glossary notes, and a phrase-collision hint when applicable. Both `translate insert`, `judge insert`, `validate`, and `lint-block` produce consistent findings through shared diagnostics.
+
+## Starting the next book in a series
+
+For a new book in an existing series, export policy from the completed profile with `booktx context export-pack`, import it into the new book with a dry run first, then apply it with `--write` only after reviewing conflicts. Do not copy `context.md` manually. If the pack contains reusable termbase entries, writing them is opt-in with `--write-termbase` and requires `--write`; use `--termbase-scope project` for series-wide shards or `profile` for local overrides.
+
+After import, render the context and show `booktx context questionnaire` to the human reviewer. Do not run `booktx context mark-ready` until the human approves the imported answers and any source-analysis additions.

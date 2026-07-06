@@ -1,6 +1,8 @@
 # GENERATED from booktx/docs. Do not edit by hand.
 tool: booktx
 repo_url: "https://github.com/buchwandler/booktx"
+release_tag: "v0.4.0"
+release_url: "https://github.com/buchwandler/booktx/releases/tag/v0.4.0"
 entries:
   - slug: index
     title: "booktx"

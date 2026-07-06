@@ -16,8 +16,8 @@ efforts without mixing mutable state.
 
 Examples:
 
-- `de_gpt5_5`
-- `de_glm_5_2`
+- `PROFILE_A`
+- `PROFILE_B`
 - `fr_gpt5_5`
 
 ## Why profiles exist
@@ -32,18 +32,17 @@ Profiles prevent that by moving mutable translation state under
 ## Commands
 
 ```bash
-booktx profile create ./book de_gpt5_5 --target de --target-locale de-DE --select
+booktx profile create ./book PROFILE_A --target de --target-locale de-DE
 booktx profile list ./book
-booktx profile show ./book de_gpt5_5
-booktx profile select ./book de_gpt5_5
-booktx profile compare ./book --profiles de_gpt5_5,de_glm_5_2 --record 0001-000001
-booktx profile migrate-current ./book de_gpt5_5 --select
+booktx profile show ./book PROFILE_A
+booktx profile compare ./book --profiles PROFILE_A,PROFILE_B --record 0001-000001
+booktx profile migrate-current ./book PROFILE_A
 ```
 
 ## Resolution rules
 
 1. Explicit `--profile` wins.
-2. Otherwise the active profile from `.booktx/profile-state.json` is used.
+2. Otherwise the explicit profile from `.booktx/profile state` is used.
 3. Otherwise exactly one existing profile is auto-resolved.
 4. Otherwise target-dependent commands fail until a profile is chosen explicitly.
 
@@ -92,7 +91,7 @@ booktx validate .
 booktx build .
 ```
 
-`profile list` in isolated mode shows only the current profile (no sibling profile names, no absolute paths, no `../`). Cross-profile commands like `profile compare`, `profile select`, `profile create`, and `profile migrate-current` remain blocked.
+`profile list` in isolated mode shows only the current profile (no sibling profile names, no absolute paths, no `../`). Cross-profile commands like `profile compare`, `profile create`, and `profile migrate-current` remain blocked.
 
 If a command in profile-root mode suggests `../`, prints an absolute path, or
 reveals another profile, stop and report a booktx isolation bug.
@@ -144,7 +143,6 @@ Source-derived state under `.booktx/` is shared by all profiles:
 | `names.json`           | Protected-term glossary             |
 | `chapter-map.json`     | Cached chapter boundaries           |
 | `chunks/`              | Immutable extracted source records  |
-| `profile-state.json`   | Active-profile selector             |
 
 Re-extracting the source updates the shared state for every profile at once.
 
@@ -167,8 +165,8 @@ own context files; it does not make context shared.
 
 Create a new profile whenever you want a hard isolation boundary:
 
-- **Different target language**: `de_gpt5_5`, `fr_gpt5_5`, `es_gpt5_5`.
-- **Different model experiment**: `de_gpt5_5` vs `de_glm_5_2` for the same
+- **Different target language**: `PROFILE_A`, `fr_gpt5_5`, `es_gpt5_5`.
+- **Different model experiment**: `PROFILE_A` vs `PROFILE_B` for the same
   language, so the two outputs never contaminate each other.
 - **Different context decisions**: a re-translation under revised glossary or
   style rules, kept separate from a previous accepted run.
@@ -211,37 +209,100 @@ assembled from cross-profile judge decisions.
 Create one with:
 
 ```bash
-booktx judge create-profile ./book de_judge_gpt5_5 \
+booktx judge create-profile ./book JUDGE_PROFILE \
   --target de \
   --target-locale de-DE \
-  --sources de_gpt5_5,de_glm_5_2 \
+  --sources PROFILE_A,PROFILE_B \
+  --context-from PROFILE_A \
   --model gpt-5.5 \
-  --select
+
 ```
 
-Before judging, initialize the selection profile context, sync policy from a
-compatible source profile (or otherwise configure the same policy), and mark it
-ready:
+`--context-from` copies approved style, global rules, glossary, and reusable
+approved answers from a ready source profile into the new selection profile and
+marks the judge context ready when that imported policy satisfies all required
+questions. Without it, initialize the selection profile context explicitly and
+sync policy from a compatible source profile before judging.
 
 ```bash
-booktx context init ./book --profile de_judge_gpt5_5 --non-interactive
+booktx context init ./book --profile JUDGE_PROFILE --non-interactive
 booktx context sync ./book \
-  --from de_gpt5_5 \
-  --to de_judge_gpt5_5 \
+  --from PROFILE_A \
+  --to JUDGE_PROFILE \
   --section glossary \
   --section style \
   --section global-rules \
   --write
-booktx context mark-ready ./book --profile de_judge_gpt5_5
+booktx context mark-ready ./book --profile JUDGE_PROFILE
 ```
 
-Judge workflows are cross-profile and therefore project-root only:
+Judge profile creation and snapshot preparation are project-root workflows.
+After snapshot preparation, a selection profile may run `judge status`,
+`judge next`, `judge insert`, `judge show`, `judge continue`, and
+`judge accept-identical` from its own profile root:
 
 ```bash
-booktx judge status ./book --profile de_judge_gpt5_5 --sources de_gpt5_5,de_glm_5_2
-booktx judge next ./book --profile de_judge_gpt5_5 --sources de_gpt5_5,de_glm_5_2 --unit chapter --chapter 0001
-booktx judge insert ./book --profile de_judge_gpt5_5 --judge-task-id TASK --file translations/de_judge_gpt5_5/judge-ingest/TASK.block.txt --format block
+booktx judge status ./book --profile JUDGE_PROFILE --sources PROFILE_A,PROFILE_B
+booktx judge accept-identical ./book --profile JUDGE_PROFILE --sources PROFILE_A,PROFILE_B --unit chapter --chapter 0001 --max-records 100 --write
+booktx judge next ./book --profile JUDGE_PROFILE --sources PROFILE_A,PROFILE_B --unit chapter --chapter 0001 --max-records 8 --format decisions
+booktx judge insert ./book --profile JUDGE_PROFILE --judge-task-id TASK --file translations/JUDGE_PROFILE/judge-ingest/TASK.decisions.txt --format decisions
 ```
+
+Judge task record ids are chunk-based, so a task for a logical chapter can
+still contain ids prefixed with another chunk such as `0001-...`.
+
+## Single-source judge revision profiles
+
+Use `--purpose revise` when one translation source is clearly best and you
+want an isolated final profile where an LLM must explicitly proofread every
+record.
+
+Revision profiles are judge profiles, not review passes. Their effective
+output is valid only while each active target has matching judge-decision
+provenance.
+
+Do not run `accept-identical`, `sweep-identical`, or
+`prefill-policy-fixes` in a revision profile. Do not modify effective output
+through translation or review revision commands; use `judge record` for later
+corrections.
+
+Create a revision profile with exactly one source:
+
+```bash
+booktx judge create-profile ./book PROFILE_REVISED \
+  --target de \
+  --target-locale de-DE \
+  --sources PROFILE_B \
+  --context-from PROFILE_B \
+  --model gpt-5.5 \
+  --purpose revise
+
+booktx judge prepare-isolation ./book \
+  --profile PROFILE_REVISED \
+  --write
+```
+
+Inside the isolated profile root, judge every record explicitly. For each
+record choose `copy` (keep the base target) or `edited` (write the complete
+corrected target). Later corrections use `booktx judge record`, not
+translation or review revision commands:
+
+```bash
+cd translations/PROFILE_REVISED
+booktx judge status .
+booktx judge next . --unit chapter --chapter 0008 --max-records 20 --format decisions
+booktx judge insert . --judge-task-id TASK --file judge-ingest/TASK.decisions.txt --format decisions
+booktx judge continue . --max-records 20
+booktx judge record . --record RECORD_ID --format decisions
+booktx validate . --fail-on-warnings
+booktx build . --require-complete
+```
+
+In `selection.purpose=compare`, prefer `accept-identical` and
+`sweep-identical` for true multi-source identical candidates.
+
+In `selection.purpose=revise`, never use deterministic selection commands.
+Every record requires an explicit copy or edited judge decision.
 
 ## What stays a version?
 
@@ -270,7 +331,7 @@ A legacy single-layout project keeps all state under `.booktx/`. Migrate it
 into the profile layout:
 
 ```bash
-booktx profile migrate-current ./book PROFILE --select
+booktx profile migrate-current ./book PROFILE
 ```
 
 Before:
@@ -398,3 +459,7 @@ Per-pass fields:
 - `instructions` -- prompt for the reviewing agent
 
 Pass-through profiles must not set `[quality_review]`.
+
+## Series continuation profiles
+
+Use the same profile name for a new book only after creating it in the new project. Policy transfer is explicit through context packs and optional termbase import, not by copying profile directories. After project-root preparation, run `booktx agents write BOOK --profile PROFILE --mode isolated` and start translation inside `translations/PROFILE`.
