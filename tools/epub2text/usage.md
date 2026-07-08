@@ -1,341 +1,310 @@
 ---
 layout: tool-doc
-title: "epub2text usage guide"
-description: "Extraction modes, text cleaning, and the interactive reader"
+title: "epub2text Usage Guide"
 permalink: /tools/epub2text/usage/
 nav_tool: epub2text
-generated_from: epub2text/docs
-source_path: docs/usage.md
 ---
-<!-- GENERATED from epub2text/docs. Do not edit by hand. -->
 
-# Usage Guide
-
-epub2text provides several commands for working with EPUB files: `list`, `extract`,
-`extract-pages`, `extract-gutenberg`, `pages`, `read`, and `info`.
-
-## List Chapters
-
-Display all chapters in an EPUB file:
-
-```bash
-# Table format (default)
-epub2text list book.epub
-
-# Tree format (shows hierarchy)
-epub2text list book.epub --format tree
-```
-
-The table format shows chapter numbers, titles, character counts, and nesting levels.
-The tree format displays the hierarchical structure of nested chapters.
-
-## Extract Text
-
-### Extract by Chapters
-
-#### Basic Extraction
-
-Extract all chapters to stdout:
-
-```bash
-epub2text extract book.epub
-```
-
-Extract to a file:
-
-```bash
-epub2text extract book.epub -o output.txt
-```
-
-#### Chapter Selection
-
-Extract specific chapters by number:
-
-```bash
-# Single chapter
-epub2text extract book.epub -c 1
-
-# Multiple chapters
-epub2text extract book.epub -c 1,3,5
-
-# Chapter range
-epub2text extract book.epub -c 1-5
-
-# Complex range
-epub2text extract book.epub -c 1-5,7,9-12 -o selected.txt
-```
-
-Interactive chapter selection:
-
-```bash
-epub2text extract book.epub --interactive
-```
-
-#### Output Formatting
-
-**Paragraph Mode** (`-p, --paragraphs`): One line per paragraph:
-
-```bash
-epub2text extract book.epub --paragraphs
-```
-
-**Sentence Mode** (`-s, --sentences`): One line per sentence (requires phrasplit/spaCy):
-
-```bash
-epub2text extract book.epub --sentences
-```
-
-**Clause Mode** (`--comma`): One line per clause (split at commas, semicolons):
-
-```bash
-epub2text extract book.epub --comma
-```
-
-**Combined Modes**: Combine sentence and clause splitting:
-
-```bash
-epub2text extract book.epub --sentences --comma
-```
-
-**Max Line Length** (`-m, --max-length`): Split long lines at clause boundaries:
-
-```bash
-epub2text extract book.epub --max-length 80
-```
-
-**Paragraph Separators**:
-
-By default, paragraphs are separated by two spaces at the start of each new paragraph.
-You can customize this behavior:
-
-```bash
-# Use empty lines between paragraphs
-epub2text extract book.epub --empty-lines
-
-# Custom separator (e.g., tab)
-epub2text extract book.epub --separator "\\t"
-
-# No separator
-epub2text extract book.epub --separator ""
-```
-
-#### Text Cleaning Options
-
-By default, epub2text applies smart text cleaning. You can disable or customize it:
-
-```bash
-# Disable all cleaning (raw output)
-epub2text extract book.epub --raw
-
-# Keep bracketed footnotes like [1]
-epub2text extract book.epub --keep-footnotes
-
-# Keep page numbers
-epub2text extract book.epub --keep-page-numbers
-
-# Hide chapter markers
-epub2text extract book.epub --no-markers
-```
-
-#### Output Control
-
-Control which lines are output:
-
-```bash
-# Skip first 10 lines
-epub2text extract book.epub --offset 10
-
-# Limit to 100 lines
-epub2text extract book.epub --limit 100
-
-# Add line numbers
-epub2text extract book.epub --line-numbers
-```
-
-#### Language Model
-
-For sentence-level formatting, you can specify a different spaCy language model:
-
-```bash
-# Use German language model
-epub2text extract book.epub --sentences --language-model de_core_news_sm
-```
-
-### Extract by Pages
-
-Extract content organized by pages instead of chapters:
-
-```bash
-# Extract all pages (uses EPUB page-list if available, otherwise synthetic)
-epub2text extract-pages book.epub
-
-# Extract specific page range
-epub2text extract-pages book.epub --pages 1-10
-
-# Generate synthetic pages with custom size (characters)
-epub2text extract-pages book.epub --page-size 2000
-
-# Use word count for synthetic pages
-epub2text extract-pages book.epub --use-words --page-size 350
-
-# Show front matter (TOC, acknowledgements, etc.)
-epub2text extract-pages book.epub --show-front-matter
-
-# Keep duplicate chapter titles in pages
-epub2text extract-pages book.epub --keep-duplicate-titles
-```
-
-**Page-based extraction features:**
-
-- Uses EPUB page-list navigation when available (original print book pages)
-- Generates synthetic pages at sentence boundaries when page-list not available
-- Automatically filters table of contents and front matter by default
-- Organizes output by chapters with page markers (`<<PAGE: N>>`)
-- Supports all text cleaning options (`--raw`, `--keep-footnotes`, etc.)
-
-### Extract in Project Gutenberg Format
-
-Generate text in Project Gutenberg format with proper headers and formatting:
-
-```bash
-# Extract complete book in Gutenberg format
-epub2text extract-gutenberg book.epub
-
-# Save to specific file (default: {book-title}.txt)
-epub2text extract-gutenberg book.epub -o output.txt
-
-# Extract specific chapters
-epub2text extract-gutenberg book.epub --chapters 1-10
-
-# Interactive chapter selection
-epub2text extract-gutenberg book.epub --interactive
-```
-
-**Features of Gutenberg format:**
-
-- Project Gutenberg-style header with metadata
-- Table of Contents
-- Two spaces after sentences and colons
-- 72-character line wrapping
-- Proper chapter formatting with uppercase titles
-- Automatic filtering of front matter chapters
-
-## List Pages
-
-View all pages in an EPUB file:
-
-```bash
-# List pages (shows EPUB page-list or generates synthetic pages)
-epub2text pages book.epub
-
-# Customize synthetic page size (in characters)
-epub2text pages book.epub --page-size 2000
-
-# Use word count instead of character count
-epub2text pages book.epub --use-words --page-size 350
-```
-
-The `pages` command displays:
-
-- Page numbers (from page-list or generated: "1", "2", "3", ...)
-- Character count per page
-- Source type (print page-list or synthetic)
-- Chapter assignment for each page
-- Total character count
-
-## Interactive Reader
-
-Read EPUB files directly in your terminal with vim-style navigation:
-
-```bash
-# Start reading from the beginning
-epub2text read book.epub
-
-# Resume from last bookmark
-epub2text read book.epub --resume
-
-# Start at specific chapter
-epub2text read book.epub --chapter 5
-
-# Start at specific line
-epub2text read book.epub --line 100
-
-# Format as sentences while reading
-epub2text read book.epub --sentences
-
-# Format as clauses
-epub2text read book.epub --comma
-
-# Set maximum content width for better readability
-epub2text read book.epub --width 80
-
-# Hide header or footer
-epub2text read book.epub --no-header --no-footer
-```
-
-**Navigation Keys:**
-
-- `j` / `↓` - Scroll down one line
-- `k` / `↑` - Scroll up one line
-- `Space` / `PgDn` - Next page
-- `b` / `PgUp` - Previous page
-- `n` - Next chapter
-- `p` - Previous chapter
-- `g` / `Home` - Go to beginning
-- `G` / `End` - Go to end
-- `m` - Save bookmark
-- `'` - Jump to bookmark
-- `h` / `?` - Show help
-- `q` / `Esc` - Quit
-
-**Features:**
-
-- Automatic bookmark management (saved to `~/.epub2text/bookmarks.json`)
-- Custom bookmark file support (`--bookmark-file`)
-- Configurable page size (`--page-size`)
-- Adjustable content width for better readability (`--width`)
-- Support for all text formatting options (`--sentences`, `--comma`, `--paragraphs`)
-- Full text cleaning options (`--raw`, `--keep-footnotes`, etc.)
-
-## Show Metadata
-
-Display EPUB metadata and statistics:
-
-```bash
-# Panel format (default)
-epub2text info book.epub
-
-# Table format
-epub2text info book.epub --format table
-
-# JSON format (for scripting)
-epub2text info book.epub --format json
-```
-
-The `info` command displays:
-
-- Title
-- Authors
-- Contributors
-- Publisher
-- Publication Year
-- Identifier (ISBN, UUID, etc.)
-- Language
-- Rights (copyright)
-- Coverage
-- Description
-- Chapter count
-- Page count (from page-list or estimated)
-- Total character count
-
-## Chapter and Page Markers
-
-### Chapter Markers
-
-Extracted text includes chapter titles with clear visual separation:
-
-```text
-Chapter Title
+<!-- GENERATED by sphinxpress. Do not edit by hand. -->
+
+<section id="usage-guide">
+<h1>Usage Guide</h1>
+<p>epub2text provides several commands for working with EPUB files: <code class="docutils literal notranslate"><span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">extract</span></code>,
+<code class="docutils literal notranslate"><span class="pre">extract-pages</span></code>, <code class="docutils literal notranslate"><span class="pre">extract-gutenberg</span></code>, <code class="docutils literal notranslate"><span class="pre">pages</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, and <code class="docutils literal notranslate"><span class="pre">info</span></code>.</p>
+<section id="list-chapters">
+<h2>List Chapters</h2>
+<p>Display all chapters in an EPUB file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Table format (default)</span>
+epub2text<span class="w"> </span>list<span class="w"> </span>book.epub
+
+<span class="c1"># Tree format (shows hierarchy)</span>
+epub2text<span class="w"> </span>list<span class="w"> </span>book.epub<span class="w"> </span>--format<span class="w"> </span>tree
+</pre></div>
+</div>
+<p>The table format shows chapter numbers, titles, character counts, and nesting levels.
+The tree format displays the hierarchical structure of nested chapters.</p>
+</section>
+<section id="extract-text">
+<h2>Extract Text</h2>
+<section id="extract-by-chapters">
+<h3>Extract by Chapters</h3>
+<section id="basic-extraction">
+<h4>Basic Extraction</h4>
+<p>Extract all chapters to stdout:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub
+</pre></div>
+</div>
+<p>Extract to a file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-o<span class="w"> </span>output.txt
+</pre></div>
+</div>
+</section>
+<section id="chapter-selection">
+<h4>Chapter Selection</h4>
+<p>Extract specific chapters by number:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Single chapter</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span>
+
+<span class="c1"># Multiple chapters</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span>,3,5
+
+<span class="c1"># Chapter range</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span>-5
+
+<span class="c1"># Complex range</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span>-5,7,9-12<span class="w"> </span>-o<span class="w"> </span>selected.txt
+</pre></div>
+</div>
+<p>Interactive chapter selection:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--interactive
+</pre></div>
+</div>
+</section>
+<section id="output-formatting">
+<h4>Output Formatting</h4>
+<p><strong>Paragraph Mode</strong> (<code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--paragraphs</span></code>): One line per paragraph:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--paragraphs
+</pre></div>
+</div>
+<p><strong>Sentence Mode</strong> (<code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--sentences</span></code>): One line per sentence (requires phrasplit/spaCy):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--sentences
+</pre></div>
+</div>
+<p><strong>Clause Mode</strong> (<code class="docutils literal notranslate"><span class="pre">--comma</span></code>): One line per clause (split at commas, semicolons):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--comma
+</pre></div>
+</div>
+<p><strong>Combined Modes</strong>: Combine sentence and clause splitting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--sentences<span class="w"> </span>--comma
+</pre></div>
+</div>
+<p><strong>Max Line Length</strong> (<code class="docutils literal notranslate"><span class="pre">-m,</span> <span class="pre">--max-length</span></code>): Split long lines at clause boundaries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--max-length<span class="w"> </span><span class="m">80</span>
+</pre></div>
+</div>
+<p><strong>Paragraph Separators</strong>:</p>
+<p>By default, paragraphs are separated by two spaces at the start of each new paragraph.
+You can customize this behavior:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use empty lines between paragraphs</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--empty-lines
+
+<span class="c1"># Custom separator (e.g., tab)</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--separator<span class="w"> </span><span class="s2">&quot;\\t&quot;</span>
+
+<span class="c1"># No separator</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--separator<span class="w"> </span><span class="s2">&quot;&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="text-cleaning-options">
+<h4>Text Cleaning Options</h4>
+<p>By default, epub2text applies smart text cleaning. You can disable or customize it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Disable all cleaning (raw output)</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--raw
+
+<span class="c1"># Keep bracketed footnotes like [1]</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--keep-footnotes
+
+<span class="c1"># Keep page numbers</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--keep-page-numbers
+
+<span class="c1"># Hide chapter markers</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--no-markers
+</pre></div>
+</div>
+</section>
+<section id="output-control">
+<h4>Output Control</h4>
+<p>Control which lines are output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Skip first 10 lines</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--offset<span class="w"> </span><span class="m">10</span>
+
+<span class="c1"># Limit to 100 lines</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--limit<span class="w"> </span><span class="m">100</span>
+
+<span class="c1"># Add line numbers</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--line-numbers
+</pre></div>
+</div>
+</section>
+<section id="language-model">
+<h4>Language Model</h4>
+<p>For sentence-level formatting, you can specify a different spaCy language model:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use German language model</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--sentences<span class="w"> </span>--language-model<span class="w"> </span>de_core_news_sm
+</pre></div>
+</div>
+</section>
+</section>
+<section id="extract-by-pages">
+<h3>Extract by Pages</h3>
+<p>Extract content organized by pages instead of chapters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract all pages (uses EPUB page-list if available, otherwise synthetic)</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub
+
+<span class="c1"># Extract specific page range</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--pages<span class="w"> </span><span class="m">1</span>-10
+
+<span class="c1"># Generate synthetic pages with custom size (characters)</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--page-size<span class="w"> </span><span class="m">2000</span>
+
+<span class="c1"># Use word count for synthetic pages</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--use-words<span class="w"> </span>--page-size<span class="w"> </span><span class="m">350</span>
+
+<span class="c1"># Show front matter (TOC, acknowledgements, etc.)</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--show-front-matter
+
+<span class="c1"># Keep duplicate chapter titles in pages</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--keep-duplicate-titles
+</pre></div>
+</div>
+<p><strong>Page-based extraction features:</strong></p>
+<ul class="simple">
+<li><p>Uses EPUB page-list navigation when available (original print book pages)</p></li>
+<li><p>Generates synthetic pages at sentence boundaries when page-list not available</p></li>
+<li><p>Automatically filters table of contents and front matter by default</p></li>
+<li><p>Organizes output by chapters with page markers (<code class="docutils literal notranslate"><span class="pre">&lt;&lt;PAGE:</span> <span class="pre">N&gt;&gt;</span></code>)</p></li>
+<li><p>Supports all text cleaning options (<code class="docutils literal notranslate"><span class="pre">--raw</span></code>, <code class="docutils literal notranslate"><span class="pre">--keep-footnotes</span></code>, etc.)</p></li>
+</ul>
+</section>
+<section id="extract-in-project-gutenberg-format">
+<h3>Extract in Project Gutenberg Format</h3>
+<p>Generate text in Project Gutenberg format with proper headers and formatting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract complete book in Gutenberg format</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub
+
+<span class="c1"># Save to specific file (default: {book-title}.txt)</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub<span class="w"> </span>-o<span class="w"> </span>output.txt
+
+<span class="c1"># Extract specific chapters</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-10
+
+<span class="c1"># Interactive chapter selection</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub<span class="w"> </span>--interactive
+</pre></div>
+</div>
+<p><strong>Features of Gutenberg format:</strong></p>
+<ul class="simple">
+<li><p>Project Gutenberg-style header with metadata</p></li>
+<li><p>Table of Contents</p></li>
+<li><p>Two spaces after sentences and colons</p></li>
+<li><p>72-character line wrapping</p></li>
+<li><p>Proper chapter formatting with uppercase titles</p></li>
+<li><p>Automatic filtering of front matter chapters</p></li>
+</ul>
+</section>
+</section>
+<section id="list-pages">
+<h2>List Pages</h2>
+<p>View all pages in an EPUB file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List pages (shows EPUB page-list or generates synthetic pages)</span>
+epub2text<span class="w"> </span>pages<span class="w"> </span>book.epub
+
+<span class="c1"># Customize synthetic page size (in characters)</span>
+epub2text<span class="w"> </span>pages<span class="w"> </span>book.epub<span class="w"> </span>--page-size<span class="w"> </span><span class="m">2000</span>
+
+<span class="c1"># Use word count instead of character count</span>
+epub2text<span class="w"> </span>pages<span class="w"> </span>book.epub<span class="w"> </span>--use-words<span class="w"> </span>--page-size<span class="w"> </span><span class="m">350</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">pages</span></code> command displays:</p>
+<ul class="simple">
+<li><p>Page numbers (from page-list or generated: “1”, “2”, “3”, …)</p></li>
+<li><p>Character count per page</p></li>
+<li><p>Source type (print page-list or synthetic)</p></li>
+<li><p>Chapter assignment for each page</p></li>
+<li><p>Total character count</p></li>
+</ul>
+</section>
+<section id="interactive-reader">
+<h2>Interactive Reader</h2>
+<p>Read EPUB files directly in your terminal with vim-style navigation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start reading from the beginning</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub
+
+<span class="c1"># Resume from last bookmark</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--resume
+
+<span class="c1"># Start at specific chapter</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--chapter<span class="w"> </span><span class="m">5</span>
+
+<span class="c1"># Start at specific line</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--line<span class="w"> </span><span class="m">100</span>
+
+<span class="c1"># Format as sentences while reading</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--sentences
+
+<span class="c1"># Format as clauses</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--comma
+
+<span class="c1"># Set maximum content width for better readability</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--width<span class="w"> </span><span class="m">80</span>
+
+<span class="c1"># Hide header or footer</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--no-header<span class="w"> </span>--no-footer
+</pre></div>
+</div>
+<p><strong>Navigation Keys:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">j</span></code> / <code class="docutils literal notranslate"><span class="pre">↓</span></code> - Scroll down one line</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">k</span></code> / <code class="docutils literal notranslate"><span class="pre">↑</span></code> - Scroll up one line</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Space</span></code> / <code class="docutils literal notranslate"><span class="pre">PgDn</span></code> - Next page</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">b</span></code> / <code class="docutils literal notranslate"><span class="pre">PgUp</span></code> - Previous page</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">n</span></code> - Next chapter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> - Previous chapter</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">g</span></code> / <code class="docutils literal notranslate"><span class="pre">Home</span></code> - Go to beginning</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">G</span></code> / <code class="docutils literal notranslate"><span class="pre">End</span></code> - Go to end</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">m</span></code> - Save bookmark</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">'</span></code> - Jump to bookmark</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">h</span></code> / <code class="docutils literal notranslate"><span class="pre">?</span></code> - Show help</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">q</span></code> / <code class="docutils literal notranslate"><span class="pre">Esc</span></code> - Quit</p></li>
+</ul>
+<p><strong>Features:</strong></p>
+<ul class="simple">
+<li><p>Automatic bookmark management (saved to <code class="docutils literal notranslate"><span class="pre">~/.epub2text/bookmarks.json</span></code>)</p></li>
+<li><p>Custom bookmark file support (<code class="docutils literal notranslate"><span class="pre">--bookmark-file</span></code>)</p></li>
+<li><p>Configurable page size (<code class="docutils literal notranslate"><span class="pre">--page-size</span></code>)</p></li>
+<li><p>Adjustable content width for better readability (<code class="docutils literal notranslate"><span class="pre">--width</span></code>)</p></li>
+<li><p>Support for all text formatting options (<code class="docutils literal notranslate"><span class="pre">--sentences</span></code>, <code class="docutils literal notranslate"><span class="pre">--comma</span></code>, <code class="docutils literal notranslate"><span class="pre">--paragraphs</span></code>)</p></li>
+<li><p>Full text cleaning options (<code class="docutils literal notranslate"><span class="pre">--raw</span></code>, <code class="docutils literal notranslate"><span class="pre">--keep-footnotes</span></code>, etc.)</p></li>
+</ul>
+</section>
+<section id="show-metadata">
+<h2>Show Metadata</h2>
+<p>Display EPUB metadata and statistics:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Panel format (default)</span>
+epub2text<span class="w"> </span>info<span class="w"> </span>book.epub
+
+<span class="c1"># Table format</span>
+epub2text<span class="w"> </span>info<span class="w"> </span>book.epub<span class="w"> </span>--format<span class="w"> </span>table
+
+<span class="c1"># JSON format (for scripting)</span>
+epub2text<span class="w"> </span>info<span class="w"> </span>book.epub<span class="w"> </span>--format<span class="w"> </span>json
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">info</span></code> command displays:</p>
+<ul class="simple">
+<li><p>Title</p></li>
+<li><p>Authors</p></li>
+<li><p>Contributors</p></li>
+<li><p>Publisher</p></li>
+<li><p>Publication Year</p></li>
+<li><p>Identifier (ISBN, UUID, etc.)</p></li>
+<li><p>Language</p></li>
+<li><p>Rights (copyright)</p></li>
+<li><p>Coverage</p></li>
+<li><p>Description</p></li>
+<li><p>Chapter count</p></li>
+<li><p>Page count (from page-list or estimated)</p></li>
+<li><p>Total character count</p></li>
+</ul>
+</section>
+<section id="chapter-and-page-markers">
+<h2>Chapter and Page Markers</h2>
+<section id="chapter-markers">
+<h3>Chapter Markers</h3>
+<p>Extracted text includes chapter titles with clear visual separation:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter Title
 
 Chapter text content here...
 
@@ -343,88 +312,75 @@ Chapter text content here...
 Next Chapter
 
 More content...
-```
+</pre></div>
+</div>
+<p>The first chapter appears as <code class="docutils literal notranslate"><span class="pre">{title}\n\n{content}</span></code>, while subsequent chapters are
+separated by four linebreaks before the title, then two linebreaks after the title.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--no-markers</span></code> to hide chapter titles from the output.</p>
+</section>
+<section id="page-markers">
+<h3>Page Markers</h3>
+<p>When using <code class="docutils literal notranslate"><span class="pre">extract-pages</span></code>, pages are marked with the format <code class="docutils literal notranslate"><span class="pre">&lt;&lt;PAGE:</span> <span class="pre">N&gt;&gt;</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter Title
 
-The first chapter appears as `{title}\n\n{content}`, while subsequent chapters are
-separated by four linebreaks before the title, then two linebreaks after the title.
-
-Use `--no-markers` to hide chapter titles from the output.
-
-### Page Markers
-
-When using `extract-pages`, pages are marked with the format `<<PAGE: N>>`:
-
-```text
-Chapter Title
-
-<<PAGE: 1>>
+&lt;&lt;PAGE: 1&gt;&gt;
 
 First page content...
 
-<<PAGE: 2>>
+&lt;&lt;PAGE: 2&gt;&gt;
 
 Second page content...
-```
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--no-markers</span></code> to hide these page markers from the output.</p>
+</section>
+</section>
+<section id="examples">
+<h2>Examples</h2>
+<p>Extract a book for text-to-speech processing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># One sentence per line, suitable for TTS</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--sentences<span class="w"> </span>-o<span class="w"> </span>book.txt
 
-Use `--no-markers` to hide these page markers from the output.
+<span class="c1"># One clause per line (even better for TTS)</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--comma<span class="w"> </span>-o<span class="w"> </span>book.txt
+</pre></div>
+</div>
+<p>Create a clean plain text version:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Paragraphs with empty lines, no markers</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>--paragraphs<span class="w"> </span>--empty-lines<span class="w"> </span>--no-markers<span class="w"> </span>-o<span class="w"> </span>book.txt
+</pre></div>
+</div>
+<p>Extract specific chapters with line length limit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Chapters 1-5 with max 100 chars per line</span>
+epub2text<span class="w"> </span>extract<span class="w"> </span>book.epub<span class="w"> </span>-c<span class="w"> </span><span class="m">1</span>-5<span class="w"> </span>--max-length<span class="w"> </span><span class="m">100</span><span class="w"> </span>-o<span class="w"> </span>excerpt.txt
+</pre></div>
+</div>
+<p>Extract by page numbers:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Extract pages 1-20 from EPUB page-list</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--pages<span class="w"> </span><span class="m">1</span>-20<span class="w"> </span>-o<span class="w"> </span>chapter1.txt
 
-## Examples
+<span class="c1"># Generate synthetic pages and extract first 10</span>
+epub2text<span class="w"> </span>extract-pages<span class="w"> </span>book.epub<span class="w"> </span>--page-size<span class="w"> </span><span class="m">500</span><span class="w"> </span>--pages<span class="w"> </span><span class="m">1</span>-10<span class="w"> </span>-o<span class="w"> </span>sample.txt
+</pre></div>
+</div>
+<p>Create a Project Gutenberg-style text file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Complete book in Gutenberg format</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub
 
-Extract a book for text-to-speech processing:
-
-```bash
-# One sentence per line, suitable for TTS
-epub2text extract book.epub --sentences -o book.txt
-
-# One clause per line (even better for TTS)
-epub2text extract book.epub --comma -o book.txt
-```
-
-Create a clean plain text version:
-
-```bash
-# Paragraphs with empty lines, no markers
-epub2text extract book.epub --paragraphs --empty-lines --no-markers -o book.txt
-```
-
-Extract specific chapters with line length limit:
-
-```bash
-# Chapters 1-5 with max 100 chars per line
-epub2text extract book.epub -c 1-5 --max-length 100 -o excerpt.txt
-```
-
-Extract by page numbers:
-
-```bash
-# Extract pages 1-20 from EPUB page-list
-epub2text extract-pages book.epub --pages 1-20 -o chapter1.txt
-
-# Generate synthetic pages and extract first 10
-epub2text extract-pages book.epub --page-size 500 --pages 1-10 -o sample.txt
-```
-
-Create a Project Gutenberg-style text file:
-
-```bash
-# Complete book in Gutenberg format
-epub2text extract-gutenberg book.epub
-
-# Specific chapters only
-epub2text extract-gutenberg book.epub --chapters 5-10 -o excerpt.txt
-```
-
-Interactive reading:
-
-```bash
-# Start reading and automatically resume later
-epub2text read book.epub
-# ... quit and come back later ...
-epub2text read book.epub --resume
-```
-
-Get metadata as JSON for scripting:
-
-```bash
-epub2text info book.epub --format json | jq '.title'
-```
+<span class="c1"># Specific chapters only</span>
+epub2text<span class="w"> </span>extract-gutenberg<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span>-10<span class="w"> </span>-o<span class="w"> </span>excerpt.txt
+</pre></div>
+</div>
+<p>Interactive reading:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start reading and automatically resume later</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub
+<span class="c1"># ... quit and come back later ...</span>
+epub2text<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--resume
+</pre></div>
+</div>
+<p>Get metadata as JSON for scripting:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>epub2text<span class="w"> </span>info<span class="w"> </span>book.epub<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.title&#39;</span>
+</pre></div>
+</div>
+</section>
+</section>

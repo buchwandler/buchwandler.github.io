@@ -10,7 +10,6 @@ description: buchwandler tool documentation hub
 
 Documentation hub for small tools used in ebook text and conversion workflows.
 
-[Browse tools]({{ '/tools/' | relative_url }})
 
 </section>
 
@@ -33,4 +32,9 @@ Documentation hub for small tools used in ebook text and conversion workflows.
     <h3><a href="{{ '/tools/booktx/' | relative_url }}">booktx</a></h3>
     <p>Profile-first translation toolchain for ebooks.</p>
   </section>
+  <section class="card">
+    <h3><a href="{{ '/tools/sphinxpress/' | relative_url }}">spinxpress</a></h3>
+    <p>Generate docs from sphinx config.</p>
+  </section>
+
 </div>

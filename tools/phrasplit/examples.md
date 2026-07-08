@@ -1,395 +1,384 @@
 ---
 layout: tool-doc
-title: "phrasplit examples"
-description: "Worked examples for each phrasplit splitting mode"
+title: "phrasplit Examples"
 permalink: /tools/phrasplit/examples/
 nav_tool: phrasplit
-generated_from: phrasplit/docs
-source_path: docs/examples.md
 ---
-<!-- GENERATED from phrasplit/docs. Do not edit by hand. -->
 
-# Examples
-
-This page provides practical examples of using phrasplit for various use cases.
-
-## Audiobook Creation
-
-Split text at natural pause points for text-to-speech processing:
-
-```python
-from phrasplit import split_sentences, split_clauses
-
-def prepare_for_tts(text):
-    """Prepare text for text-to-speech with natural pauses."""
-    parts = []
-
-    for sentence in split_sentences(text):
-        # Split long sentences at commas for natural pauses
-        clauses = split_clauses(sentence)
-        parts.extend(clauses)
-
-    return parts
-
-text = """
-When the sun rose over the mountains, the valley was filled with golden light.
-Birds began to sing their morning songs, and the world slowly awakened.
-"""
-
-parts = prepare_for_tts(text)
-for part in parts:
-    print(part)
-    # Each part can be sent to TTS with appropriate pauses between them
-```
-
-### Audiobook with Paragraph Awareness
-
-For more control over pause lengths, use {func}`~phrasplit.split_text` to track
-paragraph and sentence boundaries:
-
-```python
-from phrasplit import split_text
-
-def create_audiobook_segments(text, mode="sentence"):
-    """
-    Create audiobook segments with pause markers.
-
-    Args:
-        text: The text to process
-        mode: "sentence" or "clause" for granularity
-
-    Returns:
-        List of (text, pause_type) tuples
-    """
-    segments = split_text(text, mode=mode)
-    result = []
-
-    for i, seg in enumerate(segments):
-        if not seg.text.strip():
-            continue
-
-        # Determine pause type based on structure change
-        if i == 0:
-            pause_type = "none"
-        elif seg.paragraph != segments[i-1].paragraph:
-            pause_type = "paragraph"  # Long pause (e.g., 1.0s)
-        elif seg.sentence != segments[i-1].sentence:
-            pause_type = "sentence"   # Medium pause (e.g., 0.5s)
-        else:
-            pause_type = "clause"     # Short pause (e.g., 0.2s)
-
-        result.append((seg.text, pause_type))
-
-    return result
-
-text = """
-The adventure begins here. Our hero sets out on a journey.
-
-Many challenges lay ahead. But courage would see them through.
-"""
-
-segments = create_audiobook_segments(text, mode="clause")
-for text, pause in segments:
-    print(f"[{pause:>10}] {text}")
-
-# Output:
-# [      none] The adventure begins here.
-# [  sentence] Our hero sets out on a journey.
-# [ paragraph] Many challenges lay ahead.
-# [  sentence] But courage would see them through.
-```
-
-### Complete Audiobook Processor
-
-A full example integrating with a TTS system:
-
-```python
-from phrasplit import split_text, Segment
-
-class AudiobookProcessor:
-    """Process text for audiobook generation."""
-
-    PAUSE_DURATIONS = {
-        "paragraph": 1.0,
-        "sentence": 0.5,
-        "clause": 0.2,
-    }
-
-    def __init__(self, tts_engine):
-        self.tts = tts_engine
-
-    def process_chapter(self, text, mode="sentence"):
-        """Process a chapter into audio segments."""
-        segments = split_text(text, mode=mode)
-        segments = [s for s in segments if s.text.strip()]
-
-        audio_segments = []
-
-        for i, seg in enumerate(segments):
-            # Generate audio for text
-            audio = self.tts.synthesize(seg.text)
-            audio_segments.append(audio)
-
-            # Add appropriate pause
-            if i < len(segments) - 1:
-                next_seg = segments[i + 1]
-                if next_seg.paragraph != seg.paragraph:
-                    pause = self.PAUSE_DURATIONS["paragraph"]
-                elif next_seg.sentence != seg.sentence:
-                    pause = self.PAUSE_DURATIONS["sentence"]
-                else:
-                    pause = self.PAUSE_DURATIONS["clause"]
-
-                audio_segments.append(self.tts.silence(pause))
-
-        return self.tts.concatenate(audio_segments)
-```
-
-## Subtitle Generation
-
-Create subtitles that fit within character limits:
-
-```python
-from phrasplit import split_long_lines
-
-def create_subtitles(transcript, max_chars=42):
-    """Create subtitles from transcript with length limits."""
-    lines = split_long_lines(transcript, max_length=max_chars)
-
-    subtitles = []
-    for i, line in enumerate(lines, 1):
-        subtitle = {
-            "index": i,
-            "text": line,
-            "chars": len(line)
-        }
-        subtitles.append(subtitle)
-
-    return subtitles
-
-transcript = """
-This is a very long sentence that would not fit on a single subtitle line
-and needs to be broken up into smaller, more readable chunks for the viewer.
-"""
-
-subtitles = create_subtitles(transcript)
-for sub in subtitles:
-    print(f"{sub['index']}: {sub['text']} ({sub['chars']} chars)")
-```
-
-## E-book Processing
-
-Process an e-book into structured data:
-
-```python
-from phrasplit import split_paragraphs, split_sentences
-import json
-
-def process_ebook(text):
-    """Convert e-book text to structured JSON."""
-    chapters = []
-    current_chapter = {"paragraphs": []}
-
-    for para in split_paragraphs(text):
-        # Detect chapter headers (simple example)
-        if para.startswith("Chapter"):
-            if current_chapter["paragraphs"]:
-                chapters.append(current_chapter)
-            current_chapter = {
-                "title": para,
-                "paragraphs": []
-            }
-        else:
-            sentences = split_sentences(para)
-            current_chapter["paragraphs"].append({
-                "text": para,
-                "sentences": sentences,
-                "sentence_count": len(sentences)
-            })
-
-    if current_chapter["paragraphs"]:
-        chapters.append(current_chapter)
-
-    return chapters
-
-# Example usage
-book_text = """
-Chapter 1
-
-It was the best of times. It was the worst of times.
-
-The city was alive with activity. People rushed through the streets.
-
-Chapter 2
-
-A new day dawned. The adventure continued.
-"""
-
-structure = process_ebook(book_text)
-print(json.dumps(structure, indent=2))
-```
-
-## Text Analysis
-
-Analyze text statistics:
-
-```python
-from phrasplit import split_paragraphs, split_sentences, split_clauses
-
-def analyze_text(text):
-    """Generate text statistics."""
-    paragraphs = split_paragraphs(text)
-
-    total_sentences = 0
-    total_clauses = 0
-    sentence_lengths = []
-
-    for para in paragraphs:
-        sentences = split_sentences(para)
-        total_sentences += len(sentences)
-
-        for sent in sentences:
-            sentence_lengths.append(len(sent))
-            clauses = split_clauses(sent)
-            total_clauses += len(clauses)
-
-    stats = {
-        "paragraphs": len(paragraphs),
-        "sentences": total_sentences,
-        "clauses": total_clauses,
-        "avg_sentence_length": sum(sentence_lengths) / len(sentence_lengths),
-        "avg_sentences_per_paragraph": total_sentences / len(paragraphs),
-        "avg_clauses_per_sentence": total_clauses / total_sentences,
-    }
-
-    return stats
-
-text = """
-The quick brown fox jumps over the lazy dog. This sentence is shorter.
-
-Another paragraph here, with some clauses, and more content.
-Final sentence of the document.
-"""
-
-stats = analyze_text(text)
-for key, value in stats.items():
-    print(f"{key}: {value:.2f}" if isinstance(value, float) else f"{key}: {value}")
-```
-
-## Batch Processing
-
-Process multiple files:
-
-```python
-from pathlib import Path
-from phrasplit import split_sentences
-
-def process_directory(input_dir, output_dir):
-    """Process all text files in a directory."""
-    input_path = Path(input_dir)
-    output_path = Path(output_dir)
-    output_path.mkdir(exist_ok=True)
-
-    for txt_file in input_path.glob("*.txt"):
-        print(f"Processing {txt_file.name}...")
-
-        text = txt_file.read_text(encoding="utf-8")
-        sentences = split_sentences(text)
-
-        output_file = output_path / txt_file.name
-        output_file.write_text("\n".join(sentences), encoding="utf-8")
-
-        print(f"  -> {len(sentences)} sentences written to {output_file}")
-
-# Example usage
-# process_directory("./books", "./processed")
-```
-
-## Working with Different Languages
-
-Use language-specific models:
-
-```python
-from phrasplit import split_sentences
-
-# German text
-german_text = "Guten Tag. Wie geht es Ihnen? Das Wetter ist schön."
-# First: python -m spacy download de_core_news_sm
-german_sentences = split_sentences(german_text, language_model="de_core_news_sm")
-
-# French text
-french_text = "Bonjour. Comment allez-vous? Il fait beau aujourd'hui."
-# First: python -m spacy download fr_core_news_sm
-french_sentences = split_sentences(french_text, language_model="fr_core_news_sm")
-
-# Spanish text
-spanish_text = "Hola. ¿Cómo estás? El tiempo es bueno."
-# First: python -m spacy download es_core_news_sm
-spanish_sentences = split_sentences(spanish_text, language_model="es_core_news_sm")
-```
-
-## Integration with pandas
-
-Process text data in DataFrames:
-
-```python
-import pandas as pd
-from phrasplit import split_sentences, split_clauses, split_text
-
-# Sample data
-data = {
-    "id": [1, 2, 3],
-    "text": [
-        "Hello world. How are you?",
-        "The cat sat on the mat, and the dog barked.",
-        "Dr. Smith arrived. He was late, unfortunately."
-    ]
-}
-df = pd.DataFrame(data)
-
-# Add sentence count
-df["sentence_count"] = df["text"].apply(lambda x: len(split_sentences(x)))
-
-# Add clause count
-df["clause_count"] = df["text"].apply(lambda x: len(split_clauses(x)))
-
-# Explode into one row per sentence
-df_sentences = df.assign(
-    sentence=df["text"].apply(split_sentences)
-).explode("sentence")
-
-print(df_sentences)
-```
-
-### Using split_text with pandas
-
-For more detailed analysis with structure information:
-
-```python
-import pandas as pd
-from phrasplit import split_text
-
-text = """First paragraph sentence one. Sentence two.
-
-Second paragraph here. Another sentence."""
-
-# Convert segments to DataFrame
-segments = split_text(text, mode="sentence")
-df = pd.DataFrame([
-    {"text": s.text, "paragraph": s.paragraph, "sentence": s.sentence}
-    for s in segments
-])
-
-print(df)
-#                        text  paragraph  sentence
-# 0  First paragraph sentence one.          0         0
-# 1               Sentence two.          0         1
-# 2      Second paragraph here.          1         0
-# 3          Another sentence.          1         1
-
-# Group by paragraph
-for para_id, group in df.groupby("paragraph"):
-    print(f"\nParagraph {para_id}:")
-    for _, row in group.iterrows():
-        print(f"  S{row['sentence']}: {row['text']}")
-```
+<!-- GENERATED by sphinxpress. Do not edit by hand. -->
+
+<section id="examples">
+<h1>Examples</h1>
+<p>This page provides practical examples of using phrasplit for various use cases.</p>
+<section id="audiobook-creation">
+<h2>Audiobook Creation</h2>
+<p>Split text at natural pause points for text-to-speech processing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span><span class="p">,</span> <span class="n">split_clauses</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">prepare_for_tts</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Prepare text for text-to-speech with natural pauses.&quot;&quot;&quot;</span>
+    <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="c1"># Split long sentences at commas for natural pauses</span>
+        <span class="n">clauses</span> <span class="o">=</span> <span class="n">split_clauses</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
+        <span class="n">parts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">parts</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">When the sun rose over the mountains, the valley was filled with golden light.</span>
+<span class="s2">Birds began to sing their morning songs, and the world slowly awakened.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">parts</span> <span class="o">=</span> <span class="n">prepare_for_tts</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">part</span> <span class="ow">in</span> <span class="n">parts</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">part</span><span class="p">)</span>
+    <span class="c1"># Each part can be sent to TTS with appropriate pauses between them</span>
+</pre></div>
+</div>
+<section id="audiobook-with-paragraph-awareness">
+<h3>Audiobook with Paragraph Awareness</h3>
+<p>For more control over pause lengths, use <a class="reference internal" href="../api/#phrasplit.split_text" title="phrasplit.split_text"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_text()</span></code></a> to track
+paragraph and sentence boundaries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_text</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_audiobook_segments</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Create audiobook segments with pause markers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        text: The text to process</span>
+<span class="sd">        mode: &quot;sentence&quot; or &quot;clause&quot; for granularity</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        List of (text, pause_type) tuples</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">():</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># Determine pause type based on structure change</span>
+        <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">pause_type</span> <span class="o">=</span> <span class="s2">&quot;none&quot;</span>
+        <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span> <span class="o">!=</span> <span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">paragraph</span><span class="p">:</span>
+            <span class="n">pause_type</span> <span class="o">=</span> <span class="s2">&quot;paragraph&quot;</span>  <span class="c1"># Long pause (e.g., 1.0s)</span>
+        <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">sentence</span> <span class="o">!=</span> <span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sentence</span><span class="p">:</span>
+            <span class="n">pause_type</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span>   <span class="c1"># Medium pause (e.g., 0.5s)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">pause_type</span> <span class="o">=</span> <span class="s2">&quot;clause&quot;</span>     <span class="c1"># Short pause (e.g., 0.2s)</span>
+
+        <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">pause_type</span><span class="p">))</span>
+
+    <span class="k">return</span> <span class="n">result</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">The adventure begins here. Our hero sets out on a journey.</span>
+
+<span class="s2">Many challenges lay ahead. But courage would see them through.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">segments</span> <span class="o">=</span> <span class="n">create_audiobook_segments</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;clause&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">pause</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">pause</span><span class="si">:</span><span class="s2">&gt;10</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Output:</span>
+<span class="c1"># [      none] The adventure begins here.</span>
+<span class="c1"># [  sentence] Our hero sets out on a journey.</span>
+<span class="c1"># [ paragraph] Many challenges lay ahead.</span>
+<span class="c1"># [  sentence] But courage would see them through.</span>
+</pre></div>
+</div>
+</section>
+<section id="complete-audiobook-processor">
+<h3>Complete Audiobook Processor</h3>
+<p>A full example integrating with a TTS system:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_text</span><span class="p">,</span> <span class="n">Segment</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">AudiobookProcessor</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process text for audiobook generation.&quot;&quot;&quot;</span>
+
+    <span class="n">PAUSE_DURATIONS</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;paragraph&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span>
+        <span class="s2">&quot;sentence&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">,</span>
+        <span class="s2">&quot;clause&quot;</span><span class="p">:</span> <span class="mf">0.2</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tts_engine</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tts</span> <span class="o">=</span> <span class="n">tts_engine</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">process_chapter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process a chapter into audio segments.&quot;&quot;&quot;</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span>
+        <span class="n">segments</span> <span class="o">=</span> <span class="p">[</span><span class="n">s</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">segments</span> <span class="k">if</span> <span class="n">s</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()]</span>
+
+        <span class="n">audio_segments</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
+            <span class="c1"># Generate audio for text</span>
+            <span class="n">audio</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+            <span class="n">audio_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
+
+            <span class="c1"># Add appropriate pause</span>
+            <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">segments</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="n">next_seg</span> <span class="o">=</span> <span class="n">segments</span><span class="p">[</span><span class="n">i</span> <span class="o">+</span> <span class="mi">1</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">next_seg</span><span class="o">.</span><span class="n">paragraph</span> <span class="o">!=</span> <span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span><span class="p">:</span>
+                    <span class="n">pause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAUSE_DURATIONS</span><span class="p">[</span><span class="s2">&quot;paragraph&quot;</span><span class="p">]</span>
+                <span class="k">elif</span> <span class="n">next_seg</span><span class="o">.</span><span class="n">sentence</span> <span class="o">!=</span> <span class="n">seg</span><span class="o">.</span><span class="n">sentence</span><span class="p">:</span>
+                    <span class="n">pause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAUSE_DURATIONS</span><span class="p">[</span><span class="s2">&quot;sentence&quot;</span><span class="p">]</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">pause</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PAUSE_DURATIONS</span><span class="p">[</span><span class="s2">&quot;clause&quot;</span><span class="p">]</span>
+
+                <span class="n">audio_segments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">silence</span><span class="p">(</span><span class="n">pause</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">tts</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">audio_segments</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="subtitle-generation">
+<h2>Subtitle Generation</h2>
+<p>Create subtitles that fit within character limits:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_long_lines</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">create_subtitles</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">max_chars</span><span class="o">=</span><span class="mi">42</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Create subtitles from transcript with length limits.&quot;&quot;&quot;</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">split_long_lines</span><span class="p">(</span><span class="n">transcript</span><span class="p">,</span> <span class="n">max_length</span><span class="o">=</span><span class="n">max_chars</span><span class="p">)</span>
+
+    <span class="n">subtitles</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">line</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">lines</span><span class="p">,</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="n">subtitle</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;index&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+            <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">line</span><span class="p">,</span>
+            <span class="s2">&quot;chars&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">line</span><span class="p">)</span>
+        <span class="p">}</span>
+        <span class="n">subtitles</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">subtitle</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">subtitles</span>
+
+<span class="n">transcript</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">This is a very long sentence that would not fit on a single subtitle line</span>
+<span class="s2">and needs to be broken up into smaller, more readable chunks for the viewer.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">subtitles</span> <span class="o">=</span> <span class="n">create_subtitles</span><span class="p">(</span><span class="n">transcript</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sub</span> <span class="ow">in</span> <span class="n">subtitles</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;index&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">sub</span><span class="p">[</span><span class="s1">&#39;chars&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2"> chars)&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="e-book-processing">
+<h2>E-book Processing</h2>
+<p>Process an e-book into structured data:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_paragraphs</span><span class="p">,</span> <span class="n">split_sentences</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_ebook</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert e-book text to structured JSON.&quot;&quot;&quot;</span>
+    <span class="n">chapters</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">current_chapter</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">:</span> <span class="p">[]}</span>
+
+    <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">split_paragraphs</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+        <span class="c1"># Detect chapter headers (simple example)</span>
+        <span class="k">if</span> <span class="n">para</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Chapter&quot;</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">current_chapter</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">]:</span>
+                <span class="n">chapters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_chapter</span><span class="p">)</span>
+            <span class="n">current_chapter</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="n">para</span><span class="p">,</span>
+                <span class="s2">&quot;paragraphs&quot;</span><span class="p">:</span> <span class="p">[]</span>
+            <span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">para</span><span class="p">)</span>
+            <span class="n">current_chapter</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+                <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">para</span><span class="p">,</span>
+                <span class="s2">&quot;sentences&quot;</span><span class="p">:</span> <span class="n">sentences</span><span class="p">,</span>
+                <span class="s2">&quot;sentence_count&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+            <span class="p">})</span>
+
+    <span class="k">if</span> <span class="n">current_chapter</span><span class="p">[</span><span class="s2">&quot;paragraphs&quot;</span><span class="p">]:</span>
+        <span class="n">chapters</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">current_chapter</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">chapters</span>
+
+<span class="c1"># Example usage</span>
+<span class="n">book_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">Chapter 1</span>
+
+<span class="s2">It was the best of times. It was the worst of times.</span>
+
+<span class="s2">The city was alive with activity. People rushed through the streets.</span>
+
+<span class="s2">Chapter 2</span>
+
+<span class="s2">A new day dawned. The adventure continued.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">structure</span> <span class="o">=</span> <span class="n">process_ebook</span><span class="p">(</span><span class="n">book_text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">structure</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="text-analysis">
+<h2>Text Analysis</h2>
+<p>Analyze text statistics:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_paragraphs</span><span class="p">,</span> <span class="n">split_sentences</span><span class="p">,</span> <span class="n">split_clauses</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">analyze_text</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate text statistics.&quot;&quot;&quot;</span>
+    <span class="n">paragraphs</span> <span class="o">=</span> <span class="n">split_paragraphs</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+    <span class="n">total_sentences</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">total_clauses</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sentence_lengths</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">para</span> <span class="ow">in</span> <span class="n">paragraphs</span><span class="p">:</span>
+        <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">para</span><span class="p">)</span>
+        <span class="n">total_sentences</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">sent</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
+            <span class="n">sentence_lengths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">sent</span><span class="p">))</span>
+            <span class="n">clauses</span> <span class="o">=</span> <span class="n">split_clauses</span><span class="p">(</span><span class="n">sent</span><span class="p">)</span>
+            <span class="n">total_clauses</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">clauses</span><span class="p">)</span>
+
+    <span class="n">stats</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;paragraphs&quot;</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">),</span>
+        <span class="s2">&quot;sentences&quot;</span><span class="p">:</span> <span class="n">total_sentences</span><span class="p">,</span>
+        <span class="s2">&quot;clauses&quot;</span><span class="p">:</span> <span class="n">total_clauses</span><span class="p">,</span>
+        <span class="s2">&quot;avg_sentence_length&quot;</span><span class="p">:</span> <span class="nb">sum</span><span class="p">(</span><span class="n">sentence_lengths</span><span class="p">)</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentence_lengths</span><span class="p">),</span>
+        <span class="s2">&quot;avg_sentences_per_paragraph&quot;</span><span class="p">:</span> <span class="n">total_sentences</span> <span class="o">/</span> <span class="nb">len</span><span class="p">(</span><span class="n">paragraphs</span><span class="p">),</span>
+        <span class="s2">&quot;avg_clauses_per_sentence&quot;</span><span class="p">:</span> <span class="n">total_clauses</span> <span class="o">/</span> <span class="n">total_sentences</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="n">stats</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">The quick brown fox jumps over the lazy dog. This sentence is shorter.</span>
+
+<span class="s2">Another paragraph here, with some clauses, and more content.</span>
+<span class="s2">Final sentence of the document.</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="n">stats</span> <span class="o">=</span> <span class="n">analyze_text</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">stats</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">&quot;</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">float</span><span class="p">)</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">value</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="batch-processing">
+<h2>Batch Processing</h2>
+<p>Process multiple files:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">process_directory</span><span class="p">(</span><span class="n">input_dir</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Process all text files in a directory.&quot;&quot;&quot;</span>
+    <span class="n">input_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">input_dir</span><span class="p">)</span>
+    <span class="n">output_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+    <span class="n">output_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">for</span> <span class="n">txt_file</span> <span class="ow">in</span> <span class="n">input_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;*.txt&quot;</span><span class="p">):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Processing </span><span class="si">{</span><span class="n">txt_file</span><span class="o">.</span><span class="n">name</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
+
+        <span class="n">text</span> <span class="o">=</span> <span class="n">txt_file</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+        <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+
+        <span class="n">output_file</span> <span class="o">=</span> <span class="n">output_path</span> <span class="o">/</span> <span class="n">txt_file</span><span class="o">.</span><span class="n">name</span>
+        <span class="n">output_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sentences</span><span class="p">),</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  -&gt; </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span><span class="si">}</span><span class="s2"> sentences written to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Example usage</span>
+<span class="c1"># process_directory(&quot;./books&quot;, &quot;./processed&quot;)</span>
+</pre></div>
+</div>
+</section>
+<section id="working-with-different-languages">
+<h2>Working with Different Languages</h2>
+<p>Use language-specific models:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span>
+
+<span class="c1"># German text</span>
+<span class="n">german_text</span> <span class="o">=</span> <span class="s2">&quot;Guten Tag. Wie geht es Ihnen? Das Wetter ist schön.&quot;</span>
+<span class="c1"># First: python -m spacy download de_core_news_sm</span>
+<span class="n">german_sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">german_text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">)</span>
+
+<span class="c1"># French text</span>
+<span class="n">french_text</span> <span class="o">=</span> <span class="s2">&quot;Bonjour. Comment allez-vous? Il fait beau aujourd&#39;hui.&quot;</span>
+<span class="c1"># First: python -m spacy download fr_core_news_sm</span>
+<span class="n">french_sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">french_text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;fr_core_news_sm&quot;</span><span class="p">)</span>
+
+<span class="c1"># Spanish text</span>
+<span class="n">spanish_text</span> <span class="o">=</span> <span class="s2">&quot;Hola. ¿Cómo estás? El tiempo es bueno.&quot;</span>
+<span class="c1"># First: python -m spacy download es_core_news_sm</span>
+<span class="n">spanish_sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">spanish_text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;es_core_news_sm&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="integration-with-pandas">
+<h2>Integration with pandas</h2>
+<p>Process text data in DataFrames:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span><span class="p">,</span> <span class="n">split_clauses</span><span class="p">,</span> <span class="n">split_text</span>
+
+<span class="c1"># Sample data</span>
+<span class="n">data</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;id&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>
+    <span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s2">&quot;Hello world. How are you?&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;The cat sat on the mat, and the dog barked.&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;Dr. Smith arrived. He was late, unfortunately.&quot;</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<span class="c1"># Add sentence count</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;sentence_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_sentences</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+<span class="c1"># Add clause count</span>
+<span class="n">df</span><span class="p">[</span><span class="s2">&quot;clause_count&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">split_clauses</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
+
+<span class="c1"># Explode into one row per sentence</span>
+<span class="n">df_sentences</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span>
+    <span class="n">sentence</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">split_sentences</span><span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">explode</span><span class="p">(</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df_sentences</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="using-split-text-with-pandas">
+<h3>Using split_text with pandas</h3>
+<p>For more detailed analysis with structure information:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pandas</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_text</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;First paragraph sentence one. Sentence two.</span>
+
+<span class="s2">Second paragraph here. Another sentence.&quot;&quot;&quot;</span>
+
+<span class="c1"># Convert segments to DataFrame</span>
+<span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
+    <span class="p">{</span><span class="s2">&quot;text&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;paragraph&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">paragraph</span><span class="p">,</span> <span class="s2">&quot;sentence&quot;</span><span class="p">:</span> <span class="n">s</span><span class="o">.</span><span class="n">sentence</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">segments</span>
+<span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+<span class="c1">#                        text  paragraph  sentence</span>
+<span class="c1"># 0  First paragraph sentence one.          0         0</span>
+<span class="c1"># 1               Sentence two.          0         1</span>
+<span class="c1"># 2      Second paragraph here.          1         0</span>
+<span class="c1"># 3          Another sentence.          1         1</span>
+
+<span class="c1"># Group by paragraph</span>
+<span class="k">for</span> <span class="n">para_id</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">&quot;paragraph&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Paragraph </span><span class="si">{</span><span class="n">para_id</span><span class="si">}</span><span class="s2">:&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">group</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  S</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;sentence&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;text&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>

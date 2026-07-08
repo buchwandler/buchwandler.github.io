@@ -1,0 +1,104 @@
+[site]
+root = "."
+base_url = "https://buchwandler.de"
+tools_dir = "tools"
+nav_data_dir = "_data/tool_nav"
+layout = "tool-doc"
+title = "buchwandler Tool Docs"
+
+[build]
+work_dir = ".sphinxpress"
+sphinx_build = "sphinx-build"
+fail_on_warning = true
+keep_build_dir = false
+parallel = "auto"
+
+[build.env]
+enabled = true
+scope = "shared"
+python = "python3"
+path = ".sphinxpress/venv"
+upgrade_pip = true
+packages = [
+  "sphinx>=7",
+  "myst-parser",
+  "sphinx-rtd-theme",
+  "pydantic>=2",
+  "tomli-w",
+  "typer>=0.12",
+  "PyYAML>=6",
+  "rich",
+  "beautifulsoup4",
+  "-e", "../../odoo17/phrasplit",
+  "-e", "../../odoo17/epub2text",
+  "-e", "../../odoo17/text2epub",
+  "-e", "../sphinxpress",
+]
+
+[book]
+title = "buchwandler Tool Documentation"
+author = "buchwandler"
+language = "en"
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress"]
+
+[pdf]
+builder = "latexpdf"
+output = "dist/buchwandler-tool-documentation.pdf"
+
+[epub]
+builder = "epub"
+output = "dist/buchwandler-tool-documentation.epub"
+
+[release]
+tag_prefix = "v"
+release_url_template = "{repo_url}/releases/tag/{tag}"
+
+[[projects]]
+name = "booktx"
+title = "booktx"
+docs_root = "../../odoo17/booktx/docs"
+conf_dir = "../../odoo17/booktx/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/booktx"
+release_strategy = "manual"
+release_tag = "v0.4.1"
+
+[[projects]]
+name = "epub2text"
+title = "epub2text"
+docs_root = "../../odoo17/epub2text/docs"
+conf_dir = "../../odoo17/epub2text/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/epub2text"
+release_strategy = "manual"
+release_tag = "v0.2.7"
+
+[[projects]]
+name = "phrasplit"
+title = "phrasplit"
+docs_root = "../../odoo17/phrasplit/docs"
+conf_dir = "../../odoo17/phrasplit/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/phrasplit"
+release_strategy = "manual"
+release_tag = "v0.3.3"
+
+[[projects]]
+name = "text2epub"
+title = "text2epub"
+docs_root = "../../odoo17/text2epub/docs"
+conf_dir = "../../odoo17/text2epub/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/text2epub"
+release_strategy = "manual"
+release_tag = "v0.1.4"
+
+[[projects]]
+name = "sphinxpress"
+title = "sphinxpress"
+docs_root = "../sphinxpress/docs"
+conf_dir = "../sphinxpress/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/sphinxpress"
+release_strategy = "manual"
+release_tag = "v0.1.0"

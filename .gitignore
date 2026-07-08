@@ -7,3 +7,5 @@ _site/
 vendor/
 context_buchwandler_github_io*
 _vendor/
+.sphinxpress/
+run.html
