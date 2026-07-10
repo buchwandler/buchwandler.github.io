@@ -34,7 +34,7 @@ packages = [
   "epub2text==0.2.7",
   "text2epub==0.1.4",
   "booktx==0.4.1",
-  "sphinxpress==0.1.0",
+  "sphinxpress>=0.1.1",
 ]
 
 [book]
@@ -103,4 +103,4 @@ conf_dir = "../sphinxpress/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/sphinxpress"
 release_strategy = "manual"
-release_tag = "v0.1.1"
+release_tag = "v0.1.2"
