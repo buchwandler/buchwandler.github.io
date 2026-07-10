@@ -11,12 +11,20 @@
     <header class="site-header">
       <a class="brand" href="{{ '/' | relative_url }}">buchwandler</a>
       <nav class="site-nav" aria-label="Main navigation">
-        <a href="{{ '/tools/' | relative_url }}">Tools</a>
-        <a href="{{ '/tools/epub2text/' | relative_url }}">epub2text</a>
-        <a href="{{ '/tools/text2epub/' | relative_url }}">text2epub</a>
-        <a href="{{ '/tools/phrasplit/' | relative_url }}">phrasplit</a>
-        <a href="{{ '/tools/booktx/' | relative_url }}">booktx</a>
-        <a href="{{ '/tools/sphinxpress/' | relative_url }}">sphinxpress</a>
+        <a class="nav-home" href="{{ '/' | relative_url }}">Home</a>
+        <details class="nav-dropdown">
+          <summary>Tools</summary>
+          <div class="nav-dropdown-menu">
+            <a class="nav-dropdown-all" href="{{ '/tools/' | relative_url }}">All documentation <span aria-hidden="true">↗</span></a>
+            {% for tool in site.data.tools %}
+            {% if tool.docs_url %}
+            <a href="{{ tool.docs_url | relative_url }}">{{ tool.name }} <span class="nav-item-type">Docs</span></a>
+            {% else %}
+            <a href="{{ tool.repo_url }}" rel="external noopener">{{ tool.name }} <span class="nav-item-type">GitHub</span></a>
+            {% endif %}
+            {% endfor %}
+          </div>
+        </details>
         <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
         <a href="{{ '/datenschutz/' | relative_url }}">Datenschutz</a>
       </nav>
@@ -25,7 +33,7 @@
       {{ content }}
     </main>
     <footer class="site-footer">
-      <p>Book processing tools for ebook workflows.</p>
+      <p>Book processing tools for ebook workflows. <a href="{{ '/tools/' | relative_url }}">Browse all tools</a> or <a href="https://github.com/buchwandler" rel="external noopener">follow buchwandler on GitHub</a>.</p>
     </footer>
   </body>
 </html>

@@ -2,6 +2,7 @@ title: buchwandler
 description: Practical notes and tool documentation.
 url: "https://buchwandler.de"
 baseurl: ""
+repository: buchwandler/buchwandler.github.io
 
 markdown: kramdown
 highlighter: rouge

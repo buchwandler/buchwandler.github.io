@@ -1,0 +1,20 @@
+- name: epub2text
+  description: Extract text from EPUB files with smart cleaning and navigation.
+  docs_url: /tools/epub2text/
+  repo_url: https://github.com/buchwandler/epub2text
+- name: text2epub
+  description: Build EPUB ebooks from Markdown and text sources.
+  docs_url: /tools/text2epub/
+  repo_url: https://github.com/buchwandler/text2epub
+- name: phrasplit
+  description: Split text into sentences, clauses, or paragraphs.
+  docs_url: /tools/phrasplit/
+  repo_url: https://github.com/buchwandler/phrasplit
+- name: booktx
+  description: Profile-first translation toolchain for ebooks.
+  docs_url: /tools/booktx/
+  repo_url: https://github.com/buchwandler/booktx
+- name: sphinxpress
+  description: Publish multiple Sphinx documentation projects as one site and book.
+  docs_url: /tools/sphinxpress/
+  repo_url: https://github.com/buchwandler/sphinxpress

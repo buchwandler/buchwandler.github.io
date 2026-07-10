@@ -23,15 +23,17 @@ packages = [
   "sphinx>=7",
   "myst-parser",
   "sphinx-rtd-theme",
+  "weasyprint>=67",
   "pydantic>=2",
   "tomli-w",
   "typer>=0.12",
   "PyYAML>=6",
   "rich",
   "beautifulsoup4",
-  "-e", "../../odoo17/phrasplit",
-  "-e", "../../odoo17/epub2text",
-  "-e", "../../odoo17/text2epub",
+  "phrasplit==0.3.3",
+  "epub2text==0.2.7",
+  "text2epub==0.1.4",
+  "booktx==0.4.1",
   "-e", "../sphinxpress",
 ]
 
@@ -42,7 +44,7 @@ language = "en"
 project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress"]
 
 [pdf]
-builder = "latexpdf"
+builder = "weasyprint"
 output = "dist/buchwandler-tool-documentation.pdf"
 
 [epub]
