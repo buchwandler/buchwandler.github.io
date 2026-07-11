@@ -400,6 +400,11 @@ must use <code class="docutils literal notranslate"><span class="pre">booktx</sp
 review revision commands, because revision output is valid only while each
 active target has matching judge-decision provenance. See <em>Single-source judge
 revision profiles</em> in <code class="docutils literal notranslate"><span class="pre">docs/profiles.md</span></code>.</p>
+<p>For grammar-only fix runs on an existing translated book, create the revision
+profile with <code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>. In that mode, <code class="docutils literal notranslate"><span class="pre">BASE_TARGET</span></code> is
+authoritative for wording and terminology, <code class="docutils literal notranslate"><span class="pre">SOURCE</span></code> is only a semantic guard,
+<code class="docutils literal notranslate"><span class="pre">copy</span></code> is preferred whenever the German is grammatically valid, and <code class="docutils literal notranslate"><span class="pre">edited</span></code>
+must be the complete minimally corrected target.</p>
 </section>
 <section id="isolated-judge-workflow">
 <h2>Isolated judge workflow</h2>
@@ -428,6 +433,27 @@ profiles. Output is sanitized: no <code class="docutils literal notranslate"><sp
 <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;</span></code> references. Submission paths are confined to regular
 files inside the current profile. Do not chain <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">insert</span></code> and <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">next</span></code>
 in one shell command; continue only after a successful insert.</p>
+<p>For revision profiles, replace the compare-mode <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code> step with an
+explicit decision loop:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## 0001-000001
+selected: A
+decision_kind: copy
+reason: grammatically correct
+TARGET:
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>## 0001-000002
+selected: A
+decision_kind: edited
+reason: grammar: corrected case agreement
+TARGET:
+Der vollständig korrigierte deutsche Zielsatz.
+</pre></div>
+</div>
+<p>Do not tell an agent to use <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code> in revise mode. One managed
+isolated profile contract is active at a time, so run isolated grammar
+benchmarks sequentially in one project unless you split them across worktrees
+or separate project copies.</p>
 </section>
 </section>
 </div>

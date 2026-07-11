@@ -451,6 +451,14 @@ provenance.</p>
 <code class="docutils literal notranslate"><span class="pre">prefill-policy-fixes</span></code> in a revision profile. Do not modify effective output
 through translation or review revision commands; use <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">record</span></code> for later
 corrections.</p>
+<p>Revision profiles have two submodes:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">general</span></code> (default): general proofread/revision; grammar,
+flow, punctuation, style, or terminology corrections may be made.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>: grammar-only revision; existing wording,
+terminology, names, tone, and register are frozen, and <code class="docutils literal notranslate"><span class="pre">BASE_TARGET</span></code> is the
+authoritative German wording.</p></li>
+</ul>
 <p>Create a revision profile with exactly one source:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>PROFILE_REVISED<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
@@ -459,9 +467,21 @@ corrections.</p>
 <span class="w">  </span>--context-from<span class="w"> </span>PROFILE_B<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--purpose<span class="w"> </span>revise
+</pre></div>
+</div>
+<p>Create a grammar-only isolated revision profile from an existing translated
+book:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>judge_gpt5_6<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sources<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--context-from<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--model<span class="w"> </span>gpt-5.6<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--purpose<span class="w"> </span>revise<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--revision-focus<span class="w"> </span>grammar
 
 booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>PROFILE_REVISED<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--profile<span class="w"> </span>judge_gpt5_6<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--write
 </pre></div>
 </div>
@@ -479,10 +499,19 @@ booktx<span class="w"> </span>validate<span class="w"> </span>.<span class="w"> 
 booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--require-complete
 </pre></div>
 </div>
+<p>Booktx records are sentence-segmented translation units; a revision profile
+requires an explicit decision for every translatable record. In
+<code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>, prefer <code class="docutils literal notranslate"><span class="pre">copy</span></code> whenever the existing German is
+grammatically valid, and use <code class="docutils literal notranslate"><span class="pre">edited</span></code> only for minimal grammar, syntax,
+agreement, inflection, orthography, capitalization, or punctuation fixes.
+Source gaps are blockers in revise mode, not skippable records.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">selection.purpose=compare</span></code>, prefer <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code> and
 <code class="docutils literal notranslate"><span class="pre">sweep-identical</span></code> for true multi-source identical candidates.</p>
 <p>In <code class="docutils literal notranslate"><span class="pre">selection.purpose=revise</span></code>, never use deterministic selection commands.
-Every record requires an explicit copy or edited judge decision.</p>
+Every record requires an explicit copy or edited judge decision. Only one
+managed isolated profile contract is active at a time, so prepare isolated
+judge profiles sequentially in one project unless you use separate worktrees or
+project copies.</p>
 </section>
 <section id="what-stays-a-version">
 <h2>What stays a version?</h2>

@@ -568,6 +568,14 @@ explicit copy or edited judge decision for every record; the deterministic
 commands <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code>, <code class="docutils literal notranslate"><span class="pre">sweep-identical</span></code>, and <code class="docutils literal notranslate"><span class="pre">prefill-policy-fixes</span></code> are
 disabled there. See <em>Single-source judge revision profiles</em> in
 <code class="docutils literal notranslate"><span class="pre">docs/profiles.md</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">create-profile</span></code> also accepts:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--revision-focus general|grammar
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">general</span></code> for the existing broad revise contract. Use <code class="docutils literal notranslate"><span class="pre">grammar</span></code> when you
+want an isolated single-source grammar-fix run that freezes established
+wording, terminology, names, tone, and register while still requiring an
+explicit decision for every record.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
@@ -575,6 +583,15 @@ disabled there. See <em>Single-source judge revision profiles</em> in
 <span class="w">  </span>--context-from<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--purpose<span class="w"> </span>compare
+
+booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE_GRAMMAR<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--sources<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--context-from<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--model<span class="w"> </span>gpt-5.6<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--purpose<span class="w"> </span>revise<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--revision-focus<span class="w"> </span>grammar
 
 booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--sources<span class="w"> </span>PROFILE,PROFILE_B
 
@@ -634,6 +651,10 @@ booktx<span class="w"> </span>judge<span class="w"> </span><span class="k">conti
 </div>
 <p>For <code class="docutils literal notranslate"><span class="pre">decision_kind:</span> <span class="pre">copy</span></code>, leave <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> empty; booktx copies the selected
 candidate exactly. Only <code class="docutils literal notranslate"><span class="pre">edited</span></code> decisions require a non-empty <code class="docutils literal notranslate"><span class="pre">TARGET</span></code>.</p>
+<p>For revise profiles, do <strong>not</strong> use <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code>; it is valid only in
+compare mode. In <code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">status</span> <span class="pre">.</span></code> reports the
+revision focus plus copy/edited counts and edit rate so model runs can be
+compared without adding a separate reporting command.</p>
 </section>
 </section>
 <section id="glossary-repair-and-chapter-note-reset">
