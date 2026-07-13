@@ -171,140 +171,72 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="translation-contract">
 <h1>Translation contract</h1>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span></code> now keeps translation state per profile.</p>
-<section id="primary-profile-local-state">
-<h2>Primary profile-local state</h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-version-ledger.json</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/tasks/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/todos/</span></code></p></li>
-</ul>
-</section>
-<section id="todo-files">
-<h2>Todo files</h2>
-<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/todos/&lt;todo-id&gt;.{json,md}</span></code> are <strong>run-control artifacts</strong>
-written by <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">todo-next</span></code>. They describe a bounded multi-chapter
-agent run (chapters to complete, per-task word budget, stop conditions).</p>
-<p>Todo files are NOT translation submissions. The agent reads the markdown loop
-instructions, fills ingest files, and runs <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">insert</span></code> for each batch.
-Do not submit todo JSON files through <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">insert</span></code>.</p>
-</section>
+<p>Translation state is profile-local. The durable current record store is
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code> (<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>). The
+version ledger, context, tasks, submissions, reviews, and reports are also
+profile-local.</p>
 <section id="task-metadata">
 <h2>Task metadata</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code> persists tasks with:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">profile</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">target_language</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">target_locale</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translation_version</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">context_sha256</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">source_sha256</span></code></p></li>
-<li><p>source/profile config hashes</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">insert</span></code> rejects:</p>
-<ul class="simple">
-<li><p>task/profile mismatches</p></li>
-<li><p>submission/profile mismatches</p></li>
-<li><p>stale task version metadata</p></li>
-</ul>
-</section>
-<section id="compatibility-exports">
-<h2>Compatibility exports</h2>
-<p>Compatibility translated chunk files remain JSON objects with <code class="docutils literal notranslate"><span class="pre">chunk_id</span></code> and
-ordered record targets, but they are profile-local:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>translations/&lt;profile&gt;/translated/NNNN.json
-</pre></div>
-</div>
-</section>
-<section id="comparison-rules">
-<h2>Comparison rules</h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translation</span> <span class="pre">compare</span></code> is profile-local.</p></li>
-<li><p>Cross-profile comparison is explicit under <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">compare</span></code>.</p></li>
-</ul>
-</section>
-<section id="block-submission-schema">
-<h2>Block submission schema</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span> <span class="pre">--format</span> <span class="pre">block</span></code> writes a durable ingest file under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/&lt;task&gt;.block.txt</span></code>. Edit only that file and
-submit it back. Example:</p>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code> records the profile, target language and locale,
+translation version, context view hash, source hash, and relevant profile and
+source configuration hashes. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">insert</span></code> rejects stale or
+profile-mismatched submissions.</p>
+<p>Block submissions are written under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/</span></code>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span># booktx block submission
-# profile: PROFILE_A
-# task: bt-task-20260101T000000Z-ch01-0001r0001-a1b2c3d4
+# profile: PROFILE
+# task: TASK_ID
 # translation_version: 1.2
 &gt;&gt;&gt; 0001-000001
-Translated text here.
-&gt;&gt;&gt; 0001-000002
-Second translated record.
+Translated text.
 </pre></div>
 </div>
-<p>Rules:</p>
-<ul class="simple">
-<li><p>Keep every <code class="docutils literal notranslate"><span class="pre">&gt;&gt;&gt;</span> <span class="pre">RECORD_ID</span></code> header unchanged.</p></li>
-<li><p>Write only the target translation under each header.</p></li>
-<li><p>Preserve required placeholder tokens (for example <code class="docutils literal notranslate"><span class="pre">__NAME_001__</span></code>) exactly.</p></li>
-<li><p>Preserve enclosing quotation marks when the source record is fully quoted. German targets may use either <code class="docutils literal notranslate"><span class="pre">„...“</span></code> or <code class="docutils literal notranslate"><span class="pre">»...«</span></code>, but both opening and closing quotation marks must be present as a valid pair. Do not mix quote styles within one outer pair.</p></li>
-<li><p>Do not add commentary outside target text.</p></li>
-<li><p>Do not edit <code class="docutils literal notranslate"><span class="pre">tasks/&lt;task&gt;.source.block.txt</span></code> as the submission.</p></li>
-</ul>
+<p>Keep each record header unchanged, write only the target text, preserve
+placeholder tokens, and do not add commentary. JSON submissions use schema
+version 2 and must declare the matching profile and translation version.</p>
 </section>
-<section id="json-submission-schema">
-<h2>JSON submission schema</h2>
-<p>Submissions may also be supplied as JSON (<code class="docutils literal notranslate"><span class="pre">schema_version</span></code> 2). Example:</p>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;profile&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PROFILE_A&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;task_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;bt-task-...&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;translation_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;1.2&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;records&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0001-000001&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;target&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Translated text here.&quot;</span><span class="w"> </span><span class="p">}]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">profile</span></code> and <code class="docutils literal notranslate"><span class="pre">translation_version</span></code> fields must match the target profile
-and the durable task metadata, or <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">insert</span></code> rejects the
-submission.</p>
+<section id="generated-exports">
+<h2>Generated exports</h2>
+<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/NNNN.json</span></code> is a compatibility export. It is
+derived from the store and is not the canonical state. Editor indexes, reports,
+and output are likewise generated artifacts.</p>
 </section>
-<section id="epub-inline-xhtml-fragments">
-<h2>EPUB inline XHTML fragments</h2>
-<p>EPUB source records may contain constrained inline XHTML fragments. Targets must preserve equivalent inline XHTML semantics. A target that drops <code class="docutils literal notranslate"><span class="pre">&lt;em&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;strong&gt;</span></code>, link, span-class, code, superscript/subscript, or other source inline semantics is invalid unless the user explicitly approves a semantic change.</p>
-<p>Translate only human-readable text nodes. Preserve tag names and attributes around the equivalent target-language phrase. Do not replace XHTML with Markdown markers. Do not invent block markup, comments, scripts, styles, or new attributes. Opaque inline elements such as <code class="docutils literal notranslate"><span class="pre">&lt;code&gt;...&lt;/code&gt;</span></code> must stay unchanged.</p>
+<section id="versions-and-reviews">
+<h2>Versions and reviews</h2>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">compare</span></code> and <code class="docutils literal notranslate"><span class="pre">activate</span></code> operate on versions inside one
+profile. Cross-profile comparison is explicit through <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">compare</span></code>
+or judge workflows. Review candidates are stored separately in the nested
+<code class="docutils literal notranslate"><span class="pre">reviews</span></code> data and use <code class="docutils literal notranslate"><span class="pre">R&lt;pass&gt;.&lt;run&gt;</span></code> references. Effective output resolves a
+valid review candidate before the current translation version.</p>
 </section>
-<section id="review-candidates">
-<h2>Review candidates</h2>
-<p>Review candidates are quality-improved targets stored separately from
-translation versions. They live under a separate <code class="docutils literal notranslate"><span class="pre">reviews[]</span></code> array in
-<code class="docutils literal notranslate"><span class="pre">StoredTranslationRecordV2</span></code> and use a separate ref namespace – <code class="docutils literal notranslate"><span class="pre">R&lt;pass&gt;.&lt;run&gt;</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">R1.1</span></code>, <code class="docutils literal notranslate"><span class="pre">R2.1</span></code>) – so they are visibly different from dotted version refs.</p>
-<ul class="simple">
-<li><p><strong>Translation versions</strong> answer: which source/context/model produced the initial target?</p></li>
-<li><p><strong>Review candidates</strong> answer: which quality pass improved or approved that target?</p></li>
-</ul>
-<p>Final output resolves as: <code class="docutils literal notranslate"><span class="pre">active_review</span> <span class="pre">(if</span> <span class="pre">valid)</span> <span class="pre">-&gt;</span> <span class="pre">active_version</span> <span class="pre">-&gt;</span> <span class="pre">missing</span></code>.
-A stale or invalid active review is reported as an error during validation.
-Review candidates are stored under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/reviews/</span></code>.</p>
+<section id="placeholders-and-markdown">
+<h2>Placeholders and Markdown</h2>
+<p>Required placeholders such as <code class="docutils literal notranslate"><span class="pre">__NAME_001__</span></code> and <code class="docutils literal notranslate"><span class="pre">__TAG_001__</span></code> must be
+preserved exactly. Markdown links keep their URLs, code remains opaque, and
+front matter is preserved. Targets must be non-empty and record ids must not
+change.</p>
 </section>
-<section id="revision-provenance">
-<h2>Revision provenance</h2>
-<p><code class="docutils literal notranslate"><span class="pre">translation</span> <span class="pre">revise-record</span></code> and <code class="docutils literal notranslate"><span class="pre">translation</span> <span class="pre">revise-block</span></code> preserve provenance for revised candidates. The commands resolve the current translation version and baseline once, create chapter-scoped context-view snapshots for affected records, and write <code class="docutils literal notranslate"><span class="pre">baseline_ref</span></code>, <code class="docutils literal notranslate"><span class="pre">baseline_sha256</span></code>, <code class="docutils literal notranslate"><span class="pre">context_view_sha256</span></code>, <code class="docutils literal notranslate"><span class="pre">context_view_path</span></code>, and context-note scope metadata to the candidate. Revising an existing candidate at the same version amends that candidate; immutable correction-history references are not part of this contract.</p>
+<section id="epub-inline-xhtml">
+<h2>EPUB inline XHTML</h2>
+<p>EPUB source records may use constrained inline XHTML. Targets preserve the
+same tag names and attributes around translated text nodes. Do not replace
+XHTML with Markdown, add block markup, change opaque inline elements, or invent
+attributes. Validation and build preflight check the inline skeleton and
+opaque-content preservation.</p>
+</section>
+<section id="context-and-provenance">
+<h2>Context and provenance</h2>
+<p><code class="docutils literal notranslate"><span class="pre">context.json</span></code> is authoritative and <code class="docutils literal notranslate"><span class="pre">context.md</span></code> is rendered. Each task stores
+an immutable effective context view under
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context-history/views/&lt;sha&gt;/</span></code>. Translation and review
+revisions retain baseline and context-view provenance. Do not edit the store or
+rendered context manually; use the CLI workflows.</p>
 </section>
 <section id="glossary-phrase-collisions">
 <h2>Glossary phrase collisions</h2>
-<p>When a shorter source term is contained inside a longer configured source
-phrase, enforcement uses only the longest non-shadowed source span. A separate
-standalone occurrence of the shorter term remains active. Do not distort the
-target sentence merely to satisfy the shorter literal target token. Prefer one
-of:</p>
-<ol class="arabic simple">
-<li><p>natural apposition or rephrasing that contains the approved target naturally;</p></li>
-<li><p>a longer source phrase glossary entry, which shadows the shorter entry;</p></li>
-<li><p>an explicit forbidden target for the bad correction pattern.</p></li>
-</ol>
-<p>Example: a binding <code class="docutils literal notranslate"><span class="pre">Mole</span> <span class="pre">Cricket-kinden</span> <span class="pre">-&gt;</span> <span class="pre">Maulwurfsgrillenart</span></code> entry shadows
-<code class="docutils literal notranslate"><span class="pre">Cricket-kinden</span> <span class="pre">-&gt;</span> <span class="pre">Grillenart</span></code> for that contained occurrence, allowing the
-natural German compound. Create the longer decision with <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mandate-term</span></code>.
-Apposition is only a fallback when no longer phrase decision exists.</p>
+<p>Glossary enforcement uses the longest non-shadowed source span. If a shorter
+term occurs inside a longer configured phrase, add the longer phrase or use
+natural apposition rather than forcing an unnatural target token. A standalone
+shorter occurrence remains subject to its own rule.</p>
 </section>
 </section>
 </div>

@@ -219,10 +219,18 @@ ruff<span class="w"> </span>check<span class="w"> </span>.
 mypy<span class="w"> </span>booktx
 </pre></div>
 </div>
-<p>For docs (requires the <code class="docutils literal notranslate"><span class="pre">docs</span></code> extra), build with warnings as errors:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinx-build<span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs<span class="w"> </span>docs/_build/html
+<p>For documentation changes, install the <code class="docutils literal notranslate"><span class="pre">docs</span></code> extra and run the repository’s
+warnings-as-errors check:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_docs_consistency.py<span class="w"> </span>-q
+sphinx-build<span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs<span class="w"> </span>docs/_build/check
+bash<span class="w"> </span>-n<span class="w"> </span>docs/build.sh
+git<span class="w"> </span>diff<span class="w"> </span>--check
 </pre></div>
 </div>
+<p>The same Sphinx check is available as <code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">-C</span> <span class="pre">docs</span> <span class="pre">check</span></code>. For a local HTML
+and optional PDF build after dependencies are installed, run <code class="docutils literal notranslate"><span class="pre">./docs/build.sh</span></code>;
+the script uses the same <code class="docutils literal notranslate"><span class="pre">-W</span></code> warnings-as-errors policy. Generated files stay
+under <code class="docutils literal notranslate"><span class="pre">docs/_build/</span></code> and should not be committed.</p>
 </section>
 <section id="current-test-clusters">
 <h2>Current test clusters</h2>

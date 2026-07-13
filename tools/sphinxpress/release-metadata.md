@@ -171,7 +171,17 @@ nav_tool: sphinxpress
 <div class="sphinxpress-doc">
 <section id="release-metadata">
 <h1>Release metadata</h1>
-<p><code class="docutils literal notranslate"><span class="pre">sphinxpress</span></code> can attach release tags and release URLs to generated navigation data.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sphinxpress</span></code> can attach release tags and release URLs to generated navigation
+data.</p>
+<p>Release metadata and source selection are related but separate:</p>
+<ul class="simple">
+<li><p>release metadata answers “what release label and URL should this target show?”</p></li>
+<li><p>source selection answers “which checkout should Sphinx actually build?”</p></li>
+</ul>
+<p>For versioned site builds, the <code class="docutils literal notranslate"><span class="pre">release</span></code> variant resolves a release tag and
+materializes that exact Git object before running Sphinx. A <code class="docutils literal notranslate"><span class="pre">git_ref</span></code> variant
+resolves an explicit branch, remote ref, or commit SHA and materializes that
+commit separately.</p>
 <p>Supported project strategies are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">manual</span></code>, using the project’s configured <code class="docutils literal notranslate"><span class="pre">release_tag</span></code></p></li>
@@ -185,6 +195,18 @@ nav_tool: sphinxpress
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">update-release</span></code> to set one manual tag and <code class="docutils literal notranslate"><span class="pre">update-releases</span></code> to refresh all resolvable tags.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">git_ref</span></code> variants, the source URL is formatted with
+<code class="docutils literal notranslate"><span class="pre">[release].branch_url_template</span></code>:</p>
+<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[release]</span>
+<span class="n">branch_url_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{repo_url}/tree/{ref}&quot;</span>
+</pre></div>
+</div>
+<p>Versioned builds do not fetch refs or tags automatically. If a configured
+release tag or <code class="docutils literal notranslate"><span class="pre">git_ref</span></code> is missing locally, sphinxpress raises an actionable
+error instead of falling back to the current working tree.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">git_tag</span></code> strategy still uses <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">describe</span> <span class="pre">--tags</span> <span class="pre">--abbrev=0</span></code>, so
+“latest release” means the nearest reachable tag from the checked-out history,
+not a separate semantic-version sort across all tags.</p>
 </section>
 </div>
 {% endraw %}

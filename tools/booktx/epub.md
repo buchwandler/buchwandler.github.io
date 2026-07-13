@@ -171,251 +171,92 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="epub-handling">
 <h1>EPUB handling</h1>
-<p>EPUB support uses two external libraries through booktx adapters:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">epub2text</span></code> for structured extraction</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">text2epub</span></code> for rebuild</p></li>
-</ul>
-<p>The adapter code lives mainly in:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx.epub_io</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx.epub_manifest</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx.build</span></code></p></li>
-</ul>
-<section id="extraction-flow">
-<h2>Extraction flow</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code> calls <code class="docutils literal notranslate"><span class="pre">extract_epub()</span></code>.</p>
-<p>The extraction policy requests:</p>
-<ul class="simple">
-<li><p>raw documents</p></li>
-<li><p>character offsets</p></li>
-<li><p>inline runs</p></li>
-<li><p>no duplicate-title removal</p></li>
-<li><p>no nav document text as translatable prose</p></li>
-<li><p>no pre-segmentation by <code class="docutils literal notranslate"><span class="pre">epub2text</span></code></p></li>
-</ul>
-<p>booktx then:</p>
-<ol class="arabic simple">
-<li><p>maps structured blocks back to raw XHTML offsets</p></li>
-<li><p>protects configured names</p></li>
-<li><p>stores ordered span references</p></li>
-<li><p>converts structured extraction data into a <code class="docutils literal notranslate"><span class="pre">text2epub</span></code> manifest</p></li>
-<li><p>writes <code class="docutils literal notranslate"><span class="pre">.booktx/source-manifest.json</span></code></p></li>
-</ol>
+<p>EPUB support adapts <code class="docutils literal notranslate"><span class="pre">epub2text</span></code> extraction and <code class="docutils literal notranslate"><span class="pre">text2epub</span></code> rebuilding through
+<code class="docutils literal notranslate"><span class="pre">booktx.epub_io</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.epub_manifest</span></code>, and <code class="docutils literal notranslate"><span class="pre">booktx.build</span></code>.</p>
+<section id="extraction">
+<h2>Extraction</h2>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code> records raw document offsets, inline runs, source spans,
+protected names, and navigation metadata in <code class="docutils literal notranslate"><span class="pre">.booktx/source-manifest.json</span></code>.
+Fresh EPUB chunks contain clean block text and name placeholders. The manifest
+also stores the source checksum, text2epub manifest, span references, and
+chapter mapping.</p>
+<p>Re-extract when the source checksum changes or when an old manifest lacks the
+current block annotations. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">chapters</span> <span class="pre">PROJECT</span> <span class="pre">--audit</span></code> reports visible
+TOC entries that are missing, unmapped, or only partially represented by the
+chapter map.</p>
 </section>
-<section id="fresh-epub-chunk-rule">
-<h2>Fresh EPUB chunk rule</h2>
-<p>New EPUB chunks should contain clean block text and <code class="docutils literal notranslate"><span class="pre">__NAME_NNN__</span></code> placeholders only.</p>
-<p>Fresh EPUB extraction must not emit:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>__TAG_NNN__
-__SPANTX_NNNN__
-</pre></div>
-</div>
-<p>If these appear in fresh EPUB chunks, extraction is considered defective. Legacy EPUB projects should be re-extracted after upgrading.</p>
-</section>
-<section id="manifest-v2">
-<h2>Manifest v2</h2>
-<p>EPUB rebuild uses <code class="docutils literal notranslate"><span class="pre">.booktx/source-manifest.json</span></code> version 2.</p>
-<p>The manifest stores:</p>
-<ul class="simple">
-<li><p>source filename</p></li>
-<li><p>source format</p></li>
-<li><p>source and target languages</p></li>
-<li><p>source SHA256</p></li>
-<li><p>chunk count</p></li>
-<li><p>record count</p></li>
-<li><p>EPUB template data</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">text2epub</span></code> extraction manifest</p></li>
-<li><p>span references</p></li>
-<li><p>navigation references</p></li>
-</ul>
-<p>Build rejects legacy EPUB manifests and asks the user to rerun extraction.</p>
-</section>
-<section id="source-checksum">
-<h2>Source checksum</h2>
-<p>EPUB build verifies that the current source EPUB matches the checksum recorded at extraction time.</p>
-<p>If the source changed, rebuild fails. Re-run extraction after intentional source changes.</p>
-</section>
-<section id="identity-build">
-<h2>Identity build</h2>
-<p>The intended gold standard is that pass-through EPUB builds preserve the
-extracted source EPUB bytes by default. Pass-through profiles resolve to a
-fully preserving EPUB output policy and so remain byte-identical.</p>
-<p>Translation profiles, by contrast, apply an EPUB output policy that rewrites
-publication/content language and injects a deterministic hyphenation style
-sheet, so a translated build is <strong>not</strong> expected to be byte-identical to the
-source. See <em>EPUB output-language and hyphenation policy</em> below.</p>
-</section>
-<section id="epub-output-language-and-hyphenation-policy">
-<h2>EPUB output-language and hyphenation policy</h2>
-<p>A translated EPUB build writes the resolved target language to the primary
-OPF <code class="docutils literal notranslate"><span class="pre">dc:language</span></code> and to the <code class="docutils literal notranslate"><span class="pre">lang</span></code>/<code class="docutils literal notranslate"><span class="pre">xml:lang</span></code> of targeted XHTML root
-elements, and injects one deterministic best-effort hyphenation/word-break
-style sheet into eligible reflowable documents. Descendant language
-annotations (for example a quoted passage in another language) are preserved.</p>
-<p>This is a <strong>metadata and author-style correctness</strong> contract, not a promise
-of identical rendering across reading systems. Automatic hyphenation depends
-on the reader and its installed dictionaries; booktx cannot control computed
-style. CSS cascade conflicts (source <code class="docutils literal notranslate"><span class="pre">!important</span></code>, higher-specificity rules,
-or reader styles) are reported as warnings because they can override the
-injected policy.</p>
-<p>Defaults depend on profile kind:</p>
-<ul class="simple">
-<li><p>translation and legacy translation projects default to <code class="docutils literal notranslate"><span class="pre">target</span></code> language
-and <code class="docutils literal notranslate"><span class="pre">auto</span></code> hyphenation;</p></li>
-<li><p>pass-through profiles default to <code class="docutils literal notranslate"><span class="pre">preserve</span></code>/<code class="docutils literal notranslate"><span class="pre">preserve</span></code> (byte-identical
-output).</p></li>
-</ul>
-<p>Override the policy explicitly under <code class="docutils literal notranslate"><span class="pre">[epub_output]</span></code> in the profile (or
-legacy) config:</p>
+<section id="rebuild-and-output-policy">
+<h2>Rebuild and output policy</h2>
+<p>Build verifies the extraction checksum and assembles record targets back into
+manifest spans. The build is transactional: a failed rebuild or output-policy
+audit leaves the last successful output untouched.</p>
+<p>Target translation builds resolve the target language for OPF and XHTML
+metadata and can inject deterministic hyphenation CSS. The policy is configured
+under <code class="docutils literal notranslate"><span class="pre">[epub_output]</span></code>:</p>
 <div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[epub_output]</span>
-<span class="n">language_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;target&quot;</span>
-<span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;de-DE&quot;</span><span class="w">        </span><span class="c1"># required only when language_policy = &quot;explicit&quot;</span>
-<span class="n">hyphenation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="w">      </span><span class="c1"># auto | manual | none | preserve</span>
+<span class="n">language_policy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;target&quot;</span><span class="w">  </span><span class="c1"># target | source | preserve | explicit</span>
+<span class="n">language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;de-DE&quot;</span><span class="w">          </span><span class="c1"># required for explicit</span>
+<span class="n">hyphenation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="w">        </span><span class="c1"># auto | manual | none | preserve</span>
 <span class="n">inject_css</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
 <span class="n">patch_body_language</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">hyphenation</span> <span class="pre">=</span> <span class="pre">&quot;none&quot;</span></code> is the compatibility escape hatch: it disables the
-generated automatic hyphenation when a reader keeps producing bad breaks.</p>
-<p>The build is transactional: a failed policy resolution, rebuild, or audit
-leaves the last successful output untouched. The build report keeps the
-existing top-level keys (<code class="docutils literal notranslate"><span class="pre">changed_entries</span></code>, <code class="docutils literal notranslate"><span class="pre">replacement_count</span></code>,
-<code class="docutils literal notranslate"><span class="pre">unresolved_token_count</span></code>) and adds an <code class="docutils literal notranslate"><span class="pre">epub_output_policy</span></code> object with the
-resolved language, hyphenation mode, patched XHTML count, and warning count.</p>
+<p>The language and CSS policy is deterministic, but actual hyphenation depends on
+the reading system and its dictionaries. <code class="docutils literal notranslate"><span class="pre">hyphenation</span> <span class="pre">=</span> <span class="pre">&quot;none&quot;</span></code> disables the
+generated automatic hyphenation policy. Output reports retain replacement and
+unresolved-token counters and include the resolved EPUB policy and warnings.</p>
+<p>Pass-through profiles are generated reconstruction checks. Compare their
+output with an EPUB diff tool or the repository’s reconstruction tests. The
+documentation does not promise byte identity for an arbitrary EPUB fixture.</p>
 </section>
-<section id="reconstruction-validation">
-<h2>Reconstruction validation</h2>
-<p>To verify that extraction and reconstruction include all content, create a
-pass-through profile that rebuilds the EPUB from source-as-target chunks:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>./book
-booktx<span class="w"> </span>pass-through<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>passthrough_en<span class="w"> </span>--create
-</pre></div>
-</div>
-<p>Then compare the source and rebuilt output byte-for-byte (for the fixture) or
-with an EPUB diff viewer (for real books):</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source/book.epub
-translations/passthrough_en/output/book.en.epub
-</pre></div>
-</div>
+<section id="inline-xhtml-contract">
+<h2>Inline XHTML contract</h2>
+<p>EPUB records with inline markup use <code class="docutils literal notranslate"><span class="pre">source_markup=&quot;epub-inline-xhtml:v1&quot;</span></code>.
+Changed targets are parsed and sanitized by <code class="docutils literal notranslate"><span class="pre">epub_preflight</span></code>, then passed to
+<code class="docutils literal notranslate"><span class="pre">text2epub</span></code> with inline XHTML enabled. Unchanged records use the source fragment
+for identity reconstruction.</p>
+<p>A changed target must:</p>
+<ul class="simple">
+<li><p>preserve the source tag sequence and attributes;</p></li>
+<li><p>change only visible text nodes;</p></li>
+<li><p>preserve opaque elements such as <code class="docutils literal notranslate"><span class="pre">code</span></code>, <code class="docutils literal notranslate"><span class="pre">img</span></code>, <code class="docutils literal notranslate"><span class="pre">svg</span></code>, <code class="docutils literal notranslate"><span class="pre">math</span></code>, and media;</p></li>
+<li><p>avoid comments, processing instructions, scripts, styles, block tags, event
+handlers, new attributes, and new inline elements.</p></li>
+</ul>
+<p>Validation, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span></code>, <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">insert</span></code>, and build use the same
+build-grade preflight. Findings include <code class="docutils literal notranslate"><span class="pre">inline_xhtml_preserved</span></code>,
+<code class="docutils literal notranslate"><span class="pre">inline_xhtml_no_new_attributes</span></code>, <code class="docutils literal notranslate"><span class="pre">inline_xhtml_no_block_tags</span></code>,
+<code class="docutils literal notranslate"><span class="pre">inline_xhtml_opaque_preserved</span></code>, and parse or empty-visible-text errors.
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">audit-inline</span></code> lists stored records requiring attention.</p>
 </section>
-<section id="changed-block-tradeoff">
-<h2>Changed block tradeoff</h2>
-<p>The current EPUB rebuild path replaces changed blocks with escaped translated text for the whole block body.</p>
-<p>This preserves identity builds, but changed blocks can lose inner inline markup such as <code class="docutils literal notranslate"><span class="pre">&lt;strong&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">&lt;em&gt;</span></code> until a future text-run-preserving replacement mode exists.</p>
-</section>
-<section id="chapter-detection">
-<h2>Chapter detection</h2>
-<p>EPUB chapter detection combines several signals rather than trusting a single
-source:</p>
-<ol class="arabic simple">
-<li><p><strong>upstream <code class="docutils literal notranslate"><span class="pre">epub2text</span></code> block chapter annotations</strong> — the authoritative
-source for manifests marked <code class="docutils literal notranslate"><span class="pre">chapter_mapping=&quot;epub2text-block-v1&quot;</span></code>. New
-extractions persist <code class="docutils literal notranslate"><span class="pre">TextBlock.chapter_id</span></code> / <code class="docutils literal notranslate"><span class="pre">chapter_title</span></code> onto each
-span ref and use them even when the set is empty (an authoritative “no
-assignment” result).</p></li>
-<li><p><strong>heading tags</strong> (<code class="docutils literal notranslate"><span class="pre">h1</span></code> through <code class="docutils literal notranslate"><span class="pre">h6</span></code>) that extend a numbered sequence</p></li>
-<li><p><strong>TOC-derived document starts</strong>: when a boundary source is partial and a
-visible contents page links to an extracted XHTML document, the first span
-of that document becomes a chapter boundary</p></li>
-<li><p>a single chapter covering the whole record stream (last resort)</p></li>
-</ol>
-<p>Boundaries are resolved through canonical <code class="docutils literal notranslate"><span class="pre">Record.span_index</span></code> metadata, so a
-multi-sentence block never shifts a chapter start. Old manifests without
-block annotations (<code class="docutils literal notranslate"><span class="pre">chapter_mapping=&quot;legacy&quot;</span></code>) fall back to a conservative
-navigation mapper that ignores fallback/unresolved navigation entries and
-offsets beyond extracted spans; re-extraction is required to gain upstream
-annotations. Detection no longer trusts partial navigation blindly: when a
-boundary source is a strict subset of a strongly chapter-like heading
-sequence, headings complete the map. TOC-derived boundaries are only used
-for documents that were actually extracted, so a truncated/preview EPUB
-never produces empty chapter entries. Relative visible-TOC hrefs are resolved
-against their containing XHTML document (no same-basename collapse).</p>
-<section id="chapter-completeness-audit">
-<h3>Chapter completeness audit</h3>
-<p>A visible contents page can promise more chapters than were extracted or
-detected (for example a preview EPUB, a skipped spine document, or partial
-navigation). The audit compares the visible TOC against extracted spans,
-navigation, and the chapter map:</p>
+<section id="chapter-audit">
+<h2>Chapter audit</h2>
+<p>The chapter map combines upstream block annotations, heading sequences, and
+TOC document boundaries. The audit distinguishes:</p>
+<ul class="simple">
+<li><p>visible TOC chapters;</p></li>
+<li><p>extracted spine documents;</p></li>
+<li><p>chapters covered by the chapter map.</p></li>
+</ul>
+<p>An extracted TOC target with no chapter-map boundary is an error and blocks new
+chapter work. Missing or partial preview navigation is reported as a warning.
+Use:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit
 booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit<span class="w"> </span>--json
+booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
-<p>The audit writes <code class="docutils literal notranslate"><span class="pre">.booktx/reports/chapter-audit.json</span></code> and is also surfaced by
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span></code> for unscoped EPUB runs. Deterministic
-finding codes and severities:</p>
+</section>
+<section id="common-recovery">
+<h2>Common recovery</h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">error</span> <span class="pre">epub_toc_href_extracted_but_unmapped</span></code>: the TOC target has extracted
-spans but no chapter boundary covers it.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">warning</span> <span class="pre">epub_toc_chapter_missing_from_map</span></code>: a numbered TOC entry is not in
-the chapter map.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">warning</span> <span class="pre">epub_toc_href_missing_from_extracted_spans</span></code>: the TOC target has no
-extracted span (truncated/preview EPUB or extraction skip).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">warning</span> <span class="pre">epub_navigation_partial</span></code>: navigation covers fewer numbered chapters
-than visible chapter signals.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">warning</span> <span class="pre">epub_chapter_sequence_gap</span></code>: numbered TOC chapters have gaps.</p></li>
+<li><p>On a legacy manifest, run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span> <span class="pre">./book</span></code> again.</p></li>
+<li><p>On a source checksum mismatch, restore the source or re-extract intentionally.</p></li>
+<li><p>On an unresolved placeholder, repair the submission and validate again.</p></li>
+<li><p>On an inline-XHTML finding, restore the source skeleton and opaque content.</p></li>
+<li><p>On a TOC audit error, inspect the source EPUB rather than synthesizing empty
+chapters.</p></li>
 </ul>
-<p>The chapter map and audit are generated automatically during <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code>:
-<code class="docutils literal notranslate"><span class="pre">extract</span></code> writes <code class="docutils literal notranslate"><span class="pre">.booktx/chapter-map.json</span></code>, runs the audit, writes
-<code class="docutils literal notranslate"><span class="pre">.booktx/reports/chapter-audit.json</span></code>, and prints a one-line warning with the
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">chapters</span> <span class="pre">.</span> <span class="pre">--audit</span></code> hint when findings exist. Extraction stays
-successful for warning-only preview/truncation cases (it is a completeness
-signal, not a policy gate). The chapter-map algorithm is versioned
-(<code class="docutils literal notranslate"><span class="pre">ChapterMap.version</span></code>); a cached map whose version is older than the current
-algorithm is regenerated even when the source SHA is unchanged.</p>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">status</span></code> recomputes the audit summary for the current source rather
-than trusting the persisted report, and shows it when findings exist. New
-chapter/task/todo selection (<code class="docutils literal notranslate"><span class="pre">next</span></code>, <code class="docutils literal notranslate"><span class="pre">next-chapter</span></code>, <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">next</span> <span class="pre">--chapter</span></code>, todo creation) refuses to create new work only on <code class="docutils literal notranslate"><span class="pre">error</span></code> audit
-findings (for example <code class="docutils literal notranslate"><span class="pre">epub_toc_href_extracted_but_unmapped</span></code>); warning-only
-findings remain visible but non-blocking. This keeps the three counts distinct:</p>
-<ul class="simple">
-<li><p><strong>visible-TOC count</strong> — chapters promised by the contents page (audit only).</p></li>
-<li><p><strong>extracted-spine documents</strong> — XHTML documents actually present in the spine.</p></li>
-<li><p><strong>chapter-map count</strong> — chapters booktx will translate.</p></li>
-</ul>
-<p>If the chapter-map count is lower than the visible-TOC count, inspect the
-source rather than trusting the contents page:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>chapters<span class="w"> </span>.<span class="w"> </span>--audit
-booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-<section id="re-extraction-for-upstream-annotations">
-<h3>Re-extraction for upstream annotations</h3>
-<p>Projects extracted before <code class="docutils literal notranslate"><span class="pre">chapter_mapping=&quot;epub2text-block-v1&quot;</span></code> use the
-conservative legacy navigation fallback and do not carry upstream block
-annotations. Re-extract to gain them:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-</section>
-<section id="common-epub-errors">
-<h2>Common EPUB errors</h2>
-<section id="legacy-manifest">
-<h3>Legacy manifest</h3>
-<p>Message:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>This project uses the legacy EPUB extraction format. Re-run `booktx extract` after upgrading.
-</pre></div>
-</div>
-<p>Fix:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>.
-</pre></div>
-</div>
-</section>
-<section id="source-checksum-mismatch">
-<h3>Source checksum mismatch</h3>
-<p>The source EPUB bytes differ from the extraction manifest. Restore the original source or re-extract.</p>
-</section>
-<section id="unresolved-placeholder-in-output-epub">
-<h3>Unresolved placeholder in output EPUB</h3>
-<p>A target likely omitted or changed a placeholder token. Run validation, repair the translated chunk, and rebuild.</p>
-</section>
-</section>
-<section id="inline-xhtml-semantics">
-<h2>Inline XHTML semantics</h2>
-<p>EPUB extraction exposes inline XHTML fragments in record <code class="docutils literal notranslate"><span class="pre">source</span></code> values when the source block contains inline semantics. EPUB records use <code class="docutils literal notranslate"><span class="pre">source_markup=&quot;epub-inline-xhtml:v1&quot;</span></code>. Legacy plain records continue to load as <code class="docutils literal notranslate"><span class="pre">plain:v1</span></code>.</p>
-<p>During rebuild, changed EPUB targets are parsed and sanitized as constrained inline XHTML before <code class="docutils literal notranslate"><span class="pre">text2epub</span></code> receives <code class="docutils literal notranslate"><span class="pre">allow_inline_xhtml=True</span></code>. Identity/pass-through output uses the plain expected source so reconstruction checks remain useful.</p>
 </section>
 </section>
 </div>

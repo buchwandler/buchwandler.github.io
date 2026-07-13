@@ -280,8 +280,8 @@ booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span 
 chapter, fill the <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">chapter-note</span></code> template printed by
 <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">insert</span></code>; do not hand-edit <code class="docutils literal notranslate"><span class="pre">context.md</span></code> for chapter notes.</p>
 <p>If validation flags an old accepted record during a bounded run, use
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translation</span> <span class="pre">revise-record</span> <span class="pre">.</span> <span class="pre">RECORD_ID</span> <span class="pre">--target</span> <span class="pre">&quot;...&quot;</span></code> to fix it.
-Never edit <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> directly.
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">revise-record</span> <span class="pre">.</span> <span class="pre">RECORD_ID</span> <span class="pre">--target</span> <span class="pre">&quot;...&quot;</span></code> to fix it.
+Never edit canonical translation store shards directly.
 That chapter-note append affects the next task’s context view, but it does not
 mint a new dotted version by itself.
 Stop when the todo goal is complete, when <code class="docutils literal notranslate"><span class="pre">todo-status</span></code> says it is complete, or
@@ -297,7 +297,7 @@ mode.</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">sync</span></code> for same-book sibling policy propagation instead of
 copying context files or hand-repeating glossary decisions.</p></li>
 <li><p>Never edit <code class="docutils literal notranslate"><span class="pre">.booktx/chunks/*.json</span></code> directly during normal translation work.</p></li>
-<li><p>Never edit <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code> directly. If validation flags an old accepted record, use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translation</span> <span class="pre">revise-record</span></code> to fix it.</p></li>
+<li><p>Never edit <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> directly. If validation flags an old accepted record, use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">revise-record</span></code> to fix it.</p></li>
 <li><p>Never edit <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/*.json</span></code> directly; use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">export</span></code>.</p></li>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">compare</span></code> for cross-profile review instead of mixing store files manually.</p></li>
 <li><p>Use project-root mode to create or refresh a judge source snapshot. After
@@ -364,7 +364,7 @@ translations, stay at the project root and use the dedicated judge workflow:</p>
 <span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--sources<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--context-from<span class="w"> </span>PROFILE_A<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--model<span class="w"> </span>gpt-5.5
 
 booktx<span class="w"> </span>judge<span class="w"> </span>accept-identical<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>

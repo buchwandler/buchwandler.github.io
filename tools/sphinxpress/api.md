@@ -172,7 +172,7 @@ nav_tool: sphinxpress
 <section id="module-sphinxpress.config">
 <span id="api-reference"></span><h1>API reference</h1>
 <p>Configuration loading and mutation helpers.</p>
-<p id="module-sphinxpress.site_builder">Build Jekyll site output from Sphinx JSON pages.</p>
+<p id="module-sphinxpress.site_builder">Build Jekyll site output from resolved Sphinx JSON pages.</p>
 <p id="module-sphinxpress.book_builder">Create aggregate Sphinx projects for EPUB and PDF output.</p>
 <p id="module-sphinxpress.release">Release metadata helpers.</p>
 </section>

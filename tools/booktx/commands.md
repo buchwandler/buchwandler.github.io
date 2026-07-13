@@ -171,577 +171,227 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="commands">
 <h1>Commands</h1>
-<section id="source-first-setup">
-<h2>Source-first setup</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--source-file<span class="w"> </span>book.epub<span class="w"> </span>--source-lang<span class="w"> </span>en
+<p>This is the human-first CLI reference. Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">guide</span> <span class="pre">PROJECT</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span></code> to get the next lifecycle action for a real project.</p>
+<p>Project-root commands use an explicit <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code> for profile-local
+state. A command run inside <code class="docutils literal notranslate"><span class="pre">translations/PROFILE/</span></code> uses <code class="docutils literal notranslate"><span class="pre">.</span></code> and the validated
+profile marker to resolve that profile.</p>
+<section id="human-lifecycle">
+<h2>Human lifecycle</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--source-file<span class="w"> </span>./book.epub<span class="w"> </span>--source-lang<span class="w"> </span>en
 booktx<span class="w"> </span>extract<span class="w"> </span>./book
+booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit
+booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>MODEL
+booktx<span class="w"> </span>guide<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
-<p>Legacy one-step initialization still works:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--source-file<span class="w"> </span>book.epub<span class="w"> </span>--source-lang<span class="w"> </span>en
-</pre></div>
-</div>
-<p>That creates and selects a default profile such as <code class="docutils literal notranslate"><span class="pre">de_default</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">inspect</span></code> for a read-only pre-extraction estimate and
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">qa-scan</span></code> for advanced target checks. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> is the detailed
+validation command. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">epub</span> <span class="pre">inspect</span></code> is the EPUB output inspection
+surface.</p>
 </section>
-<section id="profile-commands">
-<h2>Profile commands</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>codex-openai/gpt-5.5@low
-booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>./book
+<section id="human-decisions">
+<h2>Human decisions</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--non-interactive
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./book<span class="w"> </span>--write<span class="w"> </span>--sync-profiles
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
+booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
+booktx<span class="w"> </span>context<span class="w"> </span>approve<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>Q001<span class="w"> </span>--text<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span>--approved-by<span class="w"> </span><span class="s2">&quot;user:NAME&quot;</span>
+booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>glossary<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>glossary<span class="w"> </span>mandate<span class="w"> </span>./book<span class="w"> </span><span class="s2">&quot;Empire&quot;</span><span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span>
+booktx<span class="w"> </span>identity<span class="w"> </span><span class="nb">set</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--actor<span class="w"> </span>user:NAME<span class="w"> </span>--harness<span class="w"> </span>codex<span class="w"> </span>--model<span class="w"> </span>MODEL
+</pre></div>
+</div>
+<p>Recommendations and generated questionnaires are not user approval. Stop and
+wait for explicit approval before <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">approve</span></code> and <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>.
+Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">glossary</span></code> for normal terminology decisions. The compatibility
+<code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">*-term</span></code> commands and <code class="docutils literal notranslate"><span class="pre">termbase</span></code> storage commands are advanced surfaces.</p>
+</section>
+<section id="profiles-and-isolation">
+<h2>Profiles and isolation</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>./book
 booktx<span class="w"> </span>profile<span class="w"> </span>show<span class="w"> </span>./book<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>profile<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profiles<span class="w"> </span>PROFILE,PROFILE_B<span class="w"> </span>--record<span class="w"> </span><span class="m">0001</span>-000001
+booktx<span class="w"> </span>profile<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profiles<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span>--record<span class="w"> </span><span class="m">0001</span>-000001
+booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>./book<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>agents<span class="w"> </span>status<span class="w"> </span>./book
 booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>profile<span class="w"> </span>create-pass-through<span class="w"> </span>./book<span class="w"> </span>passthrough_en
 </pre></div>
 </div>
-</section>
-<section id="generated-agents-md-files">
-<h2>Generated AGENTS.md files</h2>
-<p>Before starting an agent harness, write the matching harness instructions:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>.<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-<span class="nb">cd</span><span class="w"> </span>translations/PROFILE
-</pre></div>
-</div>
-<p>For project-root collaboration:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>.<span class="w"> </span>--mode<span class="w"> </span>collaborative
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">agents</span> <span class="pre">status</span> <span class="pre">.</span></code> reports which <code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> files are present and whether
-they are stale, and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">agents</span> <span class="pre">clean</span> <span class="pre">.</span> <span class="pre">--mode</span> <span class="pre">all</span></code> removes only the files
-booktx generated. booktx deletes only <code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> files it generated itself;
-user-authored files are never silently overwritten or removed. In isolated
-profile-root mode, <code class="docutils literal notranslate"><span class="pre">agents</span> <span class="pre">status</span></code>/<code class="docutils literal notranslate"><span class="pre">clean</span></code>/errors expose only the local
-<code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> and never print parent paths, <code class="docutils literal notranslate"><span class="pre">../</span></code>, or sibling profile names.</p>
-</section>
-<section id="context-commands">
-<h2>Context commands</h2>
-<p>All context files are profile-local:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--non-interactive
-booktx<span class="w"> </span>context<span class="w"> </span>questions<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>context<span class="w"> </span>recommend<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>Q001<span class="w"> </span>--text<span class="w"> </span>de-DE<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;profile target locale&quot;</span>
-booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
-<span class="c1"># Stop for user approval, then record the approved answer.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>approve<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>Q001<span class="w"> </span>--text<span class="w"> </span>de-DE<span class="w"> </span>--approved-by<span class="w"> </span><span class="s2">&quot;user:&lt;USER&gt;&quot;</span>
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>context<span class="w"> </span>render<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>chapter-note<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">0010</span><span class="w"> </span>--decision<span class="w"> </span><span class="s2">&quot;Keep title literal&quot;</span>
-
-<span class="c1"># Same-book policy sync across sibling profiles (dry run by default).</span>
-booktx<span class="w"> </span>context<span class="w"> </span>sync<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--all-compatible<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--section<span class="w"> </span>glossary<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--term<span class="w"> </span><span class="s2">&quot;Empire&quot;</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">export-pack</span></code> / <code class="docutils literal notranslate"><span class="pre">import-pack</span></code> move reusable policy between different
-books. <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">sync</span></code> reuses the same merge semantics for sibling profiles
-inside one book project and is rejected in isolated profile-root mode.</p>
-</section>
-<section id="series-setup-commands">
-<h2>Series setup commands</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> for the normal “start the next book in a series”
-workflow:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--source-file<span class="w"> </span>./book5/book5.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-book<span class="w"> </span>./book4<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--series-id<span class="w"> </span>shadows-of-the-apt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Shadows of the Apt German series context&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>zai/glm-5.2@high<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write-termbase<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--termbase-scope<span class="w"> </span>project
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> is dry-run by default. <code class="docutils literal notranslate"><span class="pre">--write</span></code> performs the setup,
-writes <code class="docutils literal notranslate"><span class="pre">.booktx/reports/series-prepare.json</span></code> and <code class="docutils literal notranslate"><span class="pre">.md</span></code>, and stops before
-translation and before automatic <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>.</p>
-<p>Review handoff:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--stdout
-booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>context<span class="w"> </span>render<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>./book5<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-</pre></div>
-</div>
-<p>Pack mode replaces <code class="docutils literal notranslate"><span class="pre">--from-book</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--source-file<span class="w"> </span>./book5/book5.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--pack<span class="w"> </span>./series-context.de.json<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--series-id<span class="w"> </span>shadows-of-the-apt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Shadows of the Apt German series context&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>zai/glm-5.2@high<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-</pre></div>
-</div>
-<p>Write a reusable recipe once, then reuse it for the next book:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>recipe<span class="w"> </span>write<span class="w"> </span>./book5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--series-id<span class="w"> </span>shadows-of-the-apt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Shadows of the Apt German series context&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--output<span class="w"> </span>../shadows-of-the-apt.de.booktx-series.toml
-
-booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book6<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--source-file<span class="w"> </span>./book6/book6.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-book<span class="w"> </span>./book5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--recipe<span class="w"> </span>../shadows-of-the-apt.de.booktx-series.toml<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
+<p>For isolated profile-root work:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/PROFILE
+booktx<span class="w"> </span>mode<span class="w"> </span>.
+booktx<span class="w"> </span>doctor<span class="w"> </span>isolation<span class="w"> </span>.
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>status<span class="w"> </span>.
+booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>.
+booktx<span class="w"> </span>validate<span class="w"> </span>.
+booktx<span class="w"> </span>build<span class="w"> </span>.
 </pre></div>
 </div>
 </section>
-<section id="chapter-detection-and-audit">
-<h2>Chapter detection and audit</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w">                       </span><span class="c1"># detect, persist, and list chapter ranges</span>
-booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit<span class="w">               </span><span class="c1"># audit EPUB TOC vs. extracted spans and map</span>
-booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit<span class="w"> </span>--json<span class="w">        </span><span class="c1"># machine-readable audit output</span>
+<section id="series-and-quality-workflows">
+<h2>Series and quality workflows</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span>--source-file<span class="w"> </span>./book5.epub<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--from-book<span class="w"> </span>./book4<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--series-id<span class="w"> </span>series-id<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Series policy&quot;</span><span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--write
+booktx<span class="w"> </span>series<span class="w"> </span>recipe<span class="w"> </span>write<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--series-id<span class="w"> </span>series-id<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Series policy&quot;</span><span class="w"> </span>--output<span class="w"> </span>./series.toml
+booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>review<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--sources<span class="w"> </span>PROFILE<span class="w"> </span>--model<span class="w"> </span>MODEL
+booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--write
+booktx<span class="w"> </span>judge<span class="w"> </span>prepare-grammar<span class="w"> </span>./book<span class="w"> </span>--source-profile<span class="w"> </span>PROFILE<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--write
+booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">chapters</span></code> refreshes <code class="docutils literal notranslate"><span class="pre">.booktx/chapter-map.json</span></code> and lists each chapter’s
-chunk and record range. <code class="docutils literal notranslate"><span class="pre">--audit</span></code> is EPUB-only and read-only: it compares the
-visible contents page against extracted spans, navigation, and the chapter
-map, then writes <code class="docutils literal notranslate"><span class="pre">.booktx/reports/chapter-audit.json</span></code>. EPUB <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code>
-already generates both files and prints a warning when findings exist; run
-<code class="docutils literal notranslate"><span class="pre">--audit</span></code> for details. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">status</span></code> recomputes the audit summary, and new
-work selection blocks only on <code class="docutils literal notranslate"><span class="pre">error</span></code> findings (warning-only findings stay
-non-blocking).</p>
+<p><code class="docutils literal notranslate"><span class="pre">series</span> <span class="pre">prepare</span></code> stops for the human context review. <code class="docutils literal notranslate"><span class="pre">review</span></code> configures and
+monitors quality passes. <code class="docutils literal notranslate"><span class="pre">judge</span></code> prepares comparison or revision profiles.</p>
 </section>
-<section id="status-and-identity">
-<h2>Status and identity</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>status<span class="w"> </span>./book
-booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>whoami<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>actor<span class="w"> </span>whoami<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>harness<span class="w"> </span>whoami<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>model<span class="w"> </span>whoami<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-</pre></div>
-</div>
-<p>When multiple profiles exist and none is active, target-dependent commands fail
-until you pass <code class="docutils literal notranslate"><span class="pre">--profile</span></code> or select one.</p>
-</section>
-<section id="translation-workflow">
-<h2>Translation workflow</h2>
+<section id="agent-protocol">
+<h2>Agent protocol</h2>
+<p><code class="docutils literal notranslate"><span class="pre">translate</span></code> is the coding-agent task namespace. It is not the normal human
+starting point:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--unit<span class="w"> </span>batch<span class="w"> </span>--max-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--format<span class="w"> </span>block
-booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>translations/PROFILE/ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
-booktx<span class="w"> </span>translate<span class="w"> </span>task-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK
-booktx<span class="w"> </span>translate<span class="w"> </span>set-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--record-id<span class="w"> </span>RECORD_ID<span class="w"> </span>--stdin
-booktx<span class="w"> </span>translation<span class="w"> </span>get-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w"> </span>--before<span class="w"> </span><span class="m">2</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2</span>
-booktx<span class="w"> </span>translation<span class="w"> </span>list<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapter<span class="w"> </span><span class="m">10</span>
-booktx<span class="w"> </span>translation<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w"> </span>--versions<span class="w"> </span><span class="m">1</span>.1,1.2
-booktx<span class="w"> </span>translation<span class="w"> </span>activate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w"> </span><span class="m">1</span>.2
-booktx<span class="w"> </span>translation<span class="w"> </span>review<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w"> </span>--activate<span class="w"> </span><span class="m">1</span>.2<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;Better rhythm&quot;</span>
-booktx<span class="w"> </span>translation<span class="w"> </span>revise-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Revised target text&quot;</span>
-booktx<span class="w"> </span>translation<span class="w"> </span>revise-block<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>ingest/fixes.block.txt<span class="w"> </span>--format<span class="w"> </span>block<span class="w"> </span>--activate
-booktx<span class="w"> </span>translate<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--kind<span class="w"> </span><span class="nb">source</span>
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--kind<span class="w"> </span>target
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--kind<span class="w"> </span>source-target
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-on-warn
-booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w"> </span>--before<span class="w"> </span><span class="m">1</span><span class="w"> </span>--after<span class="w"> </span><span class="m">1</span>
-booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--source<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--jsonl
-booktx<span class="w"> </span>translate<span class="w"> </span>migrate-inline-xhtml<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w">  </span><span class="c1"># normalize inline XHTML in stored targets</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">74</span>@38<span class="w">            </span><span class="c1"># inspect one source record</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>chapter<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">0001</span><span class="w">            </span><span class="c1"># inspect one source chapter</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./book<span class="w">                                     </span><span class="c1"># dry-run translation-risk review queue</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./book<span class="w"> </span>--write<span class="w">                             </span><span class="c1"># write canonical JSON + Markdown review queue</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./book<span class="w"> </span>--write<span class="w"> </span>--sync-profiles<span class="w">             </span><span class="c1"># also refresh profile snapshots</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analysis<span class="w"> </span>./book/translations/PROFILE<span class="w">             </span><span class="c1"># read the current profile snapshot</span>
-booktx<span class="w"> </span>context<span class="w"> </span>prefill<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--from-source-analysis
-booktx<span class="w"> </span>context<span class="w"> </span>prefill<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--from-source-analysis<span class="w"> </span>--include-advisory<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>prefill<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--from-source-analysis<span class="w"> </span>--consolidate-imported-policy<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>promote-candidate<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--as-question<span class="w"> </span>--write
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>ignore-candidate<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;ordinary vocabulary&quot;</span><span class="w"> </span>--write
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>review-candidate<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;checked, no glossary decision needed&quot;</span><span class="w"> </span>--write
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write<span class="w">       </span><span class="c1"># write generated interview ledger</span>
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-if-open
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-answer<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>TARGET<span class="w"> </span>--write
-booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-skip<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--disposition<span class="w"> </span>ignored<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;REASON&quot;</span><span class="w"> </span>--write
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">analyze</span></code> is project-root only and does not write unless <code class="docutils literal notranslate"><span class="pre">--write</span></code> is
-provided. Its JSON report is authoritative; Markdown is a generated review
-queue. The default output is a translation-risk review surface, not a bulk
-glossary prefill. Profile-root mode can only read its own generated snapshot
-with <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">analysis</span></code>; if the snapshot is missing, rerun project-root
-analysis with <code class="docutils literal notranslate"><span class="pre">--write</span> <span class="pre">--sync-profiles</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">prefill</span> <span class="pre">--from-source-analysis</span> <span class="pre">--gate-readiness</span></code> creates required questions for readiness-gated workflows.</p>
-<p><code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">prefill</span> <span class="pre">--from-source-analysis</span></code> is dry-run by default and now creates
-review questions for binding/name/rare candidates instead of open glossary
-entries. Advisory glossary entries stay opt-in behind <code class="docutils literal notranslate"><span class="pre">--include-advisory</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">export</span></code> writes store-backed accepted translations as legacy-compatible chunk files under <code class="docutils literal notranslate"><span class="pre">translated/</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">export-index</span></code> writes three generated editor QA indexes under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>: <code class="docutils literal notranslate"><span class="pre">source-index.json</span></code> (source text only), <code class="docutils literal notranslate"><span class="pre">target-index.json</span></code> (target text only), and <code class="docutils literal notranslate"><span class="pre">source-target-index.json</span></code> (slim side-by-side view). Use <code class="docutils literal notranslate"><span class="pre">--kind</span> <span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">--kind</span> <span class="pre">target</span></code>, or <code class="docutils literal notranslate"><span class="pre">--kind</span> <span class="pre">source-target</span></code> (repeatable) to write only selected kinds. <code class="docutils literal notranslate"><span class="pre">--fail-on-warn</span></code> blocks target-based indexes on warnings. <code class="docutils literal notranslate"><span class="pre">--json</span></code> prints the summary as JSON. All three files are generated artifacts safe to delete and regenerate. They never contain canonical state and must not be used as build input.</p>
-<p>Profile-root mode works without <code class="docutils literal notranslate"><span class="pre">--profile</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/de_default
-booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>.
-rg<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w"> </span>target-index.json
-nvim<span class="w"> </span>source-target-index.json
-</pre></div>
-</div>
-</section>
-<section id="bounded-agent-runs">
-<h2>Bounded agent runs</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--write
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--max-run-words<span class="w"> </span><span class="m">12000</span><span class="w"> </span>--write<span class="w"> </span>--json
+booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>translations/PROFILE/ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
+booktx<span class="w"> </span>translate<span class="w"> </span>lint-block<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
+booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--write
 booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--todo-id<span class="w"> </span>TODO<span class="w"> </span>--json
 booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest<span class="w"> </span>--format<span class="w"> </span>block
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--todo-id<span class="w"> </span>TODO<span class="w"> </span>--format<span class="w"> </span>block
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--skip-current<span class="w"> </span>--write
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--start-chapter<span class="w"> </span><span class="m">0017</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--write
+booktx<span class="w"> </span>translate<span class="w"> </span>get-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--json
+booktx<span class="w"> </span>translate<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--versions<span class="w"> </span><span class="m">1</span>.1,1.2
+booktx<span class="w"> </span>translate<span class="w"> </span>revise-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Revised target&quot;</span>
+booktx<span class="w"> </span>translate<span class="w"> </span>revise-block<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>ingest/fixes.block.txt<span class="w"> </span>--format<span class="w"> </span>block<span class="w"> </span>--activate
+booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w"> </span>--before<span class="w"> </span><span class="m">1</span><span class="w"> </span>--after<span class="w"> </span><span class="m">1</span>
 </pre></div>
 </div>
-<p>Creates a durable todo under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/todos/</span></code> that describes the
-bounded run: chapters to complete, per-task word budget, advisory run budget,
-and stop conditions. The agent reads the todo markdown and follows
-<code class="docutils literal notranslate"><span class="pre">todo-status</span> <span class="pre">-&gt;</span> <span class="pre">todo-resume</span> <span class="pre">-&gt;</span> <span class="pre">insert</span> <span class="pre">-&gt;</span> <span class="pre">check</span> <span class="pre">--chapter</span> <span class="pre">CHAPTER</span></code> until
-complete or a stop condition fires. Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span> <span class="pre">--fail-on-warnings</span></code>
-for the final pre-build check only. This is NOT a translation submission; the
-agent still fills ingest files and runs <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">insert</span></code> for each batch.
-<code class="docutils literal notranslate"><span class="pre">--max-run-words</span></code> is advisory only.</p>
+<p>The agent workflow requires approved context, bounded tasks, unchanged record
+headers, and preserved placeholders. It must not edit the store directly.
+Agent-only review and judge task commands are documented in
+<a class="reference internal" href="../agent-workflow/"><span class="std std-doc">agent workflow</span></a>.</p>
 </section>
-<section id="version-commands">
-<h2>Version commands</h2>
-<p>Versions are profile-local:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>version<span class="w"> </span>current<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>version<span class="w"> </span>list<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>version<span class="w"> </span>show<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">1</span>.2
-booktx<span class="w"> </span>version<span class="w"> </span><span class="k">select</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">1</span>.2
-booktx<span class="w"> </span>version<span class="w"> </span>set-label<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">&quot;GPT 5.5&quot;</span>
-booktx<span class="w"> </span>version<span class="w"> </span>fork-context<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--note<span class="w"> </span><span class="s2">&quot;Manual context split&quot;</span>
+<section id="advanced-and-maintenance-surfaces">
+<h2>Advanced and maintenance surfaces</h2>
+<p>These commands are intentionally separate from the human happy path:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>version current/list/show/select/set-label/fork-context
+whoami
+mode
+inspect
+qa-scan
+termbase status/add/validate-entry/export/import/scan-source/audit/
+  promote-candidate/promote-context/write-review
+translate export/export-index/list/activate/review/set-record/
+  import-legacy/migrate-store/audit-inline/migrate-inline-xhtml/task-status
+judge sync-sources/next/continue/record/show/insert/reset-ingest/
+  accept-identical/sweep-identical/prefill-policy-fixes/finish-chapter-plan
+context doctor/render/audit-term/export-pack/import-pack/sync/recommend/answer/import-md
+source record/chapter
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">version</span> <span class="pre">list</span></code> now reports baseline-scoped subversions. Routine chapter-note
-appends keep the same dotted version; baseline policy changes create or select
-the next subversion. <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">next</span></code> task output also includes baseline and
-context-view metadata for the immutable task snapshot it created.</p>
+<p>Use the matching <code class="docutils literal notranslate"><span class="pre">--help</span></code> output before running an advanced or maintenance
+command. The old top-level <code class="docutils literal notranslate"><span class="pre">translation</span></code>, <code class="docutils literal notranslate"><span class="pre">model</span></code>, <code class="docutils literal notranslate"><span class="pre">actor</span></code>, and <code class="docutils literal notranslate"><span class="pre">harness</span></code>
+namespaces are not part of the current CLI.</p>
 </section>
-<section id="validate-and-build">
-<h2>Validate and build</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-on-warnings
-booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0005</span>
-booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK_ID
-booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--require-complete
+<section id="public-human-command-paths">
+<h2>Public human command paths</h2>
+<blockquote>
+<div><p>The following paths are part of the current Typer tree. Use <code class="docutils literal notranslate"><span class="pre">--help</span></code> to
+confirm arguments and flags before copying an example.</p>
+</div></blockquote>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>booktx agents
+booktx agents clean
+booktx agents status
+booktx agents write
+booktx build
+booktx chapters
+booktx check
+booktx context
+booktx context add-question
+booktx context add-term
+booktx context approve
+booktx context audit-term
+booktx context chapter-note
+booktx context doctor
+booktx context export-pack
+booktx context import-pack
+booktx context init
+booktx context mandate-term
+booktx context mark-ready
+booktx context prefill
+booktx context promote-candidate
+booktx context questionnaire
+booktx context questions
+booktx context remove-term
+booktx context render
+booktx context reset-term
+booktx context status
+booktx context sync
+booktx doctor isolation
+booktx epub
+booktx epub extract-text
+booktx epub grep
+booktx epub inspect
+booktx extract
+booktx glossary
+booktx glossary add
+booktx glossary audit
+booktx glossary export
+booktx glossary import
+booktx glossary mandate
+booktx glossary remove
+booktx glossary reset
+booktx glossary status
+booktx guide
+booktx identity
+booktx identity clear
+booktx identity set
+booktx init
+booktx inspect
+booktx judge
+booktx judge create-profile
+booktx judge prepare-grammar
+booktx judge prepare-isolation
+booktx judge status
+booktx profile
+booktx profile compare
+booktx profile create
+booktx profile list
+booktx profile show
+booktx qa-scan
+booktx review
+booktx review configure
+booktx review status
+booktx series
+booktx series prepare
+booktx series recipe
+booktx series recipe write
+booktx source
+booktx source analysis
+booktx source analyze
+booktx source ignore-candidate
+booktx source interview-answer
+booktx source interview-next
+booktx source interview-plan
+booktx source interview-skip
+booktx source interview-status
+booktx source review-candidate
+booktx source status
+booktx status
+booktx validate
+booktx version
+booktx version current
+booktx version list
+booktx version show
+booktx whoami
+booktx translate
+booktx termbase
+booktx pass-through
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">--chapter</span></code> and <code class="docutils literal notranslate"><span class="pre">--task-id</span></code> scope validation to a specific chapter or task.
-Use <code class="docutils literal notranslate"><span class="pre">--json</span></code> for machine-readable output.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--fail-on-warnings</span></code> keeps default validate behavior unchanged unless you opt
-into warning-fatal automation.</p>
-</section>
-<section id="qa-scan-and-epub-inspection">
-<h2>QA scan and EPUB inspection</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>qa-scan<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w">            </span><span class="c1"># targeted QA scan of translated targets</span>
-booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w">          </span><span class="c1"># inspect built EPUB XHTML output</span>
-booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--contains<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span>
-booktx<span class="w"> </span>epub<span class="w"> </span>grep<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w">   </span><span class="c1"># grep built EPUB XHTML for text</span>
-booktx<span class="w"> </span>epub<span class="w"> </span>extract-text<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w">     </span><span class="c1"># extract plain text from built EPUB XHTML</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">qa-scan</span></code> runs targeted quality checks (glossary/forbidden-term/regex) over
-effective translated targets without a full validate run. The <code class="docutils literal notranslate"><span class="pre">epub</span></code>
-commands read the profile-local <code class="docutils literal notranslate"><span class="pre">output/</span></code> directory produced by <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">build</span></code>; run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">build</span> <span class="pre">.</span></code> first if <code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">EPUB</span> <span class="pre">output</span> <span class="pre">directory</span></code> is reported.</p>
-</section>
-<section id="translation-preference-dictionary-termbase">
-<h2>Translation preference dictionary / termbase</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>termbase<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>termbase<span class="w"> </span>add<span class="w"> </span>--scope<span class="w"> </span>global<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--id<span class="w"> </span>LEX-MOULDY<span class="w"> </span>--source<span class="w"> </span><span class="s2">&quot;mouldy principles&quot;</span><span class="w"> </span>--preferred<span class="w"> </span><span class="s2">&quot;schäbige Prinzipien&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;schimmligen Prinzipien&quot;</span><span class="w"> </span>--approve
-booktx<span class="w"> </span>termbase<span class="w"> </span>scan-source<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--jsonl
-booktx<span class="w"> </span>termbase<span class="w"> </span>audit<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--jsonl
-booktx<span class="w"> </span>termbase<span class="w"> </span>write-review<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--pass<span class="w"> </span><span class="m">1</span>
-booktx<span class="w"> </span>termbase<span class="w"> </span>promote-context<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--entry<span class="w"> </span>LEX-MOULDY<span class="w"> </span>--as-question
-booktx<span class="w"> </span>termbase<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--scope<span class="w"> </span>global<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--output<span class="w"> </span>./termbase-de.json
-booktx<span class="w"> </span>termbase<span class="w"> </span>import<span class="w"> </span>--scope<span class="w"> </span>global<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--input<span class="w"> </span>./termbase-de.json<span class="w"> </span>--mode<span class="w"> </span>merge
-</pre></div>
-</div>
-<p>Use the termbase for recurring word-sense preferences, literalism traps, and
-cross-book lexical habits that should only appear in prompts when the source
-cue actually matches the selected records. Do <strong>not</strong> use it as a replacement
-for the glossary: names, invented terms, and mandatory enforced terminology
-still belong in <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">...</span></code>.</p>
-<p>Resolution order is deterministic:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>global base &lt; global locale &lt; project base &lt; project locale &lt; profile base &lt; profile locale
-</pre></div>
-</div>
-<p>Higher-precedence entries with the same id replace lower entries wholesale, and
-<code class="docutils literal notranslate"><span class="pre">status=disabled</span></code> acts as a tombstone. Only approved effective entries
-participate in source matching, task prompts, or audits.</p>
-<p>In isolated profile-root mode, read-only termbase commands and profile-scope
-writes work without <code class="docutils literal notranslate"><span class="pre">--profile</span></code>, but global/project mutations remain blocked.
-Global path output is redacted to <code class="docutils literal notranslate"><span class="pre">~</span></code> or <code class="docutils literal notranslate"><span class="pre">$BOOKTX_TERMBASE_DIR/...</span></code>.</p>
-</section>
-<section id="check-scoped-build-preflight-validation">
-<h2><code class="docutils literal notranslate"><span class="pre">check</span></code> – scoped build-preflight validation</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0005</span><span class="w"> </span>--fail-on-warnings
-booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK_ID<span class="w"> </span>--json
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">check</span></code> is a human-friendly alias for scoped validation + EPUB inline-XHTML
-preflight. It defaults to <code class="docutils literal notranslate"><span class="pre">--fail-on-warnings</span></code>. Use it after each chapter
-translation and before build.</p>
-<p>Outputs land under:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>translations/&lt;profile&gt;/reports/
-translations/&lt;profile&gt;/output/
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">--epub-output</span></code> audits the existing expected EPUB output path against the
-resolved EPUB output policy <strong>without building or modifying it</strong>. It errors
-clearly when no output exists and emits the same findings in text and JSON
-modes. Use it after a build to confirm the output’s language contract and
-review reported CSS cascade conflicts:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--epub-output<span class="w"> </span>--json
-</pre></div>
-</div>
-</section>
-<section id="pass-through-validation">
-<h2>Pass-through validation</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">pass-through</span></code> generates source-as-target translated chunks from the
-extracted source chunks, validates complete coverage, and rebuilds the output.
-It is a reconstruction fixture, not a translation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>pass-through<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>passthrough_en<span class="w"> </span>--create
-booktx<span class="w"> </span>pass-through<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>passthrough_en<span class="w"> </span>--no-build
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--profile</span></code> is always required. Use <code class="docutils literal notranslate"><span class="pre">--clear-store</span></code> only when reusing a
-pass-through profile that has stray store records. Compare the rebuilt output
-against the source with an EPUB diff viewer.</p>
-</section>
-<section id="json-output-for-machine-consumers">
-<h2>JSON output for machine consumers</h2>
-<p>Most read commands accept <code class="docutils literal notranslate"><span class="pre">--json</span></code>. Examples:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>./book<span class="w"> </span>--json
-booktx<span class="w"> </span>profile<span class="w"> </span>show<span class="w"> </span>./book<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>whoami<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
-booktx<span class="w"> </span>version<span class="w"> </span>show<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="m">1</span>.2<span class="w"> </span>--json
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">list</span></code>/<code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">show</span></code>/<code class="docutils literal notranslate"><span class="pre">whoami</span></code> report the live identity from
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/identity.json</span></code>, so they stay consistent after
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">model</span> <span class="pre">set</span></code>, <code class="docutils literal notranslate"><span class="pre">actor</span> <span class="pre">set</span></code>, or <code class="docutils literal notranslate"><span class="pre">harness</span> <span class="pre">set</span></code>.</p>
-</section>
-<section id="context-question-lifecycle">
-<h2>Context question lifecycle</h2>
-<p>Questions start as <code class="docutils literal notranslate"><span class="pre">open</span></code>. Agents may store draft defaults with <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">recommend</span></code>, which sets <code class="docutils literal notranslate"><span class="pre">recommended</span></code> but does not answer the question or change style policy. User-approved decisions are recorded with <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">approve</span></code>, which stores <code class="docutils literal notranslate"><span class="pre">answer_source=user</span></code>, approval metadata, and applies style updates. Required dynamic questions can be added with <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">add-question</span> <span class="pre">--required</span></code> after source review. Use <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">questionnaire</span> <span class="pre">--stdout</span></code> to show a user-facing approval form. <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span> <span class="pre">--force</span> <span class="pre">--reason</span> <span class="pre">...</span></code> is only for emergency or migration cases.</p>
-</section>
-<section id="review-commands-booktx-review">
-<h2>Review commands (<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span></code>)</h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">configure</span> <span class="pre">.</span> <span class="pre">--show</span></code> – show current quality review config</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">configure</span> <span class="pre">.</span> <span class="pre">--enable</span> <span class="pre">--pass</span> <span class="pre">1</span> <span class="pre">--name</span> <span class="pre">&quot;Flow</span> <span class="pre">review&quot;</span> <span class="pre">--mode</span> <span class="pre">manual</span> <span class="pre">--enforce</span> <span class="pre">warn</span></code> – enable review with one pass (see <code class="docutils literal notranslate"><span class="pre">docs/profiles.md</span></code> for all flags)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">configure</span> <span class="pre">.</span> <span class="pre">--disable</span></code> – disable quality review entirely</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">status</span> <span class="pre">.</span></code> – report review coverage by pass (eligible/reviewed/missing/stale/blocked); JSON includes <code class="docutils literal notranslate"><span class="pre">next_command</span></code>, <code class="docutils literal notranslate"><span class="pre">first_missing_record</span></code>, <code class="docutils literal notranslate"><span class="pre">first_missing_chapter</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">next</span> <span class="pre">.</span> <span class="pre">--pass</span> <span class="pre">1</span></code> – create the next durable review task for a pass; supports <code class="docutils literal notranslate"><span class="pre">--selection</span> <span class="pre">missing|stale|reviewed|all|changed-base</span></code> and <code class="docutils literal notranslate"><span class="pre">--base</span> <span class="pre">active_translation|active_review|pass:N</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">next</span> <span class="pre">.</span> <span class="pre">--pass</span> <span class="pre">1ion</span> <span class="pre">reviewed</span> <span class="pre">--base</span> <span class="pre">active_review</span></code> – rerun a pass over already-reviewed records, creating <code class="docutils literal notranslate"><span class="pre">R1.2</span></code> from <code class="docutils literal notranslate"><span class="pre">R1.1</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">insert</span> <span class="pre">.</span> <span class="pre">--review-task-id</span> <span class="pre">TASK</span> <span class="pre">--file</span> <span class="pre">reviews/TASK.block.txt</span> <span class="pre">--format</span> <span class="pre">block</span></code> – parse and accept a review submission</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">activate</span> <span class="pre">.</span> <span class="pre">RECORD</span> <span class="pre">R1.2</span></code> – manually activate an existing review candidate for a record</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">deactivate</span> <span class="pre">.</span> <span class="pre">RECORD</span></code> – deactivate the active review, falling back to the active translation version</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">revise-record</span> <span class="pre">.</span> <span class="pre">RECORD</span> <span class="pre">--base-review</span> <span class="pre">R1.2</span> <span class="pre">--stdin</span></code> – revise an accepted review candidate by creating a new same-pass rerun</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">todo-next</span> <span class="pre">.</span> <span class="pre">--passes</span> <span class="pre">1</span> <span class="pre">--chapters</span> <span class="pre">2</span> <span class="pre">--batch-words</span> <span class="pre">900</span> <span class="pre">--write</span></code> – create a bounded multi-pass review todo over chapters with review gaps (profile-local <code class="docutils literal notranslate"><span class="pre">review-todos/</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">todo-status</span> <span class="pre">.</span> <span class="pre">--review-todo-id</span> <span class="pre">TODO</span></code> – report progress for a durable review todo (remaining chapters/passes)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">todo-resume</span> <span class="pre">.</span> <span class="pre">--review-todo-id</span> <span class="pre">TODO</span> <span class="pre">--format</span> <span class="pre">block</span></code> – emit the next review block for a durable review todo</p></li>
-</ul>
-<p>Enable quality review via CLI (preferred) or TOML:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>.<span class="w"> </span>--enable<span class="w"> </span>--pass<span class="w"> </span><span class="m">1</span><span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Flow review&quot;</span><span class="w"> </span>--mode<span class="w"> </span>manual<span class="w"> </span>--enforce<span class="w"> </span>warn
-</pre></div>
-</div>
-</section>
-<section id="judge-commands-booktx-judge">
-<h2>Judge commands (<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span></code>)</h2>
-<p>Use project-root mode to create or refresh a judge source snapshot. After
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">sync-sources</span></code> or <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">prepare-isolation</span></code>, a selection
-profile may run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">status/next/record/insert</span></code> from its profile root
-without sibling profile access.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--purpose</span> <span class="pre">compare</span></code> (the default) builds a multi-source selection profile.
-<code class="docutils literal notranslate"><span class="pre">--purpose</span> <span class="pre">revise</span></code> builds a single-source revision profile that requires an
-explicit copy or edited judge decision for every record; the deterministic
-commands <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code>, <code class="docutils literal notranslate"><span class="pre">sweep-identical</span></code>, and <code class="docutils literal notranslate"><span class="pre">prefill-policy-fixes</span></code> are
-disabled there. See <em>Single-source judge revision profiles</em> in
-<code class="docutils literal notranslate"><span class="pre">docs/profiles.md</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">create-profile</span></code> also accepts:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--revision-focus general|grammar
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">general</span></code> for the existing broad revise contract. Use <code class="docutils literal notranslate"><span class="pre">grammar</span></code> when you
-want an isolated single-source grammar-fix run that freezes established
-wording, terminology, names, tone, and register while still requiring an
-explicit decision for every record.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE,PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--context-from<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--purpose<span class="w"> </span>compare
-
-booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE_GRAMMAR<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--context-from<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.6<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--purpose<span class="w"> </span>revise<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--revision-focus<span class="w"> </span>grammar
-
-booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--sources<span class="w"> </span>PROFILE,PROFILE_B
-
-booktx<span class="w"> </span>judge<span class="w"> </span>accept-identical<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE,PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--unit<span class="w"> </span>chapter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--max-records<span class="w"> </span><span class="m">100</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-
-booktx<span class="w"> </span>judge<span class="w"> </span>next<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE,PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--unit<span class="w"> </span>chapter<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--max-records<span class="w"> </span><span class="m">8</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--format<span class="w"> </span>decisions
-
-booktx<span class="w"> </span>judge<span class="w"> </span>record<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE,PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--record<span class="w"> </span><span class="m">0001</span>-000001<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--format<span class="w"> </span>decisions
-
-booktx<span class="w"> </span>judge<span class="w"> </span>insert<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--file<span class="w"> </span>translations/JUDGE_PROFILE/judge-ingest/TASK.decisions.txt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--format<span class="w"> </span>decisions
-
-booktx<span class="w"> </span>judge<span class="w"> </span>reset-ingest<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--format<span class="w"> </span>decisions<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-</pre></div>
-</div>
-<section id="prepare-isolation-project-root">
-<h3>Prepare isolation (project-root)</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>sync-sources<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--write
-booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--write
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">sync-sources</span></code> copies source candidate stores into an immutable profile-local snapshot. <code class="docutils literal notranslate"><span class="pre">prepare-isolation</span></code> syncs and writes judge-specific <code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code>. Both are dry-run by default; pass <code class="docutils literal notranslate"><span class="pre">--write</span></code> to publish.</p>
-</section>
-<section id="isolated-judge-workflow-profile-root">
-<h3>Isolated judge workflow (profile root)</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/JUDGE_PROFILE
-booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>.
-booktx<span class="w"> </span>judge<span class="w"> </span>accept-identical<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>chapter<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--max-records<span class="w"> </span><span class="m">100</span><span class="w"> </span>--write
-booktx<span class="w"> </span>judge<span class="w"> </span>next<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>chapter<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--max-records<span class="w"> </span><span class="m">8</span><span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>judge<span class="w"> </span>insert<span class="w"> </span>.<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>judge-ingest/TASK.decisions.txt<span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>judge<span class="w"> </span>reset-ingest<span class="w"> </span>.<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--format<span class="w"> </span>decisions<span class="w"> </span>--write
-booktx<span class="w"> </span>judge<span class="w"> </span><span class="k">continue</span><span class="w"> </span>.<span class="w"> </span>--max-records<span class="w"> </span><span class="m">8</span>
-</pre></div>
-</div>
-<p>For <code class="docutils literal notranslate"><span class="pre">decision_kind:</span> <span class="pre">copy</span></code>, leave <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> empty; booktx copies the selected
-candidate exactly. Only <code class="docutils literal notranslate"><span class="pre">edited</span></code> decisions require a non-empty <code class="docutils literal notranslate"><span class="pre">TARGET</span></code>.</p>
-<p>For revise profiles, do <strong>not</strong> use <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code>; it is valid only in
-compare mode. In <code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">status</span> <span class="pre">.</span></code> reports the
-revision focus plus copy/edited counts and edit rate so model runs can be
-compared without adding a separate reporting command.</p>
-</section>
-</section>
-<section id="glossary-repair-and-chapter-note-reset">
-<h2>Glossary repair and chapter note reset</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Replace forbidden targets (full replacement, not append).</span>
-booktx<span class="w"> </span>context<span class="w"> </span>add-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Empire&quot;</span>
-
-<span class="c1"># Append forbidden targets explicitly.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>add-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--append-forbid<span class="w"> </span><span class="s2">&quot;Kaiserreich&quot;</span>
-
-<span class="c1"># Clear all forbidden targets.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>add-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--clear-forbidden
-
-<span class="c1"># Remove a wrong glossary entry.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>remove-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span>
-booktx<span class="w"> </span>context<span class="w"> </span>remove-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--missing-ok
-
-<span class="c1"># Reset one entry atomically.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>reset-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Empire&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--category<span class="w"> </span><span class="s2">&quot;concept&quot;</span><span class="w"> </span>--enforce<span class="w"> </span>error
-
-<span class="c1"># Replace an entire chapter note.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>chapter-note<span class="w"> </span>.<span class="w"> </span><span class="m">0006</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--replace-all<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;TWO&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--source-summary<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--translation-summary<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--decision<span class="w"> </span><span class="s2">&quot;Keep Apt&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--open-issue<span class="w"> </span><span class="s2">&quot;Check title rendering&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="series-context-packs">
-<h2>Series context packs</h2>
-<p>Context is normally profile-local. Series-wide consistency is achieved by
-importing an explicit context pack, not by sharing profile state. A pack
-carries only reusable policy (style, global rules, glossary entries, approved
-reusable question answers); it never carries records, candidates, tasks,
-todos, stores, ledgers, identity, chapter contexts, or source state.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export from an approved profile context (dry-run-safe; refuses overwrite</span>
-<span class="c1"># without --force; requires ready unless --allow-not-ready).</span>
-booktx<span class="w"> </span>context<span class="w"> </span>export-pack<span class="w"> </span>./book1<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--series-id<span class="w"> </span>shadows-of-apt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Shadows of the Apt / German policy&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--output<span class="w"> </span>./shadows-of-apt.en-de.booktx-context-pack.json
-
-<span class="c1"># Import into another book&#39;s profile. Dry run by default; --write commits.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>import-pack<span class="w"> </span>./book2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--file<span class="w"> </span>./shadows-of-apt.en-de.booktx-context-pack.json
-
-booktx<span class="w"> </span>context<span class="w"> </span>import-pack<span class="w"> </span>./book2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--file<span class="w"> </span>./shadows-of-apt.en-de.booktx-context-pack.json<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-</pre></div>
-</div>
-<p>Import never mutates profile config, source state, identity, stores,
-ledgers, or tasks. When policy changes it clears readiness and regenerates
-<code class="docutils literal notranslate"><span class="pre">context.md</span></code>; run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">mark-ready</span></code> again after approval. Conflicts
-are reported as findings and can be resolved with <code class="docutils literal notranslate"><span class="pre">--conflict</span> <span class="pre">fail|keep-local|replace</span></code>. A task created before a binding glossary import is
-rejected by the existing stale-policy guard; create a fresh task to use the
-imported policy. In profile-root isolated mode, pack input and output paths
-must resolve inside the current profile root.</p>
-</section>
-<section id="terminology-search-and-correction-blocks">
-<h2>Terminology search and correction blocks</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translation</span> <span class="pre">search</span></code> supports <code class="docutils literal notranslate"><span class="pre">--match</span> <span class="pre">any</span></code> (default, compatibility) and <code class="docutils literal notranslate"><span class="pre">--match</span> <span class="pre">all</span></code> for requiring every populated positive group, plus <code class="docutils literal notranslate"><span class="pre">--source-regex</span></code>, <code class="docutils literal notranslate"><span class="pre">--target-regex</span></code>, <code class="docutils literal notranslate"><span class="pre">--exclude-source</span></code>, <code class="docutils literal notranslate"><span class="pre">--exclude-source-regex</span></code>, and <code class="docutils literal notranslate"><span class="pre">--write-block</span> <span class="pre">ingest/name.block.txt</span></code>. Generated correction blocks are editable target-only blocks suitable for <code class="docutils literal notranslate"><span class="pre">translation</span> <span class="pre">revise-block</span></code>; the companion <code class="docutils literal notranslate"><span class="pre">.sources.txt</span></code> file is reference-only.</p>
-<p>In isolated profile-root mode, generated and submitted block paths must be profile-local relative paths. Absolute paths, <code class="docutils literal notranslate"><span class="pre">..</span></code> traversal, and escaping paths are rejected.</p>
-<section id="context-pack-termbase-import">
-<h3>Context pack termbase import</h3>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">import-pack</span></code> is dry-run by default. <code class="docutils literal notranslate"><span class="pre">--write</span></code> commits context changes. Pack termbase entries are not written unless <code class="docutils literal notranslate"><span class="pre">--write-termbase</span></code> is also supplied, for example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>import-pack<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE_B<span class="w"> </span>--file<span class="w"> </span>series-context.de.json<span class="w"> </span>--write<span class="w"> </span>--write-termbase<span class="w"> </span>--termbase-scope<span class="w"> </span>project
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">termbase</span> <span class="pre">status</span> <span class="pre">BOOK</span> <span class="pre">--profile</span> <span class="pre">PROFILE_B</span> <span class="pre">--scope</span> <span class="pre">effective</span></code> after import. Existing tasks created before context or termbase changes can be stale; create fresh tasks after policy changes.</p>
-</section>
-<section id="source-analysis-candidate-to-termbase">
-<h3>Source-analysis candidate to termbase</h3>
-<p>Promote a reviewed source-analysis candidate without hand-editing JSON:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>termbase<span class="w"> </span>promote-candidate<span class="w"> </span>./book<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--scope<span class="w"> </span>profile<span class="w"> </span>--preferred<span class="w"> </span><span class="s2">&quot;TARGET&quot;</span><span class="w"> </span>--preferred-policy<span class="w"> </span>required<span class="w"> </span>--severity<span class="w"> </span>error<span class="w"> </span>--approve<span class="w"> </span>--write
-</pre></div>
-</div>
-</section>
 </section>
 </section>
 </div>

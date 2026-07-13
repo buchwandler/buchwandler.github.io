@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Wrap generated sphinxpress page bodies in Liquid raw tags for Jekyll 3."""
+"""Wrap generated sphinxpress page bodies in Liquid raw tags for Jekyll 3.
+
+Inner ``{%`` in the body is escaped to ``&#123;%`` so it cannot terminate the
+outer raw block. (Jekyll 3 has no per-page ``liquid: false``.)
+"""
 
 from __future__ import annotations
 
@@ -10,21 +14,41 @@ RAW_START = "{% raw %}"
 RAW_END = "{% endraw %}"
 
 
-def wrap_page(path: Path) -> None:
+def is_already_wrapped(text: str) -> bool:
+    """True if the body already starts with ``{% raw %}`` after the generated marker."""
+    marker_index = text.find(GENERATED_MARKER)
+    if marker_index == -1:
+        return False
+    after_marker = text[marker_index + len(GENERATED_MARKER):].lstrip()
+    return after_marker.startswith(RAW_START)
+
+
+def process_page(path: Path) -> None:
     text = path.read_text(encoding="utf-8")
-    if GENERATED_MARKER not in text or RAW_START in text:
+    if GENERATED_MARKER not in text:
         return
+    if is_already_wrapped(text):
+        return
+
+    text = text.replace("liquid: false\n", "", 1)
+    marker_index = text.find(GENERATED_MARKER)
+    head = text[: marker_index + len(GENERATED_MARKER)]
+    body = text[marker_index + len(GENERATED_MARKER):]
+    body = body.replace("{%", "&#123;%")
+    text = head + body
+
     text = text.replace(
         GENERATED_MARKER + "\n",
         GENERATED_MARKER + "\n" + RAW_START + "\n",
         1,
     )
-    path.write_text(text.rstrip() + "\n" + RAW_END + "\n", encoding="utf-8")
+    text = text.rstrip() + "\n" + RAW_END + "\n"
+    path.write_text(text, encoding="utf-8")
 
 
 def main() -> None:
     for path in Path("tools").glob("*/*.md"):
-        wrap_page(path)
+        process_page(path)
 
 
 if __name__ == "__main__":

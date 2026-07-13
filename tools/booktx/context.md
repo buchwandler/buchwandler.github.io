@@ -184,7 +184,7 @@ translations/&lt;profile&gt;/context-history/views/&lt;sha&gt;/{context.json,con
 <li><p>Read <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.md</span></code> before opening a new task.</p></li>
 <li><p>Treat <code class="docutils literal notranslate"><span class="pre">context.json</span></code> as authoritative and <code class="docutils literal notranslate"><span class="pre">context.md</span></code> as rendered.</p></li>
 <li><p>Persist chapter notes with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">chapter-note</span></code>, never by hand-editing <code class="docutils literal notranslate"><span class="pre">context.md</span></code>.</p></li>
-<li><p>Context is not shared across languages or model experiments. Series-wide consistency is achieved by importing an explicit context pack (<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">export-pack</span></code> / <code class="docutils literal notranslate"><span class="pre">import-pack</span></code>), not by sharing profile state.</p></li>
+<li><p>Context is not shared across languages or model experiments. Series-wide consistency is achieved by importing an explicit context pack (<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">export-pack</span></code> / <code class="docutils literal notranslate"><span class="pre">import-pack</span></code>), not by sharing profile-local files.</p></li>
 <li><p>If <code class="docutils literal notranslate"><span class="pre">context.md</span></code> already contains manual chapter notes, run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">import-md</span> <span class="pre">./book</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--write</span></code> before validating or rendering again.</p></li>
 <li><p>Chapter-note appends change the next task’s effective context, but they do not create a new dotted version by themselves.</p></li>
 <li><p>Each new translation task snapshots its composed effective context view under <code class="docutils literal notranslate"><span class="pre">context-history/views/&lt;sha&gt;/</span></code> and accepted candidates preserve that task-time evidence.</p></li>
@@ -195,8 +195,8 @@ translations/&lt;profile&gt;/context-history/views/&lt;sha&gt;/{context.json,con
 <p><code class="docutils literal notranslate"><span class="pre">context.json</span></code> is the source of truth. Structured <code class="docutils literal notranslate"><span class="pre">style</span></code>, <code class="docutils literal notranslate"><span class="pre">global_rules</span></code>, and
 glossary entries are active policy. Setup questions and chapter notes are
 provenance unless their decisions are promoted into structured policy with
-context commands such as <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">approve</span></code>, <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mandate-term</span></code>,
-<code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">add-term</span></code>, or <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">reset-term</span></code>.</p>
+commands such as <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">approve</span></code>, <code class="docutils literal notranslate"><span class="pre">glossary</span> <span class="pre">mandate</span></code>, <code class="docutils literal notranslate"><span class="pre">glossary</span> <span class="pre">add</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">glossary</span> <span class="pre">reset</span></code>.</p>
 <p>Use the report-only organization doctor to find duplicated or hidden policy:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>doctor<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>context<span class="w"> </span>doctor<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
@@ -327,17 +327,16 @@ profile is already selected.</p>
 <p>When the target changes, any forbidden term equal to the new target (respecting <code class="docutils literal notranslate"><span class="pre">case_sensitive</span></code>) is pruned automatically.</p>
 <p>Updating an existing entry preserves <code class="docutils literal notranslate"><span class="pre">category</span></code>, <code class="docutils literal notranslate"><span class="pre">notes</span></code>, <code class="docutils literal notranslate"><span class="pre">enforce</span></code>, <code class="docutils literal notranslate"><span class="pre">case_sensitive</span></code>, <code class="docutils literal notranslate"><span class="pre">status</span></code>, and <code class="docutils literal notranslate"><span class="pre">examples</span></code> unless the command explicitly changes them.</p>
 </section>
-<section id="remove-term">
-<h3>remove-term</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>remove-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span>
-booktx<span class="w"> </span>context<span class="w"> </span>remove-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span>--missing-ok
+<section id="glossary-remove">
+<h3>glossary remove</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>glossary<span class="w"> </span>remove<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span>
 </pre></div>
 </div>
-<p>Deletes exact glossary entries by source term. Without <code class="docutils literal notranslate"><span class="pre">--missing-ok</span></code>, exits non-zero when the term is absent.</p>
+<p>Deletes exact glossary entries by source term.</p>
 </section>
-<section id="reset-term">
-<h3>reset-term</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>reset-term<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span><span class="se">\</span>
+<section id="glossary-reset">
+<h3>glossary reset</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>glossary<span class="w"> </span>reset<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;empire&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Empire&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--category<span class="w"> </span><span class="s2">&quot;concept&quot;</span><span class="w"> </span><span class="se">\</span>

@@ -171,496 +171,105 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="profiles">
 <h1>Profiles</h1>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span></code> translation profiles let one source book support multiple translation
-efforts without mixing mutable state.</p>
-<p>Examples:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">PROFILE_A</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PROFILE_B</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">fr_gpt5_5</span></code></p></li>
-</ul>
-<section id="why-profiles-exist">
-<h2>Why profiles exist</h2>
-<p>Without profiles, all mutable translation state lands in one shared store. That
-mixes different languages, different model experiments, and different context
-decisions.</p>
-<p>Profiles prevent that by moving mutable translation state under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>.</p>
-</section>
-<section id="commands">
-<h2>Commands</h2>
+<p>Profiles isolate mutable translation state while sharing extracted source data.
+Create one for each target language, model experiment, or deliberately
+separate context decision.</p>
+<section id="project-root-commands">
+<h2>Project-root commands</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE_A<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE
 booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>./book
 booktx<span class="w"> </span>profile<span class="w"> </span>show<span class="w"> </span>./book<span class="w"> </span>PROFILE_A
 booktx<span class="w"> </span>profile<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profiles<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span>--record<span class="w"> </span><span class="m">0001</span>-000001
-booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE_A
 </pre></div>
 </div>
+<p>A project-root command that needs profile-local data must receive
+<code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code>. There is no global profile selector and target-state
+commands do not infer a profile from the number of profiles in the project.</p>
 </section>
-<section id="resolution-rules">
-<h2>Resolution rules</h2>
-<ol class="arabic simple">
-<li><p>Explicit <code class="docutils literal notranslate"><span class="pre">--profile</span></code> wins.</p></li>
-<li><p>Otherwise the explicit profile from <code class="docutils literal notranslate"><span class="pre">.booktx/profile</span> <span class="pre">state</span></code> is used.</p></li>
-<li><p>Otherwise exactly one existing profile is auto-resolved.</p></li>
-<li><p>Otherwise target-dependent commands fail until a profile is chosen explicitly.</p></li>
-</ol>
-</section>
-<section id="access-modes">
-<h2>Access modes</h2>
-<p>Profiles own mutable translation state, but <strong>visibility of sibling profiles</strong>
-depends on how the harness starts:</p>
-<section id="collaborative-project-root-mode">
-<h3>Collaborative project-root mode</h3>
-<p>Start the harness at the book project root when you need:</p>
-<ul class="simple">
-<li><p>profile administration</p></li>
-<li><p>profile comparison</p></li>
-<li><p>cross-profile reference work</p></li>
-<li><p>migration and debugging</p></li>
-</ul>
-<p>In this mode, project-relative paths and explicit cross-profile commands are
-expected and allowed.</p>
-</section>
-<section id="isolated-profile-root-mode">
-<h3>Isolated profile-root mode</h3>
-<p>Start the harness inside <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code> when you want unbiased model
-or context evaluation for one target profile.</p>
-<p>This is <strong>booktx-mediated isolation</strong>, not OS sandboxing. It assumes:</p>
-<ul class="simple">
-<li><p>the harness blocks parent paths, absolute paths, sibling profile paths, shell
-globs, and arbitrary filesystem inspection snippets;</p></li>
-<li><p>the agent uses only profile-local <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">...</span> <span class="pre">.</span></code> commands;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span></code> itself never requires or prints parent/sibling paths for the normal
-isolated workflow.</p></li>
-</ul>
-<p>Use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>mode<span class="w"> </span>.
+<section id="profile-root-commands">
+<h2>Profile-root commands</h2>
+<p>A validated profile root is <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>. Its
+<code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code> marker binds the directory to the profile configuration,
+project root, target locale, and current source identity. From that directory,
+use <code class="docutils literal notranslate"><span class="pre">.</span></code> and omit <code class="docutils literal notranslate"><span class="pre">--profile</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/PROFILE_A
+booktx<span class="w"> </span>mode<span class="w"> </span>.
 booktx<span class="w"> </span>doctor<span class="w"> </span>isolation<span class="w"> </span>.
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>status<span class="w"> </span>.
-booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>.<span class="w">          </span><span class="c1"># shows current profile only, no sibling names</span>
-booktx<span class="w"> </span>profile<span class="w"> </span>show<span class="w"> </span>.<span class="w"> </span>.<span class="w">         </span><span class="c1"># defaults to current profile</span>
 booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>.
 booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>batch<span class="w"> </span>--max-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--format<span class="w"> </span>block
-booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class="w"> </span>.<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
 booktx<span class="w"> </span>validate<span class="w"> </span>.
 booktx<span class="w"> </span>build<span class="w"> </span>.
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">list</span></code> in isolated mode shows only the current profile (no sibling profile names, no absolute paths, no <code class="docutils literal notranslate"><span class="pre">../</span></code>). Cross-profile commands like <code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">compare</span></code>, <code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">create</span></code>, and <code class="docutils literal notranslate"><span class="pre">profile</span> <span class="pre">migrate-current</span></code> remain blocked.</p>
-<p>If a command in profile-root mode suggests <code class="docutils literal notranslate"><span class="pre">../</span></code>, prints an absolute path, or
-reveals another profile, stop and report a booktx isolation bug.</p>
-<p>Before starting the harness inside a profile, prepare the matching harness
-instructions so the agent does not have to rediscover them:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>.<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-</pre></div>
-</div>
-<p>This writes a profile-local <code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> (safe to read from inside the profile
-root: no parent paths, absolute paths, sibling profile names, or <code class="docutils literal notranslate"><span class="pre">--profile</span></code>)
-and removes project-root/collaborative generated instructions. From inside the
-profile root, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">agents</span> <span class="pre">write</span> <span class="pre">.</span> <span class="pre">--mode</span> <span class="pre">isolated</span></code> refreshes the local file
-without printing parent paths. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">agents</span> <span class="pre">status</span> <span class="pre">.</span></code> reports ownership and
-staleness for the local file only.</p>
+<p>Profile-root mode exposes only the selected profile through booktx’s brokered
+source commands. It is booktx-mediated isolation, not an operating-system
+sandbox. Parent paths, sibling profiles, and arbitrary filesystem inspection
+are outside the isolated workflow.</p>
 </section>
-</section>
-<section id="what-is-isolated">
-<h2>What is isolated?</h2>
-<p>Each profile owns its own copy of all mutable translation state under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>:</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Path</p></th>
-<th class="head"><p>Meaning</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code></p></td>
-<td><p>Profile-root runtime marker</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">config.toml</span></code></p></td>
-<td><p>Profile config (target, output name)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">identity.json</span></code></p></td>
-<td><p>Live actor/harness/model identity</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">context.json</span></code> / <code class="docutils literal notranslate"><span class="pre">context.md</span></code></p></td>
-<td><p>Translation context and rendered form</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code></p></td>
-<td><p>Primary record-level translations</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code></p></td>
-<td><p>Version tracks and subversions</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tasks/</span></code></p></td>
-<td><p>Durable translation task files</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ingest/</span></code></p></td>
-<td><p>Submission templates (agent edits)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translated/</span></code></p></td>
-<td><p>Generated compatibility export</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">reports/</span></code></p></td>
-<td><p>Validation/build reports</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output/</span></code></p></td>
-<td><p>Final rebuilt document</p></td>
-</tr>
-</tbody>
-</table>
-<p>Two profiles never share any of the above. Translations accepted into one
-profile are invisible to another.</p>
-</section>
-<section id="what-is-shared">
-<h2>What is shared?</h2>
-<p>Source-derived state under <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> is shared by all profiles:</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Path</p></th>
-<th class="head"><p>Meaning</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">source-config.toml</span></code></p></td>
-<td><p>Source language/format/chunking</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">source-manifest.json</span></code></p></td>
-<td><p>Source hash and extraction manifest</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">names.json</span></code></p></td>
-<td><p>Protected-term glossary</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chapter-map.json</span></code></p></td>
-<td><p>Cached chapter boundaries</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chunks/</span></code></p></td>
-<td><p>Immutable extracted source records</p></td>
-</tr>
-</tbody>
-</table>
-<p>Re-extracting the source updates the shared state for every profile at once.</p>
-<p>Profile-root isolated mode reads that shared source state only through booktx’s
-brokered commands such as <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">source</span> <span class="pre">...</span></code> and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span> <span class="pre">.</span></code>.</p>
-<p>Translation context is <strong>not</strong> shared across profiles. To keep style,
-global rules, glossary, and approved question answers consistent across
-several books in the same series, export a series context pack from one
-approved profile and import it into another with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">export-pack</span></code>
-and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">import-pack</span></code>. The pack carries reusable policy only; it
-never carries records, tasks, stores, ledgers, identity, or chapter contexts.
-For the normal “next book in the same series” workflow, prefer
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> so init/extract/profile creation/import/source-analysis
-and the human review stop are orchestrated together.</p>
-<p>For sibling profiles inside the <strong>same</strong> book project, use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">sync</span></code>
-from project-root collaborative mode instead of repeatedly exporting and
-re-importing pack files. Sync still copies policy into each target profile’s
-own context files; it does not make context shared.</p>
-</section>
-<section id="when-to-create-a-new-profile">
-<h2>When to create a new profile?</h2>
-<p>Create a new profile whenever you want a hard isolation boundary:</p>
+<section id="shared-and-local-state">
+<h2>Shared and local state</h2>
+<p><code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> contains shared source-derived state:</p>
 <ul class="simple">
-<li><p><strong>Different target language</strong>: <code class="docutils literal notranslate"><span class="pre">PROFILE_A</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_gpt5_5</span></code>, <code class="docutils literal notranslate"><span class="pre">es_gpt5_5</span></code>.</p></li>
-<li><p><strong>Different model experiment</strong>: <code class="docutils literal notranslate"><span class="pre">PROFILE_A</span></code> vs <code class="docutils literal notranslate"><span class="pre">PROFILE_B</span></code> for the same
-language, so the two outputs never contaminate each other.</p></li>
-<li><p><strong>Different context decisions</strong>: a re-translation under revised glossary or
-style rules, kept separate from a previous accepted run.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source-config.toml</span></code>, <code class="docutils literal notranslate"><span class="pre">source-manifest.json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">names.json</span></code>, <code class="docutils literal notranslate"><span class="pre">chapter-map.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">chunks/</span></code></p></li>
+<li><p>source-analysis evidence and shared reports</p></li>
 </ul>
-<p>Do <strong>not</strong> create a new profile for a routine re-translation of the same
-language/model/context; that is a <em>version</em>, not a profile.</p>
+<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code> contains profile-local mutable state:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code>, <code class="docutils literal notranslate"><span class="pre">config.toml</span></code>, and <code class="docutils literal notranslate"><span class="pre">identity.json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">context.json</span></code>, <code class="docutils literal notranslate"><span class="pre">context.md</span></code>, and <code class="docutils literal notranslate"><span class="pre">context-history/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">translation-store/</span></code> and <code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasks/</span></code>, <code class="docutils literal notranslate"><span class="pre">todos/</span></code>, <code class="docutils literal notranslate"><span class="pre">ingest/</span></code>, <code class="docutils literal notranslate"><span class="pre">reviews/</span></code>, <code class="docutils literal notranslate"><span class="pre">review-todos/</span></code>, and judge artifacts</p></li>
+<li><p>generated <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, indexes, <code class="docutils literal notranslate"><span class="pre">reports/</span></code>, and <code class="docutils literal notranslate"><span class="pre">output/</span></code></p></li>
+</ul>
+<p>Never use sibling profile paths in an isolated profile-root workflow. Never edit
+canonical store shards or generated exports directly; use the CLI surfaces.</p>
+</section>
+<section id="context-transfer">
+<h2>Context transfer</h2>
+<p>For a different book, export and import a context pack. For sibling profiles in
+the same book, use project-root <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">sync</span></code>. These operations copy
+approved policy into each profile; they do not share mutable stores or context
+files.</p>
 </section>
 <section id="pass-through-profiles">
 <h2>Pass-through profiles</h2>
-<p>A pass-through profile is a <strong>generated validation fixture</strong>, not a translation.
-Its target language equals the source language, and every translated record’s
-target is set to the source text. Use it to verify that extraction and EPUB
-reconstruction include all content before involving a translator.</p>
-<ul class="simple">
-<li><p>Pass-through profiles are generated fixtures; they must not be used for
-human or LLM translation.</p></li>
-<li><p>They use the source language as the target language.</p></li>
-<li><p>They are isolated under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>, just like any profile, so
-they cannot contaminate real translation profiles.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">pass-through</span></code> requires an explicit <code class="docutils literal notranslate"><span class="pre">--profile</span></code> and refuses to run
-against a profile whose <code class="docutils literal notranslate"><span class="pre">kind</span></code> is not <code class="docutils literal notranslate"><span class="pre">pass-through</span></code>.</p></li>
-</ul>
-<p>A non-empty translation store can silently override generated chunks, so
-pass-through refuses a profile with store records unless you pass
-<code class="docutils literal notranslate"><span class="pre">--clear-store</span></code> (which rewrites only <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>).</p>
-</section>
-<section id="selection-profiles">
-<h2>Selection profiles</h2>
-<p>A selection profile is a normal buildable profile whose accepted output is
-assembled from cross-profile judge decisions.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">kind</span> <span class="pre">=</span> <span class="pre">&quot;selection&quot;</span></code> in <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/config.toml</span></code></p></li>
-<li><p>it keeps its own <code class="docutils literal notranslate"><span class="pre">context.json</span></code>, <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>, and output files</p></li>
-<li><p>accepted judge output is written into the normal translation store so
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">build</span></code> work without special build rules</p></li>
-<li><p>provenance is stored separately in
-<code class="docutils literal notranslate"><span class="pre">translation-selection-ledger.json</span></code></p></li>
-<li><p>durable judge task artifacts live under <code class="docutils literal notranslate"><span class="pre">judge-tasks/</span></code> and <code class="docutils literal notranslate"><span class="pre">judge-ingest/</span></code></p></li>
-</ul>
-<p>Create one with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--context-from<span class="w"> </span>PROFILE_A<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--context-from</span></code> copies approved style, global rules, glossary, and reusable
-approved answers from a ready source profile into the new selection profile and
-marks the judge context ready when that imported policy satisfies all required
-questions. Without it, initialize the selection profile context explicitly and
-sync policy from a compatible source profile before judging.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--non-interactive
-booktx<span class="w"> </span>context<span class="w"> </span>sync<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from<span class="w"> </span>PROFILE_A<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--to<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--section<span class="w"> </span>glossary<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--section<span class="w"> </span>style<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--section<span class="w"> </span>global-rules<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE
-</pre></div>
-</div>
-<p>Judge profile creation and snapshot preparation are project-root workflows.
-After snapshot preparation, a selection profile may run <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">status</span></code>,
-<code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">next</span></code>, <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">insert</span></code>, <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">show</span></code>, <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">continue</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">accept-identical</span></code> from its own profile root:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--sources<span class="w"> </span>PROFILE_A,PROFILE_B
-booktx<span class="w"> </span>judge<span class="w"> </span>accept-identical<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--sources<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span>--unit<span class="w"> </span>chapter<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--max-records<span class="w"> </span><span class="m">100</span><span class="w"> </span>--write
-booktx<span class="w"> </span>judge<span class="w"> </span>next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--sources<span class="w"> </span>PROFILE_A,PROFILE_B<span class="w"> </span>--unit<span class="w"> </span>chapter<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--max-records<span class="w"> </span><span class="m">8</span><span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>judge<span class="w"> </span>insert<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>translations/JUDGE_PROFILE/judge-ingest/TASK.decisions.txt<span class="w"> </span>--format<span class="w"> </span>decisions
-</pre></div>
-</div>
-<p>Judge task record ids are chunk-based, so a task for a logical chapter can
-still contain ids prefixed with another chunk such as <code class="docutils literal notranslate"><span class="pre">0001-...</span></code>.</p>
-</section>
-<section id="single-source-judge-revision-profiles">
-<h2>Single-source judge revision profiles</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--purpose</span> <span class="pre">revise</span></code> when one translation source is clearly best and you
-want an isolated final profile where an LLM must explicitly proofread every
-record.</p>
-<p>Revision profiles are judge profiles, not review passes. Their effective
-output is valid only while each active target has matching judge-decision
-provenance.</p>
-<p>Do not run <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code>, <code class="docutils literal notranslate"><span class="pre">sweep-identical</span></code>, or
-<code class="docutils literal notranslate"><span class="pre">prefill-policy-fixes</span></code> in a revision profile. Do not modify effective output
-through translation or review revision commands; use <code class="docutils literal notranslate"><span class="pre">judge</span> <span class="pre">record</span></code> for later
-corrections.</p>
-<p>Revision profiles have two submodes:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">general</span></code> (default): general proofread/revision; grammar,
-flow, punctuation, style, or terminology corrections may be made.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>: grammar-only revision; existing wording,
-terminology, names, tone, and register are frozen, and <code class="docutils literal notranslate"><span class="pre">BASE_TARGET</span></code> is the
-authoritative German wording.</p></li>
-</ul>
-<p>Create a revision profile with exactly one source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>PROFILE_REVISED<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--context-from<span class="w"> </span>PROFILE_B<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--purpose<span class="w"> </span>revise
-</pre></div>
-</div>
-<p>Create a grammar-only isolated revision profile from an existing translated
-book:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span class="w"> </span>./book<span class="w"> </span>judge_gpt5_6<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--sources<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--context-from<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>gpt-5.6<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--purpose<span class="w"> </span>revise<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--revision-focus<span class="w"> </span>grammar
-
-booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>judge_gpt5_6<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write
-</pre></div>
-</div>
-<p>Inside the isolated profile root, judge every record explicitly. For each
-record choose <code class="docutils literal notranslate"><span class="pre">copy</span></code> (keep the base target) or <code class="docutils literal notranslate"><span class="pre">edited</span></code> (write the complete
-corrected target). Later corrections use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">record</span></code>, not
-translation or review revision commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/PROFILE_REVISED
-booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>.
-booktx<span class="w"> </span>judge<span class="w"> </span>next<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>chapter<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0008</span><span class="w"> </span>--max-records<span class="w"> </span><span class="m">20</span><span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>judge<span class="w"> </span>insert<span class="w"> </span>.<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>judge-ingest/TASK.decisions.txt<span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>judge<span class="w"> </span><span class="k">continue</span><span class="w"> </span>.<span class="w"> </span>--max-records<span class="w"> </span><span class="m">20</span>
-booktx<span class="w"> </span>judge<span class="w"> </span>record<span class="w"> </span>.<span class="w"> </span>--record<span class="w"> </span>RECORD_ID<span class="w"> </span>--format<span class="w"> </span>decisions
-booktx<span class="w"> </span>validate<span class="w"> </span>.<span class="w"> </span>--fail-on-warnings
-booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--require-complete
-</pre></div>
-</div>
-<p>Booktx records are sentence-segmented translation units; a revision profile
-requires an explicit decision for every translatable record. In
-<code class="docutils literal notranslate"><span class="pre">--revision-focus</span> <span class="pre">grammar</span></code>, prefer <code class="docutils literal notranslate"><span class="pre">copy</span></code> whenever the existing German is
-grammatically valid, and use <code class="docutils literal notranslate"><span class="pre">edited</span></code> only for minimal grammar, syntax,
-agreement, inflection, orthography, capitalization, or punctuation fixes.
-Source gaps are blockers in revise mode, not skippable records.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">selection.purpose=compare</span></code>, prefer <code class="docutils literal notranslate"><span class="pre">accept-identical</span></code> and
-<code class="docutils literal notranslate"><span class="pre">sweep-identical</span></code> for true multi-source identical candidates.</p>
-<p>In <code class="docutils literal notranslate"><span class="pre">selection.purpose=revise</span></code>, never use deterministic selection commands.
-Every record requires an explicit copy or edited judge decision. Only one
-managed isolated profile contract is active at a time, so prepare isolated
-judge profiles sequentially in one project unless you use separate worktrees or
-project copies.</p>
-</section>
-<section id="what-stays-a-version">
-<h2>What stays a version?</h2>
-<p>Versions live <em>inside</em> a profile. Two profiles may both contain version <code class="docutils literal notranslate"><span class="pre">1.1</span></code>;
-they are unrelated.</p>
-<ul class="simple">
-<li><p>A <strong>model/actor/harness identity change</strong> creates or selects a major track
-(e.g. <code class="docutils literal notranslate"><span class="pre">1</span></code>).</p></li>
-<li><p>A <strong>baseline policy change</strong> creates or selects a subversion inside that
-track (e.g. <code class="docutils literal notranslate"><span class="pre">1.2</span></code>).</p></li>
-<li><p>A <strong>chapter-note append</strong> changes the next task’s composed context view but
-does <strong>not</strong> create a new dotted version on its own.</p></li>
-</ul>
-<p>Use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>version<span class="w"> </span>current<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>version<span class="w"> </span>list<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-booktx<span class="w"> </span>translation<span class="w"> </span>compare<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--versions<span class="w"> </span><span class="m">1</span>.1,1.2
-booktx<span class="w"> </span>translation<span class="w"> </span>activate<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span><span class="m">1</span>.2
+<p>Pass-through profiles are generated reconstruction checks. They use source text
+as target text and must not be used for human translation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create-pass-through<span class="w"> </span>./book<span class="w"> </span>passthrough_en
+booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>passthrough_en
+booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>passthrough_en
 </pre></div>
 </div>
 </section>
-<section id="migration-from-legacy-layout">
-<h2>Migration from legacy layout</h2>
-<p>A legacy single-layout project keeps all state under <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code>. Migrate it
-into the profile layout:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE
-</pre></div>
-</div>
-<p>Before:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>book/.booktx/{config.toml, translation-store.json, tasks/, ingest/, ...}
-</pre></div>
-</div>
-<p>After:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>book/.booktx/{source-config.toml, source-manifest.json, chunks/, ...}
-book/translations/PROFILE/{identity.json, translation-store.json, tasks/, ingest/, ...}
-</pre></div>
-</div>
-<p>CLI identity overrides (<code class="docutils literal notranslate"><span class="pre">--model</span></code>, <code class="docutils literal notranslate"><span class="pre">--actor</span></code>, <code class="docutils literal notranslate"><span class="pre">--harness</span></code>) are honored over any
-legacy <code class="docutils literal notranslate"><span class="pre">.booktx/identity.json</span></code>. Migration is staged: mutable files move
-first, then the final profile config/identity/state are written, and the
-legacy <code class="docutils literal notranslate"><span class="pre">config.toml</span></code> is removed only after all moves succeed.</p>
+<section id="selection-and-revision-profiles">
+<h2>Selection and revision profiles</h2>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">create-profile</span></code> creates compare or revision profiles. A selection
+profile stores accepted judge decisions in its normal <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>
+store and keeps judge provenance separately. A single-source revision profile
+requires an explicit <code class="docutils literal notranslate"><span class="pre">copy</span></code> or <code class="docutils literal notranslate"><span class="pre">edited</span></code> judge decision for every record.
+Prepare isolated judge work from the project root with
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">prepare-isolation</span></code>, then continue from the profile root.</p>
 </section>
-<section id="failure-modes">
-<h2>Failure modes</h2>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">multiple_profiles_ambiguous</span></code></strong>: more than one profile exists and no
-<code class="docutils literal notranslate"><span class="pre">--profile</span></code> was given for a target-state command. Pass <code class="docutils literal notranslate"><span class="pre">--profile</span></code>.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">profile_root_marker_missing</span></code></strong>: the profile-root marker is missing. Recreate
-or backfill the profile marker before using isolated mode.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">profile_root_marker_mismatch</span></code></strong>: the marker no longer matches the profile
-directory, project root, or profile config. Regenerate or repair the marker.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">stale_profile_root_marker</span></code></strong>: the marker is bound to an older extracted
-source identity. Refresh the marker after source extraction changes.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">task_profile_mismatch</span></code></strong>: a submission’s profile header does not match
-the selected profile. Re-request the task in the correct profile.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">submission_profile_mismatch</span></code></strong>: a JSON submission’s <code class="docutils literal notranslate"><span class="pre">profile</span></code> field
-differs from the target profile. Fix the submission or switch profile.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">legacy_project_required</span></code></strong>: the project still uses the legacy layout.
-Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span></code> first.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">migration_target_exists</span></code></strong>: the destination profile directory already
-exists and is non-empty. Remove it or pick a new profile name.</p></li>
-</ul>
+<section id="versions">
+<h2>Versions</h2>
+<p>Versions live inside one profile. Translation versions use dotted references,
+while review candidates use <code class="docutils literal notranslate"><span class="pre">R&lt;pass&gt;.&lt;run&gt;</span></code> references. Compare or activate
+versions with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>compare<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>RECORD<span class="w"> </span>--versions<span class="w"> </span><span class="m">1</span>.1,1.2
+booktx<span class="w"> </span>translate<span class="w"> </span>activate<span class="w"> </span>.<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>RECORD<span class="w"> </span><span class="m">1</span>.2
+</pre></div>
+</div>
 </section>
-<section id="quality-review-configuration">
-<h2>Quality review configuration</h2>
-<p>Add or update quality review through the CLI (preferred) or by editing
-the profile <code class="docutils literal notranslate"><span class="pre">config.toml</span></code> directly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show current config</span>
-booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>.<span class="w"> </span>--show
-
-<span class="c1"># Enable with one pass</span>
-booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>.<span class="w"> </span>--enable<span class="w"> </span>--pass<span class="w"> </span><span class="m">1</span><span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Flow review&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--mode<span class="w"> </span>manual<span class="w"> </span>--enforce<span class="w"> </span>warn<span class="w"> </span>--base<span class="w"> </span>active_translation<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--before<span class="w"> </span><span class="m">2</span><span class="w"> </span>--after<span class="w"> </span><span class="m">2</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">900</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--instructions<span class="w"> </span><span class="s2">&quot;Improve reading flow and pronoun continuity.&quot;</span>
-
-<span class="c1"># Add a second pass</span>
-booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>.<span class="w"> </span>--enable<span class="w"> </span>--pass<span class="w"> </span><span class="m">2</span><span class="w"> </span>--name<span class="w"> </span><span class="s2">&quot;Final polish&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--base<span class="w"> </span>active_review<span class="w"> </span>--required-base-pass<span class="w"> </span><span class="m">1</span><span class="w"> </span>--enforce<span class="w"> </span>error<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--instructions<span class="w"> </span><span class="s2">&quot;Polish final prose. Prefer minimal edits.&quot;</span>
-
-<span class="c1"># Disable quality review entirely</span>
-booktx<span class="w"> </span>review<span class="w"> </span>configure<span class="w"> </span>.<span class="w"> </span>--disable
+<section id="legacy-migration">
+<h2>Legacy migration</h2>
+<p>Legacy single-layout projects may be migrated once:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE_A
 </pre></div>
 </div>
-<p>Manual TOML equivalent (kept for reference):
-Add a <code class="docutils literal notranslate"><span class="pre">[quality_review]</span></code> table to the profile <code class="docutils literal notranslate"><span class="pre">config.toml</span></code>:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[quality_review]</span>
-<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="n">active_passes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
-<span class="n">require_all_active_passes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-
-<span class="k">[[quality_review.passes]]</span>
-<span class="n">pass_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Flow review&quot;</span>
-<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="n">mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;after_chapter&quot;</span>
-<span class="n">enforce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;warn&quot;</span>
-<span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;active_translation&quot;</span>
-<span class="n">before_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="n">after_records</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="n">batch_words</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">900</span>
-<span class="n">instructions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Improve reading flow and pronoun continuity.&quot;</span>
-</pre></div>
-</div>
-<p>Two-pass example:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[quality_review]</span>
-<span class="n">enabled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">true</span>
-<span class="n">active_passes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">]</span>
-
-<span class="k">[[quality_review.passes]]</span>
-<span class="n">pass_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Flow review&quot;</span>
-<span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;active_translation&quot;</span>
-<span class="n">enforce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;warn&quot;</span>
-
-<span class="k">[[quality_review.passes]]</span>
-<span class="n">pass_number</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">2</span>
-<span class="n">name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Final polish&quot;</span>
-<span class="n">base</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;active_review&quot;</span>
-<span class="n">required_base_pass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span>
-<span class="n">enforce</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;error&quot;</span>
-<span class="n">instructions</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;Polish final prose. Prefer minimal edits.&quot;</span>
-</pre></div>
-</div>
-<p>Fields:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code> – enable or disable quality review for this profile</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">active_passes</span></code> – which passes are currently active (reported by <code class="docutils literal notranslate"><span class="pre">review</span> <span class="pre">status</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">require_all_active_passes</span></code> – when true, validation reports missing active passes</p></li>
-</ul>
-<p>Per-pass fields:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">pass_number</span></code> – unique pass identifier (1, 2, …)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code> – human-readable label</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enabled</span></code> – enable or disable this specific pass</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mode</span></code> – <code class="docutils literal notranslate"><span class="pre">manual</span></code>, <code class="docutils literal notranslate"><span class="pre">after_chapter</span></code>, or <code class="docutils literal notranslate"><span class="pre">before_build</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enforce</span></code> – <code class="docutils literal notranslate"><span class="pre">off</span></code> (no findings), <code class="docutils literal notranslate"><span class="pre">warn</span></code> (warning), <code class="docutils literal notranslate"><span class="pre">error</span></code> (blocking)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">base</span></code> – <code class="docutils literal notranslate"><span class="pre">active_translation</span></code> (first-pass version) or <code class="docutils literal notranslate"><span class="pre">active_review</span></code> (prior review)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">required_base_pass</span></code> – pass that must be completed first (for chaining)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">before_records</span></code> / <code class="docutils literal notranslate"><span class="pre">after_records</span></code> – neighbor context window size</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">batch_words</span></code> – maximum source words per review task</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">instructions</span></code> – prompt for the reviewing agent</p></li>
-</ul>
-<p>Pass-through profiles must not set <code class="docutils literal notranslate"><span class="pre">[quality_review]</span></code>.</p>
-</section>
-<section id="series-continuation-profiles">
-<h2>Series continuation profiles</h2>
-<p>Use the same profile name for a new book only after creating it in the new project. Policy transfer is explicit through context packs and optional termbase import, not by copying profile directories. After project-root preparation, run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">agents</span> <span class="pre">write</span> <span class="pre">BOOK</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--mode</span> <span class="pre">isolated</span></code> and start translation inside <code class="docutils literal notranslate"><span class="pre">translations/PROFILE</span></code>.</p>
+<p>After migration, <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> remains the shared source tree and mutable
+translation state moves under <code class="docutils literal notranslate"><span class="pre">translations/PROFILE_A/</span></code>.</p>
 </section>
 </section>
 </div>

@@ -171,301 +171,118 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="troubleshooting">
 <h1>Troubleshooting</h1>
-<section id="multiple-translation-profiles-exist">
-<h2><code class="docutils literal notranslate"><span class="pre">multiple</span> <span class="pre">translation</span> <span class="pre">profiles</span> <span class="pre">exist</span></code></h2>
-<p>Pass <code class="docutils literal notranslate"><span class="pre">--profile</span></code> or select one first:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>
+<section id="multiple-profiles-or-missing-profile">
+<h2>Multiple profiles or missing profile</h2>
+<p>Project-root commands that read or write profile-local data require an explicit
+profile:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"> </span>./book
+booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>guide<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
-</section>
-<section id="no-translation-profile-exists">
-<h2><code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">translation</span> <span class="pre">profile</span> <span class="pre">exists</span></code></h2>
-<p>Create one:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE_A<span class="w"> </span>--target<span class="w"> </span>de
+<p>If no profile exists, create one:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE
 </pre></div>
 </div>
+<p>From <code class="docutils literal notranslate"><span class="pre">translations/PROFILE/</span></code>, use <code class="docutils literal notranslate"><span class="pre">.</span></code> and omit <code class="docutils literal notranslate"><span class="pre">--profile</span></code>. If the marker is
+missing, mismatched, or stale, regenerate the profile-root instructions or
+repair the profile through the project-root workflow before isolated work.</p>
 </section>
-<section id="task-profile-mismatch">
-<h2><code class="docutils literal notranslate"><span class="pre">task</span> <span class="pre">profile</span> <span class="pre">mismatch</span></code></h2>
-<p>The task was created for another profile. Request a fresh task in the selected
-profile.</p>
-</section>
-<section id="submission-profile-mismatch">
-<h2><code class="docutils literal notranslate"><span class="pre">submission</span> <span class="pre">profile</span> <span class="pre">mismatch</span></code></h2>
-<p>The durable submission file or JSON payload declares a different profile than
-the selected one. Use the matching <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/</span></code> file.</p>
-</section>
-<section id="output-filename-does-not-match-target-language">
-<h2><code class="docutils literal notranslate"><span class="pre">output</span> <span class="pre">filename</span> <span class="pre">...</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">match</span> <span class="pre">target</span> <span class="pre">language</span> <span class="pre">...</span></code></h2>
-<p>Choose an output filename that matches the profile target, for example
-<code class="docutils literal notranslate"><span class="pre">book.de.epub</span></code>.</p>
-</section>
-<section id="legacy-path-used-after-migration">
-<h2><code class="docutils literal notranslate"><span class="pre">legacy</span> <span class="pre">path</span> <span class="pre">used</span> <span class="pre">after</span> <span class="pre">migration</span></code></h2>
-<p>After migrating, do not use:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/context.json</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/context.md</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/tasks/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/ingest/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/translated/</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">.booktx/translation-store.json</span></code></p></li>
-</ul>
-<p>Use the selected profile paths under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code> instead.</p>
-</section>
-<section id="stale-translation-task-version">
-<h2>Stale translation task version</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">insert</span></code> reports a stale task version when the durable task
-was created against an older context/version than the current one. Do not
-force the old file through. Request a fresh task:</p>
+<section id="profile-and-submission-mismatches">
+<h2>Profile and submission mismatches</h2>
+<p>A task or submission created for another profile cannot be inserted into the
+selected profile. Request a fresh task and use the matching profile-local
+<code class="docutils literal notranslate"><span class="pre">ingest/</span></code> file:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>block
 </pre></div>
 </div>
-<p>and submit the newly generated ingest file.</p>
+<p>Do not edit canonical translation store shards to work around a mismatch.</p>
 </section>
-<section id="context-render-drift">
-<h2><code class="docutils literal notranslate"><span class="pre">context_render_drift</span></code></h2>
-<p><code class="docutils literal notranslate"><span class="pre">context.md</span></code> differs from <code class="docutils literal notranslate"><span class="pre">context.json</span></code>. If the difference is chapter notes
-you want to keep, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>import-md<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+<section id="legacy-paths-after-migration">
+<h2>Legacy paths after migration</h2>
+<p>After <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span></code>, mutable translation state belongs under
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>. Old <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> paths such as <code class="docutils literal notranslate"><span class="pre">context.json</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tasks/</span></code>, <code class="docutils literal notranslate"><span class="pre">ingest/</span></code>, <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, and <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> are legacy
+migration input, not current profile storage.</p>
+</section>
+<section id="stale-tasks-and-context">
+<h2>Stale tasks and context</h2>
+<p>If insertion reports stale task metadata, request a new task after the context,
+glossary, source, or version change:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>block
 </pre></div>
 </div>
-<p>Prefer <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">chapter-note</span></code> for future chapter summaries.</p>
+<p><code class="docutils literal notranslate"><span class="pre">context.json</span></code> is authoritative. If <code class="docutils literal notranslate"><span class="pre">context.md</span></code> contains manual notes, import
+or replace them with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">import-md</span></code> before rendering. Do not mark
+context ready until the user has approved required questions.</p>
 </section>
-<section id="series-prepare-pack-source-conflict-series-prepare-pack-source-missing">
-<h2><code class="docutils literal notranslate"><span class="pre">series_prepare_pack_source_conflict</span></code> / <code class="docutils literal notranslate"><span class="pre">series_prepare_pack_source_missing</span></code></h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> requires exactly one policy source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span>--source-file<span class="w"> </span>./book5/book.epub<span class="w"> </span>--from-book<span class="w"> </span>./book4<span class="w"> </span>...
-</pre></div>
-</div>
-<p>or:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span>--source-file<span class="w"> </span>./book5/book.epub<span class="w"> </span>--pack<span class="w"> </span>./series-context.json<span class="w"> </span>...
-</pre></div>
-</div>
-<p>Do not pass both <code class="docutils literal notranslate"><span class="pre">--from-book</span></code> and <code class="docutils literal notranslate"><span class="pre">--pack</span></code>, and do not omit both.</p>
-</section>
-<section id="series-prepare-profile-conflict">
-<h2><code class="docutils literal notranslate"><span class="pre">series_prepare_profile_conflict</span></code></h2>
-<p>The target profile already exists but does not match the requested
-target/locale/model (or explicit actor/harness override). Re-run with a
-compatible profile configuration, choose another profile name, or explicitly
-recreate it:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>...<span class="w"> </span>--replace-profile<span class="w"> </span>--write
-</pre></div>
-</div>
-</section>
-<section id="series-prepare-chapter-audit-failed">
-<h2><code class="docutils literal notranslate"><span class="pre">series_prepare_chapter_audit_failed</span></code></h2>
-<p>The EPUB chapter audit found blocking TOC/map mismatches during series setup.
-Inspect the generated report and fix the source before continuing:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>chapters<span class="w"> </span>./book5<span class="w"> </span>--audit
-</pre></div>
-</div>
-</section>
-<section id="series-prepare-isolated-mode">
-<h2><code class="docutils literal notranslate"><span class="pre">series_prepare_isolated_mode</span></code></h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> is a project-root workflow. Do not run it from
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>. Move to the project root or parent directory first,
-then rerun the command there.</p>
-</section>
-<section id="source-drift-after-extraction">
-<h2>Source drift after extraction</h2>
-<p>If the source file changed since the last <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code>, the recorded
-source hash no longer matches and inserts/builds are blocked. Re-extract to
-realign the chunks and source manifest:</p>
+<section id="source-drift-and-missing-chunks">
+<h2>Source drift and missing chunks</h2>
+<p>Re-extract after an intentional source change or when chunks are missing:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>./book
+booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit
 </pre></div>
 </div>
-<p>Then re-request tasks against the refreshed source.</p>
+<p>The source checksum and chapter audit must be current before new tasks are
+created. An extracted EPUB target with no chapter-map boundary is an error;
+warning-only preview or navigation findings remain visible for review.</p>
 </section>
-<section id="validation-warnings-during-bounded-todo-runs">
-<h2>Validation warnings during bounded todo runs</h2>
-<p>Bounded todo runs should use scoped validation per batch:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapter<span class="w"> </span>CHAPTER<span class="w"> </span>--fail-on-warnings
+<section id="validation-and-build">
+<h2>Validation and build</h2>
+<p>Use scoped checks during bounded work and the full validation before output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-on-warnings
+booktx<span class="w"> </span>validate<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-on-warnings
+booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--require-complete
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span> <span class="pre">./book</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--fail-on-warnings</span></code> only for the
-final pre-build check. If validation flags an old accepted record, use
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translation</span> <span class="pre">revise-record</span></code> to fix it; never edit
-<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> directly.</p>
-<p>Warnings remain non-fatal for plain <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code>, but <code class="docutils literal notranslate"><span class="pre">todo-resume</span></code> and
-the generated todo workflow expect warnings to be cleared before continuing.</p>
+<p>If EPUB validation reports an inline-XHTML finding, preserve the source tag and
+attribute skeleton and change only text nodes. The same preflight is used by
+validation and build.</p>
+<p>If an output filename does not match the profile target, update the profile
+configuration rather than renaming generated files by hand.</p>
 </section>
-<section id="latest-todo-is-incomplete">
-<h2>Latest todo is incomplete</h2>
-<p>Inspect the live bounded-run state before requesting more work:</p>
+<section id="context-and-series-preparation">
+<h2>Context and series preparation</h2>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> is a project-root workflow. Provide exactly one policy
+source, either <code class="docutils literal notranslate"><span class="pre">--from-book</span></code> or <code class="docutils literal notranslate"><span class="pre">--pack</span></code>, then review the generated questionnaire
+before <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>. Do not run series preparation from a profile root.</p>
+</section>
+<section id="epub-output-policy">
+<h2>EPUB output policy</h2>
+<p>Target language metadata and generated hyphenation CSS are controlled by the
+profile’s <code class="docutils literal notranslate"><span class="pre">[epub_output]</span></code> policy. Automatic hyphenation still depends on the
+reader. Set <code class="docutils literal notranslate"><span class="pre">hyphenation</span> <span class="pre">=</span> <span class="pre">&quot;none&quot;</span></code> when the reader produces unacceptable
+breaks, then rebuild.</p>
+</section>
+<section id="bounded-todos">
+<h2>Bounded todos</h2>
+<p>Inspect an incomplete run before requesting more work:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest
 booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest<span class="w"> </span>--format<span class="w"> </span>block
 </pre></div>
 </div>
-<p>If <code class="docutils literal notranslate"><span class="pre">todo-status</span></code> reports overlap ambiguity, re-run with <code class="docutils literal notranslate"><span class="pre">--todo-id</span> <span class="pre">TODO</span></code>.</p>
+<p>When planned chapters are complete, create a new bounded todo with
+<code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">todo-next</span></code>. Keep todo files as run-control artifacts, not submission
+files.</p>
 </section>
-<section id="todo-planned-chapters-are-already-complete">
-<h2>Todo planned chapters are already complete</h2>
-<p>When the planned chapter set is finished, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">todo-resume</span></code> stops
-instead of issuing a task for the next chapter. Start a new bounded run if you
-want more work:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--write
+<section id="glossary-and-termbase">
+<h2>Glossary and termbase</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">glossary</span></code> for binding terminology decisions and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">termbase</span></code>
+for advanced reusable preferences. After a mandatory glossary change, request
+fresh translation tasks and audit the effective output. Longer glossary phrases
+shadow contained shorter matches; do not force an unnatural compound to satisfy
+a shorter rule.</p>
+</section>
+<section id="judge-ingest">
+<h2>Judge ingest</h2>
+<p>For a corrupted judge ingest file, regenerate it from the stored task:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>reset-ingest<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--format<span class="w"> </span>decisions<span class="w"> </span>--write
 </pre></div>
 </div>
-</section>
-<section id="task-created-outside-a-todo">
-<h2>Task created outside a todo</h2>
-<p>If a user asked to continue a bounded run but the current task was created with
-plain <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code>, switch back to the todo controller:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest<span class="w"> </span>--format<span class="w"> </span>block
-</pre></div>
-</div>
-</section>
-<section id="context-is-not-ready">
-<h2>Context is not ready</h2>
-<p>Translation work requires a ready context. If you see <code class="docutils literal notranslate"><span class="pre">translation</span> <span class="pre">context</span> <span class="pre">is</span> <span class="pre">missing</span> <span class="pre">or</span> <span class="pre">not</span> <span class="pre">ready</span></code>, initialize and mark it ready:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--non-interactive
-booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
-<span class="c1"># Ask the user to approve or edit answers, then use context approve before mark-ready.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
-</pre></div>
-</div>
-</section>
-<section id="missing-source-chunks">
-<h2>Missing source chunks</h2>
-<p><code class="docutils literal notranslate"><span class="pre">No</span> <span class="pre">source</span> <span class="pre">chunks</span> <span class="pre">found</span></code> means extraction has not run (or the source file is
-missing). Check <code class="docutils literal notranslate"><span class="pre">.booktx/source-config.toml</span></code> points at an existing source
-file, then:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>./book
-</pre></div>
-</div>
-</section>
-<section id="output-filename-mismatch">
-<h2>Output filename mismatch</h2>
-<p>The output filename must match the profile target language. For Markdown the
-rebuilt file is <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/output/&lt;name&gt;.md</span></code>; for EPUB it is
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/output/&lt;name&gt;.epub</span></code>. If <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">build</span></code> complains,
-create a profile with a matching <code class="docutils literal notranslate"><span class="pre">--target</span></code>/output filename, or override with
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">create</span> <span class="pre">...</span> <span class="pre">--output-filename</span> <span class="pre">book.de.md</span></code>.</p>
-</section>
-<section id="old-booktx-ingest-path-after-migration">
-<h2>Old <code class="docutils literal notranslate"><span class="pre">.booktx/ingest</span></code> path after migration</h2>
-<p>After <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span></code>, submissions belong under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/</span></code>, never <code class="docutils literal notranslate"><span class="pre">.booktx/ingest/</span></code>. If a missing-file
-error hints at the profile-local ingest path, switch to that file. Re-running
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code> regenerates the correct ingest file.</p>
-</section>
-<section id="translationtodo-is-not-fully-defined">
-<h2><code class="docutils literal notranslate"><span class="pre">TranslationTodo</span></code> is not fully defined</h2>
-<p>This indicates an internal booktx model initialization bug, not a translation
-error. The message looks like:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>`TranslationTodo` is not fully defined; you should define `StatusTotals`,
-then call `TranslationTodo.model_rebuild()`.
-</pre></div>
-</div>
-<p>Do not edit todo JSON manually. Upgrade booktx or run the fixed version where
-<code class="docutils literal notranslate"><span class="pre">StatusTotals</span></code> is defined in <code class="docutils literal notranslate"><span class="pre">booktx.models</span></code> and <code class="docutils literal notranslate"><span class="pre">TranslationTodo</span></code> no longer
-requires a late Pydantic <code class="docutils literal notranslate"><span class="pre">model_rebuild()</span></code>.</p>
-<p>If you see <code class="docutils literal notranslate"><span class="pre">internal</span> <span class="pre">todo</span> <span class="pre">model</span> <span class="pre">initialization</span> <span class="pre">failed</span></code> instead, the error
-classifier detected a schema/program error rather than a data validation error.
-Report this as a booktx bug with the full error message.</p>
-<p>Do not use <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span> <span class="pre">--force</span></code> during normal translation setup. If a legacy migration truly needs it, pass <code class="docutils literal notranslate"><span class="pre">--reason</span></code> and document the external approval.</p>
-</section>
-<section id="epub-inline-xhtml-validation-failures">
-<h2>EPUB inline XHTML validation failures</h2>
-<p>If validation reports <code class="docutils literal notranslate"><span class="pre">inline_xhtml_preserved</span></code>, <code class="docutils literal notranslate"><span class="pre">inline_xhtml_no_new_attributes</span></code>, <code class="docutils literal notranslate"><span class="pre">inline_xhtml_no_block_tags</span></code>, or <code class="docutils literal notranslate"><span class="pre">inline_xhtml_opaque_preserved</span></code>, correct the target so it preserves the source inline XHTML skeleton. Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">audit-inline</span> <span class="pre">./book</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span></code> to list active records that need review.</p>
-</section>
-<section id="validate-passed-but-build-failed-inline-xhtml">
-<h2>Validate passed but build failed (inline XHTML)</h2>
-<p>If <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">build</span></code> fails with <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">inline</span> <span class="pre">XHTML</span> <span class="pre">skeleton</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">match</span> <span class="pre">the</span> <span class="pre">source</span></code>
-but <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> reported no errors, this indicates a validation gap that
-should no longer occur with the current version. The EPUB inline-XHTML preflight
-is now shared between validate/check and build.</p>
-<p>If you encounter this, run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span></code> which uses the build-grade preflight:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0005</span><span class="w"> </span>--fail-on-warnings
-</pre></div>
-</div>
-<p>The check output will show the exact record, chapter, source/target snippet, and
-suggested fix commands. File a booktx bug if check also misses the error that
-build catches.</p>
-</section>
-<section id="toc-lists-more-chapters-than-chapter-map">
-<h2>TOC lists more chapters than chapter-map</h2>
-<p>An EPUB contents page can advertise numbered chapters that were not extracted
-or not detected. Symptoms: <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> reports
-<code class="docutils literal notranslate"><span class="pre">epub_toc_chapter_missing_from_map</span></code> or <code class="docutils literal notranslate"><span class="pre">epub_toc_href_extracted_but_unmapped</span></code>,
-or the chapter map ends early (for example at <code class="docutils literal notranslate"><span class="pre">TEN</span></code> while the TOC lists
-<code class="docutils literal notranslate"><span class="pre">ONE</span></code> through <code class="docutils literal notranslate"><span class="pre">TWENTY-SIX</span></code>).</p>
-<p>Diagnose with the read-only audit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>chapters<span class="w"> </span>.<span class="w"> </span>--audit
-</pre></div>
-</div>
-<p>Interpret the findings:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">epub_toc_href_missing_from_extracted_spans</span></code> means the target XHTML was not
-extracted. The source is likely a preview/truncated EPUB or extraction
-skipped a spine document. Do not synthesize empty chapters; re-extract from a
-complete source.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">epub_toc_href_extracted_but_unmapped</span></code> means the target was extracted but no
-chapter boundary covers it, so translation would skip it. It is a blocking
-<code class="docutils literal notranslate"><span class="pre">error</span></code> finding: <code class="docutils literal notranslate"><span class="pre">next</span></code>, <code class="docutils literal notranslate"><span class="pre">next-chapter</span></code>, <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">next</span> <span class="pre">--chapter</span></code>, and todo
-creation will refuse new work until it is resolved. Re-extract to refresh
-upstream block annotations, or inspect the source with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">epub</span> <span class="pre">inspect</span> <span class="pre">.</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">epub_navigation_partial</span></code> indicates navigation is a strict subset of the
-visible chapter signals.</p></li>
-</ul>
-<p>Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">chapters</span> <span class="pre">.</span></code> to refresh the map after fixing the source or
-re-extracting.</p>
-</section>
-<section id="bad-hyphenation-in-a-translated-epub-for-example-le-icht">
-<h2>Bad hyphenation in a translated EPUB, for example <code class="docutils literal notranslate"><span class="pre">le-icht</span></code></h2>
-<p>Build a complete output and inspect the reported EPUB policy:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>de_default<span class="w"> </span>--require-complete
-</pre></div>
-</div>
-<p>booktx writes the profile target locale to the publication metadata and content
-document language attributes. Automatic hyphenation still depends on the
-reading system and its dictionaries; booktx cannot guarantee identical breaks.</p>
-<p>If a reader continues to produce bad breaks, disable automatic hyphenation:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="k">[epub_output]</span>
-<span class="n">hyphenation</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;none&quot;</span>
-</pre></div>
-</div>
-<p>Then rebuild. Source CSS conflict warnings in the build report may identify
-styles that still override the generated policy. To audit an existing output
-without rebuilding, run:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>de_default<span class="w"> </span>--epub-output<span class="w"> </span>--json
-</pre></div>
-</div>
-</section>
-<section id="corrupted-judge-ingest-file">
-<h2>Corrupted judge ingest file</h2>
-<p>If a judge ingest file glues a <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> line to the next <code class="docutils literal notranslate"><span class="pre">##</span> <span class="pre">RECORD</span></code> header,
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">insert</span></code> now reports a boundary-corruption error and suggests a
-reset command. Re-render the editable decision file from the stored task:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>reset-ingest<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span>--format<span class="w"> </span>decisions<span class="w"> </span>--write
-</pre></div>
-</div>
-<p>For <code class="docutils literal notranslate"><span class="pre">decision_kind:</span> <span class="pre">copy</span></code>, leave <code class="docutils literal notranslate"><span class="pre">TARGET</span></code> empty after the reset. booktx copies
-the selected candidate exactly during insert.</p>
-</section>
-<section id="glossary-alignment-ambiguous">
-<h2>glossary_alignment_ambiguous</h2>
-<p>This warning means a source record contains both a longer glossary occurrence and a shorter standalone occurrence, and a target form could belong to either. Review the companion source block from <code class="docutils literal notranslate"><span class="pre">translation</span> <span class="pre">search</span> <span class="pre">--write-block</span></code> or <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">audit-term</span> <span class="pre">--write-block</span></code>, then revise deliberately. Use <code class="docutils literal notranslate"><span class="pre">--fail-on-warnings</span></code> to block final validation until the ambiguity has been reviewed.</p>
-<p>For a contained phrase collision, add the longer binding source phrase. Booktx
-enforces only longest non-shadowed spans, so
-<code class="docutils literal notranslate"><span class="pre">Mole</span> <span class="pre">Cricket-kinden</span> <span class="pre">-&gt;</span> <span class="pre">Maulwurfsgrillenart</span></code> suppresses
-<code class="docutils literal notranslate"><span class="pre">Cricket-kinden</span> <span class="pre">-&gt;</span> <span class="pre">Grillenart</span></code> only inside that phrase. It does not suppress a
-separate standalone <code class="docutils literal notranslate"><span class="pre">Cricket-kinden</span></code> occurrence.</p>
-</section>
-<section id="stale-tasks-after-policy-import">
-<h2>Stale tasks after policy import</h2>
-<p>If insert reports that a task predates context, glossary, or applicable
-termbase changes, discard the old task and request a fresh one. Binding glossary
-changes stale paragraph, batch, chapter, and todo-created tasks. Check
-<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">termbase</span> <span class="pre">status</span> <span class="pre">--scope</span> <span class="pre">effective</span></code>, rerun <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">status</span></code>, and
-use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">todo-resume</span></code> when continuing a todo.</p>
-</section>
-<section id="starting-a-next-book-safely">
-<h2>Starting a next book safely</h2>
-<p>Run context-pack import as a dry run first, use <code class="docutils literal notranslate"><span class="pre">--write-termbase</span></code> only intentionally, run source analysis with <code class="docutils literal notranslate"><span class="pre">--sync-profiles</span></code>, and stop for human approval before <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>.</p>
+<p>For revision profiles, every record requires an explicit <code class="docutils literal notranslate"><span class="pre">copy</span></code> or <code class="docutils literal notranslate"><span class="pre">edited</span></code>
+decision. Later corrections use judge commands, not direct store edits.</p>
 </section>
 </section>
 </div>

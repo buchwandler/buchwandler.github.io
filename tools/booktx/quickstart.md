@@ -171,113 +171,78 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="quickstart">
 <h1>Quickstart</h1>
-<section id="initialize-a-source-project">
-<h2>1. Initialize a source project</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>init<span class="w"> </span>./demo<span class="w"> </span>--source-file<span class="w"> </span>book.epub<span class="w"> </span>--source-lang<span class="w"> </span>en
+<p>This is the human operator path. It stops before translation until required
+policy decisions are approved.</p>
+<p>Project-root profile commands use <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code>. Inside
+<code class="docutils literal notranslate"><span class="pre">translations/PROFILE/</span></code>, use <code class="docutils literal notranslate"><span class="pre">.</span></code> and the validated profile marker resolves the
+profile.</p>
+<section id="initialize-and-extract">
+<h2>1. Initialize and extract</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>init<span class="w"> </span>./demo<span class="w"> </span>--source-file<span class="w"> </span>./book.epub<span class="w"> </span>--source-lang<span class="w"> </span>en
+booktx<span class="w"> </span>extract<span class="w"> </span>./demo
+booktx<span class="w"> </span>chapters<span class="w"> </span>./demo<span class="w"> </span>--audit
 </pre></div>
 </div>
 </section>
-<section id="extract-the-source">
-<h2>2. Extract the source</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>extract<span class="w"> </span>./demo
+<section id="create-a-profile">
+<h2>2. Create a profile</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./demo<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>MODEL
+booktx<span class="w"> </span>guide<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
 </section>
-<section id="create-and-select-a-translation-profile">
-<h2>3. Create and select a translation profile</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./demo<span class="w"> </span>PROFILE_A<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>codex-openai/gpt-5.5@low<span class="w"> </span><span class="se">\</span>
+<section id="prepare-and-review-context">
+<h2>3. Prepare and review context</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--non-interactive
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./demo<span class="w"> </span>--write<span class="w"> </span>--sync-profiles
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
+booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
 </pre></div>
 </div>
+<p>Recommendations and questionnaire output are not approval. Show them to the
+human and wait for an explicit decision.</p>
 </section>
-<section id="initialize-the-profile-local-context">
-<h2>4. Initialize the profile-local context</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>--non-interactive
-booktx<span class="w"> </span>context<span class="w"> </span>questions<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A
-<span class="c1"># Ask the user to approve or edit answers before continuing.</span>
-booktx<span class="w"> </span>context<span class="w"> </span>approve<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>Q001<span class="w"> </span>--text<span class="w"> </span><span class="s2">&quot;&lt;USER_APPROVED_TEXT&gt;&quot;</span><span class="w"> </span>--approved-by<span class="w"> </span><span class="s2">&quot;user:&lt;USER&gt;&quot;</span>
-booktx<span class="w"> </span>context<span class="w"> </span>render<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A
+<section id="approve-and-prepare-the-agent">
+<h2>4. Approve and prepare the agent</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>approve<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>Q001<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--text<span class="w"> </span><span class="s2">&quot;&lt;USER_APPROVED_TEXT&gt;&quot;</span><span class="w"> </span>--approved-by<span class="w"> </span><span class="s2">&quot;user:NAME&quot;</span>
+booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>glossary<span class="w"> </span>mandate<span class="w"> </span>./demo<span class="w"> </span><span class="s2">&quot;Empire&quot;</span><span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span>
+booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>./demo<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
+<p>Start the harness inside <code class="docutils literal notranslate"><span class="pre">demo/translations/PROFILE/</span></code>.</p>
 </section>
-<section id="request-a-translation-task">
-<h2>5. Request a translation task</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span>--unit<span class="w"> </span>batch<span class="w"> </span>--max-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--format<span class="w"> </span>block
+<section id="run-and-build">
+<h2>5. Run and build</h2>
+<p>From the profile root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>guide<span class="w"> </span>.
+booktx<span class="w"> </span>status<span class="w"> </span>.
+booktx<span class="w"> </span>translate<span class="w"> </span>next<span class="w"> </span>.<span class="w"> </span>--unit<span class="w"> </span>batch<span class="w"> </span>--max-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--format<span class="w"> </span>block
+booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class="w"> </span>.<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--file<span class="w"> </span>ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
+booktx<span class="w"> </span>check<span class="w"> </span>.
+booktx<span class="w"> </span>validate<span class="w"> </span>.
+booktx<span class="w"> </span>build<span class="w"> </span>.
 </pre></div>
 </div>
-<p>Read <code class="docutils literal notranslate"><span class="pre">translations/PROFILE_A/context.md</span></code>, then fill the generated durable file
-under <code class="docutils literal notranslate"><span class="pre">translations/PROFILE_A/ingest/</span></code>.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">todo-next</span></code> and <code class="docutils literal notranslate"><span class="pre">todo-resume</span></code> for bounded multi-chapter
+runs. Do not edit the profile store or rendered context directly.</p>
 </section>
-<section id="submit-the-translation">
-<h2>6. Submit the translation</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class="w"> </span>./demo<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>PROFILE_A<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--file<span class="w"> </span>translations/PROFILE_A/ingest/TASK.block.txt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--format<span class="w"> </span>block
-</pre></div>
-</div>
-</section>
-<section id="validate-and-build">
-<h2>7. Validate and build</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>validate<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A
-booktx<span class="w"> </span>build<span class="w"> </span>./demo<span class="w"> </span>--profile<span class="w"> </span>PROFILE_A
-</pre></div>
-</div>
-<p>The rebuilt output is written under:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>demo/translations/PROFILE_A/output/
-</pre></div>
-</div>
-</section>
-<section id="legacy-projects">
-<h2>Legacy projects</h2>
-<p>Old single-layout projects can be migrated with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./demo<span class="w"> </span>PROFILE_A
-</pre></div>
-</div>
-</section>
-<section id="context-approval">
-<h2>Context approval</h2>
-<p>booktx never decides translation policy by itself. An agent may propose context answers, but the user must approve them before translation begins. Do not use <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span> <span class="pre">--force</span></code> during normal translation work.</p>
-</section>
-<section id="next-book-in-a-series">
-<h2>Next book in a series</h2>
-<p>Normal path:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--source-file<span class="w"> </span>./book5/book5.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-book<span class="w"> </span>./book4<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--from-profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--series-id<span class="w"> </span>shadows-of-the-apt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Shadows of the Apt German series context&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--model<span class="w"> </span>zai/glm-5.2@high<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--write-termbase<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--termbase-scope<span class="w"> </span>project
-</pre></div>
-</div>
-<p>Then review the generated context and finish the human gate:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--stdout
-booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>context<span class="w"> </span>render<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>./book5<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-</pre></div>
-</div>
-<p>Advanced/manual path:</p>
-<ol class="arabic simple">
-<li><p>Export a context pack from the completed profile.</p></li>
-<li><p>Initialize and extract the new book, then create the matching profile.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">import-pack</span></code> as a dry run, then re-run with <code class="docutils literal notranslate"><span class="pre">--write</span></code>.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">source</span> <span class="pre">analyze</span> <span class="pre">--write</span> <span class="pre">--sync-profiles</span></code>.</p></li>
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">prefill</span> <span class="pre">--from-source-analysis</span> <span class="pre">--consolidate-imported-policy</span> <span class="pre">--write</span></code>.</p></li>
-<li><p>Review the context questionnaire, then mark ready and write isolated agent instructions.</p></li>
-</ol>
+<section id="continue-with-the-guides">
+<h2>6. Continue with the guides</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../project-layout/"><span class="std std-doc">Project layout</span></a> describes shared and profile-local paths.</p></li>
+<li><p><a class="reference internal" href="../profiles/"><span class="std std-doc">Profiles</span></a> describes runtime resolution and isolation.</p></li>
+<li><p><a class="reference internal" href="../context/"><span class="std std-doc">Context</span></a> describes policy approval and provenance.</p></li>
+<li><p><a class="reference internal" href="../commands/"><span class="std std-doc">Commands</span></a> is the current CLI reference.</p></li>
+<li><p><a class="reference internal" href="../agent-workflow/"><span class="std std-doc">Agent workflow</span></a> describes durable task work.</p></li>
+<li><p><a class="reference internal" href="../series/"><span class="std std-doc">Series workflows</span></a> prepares the next book with a review stop.</p></li>
+<li><p><a class="reference internal" href="../markdown/"><span class="std std-doc">Markdown</span></a> and <a class="reference internal" href="../epub/"><span class="std std-doc">EPUB</span></a> describe format behavior.</p></li>
+<li><p><a class="reference internal" href="../troubleshooting/"><span class="std std-doc">Troubleshooting</span></a> maps failures to safe remediation.</p></li>
+</ul>
 </section>
 </section>
 </div>

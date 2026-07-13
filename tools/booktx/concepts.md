@@ -173,7 +173,7 @@ nav_tool: booktx
 <h1>Concepts</h1>
 <section id="source-project">
 <h2>Source project</h2>
-<p>A source project is the shared book and its source-derived state:</p>
+<p>The source project is shared by all profiles:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">source/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">.booktx/source-config.toml</span></code></p></li>
@@ -182,80 +182,45 @@ nav_tool: booktx
 <li><p><code class="docutils literal notranslate"><span class="pre">.booktx/chapter-map.json</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">.booktx/chunks/</span></code></p></li>
 </ul>
+<p>Re-extraction updates this shared source state for every profile.</p>
 </section>
 <section id="translation-profile">
 <h2>Translation profile</h2>
-<p>A translation profile is an isolated translation effort under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>.</p>
-<p>It owns:</p>
-<ul class="simple">
-<li><p>target language and locale</p></li>
-<li><p>default actor / harness / model identity</p></li>
-<li><p>profile-local context</p></li>
-<li><p>translation store</p></li>
-<li><p>version ledger</p></li>
-<li><p>task files</p></li>
-<li><p>ingest files</p></li>
-<li><p>compatibility exported chunks</p></li>
-<li><p>validation reports</p></li>
-<li><p>rebuilt output</p></li>
-</ul>
+<p>A profile is an isolated translation effort under
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>. It owns target language and locale, identity
+configuration, context, the translation store, version ledger, tasks, ingest
+files, reviews, reports, and rebuilt output.</p>
+<p>Project-root commands require an explicit <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code> when they read or
+write profile-local data. A command run from a profile root resolves the profile
+from the validated <code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code> marker and uses <code class="docutils literal notranslate"><span class="pre">.</span></code> as its project
+argument. There is no project-wide selector and no implicit single-profile
+resolution.</p>
 </section>
-<section id="explicit-profile-selection">
-<h2>Explicit profile selection</h2>
-<p><code class="docutils literal notranslate"><span class="pre">.booktx/profile</span> <span class="pre">state</span></code> records the currently selected profile. When
-multiple profiles exist, commands that read or mutate translation state should
-use <code class="docutils literal notranslate"><span class="pre">--profile</span></code> or rely on the active selection.</p>
+<section id="state-of-truth">
+<h2>State of truth</h2>
+<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> is the canonical shard-based record
+store. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> is the compatibility materialization model used by
+the loader surface. <code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code> records version history.
+Generated <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, editor indexes, reports, and output files are derived
+artifacts and can be rebuilt.</p>
+<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.json</span></code> is authoritative context state.
+<code class="docutils literal notranslate"><span class="pre">context.md</span></code> is its rendered view. Effective context views used by tasks are
+snapshotted under <code class="docutils literal notranslate"><span class="pre">context-history/views/&lt;sha&gt;/</span></code>.</p>
 </section>
-<section id="versions-inside-a-profile">
-<h2>Versions inside a profile</h2>
-<p>Versions are scoped inside a profile, not across the whole project.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">1.1</span></code> and <code class="docutils literal notranslate"><span class="pre">1.2</span></code> are two candidates or context forks within the same profile</p></li>
-<li><p>a model change may create a new major track such as <code class="docutils literal notranslate"><span class="pre">2.1</span></code></p></li>
-<li><p>two profiles may both have a <code class="docutils literal notranslate"><span class="pre">1.1</span></code>, and those are intentionally independent</p></li>
-</ul>
-<p>Subversions are baseline-scoped, not full-live-context-scoped:</p>
-<ul class="simple">
-<li><p>a chapter-note append updates the next task’s effective context but keeps the
-same dotted version;</p></li>
-<li><p>a baseline policy change (style, glossary, answered questions, global rules,
-readiness, source metadata, language metadata) creates or selects the next
-subversion inside the current track.</p></li>
-</ul>
+<section id="versions-and-reviews">
+<h2>Versions and reviews</h2>
+<p>Versions are scoped inside one profile. A model or baseline policy change can
+create a new dotted version. A chapter note changes the next task’s effective
+context but does not create a dotted version by itself. Review candidates use
+the separate <code class="docutils literal notranslate"><span class="pre">R&lt;pass&gt;.&lt;run&gt;</span></code> namespace and are selected only when their
+provenance chain is valid.</p>
 </section>
-<section id="translation-store">
-<h2>Translation store</h2>
-<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code> is the primary record-level
-translation state for that profile.</p>
-<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/*.json</span></code> remains a compatibility/export
-surface managed by <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">export</span></code>.</p>
-</section>
-<section id="editor-qa-indexes">
-<h2>Editor QA indexes</h2>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">export-index</span></code> writes three generated profile-local artifacts:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">source-index.json</span></code> – source text only, for isolated profile workflows and source-language search</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">target-index.json</span></code> – effective target text only, for target-language search without source false positives</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">source-target-index.json</span></code> – slim source/target side-by-side view for translation-fit scanning</p></li>
-</ul>
-<p>All three are derived from the store, source chunks, and chapter map. They are
-safe to delete and regenerate. Do not edit them manually and do not use them as
-build input. The canonical state remains <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>.</p>
-</section>
-<section id="context">
-<h2>Context</h2>
-<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.json</span></code> is authoritative.</p>
-<p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.md</span></code> is a rendered agent view and must not be
-treated as the durable source of truth.</p>
-<p>Each task composes a context view from the current baseline plus the chapter
-notes that come before the target chapter in chapter-map order. That composed
-view is snapshotted under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context-history/views/&lt;sha&gt;/</span></code>
-and becomes immutable task evidence.</p>
-<p>Context is profile-local and never shared by linking or symlinking. For books
-in the same series, export reusable policy (style, global rules, glossary,
-approved question answers) as a series context pack and import it into the
-other profile: see <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">context</span> <span class="pre">export-pack</span></code> / <code class="docutils literal notranslate"><span class="pre">import-pack</span></code>.</p>
+<section id="context-and-terminology">
+<h2>Context and terminology</h2>
+<p>Context is profile-local. To reuse approved policy between books, use an
+explicit context pack. To align sibling profiles in one book, use <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">sync</span></code>; each target keeps its own context files.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">glossary</span></code> for human terminology decisions. Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">termbase</span></code>
+only for the advanced reusable preference storage surface.</p>
 </section>
 </section>
 </div>

@@ -171,178 +171,97 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="project-layout">
 <h1>Project layout</h1>
-<p><code class="docutils literal notranslate"><span class="pre">booktx</span></code> now uses a <strong>source-first, profile-aware</strong> layout.</p>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span></code> uses a source-first layout with profile-local mutable state:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>book/
-  source/
-    book.md
-
+  source/book.epub
   .booktx/
     source-config.toml
     source-manifest.json
     names.json
     chapter-map.json
     chunks/
-      0001.json
-      0002.json
-
-  translations/
-    PROFILE_A/
-      config.toml
-      identity.json
-      context.json
-      context.md
-      translation-store.json
-      translation-version-ledger.json
-      tasks/
-      ingest/
-      translated/
-      reports/
-      output/
-        book.de.md
+    reports/
+  translations/PROFILE/
+    .booktx-profile.json
+    config.toml
+    identity.json
+    context.json
+    context.md
+    context-history/views/&lt;sha&gt;/
+    translation-store/
+      manifest.json
+      current/
+      translation-candidates/
+      review-candidates/
+      transactions/
+    translation-version-ledger.json
+    tasks/
+    todos/
+    ingest/
+    reviews/
+    review-todos/
+    translated/
+    reports/
+    output/
 </pre></div>
 </div>
-<section id="shared-source-scope">
-<h2>Shared source scope</h2>
-<p><code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> contains only source-derived or source-shared state.</p>
+<section id="shared-source-state">
+<h2>Shared source state</h2>
+<p><code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> contains only source configuration and source-derived evidence:</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Path</p></th>
-<th class="head"><p>Scope</p></th>
-<th class="head"><p>Notes</p></th>
+<th class="head"><p>Meaning</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/source-config.toml</span></code></p></td>
-<td><p>shared</p></td>
-<td><p>Source language, source file, format, chunk size</p></td>
+<td><p>Source language, file, format, and chunking</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/source-manifest.json</span></code></p></td>
-<td><p>shared</p></td>
-<td><p>Source digest and rebuild metadata</p></td>
+<td><p>Source digest and extraction manifest</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/names.json</span></code></p></td>
-<td><p>shared</p></td>
-<td><p>Protected terms</p></td>
+<td><p>Protected source names</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/chapter-map.json</span></code></p></td>
-<td><p>shared</p></td>
-<td><p>Chapter-to-record/chunk metadata</p></td>
+<td><p>Chapter and record mapping</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/chunks/</span></code></p></td>
-<td><p>shared</p></td>
-<td><p>Extracted source chunks</p></td>
+<td><p>Extracted source records</p></td>
 </tr>
-</tbody>
-</table>
-<p>Do <strong>not</strong> put target-language translation state under <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> in a profile
-project.</p>
-</section>
-<section id="translation-profile-scope">
-<h2>Translation profile scope</h2>
-<p>Every translation effort lives under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>.</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Path</p></th>
-<th class="head"><p>Scope</p></th>
-<th class="head"><p>Notes</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/config.toml</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Target language, locale, output filename, default identity</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/identity.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Stored actor/harness/model defaults</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Authoritative translation context</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context.md</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Rendered context for agents</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Primary record-level translation state</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-version-ledger.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Version history inside this profile</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/tasks/</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Persisted translation tasks</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/ingest/</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Durable submission files</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Generated compatibility/export chunk JSON (rebuildable; not primary state)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/source-index.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Generated source-only editor QA index; rebuildable from source chunks and chapter map</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/target-index.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Generated target-only search index for editor QA; rebuildable from store, chunks, and chapter map</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/source-target-index.json</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Generated source/target side-by-side editor QA index; rebuildable from store, chunks, and chapter map</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/reports/</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Validation reports</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/output/</span></code></p></td>
-<td><p>profile-local</p></td>
-<td><p>Rebuilt translated documents (rebuildable from the store)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">.booktx/reports/</span></code></p></td>
+<td><p>Source and chapter audit reports</p></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="safety-rules">
-<h2>Safety rules</h2>
-<ol class="arabic simple">
-<li><p>A profile is the hard isolation boundary.</p></li>
-<li><p>Different languages must not share one translation store.</p></li>
-<li><p>Model experiments should usually be separate profiles, even for the same target language.</p></li>
-<li><p>Project-root profile-local commands require <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code>.</p></li>
-<li><p>Legacy single-layout projects should be migrated with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translated/</span></code> and <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/output/</span></code> are
-generated artifacts. They can be deleted and regenerated; do not treat them
-as primary state (the store and ledger are).</p></li>
-</ol>
+<section id="profile-local-state">
+<h2>Profile-local state</h2>
+<p>Each <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code> directory is an isolation boundary. The
+<code class="docutils literal notranslate"><span class="pre">translation-store/</span></code> directory is the canonical store backend; <code class="docutils literal notranslate"><span class="pre">context.json</span></code>
+and the version ledger are also durable state. Tasks, todos, submission files,
+reviews, judge artifacts, and reports remain profile-local.</p>
+<p><code class="docutils literal notranslate"><span class="pre">translated/</span></code>, editor indexes, and <code class="docutils literal notranslate"><span class="pre">output/</span></code> are generated artifacts. They are
+rebuildable from source state and the profile store and are not the source of
+truth.</p>
 </section>
-<section id="legacy-layout-and-migration">
-<h2>Legacy layout and migration</h2>
-<p>Legacy single-layout projects keep all state under <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>book/.booktx/
-  config.toml              # source + target config
-  manifest.json
-  names.json
-  chunks/
-  context.json
-  identity.json
-  translation-store.json
-  translation-version-ledger.json
-  tasks/
-  ingest/
-  translated/
-  reports/
-book/output/               # build output lived at the project root
+<section id="resolution-and-safety">
+<h2>Resolution and safety</h2>
+<p>From the project root, profile-local commands require <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code>.
+From a profile root, booktx resolves the profile through
+<code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code> and the validated <code class="docutils literal notranslate"><span class="pre">config.toml</span></code>, so commands use <code class="docutils literal notranslate"><span class="pre">.</span></code>.
+The marker also binds the profile to the current project source identity.</p>
+</section>
+<section id="legacy-layout">
+<h2>Legacy layout</h2>
+<p>A legacy single-layout project may still contain translation files under
+<code class="docutils literal notranslate"><span class="pre">.booktx/</span></code>. Migrate it with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE
 </pre></div>
 </div>
-<p>After <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span> <span class="pre">./book</span> <span class="pre">PROFILE</span></code>, mutable state
-moves under <code class="docutils literal notranslate"><span class="pre">translations/PROFILE/</span></code>, shared source state stays under
-<code class="docutils literal notranslate"><span class="pre">.booktx/</span></code>, and build output moves under <code class="docutils literal notranslate"><span class="pre">translations/PROFILE/output/</span></code>. The
-legacy <code class="docutils literal notranslate"><span class="pre">config.toml</span></code> is removed once migration completes.</p>
+<p>After migration, <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> keeps shared source state and profile-local mutable
+files move to <code class="docutils literal notranslate"><span class="pre">translations/PROFILE/</span></code>.</p>
 </section>
 </section>
 </div>

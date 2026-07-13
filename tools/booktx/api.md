@@ -171,16 +171,19 @@ nav_tool: booktx
 <div class="sphinxpress-doc">
 <section id="api-reference">
 <h1>API reference</h1>
-<p>This page exposes the internal modules through Sphinx autodoc. The public command-line interface is more stable than the Python internals.</p>
-<section id="stability-notes">
-<h2>Stability notes</h2>
-<ul class="simple">
-<li><p><strong>Stable public API</strong>: The CLI commands (<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">init</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">extract</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code>, etc.) and their JSON output shapes are the primary stable interface.</p></li>
-<li><p><strong>Stable models</strong>: Pydantic models in <code class="docutils literal notranslate"><span class="pre">booktx.models</span></code> (Chunk, Record, TranslationStore, TranslationTask, Manifest) are serialization contracts used by the CLI and external tools.</p></li>
-<li><p><strong>Service modules</strong>: <code class="docutils literal notranslate"><span class="pre">booktx.status</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.tasks</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.submissions</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.acceptance</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.rendering</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.io_utils</span></code> contain the extracted service logic. Their public functions are stable within a release cycle.</p></li>
-<li><p><strong>Internal helpers</strong>: <code class="docutils literal notranslate"><span class="pre">booktx.config</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.context</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.validate</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.build</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.chunking</span></code>, <code class="docutils literal notranslate"><span class="pre">booktx.placeholders</span></code> are intended stable but may change between minor releases.</p></li>
-<li><p><strong>Legacy</strong>: <code class="docutils literal notranslate"><span class="pre">booktx.html_io</span></code> contains shared XHTML helpers that may be consolidated in future releases.</p></li>
-</ul>
+<p>This page is generated reference material for selected internal Python modules.
+The CLI and its documented JSON output are the user-facing interface. Python
+module names and function signatures may change between releases unless a
+separate API contract says otherwise.</p>
+<p>The durable model names currently include <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>, translation
+records and review candidates, context models, profile configuration, source
+manifests, EPUB span metadata, and the v3 shard models in
+<code class="docutils literal notranslate"><span class="pre">booktx.store.models</span></code>. The profile-local canonical store is the
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> directory; <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>
+remains the compatibility materialization model.</p>
+<p>The reference is intentionally broad so generated documentation can expose
+model fields and service helpers. It should not be read as a promise that every
+imported symbol is a supported public API.</p>
 <p id="module-booktx.config">Project configuration and path resolution for legacy and profile layouts.</p>
 <p>booktx now supports two project shapes.</p>
 <p>Legacy single-layout projects:</p>
@@ -567,6 +570,16 @@ state lives under the explicitly resolved profile.</p>
 <dd></dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="booktx.config.translation_store_v3_root">
+<span class="sig-prename descclassname"><span class="pre">booktx.config.</span></span><span class="sig-name descname"><span class="pre">translation_store_v3_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.config.Project" title="booktx.config.Project"><span class="pre">Project</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></span><a class="reference internal" href="../_modules/booktx/config/#translation_store_v3_root"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="booktx.config.translation_store_v3_manifest_path">
+<span class="sig-prename descclassname"><span class="pre">booktx.config.</span></span><span class="sig-name descname"><span class="pre">translation_store_v3_manifest_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.config.Project" title="booktx.config.Project"><span class="pre">Project</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></span><a class="reference internal" href="../_modules/booktx/config/#translation_store_v3_manifest_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="booktx.config.translation_version_ledger_path">
 <span class="sig-prename descclassname"><span class="pre">booktx.config.</span></span><span class="sig-name descname"><span class="pre">translation_version_ledger_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.config.Project" title="booktx.config.Project"><span class="pre">Project</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a></span></span><a class="reference internal" href="../_modules/booktx/config/#translation_version_ledger_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
@@ -593,7 +606,7 @@ state lives under the explicitly resolved profile.</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="booktx.config.write_translation_store">
-<span class="sig-prename descclassname"><span class="pre">booktx.config.</span></span><span class="sig-name descname"><span class="pre">write_translation_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.config.Project" title="booktx.config.Project"><span class="pre">Project</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.models.TranslationStoreV2" title="booktx.models.TranslationStoreV2"><span class="pre">TranslationStoreV2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/booktx/config/#write_translation_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">booktx.config.</span></span><span class="sig-name descname"><span class="pre">write_translation_store</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">project</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.config.Project" title="booktx.config.Project"><span class="pre">Project</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">store</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.models.TranslationStore" title="booktx.models.TranslationStore"><span class="pre">TranslationStore</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#booktx.models.TranslationStoreV2" title="booktx.models.TranslationStoreV2"><span class="pre">TranslationStoreV2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/booktx/config/#write_translation_store"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
@@ -2425,8 +2438,8 @@ the per-task word budget, and the stop conditions.</p>
 <dd><p>Initial identity defaults captured when a profile is created.</p>
 <p>This is <strong>not</strong> the live identity. After creation, the authoritative
 identity lives in <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/identity.json</span></code> and is updated
-by <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">model</span> <span class="pre">set</span></code> / <code class="docutils literal notranslate"><span class="pre">actor</span> <span class="pre">set</span></code> / <code class="docutils literal notranslate"><span class="pre">harness</span> <span class="pre">set</span></code>. Profile list
-and show render the resolved <code class="docutils literal notranslate"><span class="pre">identity.json</span></code> value, not this field.</p>
+updated by <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">identity</span> <span class="pre">set</span></code> / <code class="docutils literal notranslate"><span class="pre">identity</span> <span class="pre">clear</span></code>. Profile list and
+show render the resolved <code class="docutils literal notranslate"><span class="pre">identity.json</span></code> value, not this field.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="booktx.models.ProfileIdentityConfig.model_config">
 <span class="sig-name descname"><span class="pre">model_config</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'extra':</span> <span class="pre">'forbid'}</span></span></dt>
@@ -4243,8 +4256,8 @@ When <code class="docutils literal notranslate"><span class="pre">None</span></c
 <p>When <code class="docutils literal notranslate"><span class="pre">None</span></code> (the default), booktx resolves effective policy from the
 profile kind: translation and legacy translation projects default to
 <code class="docutils literal notranslate"><span class="pre">target</span></code> language / <code class="docutils literal notranslate"><span class="pre">auto</span></code> hyphenation; pass-through profiles default to
-<code class="docutils literal notranslate"><span class="pre">preserve</span></code> / <code class="docutils literal notranslate"><span class="pre">preserve</span></code> (byte-identical output). Storing the model
-opts the project into an explicit policy.</p>
+<code class="docutils literal notranslate"><span class="pre">preserve</span></code> / <code class="docutils literal notranslate"><span class="pre">preserve</span></code> output policy. Storing the model opts the
+project into an explicit policy.</p>
 <p>See <code class="docutils literal notranslate"><span class="pre">booktx.epub_output_policy</span></code> for resolution and validation.</p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="booktx.models.EpubOutputConfig.model_config">
@@ -6710,7 +6723,7 @@ on the CLI module (which would create a circular import).</p>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="booktx.rendering.print_status_human">
-<span class="sig-prename descclassname"><span class="pre">booktx.rendering.</span></span><span class="sig-name descname"><span class="pre">print_status_human</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.status.StatusBundle" title="booktx.status.StatusBundle"><span class="pre">StatusBundle</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">chapter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.status.ChapterProgress" title="booktx.status.ChapterProgress"><span class="pre">ChapterProgress</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/booktx/rendering/#print_status_human"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">booktx.rendering.</span></span><span class="sig-name descname"><span class="pre">print_status_human</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">bundle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.status.StatusBundle" title="booktx.status.StatusBundle"><span class="pre">StatusBundle</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">chapter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#booktx.status.ChapterProgress" title="booktx.status.ChapterProgress"><span class="pre">ChapterProgress</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">guide</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">GuideResult</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/booktx/rendering/#print_status_human"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Render the human-readable <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">status</span></code> summary to the console.</p>
 </dd></dl>
 
@@ -7190,7 +7203,6 @@ reruns such as <code class="docutils literal notranslate"><span class="pre">R1.2
 <dd><p>Set the label for one major track.</p>
 </dd></dl>
 
-</section>
 </section>
 </div>
 {% endraw %}

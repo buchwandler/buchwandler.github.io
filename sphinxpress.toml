@@ -5,6 +5,24 @@ tools_dir = "tools"
 nav_data_dir = "_data/tool_nav"
 layout = "tool-doc"
 title = "buchwandler Tool Docs"
+protect_liquid = true
+
+[site.versioning]
+enabled = true
+default = "release"
+
+[[site.versioning.variants]]
+name = "release"
+label = "Latest release"
+source = "release"
+url_segment = ""
+
+[[site.versioning.variants]]
+name = "main"
+label = "Current main"
+source = "git_ref"
+ref = "main"
+url_segment = "main"
 
 [build]
 work_dir = ".sphinxpress"
@@ -63,6 +81,8 @@ conf_dir = "../../odoo17/booktx/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/booktx"
 release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
 
 [[projects]]
 name = "epub2text"
@@ -72,6 +92,9 @@ conf_dir = "../../odoo17/epub2text/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/epub2text"
 release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
 
 [[projects]]
 name = "phrasplit"
@@ -81,6 +104,9 @@ conf_dir = "../../odoo17/phrasplit/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/phrasplit"
 release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
 
 [[projects]]
 name = "text2epub"
@@ -90,6 +116,9 @@ conf_dir = "../../odoo17/text2epub/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/text2epub"
 release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
 
 [[projects]]
 name = "sphinxpress"
@@ -99,3 +128,7 @@ conf_dir = "../sphinxpress/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/sphinxpress"
 release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+

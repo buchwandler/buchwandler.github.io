@@ -175,11 +175,19 @@ nav_tool: sphinxpress
 <section id="jekyll-pages">
 <h2>Jekyll pages</h2>
 <p><code class="docutils literal notranslate"><span class="pre">build-site</span></code> writes one page per Sphinx JSON document under the configured <code class="docutils literal notranslate"><span class="pre">site.root</span></code> and <code class="docutils literal notranslate"><span class="pre">site.tools_dir</span></code>.</p>
+<p>When site versioning is enabled, the default variant keeps the stable release
+URL while non-default variants add their configured segment:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">tools/booktx/index.md</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">/tools/booktx/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tools/booktx/main/index.md</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">/tools/booktx/main/</span></code></p></li>
+</ul>
 <p>Each generated page is wrapped in a <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">class=&quot;sphinxpress-doc&quot;&gt;</span></code> and is preceded by a <code class="docutils literal notranslate"><span class="pre">&lt;style</span> <span class="pre">data-sphinxpress-style=&quot;api&quot;&gt;</span></code> block that ships a small, scoped sphinxpress stylesheet for Sphinx document-body elements. The stylesheet targets Python API descriptions, field lists, inline literals, and source links produced by <code class="docutils literal notranslate"><span class="pre">sphinx.ext.autodoc</span></code>. All rules are scoped to the <code class="docutils literal notranslate"><span class="pre">.sphinxpress-doc</span></code> wrapper so the host Jekyll theme is not affected outside generated pages.</p>
 </section>
 <section id="navigation-data">
 <h2>Navigation data</h2>
-<p>For each project, <code class="docutils literal notranslate"><span class="pre">build-site</span></code> writes a YAML file under <code class="docutils literal notranslate"><span class="pre">site.nav_data_dir</span></code>. Jekyll layouts can use this data to render project navigation.</p>
+<p>For each resolved project/variant target, <code class="docutils literal notranslate"><span class="pre">build-site</span></code> writes a YAML file under
+<code class="docutils literal notranslate"><span class="pre">site.nav_data_dir</span></code>. Jekyll layouts can use this data to render both page
+navigation and the version switcher for the logical project.</p>
 </section>
 <section id="epub-and-pdf">
 <h2>EPUB and PDF</h2>
@@ -197,6 +205,12 @@ produces a <code class="docutils literal notranslate"><span class="pre">YYYYMMDD
 that points at the most recent run. Failures include the relevant <code class="docutils literal notranslate"><span class="pre">Log:</span></code> path
 in the sphinxpress error message so the full stdout and stderr can be reviewed
 without rerunning the build.</p>
+</section>
+<section id="generated-output-manifest">
+<h2>Generated-output manifest</h2>
+<p><code class="docutils literal notranslate"><span class="pre">build-site</span></code> also writes <code class="docutils literal notranslate"><span class="pre">&lt;work_dir&gt;/site-output-manifest.json</span></code>. sphinxpress
+uses this manifest to remove stale generated Markdown pages for the selected
+targets without deleting hand-maintained content under the same tool tree.</p>
 </section>
 </section>
 </div>

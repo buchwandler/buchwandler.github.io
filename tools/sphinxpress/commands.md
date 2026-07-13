@@ -178,6 +178,12 @@ nav_tool: sphinxpress
 <section id="sphinxpress-list">
 <h2><code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">list</span></code></h2>
 <p>Lists configured projects and resolved release metadata.</p>
+<p>When site versioning is enabled, <code class="docutils literal notranslate"><span class="pre">list</span></code> expands each logical project into one
+line per resolved variant:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>booktx  release  v0.4.1  &lt;commit&gt;  &lt;release-url&gt;
+booktx  main     main    &lt;commit&gt;  &lt;branch-url&gt;
+</pre></div>
+</div>
 </section>
 <section id="sphinxpress-build-site">
 <h2><code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">build-site</span></code></h2>
@@ -185,8 +191,12 @@ nav_tool: sphinxpress
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinxpress<span class="w"> </span>build-site<span class="w"> </span>--all
 sphinxpress<span class="w"> </span>build-site<span class="w"> </span>--project<span class="w"> </span>tool-a
 sphinxpress<span class="w"> </span>build-site<span class="w"> </span>--projects<span class="w"> </span>tool-a,tool-b
+sphinxpress<span class="w"> </span>build-site<span class="w"> </span>--all<span class="w"> </span>--variant<span class="w"> </span>release
+sphinxpress<span class="w"> </span>build-site<span class="w"> </span>--projects<span class="w"> </span>tool-a,tool-b<span class="w"> </span>--variants<span class="w"> </span>release,main
 </pre></div>
 </div>
+<p>Without variant filters, <code class="docutils literal notranslate"><span class="pre">build-site</span> <span class="pre">--all</span></code> builds every configured variant for
+every selected project.</p>
 </section>
 <section id="sphinxpress-build-epub">
 <h2><code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">build-epub</span></code></h2>
@@ -222,6 +232,8 @@ sphinxpress<span class="w"> </span>build-book<span class="w"> </span>--format<sp
 <p>For <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">pdf</span></code>, the default backend matches <code class="docutils literal notranslate"><span class="pre">build-pdf</span></code>: aggregate
 <code class="docutils literal notranslate"><span class="pre">singlehtml</span></code> plus WeasyPrint, with explicit <code class="docutils literal notranslate"><span class="pre">latexpdf</span></code> still available through
 configuration.</p>
+<p>When site versioning is enabled, <code class="docutils literal notranslate"><span class="pre">build-book</span></code> uses <code class="docutils literal notranslate"><span class="pre">[book].docs_variant</span></code> and
+does not aggregate multiple variants into the same EPUB or PDF.</p>
 </section>
 <section id="sphinxpress-update-release">
 <h2><code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">update-release</span></code></h2>
@@ -250,6 +262,10 @@ configuration.</p>
 <section id="sphinxpress-validate">
 <h2><code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">validate</span></code></h2>
 <p>Runs checks, validates generated Jekyll output, and verifies aggregate book project creation.</p>
+<p>With site versioning enabled, <code class="docutils literal notranslate"><span class="pre">validate</span></code> resolves every configured site target,
+checks each version-switch URL in generated nav payloads, verifies nav-key
+uniqueness, confirms Liquid raw wrappers are balanced, and verifies the
+generated-output manifest exists.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sphinxpress<span class="w"> </span>validate
 sphinxpress<span class="w"> </span>validate<span class="w"> </span>--linkcheck
 </pre></div>

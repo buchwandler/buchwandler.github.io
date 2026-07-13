@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "booktx Architecture"
-permalink: /tools/booktx/architecture/
+title: "booktx Maintenance"
+permalink: /tools/booktx/maintenance/
 nav_tool: booktx
 ---
 
@@ -169,54 +169,48 @@ nav_tool: booktx
 </style>
 
 <div class="sphinxpress-doc">
-<section id="architecture">
-<h1>Architecture</h1>
-<section id="current-data-flow">
-<h2>Current data flow</h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source document
-  -&gt; booktx extract
-  -&gt; .booktx/chunks/*.json and source manifests
-  -&gt; selected profile context and canonical translation store
-  -&gt; translations/&lt;profile&gt;/translation-store/
-  -&gt; booktx validate/check
-  -&gt; generated translated exports and reports
-  -&gt; booktx build
-  -&gt; translations/&lt;profile&gt;/output/
+<section id="maintenance">
+<h1>Maintenance</h1>
+<p>Maintenance commands handle migration, diagnostics, generated exports, and
+low-level storage. They are separate from the human-first workflow and may be
+hidden from the default help panels.</p>
+<section id="diagnostics">
+<h2>Diagnostics</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>mode<span class="w"> </span>.
+booktx<span class="w"> </span>doctor<span class="w"> </span>isolation<span class="w"> </span>.
+booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>qa-scan<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
 </section>
-<section id="boundaries">
-<h2>Boundaries</h2>
-<p>The source boundary contains the source file, extraction configuration,
-protected names, chapter metadata, chunks, and source-analysis evidence. The
-profile boundary contains target language and locale, identity, context,
-translation versions, review candidates, tasks, submissions, validation
-reports, and output.</p>
-<p>The profile boundary is the hard mutable-state isolation boundary. A build or
-validation run resolves one profile and never reads another profile’s store.
-Cross-profile comparison is explicit through <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">compare</span></code> or judge
-workflows.</p>
+<section id="legacy-migration">
+<h2>Legacy migration</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>profile<span class="w"> </span>migrate-current<span class="w"> </span>./book<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>translate<span class="w"> </span>import-legacy<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>translate<span class="w"> </span>migrate-store<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>translate<span class="w"> </span>migrate-inline-xhtml<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+</pre></div>
+</div>
+<p>Use migration commands only for legacy projects. Current projects use
+<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>.</p>
 </section>
-<section id="runtime-resolution">
-<h2>Runtime resolution</h2>
-<p>At a project root, <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">PROFILE</span></code> selects the profile for a command. At a
-profile root, <code class="docutils literal notranslate"><span class="pre">.booktx-profile.json</span></code> is validated against the enclosing project,
-profile configuration, target locale, and source identity. The runtime then
-uses the marker-bound profile and brokers access to shared source data.</p>
+<section id="generated-exports-and-storage">
+<h2>Generated exports and storage</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>translate<span class="w"> </span>export-index<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>termbase<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>termbase<span class="w"> </span><span class="nb">export</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+</pre></div>
+</div>
+<p>Generated exports and indexes can be regenerated. Do not edit the profile store
+or generated files directly.</p>
 </section>
-<section id="store-and-provenance">
-<h2>Store and provenance</h2>
-<p>The canonical persisted backend is the shard-based v3 store under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code>. It stores a manifest plus
-per-chunk current, translation-candidate, and review-candidate shards.
-<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains the compatibility materialization model returned by
-the Python loader surface. Effective output still chooses a valid review
-candidate before the current translation version. Task context views and
-revision metadata preserve the source, baseline, and policy evidence needed to
-validate provenance.</p>
-<p>Generated compatibility exports, indexes, reports, and output are derived from
-the canonical store and can be regenerated. Agents and operators should inspect
-generated indexes or CLI output, not edit shard files directly.</p>
+<section id="recovery-boundaries">
+<h2>Recovery boundaries</h2>
+<p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">pass-through</span></code> is a generated reconstruction check. Version selection and
+record corrections must use the current <code class="docutils literal notranslate"><span class="pre">translate</span></code>, <code class="docutils literal notranslate"><span class="pre">review</span></code>, or <code class="docutils literal notranslate"><span class="pre">judge</span></code>
+workflow that owns the relevant provenance. Run the exact command help before
+using maintenance operations.</p>
 </section>
 </section>
 </div>

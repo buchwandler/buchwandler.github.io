@@ -235,11 +235,14 @@ python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> <
 <li class="toctree-l2"><a class="reference internal" href="outputs/#navigation-data">Navigation data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="outputs/#epub-and-pdf">EPUB and PDF</a></li>
 <li class="toctree-l2"><a class="reference internal" href="outputs/#build-logs">Build logs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="outputs/#generated-output-manifest">Generated-output manifest</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-metadata/">Release metadata</a></li>
 <li class="toctree-l1"><a class="reference internal" href="jekyll-integration/">Jekyll integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="jekyll-integration/#scoped-api-stylesheet">Scoped API stylesheet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jekyll-integration/#liquid-protection">Liquid protection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="jekyll-integration/#layout-follow-up-for-versioned-docs">Layout follow-up for versioned docs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API reference</a></li>
