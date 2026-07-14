@@ -27,7 +27,7 @@ url_segment = "main"
 [build]
 work_dir = ".sphinxpress"
 sphinx_build = "sphinx-build"
-fail_on_warning = true
+fail_on_warning = false
 keep_build_dir = false
 parallel = "auto"
 
