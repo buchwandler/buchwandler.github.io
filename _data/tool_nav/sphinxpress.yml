@@ -4,17 +4,17 @@ nav_key: sphinxpress
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.2
-source_commit: 621ca40e7e724c20ea8c17cc22f933a73842e614
-source_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.2
+source_ref: v0.1.3
+source_commit: 0e72ae1e7e970aad69e73ab3dd655615a3764149
+source_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.3
 is_default: true
 repo_url: https://github.com/buchwandler/sphinxpress
-release_tag: v0.1.2
-release_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.2
+release_tag: v0.1.3
+release_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.3
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.2
+  ref: v0.1.3
   url: /tools/sphinxpress/
   current: true
 - name: main

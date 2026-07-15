@@ -6,7 +6,6 @@ install:
 
 sphinxpress-build:
     sphinxpress build-site --all
-    python3 scripts/wrap_sphinxpress_jekyll_raw.py
 
 sphinxpress-check:
     sphinxpress check

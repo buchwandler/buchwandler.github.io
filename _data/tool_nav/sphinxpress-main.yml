@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 3d9ff4a54a2187adaf12c4ad857a571f9909f23b
+source_commit: 0e72ae1e7e970aad69e73ab3dd655615a3764149
 source_url: https://github.com/buchwandler/sphinxpress/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/sphinxpress
-release_tag: v0.1.2
-release_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.2
+release_tag: v0.1.3
+release_url: https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.3
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.2
+  ref: v0.1.3
   url: /tools/sphinxpress/
   current: false
 - name: main
