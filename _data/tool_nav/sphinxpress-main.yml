@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 0e72ae1e7e970aad69e73ab3dd655615a3764149
+source_commit: 09a59f01d37f01d85cf3192286583685dc1d52e3
 source_url: https://github.com/buchwandler/sphinxpress/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/sphinxpress

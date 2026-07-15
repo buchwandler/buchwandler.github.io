@@ -1,0 +1,961 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "booktx-main",
+  "entries": [
+    {
+      "url": "/tools/booktx/main/agent-workflow/",
+      "title": "booktx Agent workflow",
+      "snippet": "Before any of the workflows below, the human prepares the matching harness\ninstructions so the agent starts with the correct mode contract: …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Agent workflow",
+          "text": "Before any of the workflows below, the human prepares the matching harness\ninstructions so the agent starts with the correct mode contract:\n\nbooktx agents write . --mode isolated --profile PROFILE   # then cd translations/<profile>\nbooktx agents write . --mode collaborative                 # stay at the project root\n\n\n\n\nThe agent then starts in the matching directory and runs booktx mode . and\nbooktx doctor isolation . to confirm the mode. The generated AGENTS.md is\nthe local entry contract; it does not replace the installed booktx skill.",
+          "lower": "before any of the workflows below, the human prepares the matching harness\ninstructions so the agent starts with the correct mode contract:\n\nbooktx agents write . --mode isolated --profile profile   # then cd translations/<profile>\nbooktx agents write . --mode collaborative                 # stay at the project root\n\n\n\n\nthe agent then starts in the matching directory and runs booktx mode . and\nbooktx doctor isolation . to confirm the mode. the generated agents.md is\nthe local entry contract; it does not replace the installed booktx skill."
+        },
+        {
+          "anchor": "",
+          "heading": "Collaborative translation workflow",
+          "text": "Start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nIf multiple profiles exist, pass --profile on all translation-state commands.\n\nBefore starting isolated translation, run the generic source-policy interview when source analysis is available:\n\nbooktx source analyze BOOK --write --sync-profiles\nbooktx source interview-plan BOOK --profile PROFILE --write\nbooktx source interview-next BOOK --profile PROFILE --format markdown\nbooktx source interview-status BOOK --profile PROFILE --fail-if-open\n\n\n\n\nPersist only user-approved answers with booktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write, or record explicit skips with booktx source interview-skip.",
+          "lower": "start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nif multiple profiles exist, pass --profile on all translation-state commands.\n\nbefore starting isolated translation, run the generic source-policy interview when source analysis is available:\n\nbooktx source analyze book --write --sync-profiles\nbooktx source interview-plan book --profile profile --write\nbooktx source interview-next book --profile profile --format markdown\nbooktx source interview-status book --profile profile --fail-if-open\n\n\n\n\npersist only user-approved answers with booktx source interview-answer book cand-... --profile profile --target target --write, or record explicit skips with booktx source interview-skip."
+        },
+        {
+          "anchor": "",
+          "heading": "Isolated evaluation workflow",
+          "text": "Start inside translations/<profile>/ when you want unbiased model or context\nevaluation for one profile:\n\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\n\n\n\n\nIn isolated mode, use only profile-local booktx ... . commands. Never use\nparent paths, absolute paths, shell globs, interpreter snippets, or sibling\nprofile commands. If booktx prints a sibling profile or a parent path, stop and\nreport a booktx isolation bug.",
+          "lower": "start inside translations/<profile>/ when you want unbiased model or context\nevaluation for one profile:\n\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\n\n\n\n\nin isolated mode, use only profile-local booktx ... . commands. never use\nparent paths, absolute paths, shell globs, interpreter snippets, or sibling\nprofile commands. if booktx prints a sibling profile or a parent path, stop and\nreport a booktx isolation bug."
+        },
+        {
+          "anchor": "",
+          "heading": "2. Read the profile-local context",
+          "text": "context.md\n\n\n\n\nDo not start translating when context.json is missing or not ready.",
+          "lower": "context.md\n\n\n\n\ndo not start translating when context.json is missing or not ready."
+        },
+        {
+          "anchor": "",
+          "heading": "3. Request a task",
+          "text": "booktx translate next . --unit batch --max-words 800 --format block\n\n\n\n\nThis writes:\n\n\ntasks/TASK.agent.md\n\n\ntasks/TASK.source.block.txt\n\n\ningest/TASK.block.txt\n\n\ningest/TASK.json\n\n\n\nThe task JSON also records the dotted baseline version plus the immutable\ncontext-view snapshot used for that task.",
+          "lower": "booktx translate next . --unit batch --max-words 800 --format block\n\n\n\n\nthis writes:\n\n\ntasks/task.agent.md\n\n\ntasks/task.source.block.txt\n\n\ningest/task.block.txt\n\n\ningest/task.json\n\n\n\nthe task json also records the dotted baseline version plus the immutable\ncontext-view snapshot used for that task."
+        },
+        {
+          "anchor": "",
+          "heading": "4. Fill the durable ingest file",
+          "text": "Read tasks/TASK.agent.md first. Translate only the record bodies in\ningest/TASK.block.txt. Keep record ids and placeholders unchanged. Treat\n# glossary:, # style:, and # termbase: as source-only directives; never\ncopy them into target text.",
+          "lower": "read tasks/task.agent.md first. translate only the record bodies in\ningest/task.block.txt. keep record ids and placeholders unchanged. treat\n# glossary:, # style:, and # termbase: as source-only directives; never\ncopy them into target text."
+        },
+        {
+          "anchor": "",
+          "heading": "5. Lint, then submit the result",
+          "text": "booktx translate lint-block . \\\n  --task-id TASK \\\n  --file ingest/TASK.block.txt \\\n  --format block\n\nbooktx translate insert . \\\n  --task-id TASK \\\n  --file ingest/TASK.block.txt \\\n  --format block\n\n\n\n\nLint is read-only. If lint fails, repair the same ingest file and rerun lint\nonce. If the same failure class remains, stop and report it.",
+          "lower": "booktx translate lint-block . \\\n  --task-id task \\\n  --file ingest/task.block.txt \\\n  --format block\n\nbooktx translate insert . \\\n  --task-id task \\\n  --file ingest/task.block.txt \\\n  --format block\n\n\n\n\nlint is read-only. if lint fails, repair the same ingest file and rerun lint\nonce. if the same failure class remains, stop and report it."
+        },
+        {
+          "anchor": "",
+          "heading": "6. Validate and build",
+          "text": "booktx validate . --fail-on-warnings\nbooktx build . --require-complete\n\n\n\n\nFor per-batch validation within a bounded todo, use scoped booktx check . --chapter CHAPTER --fail-on-warnings instead. Use booktx validate only for the final pre-build check.",
+          "lower": "booktx validate . --fail-on-warnings\nbooktx build . --require-complete\n\n\n\n\nfor per-batch validation within a bounded todo, use scoped booktx check . --chapter chapter --fail-on-warnings instead. use booktx validate only for the final pre-build check."
+        },
+        {
+          "anchor": "",
+          "heading": "6b. Refresh editor QA indexes",
+          "text": "After translation/review changes, refresh the three editor-friendly indexes for source-only search, target-only search, and side-by-side review:\n\nbooktx translate export-index .\n\n\n\n\nThis writes source-index.json, target-index.json, and source-target-index.json into the profile directory. Use rg to search translated terms without English source false positives (rg \"Wespen\" target-index.json) or source terms without target matches (rg \"Wasp\" source-index.json). Use nvim source-target-index.json for side-by-side scanning.\n\nThe three files are generated artifacts. Do not edit them manually and do not use them as build input.",
+          "lower": "after translation/review changes, refresh the three editor-friendly indexes for source-only search, target-only search, and side-by-side review:\n\nbooktx translate export-index .\n\n\n\n\nthis writes source-index.json, target-index.json, and source-target-index.json into the profile directory. use rg to search translated terms without english source false positives (rg \"wespen\" target-index.json) or source terms without target matches (rg \"wasp\" source-index.json). use nvim source-target-index.json for side-by-side scanning.\n\nthe three files are generated artifacts. do not edit them manually and do not use them as build input."
+        },
+        {
+          "anchor": "",
+          "heading": "7. Longer bounded runs",
+          "text": "When the user asks to continue for multiple chapters, do not request one huge\nchapter task. Create a todo instead:\n\nbooktx translate todo-next . --profile PROFILE_A --chapters 3 \\\n  --batch-words 800 --write --resume --format block\n\n\n\n\nRead the generated todo markdown and follow its loop. After each completed\nchapter, fill the booktx context chapter-note template printed by\nbooktx translate insert; do not hand-edit context.md for chapter notes.\n\nIf validation flags an old accepted record during a bounded run, use\nbooktx translate revise-record . RECORD_ID --target \"...\" to fix it.\nNever edit canonical translation store shards directly.\nThat chapter-note append affects the next task’s context view, but it does not\nmint a new dotted version by itself.\nStop when the todo goal is complete, wh…",
+          "lower": "when the user asks to continue for multiple chapters, do not request one huge\nchapter task. create a todo instead:\n\nbooktx translate todo-next . --profile profile_a --chapters 3 \\\n  --batch-words 800 --write --resume --format block\n\n\n\n\nread the generated todo markdown and follow its loop. after each completed\nchapter, fill the booktx context chapter-note template printed by\nbooktx translate insert; do not hand-edit context.md for chapter notes.\n\nif validation flags an old accepted record during a bounded run, use\nbooktx translate revise-record . record_id --target \"...\" to fix it.\nnever edit canonical translation store shards directly.\nthat chapter-note append affects the next task’s context view, but it does not\nmint a new dotted version by itself.\nstop when the todo goal is complete, wh…"
+        },
+        {
+          "anchor": "",
+          "heading": "Guardrails",
+          "text": "Never mix files between profiles.\n\n\nCross-profile reference work is allowed only from project-root collaborative\nmode.\n\n\nUse booktx context sync for same-book sibling policy propagation instead of\ncopying context files or hand-repeating glossary decisions.\n\n\nNever edit .booktx/chunks/*.json directly during normal translation work.\n\n\nNever edit translations/<profile>/translation-store/ directly. If validation flags an old accepted record, use booktx translate revise-record to fix it.\n\n\nNever edit translations/<profile>/translated/*.json directly; use booktx translate export.\n\n\nUse booktx profile compare for cross-profile review instead of mixing store files manually.\n\n\nUse project-root mode to create or refresh a judge source snapshot. After\nbooktx judge sync-sources or booktx judge prepar…",
+          "lower": "never mix files between profiles.\n\n\ncross-profile reference work is allowed only from project-root collaborative\nmode.\n\n\nuse booktx context sync for same-book sibling policy propagation instead of\ncopying context files or hand-repeating glossary decisions.\n\n\nnever edit .booktx/chunks/*.json directly during normal translation work.\n\n\nnever edit translations/<profile>/translation-store/ directly. if validation flags an old accepted record, use booktx translate revise-record to fix it.\n\n\nnever edit translations/<profile>/translated/*.json directly; use booktx translate export.\n\n\nuse booktx profile compare for cross-profile review instead of mixing store files manually.\n\n\nuse project-root mode to create or refresh a judge source snapshot. after\nbooktx judge sync-sources or booktx judge prepar…"
+        },
+        {
+          "anchor": "",
+          "heading": "Finish a single large chapter",
+          "text": "If the user asks to finish a chapter and that chapter has more than the safe\ntask budget, booktx automatically creates a single-chapter todo and returns\nbounded batch tasks. Do not create a giant chapter task:\n\nbooktx translate next . --chapter 0005 --unit chapter --max-words 800 --format block\n# booktx auto-creates a single-chapter todo and returns a bounded batch\nbooktx translate insert . --task-id TASK --file ingest/TASK.block.txt --format block\nbooktx check . --chapter 0005 --fail-on-warnings\nbooktx translate todo-resume . --latest --format block\n# repeat until chapter complete\n\n\n\n\nOnly use --force-chapter for small chapters or when explicitly requested.\n\nAfter each chapter, always run booktx check before adding the chapter note:\n\nbooktx check . --chapter 0005 --fail-on-warnings\nbookt…",
+          "lower": "if the user asks to finish a chapter and that chapter has more than the safe\ntask budget, booktx automatically creates a single-chapter todo and returns\nbounded batch tasks. do not create a giant chapter task:\n\nbooktx translate next . --chapter 0005 --unit chapter --max-words 800 --format block\n# booktx auto-creates a single-chapter todo and returns a bounded batch\nbooktx translate insert . --task-id task --file ingest/task.block.txt --format block\nbooktx check . --chapter 0005 --fail-on-warnings\nbooktx translate todo-resume . --latest --format block\n# repeat until chapter complete\n\n\n\n\nonly use --force-chapter for small chapters or when explicitly requested.\n\nafter each chapter, always run booktx check before adding the chapter note:\n\nbooktx check . --chapter 0005 --fail-on-warnings\nbookt…"
+        },
+        {
+          "anchor": "",
+          "heading": "Context approval hard stop",
+          "text": "Stop and ask the user whenever context questions are open or only recommended. Do not translate from a context that you generated yourself. Prepare a user review form, then wait for explicit approval or edited answers before running booktx context approve and booktx context mark-ready.",
+          "lower": "stop and ask the user whenever context questions are open or only recommended. do not translate from a context that you generated yourself. prepare a user review form, then wait for explicit approval or edited answers before running booktx context approve and booktx context mark-ready."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUB inline XHTML translation rule",
+          "text": "For EPUB records, preserve inline XHTML tags and attributes in the target. Translate text nodes only. Do not convert <em> or other inline tags to Markdown markers.",
+          "lower": "for epub records, preserve inline xhtml tags and attributes in the target. translate text nodes only. do not convert <em> or other inline tags to markdown markers."
+        },
+        {
+          "anchor": "",
+          "heading": "7b. Quality review pass workflow",
+          "text": "After validation passes, optional quality review improves the accepted target:\n\n\nbooktx review status . – check which records still need review per pass\n\n\nbooktx review next . --pass 1 – create a review task for un-reviewed records\n\n\nEdit the prefilled ingest block under translations/<profile>/reviews/\n\n\nbooktx review insert . --review-task-id TASK --file reviews/TASK.block.txt\n\n\nRepeat for pass 2: booktx review next . --pass 2, review, insert\n\n\nValidate and build: booktx validate . --fail-on-warnings && booktx build . --require-complete --require-reviewed\n\n\n\nDuring review pass tasks, review the existing target critically. Preserve meaning,\nplaceholders, protected terms, and inline XHTML. If the current target is already\ngood, submit it unchanged – booktx stores an explicit review candida…",
+          "lower": "after validation passes, optional quality review improves the accepted target:\n\n\nbooktx review status . – check which records still need review per pass\n\n\nbooktx review next . --pass 1 – create a review task for un-reviewed records\n\n\nedit the prefilled ingest block under translations/<profile>/reviews/\n\n\nbooktx review insert . --review-task-id task --file reviews/task.block.txt\n\n\nrepeat for pass 2: booktx review next . --pass 2, review, insert\n\n\nvalidate and build: booktx validate . --fail-on-warnings && booktx build . --require-complete --require-reviewed\n\n\n\nduring review pass tasks, review the existing target critically. preserve meaning,\nplaceholders, protected terms, and inline xhtml. if the current target is already\ngood, submit it unchanged – booktx stores an explicit review candida…"
+        },
+        {
+          "anchor": "",
+          "heading": "Judge / selection workflow",
+          "text": "When the user wants to assemble a best-of profile from several sibling\ntranslations, stay at the project root and use the dedicated judge workflow:\n\nbooktx judge create-profile ./book JUDGE_PROFILE \\\n  --target de \\\n  --target-locale de-DE \\\n  --sources PROFILE_A,PROFILE_B \\\n  --context-from PROFILE_A \\\n  --model gpt-5.5\n\nbooktx judge accept-identical ./book \\\n  --profile JUDGE_PROFILE \\\n  --sources PROFILE_A,PROFILE_B \\\n  --unit chapter \\\n  --chapter 0001 \\\n  --max-records 100 \\\n  --write\n\nbooktx judge next ./book \\\n  --profile JUDGE_PROFILE \\\n  --sources PROFILE_A,PROFILE_B \\\n  --unit chapter \\\n  --chapter 0001 \\\n  --max-records 8 \\\n  --format decisions\n\n\n\n\nJudge tasks expose the original source plus each source profile’s effective\ncandidate. Prefer exact candidate copy when one option…",
+          "lower": "when the user wants to assemble a best-of profile from several sibling\ntranslations, stay at the project root and use the dedicated judge workflow:\n\nbooktx judge create-profile ./book judge_profile \\\n  --target de \\\n  --target-locale de-de \\\n  --sources profile_a,profile_b \\\n  --context-from profile_a \\\n  --model gpt-5.5\n\nbooktx judge accept-identical ./book \\\n  --profile judge_profile \\\n  --sources profile_a,profile_b \\\n  --unit chapter \\\n  --chapter 0001 \\\n  --max-records 100 \\\n  --write\n\nbooktx judge next ./book \\\n  --profile judge_profile \\\n  --sources profile_a,profile_b \\\n  --unit chapter \\\n  --chapter 0001 \\\n  --max-records 8 \\\n  --format decisions\n\n\n\n\njudge tasks expose the original source plus each source profile’s effective\ncandidate. prefer exact candidate copy when one option…"
+        },
+        {
+          "anchor": "",
+          "heading": "Isolated judge workflow",
+          "text": "After the selection profile context is ready, prepare a profile-local snapshot\nof the source candidate stores:\n\nbooktx judge prepare-isolation ./book --profile JUDGE_PROFILE --write\n\n\n\n\nThis copies source translation-store.json, translation-version-ledger.json,\nidentity.json, and profile-config.json into an immutable\njudge-sources/snapshots/<SNAPSHOT_ID>/ directory and writes judge-specific\nAGENTS.md instructions. Then start the judge agent inside the profile root:\n\ncd translations/JUDGE_PROFILE\n\n# profile root\nbooktx judge status .\nbooktx judge accept-identical . --unit chapter --chapter 0001 --max-records 100 --write\nbooktx judge next . --unit chapter --chapter 0001 --max-records 8 --format decisions\nbooktx judge insert . --judge-task-id TASK --file judge-ingest/TASK.decisions.txt --for…",
+          "lower": "after the selection profile context is ready, prepare a profile-local snapshot\nof the source candidate stores:\n\nbooktx judge prepare-isolation ./book --profile judge_profile --write\n\n\n\n\nthis copies source translation-store.json, translation-version-ledger.json,\nidentity.json, and profile-config.json into an immutable\njudge-sources/snapshots/<snapshot_id>/ directory and writes judge-specific\nagents.md instructions. then start the judge agent inside the profile root:\n\ncd translations/judge_profile\n\n# profile root\nbooktx judge status .\nbooktx judge accept-identical . --unit chapter --chapter 0001 --max-records 100 --write\nbooktx judge next . --unit chapter --chapter 0001 --max-records 8 --format decisions\nbooktx judge insert . --judge-task-id task --file judge-ingest/task.decisions.txt --for…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/api/",
+      "title": "booktx API reference",
+      "snippet": "This page is generated reference material for selected internal Python modules.\nThe CLI and its documented JSON output are the user-facing i …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "API reference",
+          "text": "This page is generated reference material for selected internal Python modules.\nThe CLI and its documented JSON output are the user-facing interface. Python\nmodule names and function signatures may change between releases unless a\nseparate API contract says otherwise.\n\nThe durable model names currently include TranslationStoreV2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, EPUB span metadata, and the v3 shard models in\nbooktx.store.models. New profiles currently default to the v2 canonical\nstore, while the shard-based v3 backend under\ntranslations/<profile>/translation-store/ remains an explicit opt-in\nmigration target. TranslationStoreV2 remains the compatibility\nmaterialization model.\n\nThe reference is intentionally broad so genera…",
+          "lower": "this page is generated reference material for selected internal python modules.\nthe cli and its documented json output are the user-facing interface. python\nmodule names and function signatures may change between releases unless a\nseparate api contract says otherwise.\n\nthe durable model names currently include translationstorev2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, epub span metadata, and the v3 shard models in\nbooktx.store.models. new profiles currently default to the v2 canonical\nstore, while the shard-based v3 backend under\ntranslations/<profile>/translation-store/ remains an explicit opt-in\nmigration target. translationstorev2 remains the compatibility\nmaterialization model.\n\nthe reference is intentionally broad so genera…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/architecture/",
+      "title": "booktx Architecture",
+      "snippet": "source document\n  -> booktx extract\n  -> .booktx/chunks/*.json and source manifests\n  -> selected profile context and canonical translation …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Current data flow",
+          "text": "source document\n  -> booktx extract\n  -> .booktx/chunks/*.json and source manifests\n  -> selected profile context and canonical translation store\n  -> translations/<profile>/translation-store/\n  -> booktx validate/check\n  -> generated translated exports and reports\n  -> booktx build\n  -> translations/<profile>/output/",
+          "lower": "source document\n  -> booktx extract\n  -> .booktx/chunks/*.json and source manifests\n  -> selected profile context and canonical translation store\n  -> translations/<profile>/translation-store/\n  -> booktx validate/check\n  -> generated translated exports and reports\n  -> booktx build\n  -> translations/<profile>/output/"
+        },
+        {
+          "anchor": "",
+          "heading": "Boundaries",
+          "text": "The source boundary contains the source file, extraction configuration,\nprotected names, chapter metadata, chunks, and source-analysis evidence. The\nprofile boundary contains target language and locale, identity, context,\ntranslation versions, review candidates, tasks, submissions, validation\nreports, and output.\n\nThe profile boundary is the hard mutable-state isolation boundary. A build or\nvalidation run resolves one profile and never reads another profile’s store.\nCross-profile comparison is explicit through booktx profile compare or judge\nworkflows.",
+          "lower": "the source boundary contains the source file, extraction configuration,\nprotected names, chapter metadata, chunks, and source-analysis evidence. the\nprofile boundary contains target language and locale, identity, context,\ntranslation versions, review candidates, tasks, submissions, validation\nreports, and output.\n\nthe profile boundary is the hard mutable-state isolation boundary. a build or\nvalidation run resolves one profile and never reads another profile’s store.\ncross-profile comparison is explicit through booktx profile compare or judge\nworkflows."
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime resolution",
+          "text": "At a project root, --profile PROFILE selects the profile for a command. At a\nprofile root, .booktx-profile.json is validated against the enclosing project,\nprofile configuration, target locale, and source identity. The runtime then\nuses the marker-bound profile and brokers access to shared source data.",
+          "lower": "at a project root, --profile profile selects the profile for a command. at a\nprofile root, .booktx-profile.json is validated against the enclosing project,\nprofile configuration, target locale, and source identity. the runtime then\nuses the marker-bound profile and brokers access to shared source data."
+        },
+        {
+          "anchor": "",
+          "heading": "Store and provenance",
+          "text": "New profiles currently default to the v2 canonical store. The shard-based v3\nstore under translations/<profile>/translation-store/ remains an explicit\nopt-in migration target until its stabilization gate is completed. When v3 is\nactive it stores a manifest plus per-chunk current, translation-candidate, and\nreview-candidate shards. TranslationStoreV2 remains the compatibility\nmaterialization model returned by the Python loader surface. Effective output\nstill chooses a valid review candidate before the current translation version.\nTask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\nGenerated compatibility exports, indexes, reports, and output are derived from\nthe canonical store and can be regenerated. Agents and operat…",
+          "lower": "new profiles currently default to the v2 canonical store. the shard-based v3\nstore under translations/<profile>/translation-store/ remains an explicit\nopt-in migration target until its stabilization gate is completed. when v3 is\nactive it stores a manifest plus per-chunk current, translation-candidate, and\nreview-candidate shards. translationstorev2 remains the compatibility\nmaterialization model returned by the python loader surface. effective output\nstill chooses a valid review candidate before the current translation version.\ntask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\ngenerated compatibility exports, indexes, reports, and output are derived from\nthe canonical store and can be regenerated. agents and operat…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/commands/",
+      "title": "booktx Commands",
+      "snippet": "This is the human-first CLI reference. Run booktx guide PROJECT --profile PROFILE to get the next lifecycle action for a real project.\n\nProj …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Commands",
+          "text": "This is the human-first CLI reference. Run booktx guide PROJECT --profile PROFILE to get the next lifecycle action for a real project.\n\nProject-root commands use an explicit --profile PROFILE for profile-local\nstate. A command run inside translations/PROFILE/ uses . and the validated\nprofile marker to resolve that profile.",
+          "lower": "this is the human-first cli reference. run booktx guide project --profile profile to get the next lifecycle action for a real project.\n\nproject-root commands use an explicit --profile profile for profile-local\nstate. a command run inside translations/profile/ uses . and the validated\nprofile marker to resolve that profile."
+        },
+        {
+          "anchor": "",
+          "heading": "Human lifecycle",
+          "text": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book PROFILE --target de --target-locale de-DE --model MODEL\nbooktx guide ./book --profile PROFILE\nbooktx status ./book --profile PROFILE\nbooktx check ./book --profile PROFILE\nbooktx build ./book --profile PROFILE\n\n\n\n\nUse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the EPUB output inspection\nsurface.",
+          "lower": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book profile --target de --target-locale de-de --model model\nbooktx guide ./book --profile profile\nbooktx status ./book --profile profile\nbooktx check ./book --profile profile\nbooktx build ./book --profile profile\n\n\n\n\nuse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the epub output inspection\nsurface."
+        },
+        {
+          "anchor": "",
+          "heading": "Human decisions",
+          "text": "booktx context init ./book --profile PROFILE --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile PROFILE --write\nbooktx source interview-next ./book --profile PROFILE --format markdown\nbooktx context questionnaire ./book --profile PROFILE --stdout\nbooktx context approve ./book --profile PROFILE Q001 --text \"...\" --approved-by \"user:NAME\"\nbooktx context mark-ready ./book --profile PROFILE\nbooktx glossary status ./book --profile PROFILE\nbooktx glossary mandate ./book \"Empire\" --profile PROFILE --target \"Imperium\" --forbid \"Reich\"\nbooktx identity set ./book --profile PROFILE --actor user:NAME --harness codex --model MODEL\n\n\n\n\nRecommendations and generated questionnaires are not user approval. Stop and\nwait for explicit approval…",
+          "lower": "booktx context init ./book --profile profile --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile profile --write\nbooktx source interview-next ./book --profile profile --format markdown\nbooktx context questionnaire ./book --profile profile --stdout\nbooktx context approve ./book --profile profile q001 --text \"...\" --approved-by \"user:name\"\nbooktx context mark-ready ./book --profile profile\nbooktx glossary status ./book --profile profile\nbooktx glossary mandate ./book \"empire\" --profile profile --target \"imperium\" --forbid \"reich\"\nbooktx identity set ./book --profile profile --actor user:name --harness codex --model model\n\n\n\n\nrecommendations and generated questionnaires are not user approval. stop and\nwait for explicit approval…"
+        },
+        {
+          "anchor": "",
+          "heading": "Profiles and isolation",
+          "text": "booktx profile list ./book\nbooktx profile show ./book PROFILE\nbooktx profile compare ./book --profiles PROFILE_A,PROFILE_B --record 0001-000001\nbooktx agents write ./book --mode isolated --profile PROFILE\nbooktx agents status ./book\nbooktx profile migrate-current ./book PROFILE\nbooktx profile create-pass-through ./book passthrough_en\n\n\n\n\nFor isolated profile-root work:\n\ncd translations/PROFILE\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\nbooktx validate .\nbooktx build .",
+          "lower": "booktx profile list ./book\nbooktx profile show ./book profile\nbooktx profile compare ./book --profiles profile_a,profile_b --record 0001-000001\nbooktx agents write ./book --mode isolated --profile profile\nbooktx agents status ./book\nbooktx profile migrate-current ./book profile\nbooktx profile create-pass-through ./book passthrough_en\n\n\n\n\nfor isolated profile-root work:\n\ncd translations/profile\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\nbooktx validate .\nbooktx build ."
+        },
+        {
+          "anchor": "",
+          "heading": "Series and quality workflows",
+          "text": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile PROFILE --series-id series-id \\\n  --title \"Series policy\" --target de --target-locale de-DE --model MODEL --write\nbooktx series recipe write ./book5 --profile PROFILE \\\n  --series-id series-id --title \"Series policy\" --output ./series.toml\nbooktx review configure ./book --profile PROFILE\nbooktx review status ./book --profile PROFILE\nbooktx judge create-profile ./book JUDGE --target de --sources PROFILE --model MODEL\nbooktx judge prepare-isolation ./book --profile JUDGE --write\nbooktx judge prepare-grammar ./book --source-profile PROFILE --profile JUDGE --model MODEL --write\nbooktx judge status ./book --profile JUDGE\n\n\n\n\nseries prepare stops for the human context review. review configures and\nmonitor…",
+          "lower": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile profile --series-id series-id \\\n  --title \"series policy\" --target de --target-locale de-de --model model --write\nbooktx series recipe write ./book5 --profile profile \\\n  --series-id series-id --title \"series policy\" --output ./series.toml\nbooktx review configure ./book --profile profile\nbooktx review status ./book --profile profile\nbooktx judge create-profile ./book judge --target de --sources profile --model model\nbooktx judge prepare-isolation ./book --profile judge --write\nbooktx judge prepare-grammar ./book --source-profile profile --profile judge --model model --write\nbooktx judge status ./book --profile judge\n\n\n\n\nseries prepare stops for the human context review. review configures and\nmonitor…"
+        },
+        {
+          "anchor": "",
+          "heading": "Agent protocol",
+          "text": "translate is the coding-agent task namespace. It is not the normal human\nstarting point:\n\nbooktx translate next ./book --profile PROFILE --unit batch --max-words 800 --format block\nbooktx translate insert ./book --profile PROFILE --task-id TASK \\\n  --file translations/PROFILE/ingest/TASK.block.txt --format block\nbooktx translate lint-block ./book --profile PROFILE --file ingest/TASK.block.txt --format block\nbooktx translate todo-next ./book --profile PROFILE --chapters 3 --batch-words 800 --write\nbooktx translate todo-status ./book --profile PROFILE --latest\nbooktx translate todo-resume ./book --profile PROFILE --latest --format block\nbooktx translate get-record ./book --profile PROFILE RECORD --json\nbooktx translate compare ./book --profile PROFILE RECORD --versions 1.1,1.2\nbooktx transl…",
+          "lower": "translate is the coding-agent task namespace. it is not the normal human\nstarting point:\n\nbooktx translate next ./book --profile profile --unit batch --max-words 800 --format block\nbooktx translate insert ./book --profile profile --task-id task \\\n  --file translations/profile/ingest/task.block.txt --format block\nbooktx translate lint-block ./book --profile profile --file ingest/task.block.txt --format block\nbooktx translate todo-next ./book --profile profile --chapters 3 --batch-words 800 --write\nbooktx translate todo-status ./book --profile profile --latest\nbooktx translate todo-resume ./book --profile profile --latest --format block\nbooktx translate get-record ./book --profile profile record --json\nbooktx translate compare ./book --profile profile record --versions 1.1,1.2\nbooktx transl…"
+        },
+        {
+          "anchor": "",
+          "heading": "Advanced and maintenance surfaces",
+          "text": "These commands are intentionally separate from the human happy path:\n\nversion current/list/show/select/set-label/fork-context\nwhoami\nmode\ninspect\nqa-scan\ntermbase status/add/validate-entry/export/import/scan-source/audit/\n  promote-candidate/promote-context/write-review\ntranslate export/export-index/list/activate/review/set-record/\n  import-legacy/migrate-store/audit-inline/migrate-inline-xhtml/task-status\njudge sync-sources/next/continue/record/show/insert/reset-ingest/\n  accept-identical/sweep-identical/prefill-policy-fixes/finish-chapter-plan\ncontext doctor/render/audit-term/export-pack/import-pack/sync/recommend/answer/import-md\nsource record/chapter\n\n\n\n\nUse the matching --help output before running an advanced or maintenance\ncommand. The old top-level translation, model, actor, and h…",
+          "lower": "these commands are intentionally separate from the human happy path:\n\nversion current/list/show/select/set-label/fork-context\nwhoami\nmode\ninspect\nqa-scan\ntermbase status/add/validate-entry/export/import/scan-source/audit/\n  promote-candidate/promote-context/write-review\ntranslate export/export-index/list/activate/review/set-record/\n  import-legacy/migrate-store/audit-inline/migrate-inline-xhtml/task-status\njudge sync-sources/next/continue/record/show/insert/reset-ingest/\n  accept-identical/sweep-identical/prefill-policy-fixes/finish-chapter-plan\ncontext doctor/render/audit-term/export-pack/import-pack/sync/recommend/answer/import-md\nsource record/chapter\n\n\n\n\nuse the matching --help output before running an advanced or maintenance\ncommand. the old top-level translation, model, actor, and h…"
+        },
+        {
+          "anchor": "",
+          "heading": "Public human command paths",
+          "text": "The following paths are part of the current Typer tree. Use --help to\nconfirm arguments and flags before copying an example.\n\n\n\nbooktx agents\nbooktx agents clean\nbooktx agents status\nbooktx agents write\nbooktx build\nbooktx chapters\nbooktx check\nbooktx context\nbooktx context add-question\nbooktx context add-term\nbooktx context approve\nbooktx context audit-term\nbooktx context chapter-note\nbooktx context doctor\nbooktx context export-pack\nbooktx context import-pack\nbooktx context init\nbooktx context mandate-term\nbooktx context mark-ready\nbooktx context prefill\nbooktx context promote-candidate\nbooktx context questionnaire\nbooktx context questions\nbooktx context remove-term\nbooktx context render\nbooktx context reset-term\nbooktx context status\nbooktx context sync\nbooktx doctor isolation\nbooktx ep…",
+          "lower": "the following paths are part of the current typer tree. use --help to\nconfirm arguments and flags before copying an example.\n\n\n\nbooktx agents\nbooktx agents clean\nbooktx agents status\nbooktx agents write\nbooktx build\nbooktx chapters\nbooktx check\nbooktx context\nbooktx context add-question\nbooktx context add-term\nbooktx context approve\nbooktx context audit-term\nbooktx context chapter-note\nbooktx context doctor\nbooktx context export-pack\nbooktx context import-pack\nbooktx context init\nbooktx context mandate-term\nbooktx context mark-ready\nbooktx context prefill\nbooktx context promote-candidate\nbooktx context questionnaire\nbooktx context questions\nbooktx context remove-term\nbooktx context render\nbooktx context reset-term\nbooktx context status\nbooktx context sync\nbooktx doctor isolation\nbooktx ep…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/concepts/",
+      "title": "booktx Concepts",
+      "snippet": "The source project is shared by all profiles:\n\n\nsource/\n\n\n.booktx/source-config.toml\n\n\n.booktx/source-manifest.json\n\n\n.booktx/names.json\n\n\n. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Source project",
+          "text": "The source project is shared by all profiles:\n\n\nsource/\n\n\n.booktx/source-config.toml\n\n\n.booktx/source-manifest.json\n\n\n.booktx/names.json\n\n\n.booktx/chapter-map.json\n\n\n.booktx/chunks/\n\n\n\nRe-extraction updates this shared source state for every profile.",
+          "lower": "the source project is shared by all profiles:\n\n\nsource/\n\n\n.booktx/source-config.toml\n\n\n.booktx/source-manifest.json\n\n\n.booktx/names.json\n\n\n.booktx/chapter-map.json\n\n\n.booktx/chunks/\n\n\n\nre-extraction updates this shared source state for every profile."
+        },
+        {
+          "anchor": "",
+          "heading": "Translation profile",
+          "text": "A profile is an isolated translation effort under\ntranslations/<profile>/. It owns target language and locale, identity\nconfiguration, context, the translation store, version ledger, tasks, ingest\nfiles, reviews, reports, and rebuilt output.\n\nProject-root commands require an explicit --profile PROFILE when they read or\nwrite profile-local data. A command run from a profile root resolves the profile\nfrom the validated .booktx-profile.json marker and uses . as its project\nargument. There is no project-wide selector and no implicit single-profile\nresolution.",
+          "lower": "a profile is an isolated translation effort under\ntranslations/<profile>/. it owns target language and locale, identity\nconfiguration, context, the translation store, version ledger, tasks, ingest\nfiles, reviews, reports, and rebuilt output.\n\nproject-root commands require an explicit --profile profile when they read or\nwrite profile-local data. a command run from a profile root resolves the profile\nfrom the validated .booktx-profile.json marker and uses . as its project\nargument. there is no project-wide selector and no implicit single-profile\nresolution."
+        },
+        {
+          "anchor": "",
+          "heading": "State of truth",
+          "text": "New profiles currently use TranslationStoreV2 as the canonical record store.\nWhen a profile opts into v3, translations/<profile>/translation-store/\nbecomes the canonical shard-based backend. TranslationStoreV2 remains the\ncompatibility materialization model used by the loader surface.\ntranslation-version-ledger.json records version history. Generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. Effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/.",
+          "lower": "new profiles currently use translationstorev2 as the canonical record store.\nwhen a profile opts into v3, translations/<profile>/translation-store/\nbecomes the canonical shard-based backend. translationstorev2 remains the\ncompatibility materialization model used by the loader surface.\ntranslation-version-ledger.json records version history. generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/."
+        },
+        {
+          "anchor": "",
+          "heading": "Versions and reviews",
+          "text": "Versions are scoped inside one profile. A model or baseline policy change can\ncreate a new dotted version. A chapter note changes the next task’s effective\ncontext but does not create a dotted version by itself. Review candidates use\nthe separate R<pass>.<run> namespace and are selected only when their\nprovenance chain is valid.",
+          "lower": "versions are scoped inside one profile. a model or baseline policy change can\ncreate a new dotted version. a chapter note changes the next task’s effective\ncontext but does not create a dotted version by itself. review candidates use\nthe separate r<pass>.<run> namespace and are selected only when their\nprovenance chain is valid."
+        },
+        {
+          "anchor": "",
+          "heading": "Context and terminology",
+          "text": "Context is profile-local. To reuse approved policy between books, use an\nexplicit context pack. To align sibling profiles in one book, use context sync; each target keeps its own context files.\n\nUse booktx glossary for human terminology decisions. Use booktx termbase\nonly for the advanced reusable preference storage surface.",
+          "lower": "context is profile-local. to reuse approved policy between books, use an\nexplicit context pack. to align sibling profiles in one book, use context sync; each target keeps its own context files.\n\nuse booktx glossary for human terminology decisions. use booktx termbase\nonly for the advanced reusable preference storage surface."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/context/",
+      "title": "booktx Context",
+      "snippet": "Context is profile-local.\n\ntranslations/<profile>/context.json\ntranslations/<profile>/context.md\ntranslations/<profile>/context-history/view …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Context",
+          "text": "Context is profile-local.\n\ntranslations/<profile>/context.json\ntranslations/<profile>/context.md\ntranslations/<profile>/context-history/views/<sha>/{context.json,context.md,manifest.json}",
+          "lower": "context is profile-local.\n\ntranslations/<profile>/context.json\ntranslations/<profile>/context.md\ntranslations/<profile>/context-history/views/<sha>/{context.json,context.md,manifest.json}"
+        },
+        {
+          "anchor": "",
+          "heading": "Rules",
+          "text": "Build or answer the context before translating.\n\n\nRead translations/<profile>/context.md before opening a new task.\n\n\nTreat context.json as authoritative and context.md as rendered.\n\n\nPersist chapter notes with booktx context chapter-note, never by hand-editing context.md.\n\n\nContext is not shared across languages or model experiments. Series-wide consistency is achieved by importing an explicit context pack (booktx context export-pack / import-pack), not by sharing profile-local files.\n\n\nIf context.md already contains manual chapter notes, run booktx context import-md ./book --profile PROFILE --write before validating or rendering again.\n\n\nChapter-note appends change the next task’s effective context, but they do not create a new dotted version by themselves.\n\n\nEach new translation task s…",
+          "lower": "build or answer the context before translating.\n\n\nread translations/<profile>/context.md before opening a new task.\n\n\ntreat context.json as authoritative and context.md as rendered.\n\n\npersist chapter notes with booktx context chapter-note, never by hand-editing context.md.\n\n\ncontext is not shared across languages or model experiments. series-wide consistency is achieved by importing an explicit context pack (booktx context export-pack / import-pack), not by sharing profile-local files.\n\n\nif context.md already contains manual chapter notes, run booktx context import-md ./book --profile profile --write before validating or rendering again.\n\n\nchapter-note appends change the next task’s effective context, but they do not create a new dotted version by themselves.\n\n\neach new translation task s…"
+        },
+        {
+          "anchor": "",
+          "heading": "Source of truth and organization doctor",
+          "text": "context.json is the source of truth. Structured style, global_rules, and\nglossary entries are active policy. Setup questions and chapter notes are\nprovenance unless their decisions are promoted into structured policy with\ncommands such as context approve, glossary mandate, glossary add, or\nglossary reset.\n\nUse the report-only organization doctor to find duplicated or hidden policy:\n\nbooktx context doctor ./book --profile PROFILE\nbooktx context doctor ./book --profile PROFILE --json\nbooktx context doctor ./book --compare-profiles --json\nbooktx context doctor ./book --profile PROFILE --write-report reports/context-organization-report.md\n\n\n\n\nSingle-profile doctor works in project-root and isolated profile-root mode.\n--compare-profiles is a same-book cross-profile workflow and is rejected in…",
+          "lower": "context.json is the source of truth. structured style, global_rules, and\nglossary entries are active policy. setup questions and chapter notes are\nprovenance unless their decisions are promoted into structured policy with\ncommands such as context approve, glossary mandate, glossary add, or\nglossary reset.\n\nuse the report-only organization doctor to find duplicated or hidden policy:\n\nbooktx context doctor ./book --profile profile\nbooktx context doctor ./book --profile profile --json\nbooktx context doctor ./book --compare-profiles --json\nbooktx context doctor ./book --profile profile --write-report reports/context-organization-report.md\n\n\n\n\nsingle-profile doctor works in project-root and isolated profile-root mode.\n--compare-profiles is a same-book cross-profile workflow and is rejected in…"
+        },
+        {
+          "anchor": "",
+          "heading": "Same-book multi-profile context sync",
+          "text": "When several sibling profiles translate the same book and language pair, keep\ntheir reusable policy aligned with an explicit sync from project-root\ncollaborative mode:\n\nbooktx context sync ./book \\\n  --from PROFILE_A \\\n  --all-compatible \\\n  --section glossary \\\n  --term \"Empire\"\n\n\n\n\n\ncontext sync is a same-book cross-profile workflow. It is rejected in\nisolated profile-root mode.\n\n\nIt reuses the context-pack merge rules, but discovers sibling targets and\nrenders one consolidated plan across them.\n\n\nIt is a dry run by default. Re-run with --write only after reviewing the\nplan.\n\n\nIt never shares mutable files. Each target profile still keeps its own\ncontext.json and context.md.\n\n\nBy default, --all-compatible excludes pass-through profiles and selection\nprofiles.\n\n\n\nUse context export-pack…",
+          "lower": "when several sibling profiles translate the same book and language pair, keep\ntheir reusable policy aligned with an explicit sync from project-root\ncollaborative mode:\n\nbooktx context sync ./book \\\n  --from profile_a \\\n  --all-compatible \\\n  --section glossary \\\n  --term \"empire\"\n\n\n\n\n\ncontext sync is a same-book cross-profile workflow. it is rejected in\nisolated profile-root mode.\n\n\nit reuses the context-pack merge rules, but discovers sibling targets and\nrenders one consolidated plan across them.\n\n\nit is a dry run by default. re-run with --write only after reviewing the\nplan.\n\n\nit never shares mutable files. each target profile still keeps its own\ncontext.json and context.md.\n\n\nby default, --all-compatible excludes pass-through profiles and selection\nprofiles.\n\n\n\nuse context export-pack…"
+        },
+        {
+          "anchor": "",
+          "heading": "Source-analysis review queue",
+          "text": "booktx source analyze is a source-review command, not a glossary approval\ncommand. The canonical JSON and generated Markdown are a translation-risk review\nqueue for names, world-building terms, titles, and rare terms that may need a\ndecision before translation starts.\n\nbooktx source analyze ./book --write\nbooktx source analyze ./book --write --sync-profiles\nbooktx source analysis ./book/translations/PROFILE\n\n\n\n\n\nThe JSON report is authoritative; Markdown is a readable review queue.\n\n\nProfile-root source analysis reads only the current profile snapshot. If it\nsays the snapshot is missing or stale, refresh from the project root with\nbooktx source analyze . --write --sync-profiles.\n\n\nDefault review buckets suppress ordinary vocabulary and contraction fragments.\n\n\n\nTo turn reviewed candidates…",
+          "lower": "booktx source analyze is a source-review command, not a glossary approval\ncommand. the canonical json and generated markdown are a translation-risk review\nqueue for names, world-building terms, titles, and rare terms that may need a\ndecision before translation starts.\n\nbooktx source analyze ./book --write\nbooktx source analyze ./book --write --sync-profiles\nbooktx source analysis ./book/translations/profile\n\n\n\n\n\nthe json report is authoritative; markdown is a readable review queue.\n\n\nprofile-root source analysis reads only the current profile snapshot. if it\nsays the snapshot is missing or stale, refresh from the project root with\nbooktx source analyze . --write --sync-profiles.\n\n\ndefault review buckets suppress ordinary vocabulary and contraction fragments.\n\n\n\nto turn reviewed candidates…"
+        },
+        {
+          "anchor": "",
+          "heading": "Source-policy interview",
+          "text": "Use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. The interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze BOOK --write --sync-profiles\nbooktx source interview-plan BOOK --profile PROFILE --write\nbooktx source interview-next BOOK --profile PROFILE --format markdown\nbooktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write\nbooktx source interview-skip BOOK CAND-... --profile PROFILE --disposition ignored --reason \"REASON\" --write\nbooktx source interview-status BOOK --profile PROFILE --fail-if-open\nbooktx context prefill BOOK --profile PROFILE --from-source-analysis --gate-readiness --write\n\n\n\n\nRun interview-stat…",
+          "lower": "use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. the interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze book --write --sync-profiles\nbooktx source interview-plan book --profile profile --write\nbooktx source interview-next book --profile profile --format markdown\nbooktx source interview-answer book cand-... --profile profile --target target --write\nbooktx source interview-skip book cand-... --profile profile --disposition ignored --reason \"reason\" --write\nbooktx source interview-status book --profile profile --fail-if-open\nbooktx context prefill book --profile profile --from-source-analysis --gate-readiness --write\n\n\n\n\nrun interview-stat…"
+        },
+        {
+          "anchor": "",
+          "heading": "Typical workflow",
+          "text": "booktx context init ./book --profile PROFILE_A --non-interactive\nbooktx context questions ./book --profile PROFILE_A\nbooktx context recommend ./book --profile PROFILE_A Q001 --text de-DE --reason \"profile target locale\"\nbooktx context questionnaire ./book --profile PROFILE_A --stdout\n# Stop for user approval, then record the approved answer.\nbooktx context approve ./book --profile PROFILE_A Q001 --text de-DE --approved-by \"user:<USER>\"\nbooktx context mark-ready ./book --profile PROFILE_A\nbooktx context render ./book --profile PROFILE_A --write\n\n\n\n\nWhen multiple profiles exist, always pass --profile unless the intended\nprofile is already selected.",
+          "lower": "booktx context init ./book --profile profile_a --non-interactive\nbooktx context questions ./book --profile profile_a\nbooktx context recommend ./book --profile profile_a q001 --text de-de --reason \"profile target locale\"\nbooktx context questionnaire ./book --profile profile_a --stdout\n# stop for user approval, then record the approved answer.\nbooktx context approve ./book --profile profile_a q001 --text de-de --approved-by \"user:<user>\"\nbooktx context mark-ready ./book --profile profile_a\nbooktx context render ./book --profile profile_a --write\n\n\n\n\nwhen multiple profiles exist, always pass --profile unless the intended\nprofile is already selected."
+        },
+        {
+          "anchor": "",
+          "heading": "Context question lifecycle",
+          "text": "Questions start as open. Agents may store draft defaults with context recommend, which sets recommended but does not answer the question or change style policy. User-approved decisions are recorded with context approve, which stores answer_source=user, approval metadata, and applies style updates. Required dynamic questions can be added with context add-question --required after source review. Use context questionnaire --stdout to show a user-facing approval form. context mark-ready --force --reason ... is only for emergency or migration cases.",
+          "lower": "questions start as open. agents may store draft defaults with context recommend, which sets recommended but does not answer the question or change style policy. user-approved decisions are recorded with context approve, which stores answer_source=user, approval metadata, and applies style updates. required dynamic questions can be added with context add-question --required after source review. use context questionnaire --stdout to show a user-facing approval form. context mark-ready --force --reason ... is only for emergency or migration cases."
+        },
+        {
+          "anchor": "",
+          "heading": "add-term –forbid replacement semantics",
+          "text": "--forbid replaces the full forbidden-target list. Use --append-forbid to add entries without removing existing ones. --clear-forbidden removes all forbidden targets. These options are mutually exclusive.\n\nWhen the target changes, any forbidden term equal to the new target (respecting case_sensitive) is pruned automatically.\n\nUpdating an existing entry preserves category, notes, enforce, case_sensitive, status, and examples unless the command explicitly changes them.",
+          "lower": "--forbid replaces the full forbidden-target list. use --append-forbid to add entries without removing existing ones. --clear-forbidden removes all forbidden targets. these options are mutually exclusive.\n\nwhen the target changes, any forbidden term equal to the new target (respecting case_sensitive) is pruned automatically.\n\nupdating an existing entry preserves category, notes, enforce, case_sensitive, status, and examples unless the command explicitly changes them."
+        },
+        {
+          "anchor": "",
+          "heading": "glossary remove",
+          "text": "booktx glossary remove . \"empire\"\n\n\n\n\nDeletes exact glossary entries by source term.",
+          "lower": "booktx glossary remove . \"empire\"\n\n\n\n\ndeletes exact glossary entries by source term."
+        },
+        {
+          "anchor": "",
+          "heading": "glossary reset",
+          "text": "booktx glossary reset . \"empire\" \\\n  --target \"Imperium\" \\\n  --forbid \"Reich\" --forbid \"Empire\" \\\n  --category \"concept\" \\\n  --enforce error\n\n\n\n\nReplaces one glossary entry atomically. Refuses if the term does not exist unless --create is supplied. Preserves case_sensitive and examples unless explicitly changed.",
+          "lower": "booktx glossary reset . \"empire\" \\\n  --target \"imperium\" \\\n  --forbid \"reich\" --forbid \"empire\" \\\n  --category \"concept\" \\\n  --enforce error\n\n\n\n\nreplaces one glossary entry atomically. refuses if the term does not exist unless --create is supplied. preserves case_sensitive and examples unless explicitly changed."
+        },
+        {
+          "anchor": "",
+          "heading": "chapter-note –replace-all",
+          "text": "--replace-all sets the stored note exactly to the supplied values, allowing atomic reset of title, summaries, decisions, and open issues. Empty strings and empty lists are allowed. Conflicts with --replace-decisions and --replace-open-issues.\n\nbooktx context chapter-note . 0006 \\\n  --replace-all \\\n  --title \"TWO\" \\\n  --source-summary \"...\" \\\n  --translation-summary \"...\" \\\n  --decision \"Keep Apt\" \\\n  --open-issue \"Check title rendering\"",
+          "lower": "--replace-all sets the stored note exactly to the supplied values, allowing atomic reset of title, summaries, decisions, and open issues. empty strings and empty lists are allowed. conflicts with --replace-decisions and --replace-open-issues.\n\nbooktx context chapter-note . 0006 \\\n  --replace-all \\\n  --title \"two\" \\\n  --source-summary \"...\" \\\n  --translation-summary \"...\" \\\n  --decision \"keep apt\" \\\n  --open-issue \"check title rendering\""
+        },
+        {
+          "anchor": "",
+          "heading": "Binding, advisory, and disabled glossary entries",
+          "text": "Rendered context separates glossary entries into binding, advisory, and disabled sections. A glossary entry is binding only when enforce != \"off\" and it has require_target = true or at least one forbidden_targets value. enforce alone does not create an enforceable rule.\n\nSource applicability uses longest-source-match spans across the whole glossary. Longer configured terms such as Wasp-kinden suppress contained shorter terms such as wasp; explicit plurals and hyphenated forms should be modeled with source_variants. When one record mixes a valid longer compound and a standalone shorter term, booktx may emit glossary_alignment_ambiguous because it cannot prove which target occurrence maps to which source occurrence.",
+          "lower": "rendered context separates glossary entries into binding, advisory, and disabled sections. a glossary entry is binding only when enforce != \"off\" and it has require_target = true or at least one forbidden_targets value. enforce alone does not create an enforceable rule.\n\nsource applicability uses longest-source-match spans across the whole glossary. longer configured terms such as wasp-kinden suppress contained shorter terms such as wasp; explicit plurals and hyphenated forms should be modeled with source_variants. when one record mixes a valid longer compound and a standalone shorter term, booktx may emit glossary_alignment_ambiguous because it cannot prove which target occurrence maps to which source occurrence."
+        },
+        {
+          "anchor": "",
+          "heading": "Glossary phrase collisions",
+          "text": "When a glossary rejection is caused by a short term inside a longer source phrase, do not distort the target sentence merely to satisfy the literal target token. Prefer one of:\n\n\nnatural apposition or rephrasing that contains the approved target naturally;\n\n\na longer source phrase glossary entry, which shadows the shorter entry;\n\n\nan explicit forbidden target for the bad correction pattern.\n\n\n\nExample: wasp is a short glossary term. When the source contains Wasp hunter, the short wasp entry triggers. Translating this as Wespe-Jäger (forcing Wespe into a malformed German compound) is grammatically wrong and passes validation for the wrong reason. Instead, use an apposition like der Jäger, eine Wespe, ..., add a longer glossary entry for Wasp hunter, or add Wespe-Jäger as a forbidden target…",
+          "lower": "when a glossary rejection is caused by a short term inside a longer source phrase, do not distort the target sentence merely to satisfy the literal target token. prefer one of:\n\n\nnatural apposition or rephrasing that contains the approved target naturally;\n\n\na longer source phrase glossary entry, which shadows the shorter entry;\n\n\nan explicit forbidden target for the bad correction pattern.\n\n\n\nexample: wasp is a short glossary term. when the source contains wasp hunter, the short wasp entry triggers. translating this as wespe-jäger (forcing wespe into a malformed german compound) is grammatically wrong and passes validation for the wrong reason. instead, use an apposition like der jäger, eine wespe, ..., add a longer glossary entry for wasp hunter, or add wespe-jäger as a forbidden target…"
+        },
+        {
+          "anchor": "",
+          "heading": "Starting the next book in a series",
+          "text": "For a new book in an existing series, export policy from the completed profile with booktx context export-pack, import it into the new book with a dry run first, then apply it with --write only after reviewing conflicts. Do not copy context.md manually. If the pack contains reusable termbase entries, writing them is opt-in with --write-termbase and requires --write; use --termbase-scope project for series-wide shards or profile for local overrides.\n\nAfter import, render the context and show booktx context questionnaire to the human reviewer. Do not run booktx context mark-ready until the human approves the imported answers and any source-analysis additions.",
+          "lower": "for a new book in an existing series, export policy from the completed profile with booktx context export-pack, import it into the new book with a dry run first, then apply it with --write only after reviewing conflicts. do not copy context.md manually. if the pack contains reusable termbase entries, writing them is opt-in with --write-termbase and requires --write; use --termbase-scope project for series-wide shards or profile for local overrides.\n\nafter import, render the context and show booktx context questionnaire to the human reviewer. do not run booktx context mark-ready until the human approves the imported answers and any source-analysis additions."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/development/",
+      "title": "booktx Development",
+      "snippet": "Use Python 3.10 or newer.\n\npython -m pip install -e \".[dev,docs]\"\n\n\n\n\nThe package uses Hatchling with VCS-based dynamic versioning.\nThe runt …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Environment",
+          "text": "Use Python 3.10 or newer.\n\npython -m pip install -e \".[dev,docs]\"\n\n\n\n\nThe package uses Hatchling with VCS-based dynamic versioning.",
+          "lower": "use python 3.10 or newer.\n\npython -m pip install -e \".[dev,docs]\"\n\n\n\n\nthe package uses hatchling with vcs-based dynamic versioning."
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime dependencies",
+          "text": "The runtime dependencies include:\n\n\ntyper\n\n\nrich\n\n\npydantic>=2\n\n\ntomli-w\n\n\ntomli on Python older than 3.11\n\n\nbeautifulsoup4\n\n\nmarkdown-it-py\n\n\nphrasplit\n\n\nepub2text>=0.2.4\n\n\ntext2epub\n\n\n\nebooklib and mypy are included in the dev extra so the documented test/type-check commands run after a single editable install. docs/conf.py (Sphinx, MyST, Read the Docs theme) is covered by the docs extra. To install everything at once:",
+          "lower": "the runtime dependencies include:\n\n\ntyper\n\n\nrich\n\n\npydantic>=2\n\n\ntomli-w\n\n\ntomli on python older than 3.11\n\n\nbeautifulsoup4\n\n\nmarkdown-it-py\n\n\nphrasplit\n\n\nepub2text>=0.2.4\n\n\ntext2epub\n\n\n\nebooklib and mypy are included in the dev extra so the documented test/type-check commands run after a single editable install. docs/conf.py (sphinx, myst, read the docs theme) is covered by the docs extra. to install everything at once:"
+        },
+        {
+          "anchor": "",
+          "heading": "Docs dependencies",
+          "text": "The docs extra installs the packages used by docs/conf.py (Sphinx, MyST, Read the Docs theme):\n\n[project.optional-dependencies]\ndocs = [\n    \"sphinx\",\n    \"myst-parser\",\n    \"sphinx-rtd-theme\",\n]",
+          "lower": "the docs extra installs the packages used by docs/conf.py (sphinx, myst, read the docs theme):\n\n[project.optional-dependencies]\ndocs = [\n    \"sphinx\",\n    \"myst-parser\",\n    \"sphinx-rtd-theme\",\n]"
+        },
+        {
+          "anchor": "",
+          "heading": "Test commands",
+          "text": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx\n\n\n\n\nFor documentation changes, install the docs extra and run the repository’s\nwarnings-as-errors check:\n\npython -m pytest tests/test_docs_consistency.py -q\nsphinx-build -W -b html docs docs/_build/check\nbash -n docs/build.sh\ngit diff --check\n\n\n\n\nThe same Sphinx check is available as make -C docs check. For a local HTML\nand optional PDF build after dependencies are installed, run ./docs/build.sh;\nthe script uses the same -W warnings-as-errors policy. Generated files stay\nunder docs/_build/ and should not be committed.",
+          "lower": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx\n\n\n\n\nfor documentation changes, install the docs extra and run the repository’s\nwarnings-as-errors check:\n\npython -m pytest tests/test_docs_consistency.py -q\nsphinx-build -w -b html docs docs/_build/check\nbash -n docs/build.sh\ngit diff --check\n\n\n\n\nthe same sphinx check is available as make -c docs check. for a local html\nand optional pdf build after dependencies are installed, run ./docs/build.sh;\nthe script uses the same -w warnings-as-errors policy. generated files stay\nunder docs/_build/ and should not be committed."
+        },
+        {
+          "anchor": "",
+          "heading": "Current test clusters",
+          "text": "Test file\n\nArea\n\n\n\n\n\ntests/test_build.py\n\nMarkdown/EPUB build behavior\n\n\n\ntests/test_chapters.py\n\nChapter detection\n\n\n\ntests/test_chunking.py\n\nSegmentation and packing\n\n\n\ntests/test_cli.py\n\nEnd-to-end CLI behavior\n\n\n\ntests/test_cli_chapters.py\n\nChapter CLI workflows\n\n\n\ntests/test_cli_context.py\n\nContext CLI commands\n\n\n\ntests/test_config.py\n\nProject config and source discovery\n\n\n\ntests/test_context_io.py\n\nContext IO/rendering\n\n\n\ntests/test_context_models.py\n\nContext model contracts\n\n\n\ntests/test_epub_io.py\n\nEPUB extraction/rebuild\n\n\n\ntests/test_html_io.py\n\nXHTML helpers\n\n\n\ntests/test_markdown_io.py\n\nMarkdown extraction/rebuild\n\n\n\ntests/test_models.py\n\nPydantic contract models\n\n\n\ntests/test_placeholders.py\n\nPlaceholder protection/restoration\n\n\n\ntests/test_acceptance.py\n\nRecord-level accepta…",
+          "lower": "test file\n\narea\n\n\n\n\n\ntests/test_build.py\n\nmarkdown/epub build behavior\n\n\n\ntests/test_chapters.py\n\nchapter detection\n\n\n\ntests/test_chunking.py\n\nsegmentation and packing\n\n\n\ntests/test_cli.py\n\nend-to-end cli behavior\n\n\n\ntests/test_cli_chapters.py\n\nchapter cli workflows\n\n\n\ntests/test_cli_context.py\n\ncontext cli commands\n\n\n\ntests/test_config.py\n\nproject config and source discovery\n\n\n\ntests/test_context_io.py\n\ncontext io/rendering\n\n\n\ntests/test_context_models.py\n\ncontext model contracts\n\n\n\ntests/test_epub_io.py\n\nepub extraction/rebuild\n\n\n\ntests/test_html_io.py\n\nxhtml helpers\n\n\n\ntests/test_markdown_io.py\n\nmarkdown extraction/rebuild\n\n\n\ntests/test_models.py\n\npydantic contract models\n\n\n\ntests/test_placeholders.py\n\nplaceholder protection/restoration\n\n\n\ntests/test_acceptance.py\n\nrecord-level accepta…"
+        },
+        {
+          "anchor": "",
+          "heading": "Coding standards",
+          "text": "Keep changes deterministic and local.\n\n\nDo not add network calls to the CLI.\n\n\nPreserve idempotent extraction.\n\n\nPreserve translated files across extraction.\n\n\nAdd tests for every behavior change.\n\n\nKeep user-facing errors clear and actionable.\n\n\nPrefer small format-specific adapters over cross-format special cases.",
+          "lower": "keep changes deterministic and local.\n\n\ndo not add network calls to the cli.\n\n\npreserve idempotent extraction.\n\n\npreserve translated files across extraction.\n\n\nadd tests for every behavior change.\n\n\nkeep user-facing errors clear and actionable.\n\n\nprefer small format-specific adapters over cross-format special cases."
+        },
+        {
+          "anchor": "",
+          "heading": "Versioning",
+          "text": "Version data is generated by Hatch VCS into booktx/_version.py. Do not hand-edit generated version output.",
+          "lower": "version data is generated by hatch vcs into booktx/_version.py. do not hand-edit generated version output."
+        },
+        {
+          "anchor": "",
+          "heading": "Fresh-process CLI tests",
+          "text": "Some CLI bugs only manifest when each command runs in a fresh Python process.\nThe CliRunner used by most tests runs all commands in the same interpreter,\nwhich can mask import-order issues (e.g. Pydantic forward-reference rebuilds).\n\nWhen a bug involves cross-command state or module initialization, add a test\nthat uses subprocess.run to invoke booktx in separate processes. See\ntests/test_cli_translate_todo.py::test_todo_commands_work_across_fresh_python_processes\nfor an example.",
+          "lower": "some cli bugs only manifest when each command runs in a fresh python process.\nthe clirunner used by most tests runs all commands in the same interpreter,\nwhich can mask import-order issues (e.g. pydantic forward-reference rebuilds).\n\nwhen a bug involves cross-command state or module initialization, add a test\nthat uses subprocess.run to invoke booktx in separate processes. see\ntests/test_cli_translate_todo.py::test_todo_commands_work_across_fresh_python_processes\nfor an example."
+        },
+        {
+          "anchor": "",
+          "heading": "Durable model import contracts",
+          "text": "Persisted JSON boundary models (TranslationTask, TranslationTodo,\nTranslationStoreV2, TranslationVersionLedger, context JSON models,\nmanifest/config models) must validate without hidden import-order requirements.\n\nRules:\n\n\nNever use TYPE_CHECKING-gated imports for types referenced in model fields.\n\n\nNever depend on late model_rebuild() side effects for persisted models.\n\n\nIf a model references a type from another module, that type must be directly\nimportable at module load time.\n\n\nAdd a test in tests/test_models.py that validates minimal payloads for each\ndurable model without importing command-specific modules.",
+          "lower": "persisted json boundary models (translationtask, translationtodo,\ntranslationstorev2, translationversionledger, context json models,\nmanifest/config models) must validate without hidden import-order requirements.\n\nrules:\n\n\nnever use type_checking-gated imports for types referenced in model fields.\n\n\nnever depend on late model_rebuild() side effects for persisted models.\n\n\nif a model references a type from another module, that type must be directly\nimportable at module load time.\n\n\nadd a test in tests/test_models.py that validates minimal payloads for each\ndurable model without importing command-specific modules."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/epub/",
+      "title": "booktx EPUB handling",
+      "snippet": "EPUB support adapts epub2text extraction and text2epub rebuilding through\nbooktx.epub_io, booktx.epub_manifest, and booktx.build.\nbooktx ext …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "EPUB handling",
+          "text": "EPUB support adapts epub2text extraction and text2epub rebuilding through\nbooktx.epub_io, booktx.epub_manifest, and booktx.build.",
+          "lower": "epub support adapts epub2text extraction and text2epub rebuilding through\nbooktx.epub_io, booktx.epub_manifest, and booktx.build."
+        },
+        {
+          "anchor": "",
+          "heading": "Extraction",
+          "text": "booktx extract records raw document offsets, inline runs, source spans,\nprotected names, and navigation metadata in .booktx/source-manifest.json.\nFresh EPUB chunks contain clean block text and name placeholders. The manifest\nalso stores the source checksum, text2epub manifest, span references, and\nchapter mapping.\n\nRe-extract when the source checksum changes or when an old manifest lacks the\ncurrent block annotations. booktx chapters PROJECT --audit reports visible\nTOC entries that are missing, unmapped, or only partially represented by the\nchapter map.",
+          "lower": "booktx extract records raw document offsets, inline runs, source spans,\nprotected names, and navigation metadata in .booktx/source-manifest.json.\nfresh epub chunks contain clean block text and name placeholders. the manifest\nalso stores the source checksum, text2epub manifest, span references, and\nchapter mapping.\n\nre-extract when the source checksum changes or when an old manifest lacks the\ncurrent block annotations. booktx chapters project --audit reports visible\ntoc entries that are missing, unmapped, or only partially represented by the\nchapter map."
+        },
+        {
+          "anchor": "",
+          "heading": "Rebuild and output policy",
+          "text": "Build verifies the extraction checksum and assembles record targets back into\nmanifest spans. The build is transactional: a failed rebuild or output-policy\naudit leaves the last successful output untouched.\n\nTarget translation builds resolve the target language for OPF and XHTML\nmetadata and can inject deterministic hyphenation CSS. The policy is configured\nunder [epub_output]:\n\n[epub_output]\nlanguage_policy = \"target\"  # target | source | preserve | explicit\nlanguage = \"de-DE\"          # required for explicit\nhyphenation = \"auto\"        # auto | manual | none | preserve\ninject_css = true\npatch_body_language = false\n\n\n\n\nThe language and CSS policy is deterministic, but actual hyphenation depends on\nthe reading system and its dictionaries. hyphenation = \"none\" disables the\ngenerated automa…",
+          "lower": "build verifies the extraction checksum and assembles record targets back into\nmanifest spans. the build is transactional: a failed rebuild or output-policy\naudit leaves the last successful output untouched.\n\ntarget translation builds resolve the target language for opf and xhtml\nmetadata and can inject deterministic hyphenation css. the policy is configured\nunder [epub_output]:\n\n[epub_output]\nlanguage_policy = \"target\"  # target | source | preserve | explicit\nlanguage = \"de-de\"          # required for explicit\nhyphenation = \"auto\"        # auto | manual | none | preserve\ninject_css = true\npatch_body_language = false\n\n\n\n\nthe language and css policy is deterministic, but actual hyphenation depends on\nthe reading system and its dictionaries. hyphenation = \"none\" disables the\ngenerated automa…"
+        },
+        {
+          "anchor": "",
+          "heading": "Inline XHTML contract",
+          "text": "EPUB records with inline markup use source_markup=\"epub-inline-xhtml:v1\".\nChanged targets are parsed and sanitized by epub_preflight, then passed to\ntext2epub with inline XHTML enabled. Unchanged records use the source fragment\nfor identity reconstruction.\n\nA changed target must:\n\n\npreserve the source tag sequence and attributes;\n\n\nchange only visible text nodes;\n\n\npreserve opaque elements such as code, img, svg, math, and media;\n\n\navoid comments, processing instructions, scripts, styles, block tags, event\nhandlers, new attributes, and new inline elements.\n\n\n\nValidation, booktx check, translate insert, and build use the same\nbuild-grade preflight. Findings include inline_xhtml_preserved,\ninline_xhtml_no_new_attributes, inline_xhtml_no_block_tags,\ninline_xhtml_opaque_preserved, and parse o…",
+          "lower": "epub records with inline markup use source_markup=\"epub-inline-xhtml:v1\".\nchanged targets are parsed and sanitized by epub_preflight, then passed to\ntext2epub with inline xhtml enabled. unchanged records use the source fragment\nfor identity reconstruction.\n\na changed target must:\n\n\npreserve the source tag sequence and attributes;\n\n\nchange only visible text nodes;\n\n\npreserve opaque elements such as code, img, svg, math, and media;\n\n\navoid comments, processing instructions, scripts, styles, block tags, event\nhandlers, new attributes, and new inline elements.\n\n\n\nvalidation, booktx check, translate insert, and build use the same\nbuild-grade preflight. findings include inline_xhtml_preserved,\ninline_xhtml_no_new_attributes, inline_xhtml_no_block_tags,\ninline_xhtml_opaque_preserved, and parse o…"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter audit",
+          "text": "The chapter map combines upstream block annotations, heading sequences, and\nTOC document boundaries. The audit distinguishes:\n\n\nvisible TOC chapters;\n\n\nextracted spine documents;\n\n\nchapters covered by the chapter map.\n\n\n\nAn extracted TOC target with no chapter-map boundary is an error and blocks new\nchapter work. Missing or partial preview navigation is reported as a warning.\nUse:\n\nbooktx chapters ./book --audit\nbooktx chapters ./book --audit --json\nbooktx epub inspect ./book --profile PROFILE",
+          "lower": "the chapter map combines upstream block annotations, heading sequences, and\ntoc document boundaries. the audit distinguishes:\n\n\nvisible toc chapters;\n\n\nextracted spine documents;\n\n\nchapters covered by the chapter map.\n\n\n\nan extracted toc target with no chapter-map boundary is an error and blocks new\nchapter work. missing or partial preview navigation is reported as a warning.\nuse:\n\nbooktx chapters ./book --audit\nbooktx chapters ./book --audit --json\nbooktx epub inspect ./book --profile profile"
+        },
+        {
+          "anchor": "",
+          "heading": "Common recovery",
+          "text": "On a legacy manifest, run booktx extract ./book again.\n\n\nOn a source checksum mismatch, restore the source or re-extract intentionally.\n\n\nOn an unresolved placeholder, repair the submission and validate again.\n\n\nOn an inline-XHTML finding, restore the source skeleton and opaque content.\n\n\nOn a TOC audit error, inspect the source EPUB rather than synthesizing empty\nchapters.",
+          "lower": "on a legacy manifest, run booktx extract ./book again.\n\n\non a source checksum mismatch, restore the source or re-extract intentionally.\n\n\non an unresolved placeholder, repair the submission and validate again.\n\n\non an inline-xhtml finding, restore the source skeleton and opaque content.\n\n\non a toc audit error, inspect the source epub rather than synthesizing empty\nchapters."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/human-workflows/",
+      "title": "booktx Human workflows",
+      "snippet": "This guide focuses on human decisions and lifecycle outcomes rather than the\nlow-level agent task protocol.\nbooktx init ./book --source-file …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Human workflows",
+          "text": "This guide focuses on human decisions and lifecycle outcomes rather than the\nlow-level agent task protocol.",
+          "lower": "this guide focuses on human decisions and lifecycle outcomes rather than the\nlow-level agent task protocol."
+        },
+        {
+          "anchor": "",
+          "heading": "Start a book",
+          "text": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book PROFILE --target de --target-locale de-DE --model MODEL\nbooktx guide ./book --profile PROFILE",
+          "lower": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book profile --target de --target-locale de-de --model model\nbooktx guide ./book --profile profile"
+        },
+        {
+          "anchor": "",
+          "heading": "Approve policy",
+          "text": "booktx context init ./book --profile PROFILE --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx context questionnaire ./book --profile PROFILE --stdout\nbooktx context approve ./book --profile PROFILE Q001 --text \"...\" --approved-by \"user:NAME\"\nbooktx context mark-ready ./book --profile PROFILE\nbooktx glossary mandate ./book \"Empire\" --profile PROFILE --target \"Imperium\" --forbid \"Reich\"\n\n\n\n\nGenerated recommendations never replace human approval. Review the context and\nterminology decisions before marking the profile ready.",
+          "lower": "booktx context init ./book --profile profile --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx context questionnaire ./book --profile profile --stdout\nbooktx context approve ./book --profile profile q001 --text \"...\" --approved-by \"user:name\"\nbooktx context mark-ready ./book --profile profile\nbooktx glossary mandate ./book \"empire\" --profile profile --target \"imperium\" --forbid \"reich\"\n\n\n\n\ngenerated recommendations never replace human approval. review the context and\nterminology decisions before marking the profile ready."
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare an isolated workspace",
+          "text": "booktx agents write ./book --mode isolated --profile PROFILE\n\n\n\n\nStart the harness in translations/PROFILE/. Project-root administration and\ncross-profile comparison remain outside the isolated workflow.\n\nTo start a bounded translation run in one command from the profile root:\n\nbooktx translate todo-next . --chapters 3 --batch-words 800 --write --resume --format block\n\n\n\n\nThe generated task contract is authoritative: read tasks/TASK.agent.md first,\nedit only ingest/TASK.block.txt, lint before the first insert, and submit only\nafter lint passes.",
+          "lower": "booktx agents write ./book --mode isolated --profile profile\n\n\n\n\nstart the harness in translations/profile/. project-root administration and\ncross-profile comparison remain outside the isolated workflow.\n\nto start a bounded translation run in one command from the profile root:\n\nbooktx translate todo-next . --chapters 3 --batch-words 800 --write --resume --format block\n\n\n\n\nthe generated task contract is authoritative: read tasks/task.agent.md first,\nedit only ingest/task.block.txt, lint before the first insert, and submit only\nafter lint passes."
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare the next series book",
+          "text": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile PROFILE --series-id series-id \\\n  --title \"Series policy\" --target de --target-locale de-DE --model MODEL --write\nbooktx context questionnaire ./book5 --profile PROFILE --stdout\n\n\n\n\nReview the generated policy before running context mark-ready.",
+          "lower": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile profile --series-id series-id \\\n  --title \"series policy\" --target de --target-locale de-de --model model --write\nbooktx context questionnaire ./book5 --profile profile --stdout\n\n\n\n\nreview the generated policy before running context mark-ready."
+        },
+        {
+          "anchor": "",
+          "heading": "Quality workflows",
+          "text": "Configure a review pass with booktx review configure and inspect it with\nbooktx review status. Prepare a comparison or revision profile with\nbooktx judge create-profile, then use booktx judge prepare-isolation or\nbooktx judge prepare-grammar before agent work.",
+          "lower": "configure a review pass with booktx review configure and inspect it with\nbooktx review status. prepare a comparison or revision profile with\nbooktx judge create-profile, then use booktx judge prepare-isolation or\nbooktx judge prepare-grammar before agent work."
+        },
+        {
+          "anchor": "",
+          "heading": "Verify output",
+          "text": "booktx check ./book --profile PROFILE --fail-on-warnings\nbooktx validate ./book --profile PROFILE --fail-on-warnings\nbooktx build ./book --profile PROFILE --require-complete",
+          "lower": "booktx check ./book --profile profile --fail-on-warnings\nbooktx validate ./book --profile profile --fail-on-warnings\nbooktx build ./book --profile profile --require-complete"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/",
+      "title": "Documentation index",
+      "snippet": "booktx uses a source-first, profile-aware lifecycle: initialize a source\nproject, extract shared source state, create a profile, approve its …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Documentation index",
+          "text": "booktx uses a source-first, profile-aware lifecycle: initialize a source\nproject, extract shared source state, create a profile, approve its context,\ntranslate through profile-local tasks, validate, and build output.",
+          "lower": "booktx uses a source-first, profile-aware lifecycle: initialize a source\nproject, extract shared source state, create a profile, approve its context,\ntranslate through profile-local tasks, validate, and build output."
+        },
+        {
+          "anchor": "",
+          "heading": "Onboarding",
+          "text": "Quickstart\n\n\nProject layout\n\n\nProfiles\n\n\nConcepts",
+          "lower": "quickstart\n\n\nproject layout\n\n\nprofiles\n\n\nconcepts"
+        },
+        {
+          "anchor": "",
+          "heading": "Operating workflows",
+          "text": "Commands\n\n\nHuman workflows\n\n\nContext\n\n\nAgent workflow\n\n\nSeries workflows\n\n\nTranslation contract",
+          "lower": "commands\n\n\nhuman workflows\n\n\ncontext\n\n\nagent workflow\n\n\nseries workflows\n\n\ntranslation contract"
+        },
+        {
+          "anchor": "",
+          "heading": "Formats and maintenance",
+          "text": "Markdown\n\n\nEPUB\n\n\nTroubleshooting\n\n\nMaintenance\n\n\nDevelopment",
+          "lower": "markdown\n\n\nepub\n\n\ntroubleshooting\n\n\nmaintenance\n\n\ndevelopment"
+        },
+        {
+          "anchor": "",
+          "heading": "Reference",
+          "text": "Architecture\n\n\nAPI reference\n\n\nMypy status\n\n\n\n\n\nQuickstart\n1. Initialize and extract\n\n2. Create a profile\n\n3. Prepare and review context\n\n4. Approve and prepare the agent\n\n5. Run and build\n\n6. Continue with the guides\n\n\n\n\nProject layout\nShared source state\n\nProfile-local state\n\nResolution and safety\n\nLegacy layout\n\n\n\n\nProfiles\nProject-root commands\n\nProfile-root commands\n\nShared and local state\n\nContext transfer\n\nPass-through profiles\n\nSelection and revision profiles\n\nVersions\n\nLegacy migration\n\n\n\n\nConcepts\nSource project\n\nTranslation profile\n\nState of truth\n\nVersions and reviews\n\nContext and terminology\n\n\n\n\nCommands\nHuman lifecycle\n\nHuman decisions\n\nProfiles and isolation\n\nSeries and quality workflows\n\nAgent protocol\n\nAdvanced and maintenance surfaces\n\nPublic human command paths\n\n\n\n\nHuma…",
+          "lower": "architecture\n\n\napi reference\n\n\nmypy status\n\n\n\n\n\nquickstart\n1. initialize and extract\n\n2. create a profile\n\n3. prepare and review context\n\n4. approve and prepare the agent\n\n5. run and build\n\n6. continue with the guides\n\n\n\n\nproject layout\nshared source state\n\nprofile-local state\n\nresolution and safety\n\nlegacy layout\n\n\n\n\nprofiles\nproject-root commands\n\nprofile-root commands\n\nshared and local state\n\ncontext transfer\n\npass-through profiles\n\nselection and revision profiles\n\nversions\n\nlegacy migration\n\n\n\n\nconcepts\nsource project\n\ntranslation profile\n\nstate of truth\n\nversions and reviews\n\ncontext and terminology\n\n\n\n\ncommands\nhuman lifecycle\n\nhuman decisions\n\nprofiles and isolation\n\nseries and quality workflows\n\nagent protocol\n\nadvanced and maintenance surfaces\n\npublic human command paths\n\n\n\n\nhuma…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/maintenance/",
+      "title": "booktx Maintenance",
+      "snippet": "Maintenance commands handle migration, diagnostics, generated exports, and\nlow-level storage. They are separate from the human-first workflo …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Maintenance",
+          "text": "Maintenance commands handle migration, diagnostics, generated exports, and\nlow-level storage. They are separate from the human-first workflow and may be\nhidden from the default help panels.",
+          "lower": "maintenance commands handle migration, diagnostics, generated exports, and\nlow-level storage. they are separate from the human-first workflow and may be\nhidden from the default help panels."
+        },
+        {
+          "anchor": "",
+          "heading": "Diagnostics",
+          "text": "booktx mode .\nbooktx doctor isolation .\nbooktx epub inspect ./book --profile PROFILE\nbooktx qa-scan ./book --profile PROFILE",
+          "lower": "booktx mode .\nbooktx doctor isolation .\nbooktx epub inspect ./book --profile profile\nbooktx qa-scan ./book --profile profile"
+        },
+        {
+          "anchor": "",
+          "heading": "Legacy migration",
+          "text": "booktx profile migrate-current ./book PROFILE\nbooktx translate import-legacy ./book --profile PROFILE\nbooktx translate migrate-store ./book --profile PROFILE\nbooktx translate migrate-inline-xhtml ./book --profile PROFILE\n\n\n\n\nUse migration commands only for legacy projects. Current projects use\nTranslationStoreV2 by default. The shard-based v3 store is opt-in through\nbooktx translate migrate-store ./book --profile PROFILE --to v3 --write.",
+          "lower": "booktx profile migrate-current ./book profile\nbooktx translate import-legacy ./book --profile profile\nbooktx translate migrate-store ./book --profile profile\nbooktx translate migrate-inline-xhtml ./book --profile profile\n\n\n\n\nuse migration commands only for legacy projects. current projects use\ntranslationstorev2 by default. the shard-based v3 store is opt-in through\nbooktx translate migrate-store ./book --profile profile --to v3 --write."
+        },
+        {
+          "anchor": "",
+          "heading": "Generated exports and storage",
+          "text": "booktx translate export ./book --profile PROFILE\nbooktx translate export-index ./book --profile PROFILE\nbooktx termbase status ./book --profile PROFILE\nbooktx termbase export ./book --profile PROFILE\n\n\n\n\nGenerated exports and indexes can be regenerated. Do not edit the profile store\nor generated files directly.",
+          "lower": "booktx translate export ./book --profile profile\nbooktx translate export-index ./book --profile profile\nbooktx termbase status ./book --profile profile\nbooktx termbase export ./book --profile profile\n\n\n\n\ngenerated exports and indexes can be regenerated. do not edit the profile store\nor generated files directly."
+        },
+        {
+          "anchor": "",
+          "heading": "Recovery boundaries",
+          "text": "booktx pass-through is a generated reconstruction check. Version selection and\nrecord corrections must use the current translate, review, or judge\nworkflow that owns the relevant provenance. Run the exact command help before\nusing maintenance operations.",
+          "lower": "booktx pass-through is a generated reconstruction check. version selection and\nrecord corrections must use the current translate, review, or judge\nworkflow that owns the relevant provenance. run the exact command help before\nusing maintenance operations."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/markdown/",
+      "title": "booktx Markdown handling",
+      "snippet": "Markdown support is implemented in booktx.markdown_io.\nbooktx extracts inline prose from these contexts:\n\n\nparagraphs\n\n\nheadings\n\n\nlist item …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Markdown handling",
+          "text": "Markdown support is implemented in booktx.markdown_io.",
+          "lower": "markdown support is implemented in booktx.markdown_io."
+        },
+        {
+          "anchor": "",
+          "heading": "What gets translated",
+          "text": "booktx extracts inline prose from these contexts:\n\n\nparagraphs\n\n\nheadings\n\n\nlist items\n\n\nblockquotes\n\n\ntable cells\n\n\nemphasis and strong text when represented as inline content\n\n\n\nThe extracted prose is segmented into records by phrasplit.",
+          "lower": "booktx extracts inline prose from these contexts:\n\n\nparagraphs\n\n\nheadings\n\n\nlist items\n\n\nblockquotes\n\n\ntable cells\n\n\nemphasis and strong text when represented as inline content\n\n\n\nthe extracted prose is segmented into records by phrasplit."
+        },
+        {
+          "anchor": "",
+          "heading": "What is preserved",
+          "text": "These are not translated directly:\n\n\nfenced code blocks\n\n\nindented code blocks\n\n\ninline code\n\n\nlink URLs\n\n\nraw inline HTML\n\n\nraw HTML blocks\n\n\nYAML front matter keys\n\n\n\nInline non-translatable content is hidden behind __TAG_NNN__ placeholders. Protected names are hidden behind __NAME_NNN__ placeholders.",
+          "lower": "these are not translated directly:\n\n\nfenced code blocks\n\n\nindented code blocks\n\n\ninline code\n\n\nlink urls\n\n\nraw inline html\n\n\nraw html blocks\n\n\nyaml front matter keys\n\n\n\ninline non-translatable content is hidden behind __tag_nnn__ placeholders. protected names are hidden behind __name_nnn__ placeholders."
+        },
+        {
+          "anchor": "",
+          "heading": "Front matter",
+          "text": "Leading YAML front matter is preserved. The extractor splits it from the body before Markdown parsing.\n\nExample:\n\n---\ntitle: Example\nauthor: Alice\n---\n\n# Chapter One\n\nHello world.\n\n\n\n\nThe front matter block remains in the template. Body prose is extracted normally.",
+          "lower": "leading yaml front matter is preserved. the extractor splits it from the body before markdown parsing.\n\nexample:\n\n---\ntitle: example\nauthor: alice\n---\n\n# chapter one\n\nhello world.\n\n\n\n\nthe front matter block remains in the template. body prose is extracted normally."
+        },
+        {
+          "anchor": "",
+          "heading": "Links",
+          "text": "For Markdown links, the visible link text can be translated, but the URL is hidden and restored.\n\nSource:\n\nRead [the guide](https://example.com).\n\n\n\n\nExtractor behavior:\n\nRead [the guide](__TAG_001__).\n\n\n\n\nThe target must preserve __TAG_001__.",
+          "lower": "for markdown links, the visible link text can be translated, but the url is hidden and restored.\n\nsource:\n\nread [the guide](https://example.com).\n\n\n\n\nextractor behavior:\n\nread [the guide](__tag_001__).\n\n\n\n\nthe target must preserve __tag_001__."
+        },
+        {
+          "anchor": "",
+          "heading": "Inline code",
+          "text": "Inline code is hidden:\n\nRun `booktx validate .` before building.\n\n\n\n\nExtractor behavior:\n\nRun __TAG_001__ before building.\n\n\n\n\nThe target must preserve __TAG_001__.",
+          "lower": "inline code is hidden:\n\nrun `booktx validate .` before building.\n\n\n\n\nextractor behavior:\n\nrun __tag_001__ before building.\n\n\n\n\nthe target must preserve __tag_001__."
+        },
+        {
+          "anchor": "",
+          "heading": "Template rebuild",
+          "text": "The extractor creates a Markdown template with internal __SPANTX_NNNN__ markers. These internal markers must never appear in translated chunks. Build replaces each marker with the translated span text.",
+          "lower": "the extractor creates a markdown template with internal __spantx_nnnn__ markers. these internal markers must never appear in translated chunks. build replaces each marker with the translated span text."
+        },
+        {
+          "anchor": "",
+          "heading": "Known limitations",
+          "text": "Markdown extraction relies on literal inline token content being findable in the original Markdown body. Very unusual Markdown that parses to inline content not present as a direct substring may leave a span unreplaced in the template.\n\nAttributes, image alt text, and complex raw HTML are not translated in v1.",
+          "lower": "markdown extraction relies on literal inline token content being findable in the original markdown body. very unusual markdown that parses to inline content not present as a direct substring may leave a span unreplaced in the template.\n\nattributes, image alt text, and complex raw html are not translated in v1."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/mypy-baseline/",
+      "title": "booktx Mypy status",
+      "snippet": "This page records the current type-check status. It is not a claim that the\nrepository has a clean type baseline.\n\nRun the check from the re …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Mypy status",
+          "text": "This page records the current type-check status. It is not a claim that the\nrepository has a clean type baseline.\n\nRun the check from the repository root:\n\npython -m mypy booktx\n\n\n\n\nAt the documentation audit baseline on 2026-07-12, this command reported 50\nerrors in 15 files and exited non-zero. The failures are existing typing work,\nnot documentation acceptance criteria. They must remain visible in task and\nrelease reports; documentation must not describe the check as passing until an\nactual run exits zero.\n\nThe project may retain targeted # type: ignore[...] comments where they are\nalready justified by third-party stubs or lazy integration boundaries. Such\ncomments are implementation details, not a promise that the complete package\npasses mypy. Add or remove them only with the relevant…",
+          "lower": "this page records the current type-check status. it is not a claim that the\nrepository has a clean type baseline.\n\nrun the check from the repository root:\n\npython -m mypy booktx\n\n\n\n\nat the documentation audit baseline on 2026-07-12, this command reported 50\nerrors in 15 files and exited non-zero. the failures are existing typing work,\nnot documentation acceptance criteria. they must remain visible in task and\nrelease reports; documentation must not describe the check as passing until an\nactual run exits zero.\n\nthe project may retain targeted # type: ignore[...] comments where they are\nalready justified by third-party stubs or lazy integration boundaries. such\ncomments are implementation details, not a promise that the complete package\npasses mypy. add or remove them only with the relevant…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/profiles/",
+      "title": "booktx Profiles",
+      "snippet": "Profiles isolate mutable translation state while sharing extracted source data.\nCreate one for each target language, model experiment, or de …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Profiles",
+          "text": "Profiles isolate mutable translation state while sharing extracted source data.\nCreate one for each target language, model experiment, or deliberately\nseparate context decision.",
+          "lower": "profiles isolate mutable translation state while sharing extracted source data.\ncreate one for each target language, model experiment, or deliberately\nseparate context decision."
+        },
+        {
+          "anchor": "",
+          "heading": "Project-root commands",
+          "text": "booktx profile create ./book PROFILE_A --target de --target-locale de-DE\nbooktx profile list ./book\nbooktx profile show ./book PROFILE_A\nbooktx profile compare ./book --profiles PROFILE_A,PROFILE_B --record 0001-000001\n\n\n\n\nA project-root command that needs profile-local data must receive\n--profile PROFILE. There is no global profile selector and target-state\ncommands do not infer a profile from the number of profiles in the project.",
+          "lower": "booktx profile create ./book profile_a --target de --target-locale de-de\nbooktx profile list ./book\nbooktx profile show ./book profile_a\nbooktx profile compare ./book --profiles profile_a,profile_b --record 0001-000001\n\n\n\n\na project-root command that needs profile-local data must receive\n--profile profile. there is no global profile selector and target-state\ncommands do not infer a profile from the number of profiles in the project."
+        },
+        {
+          "anchor": "",
+          "heading": "Profile-root commands",
+          "text": "A validated profile root is translations/<profile>/. Its\n.booktx-profile.json marker binds the directory to the profile configuration,\nproject root, target locale, and current source identity. From that directory,\nuse . and omit --profile:\n\ncd translations/PROFILE_A\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\nbooktx translate next . --unit batch --max-words 800 --format block\nbooktx validate .\nbooktx build .\n\n\n\n\nProfile-root mode exposes only the selected profile through booktx’s brokered\nsource commands. It is booktx-mediated isolation, not an operating-system\nsandbox. Parent paths, sibling profiles, and arbitrary filesystem inspection\nare outside the isolated workflow.",
+          "lower": "a validated profile root is translations/<profile>/. its\n.booktx-profile.json marker binds the directory to the profile configuration,\nproject root, target locale, and current source identity. from that directory,\nuse . and omit --profile:\n\ncd translations/profile_a\nbooktx mode .\nbooktx doctor isolation .\nbooktx source status .\nbooktx context status .\nbooktx translate next . --unit batch --max-words 800 --format block\nbooktx validate .\nbooktx build .\n\n\n\n\nprofile-root mode exposes only the selected profile through booktx’s brokered\nsource commands. it is booktx-mediated isolation, not an operating-system\nsandbox. parent paths, sibling profiles, and arbitrary filesystem inspection\nare outside the isolated workflow."
+        },
+        {
+          "anchor": "",
+          "heading": "Shared and local state",
+          "text": ".booktx/ contains shared source-derived state:\n\n\nsource-config.toml, source-manifest.json\n\n\nnames.json, chapter-map.json, and chunks/\n\n\nsource-analysis evidence and shared reports\n\n\n\ntranslations/<profile>/ contains profile-local mutable state:\n\n\n.booktx-profile.json, config.toml, and identity.json\n\n\ncontext.json, context.md, and context-history/\n\n\ntranslation-store/ and translation-version-ledger.json\n\n\ntasks/, todos/, ingest/, reviews/, review-todos/, and judge artifacts\n\n\ngenerated translated/, indexes, reports/, and output/\n\n\n\nNever use sibling profile paths in an isolated profile-root workflow. Never edit\ncanonical store shards or generated exports directly; use the CLI surfaces.",
+          "lower": ".booktx/ contains shared source-derived state:\n\n\nsource-config.toml, source-manifest.json\n\n\nnames.json, chapter-map.json, and chunks/\n\n\nsource-analysis evidence and shared reports\n\n\n\ntranslations/<profile>/ contains profile-local mutable state:\n\n\n.booktx-profile.json, config.toml, and identity.json\n\n\ncontext.json, context.md, and context-history/\n\n\ntranslation-store/ and translation-version-ledger.json\n\n\ntasks/, todos/, ingest/, reviews/, review-todos/, and judge artifacts\n\n\ngenerated translated/, indexes, reports/, and output/\n\n\n\nnever use sibling profile paths in an isolated profile-root workflow. never edit\ncanonical store shards or generated exports directly; use the cli surfaces."
+        },
+        {
+          "anchor": "",
+          "heading": "Context transfer",
+          "text": "For a different book, export and import a context pack. For sibling profiles in\nthe same book, use project-root booktx context sync. These operations copy\napproved policy into each profile; they do not share mutable stores or context\nfiles.",
+          "lower": "for a different book, export and import a context pack. for sibling profiles in\nthe same book, use project-root booktx context sync. these operations copy\napproved policy into each profile; they do not share mutable stores or context\nfiles."
+        },
+        {
+          "anchor": "",
+          "heading": "Pass-through profiles",
+          "text": "Pass-through profiles are generated reconstruction checks. They use source text\nas target text and must not be used for human translation:\n\nbooktx profile create-pass-through ./book passthrough_en\nbooktx validate ./book --profile passthrough_en\nbooktx build ./book --profile passthrough_en",
+          "lower": "pass-through profiles are generated reconstruction checks. they use source text\nas target text and must not be used for human translation:\n\nbooktx profile create-pass-through ./book passthrough_en\nbooktx validate ./book --profile passthrough_en\nbooktx build ./book --profile passthrough_en"
+        },
+        {
+          "anchor": "",
+          "heading": "Selection and revision profiles",
+          "text": "booktx judge create-profile creates compare or revision profiles. A selection\nprofile stores accepted judge decisions in its normal TranslationStoreV2\nstore and keeps judge provenance separately. A single-source revision profile\nrequires an explicit copy or edited judge decision for every record.\nPrepare isolated judge work from the project root with\nbooktx judge prepare-isolation, then continue from the profile root.",
+          "lower": "booktx judge create-profile creates compare or revision profiles. a selection\nprofile stores accepted judge decisions in its normal translationstorev2\nstore and keeps judge provenance separately. a single-source revision profile\nrequires an explicit copy or edited judge decision for every record.\nprepare isolated judge work from the project root with\nbooktx judge prepare-isolation, then continue from the profile root."
+        },
+        {
+          "anchor": "",
+          "heading": "Versions",
+          "text": "Versions live inside one profile. Translation versions use dotted references,\nwhile review candidates use R<pass>.<run> references. Compare or activate\nversions with:\n\nbooktx translate compare . --profile PROFILE_A RECORD --versions 1.1,1.2\nbooktx translate activate . --profile PROFILE_A RECORD 1.2",
+          "lower": "versions live inside one profile. translation versions use dotted references,\nwhile review candidates use r<pass>.<run> references. compare or activate\nversions with:\n\nbooktx translate compare . --profile profile_a record --versions 1.1,1.2\nbooktx translate activate . --profile profile_a record 1.2"
+        },
+        {
+          "anchor": "",
+          "heading": "Legacy migration",
+          "text": "Legacy single-layout projects may be migrated once:\n\nbooktx profile migrate-current ./book PROFILE_A\n\n\n\n\nAfter migration, .booktx/ remains the shared source tree and mutable\ntranslation state moves under translations/PROFILE_A/.",
+          "lower": "legacy single-layout projects may be migrated once:\n\nbooktx profile migrate-current ./book profile_a\n\n\n\n\nafter migration, .booktx/ remains the shared source tree and mutable\ntranslation state moves under translations/profile_a/."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/project-layout/",
+      "title": "booktx Project layout",
+      "snippet": "booktx uses a source-first layout with profile-local mutable state:\n\nbook/\n  source/book.epub\n  .booktx/\n    source-config.toml\n    source-m …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Project layout",
+          "text": "booktx uses a source-first layout with profile-local mutable state:\n\nbook/\n  source/book.epub\n  .booktx/\n    source-config.toml\n    source-manifest.json\n    names.json\n    chapter-map.json\n    chunks/\n    reports/\n  translations/PROFILE/\n    .booktx-profile.json\n    config.toml\n    identity.json\n    context.json\n    context.md\n    context-history/views/<sha>/\n    translation-store/\n      manifest.json\n      current/\n      translation-candidates/\n      review-candidates/\n      transactions/\n    translation-version-ledger.json\n    tasks/\n    todos/\n    ingest/\n    reviews/\n    review-todos/\n    translated/\n    reports/\n    output/",
+          "lower": "booktx uses a source-first layout with profile-local mutable state:\n\nbook/\n  source/book.epub\n  .booktx/\n    source-config.toml\n    source-manifest.json\n    names.json\n    chapter-map.json\n    chunks/\n    reports/\n  translations/profile/\n    .booktx-profile.json\n    config.toml\n    identity.json\n    context.json\n    context.md\n    context-history/views/<sha>/\n    translation-store/\n      manifest.json\n      current/\n      translation-candidates/\n      review-candidates/\n      transactions/\n    translation-version-ledger.json\n    tasks/\n    todos/\n    ingest/\n    reviews/\n    review-todos/\n    translated/\n    reports/\n    output/"
+        },
+        {
+          "anchor": "",
+          "heading": "Shared source state",
+          "text": ".booktx/ contains only source configuration and source-derived evidence:\n\n\n\nPath\n\nMeaning\n\n\n\n\n\n.booktx/source-config.toml\n\nSource language, file, format, and chunking\n\n\n\n.booktx/source-manifest.json\n\nSource digest and extraction manifest\n\n\n\n.booktx/names.json\n\nProtected source names\n\n\n\n.booktx/chapter-map.json\n\nChapter and record mapping\n\n\n\n.booktx/chunks/\n\nExtracted source records\n\n\n\n.booktx/reports/\n\nSource and chapter audit reports",
+          "lower": ".booktx/ contains only source configuration and source-derived evidence:\n\n\n\npath\n\nmeaning\n\n\n\n\n\n.booktx/source-config.toml\n\nsource language, file, format, and chunking\n\n\n\n.booktx/source-manifest.json\n\nsource digest and extraction manifest\n\n\n\n.booktx/names.json\n\nprotected source names\n\n\n\n.booktx/chapter-map.json\n\nchapter and record mapping\n\n\n\n.booktx/chunks/\n\nextracted source records\n\n\n\n.booktx/reports/\n\nsource and chapter audit reports"
+        },
+        {
+          "anchor": "",
+          "heading": "Profile-local state",
+          "text": "Each translations/<profile>/ directory is an isolation boundary. The\ncanonical store is v2 by default. When a profile opts into v3, the\ntranslation-store/ directory becomes the canonical shard backend; context.json\nand the version ledger are also durable state. Tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. They are\nrebuildable from source state and the profile store and are not the source of\ntruth.",
+          "lower": "each translations/<profile>/ directory is an isolation boundary. the\ncanonical store is v2 by default. when a profile opts into v3, the\ntranslation-store/ directory becomes the canonical shard backend; context.json\nand the version ledger are also durable state. tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. they are\nrebuildable from source state and the profile store and are not the source of\ntruth."
+        },
+        {
+          "anchor": "",
+          "heading": "Resolution and safety",
+          "text": "From the project root, profile-local commands require --profile PROFILE.\nFrom a profile root, booktx resolves the profile through\n.booktx-profile.json and the validated config.toml, so commands use ..\nThe marker also binds the profile to the current project source identity.",
+          "lower": "from the project root, profile-local commands require --profile profile.\nfrom a profile root, booktx resolves the profile through\n.booktx-profile.json and the validated config.toml, so commands use ..\nthe marker also binds the profile to the current project source identity."
+        },
+        {
+          "anchor": "",
+          "heading": "Legacy layout",
+          "text": "A legacy single-layout project may still contain translation files under\n.booktx/. Migrate it with:\n\nbooktx profile migrate-current ./book PROFILE\n\n\n\n\nAfter migration, .booktx/ keeps shared source state and profile-local mutable\nfiles move to translations/PROFILE/.",
+          "lower": "a legacy single-layout project may still contain translation files under\n.booktx/. migrate it with:\n\nbooktx profile migrate-current ./book profile\n\n\n\n\nafter migration, .booktx/ keeps shared source state and profile-local mutable\nfiles move to translations/profile/."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/quickstart/",
+      "title": "booktx Quickstart",
+      "snippet": "This is the human operator path. It stops before translation until required\npolicy decisions are approved.\n\nProject-root profile commands us …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quickstart",
+          "text": "This is the human operator path. It stops before translation until required\npolicy decisions are approved.\n\nProject-root profile commands use --profile PROFILE. Inside\ntranslations/PROFILE/, use . and the validated profile marker resolves the\nprofile.",
+          "lower": "this is the human operator path. it stops before translation until required\npolicy decisions are approved.\n\nproject-root profile commands use --profile profile. inside\ntranslations/profile/, use . and the validated profile marker resolves the\nprofile."
+        },
+        {
+          "anchor": "",
+          "heading": "1. Initialize and extract",
+          "text": "booktx init ./demo --source-file ./book.epub --source-lang en\nbooktx extract ./demo\nbooktx chapters ./demo --audit",
+          "lower": "booktx init ./demo --source-file ./book.epub --source-lang en\nbooktx extract ./demo\nbooktx chapters ./demo --audit"
+        },
+        {
+          "anchor": "",
+          "heading": "2. Create a profile",
+          "text": "booktx profile create ./demo PROFILE \\\n  --target de --target-locale de-DE --model MODEL\nbooktx guide ./demo --profile PROFILE",
+          "lower": "booktx profile create ./demo profile \\\n  --target de --target-locale de-de --model model\nbooktx guide ./demo --profile profile"
+        },
+        {
+          "anchor": "",
+          "heading": "3. Prepare and review context",
+          "text": "booktx context init ./demo --profile PROFILE --non-interactive\nbooktx source analyze ./demo --write --sync-profiles\nbooktx source interview-plan ./demo --profile PROFILE --write\nbooktx source interview-next ./demo --profile PROFILE --format markdown\nbooktx context questionnaire ./demo --profile PROFILE --stdout\n\n\n\n\nRecommendations and questionnaire output are not approval. Show them to the\nhuman and wait for an explicit decision.",
+          "lower": "booktx context init ./demo --profile profile --non-interactive\nbooktx source analyze ./demo --write --sync-profiles\nbooktx source interview-plan ./demo --profile profile --write\nbooktx source interview-next ./demo --profile profile --format markdown\nbooktx context questionnaire ./demo --profile profile --stdout\n\n\n\n\nrecommendations and questionnaire output are not approval. show them to the\nhuman and wait for an explicit decision."
+        },
+        {
+          "anchor": "",
+          "heading": "4. Approve and prepare the agent",
+          "text": "booktx context approve ./demo --profile PROFILE Q001 \\\n  --text \"<USER_APPROVED_TEXT>\" --approved-by \"user:NAME\"\nbooktx context mark-ready ./demo --profile PROFILE\nbooktx glossary mandate ./demo \"Empire\" --profile PROFILE \\\n  --target \"Imperium\" --forbid \"Reich\"\nbooktx agents write ./demo --mode isolated --profile PROFILE\n\n\n\n\nStart the harness inside demo/translations/PROFILE/.",
+          "lower": "booktx context approve ./demo --profile profile q001 \\\n  --text \"<user_approved_text>\" --approved-by \"user:name\"\nbooktx context mark-ready ./demo --profile profile\nbooktx glossary mandate ./demo \"empire\" --profile profile \\\n  --target \"imperium\" --forbid \"reich\"\nbooktx agents write ./demo --mode isolated --profile profile\n\n\n\n\nstart the harness inside demo/translations/profile/."
+        },
+        {
+          "anchor": "",
+          "heading": "5. Run and build",
+          "text": "From the profile root:\n\nbooktx guide .\nbooktx status .\nbooktx translate next . --unit batch --max-words 800 --format block\nbooktx translate insert . --task-id TASK --file ingest/TASK.block.txt --format block\nbooktx check .\nbooktx validate .\nbooktx build .\n\n\n\n\nUse booktx translate todo-next and todo-resume for bounded multi-chapter\nruns. Do not edit the profile store or rendered context directly.",
+          "lower": "from the profile root:\n\nbooktx guide .\nbooktx status .\nbooktx translate next . --unit batch --max-words 800 --format block\nbooktx translate insert . --task-id task --file ingest/task.block.txt --format block\nbooktx check .\nbooktx validate .\nbooktx build .\n\n\n\n\nuse booktx translate todo-next and todo-resume for bounded multi-chapter\nruns. do not edit the profile store or rendered context directly."
+        },
+        {
+          "anchor": "",
+          "heading": "6. Continue with the guides",
+          "text": "Project layout describes shared and profile-local paths.\n\n\nProfiles describes runtime resolution and isolation.\n\n\nContext describes policy approval and provenance.\n\n\nCommands is the current CLI reference.\n\n\nAgent workflow describes durable task work.\n\n\nSeries workflows prepares the next book with a review stop.\n\n\nMarkdown and EPUB describe format behavior.\n\n\nTroubleshooting maps failures to safe remediation.",
+          "lower": "project layout describes shared and profile-local paths.\n\n\nprofiles describes runtime resolution and isolation.\n\n\ncontext describes policy approval and provenance.\n\n\ncommands is the current cli reference.\n\n\nagent workflow describes durable task work.\n\n\nseries workflows prepares the next book with a review stop.\n\n\nmarkdown and epub describe format behavior.\n\n\ntroubleshooting maps failures to safe remediation."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/series/",
+      "title": "booktx Series workflows",
+      "snippet": "Use booktx series prepare for the normal “start the next book in the same\ntranslated series” path.\nbooktx series prepare ./book5 \\\n  --sourc …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Series workflows",
+          "text": "Use booktx series prepare for the normal “start the next book in the same\ntranslated series” path.",
+          "lower": "use booktx series prepare for the normal “start the next book in the same\ntranslated series” path."
+        },
+        {
+          "anchor": "",
+          "heading": "Normal path",
+          "text": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"Shadows of the Apt German series context\" \\\n  --target de \\\n  --target-locale de-DE \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nThe command:\n\n\nInitializes or reuses the source project.\n\n\nExtracts source chunks when needed.\n\n\nRuns the EPUB chapter audit.\n\n\nCreates or reuses the target profile.\n\n\nImports the previous book’s reusable context policy.\n\n\nRuns source analysis and refreshes profile snapshots.\n\n\nPrefills context review work and renders context.md.\n\n\nWrites .booktx/reports/series-prepare.json and .md.\n\n\nStops before translation and before au…",
+          "lower": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"shadows of the apt german series context\" \\\n  --target de \\\n  --target-locale de-de \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nthe command:\n\n\ninitializes or reuses the source project.\n\n\nextracts source chunks when needed.\n\n\nruns the epub chapter audit.\n\n\ncreates or reuses the target profile.\n\n\nimports the previous book’s reusable context policy.\n\n\nruns source analysis and refreshes profile snapshots.\n\n\nprefills context review work and renders context.md.\n\n\nwrites .booktx/reports/series-prepare.json and .md.\n\n\nstops before translation and before au…"
+        },
+        {
+          "anchor": "",
+          "heading": "Pack mode",
+          "text": "Use --pack when you already exported a series context pack:\n\nbooktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --pack ./series-context.de.json \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"Shadows of the Apt German series context\" \\\n  --target de \\\n  --target-locale de-DE \\\n  --model zai/glm-5.2@high \\\n  --write",
+          "lower": "use --pack when you already exported a series context pack:\n\nbooktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --pack ./series-context.de.json \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"shadows of the apt german series context\" \\\n  --target de \\\n  --target-locale de-de \\\n  --model zai/glm-5.2@high \\\n  --write"
+        },
+        {
+          "anchor": "",
+          "heading": "Recipes",
+          "text": "Write a reusable recipe once:\n\nbooktx series recipe write ./book5 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"Shadows of the Apt German series context\" \\\n  --output ../shadows-of-the-apt.de.booktx-series.toml\n\n\n\n\nThen prepare the next book with fewer flags:\n\nbooktx series prepare ./book6 \\\n  --source-file ./book6/book6.epub \\\n  --from-book ./book5 \\\n  --recipe ../shadows-of-the-apt.de.booktx-series.toml \\\n  --write",
+          "lower": "write a reusable recipe once:\n\nbooktx series recipe write ./book5 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"shadows of the apt german series context\" \\\n  --output ../shadows-of-the-apt.de.booktx-series.toml\n\n\n\n\nthen prepare the next book with fewer flags:\n\nbooktx series prepare ./book6 \\\n  --source-file ./book6/book6.epub \\\n  --from-book ./book5 \\\n  --recipe ../shadows-of-the-apt.de.booktx-series.toml \\\n  --write"
+        },
+        {
+          "anchor": "",
+          "heading": "Manual path",
+          "text": "The manual context export-pack / init / extract / profile create /\ncontext import-pack / source analyze / context prefill workflow still\nworks unchanged when you want full step-by-step control.",
+          "lower": "the manual context export-pack / init / extract / profile create /\ncontext import-pack / source analyze / context prefill workflow still\nworks unchanged when you want full step-by-step control."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/translation-contract/",
+      "title": "booktx Translation contract",
+      "snippet": "Translation state is profile-local. New profiles currently use\ntranslations/<profile>/translation-store.json (TranslationStoreV2) as the\ndur …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Translation contract",
+          "text": "Translation state is profile-local. New profiles currently use\ntranslations/<profile>/translation-store.json (TranslationStoreV2) as the\ndurable current record store. The shard-based\ntranslations/<profile>/translation-store/ backend is an explicit opt-in v3\nmigration target. The version ledger, context, tasks, submissions, reviews,\nand reports are also profile-local.",
+          "lower": "translation state is profile-local. new profiles currently use\ntranslations/<profile>/translation-store.json (translationstorev2) as the\ndurable current record store. the shard-based\ntranslations/<profile>/translation-store/ backend is an explicit opt-in v3\nmigration target. the version ledger, context, tasks, submissions, reviews,\nand reports are also profile-local."
+        },
+        {
+          "anchor": "",
+          "heading": "Task metadata",
+          "text": "booktx translate next records the profile, target language and locale,\ntranslation version, context view hash, source hash, and relevant profile and\nsource configuration hashes. booktx translate insert rejects stale or\nprofile-mismatched submissions.\n\nBlock submissions are written under translations/<profile>/ingest/:\n\n# booktx block submission\n# profile: PROFILE\n# task: TASK_ID\n# translation_version: 1.2\n>>> 0001-000001\nTranslated text.\n\n\n\n\nKeep each record header unchanged, write only the target text, preserve\nplaceholder tokens, and do not add commentary. JSON submissions use schema\nversion 2 and must declare the matching profile and translation version.",
+          "lower": "booktx translate next records the profile, target language and locale,\ntranslation version, context view hash, source hash, and relevant profile and\nsource configuration hashes. booktx translate insert rejects stale or\nprofile-mismatched submissions.\n\nblock submissions are written under translations/<profile>/ingest/:\n\n# booktx block submission\n# profile: profile\n# task: task_id\n# translation_version: 1.2\n>>> 0001-000001\ntranslated text.\n\n\n\n\nkeep each record header unchanged, write only the target text, preserve\nplaceholder tokens, and do not add commentary. json submissions use schema\nversion 2 and must declare the matching profile and translation version."
+        },
+        {
+          "anchor": "",
+          "heading": "Generated exports",
+          "text": "translations/<profile>/translated/NNNN.json is a compatibility export. It is\nderived from the store and is not the canonical state. Editor indexes, reports,\nand output are likewise generated artifacts.",
+          "lower": "translations/<profile>/translated/nnnn.json is a compatibility export. it is\nderived from the store and is not the canonical state. editor indexes, reports,\nand output are likewise generated artifacts."
+        },
+        {
+          "anchor": "",
+          "heading": "Versions and reviews",
+          "text": "booktx translate compare and activate operate on versions inside one\nprofile. Cross-profile comparison is explicit through booktx profile compare\nor judge workflows. Review candidates are stored separately in the nested\nreviews data and use R<pass>.<run> references. Effective output resolves a\nvalid review candidate before the current translation version.",
+          "lower": "booktx translate compare and activate operate on versions inside one\nprofile. cross-profile comparison is explicit through booktx profile compare\nor judge workflows. review candidates are stored separately in the nested\nreviews data and use r<pass>.<run> references. effective output resolves a\nvalid review candidate before the current translation version."
+        },
+        {
+          "anchor": "",
+          "heading": "Placeholders and Markdown",
+          "text": "Required placeholders such as __NAME_001__ and __TAG_001__ must be\npreserved exactly. Markdown links keep their URLs, code remains opaque, and\nfront matter is preserved. Targets must be non-empty and record ids must not\nchange.",
+          "lower": "required placeholders such as __name_001__ and __tag_001__ must be\npreserved exactly. markdown links keep their urls, code remains opaque, and\nfront matter is preserved. targets must be non-empty and record ids must not\nchange."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUB inline XHTML",
+          "text": "EPUB source records may use constrained inline XHTML. Targets preserve the\nsame tag names and attributes around translated text nodes. Do not replace\nXHTML with Markdown, add block markup, change opaque inline elements, or invent\nattributes. Validation and build preflight check the inline skeleton and\nopaque-content preservation.",
+          "lower": "epub source records may use constrained inline xhtml. targets preserve the\nsame tag names and attributes around translated text nodes. do not replace\nxhtml with markdown, add block markup, change opaque inline elements, or invent\nattributes. validation and build preflight check the inline skeleton and\nopaque-content preservation."
+        },
+        {
+          "anchor": "",
+          "heading": "Context and provenance",
+          "text": "context.json is authoritative and context.md is rendered. Each task stores\nan immutable effective context view under\ntranslations/<profile>/context-history/views/<sha>/. Translation and review\nrevisions retain baseline and context-view provenance. Do not edit\ntranslation-store.json, v3 shard files, or rendered context manually; use the\nCLI workflows.",
+          "lower": "context.json is authoritative and context.md is rendered. each task stores\nan immutable effective context view under\ntranslations/<profile>/context-history/views/<sha>/. translation and review\nrevisions retain baseline and context-view provenance. do not edit\ntranslation-store.json, v3 shard files, or rendered context manually; use the\ncli workflows."
+        },
+        {
+          "anchor": "",
+          "heading": "Glossary phrase collisions",
+          "text": "Glossary enforcement uses the longest non-shadowed source span. If a shorter\nterm occurs inside a longer configured phrase, add the longer phrase or use\nnatural apposition rather than forcing an unnatural target token. A standalone\nshorter occurrence remains subject to its own rule.",
+          "lower": "glossary enforcement uses the longest non-shadowed source span. if a shorter\nterm occurs inside a longer configured phrase, add the longer phrase or use\nnatural apposition rather than forcing an unnatural target token. a standalone\nshorter occurrence remains subject to its own rule."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/troubleshooting/",
+      "title": "booktx Troubleshooting",
+      "snippet": "Project-root commands that read or write profile-local data require an explicit\nprofile:\n\nbooktx profile list ./book\nbooktx status ./book -- …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Multiple profiles or missing profile",
+          "text": "Project-root commands that read or write profile-local data require an explicit\nprofile:\n\nbooktx profile list ./book\nbooktx status ./book --profile PROFILE\nbooktx guide ./book --profile PROFILE\n\n\n\n\nIf no profile exists, create one:\n\nbooktx profile create ./book PROFILE --target de --target-locale de-DE\n\n\n\n\nFrom translations/PROFILE/, use . and omit --profile. If the marker is\nmissing, mismatched, or stale, regenerate the profile-root instructions or\nrepair the profile through the project-root workflow before isolated work.",
+          "lower": "project-root commands that read or write profile-local data require an explicit\nprofile:\n\nbooktx profile list ./book\nbooktx status ./book --profile profile\nbooktx guide ./book --profile profile\n\n\n\n\nif no profile exists, create one:\n\nbooktx profile create ./book profile --target de --target-locale de-de\n\n\n\n\nfrom translations/profile/, use . and omit --profile. if the marker is\nmissing, mismatched, or stale, regenerate the profile-root instructions or\nrepair the profile through the project-root workflow before isolated work."
+        },
+        {
+          "anchor": "",
+          "heading": "Profile and submission mismatches",
+          "text": "A task or submission created for another profile cannot be inserted into the\nselected profile. Request a fresh task and use the matching profile-local\ningest/ file:\n\nbooktx translate next ./book --profile PROFILE --format block\n\n\n\n\nDo not edit canonical translation store shards to work around a mismatch.",
+          "lower": "a task or submission created for another profile cannot be inserted into the\nselected profile. request a fresh task and use the matching profile-local\ningest/ file:\n\nbooktx translate next ./book --profile profile --format block\n\n\n\n\ndo not edit canonical translation store shards to work around a mismatch."
+        },
+        {
+          "anchor": "",
+          "heading": "Legacy paths after migration",
+          "text": "After booktx profile migrate-current, mutable translation state belongs under\ntranslations/<profile>/. Old .booktx/ paths such as context.json,\ntasks/, ingest/, translated/, and translation-store.json are legacy\nmigration input, not current profile storage.",
+          "lower": "after booktx profile migrate-current, mutable translation state belongs under\ntranslations/<profile>/. old .booktx/ paths such as context.json,\ntasks/, ingest/, translated/, and translation-store.json are legacy\nmigration input, not current profile storage."
+        },
+        {
+          "anchor": "",
+          "heading": "Stale tasks and context",
+          "text": "If insertion reports stale task metadata, request a new task after the context,\nglossary, source, or version change:\n\nbooktx context status ./book --profile PROFILE\nbooktx translate next ./book --profile PROFILE --format block\n\n\n\n\ncontext.json is authoritative. If context.md contains manual notes, import\nor replace them with booktx context import-md before rendering. Do not mark\ncontext ready until the user has approved required questions.",
+          "lower": "if insertion reports stale task metadata, request a new task after the context,\nglossary, source, or version change:\n\nbooktx context status ./book --profile profile\nbooktx translate next ./book --profile profile --format block\n\n\n\n\ncontext.json is authoritative. if context.md contains manual notes, import\nor replace them with booktx context import-md before rendering. do not mark\ncontext ready until the user has approved required questions."
+        },
+        {
+          "anchor": "",
+          "heading": "Source drift and missing chunks",
+          "text": "Re-extract after an intentional source change or when chunks are missing:\n\nbooktx extract ./book\nbooktx chapters ./book --audit\n\n\n\n\nThe source checksum and chapter audit must be current before new tasks are\ncreated. An extracted EPUB target with no chapter-map boundary is an error;\nwarning-only preview or navigation findings remain visible for review.",
+          "lower": "re-extract after an intentional source change or when chunks are missing:\n\nbooktx extract ./book\nbooktx chapters ./book --audit\n\n\n\n\nthe source checksum and chapter audit must be current before new tasks are\ncreated. an extracted epub target with no chapter-map boundary is an error;\nwarning-only preview or navigation findings remain visible for review."
+        },
+        {
+          "anchor": "",
+          "heading": "Validation and build",
+          "text": "Use scoped checks during bounded work and the full validation before output:\n\nbooktx check ./book --profile PROFILE --fail-on-warnings\nbooktx validate ./book --profile PROFILE --fail-on-warnings\nbooktx build ./book --profile PROFILE --require-complete\n\n\n\n\nIf EPUB validation reports an inline-XHTML finding, preserve the source tag and\nattribute skeleton and change only text nodes. The same preflight is used by\nvalidation and build.\n\nIf an output filename does not match the profile target, update the profile\nconfiguration rather than renaming generated files by hand.",
+          "lower": "use scoped checks during bounded work and the full validation before output:\n\nbooktx check ./book --profile profile --fail-on-warnings\nbooktx validate ./book --profile profile --fail-on-warnings\nbooktx build ./book --profile profile --require-complete\n\n\n\n\nif epub validation reports an inline-xhtml finding, preserve the source tag and\nattribute skeleton and change only text nodes. the same preflight is used by\nvalidation and build.\n\nif an output filename does not match the profile target, update the profile\nconfiguration rather than renaming generated files by hand."
+        },
+        {
+          "anchor": "",
+          "heading": "Context and series preparation",
+          "text": "booktx series prepare is a project-root workflow. Provide exactly one policy\nsource, either --from-book or --pack, then review the generated questionnaire\nbefore context mark-ready. Do not run series preparation from a profile root.",
+          "lower": "booktx series prepare is a project-root workflow. provide exactly one policy\nsource, either --from-book or --pack, then review the generated questionnaire\nbefore context mark-ready. do not run series preparation from a profile root."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUB output policy",
+          "text": "Target language metadata and generated hyphenation CSS are controlled by the\nprofile’s [epub_output] policy. Automatic hyphenation still depends on the\nreader. Set hyphenation = \"none\" when the reader produces unacceptable\nbreaks, then rebuild.",
+          "lower": "target language metadata and generated hyphenation css are controlled by the\nprofile’s [epub_output] policy. automatic hyphenation still depends on the\nreader. set hyphenation = \"none\" when the reader produces unacceptable\nbreaks, then rebuild."
+        },
+        {
+          "anchor": "",
+          "heading": "Bounded todos",
+          "text": "Inspect an incomplete run before requesting more work:\n\nbooktx translate todo-status ./book --profile PROFILE --latest\nbooktx translate todo-resume ./book --profile PROFILE --latest --format block\n\n\n\n\nWhen planned chapters are complete, create and resume a new bounded todo with:\n\nbooktx translate todo-next ./book --profile PROFILE --chapters 3 \\\n  --batch-words 800 --write --resume --format block\n\n\n\n\nKeep todo files as run-control artifacts, not submission files.",
+          "lower": "inspect an incomplete run before requesting more work:\n\nbooktx translate todo-status ./book --profile profile --latest\nbooktx translate todo-resume ./book --profile profile --latest --format block\n\n\n\n\nwhen planned chapters are complete, create and resume a new bounded todo with:\n\nbooktx translate todo-next ./book --profile profile --chapters 3 \\\n  --batch-words 800 --write --resume --format block\n\n\n\n\nkeep todo files as run-control artifacts, not submission files."
+        },
+        {
+          "anchor": "",
+          "heading": "source_directive_in_target",
+          "text": "If translate lint-block or translate insert reports\nsource_directive_in_target, the ingest file contains a copied source-only\ndirective such as # glossary:, # style:, or # termbase: under a >>>\ntarget header. Remove the copied directive, keep only translated prose in the\ntarget block, rerun lint, and submit only after lint passes.",
+          "lower": "if translate lint-block or translate insert reports\nsource_directive_in_target, the ingest file contains a copied source-only\ndirective such as # glossary:, # style:, or # termbase: under a >>>\ntarget header. remove the copied directive, keep only translated prose in the\ntarget block, rerun lint, and submit only after lint passes."
+        },
+        {
+          "anchor": "",
+          "heading": "Glossary and termbase",
+          "text": "Use booktx glossary for binding terminology decisions and booktx termbase\nfor advanced reusable preferences. After a mandatory glossary change, request\nfresh translation tasks and audit the effective output. Longer glossary phrases\nshadow contained shorter matches; do not force an unnatural compound to satisfy\na shorter rule.",
+          "lower": "use booktx glossary for binding terminology decisions and booktx termbase\nfor advanced reusable preferences. after a mandatory glossary change, request\nfresh translation tasks and audit the effective output. longer glossary phrases\nshadow contained shorter matches; do not force an unnatural compound to satisfy\na shorter rule."
+        },
+        {
+          "anchor": "",
+          "heading": "Judge ingest",
+          "text": "For a corrupted judge ingest file, regenerate it from the stored task:\n\nbooktx judge reset-ingest ./book --profile PROFILE \\\n  --judge-task-id TASK --format decisions --write\n\n\n\n\nFor revision profiles, every record requires an explicit copy or edited\ndecision. Later corrections use judge commands, not direct store edits.",
+          "lower": "for a corrupted judge ingest file, regenerate it from the stored task:\n\nbooktx judge reset-ingest ./book --profile profile \\\n  --judge-task-id task --format decisions --write\n\n\n\n\nfor revision profiles, every record requires an explicit copy or edited\ndecision. later corrections use judge commands, not direct store edits."
+        }
+      ]
+    }
+  ]
+}

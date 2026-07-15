@@ -1,0 +1,819 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "phrasplit-main",
+  "entries": [
+    {
+      "url": "/tools/phrasplit/main/api/",
+      "title": "phrasplit API Reference",
+      "snippet": "This page contains the complete API reference for phrasplit.\nphrasplit.split_sentences(text: str, language_model: str = 'en_core_web_sm', ap …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "API Reference",
+          "text": "This page contains the complete API reference for phrasplit.",
+          "lower": "this page contains the complete api reference for phrasplit."
+        },
+        {
+          "anchor": "",
+          "heading": "split_sentences",
+          "text": "phrasplit.split_sentences(text: str, language_model: str = 'en_core_web_sm', apply_corrections: bool = True, split_on_colon: bool = True, use_spacy: bool | None = None) → list[str][source]\nSplit text into sentences.\n\nBy default, uses spaCy if available for best accuracy, otherwise falls back\nto regex-based splitting. You can force a specific implementation with use_spacy.\n\n\nParameters:\n\ntext – Input text\n\n\nlanguage_model – Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)\nFor spaCy mode: Name of the spaCy model to use\nFor simple mode: Used to determine language for abbreviation handling\n\n\napply_corrections – Whether to apply post-processing corrections for\ncommon spaCy errors (URL splitting, abbreviation handling).\nDefault is True. Only applies to spaCy mode.\n\n\nsplit_on_col…",
+          "lower": "phrasplit.split_sentences(text: str, language_model: str = 'en_core_web_sm', apply_corrections: bool = true, split_on_colon: bool = true, use_spacy: bool | none = none) → list[str][source]\nsplit text into sentences.\n\nby default, uses spacy if available for best accuracy, otherwise falls back\nto regex-based splitting. you can force a specific implementation with use_spacy.\n\n\nparameters:\n\ntext – input text\n\n\nlanguage_model – language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)\nfor spacy mode: name of the spacy model to use\nfor simple mode: used to determine language for abbreviation handling\n\n\napply_corrections – whether to apply post-processing corrections for\ncommon spacy errors (url splitting, abbreviation handling).\ndefault is true. only applies to spacy mode.\n\n\nsplit_on_col…"
+        },
+        {
+          "anchor": "",
+          "heading": "split_clauses",
+          "text": "phrasplit.split_clauses(text: str, language_model: str = 'en_core_web_sm', use_spacy: bool | None = None) → list[str][source]\nSplit text into comma-separated parts for audiobook creation.\n\nUses sentence detection, then splits each sentence at commas.\nThe comma stays at the end of each part, creating natural pause points\nfor text-to-speech processing.\n\n\nParameters:\n\ntext – Input text\n\n\nlanguage_model – Language model name (e.g., “en_core_web_sm”)\n\n\nuse_spacy – Choose implementation:\nNone (default) auto-detects spaCy and uses it if available.\nTrue forces spaCy and raises ImportError if not installed.\nFalse forces simple regex-based splitting.\n\n\n\n\nReturns:\nList of comma-separated parts\n\n\nRaises:\nImportError – If use_spacy=True but spaCy is not installed\n\n\n\nExample:\n\nInput: \"I do like coffee…",
+          "lower": "phrasplit.split_clauses(text: str, language_model: str = 'en_core_web_sm', use_spacy: bool | none = none) → list[str][source]\nsplit text into comma-separated parts for audiobook creation.\n\nuses sentence detection, then splits each sentence at commas.\nthe comma stays at the end of each part, creating natural pause points\nfor text-to-speech processing.\n\n\nparameters:\n\ntext – input text\n\n\nlanguage_model – language model name (e.g., “en_core_web_sm”)\n\n\nuse_spacy – choose implementation:\nnone (default) auto-detects spacy and uses it if available.\ntrue forces spacy and raises importerror if not installed.\nfalse forces simple regex-based splitting.\n\n\n\n\nreturns:\nlist of comma-separated parts\n\n\nraises:\nimporterror – if use_spacy=true but spacy is not installed\n\n\n\nexample:\n\ninput: \"i do like coffee…"
+        },
+        {
+          "anchor": "",
+          "heading": "split_paragraphs",
+          "text": "phrasplit.split_paragraphs(text: str) → list[str][source]\nSplit text into paragraphs (separated by double newlines).\n\nApplies preprocessing to fix hyphenated line breaks and normalize whitespace.\n\n\nParameters:\ntext – Input text\n\n\nReturns:\nList of paragraphs (non-empty, stripped)\n\n\n\n\n\nExample:\n\nfrom phrasplit import split_paragraphs\n\ntext = \"First paragraph.\\n\\nSecond paragraph.\"\nparagraphs = split_paragraphs(text)\n# ['First paragraph.', 'Second paragraph.']",
+          "lower": "phrasplit.split_paragraphs(text: str) → list[str][source]\nsplit text into paragraphs (separated by double newlines).\n\napplies preprocessing to fix hyphenated line breaks and normalize whitespace.\n\n\nparameters:\ntext – input text\n\n\nreturns:\nlist of paragraphs (non-empty, stripped)\n\n\n\n\n\nexample:\n\nfrom phrasplit import split_paragraphs\n\ntext = \"first paragraph.\\n\\nsecond paragraph.\"\nparagraphs = split_paragraphs(text)\n# ['first paragraph.', 'second paragraph.']"
+        },
+        {
+          "anchor": "",
+          "heading": "split_text",
+          "text": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str = 'en_core_web_sm', apply_corrections: bool = True, split_on_colon: bool = True, use_spacy: bool | None = None) → list[Segment][source]\nSplit text into segments with hierarchical position information.\n\nThis function provides a unified interface for text splitting with different\ngranularity levels, while preserving paragraph and sentence structure information.\nUseful for audiobook generation where different pause lengths are needed\nbetween paragraphs vs. sentences vs. clauses.\n\n\nParameters:\n\ntext – Input text to split\n\n\nmode – Splitting mode. Valid values are \"paragraph\", \"sentence\",\nand \"clause\".\n\n\nlanguage_model – Language model name (e.g., “en_core_web_sm”)\n\n\napply_corrections – Whether to apply post-processing…",
+          "lower": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str = 'en_core_web_sm', apply_corrections: bool = true, split_on_colon: bool = true, use_spacy: bool | none = none) → list[segment][source]\nsplit text into segments with hierarchical position information.\n\nthis function provides a unified interface for text splitting with different\ngranularity levels, while preserving paragraph and sentence structure information.\nuseful for audiobook generation where different pause lengths are needed\nbetween paragraphs vs. sentences vs. clauses.\n\n\nparameters:\n\ntext – input text to split\n\n\nmode – splitting mode. valid values are \"paragraph\", \"sentence\",\nand \"clause\".\n\n\nlanguage_model – language model name (e.g., “en_core_web_sm”)\n\n\napply_corrections – whether to apply post-processing…"
+        },
+        {
+          "anchor": "",
+          "heading": "split_long_lines",
+          "text": "phrasplit.split_long_lines(text: str, max_length: int, language_model: str = 'en_core_web_sm', use_spacy: bool | None = None) → list[str][source]\nSplit lines exceeding max_length at clause/sentence boundaries.\n\nStrategy:\n1. First try to split at sentence boundaries\n2. If still too long, split at clause boundaries (commas, semicolons, etc.)\n3. If still too long, split at word boundaries\n\n\nParameters:\n\ntext – Input text\n\n\nmax_length – Maximum line length in characters (must be positive)\n\n\nlanguage_model – Language model name (e.g., “en_core_web_sm”)\n\n\nuse_spacy – Choose implementation:\nNone (default) auto-detects spaCy and uses it if available.\nTrue forces spaCy and raises ImportError if not installed.\nFalse forces simple regex-based splitting.\n\n\n\n\nReturns:\nList of lines, each within max_l…",
+          "lower": "phrasplit.split_long_lines(text: str, max_length: int, language_model: str = 'en_core_web_sm', use_spacy: bool | none = none) → list[str][source]\nsplit lines exceeding max_length at clause/sentence boundaries.\n\nstrategy:\n1. first try to split at sentence boundaries\n2. if still too long, split at clause boundaries (commas, semicolons, etc.)\n3. if still too long, split at word boundaries\n\n\nparameters:\n\ntext – input text\n\n\nmax_length – maximum line length in characters (must be positive)\n\n\nlanguage_model – language model name (e.g., “en_core_web_sm”)\n\n\nuse_spacy – choose implementation:\nnone (default) auto-detects spacy and uses it if available.\ntrue forces spacy and raises importerror if not installed.\nfalse forces simple regex-based splitting.\n\n\n\n\nreturns:\nlist of lines, each within max_l…"
+        },
+        {
+          "anchor": "",
+          "heading": "Segment",
+          "text": "class phrasplit.Segment(text: str, paragraph: int, sentence: int | None = None)[source]\nBases: NamedTuple\n\nA text segment with position information.\n\n\n\n- ``text``\nThe text content of the segment.\n\n\n\n\n\n- ``paragraph``\nParagraph index (0-based) within the document.\n\n\n\n\n\n- ``sentence``\nSentence index (0-based) within the paragraph.\nNone for paragraph mode.\n\n\n\n\n\ntext: str\nAlias for field number 0\n\n\n\n\n\nparagraph: int\nAlias for field number 1\n\n\n\n\n\nsentence: int | None\nAlias for field number 2\n\n\n\n\n\nA named tuple representing a text segment with position information.\n\nFields:\n\n\ntext (str): The text content of the segment\n\n\nparagraph (int): Paragraph index (0-based) within the document\n\n\nsentence (int | None): Sentence index (0-based) within the paragraph. None for\nparagraph mode.\n\n\n\nExample:…",
+          "lower": "class phrasplit.segment(text: str, paragraph: int, sentence: int | none = none)[source]\nbases: namedtuple\n\na text segment with position information.\n\n\n\n- ``text``\nthe text content of the segment.\n\n\n\n\n\n- ``paragraph``\nparagraph index (0-based) within the document.\n\n\n\n\n\n- ``sentence``\nsentence index (0-based) within the paragraph.\nnone for paragraph mode.\n\n\n\n\n\ntext: str\nalias for field number 0\n\n\n\n\n\nparagraph: int\nalias for field number 1\n\n\n\n\n\nsentence: int | none\nalias for field number 2\n\n\n\n\n\na named tuple representing a text segment with position information.\n\nfields:\n\n\ntext (str): the text content of the segment\n\n\nparagraph (int): paragraph index (0-based) within the document\n\n\nsentence (int | none): sentence index (0-based) within the paragraph. none for\nparagraph mode.\n\n\n\nexample:…"
+        },
+        {
+          "anchor": "",
+          "heading": "splitter module",
+          "text": "Text splitting utilities using spaCy for NLP-based sentence and clause detection.\n\nThis module provides two implementations:\n1. spaCy-based (default when available): High accuracy, handles complex cases\n2. Regex-based (fallback): Faster, simpler, good for common cases\n\nThe implementation is selected automatically based on spaCy availability,\nor can be controlled via the use_spacy parameter.\n\n\n\nclass phrasplit.splitter.Segment(text: str, paragraph: int, sentence: int | None = None)[source]\nBases: NamedTuple\n\nA text segment with position information.\n\n\n\n- ``text``\nThe text content of the segment.\n\n\n\n\n\n- ``paragraph``\nParagraph index (0-based) within the document.\n\n\n\n\n\n- ``sentence``\nSentence index (0-based) within the paragraph.\nNone for paragraph mode.\n\n\n\n\n\ntext: str\nAlias for field numb…",
+          "lower": "text splitting utilities using spacy for nlp-based sentence and clause detection.\n\nthis module provides two implementations:\n1. spacy-based (default when available): high accuracy, handles complex cases\n2. regex-based (fallback): faster, simpler, good for common cases\n\nthe implementation is selected automatically based on spacy availability,\nor can be controlled via the use_spacy parameter.\n\n\n\nclass phrasplit.splitter.segment(text: str, paragraph: int, sentence: int | none = none)[source]\nbases: namedtuple\n\na text segment with position information.\n\n\n\n- ``text``\nthe text content of the segment.\n\n\n\n\n\n- ``paragraph``\nparagraph index (0-based) within the document.\n\n\n\n\n\n- ``sentence``\nsentence index (0-based) within the paragraph.\nnone for paragraph mode.\n\n\n\n\n\ntext: str\nalias for field numb…"
+        },
+        {
+          "anchor": "",
+          "heading": "Type Information",
+          "text": "phrasplit is fully typed and includes a py.typed marker file for PEP 561 compliance.\nYou can use it with mypy and other type checkers.\n\nFunction signatures:\n\nfrom typing import NamedTuple\n\nclass Segment(NamedTuple):\n    text: str\n    paragraph: int\n    sentence: int | None = None\n\ndef split_sentences(\n    text: str,\n    language_model: str = \"en_core_web_sm\",\n    apply_corrections: bool = True,\n    split_on_colon: bool = True,\n    use_spacy: bool | None = None,\n) -> list[str]: ...\n\ndef split_clauses(\n    text: str,\n    language_model: str = \"en_core_web_sm\",\n    use_spacy: bool | None = None,\n) -> list[str]: ...\n\ndef split_paragraphs(text: str) -> list[str]: ...\n\ndef split_text(\n    text: str,\n    mode: str = \"sentence\",\n    language_model: str = \"en_core_web_sm\",\n    apply_corrections: b…",
+          "lower": "phrasplit is fully typed and includes a py.typed marker file for pep 561 compliance.\nyou can use it with mypy and other type checkers.\n\nfunction signatures:\n\nfrom typing import namedtuple\n\nclass segment(namedtuple):\n    text: str\n    paragraph: int\n    sentence: int | none = none\n\ndef split_sentences(\n    text: str,\n    language_model: str = \"en_core_web_sm\",\n    apply_corrections: bool = true,\n    split_on_colon: bool = true,\n    use_spacy: bool | none = none,\n) -> list[str]: ...\n\ndef split_clauses(\n    text: str,\n    language_model: str = \"en_core_web_sm\",\n    use_spacy: bool | none = none,\n) -> list[str]: ...\n\ndef split_paragraphs(text: str) -> list[str]: ...\n\ndef split_text(\n    text: str,\n    mode: str = \"sentence\",\n    language_model: str = \"en_core_web_sm\",\n    apply_corrections: b…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/cli/",
+      "title": "phrasplit Command Line Interface",
+      "snippet": "phrasplit provides a command-line interface for processing text files.\n\nBy default, the CLI automatically detects if spaCy is installed and …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Command Line Interface",
+          "text": "phrasplit provides a command-line interface for processing text files.\n\nBy default, the CLI automatically detects if spaCy is installed and uses it for best\naccuracy. You can use the --simple flag to force fast regex-based splitting that\ndoesn’t require spaCy.",
+          "lower": "phrasplit provides a command-line interface for processing text files.\n\nby default, the cli automatically detects if spacy is installed and uses it for best\naccuracy. you can use the --simple flag to force fast regex-based splitting that\ndoesn’t require spacy."
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Usage",
+          "text": "The CLI has four main commands:\n\n\nsentences - Split text into sentences\n\n\nclauses - Split text into clauses (at commas)\n\n\nparagraphs - Split text into paragraphs\n\n\nlonglines - Split long lines at natural boundaries",
+          "lower": "the cli has four main commands:\n\n\nsentences - split text into sentences\n\n\nclauses - split text into clauses (at commas)\n\n\nparagraphs - split text into paragraphs\n\n\nlonglines - split long lines at natural boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Getting Help",
+          "text": "# Show available commands\nphrasplit --help\n\n# Show help for a specific command\nphrasplit sentences --help",
+          "lower": "# show available commands\nphrasplit --help\n\n# show help for a specific command\nphrasplit sentences --help"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Sentences",
+          "text": "Split a text file into sentences:\n\n# Auto-detect mode (uses spaCy if available)\nphrasplit sentences input.txt\n\n# Output to file\nphrasplit sentences input.txt -o output.txt\n\n# Force simple mode (60x faster, no spaCy required)\nphrasplit sentences input.txt --simple\n\n# Use a different spaCy model (only when using spaCy mode)\nphrasplit sentences input.txt --model en_core_web_lg",
+          "lower": "split a text file into sentences:\n\n# auto-detect mode (uses spacy if available)\nphrasplit sentences input.txt\n\n# output to file\nphrasplit sentences input.txt -o output.txt\n\n# force simple mode (60x faster, no spacy required)\nphrasplit sentences input.txt --simple\n\n# use a different spacy model (only when using spacy mode)\nphrasplit sentences input.txt --model en_core_web_lg"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Clauses",
+          "text": "Split text into comma-separated parts:\n\nphrasplit clauses input.txt\nphrasplit clauses input.txt -o output.txt\n\n# Use simple mode for faster processing\nphrasplit clauses input.txt --simple",
+          "lower": "split text into comma-separated parts:\n\nphrasplit clauses input.txt\nphrasplit clauses input.txt -o output.txt\n\n# use simple mode for faster processing\nphrasplit clauses input.txt --simple"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Paragraphs",
+          "text": "Split text into paragraphs (no spaCy needed):\n\nphrasplit paragraphs input.txt\nphrasplit paragraphs input.txt -o output.txt",
+          "lower": "split text into paragraphs (no spacy needed):\n\nphrasplit paragraphs input.txt\nphrasplit paragraphs input.txt -o output.txt"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Long Lines",
+          "text": "Split long lines to fit within a maximum length:\n\n# Default max length is 80 characters\nphrasplit longlines input.txt\n\n# Custom max length\nphrasplit longlines input.txt --max-length 60\n\n# Use simple mode for faster processing\nphrasplit longlines input.txt --simple --max-length 60\n\n# Output to file with custom length\nphrasplit longlines input.txt -o output.txt -l 100",
+          "lower": "split long lines to fit within a maximum length:\n\n# default max length is 80 characters\nphrasplit longlines input.txt\n\n# custom max length\nphrasplit longlines input.txt --max-length 60\n\n# use simple mode for faster processing\nphrasplit longlines input.txt --simple --max-length 60\n\n# output to file with custom length\nphrasplit longlines input.txt -o output.txt -l 100"
+        },
+        {
+          "anchor": "",
+          "heading": "Reading from stdin",
+          "text": "All commands support reading from stdin by omitting the input file or using -:\n\n# Pipe input\necho \"Hello world. This is a test.\" | phrasplit sentences\n\n# Redirect input\nphrasplit sentences < input.txt\n\n# Explicit stdin with dash\nphrasplit sentences - < input.txt\n\n# Combine with output file\ncat input.txt | phrasplit clauses -o output.txt",
+          "lower": "all commands support reading from stdin by omitting the input file or using -:\n\n# pipe input\necho \"hello world. this is a test.\" | phrasplit sentences\n\n# redirect input\nphrasplit sentences < input.txt\n\n# explicit stdin with dash\nphrasplit sentences - < input.txt\n\n# combine with output file\ncat input.txt | phrasplit clauses -o output.txt"
+        },
+        {
+          "anchor": "",
+          "heading": "sentences",
+          "text": "Usage: phrasplit sentences [OPTIONS] [INPUT_FILE]\n\nSplit text into sentences.\n\nBy default, uses spaCy if available for best accuracy. Use --simple for\nfaster regex-based splitting that doesn't require spaCy.\n\nOptions:\n  -o, --output PATH   Output file (default: stdout)\n  -m, --model TEXT    spaCy language model (default: en_core_web_sm)\n  --simple            Use simple regex-based splitting (faster, no spaCy required)\n  --help              Show this message and exit.",
+          "lower": "usage: phrasplit sentences [options] [input_file]\n\nsplit text into sentences.\n\nby default, uses spacy if available for best accuracy. use --simple for\nfaster regex-based splitting that doesn't require spacy.\n\noptions:\n  -o, --output path   output file (default: stdout)\n  -m, --model text    spacy language model (default: en_core_web_sm)\n  --simple            use simple regex-based splitting (faster, no spacy required)\n  --help              show this message and exit."
+        },
+        {
+          "anchor": "",
+          "heading": "clauses",
+          "text": "Usage: phrasplit clauses [OPTIONS] [INPUT_FILE]\n\nSplit text into clauses (at commas).\n\nBy default, uses spaCy if available for best accuracy. Use --simple for\nfaster regex-based splitting that doesn't require spaCy.\n\nOptions:\n  -o, --output PATH   Output file (default: stdout)\n  -m, --model TEXT    spaCy language model (default: en_core_web_sm)\n  --simple            Use simple regex-based splitting (faster, no spaCy required)\n  --help              Show this message and exit.",
+          "lower": "usage: phrasplit clauses [options] [input_file]\n\nsplit text into clauses (at commas).\n\nby default, uses spacy if available for best accuracy. use --simple for\nfaster regex-based splitting that doesn't require spacy.\n\noptions:\n  -o, --output path   output file (default: stdout)\n  -m, --model text    spacy language model (default: en_core_web_sm)\n  --simple            use simple regex-based splitting (faster, no spacy required)\n  --help              show this message and exit."
+        },
+        {
+          "anchor": "",
+          "heading": "paragraphs",
+          "text": "Usage: phrasplit paragraphs [OPTIONS] [INPUT_FILE]\n\nSplit text into paragraphs.\n\nOptions:\n  -o, --output PATH   Output file (default: stdout)\n  --help              Show this message and exit.",
+          "lower": "usage: phrasplit paragraphs [options] [input_file]\n\nsplit text into paragraphs.\n\noptions:\n  -o, --output path   output file (default: stdout)\n  --help              show this message and exit."
+        },
+        {
+          "anchor": "",
+          "heading": "longlines",
+          "text": "Usage: phrasplit longlines [OPTIONS] [INPUT_FILE]\n\nSplit long lines at sentence/clause boundaries.\n\nBy default, uses spaCy if available for best accuracy. Use --simple for\nfaster regex-based splitting that doesn't require spaCy.\n\nOptions:\n  -o, --output PATH        Output file (default: stdout)\n  -l, --max-length INTEGER Maximum line length (default: 80, must be >= 1)\n  -m, --model TEXT         spaCy language model (default: en_core_web_sm)\n  --simple                 Use simple regex-based splitting (faster, no spaCy required)\n  --help                   Show this message and exit.",
+          "lower": "usage: phrasplit longlines [options] [input_file]\n\nsplit long lines at sentence/clause boundaries.\n\nby default, uses spacy if available for best accuracy. use --simple for\nfaster regex-based splitting that doesn't require spacy.\n\noptions:\n  -o, --output path        output file (default: stdout)\n  -l, --max-length integer maximum line length (default: 80, must be >= 1)\n  -m, --model text         spacy language model (default: en_core_web_sm)\n  --simple                 use simple regex-based splitting (faster, no spacy required)\n  --help                   show this message and exit."
+        },
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "Process a book for audiobook creation:\n\n# Split into sentences first (using simple mode for speed)\nphrasplit sentences book.txt --simple -o book_sentences.txt\n\n# Then split long sentences into clauses\nphrasplit clauses book_sentences.txt --simple -o book_clauses.txt\n\n\n\n\nCreate subtitles with line length limits:\n\nphrasplit longlines transcript.txt -o subtitles.txt --max-length 42\n\n\n\n\nSpeed comparison example:\n\n# Using spaCy mode (higher accuracy, slower)\ntime phrasplit sentences large_book.txt -o output_spacy.txt\n\n# Using simple mode (60x faster, good for well-formatted text)\ntime phrasplit sentences large_book.txt --simple -o output_simple.txt\n\n\n\n\nPipeline example with multiple tools:\n\ncat book.txt | phrasplit sentences --simple | phrasplit clauses --simple > output.txt",
+          "lower": "process a book for audiobook creation:\n\n# split into sentences first (using simple mode for speed)\nphrasplit sentences book.txt --simple -o book_sentences.txt\n\n# then split long sentences into clauses\nphrasplit clauses book_sentences.txt --simple -o book_clauses.txt\n\n\n\n\ncreate subtitles with line length limits:\n\nphrasplit longlines transcript.txt -o subtitles.txt --max-length 42\n\n\n\n\nspeed comparison example:\n\n# using spacy mode (higher accuracy, slower)\ntime phrasplit sentences large_book.txt -o output_spacy.txt\n\n# using simple mode (60x faster, good for well-formatted text)\ntime phrasplit sentences large_book.txt --simple -o output_simple.txt\n\n\n\n\npipeline example with multiple tools:\n\ncat book.txt | phrasplit sentences --simple | phrasplit clauses --simple > output.txt"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/examples/",
+      "title": "phrasplit Examples",
+      "snippet": "This page provides practical examples of using phrasplit for various use cases.\nSplit text at natural pause points for text-to-speech proces …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "This page provides practical examples of using phrasplit for various use cases.",
+          "lower": "this page provides practical examples of using phrasplit for various use cases."
+        },
+        {
+          "anchor": "",
+          "heading": "Audiobook Creation",
+          "text": "Split text at natural pause points for text-to-speech processing:\n\nfrom phrasplit import split_sentences, split_clauses\n\ndef prepare_for_tts(text):\n    \"\"\"Prepare text for text-to-speech with natural pauses.\"\"\"\n    parts = []\n\n    for sentence in split_sentences(text):\n        # Split long sentences at commas for natural pauses\n        clauses = split_clauses(sentence)\n        parts.extend(clauses)\n\n    return parts\n\ntext = \"\"\"\nWhen the sun rose over the mountains, the valley was filled with golden light.\nBirds began to sing their morning songs, and the world slowly awakened.\n\"\"\"\n\nparts = prepare_for_tts(text)\nfor part in parts:\n    print(part)\n    # Each part can be sent to TTS with appropriate pauses between them",
+          "lower": "split text at natural pause points for text-to-speech processing:\n\nfrom phrasplit import split_sentences, split_clauses\n\ndef prepare_for_tts(text):\n    \"\"\"prepare text for text-to-speech with natural pauses.\"\"\"\n    parts = []\n\n    for sentence in split_sentences(text):\n        # split long sentences at commas for natural pauses\n        clauses = split_clauses(sentence)\n        parts.extend(clauses)\n\n    return parts\n\ntext = \"\"\"\nwhen the sun rose over the mountains, the valley was filled with golden light.\nbirds began to sing their morning songs, and the world slowly awakened.\n\"\"\"\n\nparts = prepare_for_tts(text)\nfor part in parts:\n    print(part)\n    # each part can be sent to tts with appropriate pauses between them"
+        },
+        {
+          "anchor": "",
+          "heading": "Audiobook with Paragraph Awareness",
+          "text": "For more control over pause lengths, use split_text() to track\nparagraph and sentence boundaries:\n\nfrom phrasplit import split_text\n\ndef create_audiobook_segments(text, mode=\"sentence\"):\n    \"\"\"\n    Create audiobook segments with pause markers.\n\n    Args:\n        text: The text to process\n        mode: \"sentence\" or \"clause\" for granularity\n\n    Returns:\n        List of (text, pause_type) tuples\n    \"\"\"\n    segments = split_text(text, mode=mode)\n    result = []\n\n    for i, seg in enumerate(segments):\n        if not seg.text.strip():\n            continue\n\n        # Determine pause type based on structure change\n        if i == 0:\n            pause_type = \"none\"\n        elif seg.paragraph != segments[i-1].paragraph:\n            pause_type = \"paragraph\"  # Long pause (e.g., 1.0s)\n        eli…",
+          "lower": "for more control over pause lengths, use split_text() to track\nparagraph and sentence boundaries:\n\nfrom phrasplit import split_text\n\ndef create_audiobook_segments(text, mode=\"sentence\"):\n    \"\"\"\n    create audiobook segments with pause markers.\n\n    args:\n        text: the text to process\n        mode: \"sentence\" or \"clause\" for granularity\n\n    returns:\n        list of (text, pause_type) tuples\n    \"\"\"\n    segments = split_text(text, mode=mode)\n    result = []\n\n    for i, seg in enumerate(segments):\n        if not seg.text.strip():\n            continue\n\n        # determine pause type based on structure change\n        if i == 0:\n            pause_type = \"none\"\n        elif seg.paragraph != segments[i-1].paragraph:\n            pause_type = \"paragraph\"  # long pause (e.g., 1.0s)\n        eli…"
+        },
+        {
+          "anchor": "",
+          "heading": "Complete Audiobook Processor",
+          "text": "A full example integrating with a TTS system:\n\nfrom phrasplit import split_text, Segment\n\nclass AudiobookProcessor:\n    \"\"\"Process text for audiobook generation.\"\"\"\n\n    PAUSE_DURATIONS = {\n        \"paragraph\": 1.0,\n        \"sentence\": 0.5,\n        \"clause\": 0.2,\n    }\n\n    def __init__(self, tts_engine):\n        self.tts = tts_engine\n\n    def process_chapter(self, text, mode=\"sentence\"):\n        \"\"\"Process a chapter into audio segments.\"\"\"\n        segments = split_text(text, mode=mode)\n        segments = [s for s in segments if s.text.strip()]\n\n        audio_segments = []\n\n        for i, seg in enumerate(segments):\n            # Generate audio for text\n            audio = self.tts.synthesize(seg.text)\n            audio_segments.append(audio)\n\n            # Add appropriate pause…",
+          "lower": "a full example integrating with a tts system:\n\nfrom phrasplit import split_text, segment\n\nclass audiobookprocessor:\n    \"\"\"process text for audiobook generation.\"\"\"\n\n    pause_durations = {\n        \"paragraph\": 1.0,\n        \"sentence\": 0.5,\n        \"clause\": 0.2,\n    }\n\n    def __init__(self, tts_engine):\n        self.tts = tts_engine\n\n    def process_chapter(self, text, mode=\"sentence\"):\n        \"\"\"process a chapter into audio segments.\"\"\"\n        segments = split_text(text, mode=mode)\n        segments = [s for s in segments if s.text.strip()]\n\n        audio_segments = []\n\n        for i, seg in enumerate(segments):\n            # generate audio for text\n            audio = self.tts.synthesize(seg.text)\n            audio_segments.append(audio)\n\n            # add appropriate pause…"
+        },
+        {
+          "anchor": "",
+          "heading": "Subtitle Generation",
+          "text": "Create subtitles that fit within character limits:\n\nfrom phrasplit import split_long_lines\n\ndef create_subtitles(transcript, max_chars=42):\n    \"\"\"Create subtitles from transcript with length limits.\"\"\"\n    lines = split_long_lines(transcript, max_length=max_chars)\n\n    subtitles = []\n    for i, line in enumerate(lines, 1):\n        subtitle = {\n            \"index\": i,\n            \"text\": line,\n            \"chars\": len(line)\n        }\n        subtitles.append(subtitle)\n\n    return subtitles\n\ntranscript = \"\"\"\nThis is a very long sentence that would not fit on a single subtitle line\nand needs to be broken up into smaller, more readable chunks for the viewer.\n\"\"\"\n\nsubtitles = create_subtitles(transcript)\nfor sub in subtitles:\n    print(f\"{sub['index']}: {sub['text']} ({sub['chars']} chars)\")",
+          "lower": "create subtitles that fit within character limits:\n\nfrom phrasplit import split_long_lines\n\ndef create_subtitles(transcript, max_chars=42):\n    \"\"\"create subtitles from transcript with length limits.\"\"\"\n    lines = split_long_lines(transcript, max_length=max_chars)\n\n    subtitles = []\n    for i, line in enumerate(lines, 1):\n        subtitle = {\n            \"index\": i,\n            \"text\": line,\n            \"chars\": len(line)\n        }\n        subtitles.append(subtitle)\n\n    return subtitles\n\ntranscript = \"\"\"\nthis is a very long sentence that would not fit on a single subtitle line\nand needs to be broken up into smaller, more readable chunks for the viewer.\n\"\"\"\n\nsubtitles = create_subtitles(transcript)\nfor sub in subtitles:\n    print(f\"{sub['index']}: {sub['text']} ({sub['chars']} chars)\")"
+        },
+        {
+          "anchor": "",
+          "heading": "E-book Processing",
+          "text": "Process an e-book into structured data:\n\nfrom phrasplit import split_paragraphs, split_sentences\nimport json\n\ndef process_ebook(text):\n    \"\"\"Convert e-book text to structured JSON.\"\"\"\n    chapters = []\n    current_chapter = {\"paragraphs\": []}\n\n    for para in split_paragraphs(text):\n        # Detect chapter headers (simple example)\n        if para.startswith(\"Chapter\"):\n            if current_chapter[\"paragraphs\"]:\n                chapters.append(current_chapter)\n            current_chapter = {\n                \"title\": para,\n                \"paragraphs\": []\n            }\n        else:\n            sentences = split_sentences(para)\n            current_chapter[\"paragraphs\"].append({\n                \"text\": para,\n                \"sentences\": sentences,\n                \"sentence_count\": len(s…",
+          "lower": "process an e-book into structured data:\n\nfrom phrasplit import split_paragraphs, split_sentences\nimport json\n\ndef process_ebook(text):\n    \"\"\"convert e-book text to structured json.\"\"\"\n    chapters = []\n    current_chapter = {\"paragraphs\": []}\n\n    for para in split_paragraphs(text):\n        # detect chapter headers (simple example)\n        if para.startswith(\"chapter\"):\n            if current_chapter[\"paragraphs\"]:\n                chapters.append(current_chapter)\n            current_chapter = {\n                \"title\": para,\n                \"paragraphs\": []\n            }\n        else:\n            sentences = split_sentences(para)\n            current_chapter[\"paragraphs\"].append({\n                \"text\": para,\n                \"sentences\": sentences,\n                \"sentence_count\": len(s…"
+        },
+        {
+          "anchor": "",
+          "heading": "Text Analysis",
+          "text": "Analyze text statistics:\n\nfrom phrasplit import split_paragraphs, split_sentences, split_clauses\n\ndef analyze_text(text):\n    \"\"\"Generate text statistics.\"\"\"\n    paragraphs = split_paragraphs(text)\n\n    total_sentences = 0\n    total_clauses = 0\n    sentence_lengths = []\n\n    for para in paragraphs:\n        sentences = split_sentences(para)\n        total_sentences += len(sentences)\n\n        for sent in sentences:\n            sentence_lengths.append(len(sent))\n            clauses = split_clauses(sent)\n            total_clauses += len(clauses)\n\n    stats = {\n        \"paragraphs\": len(paragraphs),\n        \"sentences\": total_sentences,\n        \"clauses\": total_clauses,\n        \"avg_sentence_length\": sum(sentence_lengths) / len(sentence_lengths),\n        \"avg_sentences_per_paragraph\": total_sen…",
+          "lower": "analyze text statistics:\n\nfrom phrasplit import split_paragraphs, split_sentences, split_clauses\n\ndef analyze_text(text):\n    \"\"\"generate text statistics.\"\"\"\n    paragraphs = split_paragraphs(text)\n\n    total_sentences = 0\n    total_clauses = 0\n    sentence_lengths = []\n\n    for para in paragraphs:\n        sentences = split_sentences(para)\n        total_sentences += len(sentences)\n\n        for sent in sentences:\n            sentence_lengths.append(len(sent))\n            clauses = split_clauses(sent)\n            total_clauses += len(clauses)\n\n    stats = {\n        \"paragraphs\": len(paragraphs),\n        \"sentences\": total_sentences,\n        \"clauses\": total_clauses,\n        \"avg_sentence_length\": sum(sentence_lengths) / len(sentence_lengths),\n        \"avg_sentences_per_paragraph\": total_sen…"
+        },
+        {
+          "anchor": "",
+          "heading": "Batch Processing",
+          "text": "Process multiple files:\n\nfrom pathlib import Path\nfrom phrasplit import split_sentences\n\ndef process_directory(input_dir, output_dir):\n    \"\"\"Process all text files in a directory.\"\"\"\n    input_path = Path(input_dir)\n    output_path = Path(output_dir)\n    output_path.mkdir(exist_ok=True)\n\n    for txt_file in input_path.glob(\"*.txt\"):\n        print(f\"Processing {txt_file.name}...\")\n\n        text = txt_file.read_text(encoding=\"utf-8\")\n        sentences = split_sentences(text)\n\n        output_file = output_path / txt_file.name\n        output_file.write_text(\"\\n\".join(sentences), encoding=\"utf-8\")\n\n        print(f\"  -> {len(sentences)} sentences written to {output_file}\")\n\n# Example usage\n# process_directory(\"./books\", \"./processed\")",
+          "lower": "process multiple files:\n\nfrom pathlib import path\nfrom phrasplit import split_sentences\n\ndef process_directory(input_dir, output_dir):\n    \"\"\"process all text files in a directory.\"\"\"\n    input_path = path(input_dir)\n    output_path = path(output_dir)\n    output_path.mkdir(exist_ok=true)\n\n    for txt_file in input_path.glob(\"*.txt\"):\n        print(f\"processing {txt_file.name}...\")\n\n        text = txt_file.read_text(encoding=\"utf-8\")\n        sentences = split_sentences(text)\n\n        output_file = output_path / txt_file.name\n        output_file.write_text(\"\\n\".join(sentences), encoding=\"utf-8\")\n\n        print(f\"  -> {len(sentences)} sentences written to {output_file}\")\n\n# example usage\n# process_directory(\"./books\", \"./processed\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Working with Different Languages",
+          "text": "Use language-specific models:\n\nfrom phrasplit import split_sentences\n\n# German text\ngerman_text = \"Guten Tag. Wie geht es Ihnen? Das Wetter ist schön.\"\n# First: python -m spacy download de_core_news_sm\ngerman_sentences = split_sentences(german_text, language_model=\"de_core_news_sm\")\n\n# French text\nfrench_text = \"Bonjour. Comment allez-vous? Il fait beau aujourd'hui.\"\n# First: python -m spacy download fr_core_news_sm\nfrench_sentences = split_sentences(french_text, language_model=\"fr_core_news_sm\")\n\n# Spanish text\nspanish_text = \"Hola. ¿Cómo estás? El tiempo es bueno.\"\n# First: python -m spacy download es_core_news_sm\nspanish_sentences = split_sentences(spanish_text, language_model=\"es_core_news_sm\")",
+          "lower": "use language-specific models:\n\nfrom phrasplit import split_sentences\n\n# german text\ngerman_text = \"guten tag. wie geht es ihnen? das wetter ist schön.\"\n# first: python -m spacy download de_core_news_sm\ngerman_sentences = split_sentences(german_text, language_model=\"de_core_news_sm\")\n\n# french text\nfrench_text = \"bonjour. comment allez-vous? il fait beau aujourd'hui.\"\n# first: python -m spacy download fr_core_news_sm\nfrench_sentences = split_sentences(french_text, language_model=\"fr_core_news_sm\")\n\n# spanish text\nspanish_text = \"hola. ¿cómo estás? el tiempo es bueno.\"\n# first: python -m spacy download es_core_news_sm\nspanish_sentences = split_sentences(spanish_text, language_model=\"es_core_news_sm\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Integration with pandas",
+          "text": "Process text data in DataFrames:\n\nimport pandas as pd\nfrom phrasplit import split_sentences, split_clauses, split_text\n\n# Sample data\ndata = {\n    \"id\": [1, 2, 3],\n    \"text\": [\n        \"Hello world. How are you?\",\n        \"The cat sat on the mat, and the dog barked.\",\n        \"Dr. Smith arrived. He was late, unfortunately.\"\n    ]\n}\ndf = pd.DataFrame(data)\n\n# Add sentence count\ndf[\"sentence_count\"] = df[\"text\"].apply(lambda x: len(split_sentences(x)))\n\n# Add clause count\ndf[\"clause_count\"] = df[\"text\"].apply(lambda x: len(split_clauses(x)))\n\n# Explode into one row per sentence\ndf_sentences = df.assign(\n    sentence=df[\"text\"].apply(split_sentences)\n).explode(\"sentence\")\n\nprint(df_sentences)",
+          "lower": "process text data in dataframes:\n\nimport pandas as pd\nfrom phrasplit import split_sentences, split_clauses, split_text\n\n# sample data\ndata = {\n    \"id\": [1, 2, 3],\n    \"text\": [\n        \"hello world. how are you?\",\n        \"the cat sat on the mat, and the dog barked.\",\n        \"dr. smith arrived. he was late, unfortunately.\"\n    ]\n}\ndf = pd.dataframe(data)\n\n# add sentence count\ndf[\"sentence_count\"] = df[\"text\"].apply(lambda x: len(split_sentences(x)))\n\n# add clause count\ndf[\"clause_count\"] = df[\"text\"].apply(lambda x: len(split_clauses(x)))\n\n# explode into one row per sentence\ndf_sentences = df.assign(\n    sentence=df[\"text\"].apply(split_sentences)\n).explode(\"sentence\")\n\nprint(df_sentences)"
+        },
+        {
+          "anchor": "",
+          "heading": "Using split_text with pandas",
+          "text": "For more detailed analysis with structure information:\n\nimport pandas as pd\nfrom phrasplit import split_text\n\ntext = \"\"\"First paragraph sentence one. Sentence two.\n\nSecond paragraph here. Another sentence.\"\"\"\n\n# Convert segments to DataFrame\nsegments = split_text(text, mode=\"sentence\")\ndf = pd.DataFrame([\n    {\"text\": s.text, \"paragraph\": s.paragraph, \"sentence\": s.sentence}\n    for s in segments\n])\n\nprint(df)\n#                        text  paragraph  sentence\n# 0  First paragraph sentence one.          0         0\n# 1               Sentence two.          0         1\n# 2      Second paragraph here.          1         0\n# 3          Another sentence.          1         1\n\n# Group by paragraph\nfor para_id, group in df.groupby(\"paragraph\"):\n    print(f\"\\nParagraph {para_id}:\")\n    for _, row…",
+          "lower": "for more detailed analysis with structure information:\n\nimport pandas as pd\nfrom phrasplit import split_text\n\ntext = \"\"\"first paragraph sentence one. sentence two.\n\nsecond paragraph here. another sentence.\"\"\"\n\n# convert segments to dataframe\nsegments = split_text(text, mode=\"sentence\")\ndf = pd.dataframe([\n    {\"text\": s.text, \"paragraph\": s.paragraph, \"sentence\": s.sentence}\n    for s in segments\n])\n\nprint(df)\n#                        text  paragraph  sentence\n# 0  first paragraph sentence one.          0         0\n# 1               sentence two.          0         1\n# 2      second paragraph here.          1         0\n# 3          another sentence.          1         1\n\n# group by paragraph\nfor para_id, group in df.groupby(\"paragraph\"):\n    print(f\"\\nparagraph {para_id}:\")\n    for _, row…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/",
+      "title": "phrasplit Documentation",
+      "snippet": "A Python library for splitting text into sentences, clauses, or paragraphs. Designed for\naudiobook creation and text-to-speech processing. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "phrasplit Documentation",
+          "text": "A Python library for splitting text into sentences, clauses, or paragraphs. Designed for\naudiobook creation and text-to-speech processing.\n\nphrasplit supports two processing modes:\n\n\nspaCy mode (optional): High-accuracy NLP-based splitting using spaCy\n\n\nSimple mode: Lightweight regex-based splitting with no dependencies",
+          "lower": "a python library for splitting text into sentences, clauses, or paragraphs. designed for\naudiobook creation and text-to-speech processing.\n\nphrasplit supports two processing modes:\n\n\nspacy mode (optional): high-accuracy nlp-based splitting using spacy\n\n\nsimple mode: lightweight regex-based splitting with no dependencies"
+        },
+        {
+          "anchor": "",
+          "heading": "Features",
+          "text": "Sentence splitting: Intelligent sentence boundary detection\n\n\nClause splitting: Split sentences at commas for natural pause points\n\n\nParagraph splitting: Split text at double newlines\n\n\nLong line splitting: Break long lines at sentence/clause boundaries\n\n\nAbbreviation handling: Correctly handles Mr., Dr., U.S.A., etc.\n\n\nEllipsis support: Preserves ellipses without incorrect splitting\n\n\nFlexible installation: Works with or without spaCy\n\n\nAuto-detection: Automatically uses the best available mode",
+          "lower": "sentence splitting: intelligent sentence boundary detection\n\n\nclause splitting: split sentences at commas for natural pause points\n\n\nparagraph splitting: split text at double newlines\n\n\nlong line splitting: break long lines at sentence/clause boundaries\n\n\nabbreviation handling: correctly handles mr., dr., u.s.a., etc.\n\n\nellipsis support: preserves ellipses without incorrect splitting\n\n\nflexible installation: works with or without spacy\n\n\nauto-detection: automatically uses the best available mode"
+        },
+        {
+          "anchor": "",
+          "heading": "Mode Comparison",
+          "text": "Feature\n\nSimple Mode\n\nspaCy Mode\n\n\n\n\n\nDependencies\n\nNone (regex only)\n\nspaCy + models\n\n\n\nInstallation size\n\nMinimal\n\n~500MB+ with models\n\n\n\nSpeed\n\nVery fast\n\nFast\n\n\n\nMemory usage\n\nLow\n\nMedium-High\n\n\n\nAccuracy\n\nGood\n\nExcellent\n\n\n\nComplex abbreviations\n\nBasic support\n\nFull support\n\n\n\nDependency parsing\n\nNo\n\nYes\n\n\n\nMulti-language\n\nLimited\n\nExtensive",
+          "lower": "feature\n\nsimple mode\n\nspacy mode\n\n\n\n\n\ndependencies\n\nnone (regex only)\n\nspacy + models\n\n\n\ninstallation size\n\nminimal\n\n~500mb+ with models\n\n\n\nspeed\n\nvery fast\n\nfast\n\n\n\nmemory usage\n\nlow\n\nmedium-high\n\n\n\naccuracy\n\ngood\n\nexcellent\n\n\n\ncomplex abbreviations\n\nbasic support\n\nfull support\n\n\n\ndependency parsing\n\nno\n\nyes\n\n\n\nmulti-language\n\nlimited\n\nextensive"
+        },
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "Install without spaCy (lightweight):\n\npip install phrasplit\n\n\n\n\nInstall with spaCy support (recommended):\n\npip install phrasplit[nlp]\npython -m spacy download en_core_web_sm",
+          "lower": "install without spacy (lightweight):\n\npip install phrasplit\n\n\n\n\ninstall with spacy support (recommended):\n\npip install phrasplit[nlp]\npython -m spacy download en_core_web_sm"
+        },
+        {
+          "anchor": "",
+          "heading": "Quick Start",
+          "text": "from phrasplit import split_sentences, split_clauses, split_paragraphs\n\n# Split text into sentences (works with or without spaCy)\ntext = \"Dr. Smith is here. She has a Ph.D. in Chemistry.\"\nsentences = split_sentences(text)\n# ['Dr. Smith is here.', 'She has a Ph.D. in Chemistry.']\n\n# Explicitly use simple mode (no spaCy required)\nsentences = split_sentences(text, use_spacy=False)\n\n# Split sentences into comma-separated parts\ntext = \"I like coffee, and I like tea.\"\nclauses = split_clauses(text)\n# ['I like coffee,', 'and I like tea.']\n\n# Split text into paragraphs\ntext = \"First paragraph.\\n\\nSecond paragraph.\"\nparagraphs = split_paragraphs(text)\n# ['First paragraph.', 'Second paragraph.']",
+          "lower": "from phrasplit import split_sentences, split_clauses, split_paragraphs\n\n# split text into sentences (works with or without spacy)\ntext = \"dr. smith is here. she has a ph.d. in chemistry.\"\nsentences = split_sentences(text)\n# ['dr. smith is here.', 'she has a ph.d. in chemistry.']\n\n# explicitly use simple mode (no spacy required)\nsentences = split_sentences(text, use_spacy=false)\n\n# split sentences into comma-separated parts\ntext = \"i like coffee, and i like tea.\"\nclauses = split_clauses(text)\n# ['i like coffee,', 'and i like tea.']\n\n# split text into paragraphs\ntext = \"first paragraph.\\n\\nsecond paragraph.\"\nparagraphs = split_paragraphs(text)\n# ['first paragraph.', 'second paragraph.']"
+        },
+        {
+          "anchor": "",
+          "heading": "Table of Contents",
+          "text": "Contents:\n\n\nInstallation\nRequirements\n\nInstallation Options\n\nInstalling from Source\n\nInstalling spaCy Language Models\n\nVerifying Installation\n\nChoosing Between Modes\n\n\n\n\nUsage Guide\nSplitting Sentences\n\nSplitting Clauses\n\nSplitting Paragraphs\n\nHierarchical Splitting with split_text\n\nSplitting Long Lines\n\nUsing Different Language Models\n\nProcessing Pipeline Example\n\n\n\n\nCommand Line Interface\nBasic Usage\n\nGetting Help\n\nSplitting Sentences\n\nSplitting Clauses\n\nSplitting Paragraphs\n\nSplitting Long Lines\n\nReading from stdin\n\nCommand Options\n\nExamples\n\n\n\n\nAPI Reference\nMain Functions\n\nData Types\n\nModule Contents\n\nType Information\n\n\n\n\nExamples\nAudiobook Creation\n\nSubtitle Generation\n\nE-book Processing\n\nText Analysis\n\nBatch Processing\n\nWorking with Different Languages\n\nIntegration with pandas…",
+          "lower": "contents:\n\n\ninstallation\nrequirements\n\ninstallation options\n\ninstalling from source\n\ninstalling spacy language models\n\nverifying installation\n\nchoosing between modes\n\n\n\n\nusage guide\nsplitting sentences\n\nsplitting clauses\n\nsplitting paragraphs\n\nhierarchical splitting with split_text\n\nsplitting long lines\n\nusing different language models\n\nprocessing pipeline example\n\n\n\n\ncommand line interface\nbasic usage\n\ngetting help\n\nsplitting sentences\n\nsplitting clauses\n\nsplitting paragraphs\n\nsplitting long lines\n\nreading from stdin\n\ncommand options\n\nexamples\n\n\n\n\napi reference\nmain functions\n\ndata types\n\nmodule contents\n\ntype information\n\n\n\n\nexamples\naudiobook creation\n\nsubtitle generation\n\ne-book processing\n\ntext analysis\n\nbatch processing\n\nworking with different languages\n\nintegration with pandas…"
+        },
+        {
+          "anchor": "",
+          "heading": "Indices and tables",
+          "text": "Index\n\n\nModule Index\n\n\nSearch Page",
+          "lower": "index\n\n\nmodule index\n\n\nsearch page"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/installation/",
+      "title": "phrasplit Installation",
+      "snippet": "Python 3.9 or higher\n\n\nclick 8.0 or higher\n\n\nrich 13.0 or higher\n\n\nspaCy 3.5 or higher (optional, for high-accuracy mode)\nphrasplit can be i …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Requirements",
+          "text": "Python 3.9 or higher\n\n\nclick 8.0 or higher\n\n\nrich 13.0 or higher\n\n\nspaCy 3.5 or higher (optional, for high-accuracy mode)",
+          "lower": "python 3.9 or higher\n\n\nclick 8.0 or higher\n\n\nrich 13.0 or higher\n\n\nspacy 3.5 or higher (optional, for high-accuracy mode)"
+        },
+        {
+          "anchor": "",
+          "heading": "Installation Options",
+          "text": "phrasplit can be installed with or without spaCy support, depending on your needs.",
+          "lower": "phrasplit can be installed with or without spacy support, depending on your needs."
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Installation (Lightweight)",
+          "text": "For a lightweight installation without spaCy (uses regex-based splitting):\n\npip install phrasplit\n\n\n\n\nThis installation is sufficient for basic text splitting and has no heavy dependencies.",
+          "lower": "for a lightweight installation without spacy (uses regex-based splitting):\n\npip install phrasplit\n\n\n\n\nthis installation is sufficient for basic text splitting and has no heavy dependencies."
+        },
+        {
+          "anchor": "",
+          "heading": "Full Installation with spaCy (Recommended)",
+          "text": "For higher accuracy sentence splitting with spaCy NLP:\n\npip install phrasplit[nlp]\n\n\n\n\nOr install spaCy separately:\n\npip install phrasplit\npip install spacy>=3.5.0",
+          "lower": "for higher accuracy sentence splitting with spacy nlp:\n\npip install phrasplit[nlp]\n\n\n\n\nor install spacy separately:\n\npip install phrasplit\npip install spacy>=3.5.0"
+        },
+        {
+          "anchor": "",
+          "heading": "Installing from Source",
+          "text": "To install from source, clone the repository and install:\n\ngit clone https://github.com/buchwandler/phrasplit.git\ncd phrasplit\npip install -e .\n\n\n\n\nFor development, install with dev dependencies:\n\npip install -e \".[dev]\"\n\n\n\n\nFor spaCy support when installing from source:\n\npip install -e \".[nlp]\"",
+          "lower": "to install from source, clone the repository and install:\n\ngit clone https://github.com/buchwandler/phrasplit.git\ncd phrasplit\npip install -e .\n\n\n\n\nfor development, install with dev dependencies:\n\npip install -e \".[dev]\"\n\n\n\n\nfor spacy support when installing from source:\n\npip install -e \".[nlp]\""
+        },
+        {
+          "anchor": "",
+          "heading": "Installing spaCy Language Models",
+          "text": "If you installed with spaCy support, you’ll need a language model. The default model is\nen_core_web_sm (English). Install it with:\n\npython -m spacy download en_core_web_sm\n\n\n\n\nFor better accuracy, you can use larger models:\n\n# Medium model (more accurate)\npython -m spacy download en_core_web_md\n\n# Large model (most accurate)\npython -m spacy download en_core_web_lg\n\n\n\n\nFor other languages, see the spaCy models documentation.",
+          "lower": "if you installed with spacy support, you’ll need a language model. the default model is\nen_core_web_sm (english). install it with:\n\npython -m spacy download en_core_web_sm\n\n\n\n\nfor better accuracy, you can use larger models:\n\n# medium model (more accurate)\npython -m spacy download en_core_web_md\n\n# large model (most accurate)\npython -m spacy download en_core_web_lg\n\n\n\n\nfor other languages, see the spacy models documentation."
+        },
+        {
+          "anchor": "",
+          "heading": "Verifying Installation",
+          "text": "You can verify your installation by running:\n\nimport phrasplit\nprint(phrasplit.__version__)\n\nfrom phrasplit import split_sentences\n\n# Works with or without spaCy\nprint(split_sentences(\"Hello world. How are you?\"))\n# ['Hello world.', 'How are you?']\n\n# Explicitly use simple mode (no spaCy required)\nprint(split_sentences(\"Hello world. How are you?\", use_spacy=False))\n# ['Hello world.', 'How are you?']",
+          "lower": "you can verify your installation by running:\n\nimport phrasplit\nprint(phrasplit.__version__)\n\nfrom phrasplit import split_sentences\n\n# works with or without spacy\nprint(split_sentences(\"hello world. how are you?\"))\n# ['hello world.', 'how are you?']\n\n# explicitly use simple mode (no spacy required)\nprint(split_sentences(\"hello world. how are you?\", use_spacy=false))\n# ['hello world.', 'how are you?']"
+        },
+        {
+          "anchor": "",
+          "heading": "Choosing Between Modes",
+          "text": "Simple Mode (use_spacy=False)\n\n\nNo spaCy installation required\n\n\nFaster processing\n\n\nLower memory usage\n\n\nGood for straightforward text\n\n\nUses regex-based splitting\n\n\n\nspaCy Mode (use_spacy=True, default if available)\n\n\nRequires spaCy and language models\n\n\nHigher accuracy\n\n\nBetter handling of complex cases\n\n\nUses NLP-based analysis\n\n\nRecommended for production use",
+          "lower": "simple mode (use_spacy=false)\n\n\nno spacy installation required\n\n\nfaster processing\n\n\nlower memory usage\n\n\ngood for straightforward text\n\n\nuses regex-based splitting\n\n\n\nspacy mode (use_spacy=true, default if available)\n\n\nrequires spacy and language models\n\n\nhigher accuracy\n\n\nbetter handling of complex cases\n\n\nuses nlp-based analysis\n\n\nrecommended for production use"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/integration/",
+      "title": "phrasplit Integration Contract for Pipelines",
+      "snippet": "This document specifies the contract and guarantees provided by split_with_offsets()\nfor integration into text processing pipelines, particu …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Overview",
+          "text": "This document specifies the contract and guarantees provided by split_with_offsets()\nfor integration into text processing pipelines, particularly for TTS synthesis, token\nalignment, and markup processing.",
+          "lower": "this document specifies the contract and guarantees provided by split_with_offsets()\nfor integration into text processing pipelines, particularly for tts synthesis, token\nalignment, and markup processing."
+        },
+        {
+          "anchor": "",
+          "heading": "The Invariant",
+          "text": "For every segment returned by split_with_offsets(), the following invariant ALWAYS\nholds:\n\nsegment.text == input_text[segment.char_start:segment.char_end]\n\n\n\n\nThis is called the exact-slice policy.",
+          "lower": "for every segment returned by split_with_offsets(), the following invariant always\nholds:\n\nsegment.text == input_text[segment.char_start:segment.char_end]\n\n\n\n\nthis is called the exact-slice policy."
+        },
+        {
+          "anchor": "",
+          "heading": "What This Means",
+          "text": "No Stripping: Segment text is never stripped, trimmed, or normalized\n\n\nPrecise Mapping: Offsets point to the exact substring in the original input\n\n\nWhitespace Preserved: Leading/trailing whitespace from the original text is\nincluded\n\n\nSafe for Slicing: You can reliably extract segments using Python slicing\n\n\nMonotonic Order: Segments are emitted in order with non-overlapping ranges",
+          "lower": "no stripping: segment text is never stripped, trimmed, or normalized\n\n\nprecise mapping: offsets point to the exact substring in the original input\n\n\nwhitespace preserved: leading/trailing whitespace from the original text is\nincluded\n\n\nsafe for slicing: you can reliably extract segments using python slicing\n\n\nmonotonic order: segments are emitted in order with non-overlapping ranges"
+        },
+        {
+          "anchor": "",
+          "heading": "Example",
+          "text": "from phrasplit import split_with_offsets\n\ntext = \"  Hello world.  \\n\\n  New paragraph.  \"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    # This will ALWAYS pass\n    assert text[seg.char_start:seg.char_end] == seg.text\n\n    # Segments may include whitespace from original text\n    print(repr(seg.text))\n# Output might be: 'Hello world.' or '  Hello world.' depending on boundaries",
+          "lower": "from phrasplit import split_with_offsets\n\ntext = \"  hello world.  \\n\\n  new paragraph.  \"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    # this will always pass\n    assert text[seg.char_start:seg.char_end] == seg.text\n\n    # segments may include whitespace from original text\n    print(repr(seg.text))\n# output might be: 'hello world.' or '  hello world.' depending on boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Character Offsets",
+          "text": "All char_start and char_end values are in the coordinate space of the input\ntext\n\n\nOffsets are 0-based with exclusive end positions (Python slice convention)\n\n\nOffsets are measured in Unicode code points (characters), not bytes",
+          "lower": "all char_start and char_end values are in the coordinate space of the input\ntext\n\n\noffsets are 0-based with exclusive end positions (python slice convention)\n\n\noffsets are measured in unicode code points (characters), not bytes"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD/Markup Workflows",
+          "text": "When integrating with SSMD or other markup systems, offsets refer to whichever version\nof the text you pass in:\n\nOption 1: Segment raw markup\n\ntext_with_markup = \"Hello [world]{lang='de'}. How are you?\"\nsegments = split_with_offsets(text_with_markup)\n# Offsets are in the coordinate space of text_with_markup\n\n\n\n\nOption 2: Segment after escaping\n\nimport ssmd  # hypothetical\nescaped = ssmd.escape(text_with_markup)\nsegments = split_with_offsets(escaped)\n# Offsets are in the coordinate space of escaped text\n# Use these offsets to slice escaped text, then unescape each segment",
+          "lower": "when integrating with ssmd or other markup systems, offsets refer to whichever version\nof the text you pass in:\n\noption 1: segment raw markup\n\ntext_with_markup = \"hello [world]{lang='de'}. how are you?\"\nsegments = split_with_offsets(text_with_markup)\n# offsets are in the coordinate space of text_with_markup\n\n\n\n\noption 2: segment after escaping\n\nimport ssmd  # hypothetical\nescaped = ssmd.escape(text_with_markup)\nsegments = split_with_offsets(escaped)\n# offsets are in the coordinate space of escaped text\n# use these offsets to slice escaped text, then unescape each segment"
+        },
+        {
+          "anchor": "",
+          "heading": "Stable IDs",
+          "text": "Segment IDs are deterministic and stable across runs:\n\n\nSame input text + same parameters → same IDs\n\n\nID format: p{para}s{sent}c{clause} or p{para}s{sent}c{clause}:m{index}\n\n\nIDs only change if segmentation rules change",
+          "lower": "segment ids are deterministic and stable across runs:\n\n\nsame input text + same parameters → same ids\n\n\nid format: p{para}s{sent}c{clause} or p{para}s{sent}c{clause}:m{index}\n\n\nids only change if segmentation rules change"
+        },
+        {
+          "anchor": "",
+          "heading": "Deterministic Splitting",
+          "text": "split_with_offsets() is fully deterministic:\n\n\nSame input always produces same segments\n\n\nSame offsets, same text, same IDs\n\n\nNo randomness or runtime variation",
+          "lower": "split_with_offsets() is fully deterministic:\n\n\nsame input always produces same segments\n\n\nsame offsets, same text, same ids\n\n\nno randomness or runtime variation"
+        },
+        {
+          "anchor": "",
+          "heading": "Behavior",
+          "text": "When max_chars is specified:\n\n\nSegments exceeding max_chars are split further\n\n\nSplitting happens at whitespace or punctuation boundaries\n\n\nExact-slice policy is maintained even after splitting\n\n\nSub-segments get IDs like p0s1:m0, p0s1:m1, etc.",
+          "lower": "when max_chars is specified:\n\n\nsegments exceeding max_chars are split further\n\n\nsplitting happens at whitespace or punctuation boundaries\n\n\nexact-slice policy is maintained even after splitting\n\n\nsub-segments get ids like p0s1:m0, p0s1:m1, etc."
+        },
+        {
+          "anchor": "",
+          "heading": "Example",
+          "text": "long_text = \"This is a very long sentence that needs splitting.\"\nsegments = split_with_offsets(long_text, max_chars=20)\n\nfor seg in segments:\n    assert len(seg.text) <= 20  # Respects max_chars\n    assert long_text[seg.char_start:seg.char_end] == seg.text  # Invariant holds\n    print(f\"{seg.id}: {seg.text!r}\")\n# Output:\n# p0s0:m0: 'This is a very long '\n# p0s0:m1: 'sentence that needs '\n# p0s0:m2: 'splitting.'",
+          "lower": "long_text = \"this is a very long sentence that needs splitting.\"\nsegments = split_with_offsets(long_text, max_chars=20)\n\nfor seg in segments:\n    assert len(seg.text) <= 20  # respects max_chars\n    assert long_text[seg.char_start:seg.char_end] == seg.text  # invariant holds\n    print(f\"{seg.id}: {seg.text!r}\")\n# output:\n# p0s0:m0: 'this is a very long '\n# p0s0:m1: 'sentence that needs '\n# p0s0:m2: 'splitting.'"
+        },
+        {
+          "anchor": "",
+          "heading": "Guarantee",
+          "text": "All resulting segments have len(seg.text) <= max_chars (except single words/tokens\nthat exceed the limit)\n\n\nThe exact-slice invariant holds for all sub-segments\n\n\nIDs are stable and deterministic",
+          "lower": "all resulting segments have len(seg.text) <= max_chars (except single words/tokens\nthat exceed the limit)\n\n\nthe exact-slice invariant holds for all sub-segments\n\n\nids are stable and deterministic"
+        },
+        {
+          "anchor": "",
+          "heading": "TTS Pipeline",
+          "text": "from phrasplit import split_with_offsets\n\n# Segment text\ntext = \"Long document text...\"\nsegments = split_with_offsets(text, mode=\"sentence\", max_chars=500)\n\n# Process each segment\nfor seg in segments:\n    # Offsets allow you to track position in original\n    audio = tts_engine.synthesize(seg.text)\n\n    # Store mapping from audio to original text position\n    audio_segments.append({\n        \"audio\": audio,\n        \"text_start\": seg.char_start,\n        \"text_end\": seg.char_end,\n        \"text\": seg.text,\n        \"id\": seg.id\n    })",
+          "lower": "from phrasplit import split_with_offsets\n\n# segment text\ntext = \"long document text...\"\nsegments = split_with_offsets(text, mode=\"sentence\", max_chars=500)\n\n# process each segment\nfor seg in segments:\n    # offsets allow you to track position in original\n    audio = tts_engine.synthesize(seg.text)\n\n    # store mapping from audio to original text position\n    audio_segments.append({\n        \"audio\": audio,\n        \"text_start\": seg.char_start,\n        \"text_end\": seg.char_end,\n        \"text\": seg.text,\n        \"id\": seg.id\n    })"
+        },
+        {
+          "anchor": "",
+          "heading": "Token Alignment",
+          "text": "from phrasplit import split_with_offsets\n\ntext = \"Hello world. How are you?\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    # Tokenize the segment\n    tokens = tokenizer.tokenize(seg.text)\n\n    # Token offsets are relative to seg.text\n    for token in tokens:\n        # Map to absolute position in original text\n        abs_start = seg.char_start + token.char_start\n        abs_end = seg.char_start + token.char_end\n\n        # Verify\n        assert text[abs_start:abs_end] == token.text",
+          "lower": "from phrasplit import split_with_offsets\n\ntext = \"hello world. how are you?\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    # tokenize the segment\n    tokens = tokenizer.tokenize(seg.text)\n\n    # token offsets are relative to seg.text\n    for token in tokens:\n        # map to absolute position in original text\n        abs_start = seg.char_start + token.char_start\n        abs_end = seg.char_start + token.char_end\n\n        # verify\n        assert text[abs_start:abs_end] == token.text"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD Span Slicing",
+          "text": "from phrasplit import split_with_offsets, COMMON_PATTERNS, validate_no_placeholder_breaks\n\nssmd_text = \"Hello [world]{lang='de'}. How are [you]{emphasis}?\"\nsegments = split_with_offsets(ssmd_text, mode=\"sentence\")\n\n# Validate placeholders weren't broken\nwarnings = validate_no_placeholder_breaks(\n    ssmd_text,\n    segments,\n    placeholder_pattern=COMMON_PATTERNS[\"ssmd\"]\n)\n\nif not warnings:\n    # Safe to slice - placeholders are intact\n    for seg in segments:\n        # Extract SSMD markup for this segment\n        ssmd_slice = ssmd_text[seg.char_start:seg.char_end]\n        # Process with SSMD parser...",
+          "lower": "from phrasplit import split_with_offsets, common_patterns, validate_no_placeholder_breaks\n\nssmd_text = \"hello [world]{lang='de'}. how are [you]{emphasis}?\"\nsegments = split_with_offsets(ssmd_text, mode=\"sentence\")\n\n# validate placeholders weren't broken\nwarnings = validate_no_placeholder_breaks(\n    ssmd_text,\n    segments,\n    placeholder_pattern=common_patterns[\"ssmd\"]\n)\n\nif not warnings:\n    # safe to slice - placeholders are intact\n    for seg in segments:\n        # extract ssmd markup for this segment\n        ssmd_slice = ssmd_text[seg.char_start:seg.char_end]\n        # process with ssmd parser..."
+        },
+        {
+          "anchor": "",
+          "heading": "Invalid Inputs",
+          "text": "The function validates inputs and raises exceptions for invalid parameters:\n\n# ValueError if max_chars < 1\nsplit_with_offsets(text, max_chars=0)  # raises ValueError\n\n# ValueError if mode is invalid\nsplit_with_offsets(text, mode=\"invalid\")  # raises ValueError\n\n# ImportError if spaCy requested but not available\nsplit_with_offsets(text, use_spacy=True)  # raises ImportError if no spaCy",
+          "lower": "the function validates inputs and raises exceptions for invalid parameters:\n\n# valueerror if max_chars < 1\nsplit_with_offsets(text, max_chars=0)  # raises valueerror\n\n# valueerror if mode is invalid\nsplit_with_offsets(text, mode=\"invalid\")  # raises valueerror\n\n# importerror if spacy requested but not available\nsplit_with_offsets(text, use_spacy=true)  # raises importerror if no spacy"
+        },
+        {
+          "anchor": "",
+          "heading": "Empty or Whitespace-Only Text",
+          "text": "segments = split_with_offsets(\"\")\nassert segments == []\n\nsegments = split_with_offsets(\"   \\n\\n   \")\nassert segments == []  # No non-whitespace content",
+          "lower": "segments = split_with_offsets(\"\")\nassert segments == []\n\nsegments = split_with_offsets(\"   \\n\\n   \")\nassert segments == []  # no non-whitespace content"
+        },
+        {
+          "anchor": "",
+          "heading": "Backend Selection",
+          "text": "Regex backend (use_spacy=False): 60x faster, good for simple text\n\n\nspaCy backend (use_spacy=True): More accurate, better for complex text\n\n\nAuto-detect (use_spacy=None, default): Uses spaCy if installed",
+          "lower": "regex backend (use_spacy=false): 60x faster, good for simple text\n\n\nspacy backend (use_spacy=true): more accurate, better for complex text\n\n\nauto-detect (use_spacy=none, default): uses spacy if installed"
+        },
+        {
+          "anchor": "",
+          "heading": "Memory Usage",
+          "text": "split_with_offsets(): Returns all segments at once (O(n) memory)\n\n\niter_split_with_offsets(): Streaming iterator (O(1) memory per segment)\n\n\n\nFor large documents (> 1 MB), consider using the iterator:\n\nfrom phrasplit import iter_split_with_offsets\n\nfor segment in iter_split_with_offsets(large_text, max_chars=500):\n    process(segment)  # Stream processing",
+          "lower": "split_with_offsets(): returns all segments at once (o(n) memory)\n\n\niter_split_with_offsets(): streaming iterator (o(1) memory per segment)\n\n\n\nfor large documents (> 1 mb), consider using the iterator:\n\nfrom phrasplit import iter_split_with_offsets\n\nfor segment in iter_split_with_offsets(large_text, max_chars=500):\n    process(segment)  # stream processing"
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic Versioning",
+          "text": "The exact-slice invariant is part of the API contract\n\n\nBreaking this invariant would be a major version change\n\n\nIDs, offsets, and segmentation behavior follow semver",
+          "lower": "the exact-slice invariant is part of the api contract\n\n\nbreaking this invariant would be a major version change\n\n\nids, offsets, and segmentation behavior follow semver"
+        },
+        {
+          "anchor": "",
+          "heading": "Backward Compatibility",
+          "text": "New code using split_with_offsets() should:\n\n\nAlways verify the invariant in tests:\nassert text[seg.char_start:seg.char_end] == seg.text\n\n\nNot assume segments are stripped or normalized\n\n\nHandle segments that may contain leading/trailing whitespace",
+          "lower": "new code using split_with_offsets() should:\n\n\nalways verify the invariant in tests:\nassert text[seg.char_start:seg.char_end] == seg.text\n\n\nnot assume segments are stripped or normalized\n\n\nhandle segments that may contain leading/trailing whitespace"
+        },
+        {
+          "anchor": "",
+          "heading": "Key Guarantees",
+          "text": "✅ Exact-slice invariant: text[seg.char_start:seg.char_end] == seg.text\n\n\n✅ Deterministic: Same input → same output\n\n\n✅ Stable IDs: IDs don’t change across runs\n\n\n✅ Coordinate space: Offsets in original input text\n\n\n✅ Max-chars safety: Invariant holds even with splitting",
+          "lower": "✅ exact-slice invariant: text[seg.char_start:seg.char_end] == seg.text\n\n\n✅ deterministic: same input → same output\n\n\n✅ stable ids: ids don’t change across runs\n\n\n✅ coordinate space: offsets in original input text\n\n\n✅ max-chars safety: invariant holds even with splitting"
+        },
+        {
+          "anchor": "",
+          "heading": "Best Practices",
+          "text": "Always test the exact-slice invariant in your integration tests\n\n\nDon’t strip or normalize segment text if you need to use offsets later\n\n\nUse max_chars to ensure segments fit within processing constraints\n\n\nValidate markup integrity with validate_no_placeholder_breaks()",
+          "lower": "always test the exact-slice invariant in your integration tests\n\n\ndon’t strip or normalize segment text if you need to use offsets later\n\n\nuse max_chars to ensure segments fit within processing constraints\n\n\nvalidate markup integrity with validate_no_placeholder_breaks()"
+        },
+        {
+          "anchor": "",
+          "heading": "References",
+          "text": "Offset Coordinate System\n\n\nStreaming API\n\n\nSSMD Integration Examples",
+          "lower": "offset coordinate system\n\n\nstreaming api\n\n\nssmd integration examples"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/offsets/",
+      "title": "phrasplit Offset-Preserving Segmentation",
+      "snippet": "The offset-preserving segmentation API provides precise character-level mapping between\nsegments and the original input text. This is essent …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Overview",
+          "text": "The offset-preserving segmentation API provides precise character-level mapping between\nsegments and the original input text. This is essential for downstream processing tasks\nlike text-to-speech synthesis, where you need to maintain exact correspondence between\nprocessed segments and source text.",
+          "lower": "the offset-preserving segmentation api provides precise character-level mapping between\nsegments and the original input text. this is essential for downstream processing tasks\nlike text-to-speech synthesis, where you need to maintain exact correspondence between\nprocessed segments and source text."
+        },
+        {
+          "anchor": "",
+          "heading": "Key Features",
+          "text": "Character Offsets: Each segment includes char_start and char_end that map\nexactly to the original input\n\n\nStable IDs: Hierarchical identifiers (e.g., p0s1c2) that are stable across runs\n\n\nExact Slices: Segment text always equals the exact input slice (no normalization)\n\n\nMonotonic Offsets: Segments are ordered with non-overlapping ranges\n\n\nBackend Agnostic: Works with both spaCy (accurate) and regex (fast) backends",
+          "lower": "character offsets: each segment includes char_start and char_end that map\nexactly to the original input\n\n\nstable ids: hierarchical identifiers (e.g., p0s1c2) that are stable across runs\n\n\nexact slices: segment text always equals the exact input slice (no normalization)\n\n\nmonotonic offsets: segments are ordered with non-overlapping ranges\n\n\nbackend agnostic: works with both spacy (accurate) and regex (fast) backends"
+        },
+        {
+          "anchor": "",
+          "heading": "Coordinate System",
+          "text": "All character offsets use Python’s standard 0-based indexing with exclusive end\npositions:\n\ntext = \"Hello world. How are you?\"\nsegment = SplitSegment(\n    id=\"p0s0\",\n    text=\"Hello world.\",\n    char_start=0,\n    char_end=12,  # exclusive\n    ...\n)\n\n# Verify offset mapping\nassert text[segment.char_start:segment.char_end] == segment.text",
+          "lower": "all character offsets use python’s standard 0-based indexing with exclusive end\npositions:\n\ntext = \"hello world. how are you?\"\nsegment = splitsegment(\n    id=\"p0s0\",\n    text=\"hello world.\",\n    char_start=0,\n    char_end=12,  # exclusive\n    ...\n)\n\n# verify offset mapping\nassert text[segment.char_start:segment.char_end] == segment.text"
+        },
+        {
+          "anchor": "",
+          "heading": "Offset Guarantees",
+          "text": "Exact Mapping\n\nThe fundamental guarantee is that for any segment:\n\noriginal_text[segment.char_start:segment.char_end] == segment.text\n\n\n\n\nThis holds true even with:\n\n\nMultiple paragraphs\n\n\nComplex punctuation\n\n\nUnicode characters\n\n\nWhitespace variations\n\n\n\nOffsets are always computed against the original input text, even when the splitter\napplies internal corrections (ellipsis protection, abbreviation fixes).\n\nMonotonic, Non-Overlapping Offsets\n\nSegments are emitted in document order and do not overlap:\n\nlast_end = 0\nfor seg in segments:\n    assert seg.char_start >= last_end\n    last_end = seg.char_end\n\n\n\n\nRuntime Validation\n\nsplit_with_offsets() validates its output (bounds, exact-slice, and ordering). If any\ninvariant is violated, it raises ValueError with details about the invalid segm…",
+          "lower": "exact mapping\n\nthe fundamental guarantee is that for any segment:\n\noriginal_text[segment.char_start:segment.char_end] == segment.text\n\n\n\n\nthis holds true even with:\n\n\nmultiple paragraphs\n\n\ncomplex punctuation\n\n\nunicode characters\n\n\nwhitespace variations\n\n\n\noffsets are always computed against the original input text, even when the splitter\napplies internal corrections (ellipsis protection, abbreviation fixes).\n\nmonotonic, non-overlapping offsets\n\nsegments are emitted in document order and do not overlap:\n\nlast_end = 0\nfor seg in segments:\n    assert seg.char_start >= last_end\n    last_end = seg.char_end\n\n\n\n\nruntime validation\n\nsplit_with_offsets() validates its output (bounds, exact-slice, and ordering). if any\ninvariant is violated, it raises valueerror with details about the invalid segm…"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Usage",
+          "text": "from phrasplit import split_with_offsets\n\ntext = \"Hello world. How are you?\\\\n\\\\nNew paragraph.\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"{seg.id}: {seg.text}\")\n    # Verify offset\n    assert text[seg.char_start:seg.char_end] == seg.text",
+          "lower": "from phrasplit import split_with_offsets\n\ntext = \"hello world. how are you?\\\\n\\\\nnew paragraph.\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"{seg.id}: {seg.text}\")\n    # verify offset\n    assert text[seg.char_start:seg.char_end] == seg.text"
+        },
+        {
+          "anchor": "",
+          "heading": "Modes",
+          "text": "Paragraph Mode\n\nsegments = split_with_offsets(text, mode=\"paragraph\")\n# Returns one segment per paragraph\n\n\n\n\nSentence Mode (default)\n\nsegments = split_with_offsets(text, mode=\"sentence\")\n# Returns one segment per sentence\n\n\n\n\nClause Mode\n\nsegments = split_with_offsets(text, mode=\"clause\")\n# Returns one segment per comma-separated clause",
+          "lower": "paragraph mode\n\nsegments = split_with_offsets(text, mode=\"paragraph\")\n# returns one segment per paragraph\n\n\n\n\nsentence mode (default)\n\nsegments = split_with_offsets(text, mode=\"sentence\")\n# returns one segment per sentence\n\n\n\n\nclause mode\n\nsegments = split_with_offsets(text, mode=\"clause\")\n# returns one segment per comma-separated clause"
+        },
+        {
+          "anchor": "",
+          "heading": "Backend Selection",
+          "text": "# Auto-detect (uses spaCy if available)\nsegments = split_with_offsets(text)\n\n# Force spaCy (more accurate)\nsegments = split_with_offsets(text, use_spacy=True)\n\n# Force regex (faster, no dependencies)\nsegments = split_with_offsets(text, use_spacy=False)",
+          "lower": "# auto-detect (uses spacy if available)\nsegments = split_with_offsets(text)\n\n# force spacy (more accurate)\nsegments = split_with_offsets(text, use_spacy=true)\n\n# force regex (faster, no dependencies)\nsegments = split_with_offsets(text, use_spacy=false)"
+        },
+        {
+          "anchor": "",
+          "heading": "Max Length Splitting",
+          "text": "# Split long segments at word boundaries\nsegments = split_with_offsets(text, max_chars=100)\n\n# All segments will be ≤ 100 characters\nassert all(len(s.text) <= 100 for s in segments)\n\n# Offsets still work correctly\nfor seg in segments:\n    assert text[seg.char_start:seg.char_end] == seg.text",
+          "lower": "# split long segments at word boundaries\nsegments = split_with_offsets(text, max_chars=100)\n\n# all segments will be ≤ 100 characters\nassert all(len(s.text) <= 100 for s in segments)\n\n# offsets still work correctly\nfor seg in segments:\n    assert text[seg.char_start:seg.char_end] == seg.text"
+        },
+        {
+          "anchor": "",
+          "heading": "Extract Surrounding Context",
+          "text": "segment = segments[0]\n\n# Get 20 characters before segment\ncontext_start = max(0, segment.char_start - 20)\nbefore = text[context_start:segment.char_start]\n\n# Get 20 characters after segment\ncontext_end = min(len(text), segment.char_end + 20)\nafter = text[segment.char_end:context_end]",
+          "lower": "segment = segments[0]\n\n# get 20 characters before segment\ncontext_start = max(0, segment.char_start - 20)\nbefore = text[context_start:segment.char_start]\n\n# get 20 characters after segment\ncontext_end = min(len(text), segment.char_end + 20)\nafter = text[segment.char_end:context_end]"
+        },
+        {
+          "anchor": "",
+          "heading": "Reconstruct Original Text",
+          "text": "# Segments don't overlap, but may not cover all text\n# (whitespace between paragraphs may be skipped)\n\nreconstructed_parts = []\nlast_end = 0\n\nfor seg in segments:\n    # Add any gap\n    if seg.char_start > last_end:\n        reconstructed_parts.append(text[last_end:seg.char_start])\n\n    # Add segment\n    reconstructed_parts.append(seg.text)\n    last_end = seg.char_end\n\n# Add any trailing text\nif last_end < len(text):\n    reconstructed_parts.append(text[last_end:])\n\nreconstructed = \"\".join(reconstructed_parts)",
+          "lower": "# segments don't overlap, but may not cover all text\n# (whitespace between paragraphs may be skipped)\n\nreconstructed_parts = []\nlast_end = 0\n\nfor seg in segments:\n    # add any gap\n    if seg.char_start > last_end:\n        reconstructed_parts.append(text[last_end:seg.char_start])\n\n    # add segment\n    reconstructed_parts.append(seg.text)\n    last_end = seg.char_end\n\n# add any trailing text\nif last_end < len(text):\n    reconstructed_parts.append(text[last_end:])\n\nreconstructed = \"\".join(reconstructed_parts)"
+        },
+        {
+          "anchor": "",
+          "heading": "Map Edits Back to Original",
+          "text": "# Process segments (e.g., TTS synthesis)\nprocessed = []\nfor seg in segments:\n    result = some_processing(seg.text)\n    processed.append({\n        \"original_position\": (seg.char_start, seg.char_end),\n        \"original_text\": seg.text,\n        \"result\": result\n    })",
+          "lower": "# process segments (e.g., tts synthesis)\nprocessed = []\nfor seg in segments:\n    result = some_processing(seg.text)\n    processed.append({\n        \"original_position\": (seg.char_start, seg.char_end),\n        \"original_text\": seg.text,\n        \"result\": result\n    })"
+        },
+        {
+          "anchor": "",
+          "heading": "Empty Text",
+          "text": "segments = split_with_offsets(\"\")\nassert segments == []",
+          "lower": "segments = split_with_offsets(\"\")\nassert segments == []"
+        },
+        {
+          "anchor": "",
+          "heading": "Whitespace-Only Text",
+          "text": "segments = split_with_offsets(\"   \\\\n\\\\n   \")\nassert segments == []",
+          "lower": "segments = split_with_offsets(\"   \\\\n\\\\n   \")\nassert segments == []"
+        },
+        {
+          "anchor": "",
+          "heading": "No Sentence Breaks",
+          "text": "text = \"Just one sentence\"\nsegments = split_with_offsets(text, mode=\"sentence\")\nassert len(segments) == 1\nassert segments[0].char_start == 0",
+          "lower": "text = \"just one sentence\"\nsegments = split_with_offsets(text, mode=\"sentence\")\nassert len(segments) == 1\nassert segments[0].char_start == 0"
+        },
+        {
+          "anchor": "",
+          "heading": "Unicode and Special Characters",
+          "text": "text = \"Café résumé. Über große Möbel.\"\nsegments = split_with_offsets(text)\n\n# Offsets work correctly with multibyte characters\nfor seg in segments:\n    assert text[seg.char_start:seg.char_end] == seg.text",
+          "lower": "text = \"café résumé. über große möbel.\"\nsegments = split_with_offsets(text)\n\n# offsets work correctly with multibyte characters\nfor seg in segments:\n    assert text[seg.char_start:seg.char_end] == seg.text"
+        },
+        {
+          "anchor": "",
+          "heading": "Boundary Whitespace",
+          "text": "Segments are anchored to the first and last non-whitespace characters inside each\nparagraph. Whitespace between paragraphs or sentences may not be included in any\nsegment, but the exact-slice invariant always holds.\n\ntext = \"  Hello.  \\\\n\\\\n  World.  \"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nassert segments[0].text == \"Hello.\"\nassert segments[1].text == \"World.\"\n\nfor seg in segments:\n    extracted = text[seg.char_start:seg.char_end]\n    assert seg.text == extracted",
+          "lower": "segments are anchored to the first and last non-whitespace characters inside each\nparagraph. whitespace between paragraphs or sentences may not be included in any\nsegment, but the exact-slice invariant always holds.\n\ntext = \"  hello.  \\\\n\\\\n  world.  \"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\nassert segments[0].text == \"hello.\"\nassert segments[1].text == \"world.\"\n\nfor seg in segments:\n    extracted = text[seg.char_start:seg.char_end]\n    assert seg.text == extracted"
+        },
+        {
+          "anchor": "",
+          "heading": "Integration with Markup Languages",
+          "text": "When working with text containing markup (SSMD, Speech Markdown, Mustache templates,\netc.), you need to ensure segmentation doesn’t break markup tags or placeholders.",
+          "lower": "when working with text containing markup (ssmd, speech markdown, mustache templates,\netc.), you need to ensure segmentation doesn’t break markup tags or placeholders."
+        },
+        {
+          "anchor": "",
+          "heading": "Common Pattern Library",
+          "text": "The COMMON_PATTERNS dictionary provides regex patterns for common markup formats:\n\nfrom phrasplit import COMMON_PATTERNS\n\n# Available patterns:\n# - \"ssmd\": SSMD format [text]{lang=\"de\"}\n# - \"speechmarkdown\": Speech Markdown ((text)[key:\"value\";...])\n# - \"mustache\": Mustache templates {{variable}}\n# - \"html_tag\": HTML/XML tags <tag>...</tag>\n# - \"markdown_link\": Markdown links [text](url)",
+          "lower": "the common_patterns dictionary provides regex patterns for common markup formats:\n\nfrom phrasplit import common_patterns\n\n# available patterns:\n# - \"ssmd\": ssmd format [text]{lang=\"de\"}\n# - \"speechmarkdown\": speech markdown ((text)[key:\"value\";...])\n# - \"mustache\": mustache templates {{variable}}\n# - \"html_tag\": html/xml tags <tag>...</tag>\n# - \"markdown_link\": markdown links [text](url)"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD Integration Example",
+          "text": "For SSMD (Structured Synthesis Markup Document) escaped text:\n\nfrom phrasplit import (\n    split_with_offsets,\n    validate_no_placeholder_breaks,\n    COMMON_PATTERNS\n)\nimport ssmd  # hypothetical SSMD library\n\n# 1. Escape markup before splitting\noriginal = \"Hello [world]{lang='de'}. How are you?\"\nescaped = ssmd.escape_ssmd_syntax(original)\n\n# 2. Split with offsets\nsegments = split_with_offsets(escaped, mode=\"sentence\")\n\n# 3. Validate that placeholders weren't broken\nwarnings = validate_no_placeholder_breaks(\n    escaped,\n    segments,\n    placeholder_pattern=COMMON_PATTERNS[\"ssmd\"]\n)\nif warnings:\n    for w in warnings:\n        print(f\"Warning: {w}\")\n\n# 4. Unescape each segment\nfor seg in segments:\n    unescaped = ssmd.unescape_ssmd_syntax(seg.text)\n    # Process unescaped text...",
+          "lower": "for ssmd (structured synthesis markup document) escaped text:\n\nfrom phrasplit import (\n    split_with_offsets,\n    validate_no_placeholder_breaks,\n    common_patterns\n)\nimport ssmd  # hypothetical ssmd library\n\n# 1. escape markup before splitting\noriginal = \"hello [world]{lang='de'}. how are you?\"\nescaped = ssmd.escape_ssmd_syntax(original)\n\n# 2. split with offsets\nsegments = split_with_offsets(escaped, mode=\"sentence\")\n\n# 3. validate that placeholders weren't broken\nwarnings = validate_no_placeholder_breaks(\n    escaped,\n    segments,\n    placeholder_pattern=common_patterns[\"ssmd\"]\n)\nif warnings:\n    for w in warnings:\n        print(f\"warning: {w}\")\n\n# 4. unescape each segment\nfor seg in segments:\n    unescaped = ssmd.unescape_ssmd_syntax(seg.text)\n    # process unescaped text..."
+        },
+        {
+          "anchor": "",
+          "heading": "Custom Markup Patterns",
+          "text": "For custom markup formats, provide your own regex pattern:\n\nfrom phrasplit import split_with_offsets, validate_no_placeholder_breaks\n\n# Custom pattern for your markup format\nmy_pattern = r\"\\[\\[([^\\]]+)\\]\\]\"  # Matches [[placeholder]]\n\ntext = \"Hello [[name]]. Welcome to [[location]].\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\n# Validate with custom pattern\nwarnings = validate_no_placeholder_breaks(\n    text,\n    segments,\n    placeholder_pattern=my_pattern\n)",
+          "lower": "for custom markup formats, provide your own regex pattern:\n\nfrom phrasplit import split_with_offsets, validate_no_placeholder_breaks\n\n# custom pattern for your markup format\nmy_pattern = r\"\\[\\[([^\\]]+)\\]\\]\"  # matches [[placeholder]]\n\ntext = \"hello [[name]]. welcome to [[location]].\"\nsegments = split_with_offsets(text, mode=\"sentence\")\n\n# validate with custom pattern\nwarnings = validate_no_placeholder_breaks(\n    text,\n    segments,\n    placeholder_pattern=my_pattern\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Choosing Safe Splitting Mode",
+          "text": "Use suggest_splitting_mode() to find a safe mode that avoids breaking markup:\n\nfrom phrasplit import suggest_splitting_mode, COMMON_PATTERNS\n\ntext = \"First sentence with [markup]{lang='de'}. Second sentence.\"\n\n# Get suggested mode that won't break SSMD placeholders\nmode = suggest_splitting_mode(\n    text,\n    placeholder_pattern=COMMON_PATTERNS[\"ssmd\"]\n)\nprint(f\"Recommended mode: {mode}\")\n\n# Use the suggested mode\nsegments = split_with_offsets(text, mode=mode)",
+          "lower": "use suggest_splitting_mode() to find a safe mode that avoids breaking markup:\n\nfrom phrasplit import suggest_splitting_mode, common_patterns\n\ntext = \"first sentence with [markup]{lang='de'}. second sentence.\"\n\n# get suggested mode that won't break ssmd placeholders\nmode = suggest_splitting_mode(\n    text,\n    placeholder_pattern=common_patterns[\"ssmd\"]\n)\nprint(f\"recommended mode: {mode}\")\n\n# use the suggested mode\nsegments = split_with_offsets(text, mode=mode)"
+        },
+        {
+          "anchor": "",
+          "heading": "See Also",
+          "text": "Streaming API - Streaming iterator API\n\n\nAPI Reference - Complete API reference\n\n\nExamples - More examples",
+          "lower": "streaming api - streaming iterator api\n\n\napi reference - complete api reference\n\n\nexamples - more examples"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/streaming/",
+      "title": "phrasplit Streaming API",
+      "snippet": "The streaming API provides memory-efficient, incremental processing of text segments.\nInstead of loading all segments into memory at once, t …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Overview",
+          "text": "The streaming API provides memory-efficient, incremental processing of text segments.\nInstead of loading all segments into memory at once, the iterator yields segments one by\none in document order.\n\nThis is particularly useful for:\n\n\nLarge documents: Process multi-gigabyte texts without loading all segments into\nmemory\n\n\nReal-time synthesis: Start TTS processing before all segmentation is complete\n\n\nPipeline integration: Stream segments through processing stages\n\n\nLow-latency applications: Begin output as soon as first segment is ready",
+          "lower": "the streaming api provides memory-efficient, incremental processing of text segments.\ninstead of loading all segments into memory at once, the iterator yields segments one by\none in document order.\n\nthis is particularly useful for:\n\n\nlarge documents: process multi-gigabyte texts without loading all segments into\nmemory\n\n\nreal-time synthesis: start tts processing before all segmentation is complete\n\n\npipeline integration: stream segments through processing stages\n\n\nlow-latency applications: begin output as soon as first segment is ready"
+        },
+        {
+          "anchor": "",
+          "heading": "Iterator Function",
+          "text": "from phrasplit import iter_split_with_offsets\n\nfor segment in iter_split_with_offsets(text, mode=\"sentence\"):\n    print(f\"{segment.id}: {segment.text}\")\n\n\n\n\nThe iterator signature matches split_with_offsets():\n\niter_split_with_offsets(\n    text: str,\n    *,\n    mode: str = \"sentence\",\n    use_spacy: bool | None = None,\n    language_model: str = \"en_core_web_sm\",\n    max_chars: int | None = None,\n) -> Iterator[SplitSegment]",
+          "lower": "from phrasplit import iter_split_with_offsets\n\nfor segment in iter_split_with_offsets(text, mode=\"sentence\"):\n    print(f\"{segment.id}: {segment.text}\")\n\n\n\n\nthe iterator signature matches split_with_offsets():\n\niter_split_with_offsets(\n    text: str,\n    *,\n    mode: str = \"sentence\",\n    use_spacy: bool | none = none,\n    language_model: str = \"en_core_web_sm\",\n    max_chars: int | none = none,\n) -> iterator[splitsegment]"
+        },
+        {
+          "anchor": "",
+          "heading": "Document Order",
+          "text": "Segments are always yielded in document order (by char_start):\n\nsegments = []\nfor seg in iter_split_with_offsets(text):\n    if segments:\n        # Current segment always comes after previous\n        assert seg.char_start >= segments[-1].char_start\n    segments.append(seg)",
+          "lower": "segments are always yielded in document order (by char_start):\n\nsegments = []\nfor seg in iter_split_with_offsets(text):\n    if segments:\n        # current segment always comes after previous\n        assert seg.char_start >= segments[-1].char_start\n    segments.append(seg)"
+        },
+        {
+          "anchor": "",
+          "heading": "No Global State",
+          "text": "Each iterator is independent with no shared state:\n\n# Safe to run multiple iterators\niter1 = iter_split_with_offsets(text1)\niter2 = iter_split_with_offsets(text2)\n\n# No interference between iterations\nseg1 = next(iter1)\nseg2 = next(iter2)",
+          "lower": "each iterator is independent with no shared state:\n\n# safe to run multiple iterators\niter1 = iter_split_with_offsets(text1)\niter2 = iter_split_with_offsets(text2)\n\n# no interference between iterations\nseg1 = next(iter1)\nseg2 = next(iter2)"
+        },
+        {
+          "anchor": "",
+          "heading": "Same Offsets",
+          "text": "Offset guarantees are identical to split_with_offsets():\n\nfor segment in iter_split_with_offsets(text):\n    # Offsets map exactly to original text\n    assert text[segment.char_start:segment.char_end] == segment.text",
+          "lower": "offset guarantees are identical to split_with_offsets():\n\nfor segment in iter_split_with_offsets(text):\n    # offsets map exactly to original text\n    assert text[segment.char_start:segment.char_end] == segment.text"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Streaming",
+          "text": "from phrasplit import iter_split_with_offsets\n\ntext = \"First sentence. Second sentence.\\\\n\\\\nNew paragraph.\"\n\nfor segment in iter_split_with_offsets(text, mode=\"sentence\"):\n    print(f\"Processing {segment.id}: {segment.text}\")\n    # Process immediately without waiting for all segments",
+          "lower": "from phrasplit import iter_split_with_offsets\n\ntext = \"first sentence. second sentence.\\\\n\\\\nnew paragraph.\"\n\nfor segment in iter_split_with_offsets(text, mode=\"sentence\"):\n    print(f\"processing {segment.id}: {segment.text}\")\n    # process immediately without waiting for all segments"
+        },
+        {
+          "anchor": "",
+          "heading": "Real-time TTS Pipeline",
+          "text": "import asyncio\nfrom phrasplit import iter_split_with_offsets\n\nasync def synthesize_segment(segment):\n    \"\"\"Synthesize audio for one segment.\"\"\"\n    # Hypothetical TTS call\n    audio = await tts_engine.synthesize(segment.text)\n    return {\n        \"segment_id\": segment.id,\n        \"audio\": audio,\n        \"position\": (segment.char_start, segment.char_end)\n    }\n\nasync def stream_synthesis(text):\n    \"\"\"Stream synthesis results as soon as each segment is ready.\"\"\"\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        result = await synthesize_segment(segment)\n        yield result\n\n# Usage\nasync for audio_chunk in stream_synthesis(long_text):\n    await audio_output.write(audio_chunk)",
+          "lower": "import asyncio\nfrom phrasplit import iter_split_with_offsets\n\nasync def synthesize_segment(segment):\n    \"\"\"synthesize audio for one segment.\"\"\"\n    # hypothetical tts call\n    audio = await tts_engine.synthesize(segment.text)\n    return {\n        \"segment_id\": segment.id,\n        \"audio\": audio,\n        \"position\": (segment.char_start, segment.char_end)\n    }\n\nasync def stream_synthesis(text):\n    \"\"\"stream synthesis results as soon as each segment is ready.\"\"\"\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        result = await synthesize_segment(segment)\n        yield result\n\n# usage\nasync for audio_chunk in stream_synthesis(long_text):\n    await audio_output.write(audio_chunk)"
+        },
+        {
+          "anchor": "",
+          "heading": "Processing Large Files",
+          "text": "def process_large_book(file_path, output_path):\n    \"\"\"Process a large ebook segment by segment.\"\"\"\n    with open(file_path, 'r', encoding='utf-8') as f:\n        text = f.read()\n\n    with open(output_path, 'w', encoding='utf-8') as out:\n        for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n            # Process one segment at a time\n            processed = process_segment(segment)\n\n            # Write immediately\n            out.write(f\"{segment.id}\\\\t{processed}\\\\n\")\n\n            # Memory is freed after each iteration",
+          "lower": "def process_large_book(file_path, output_path):\n    \"\"\"process a large ebook segment by segment.\"\"\"\n    with open(file_path, 'r', encoding='utf-8') as f:\n        text = f.read()\n\n    with open(output_path, 'w', encoding='utf-8') as out:\n        for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n            # process one segment at a time\n            processed = process_segment(segment)\n\n            # write immediately\n            out.write(f\"{segment.id}\\\\t{processed}\\\\n\")\n\n            # memory is freed after each iteration"
+        },
+        {
+          "anchor": "",
+          "heading": "Parallel Processing",
+          "text": "from concurrent.futures import ThreadPoolExecutor\nfrom phrasplit import iter_split_with_offsets\n\ndef process_batch(segments):\n    \"\"\"Process a batch of segments.\"\"\"\n    results = []\n    for seg in segments:\n        result = expensive_operation(seg.text)\n        results.append((seg.id, result))\n    return results\n\ndef stream_with_batching(text, batch_size=10):\n    \"\"\"Stream segments in batches for parallel processing.\"\"\"\n    batch = []\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        batch.append(segment)\n\n        if len(batch) >= batch_size:\n            yield batch\n            batch = []\n\n    # Yield remaining\n    if batch:\n        yield batch\n\n# Process batches in parallel\nwith ThreadPoolExecutor(max_workers=4) as executor:\n    for batch in stream_with_batching…",
+          "lower": "from concurrent.futures import threadpoolexecutor\nfrom phrasplit import iter_split_with_offsets\n\ndef process_batch(segments):\n    \"\"\"process a batch of segments.\"\"\"\n    results = []\n    for seg in segments:\n        result = expensive_operation(seg.text)\n        results.append((seg.id, result))\n    return results\n\ndef stream_with_batching(text, batch_size=10):\n    \"\"\"stream segments in batches for parallel processing.\"\"\"\n    batch = []\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        batch.append(segment)\n\n        if len(batch) >= batch_size:\n            yield batch\n            batch = []\n\n    # yield remaining\n    if batch:\n        yield batch\n\n# process batches in parallel\nwith threadpoolexecutor(max_workers=4) as executor:\n    for batch in stream_with_batching…"
+        },
+        {
+          "anchor": "",
+          "heading": "Progress Tracking",
+          "text": "from phrasplit import iter_split_with_offsets\n\ndef process_with_progress(text):\n    \"\"\"Process with progress tracking.\"\"\"\n    total_chars = len(text)\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        # Calculate progress based on character position\n        progress = (segment.char_end / total_chars) * 100\n\n        print(f\"Progress: {progress:.1f}% - Processing {segment.id}\")\n\n        # Process segment...\n        process_segment(segment)",
+          "lower": "from phrasplit import iter_split_with_offsets\n\ndef process_with_progress(text):\n    \"\"\"process with progress tracking.\"\"\"\n    total_chars = len(text)\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        # calculate progress based on character position\n        progress = (segment.char_end / total_chars) * 100\n\n        print(f\"progress: {progress:.1f}% - processing {segment.id}\")\n\n        # process segment...\n        process_segment(segment)"
+        },
+        {
+          "anchor": "",
+          "heading": "Selective Processing",
+          "text": "def process_matching_segments(text, pattern):\n    \"\"\"Process only segments matching a pattern.\"\"\"\n    import re\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        if re.search(pattern, segment.text):\n            # Only process matching segments\n            result = expensive_processing(segment)\n            yield (segment.id, result)\n        else:\n            # Skip non-matching segments\n            yield (segment.id, None)",
+          "lower": "def process_matching_segments(text, pattern):\n    \"\"\"process only segments matching a pattern.\"\"\"\n    import re\n\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        if re.search(pattern, segment.text):\n            # only process matching segments\n            result = expensive_processing(segment)\n            yield (segment.id, result)\n        else:\n            # skip non-matching segments\n            yield (segment.id, none)"
+        },
+        {
+          "anchor": "",
+          "heading": "Early Termination",
+          "text": "def find_first_mention(text, search_term):\n    \"\"\"Find first segment containing search term.\"\"\"\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        if search_term in segment.text:\n            # Found it - stop iteration\n            return segment\n\n    return None\n\n# Iterator stops as soon as we return\nresult = find_first_mention(long_document, \"important phrase\")",
+          "lower": "def find_first_mention(text, search_term):\n    \"\"\"find first segment containing search term.\"\"\"\n    for segment in iter_split_with_offsets(text, mode=\"sentence\"):\n        if search_term in segment.text:\n            # found it - stop iteration\n            return segment\n\n    return none\n\n# iterator stops as soon as we return\nresult = find_first_mention(long_document, \"important phrase\")"
+        },
+        {
+          "anchor": "",
+          "heading": "When to Use Iterator",
+          "text": "✅ Use iter_split_with_offsets() when:\n\n\nProcessing very large texts (> 1 MB)\n\n\nNeed to start output before all segmentation is done\n\n\nBuilding real-time pipelines\n\n\nMemory is constrained\n\n\nCan process segments independently",
+          "lower": "✅ use iter_split_with_offsets() when:\n\n\nprocessing very large texts (> 1 mb)\n\n\nneed to start output before all segmentation is done\n\n\nbuilding real-time pipelines\n\n\nmemory is constrained\n\n\ncan process segments independently"
+        },
+        {
+          "anchor": "",
+          "heading": "When to Use List",
+          "text": "✅ Use split_with_offsets() when:\n\n\nNeed random access to segments\n\n\nNeed total segment count upfront\n\n\nPerforming multiple passes over segments\n\n\nText size is small (< 1 MB)\n\n\nNeed to sort or filter all segments",
+          "lower": "✅ use split_with_offsets() when:\n\n\nneed random access to segments\n\n\nneed total segment count upfront\n\n\nperforming multiple passes over segments\n\n\ntext size is small (< 1 mb)\n\n\nneed to sort or filter all segments"
+        },
+        {
+          "anchor": "",
+          "heading": "Memory Usage",
+          "text": "# List version - loads all segments into memory\nsegments = split_with_offsets(huge_text)  # Uses O(n) memory\n\n# Iterator version - one segment at a time\nfor seg in iter_split_with_offsets(huge_text):  # Uses O(1) memory\n    process(seg)",
+          "lower": "# list version - loads all segments into memory\nsegments = split_with_offsets(huge_text)  # uses o(n) memory\n\n# iterator version - one segment at a time\nfor seg in iter_split_with_offsets(huge_text):  # uses o(1) memory\n    process(seg)"
+        },
+        {
+          "anchor": "",
+          "heading": "Time to First Segment",
+          "text": "The iterator has the same time-to-first-segment as the list version since the current\nimplementation processes all segments upfront. A future optimization could make this\ntruly streaming.\n\n\nNote\n\nCurrent implementation note: The iterator currently uses split_with_offsets() internally and yields from the result. A future version may implement true streaming for faster time-to-first-segment.",
+          "lower": "the iterator has the same time-to-first-segment as the list version since the current\nimplementation processes all segments upfront. a future optimization could make this\ntruly streaming.\n\n\nnote\n\ncurrent implementation note: the iterator currently uses split_with_offsets() internally and yields from the result. a future version may implement true streaming for faster time-to-first-segment."
+        },
+        {
+          "anchor": "",
+          "heading": "Overhead",
+          "text": "Iterator overhead is minimal:\n\n# List conversion\nsegments_list = list(iter_split_with_offsets(text))\n\n# Equivalent to\nsegments_list = split_with_offsets(text)",
+          "lower": "iterator overhead is minimal:\n\n# list conversion\nsegments_list = list(iter_split_with_offsets(text))\n\n# equivalent to\nsegments_list = split_with_offsets(text)"
+        },
+        {
+          "anchor": "",
+          "heading": "Best Practices",
+          "text": "Process Immediately\n\n# Good - process each segment as it arrives\nfor seg in iter_split_with_offsets(text):\n    result = process(seg)\n    save(result)\n\n# Bad - defeats purpose of streaming\nall_segments = list(iter_split_with_offsets(text))\n\n\n\n\n\n\nUse with Context Managers\n\nwith open('output.txt', 'w') as f:\n    for seg in iter_split_with_offsets(text, mode=\"sentence\"):\n        processed = process(seg)\n        f.write(f\"{processed}\\\\n\")\n\n\n\n\n\n\nCombine with Generators\n\ndef processed_segments(text):\n    \"\"\"Generator pipeline.\"\"\"\n    for seg in iter_split_with_offsets(text):\n        if should_process(seg):\n            yield process(seg)\n\n# Chain generators\nfor result in processed_segments(text):\n    output(result)",
+          "lower": "process immediately\n\n# good - process each segment as it arrives\nfor seg in iter_split_with_offsets(text):\n    result = process(seg)\n    save(result)\n\n# bad - defeats purpose of streaming\nall_segments = list(iter_split_with_offsets(text))\n\n\n\n\n\n\nuse with context managers\n\nwith open('output.txt', 'w') as f:\n    for seg in iter_split_with_offsets(text, mode=\"sentence\"):\n        processed = process(seg)\n        f.write(f\"{processed}\\\\n\")\n\n\n\n\n\n\ncombine with generators\n\ndef processed_segments(text):\n    \"\"\"generator pipeline.\"\"\"\n    for seg in iter_split_with_offsets(text):\n        if should_process(seg):\n            yield process(seg)\n\n# chain generators\nfor result in processed_segments(text):\n    output(result)"
+        },
+        {
+          "anchor": "",
+          "heading": "See Also",
+          "text": "Offset-Preserving Segmentation - Offset coordinate system and guarantees\n\n\nAPI Reference - Complete API reference\n\n\nExamples - More usage examples",
+          "lower": "offset-preserving segmentation - offset coordinate system and guarantees\n\n\napi reference - complete api reference\n\n\nexamples - more usage examples"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/main/usage/",
+      "title": "phrasplit Usage Guide",
+      "snippet": "This guide covers how to use phrasplit’s Python API for text splitting.\nThe split_sentences() function intelligently detects sentence\nbounda …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Usage Guide",
+          "text": "This guide covers how to use phrasplit’s Python API for text splitting.",
+          "lower": "this guide covers how to use phrasplit’s python api for text splitting."
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Sentences",
+          "text": "The split_sentences() function intelligently detects sentence\nboundaries. It can use either spaCy’s NLP pipeline (high accuracy) or regex-based\nsplitting (lightweight, no dependencies):\n\nfrom phrasplit import split_sentences\n\ntext = \"Dr. Smith is here. She has a Ph.D. in Chemistry.\"\nsentences = split_sentences(text)\nprint(sentences)\n# ['Dr. Smith is here.', 'She has a Ph.D. in Chemistry.']\n\n\n\n\nThe function correctly handles:\n\n\nAbbreviations: Mr., Mrs., Dr., Prof., etc.\n\n\nAcronyms: U.S.A., U.K., etc.\n\n\nTitles: Ph.D., M.D., etc.\n\n\nURLs: www.example.com\n\n\nEllipses: Text with… ellipses\n\n\n\nExample with abbreviations:\n\ntext = \"Mr. Brown met Prof. Green. They discussed the U.S.A. case.\"\nsentences = split_sentences(text)\n# ['Mr. Brown met Prof. Green.', 'They discussed the U.S.A. case.']",
+          "lower": "the split_sentences() function intelligently detects sentence\nboundaries. it can use either spacy’s nlp pipeline (high accuracy) or regex-based\nsplitting (lightweight, no dependencies):\n\nfrom phrasplit import split_sentences\n\ntext = \"dr. smith is here. she has a ph.d. in chemistry.\"\nsentences = split_sentences(text)\nprint(sentences)\n# ['dr. smith is here.', 'she has a ph.d. in chemistry.']\n\n\n\n\nthe function correctly handles:\n\n\nabbreviations: mr., mrs., dr., prof., etc.\n\n\nacronyms: u.s.a., u.k., etc.\n\n\ntitles: ph.d., m.d., etc.\n\n\nurls: www.example.com\n\n\nellipses: text with… ellipses\n\n\n\nexample with abbreviations:\n\ntext = \"mr. brown met prof. green. they discussed the u.s.a. case.\"\nsentences = split_sentences(text)\n# ['mr. brown met prof. green.', 'they discussed the u.s.a. case.']"
+        },
+        {
+          "anchor": "",
+          "heading": "Choosing Processing Mode",
+          "text": "phrasplit automatically detects if spaCy is available and uses the appropriate mode. You\ncan explicitly control this with the use_spacy parameter:\n\n# Automatic detection (default)\nsentences = split_sentences(text)\n# Uses spaCy if available, otherwise falls back to regex\n\n# Force simple mode (no spaCy required)\nsentences = split_sentences(text, use_spacy=False)\n# Uses regex-based splitting, faster and lightweight\n\n# Force spaCy mode (will error if spaCy not installed)\nsentences = split_sentences(text, use_spacy=True)\n# Uses spaCy NLP for higher accuracy\n\n\n\n\nWhen to use simple mode (use_spacy=False):\n\n\nYou don’t have spaCy installed\n\n\nYou need faster processing for simple text\n\n\nYou want to minimize dependencies and memory usage\n\n\nYour text has clear sentence boundaries\n\n\n\nWhen to use spaCy…",
+          "lower": "phrasplit automatically detects if spacy is available and uses the appropriate mode. you\ncan explicitly control this with the use_spacy parameter:\n\n# automatic detection (default)\nsentences = split_sentences(text)\n# uses spacy if available, otherwise falls back to regex\n\n# force simple mode (no spacy required)\nsentences = split_sentences(text, use_spacy=false)\n# uses regex-based splitting, faster and lightweight\n\n# force spacy mode (will error if spacy not installed)\nsentences = split_sentences(text, use_spacy=true)\n# uses spacy nlp for higher accuracy\n\n\n\n\nwhen to use simple mode (use_spacy=false):\n\n\nyou don’t have spacy installed\n\n\nyou need faster processing for simple text\n\n\nyou want to minimize dependencies and memory usage\n\n\nyour text has clear sentence boundaries\n\n\n\nwhen to use spacy…"
+        },
+        {
+          "anchor": "",
+          "heading": "Colon Splitting (Deprecated)",
+          "text": "The split_on_colon parameter is deprecated and no longer affects output. It is\naccepted for API compatibility and raises a DeprecationWarning when set to False.\nColon handling is delegated to the active backend (spaCy or the regex fallback).",
+          "lower": "the split_on_colon parameter is deprecated and no longer affects output. it is\naccepted for api compatibility and raises a deprecationwarning when set to false.\ncolon handling is delegated to the active backend (spacy or the regex fallback)."
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Clauses",
+          "text": "The split_clauses() function splits text at commas, creating natural\npause points ideal for audiobook and text-to-speech applications. Like\nsplit_sentences(), it supports both spaCy and simple modes:\n\nfrom phrasplit import split_clauses\n\ntext = \"I like coffee, and I like tea.\"\n\n# Automatic mode detection\nclauses = split_clauses(text)\nprint(clauses)\n# ['I like coffee,', 'and I like tea.']\n\n# Force simple mode\nclauses = split_clauses(text, use_spacy=False)\n# Uses regex-based clause splitting\n\n\n\n\nThe comma is kept at the end of each clause, preserving the original punctuation.\n\nMore complex example:\n\ntext = \"When the sun rose, the birds began to sing, and the day started.\"\nclauses = split_clauses(text)\n# ['When the sun rose,', 'the birds began to sing,', 'and the day started.']",
+          "lower": "the split_clauses() function splits text at commas, creating natural\npause points ideal for audiobook and text-to-speech applications. like\nsplit_sentences(), it supports both spacy and simple modes:\n\nfrom phrasplit import split_clauses\n\ntext = \"i like coffee, and i like tea.\"\n\n# automatic mode detection\nclauses = split_clauses(text)\nprint(clauses)\n# ['i like coffee,', 'and i like tea.']\n\n# force simple mode\nclauses = split_clauses(text, use_spacy=false)\n# uses regex-based clause splitting\n\n\n\n\nthe comma is kept at the end of each clause, preserving the original punctuation.\n\nmore complex example:\n\ntext = \"when the sun rose, the birds began to sing, and the day started.\"\nclauses = split_clauses(text)\n# ['when the sun rose,', 'the birds began to sing,', 'and the day started.']"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Paragraphs",
+          "text": "The split_paragraphs() function splits text at double newlines:\n\nfrom phrasplit import split_paragraphs\n\ntext = \"\"\"First paragraph with some text.\n\nSecond paragraph with more text.\n\nThird paragraph.\"\"\"\n\nparagraphs = split_paragraphs(text)\n# ['First paragraph with some text.',\n#  'Second paragraph with more text.',\n#  'Third paragraph.']\n\n\n\n\nThe function handles multiple blank lines and whitespace-only lines:\n\ntext = \"First.\\n\\n\\n\\nSecond.\"  # Multiple blank lines\nparagraphs = split_paragraphs(text)\n# ['First.', 'Second.']",
+          "lower": "the split_paragraphs() function splits text at double newlines:\n\nfrom phrasplit import split_paragraphs\n\ntext = \"\"\"first paragraph with some text.\n\nsecond paragraph with more text.\n\nthird paragraph.\"\"\"\n\nparagraphs = split_paragraphs(text)\n# ['first paragraph with some text.',\n#  'second paragraph with more text.',\n#  'third paragraph.']\n\n\n\n\nthe function handles multiple blank lines and whitespace-only lines:\n\ntext = \"first.\\n\\n\\n\\nsecond.\"  # multiple blank lines\nparagraphs = split_paragraphs(text)\n# ['first.', 'second.']"
+        },
+        {
+          "anchor": "",
+          "heading": "Hierarchical Splitting with split_text",
+          "text": "The split_text() function provides a unified interface for splitting\ntext while preserving paragraph and sentence structure. This is particularly useful for\naudiobook generation where you need different pause lengths between paragraphs,\nsentences, and clauses.\n\nfrom phrasplit import split_text, Segment\n\ntext = \"First sentence. Second sentence.\\n\\nNew paragraph here.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"Paragraph {seg.paragraph}, Sentence {seg.sentence}: {seg.text}\")\n# Paragraph 0, Sentence 0: First sentence.\n# Paragraph 0, Sentence 1: Second sentence.\n# Paragraph 1, Sentence 0: New paragraph here.",
+          "lower": "the split_text() function provides a unified interface for splitting\ntext while preserving paragraph and sentence structure. this is particularly useful for\naudiobook generation where you need different pause lengths between paragraphs,\nsentences, and clauses.\n\nfrom phrasplit import split_text, segment\n\ntext = \"first sentence. second sentence.\\n\\nnew paragraph here.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"paragraph {seg.paragraph}, sentence {seg.sentence}: {seg.text}\")\n# paragraph 0, sentence 0: first sentence.\n# paragraph 0, sentence 1: second sentence.\n# paragraph 1, sentence 0: new paragraph here."
+        },
+        {
+          "anchor": "",
+          "heading": "Available Modes",
+          "text": "\"paragraph\": Returns paragraphs only (sentence is None)\n\n\n\"sentence\": Returns sentences with paragraph tracking\n\n\n\"clause\": Returns clauses with paragraph and sentence tracking\n\n\n\n# Paragraph mode\nsegments = split_text(text, mode=\"paragraph\")\n# Each segment has sentence=None\n\n# Sentence mode (default)\nsegments = split_text(text, mode=\"sentence\")\n# Each segment has paragraph and sentence indices\n\n# Clause mode - finest granularity\ntext = \"Hello, world. Goodbye, friend.\"\nsegments = split_text(text, mode=\"clause\")\n# Returns: Hello, | world. | Goodbye, | friend.\n# All with paragraph and sentence tracking",
+          "lower": "\"paragraph\": returns paragraphs only (sentence is none)\n\n\n\"sentence\": returns sentences with paragraph tracking\n\n\n\"clause\": returns clauses with paragraph and sentence tracking\n\n\n\n# paragraph mode\nsegments = split_text(text, mode=\"paragraph\")\n# each segment has sentence=none\n\n# sentence mode (default)\nsegments = split_text(text, mode=\"sentence\")\n# each segment has paragraph and sentence indices\n\n# clause mode - finest granularity\ntext = \"hello, world. goodbye, friend.\"\nsegments = split_text(text, mode=\"clause\")\n# returns: hello, | world. | goodbye, | friend.\n# all with paragraph and sentence tracking"
+        },
+        {
+          "anchor": "",
+          "heading": "Detecting Structure Changes",
+          "text": "Use the Segment fields to detect when paragraphs or sentences change:\n\nfrom phrasplit import split_text\n\ntext = \"Sent 1. Sent 2.\\n\\nSent 3.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor i, seg in enumerate(segments):\n    if i > 0 and seg.paragraph != segments[i-1].paragraph:\n        print(\"--- New Paragraph ---\")\n    print(seg.text)",
+          "lower": "use the segment fields to detect when paragraphs or sentences change:\n\nfrom phrasplit import split_text\n\ntext = \"sent 1. sent 2.\\n\\nsent 3.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor i, seg in enumerate(segments):\n    if i > 0 and seg.paragraph != segments[i-1].paragraph:\n        print(\"--- new paragraph ---\")\n    print(seg.text)"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Long Lines",
+          "text": "The split_long_lines() function breaks long lines at natural boundaries\n(sentences and clauses) to fit within a maximum length:\n\nfrom phrasplit import split_long_lines\n\ntext = \"This is a very long sentence. This is another sentence that makes it even longer.\"\nlines = split_long_lines(text, max_length=40)\n# Each line will be <= 40 characters when possible\n\n\n\n\nThe splitting strategy:\n\n\nFirst, try to split at sentence boundaries\n\n\nIf still too long, split at clause boundaries (commas)\n\n\nIf still too long, split at word boundaries",
+          "lower": "the split_long_lines() function breaks long lines at natural boundaries\n(sentences and clauses) to fit within a maximum length:\n\nfrom phrasplit import split_long_lines\n\ntext = \"this is a very long sentence. this is another sentence that makes it even longer.\"\nlines = split_long_lines(text, max_length=40)\n# each line will be <= 40 characters when possible\n\n\n\n\nthe splitting strategy:\n\n\nfirst, try to split at sentence boundaries\n\n\nif still too long, split at clause boundaries (commas)\n\n\nif still too long, split at word boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Using Different Language Models",
+          "text": "All functions that use spaCy accept a language_model parameter:\n\nfrom phrasplit import split_sentences\n\n# Use a larger, more accurate model\nsentences = split_sentences(text, language_model=\"en_core_web_lg\")\n\n# Use a model for another language\nsentences = split_sentences(german_text, language_model=\"de_core_news_sm\")\n\n\n\n\nMake sure to download the model first:\n\npython -m spacy download de_core_news_sm",
+          "lower": "all functions that use spacy accept a language_model parameter:\n\nfrom phrasplit import split_sentences\n\n# use a larger, more accurate model\nsentences = split_sentences(text, language_model=\"en_core_web_lg\")\n\n# use a model for another language\nsentences = split_sentences(german_text, language_model=\"de_core_news_sm\")\n\n\n\n\nmake sure to download the model first:\n\npython -m spacy download de_core_news_sm"
+        },
+        {
+          "anchor": "",
+          "heading": "Processing Pipeline Example",
+          "text": "Here’s a complete example of processing a document:\n\nfrom phrasplit import split_paragraphs, split_sentences, split_clauses\n\ndef process_document(text):\n    \"\"\"Process a document into structured parts.\"\"\"\n    result = []\n\n    for para_idx, paragraph in enumerate(split_paragraphs(text)):\n        para_data = {\"paragraph\": para_idx + 1, \"sentences\": []}\n\n        for sent_idx, sentence in enumerate(split_sentences(paragraph)):\n            sent_data = {\n                \"sentence\": sent_idx + 1,\n                \"text\": sentence,\n                \"clauses\": split_clauses(sentence)\n            }\n            para_data[\"sentences\"].append(sent_data)\n\n        result.append(para_data)\n\n    return result\n\n# Example usage\ntext = \"\"\"Hello world, this is a test. Another sentence here.\n\nSecond paragraph wi…",
+          "lower": "here’s a complete example of processing a document:\n\nfrom phrasplit import split_paragraphs, split_sentences, split_clauses\n\ndef process_document(text):\n    \"\"\"process a document into structured parts.\"\"\"\n    result = []\n\n    for para_idx, paragraph in enumerate(split_paragraphs(text)):\n        para_data = {\"paragraph\": para_idx + 1, \"sentences\": []}\n\n        for sent_idx, sentence in enumerate(split_sentences(paragraph)):\n            sent_data = {\n                \"sentence\": sent_idx + 1,\n                \"text\": sentence,\n                \"clauses\": split_clauses(sentence)\n            }\n            para_data[\"sentences\"].append(sent_data)\n\n        result.append(para_data)\n\n    return result\n\n# example usage\ntext = \"\"\"hello world, this is a test. another sentence here.\n\nsecond paragraph wi…"
+        },
+        {
+          "anchor": "",
+          "heading": "Simplified Pipeline with split_text",
+          "text": "The same can be achieved more simply with split_text():\n\nfrom phrasplit import split_text\n\ntext = \"\"\"Hello world, this is a test. Another sentence here.\n\nSecond paragraph with more content, and some clauses.\"\"\"\n\n# Get all clauses with full structure information\nsegments = split_text(text, mode=\"clause\")\n\nfor seg in segments:\n    print(f\"P{seg.paragraph} S{seg.sentence}: {seg.text}\")\n\n\n\n\nThe use_spacy parameter is also available for split_text():\n\n# Use simple mode for faster processing\nsegments = split_text(text, mode=\"sentence\", use_spacy=False)\n\n# Explicitly use spaCy mode\nsegments = split_text(text, mode=\"sentence\", use_spacy=True)",
+          "lower": "the same can be achieved more simply with split_text():\n\nfrom phrasplit import split_text\n\ntext = \"\"\"hello world, this is a test. another sentence here.\n\nsecond paragraph with more content, and some clauses.\"\"\"\n\n# get all clauses with full structure information\nsegments = split_text(text, mode=\"clause\")\n\nfor seg in segments:\n    print(f\"p{seg.paragraph} s{seg.sentence}: {seg.text}\")\n\n\n\n\nthe use_spacy parameter is also available for split_text():\n\n# use simple mode for faster processing\nsegments = split_text(text, mode=\"sentence\", use_spacy=false)\n\n# explicitly use spacy mode\nsegments = split_text(text, mode=\"sentence\", use_spacy=true)"
+        }
+      ]
+    }
+  ]
+}

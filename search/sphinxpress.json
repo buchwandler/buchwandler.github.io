@@ -1,0 +1,285 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "sphinxpress",
+  "entries": [
+    {
+      "url": "/tools/sphinxpress/api/",
+      "title": "sphinxpress API reference",
+      "snippet": "Configuration loading and mutation helpers.\n\nBuild Jekyll site output from resolved Sphinx JSON pages.\n\nCreate aggregate Sphinx projects for …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "API reference",
+          "text": "Configuration loading and mutation helpers.\n\nBuild Jekyll site output from resolved Sphinx JSON pages.\n\nCreate aggregate Sphinx projects for EPUB and PDF output.\n\nRelease metadata helpers.",
+          "lower": "configuration loading and mutation helpers.\n\nbuild jekyll site output from resolved sphinx json pages.\n\ncreate aggregate sphinx projects for epub and pdf output.\n\nrelease metadata helpers."
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/commands/",
+      "title": "sphinxpress Commands",
+      "snippet": "Loads configuration, prepares the managed environment if enabled, verifies sphinx-build, and runs Sphinx dummy builds.\nLists configured proj …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "sphinxpress check",
+          "text": "Loads configuration, prepares the managed environment if enabled, verifies sphinx-build, and runs Sphinx dummy builds.",
+          "lower": "loads configuration, prepares the managed environment if enabled, verifies sphinx-build, and runs sphinx dummy builds."
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress list",
+          "text": "Lists configured projects and resolved release metadata.\n\nWhen site versioning is enabled, list expands each logical project into one\nline per resolved variant:\n\nbooktx  release  v0.4.1  <commit>  <release-url>\nbooktx  main     main    <commit>  <branch-url>",
+          "lower": "lists configured projects and resolved release metadata.\n\nwhen site versioning is enabled, list expands each logical project into one\nline per resolved variant:\n\nbooktx  release  v0.4.1  <commit>  <release-url>\nbooktx  main     main    <commit>  <branch-url>"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress build-site",
+          "text": "Builds Jekyll pages and navigation data.\n\nsphinxpress build-site --all\nsphinxpress build-site --project tool-a\nsphinxpress build-site --projects tool-a,tool-b\nsphinxpress build-site --all --variant release\nsphinxpress build-site --projects tool-a,tool-b --variants release,main\n\n\n\n\nWithout variant filters, build-site --all builds every configured variant for\nevery selected project.",
+          "lower": "builds jekyll pages and navigation data.\n\nsphinxpress build-site --all\nsphinxpress build-site --project tool-a\nsphinxpress build-site --projects tool-a,tool-b\nsphinxpress build-site --all --variant release\nsphinxpress build-site --projects tool-a,tool-b --variants release,main\n\n\n\n\nwithout variant filters, build-site --all builds every configured variant for\nevery selected project."
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress build-epub",
+          "text": "Builds the combined EPUB artifact.\n\nsphinxpress build-epub --all",
+          "lower": "builds the combined epub artifact.\n\nsphinxpress build-epub --all"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress build-pdf",
+          "text": "Builds the combined PDF artifact with sphinxpress’s internal WeasyPrint backend\nby default. It renders the aggregate docs as singlehtml, then converts that\nHTML to PDF without requiring LaTeX. Install the optional pdf extra or make\nweasyprint>=67 available in the selected managed build environment. Set\n[pdf].builder = \"latexpdf\" to keep using the legacy LaTeX-based path.\n\nsphinxpress build-pdf performs a WeasyPrint preflight before the aggregate\nsinglehtml build. If the configured weasyprint executable is missing, the\ncommand fails fast with an actionable message that points to\nsphinxpress[pdf] and [build.env].packages rather than running a full\nsinglehtml build first. On any singlehtml or WeasyPrint failure, the error\nmessage points to the matching log file under [build].log_dir.\n\nsphinx…",
+          "lower": "builds the combined pdf artifact with sphinxpress’s internal weasyprint backend\nby default. it renders the aggregate docs as singlehtml, then converts that\nhtml to pdf without requiring latex. install the optional pdf extra or make\nweasyprint>=67 available in the selected managed build environment. set\n[pdf].builder = \"latexpdf\" to keep using the legacy latex-based path.\n\nsphinxpress build-pdf performs a weasyprint preflight before the aggregate\nsinglehtml build. if the configured weasyprint executable is missing, the\ncommand fails fast with an actionable message that points to\nsphinxpress[pdf] and [build.env].packages rather than running a full\nsinglehtml build first. on any singlehtml or weasyprint failure, the error\nmessage points to the matching log file under [build].log_dir.\n\nsphinx…"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress build-book",
+          "text": "Format-dispatching wrapper around PDF and EPUB builds.\n\nsphinxpress build-book --format epub --all\nsphinxpress build-book --format pdf --all\n\n\n\n\nFor --format pdf, the default backend matches build-pdf: aggregate\nsinglehtml plus WeasyPrint, with explicit latexpdf still available through\nconfiguration.\n\nWhen site versioning is enabled, build-book uses [book].docs_variant and\ndoes not aggregate multiple variants into the same EPUB or PDF.",
+          "lower": "format-dispatching wrapper around pdf and epub builds.\n\nsphinxpress build-book --format epub --all\nsphinxpress build-book --format pdf --all\n\n\n\n\nfor --format pdf, the default backend matches build-pdf: aggregate\nsinglehtml plus weasyprint, with explicit latexpdf still available through\nconfiguration.\n\nwhen site versioning is enabled, build-book uses [book].docs_variant and\ndoes not aggregate multiple variants into the same epub or pdf."
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress update-release",
+          "text": "Updates one project’s stored release_tag.\n\nsphinxpress update-release --project tool-a --tag v0.1.0",
+          "lower": "updates one project’s stored release_tag.\n\nsphinxpress update-release --project tool-a --tag v0.1.0"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress update-releases",
+          "text": "Resolves and updates release tags for all configured projects.\n\nsphinxpress update-releases --all",
+          "lower": "resolves and updates release tags for all configured projects.\n\nsphinxpress update-releases --all"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress add-project",
+          "text": "Appends a new [[projects]] entry to sphinxpress.toml.\n\nsphinxpress add-project \\\n  --name tool-a \\\n  --docs ../tool-a/docs \\\n  --repo https://github.com/example/tool-a",
+          "lower": "appends a new [[projects]] entry to sphinxpress.toml.\n\nsphinxpress add-project \\\n  --name tool-a \\\n  --docs ../tool-a/docs \\\n  --repo https://github.com/example/tool-a"
+        },
+        {
+          "anchor": "",
+          "heading": "sphinxpress validate",
+          "text": "Runs checks, validates generated Jekyll output, and verifies aggregate book project creation.\n\nWith site versioning enabled, validate resolves every configured site target,\nchecks each version-switch URL in generated nav payloads, verifies nav-key\nuniqueness, confirms Liquid raw wrappers are balanced, and verifies the\ngenerated-output manifest exists.\n\nsphinxpress validate\nsphinxpress validate --linkcheck",
+          "lower": "runs checks, validates generated jekyll output, and verifies aggregate book project creation.\n\nwith site versioning enabled, validate resolves every configured site target,\nchecks each version-switch url in generated nav payloads, verifies nav-key\nuniqueness, confirms liquid raw wrappers are balanced, and verifies the\ngenerated-output manifest exists.\n\nsphinxpress validate\nsphinxpress validate --linkcheck"
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/configuration/",
+      "title": "sphinxpress Configuration",
+      "snippet": "sphinxpress reads sphinxpress.toml from the current directory unless --config is provided.\n[build].log_dir (default <work_dir>/logs) control …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Configuration",
+          "text": "sphinxpress reads sphinxpress.toml from the current directory unless --config is provided.",
+          "lower": "sphinxpress reads sphinxpress.toml from the current directory unless --config is provided."
+        },
+        {
+          "anchor": "",
+          "heading": "Build logs",
+          "text": "[build].log_dir (default <work_dir>/logs) controls where sphinxpress writes timestamped command logs. The directory is created on demand. Each Sphinx, WeasyPrint, and managed-environment pip run writes one YYYYMMDDTHHMMSSZ-<stem>.log file plus a latest-<stem>.log copy that points at the most recent run. Stable log stems include:\n\n\nsite-<project>-json\n\n\nvalidate-<project>-dummy and validate-<project>-linkcheck\n\n\nbook-epub-sphinx\n\n\nbook-pdf-singlehtml\n\n\nbook-pdf-weasyprint\n\n\nenv-pip-upgrade and env-pip-install\n\n\n\nOverride the default location in sphinxpress.toml:\n\n[build]\nwork_dir = \".sphinxpress\"\nlog_dir = \".sphinxpress/logs\"\n\n\n\n\nSphinx and WeasyPrint failures include the relevant Log: path so the full stdout and stderr can be inspected without rerunning the build.",
+          "lower": "[build].log_dir (default <work_dir>/logs) controls where sphinxpress writes timestamped command logs. the directory is created on demand. each sphinx, weasyprint, and managed-environment pip run writes one yyyymmddthhmmssz-<stem>.log file plus a latest-<stem>.log copy that points at the most recent run. stable log stems include:\n\n\nsite-<project>-json\n\n\nvalidate-<project>-dummy and validate-<project>-linkcheck\n\n\nbook-epub-sphinx\n\n\nbook-pdf-singlehtml\n\n\nbook-pdf-weasyprint\n\n\nenv-pip-upgrade and env-pip-install\n\n\n\noverride the default location in sphinxpress.toml:\n\n[build]\nwork_dir = \".sphinxpress\"\nlog_dir = \".sphinxpress/logs\"\n\n\n\n\nsphinx and weasyprint failures include the relevant log: path so the full stdout and stderr can be inspected without rerunning the build."
+        },
+        {
+          "anchor": "",
+          "heading": "Site settings",
+          "text": "[site] controls generated Jekyll paths, layout names, and the public base URL.\n\nprotect_liquid defaults to true and wraps generated Sphinx HTML in one\nJekyll-compatible raw block after front matter. This keeps literal {{ ... }}\nand {% ... %} examples visible on Jekyll 3 without an external post-processing\nscript.\n\nOptional site versioning keeps one logical [[projects]] entry per repository\nwhile expanding it into multiple build targets:\n\n[site]\nprotect_liquid = true\n\n[site.versioning]\nenabled = true\ndefault = \"release\"\n\n[[site.versioning.variants]]\nname = \"release\"\nlabel = \"Latest release\"\nsource = \"release\"\nurl_segment = \"\"\n\n[[site.versioning.variants]]\nname = \"main\"\nlabel = \"Current main\"\nsource = \"git_ref\"\nref = \"main\"\nurl_segment = \"main\"\n\n\n\n\nWhen [site.versioning] is absent or disabl…",
+          "lower": "[site] controls generated jekyll paths, layout names, and the public base url.\n\nprotect_liquid defaults to true and wraps generated sphinx html in one\njekyll-compatible raw block after front matter. this keeps literal {{ ... }}\nand {% ... %} examples visible on jekyll 3 without an external post-processing\nscript.\n\noptional site versioning keeps one logical [[projects]] entry per repository\nwhile expanding it into multiple build targets:\n\n[site]\nprotect_liquid = true\n\n[site.versioning]\nenabled = true\ndefault = \"release\"\n\n[[site.versioning.variants]]\nname = \"release\"\nlabel = \"latest release\"\nsource = \"release\"\nurl_segment = \"\"\n\n[[site.versioning.variants]]\nname = \"main\"\nlabel = \"current main\"\nsource = \"git_ref\"\nref = \"main\"\nurl_segment = \"main\"\n\n\n\n\nwhen [site.versioning] is absent or disabl…"
+        },
+        {
+          "anchor": "",
+          "heading": "Build settings",
+          "text": "[build] controls the work directory, Sphinx executable, warning policy, and parallel build setting.\n\nUse [build.env] to enable a shared managed virtual environment for Sphinx and documentation dependencies.",
+          "lower": "[build] controls the work directory, sphinx executable, warning policy, and parallel build setting.\n\nuse [build.env] to enable a shared managed virtual environment for sphinx and documentation dependencies."
+        },
+        {
+          "anchor": "",
+          "heading": "Book settings",
+          "text": "[book], [epub], and [pdf] configure aggregate book metadata and output\npaths. [pdf].builder now defaults to weasyprint, which renders aggregate\nsinglehtml output to PDF without LaTeX. Set [pdf].builder = \"latexpdf\" only\nwhen you explicitly want the legacy LaTeX-based Sphinx path.\n\nWhen site versioning is enabled, [book].docs_variant selects exactly one\nconfigured docs variant for EPUB and PDF builds:\n\n[book]\ndocs_variant = \"release\"\n\n\n\n\nIt defaults to [site.versioning].default.\n\nEPUB builds should provide non-empty version and copyright values:\n\n[book]\ntitle = \"Example Documentation\"\nauthor = \"Example Team\"\nlanguage = \"en\"\nversion = \"0.1.0\"\ncopyright = \"2026, Example Team\"\n\n\n\n\nUse suppress_warnings = [\"ref.python\"] only as a temporary aggregate-book workaround for ambiguous Python cross-r…",
+          "lower": "[book], [epub], and [pdf] configure aggregate book metadata and output\npaths. [pdf].builder now defaults to weasyprint, which renders aggregate\nsinglehtml output to pdf without latex. set [pdf].builder = \"latexpdf\" only\nwhen you explicitly want the legacy latex-based sphinx path.\n\nwhen site versioning is enabled, [book].docs_variant selects exactly one\nconfigured docs variant for epub and pdf builds:\n\n[book]\ndocs_variant = \"release\"\n\n\n\n\nit defaults to [site.versioning].default.\n\nepub builds should provide non-empty version and copyright values:\n\n[book]\ntitle = \"example documentation\"\nauthor = \"example team\"\nlanguage = \"en\"\nversion = \"0.1.0\"\ncopyright = \"2026, example team\"\n\n\n\n\nuse suppress_warnings = [\"ref.python\"] only as a temporary aggregate-book workaround for ambiguous python cross-r…"
+        },
+        {
+          "anchor": "",
+          "heading": "Projects",
+          "text": "Each [[projects]] entry points to one existing Sphinx documentation project:\n\n[[projects]]\nname = \"tool-a\"\ntitle = \"Tool A\"\ndocs_root = \"../tool-a/docs\"\nconf_dir = \"../tool-a/docs\"\nroot_doc = \"index\"\nrepo_url = \"https://github.com/example/tool-a\"\nrelease_strategy = \"manual\"\nrelease_tag = \"v0.1.0\"\n\n\n\n\nProject names are used in generated URLs and must be URL-safe.\n\nProjects can optionally limit which site variants they publish and override the\nref for git_ref variants:\n\n[[projects]]\nname = \"tool-a\"\n# ...\nsite_variants = [\"release\", \"main\"]\nversion_refs = { main = \"origin/main\" }\n\n\n\n\nversion_refs applies only to git_ref variants. sphinxpress does not fetch\nmissing refs or tags automatically; fetch them before running check,\nbuild-site, or validate.",
+          "lower": "each [[projects]] entry points to one existing sphinx documentation project:\n\n[[projects]]\nname = \"tool-a\"\ntitle = \"tool a\"\ndocs_root = \"../tool-a/docs\"\nconf_dir = \"../tool-a/docs\"\nroot_doc = \"index\"\nrepo_url = \"https://github.com/example/tool-a\"\nrelease_strategy = \"manual\"\nrelease_tag = \"v0.1.0\"\n\n\n\n\nproject names are used in generated urls and must be url-safe.\n\nprojects can optionally limit which site variants they publish and override the\nref for git_ref variants:\n\n[[projects]]\nname = \"tool-a\"\n# ...\nsite_variants = [\"release\", \"main\"]\nversion_refs = { main = \"origin/main\" }\n\n\n\n\nversion_refs applies only to git_ref variants. sphinxpress does not fetch\nmissing refs or tags automatically; fetch them before running check,\nbuild-site, or validate."
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/",
+      "title": "sphinxpress",
+      "snippet": "sphinxpress publishes multiple Sphinx documentation projects as one documentation product:\n\n\nJekyll/GitHub Pages pages generated from Sphinx …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "sphinxpress",
+          "text": "sphinxpress publishes multiple Sphinx documentation projects as one documentation product:\n\n\nJekyll/GitHub Pages pages generated from Sphinx JSON output\n\n\na combined EPUB book\n\n\na combined PDF book\n\n\n\nsphinxpress does not replace Sphinx. Each source project remains a normal Sphinx project with its own conf.py, root document, extensions, and source files. sphinxpress orchestrates those projects and writes deterministic generated output for a site or book pipeline.",
+          "lower": "sphinxpress publishes multiple sphinx documentation projects as one documentation product:\n\n\njekyll/github pages pages generated from sphinx json output\n\n\na combined epub book\n\n\na combined pdf book\n\n\n\nsphinxpress does not replace sphinx. each source project remains a normal sphinx project with its own conf.py, root document, extensions, and source files. sphinxpress orchestrates those projects and writes deterministic generated output for a site or book pipeline."
+        },
+        {
+          "anchor": "",
+          "heading": "When to use it",
+          "text": "Use sphinxpress when you maintain several related Python tools or libraries and want one documentation site and one combined book artifact without merging the original docs projects.",
+          "lower": "use sphinxpress when you maintain several related python tools or libraries and want one documentation site and one combined book artifact without merging the original docs projects."
+        },
+        {
+          "anchor": "",
+          "heading": "First steps",
+          "text": "Install the package in your docs build environment.\n\n\nCreate sphinxpress.toml at the repository root.\n\n\nAdd one [[projects]] entry for each Sphinx docs project.\n\n\nRun sphinxpress check.\n\n\nRun sphinxpress build-site --all.\n\n\nCommit or publish the generated Jekyll pages according to your site workflow.\n\n\n\npython -m pip install sphinxpress\nsphinxpress check\nsphinxpress build-site --all\n\n\n\n\nFor development:\n\npython -m pip install -e \".[dev,docs]\"\npython -m pytest -q",
+          "lower": "install the package in your docs build environment.\n\n\ncreate sphinxpress.toml at the repository root.\n\n\nadd one [[projects]] entry for each sphinx docs project.\n\n\nrun sphinxpress check.\n\n\nrun sphinxpress build-site --all.\n\n\ncommit or publish the generated jekyll pages according to your site workflow.\n\n\n\npython -m pip install sphinxpress\nsphinxpress check\nsphinxpress build-site --all\n\n\n\n\nfor development:\n\npython -m pip install -e \".[dev,docs]\"\npython -m pytest -q"
+        },
+        {
+          "anchor": "",
+          "heading": "Contents",
+          "text": "Quickstart\n\nConfiguration\nBuild logs\n\nSite settings\n\nBuild settings\n\nBook settings\n\nProjects\n\n\n\n\nManaged build environments\n\nCommands\nsphinxpress check\n\nsphinxpress list\n\nsphinxpress build-site\n\nsphinxpress build-epub\n\nsphinxpress build-pdf\n\nsphinxpress build-book\n\nsphinxpress update-release\n\nsphinxpress update-releases\n\nsphinxpress add-project\n\nsphinxpress validate\n\n\n\n\nOutputs\nJekyll pages\n\nNavigation data\n\nEPUB and PDF\n\nBuild logs\n\nGenerated-output manifest\n\n\n\n\nRelease metadata\n\nJekyll integration\nScoped API stylesheet\n\nLiquid protection\n\nVersion switcher layout\n\n\n\n\nAPI reference",
+          "lower": "quickstart\n\nconfiguration\nbuild logs\n\nsite settings\n\nbuild settings\n\nbook settings\n\nprojects\n\n\n\n\nmanaged build environments\n\ncommands\nsphinxpress check\n\nsphinxpress list\n\nsphinxpress build-site\n\nsphinxpress build-epub\n\nsphinxpress build-pdf\n\nsphinxpress build-book\n\nsphinxpress update-release\n\nsphinxpress update-releases\n\nsphinxpress add-project\n\nsphinxpress validate\n\n\n\n\noutputs\njekyll pages\n\nnavigation data\n\nepub and pdf\n\nbuild logs\n\ngenerated-output manifest\n\n\n\n\nrelease metadata\n\njekyll integration\nscoped api stylesheet\n\nliquid protection\n\nversion switcher layout\n\n\n\n\napi reference"
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/jekyll-integration/",
+      "title": "sphinxpress Jekyll integration",
+      "snippet": "sphinxpress build-site writes Markdown files with Jekyll front matter plus HTML rendered by Sphinx’s JSON builder.\n\nThe generated page front …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Jekyll integration",
+          "text": "sphinxpress build-site writes Markdown files with Jekyll front matter plus HTML rendered by Sphinx’s JSON builder.\n\nThe generated page front matter includes:\n\n\nlayout\n\n\ntitle\n\n\npermalink\n\n\nnav_tool\n\n\ndocs_project\n\n\ndocs_variant\n\n\ndocs_ref\n\n\ndocs_commit\n\n\n\nNavigation data is written as YAML under the configured site.nav_data_dir path. A site layout can use nav_tool to select the matching navigation file.\n\nWhen site versioning is enabled, each nav payload also includes:\n\n\nnav_key\n\n\nvariant, variant_label, variant_kind\n\n\nsource_ref, source_commit, source_url\n\n\nrelease_tag, release_url\n\n\nversions, a version-switcher list for the logical project\n\n\n\nGenerated files include a notice so they can be distinguished from hand-written site pages.",
+          "lower": "sphinxpress build-site writes markdown files with jekyll front matter plus html rendered by sphinx’s json builder.\n\nthe generated page front matter includes:\n\n\nlayout\n\n\ntitle\n\n\npermalink\n\n\nnav_tool\n\n\ndocs_project\n\n\ndocs_variant\n\n\ndocs_ref\n\n\ndocs_commit\n\n\n\nnavigation data is written as yaml under the configured site.nav_data_dir path. a site layout can use nav_tool to select the matching navigation file.\n\nwhen site versioning is enabled, each nav payload also includes:\n\n\nnav_key\n\n\nvariant, variant_label, variant_kind\n\n\nsource_ref, source_commit, source_url\n\n\nrelease_tag, release_url\n\n\nversions, a version-switcher list for the logical project\n\n\n\ngenerated files include a notice so they can be distinguished from hand-written site pages."
+        },
+        {
+          "anchor": "",
+          "heading": "Scoped API stylesheet",
+          "text": "Every generated Jekyll page wraps the Sphinx body in a stable root container:\n\n<div class=\"sphinxpress-doc\">...Sphinx body HTML...</div>\n\n\n\n\nA small, scoped stylesheet is embedded as a <style data-sphinxpress-style=\"api\"> block immediately above the wrapper. The stylesheet:\n\n\nstyles Python API descriptions, field lists, inline literals, and source links\n\n\nuses CSS custom properties so host themes can recolor the panels\n\n\nsupports light and dark host themes via prefers-color-scheme: dark\n\n\nhides the [source] link in print media\n\n\n\nThe stylesheet is fully self-contained: it does not depend on Sphinx theme assets, fonts, or JavaScript, and it does not parse or rewrite the Sphinx signature HTML.\n\nHost layouts should:\n\n\npreserve the <div class=\"sphinxpress-doc\"> wrapper\n\n\navoid overriding .sph…",
+          "lower": "every generated jekyll page wraps the sphinx body in a stable root container:\n\n<div class=\"sphinxpress-doc\">...sphinx body html...</div>\n\n\n\n\na small, scoped stylesheet is embedded as a <style data-sphinxpress-style=\"api\"> block immediately above the wrapper. the stylesheet:\n\n\nstyles python api descriptions, field lists, inline literals, and source links\n\n\nuses css custom properties so host themes can recolor the panels\n\n\nsupports light and dark host themes via prefers-color-scheme: dark\n\n\nhides the [source] link in print media\n\n\n\nthe stylesheet is fully self-contained: it does not depend on sphinx theme assets, fonts, or javascript, and it does not parse or rewrite the sphinx signature html.\n\nhost layouts should:\n\n\npreserve the <div class=\"sphinxpress-doc\"> wrapper\n\n\navoid overriding .sph…"
+        },
+        {
+          "anchor": "",
+          "heading": "Liquid protection",
+          "text": "Generated pages place the Sphinx HTML inside one sphinxpress-owned raw block\nafter front matter:\n\n---\n...\n---\n\n<!-- GENERATED by sphinxpress. Do not edit by hand. -->\n\n{% raw %}\n<style ...>...</style>\n<div class=\"sphinxpress-doc\">...</div>\n{% endraw %}\n\n\n\n\nThis keeps Jekyll 3 from interpreting literal Liquid examples inside Sphinx\nHTML. Literal {% endraw %} examples are neutralized before rendering so they\ncannot terminate the outer raw block.",
+          "lower": "generated pages place the sphinx html inside one sphinxpress-owned raw block\nafter front matter:\n\n---\n...\n---\n\n<!-- generated by sphinxpress. do not edit by hand. -->\n\n{% raw %}\n<style ...>...</style>\n<div class=\"sphinxpress-doc\">...</div>\n{% endraw %}\n\n\n\n\nthis keeps jekyll 3 from interpreting literal liquid examples inside sphinx\nhtml. literal {% endraw %} examples are neutralized before rendering so they\ncannot terminate the outer raw block."
+        },
+        {
+          "anchor": "",
+          "heading": "Version switcher layout",
+          "text": "sphinxpress/templates/tool-doc.html is the canonical consumer layout for the\ngenerated tool pages. It is shipped with the package (it is installed into\nsphinxpress/templates/ alongside the other templates) and can be used in two\nways:\n\n\nCopy the file into the consuming site’s _layouts/tool-doc.html and let\nsphinxpress keep generating pages that reference layout: tool-doc.\n\n\nOr render the file directly from the package if the consuming site is willing\nto point its layout: value at a vendored copy of the file.",
+          "lower": "sphinxpress/templates/tool-doc.html is the canonical consumer layout for the\ngenerated tool pages. it is shipped with the package (it is installed into\nsphinxpress/templates/ alongside the other templates) and can be used in two\nways:\n\n\ncopy the file into the consuming site’s _layouts/tool-doc.html and let\nsphinxpress keep generating pages that reference layout: tool-doc.\n\n\nor render the file directly from the package if the consuming site is willing\nto point its layout: value at a vendored copy of the file."
+        },
+        {
+          "anchor": "",
+          "heading": "Minimal front matter",
+          "text": "A generated tool page needs at least the following front matter to use the\nlayout (sphinxpress already writes this for every page, so consumer sites do\nnot have to add it manually):\n\n---\nlayout: tool-doc\ntitle: \"sphinxpress\"\npermalink: /tools/sphinxpress/\nnav_tool: sphinpress\n---\n\n\n\n\nnav_tool is the only field the layout strictly requires. It selects the\nmatching entry from site.data.tool_nav. The other fields (title,\npermalink, docs_project, docs_variant, docs_ref, docs_commit) are\nalready documented above and can be passed through unchanged.",
+          "lower": "a generated tool page needs at least the following front matter to use the\nlayout (sphinxpress already writes this for every page, so consumer sites do\nnot have to add it manually):\n\n---\nlayout: tool-doc\ntitle: \"sphinxpress\"\npermalink: /tools/sphinxpress/\nnav_tool: sphinpress\n---\n\n\n\n\nnav_tool is the only field the layout strictly requires. it selects the\nmatching entry from site.data.tool_nav. the other fields (title,\npermalink, docs_project, docs_variant, docs_ref, docs_commit) are\nalready documented above and can be passed through unchanged."
+        },
+        {
+          "anchor": "",
+          "heading": "What the layout renders",
+          "text": "The layout reads nav = site.data.tool_nav[page.nav_tool] and renders:\n\n\nthe tool title as a link to the tool’s release-variant index page,\n\n\na <details class=\"tool-nav-versions\"> block sourced from nav.versions\n(the entry with current: true is shown as plain text inside the\n<summary>, every other entry is rendered as a link to its own url),\n\n\nthe existing “View on GitHub” link from nav.repo_url (when present),\n\n\nthe existing “Latest release” link from nav.release_tag / nav.release_url\n(when present),\n\n\nthe entries <ul> from nav.entries, with the existing label cleanup\n(entry.nav_title, entry.label, entry.slug == 'index' -> 'Overview',\nentry.title | remove_first: tool_prefix fallback) and the existing\nactive / aria-current=\"page\" rule keyed on page.url == entry.url.\n\n\n\nIf nav.versions is m…",
+          "lower": "the layout reads nav = site.data.tool_nav[page.nav_tool] and renders:\n\n\nthe tool title as a link to the tool’s release-variant index page,\n\n\na <details class=\"tool-nav-versions\"> block sourced from nav.versions\n(the entry with current: true is shown as plain text inside the\n<summary>, every other entry is rendered as a link to its own url),\n\n\nthe existing “view on github” link from nav.repo_url (when present),\n\n\nthe existing “latest release” link from nav.release_tag / nav.release_url\n(when present),\n\n\nthe entries <ul> from nav.entries, with the existing label cleanup\n(entry.nav_title, entry.label, entry.slug == 'index' -> 'overview',\nentry.title | remove_first: tool_prefix fallback) and the existing\nactive / aria-current=\"page\" rule keyed on page.url == entry.url.\n\n\n\nif nav.versions is m…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/managed-environments/",
+      "title": "sphinxpress Managed build environments",
+      "snippet": "sphinxpress can create a dedicated virtual environment for Sphinx and project documentation dependencies. This is useful when the surroundin …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Managed build environments",
+          "text": "sphinxpress can create a dedicated virtual environment for Sphinx and project documentation dependencies. This is useful when the surrounding site pipeline is not a Python docs environment, such as a Jekyll-only GitHub Pages workflow.\n\nEnable it with [build.env]:\n\n[build.env]\nenabled = true\nscope = \"shared\"\npython = \"python3\"\npath = \".sphinxpress/venv\"\nupgrade_pip = true\npackages = [\n  \"sphinx>=7\",\n  \"myst-parser\",\n  \"sphinx-rtd-theme\",\n  \"weasyprint>=67\",\n  \"tool-a==0.1.0\",\n]\n\n\n\n\nWhen enabled, sphinxpress prepares the environment once per command and uses the venv-local sphinx-build executable for check, validate, build-site, build-epub, and build-pdf.\n\nWith site versioning enabled, keep exact released package pins in\n[build.env].packages for the shared environment. sphinxpress prepends…",
+          "lower": "sphinxpress can create a dedicated virtual environment for sphinx and project documentation dependencies. this is useful when the surrounding site pipeline is not a python docs environment, such as a jekyll-only github pages workflow.\n\nenable it with [build.env]:\n\n[build.env]\nenabled = true\nscope = \"shared\"\npython = \"python3\"\npath = \".sphinxpress/venv\"\nupgrade_pip = true\npackages = [\n  \"sphinx>=7\",\n  \"myst-parser\",\n  \"sphinx-rtd-theme\",\n  \"weasyprint>=67\",\n  \"tool-a==0.1.0\",\n]\n\n\n\n\nwhen enabled, sphinxpress prepares the environment once per command and uses the venv-local sphinx-build executable for check, validate, build-site, build-epub, and build-pdf.\n\nwith site versioning enabled, keep exact released package pins in\n[build.env].packages for the shared environment. sphinxpress prepends…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/outputs/",
+      "title": "sphinxpress Outputs",
+      "snippet": "sphinxpress writes generated files for site and book workflows.\nbuild-site writes one page per Sphinx JSON document under the configured sit …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Outputs",
+          "text": "sphinxpress writes generated files for site and book workflows.",
+          "lower": "sphinxpress writes generated files for site and book workflows."
+        },
+        {
+          "anchor": "",
+          "heading": "Jekyll pages",
+          "text": "build-site writes one page per Sphinx JSON document under the configured site.root and site.tools_dir.\n\nWhen site versioning is enabled, the default variant keeps the stable release\nURL while non-default variants add their configured segment:\n\n\ntools/booktx/index.md -> /tools/booktx/\n\n\ntools/booktx/main/index.md -> /tools/booktx/main/\n\n\n\nEach generated page is wrapped in a <div class=\"sphinxpress-doc\"> and is preceded by a <style data-sphinxpress-style=\"api\"> block that ships a small, scoped sphinxpress stylesheet for Sphinx document-body elements. The stylesheet targets Python API descriptions, field lists, inline literals, and source links produced by sphinx.ext.autodoc. All rules are scoped to the .sphinxpress-doc wrapper so the host Jekyll theme is not affected outside generated pages.",
+          "lower": "build-site writes one page per sphinx json document under the configured site.root and site.tools_dir.\n\nwhen site versioning is enabled, the default variant keeps the stable release\nurl while non-default variants add their configured segment:\n\n\ntools/booktx/index.md -> /tools/booktx/\n\n\ntools/booktx/main/index.md -> /tools/booktx/main/\n\n\n\neach generated page is wrapped in a <div class=\"sphinxpress-doc\"> and is preceded by a <style data-sphinxpress-style=\"api\"> block that ships a small, scoped sphinxpress stylesheet for sphinx document-body elements. the stylesheet targets python api descriptions, field lists, inline literals, and source links produced by sphinx.ext.autodoc. all rules are scoped to the .sphinxpress-doc wrapper so the host jekyll theme is not affected outside generated pages."
+        },
+        {
+          "anchor": "",
+          "heading": "Navigation data",
+          "text": "For each resolved project/variant target, build-site writes a YAML file under\nsite.nav_data_dir. Jekyll layouts can use this data to render both page\nnavigation and the version switcher for the logical project.",
+          "lower": "for each resolved project/variant target, build-site writes a yaml file under\nsite.nav_data_dir. jekyll layouts can use this data to render both page\nnavigation and the version switcher for the logical project."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUB and PDF",
+          "text": "build-epub and build-pdf create a temporary aggregate Sphinx project under the configured work directory, then copy the final artifact to the configured output path.\n\nBy default, PDF builds render the aggregate docs as Sphinx singlehtml, apply\nsmall sphinxpress-owned print CSS/HTML adjustments, and convert the result to\nPDF with WeasyPrint. This avoids LaTeX for the default path. Set\n[pdf].builder = \"latexpdf\" to keep using the legacy LaTeX-based Sphinx build.",
+          "lower": "build-epub and build-pdf create a temporary aggregate sphinx project under the configured work directory, then copy the final artifact to the configured output path.\n\nby default, pdf builds render the aggregate docs as sphinx singlehtml, apply\nsmall sphinxpress-owned print css/html adjustments, and convert the result to\npdf with weasyprint. this avoids latex for the default path. set\n[pdf].builder = \"latexpdf\" to keep using the legacy latex-based sphinx build."
+        },
+        {
+          "anchor": "",
+          "heading": "Build logs",
+          "text": "Every Sphinx, WeasyPrint, and managed-environment pip command writes a\ntimestamped log under [build].log_dir (default <work_dir>/logs). Each run\nproduces a YYYYMMDDTHHMMSSZ-<stem>.log file and a latest-<stem>.log copy\nthat points at the most recent run. Failures include the relevant Log: path\nin the sphinxpress error message so the full stdout and stderr can be reviewed\nwithout rerunning the build.",
+          "lower": "every sphinx, weasyprint, and managed-environment pip command writes a\ntimestamped log under [build].log_dir (default <work_dir>/logs). each run\nproduces a yyyymmddthhmmssz-<stem>.log file and a latest-<stem>.log copy\nthat points at the most recent run. failures include the relevant log: path\nin the sphinxpress error message so the full stdout and stderr can be reviewed\nwithout rerunning the build."
+        },
+        {
+          "anchor": "",
+          "heading": "Generated-output manifest",
+          "text": "build-site also writes <work_dir>/site-output-manifest.json. sphinxpress\nuses this manifest to remove stale generated Markdown pages for the selected\ntargets without deleting hand-maintained content under the same tool tree.",
+          "lower": "build-site also writes <work_dir>/site-output-manifest.json. sphinxpress\nuses this manifest to remove stale generated markdown pages for the selected\ntargets without deleting hand-maintained content under the same tool tree."
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/quickstart/",
+      "title": "sphinxpress Quickstart",
+      "snippet": "Create a sphinxpress.toml file in the repository that will publish the docs.\n\n[site]\nroot = \"site\"\nbase_url = \"https://docs.example.com\"\ntoo …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quickstart",
+          "text": "Create a sphinxpress.toml file in the repository that will publish the docs.\n\n[site]\nroot = \"site\"\nbase_url = \"https://docs.example.com\"\ntools_dir = \"tools\"\nnav_data_dir = \"_data/tool_nav\"\nlayout = \"tool-doc\"\ntitle = \"Example Docs\"\n\n[build]\nwork_dir = \".sphinxpress\"\nsphinx_build = \"sphinx-build\"\nfail_on_warning = true\nkeep_build_dir = false\nparallel = \"auto\"\n\n[book]\ntitle = \"Example Documentation\"\nauthor = \"Example Team\"\nlanguage = \"en\"\nversion = \"0.1.0\"\ncopyright = \"2026, Example Team\"\nproject_order = [\"tool-a\"]\n\n[pdf]\nbuilder = \"weasyprint\"\noutput = \"dist/example-documentation.pdf\"\n\n[epub]\nbuilder = \"epub\"\noutput = \"dist/example-documentation.epub\"\n\n[release]\ntag_prefix = \"v\"\nrelease_url_template = \"{repo_url}/releases/tag/{tag}\"\n\n[[projects]]\nname = \"tool-a\"\ntitle = \"Tool A\"\ndocs_root…",
+          "lower": "create a sphinxpress.toml file in the repository that will publish the docs.\n\n[site]\nroot = \"site\"\nbase_url = \"https://docs.example.com\"\ntools_dir = \"tools\"\nnav_data_dir = \"_data/tool_nav\"\nlayout = \"tool-doc\"\ntitle = \"example docs\"\n\n[build]\nwork_dir = \".sphinxpress\"\nsphinx_build = \"sphinx-build\"\nfail_on_warning = true\nkeep_build_dir = false\nparallel = \"auto\"\n\n[book]\ntitle = \"example documentation\"\nauthor = \"example team\"\nlanguage = \"en\"\nversion = \"0.1.0\"\ncopyright = \"2026, example team\"\nproject_order = [\"tool-a\"]\n\n[pdf]\nbuilder = \"weasyprint\"\noutput = \"dist/example-documentation.pdf\"\n\n[epub]\nbuilder = \"epub\"\noutput = \"dist/example-documentation.epub\"\n\n[release]\ntag_prefix = \"v\"\nrelease_url_template = \"{repo_url}/releases/tag/{tag}\"\n\n[[projects]]\nname = \"tool-a\"\ntitle = \"tool a\"\ndocs_root…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/sphinxpress/release-metadata/",
+      "title": "sphinxpress Release metadata",
+      "snippet": "sphinxpress can attach release tags and release URLs to generated navigation\ndata.\n\nRelease metadata and source selection are related but se …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Release metadata",
+          "text": "sphinxpress can attach release tags and release URLs to generated navigation\ndata.\n\nRelease metadata and source selection are related but separate:\n\n\nrelease metadata answers “what release label and URL should this target show?”\n\n\nsource selection answers “which checkout should Sphinx actually build?”\n\n\n\nFor versioned site builds, the release variant resolves a release tag and\nmaterializes that exact Git object before running Sphinx. A git_ref variant\nresolves an explicit branch, remote ref, or commit SHA and materializes that\ncommit separately.\n\nSupported project strategies are:\n\n\nmanual, using the project’s configured release_tag\n\n\ngit_tag, resolving the latest matching git tag\n\n\npyproject, reading package metadata from pyproject.toml\n\n\n\nThe release URL is formatted with [release].relea…",
+          "lower": "sphinxpress can attach release tags and release urls to generated navigation\ndata.\n\nrelease metadata and source selection are related but separate:\n\n\nrelease metadata answers “what release label and url should this target show?”\n\n\nsource selection answers “which checkout should sphinx actually build?”\n\n\n\nfor versioned site builds, the release variant resolves a release tag and\nmaterializes that exact git object before running sphinx. a git_ref variant\nresolves an explicit branch, remote ref, or commit sha and materializes that\ncommit separately.\n\nsupported project strategies are:\n\n\nmanual, using the project’s configured release_tag\n\n\ngit_tag, resolving the latest matching git tag\n\n\npyproject, reading package metadata from pyproject.toml\n\n\n\nthe release url is formatted with [release].relea…"
+        }
+      ]
+    }
+  ]
+}

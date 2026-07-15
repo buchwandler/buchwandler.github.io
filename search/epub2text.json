@@ -1,0 +1,546 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "epub2text",
+  "entries": [
+    {
+      "url": "/tools/epub2text/api/",
+      "title": "epub2text API Reference",
+      "snippet": "This section documents the Python API for using epub2text as a library.\nclass epub2text.EPUBParser(filepath: str, paragraph_separator: str = …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "API Reference",
+          "text": "This section documents the Python API for using epub2text as a library.",
+          "lower": "this section documents the python api for using epub2text as a library."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUBParser",
+          "text": "class epub2text.EPUBParser(filepath: str, paragraph_separator: str = '\\n\\n')[source]\nBases: object\n\nParse EPUB files to extract chapters and metadata.\n\nSupports both NAV HTML (EPUB3) and NCX (EPUB2) navigation formats.\nHandles nested chapter structures and accurately slices content between\nnavigation points.\n\n\n\n__init__(filepath: str, paragraph_separator: str = '\\n\\n')[source]\nInitialize parser with EPUB file.\n\n\nArgs:filepath: Path to the EPUB file\nparagraph_separator: String to use between paragraphs (default: “nn”)\n\n\nRaises:FileNotFoundError: If file doesn’t exist\nValueError: If file is not a valid EPUB\n\n\n\n\n\n\n\nget_metadata() → Metadata[source]\nExtract metadata from EPUB.\n\n\nReturns:Metadata object with title, authors, etc.\n\n\n\n\n\n\n\nget_chapters(include_text: bool = True) → list[Chapter]…",
+          "lower": "class epub2text.epubparser(filepath: str, paragraph_separator: str = '\\n\\n')[source]\nbases: object\n\nparse epub files to extract chapters and metadata.\n\nsupports both nav html (epub3) and ncx (epub2) navigation formats.\nhandles nested chapter structures and accurately slices content between\nnavigation points.\n\n\n\n__init__(filepath: str, paragraph_separator: str = '\\n\\n')[source]\ninitialize parser with epub file.\n\n\nargs:filepath: path to the epub file\nparagraph_separator: string to use between paragraphs (default: “nn”)\n\n\nraises:filenotfounderror: if file doesn’t exist\nvalueerror: if file is not a valid epub\n\n\n\n\n\n\n\nget_metadata() → metadata[source]\nextract metadata from epub.\n\n\nreturns:metadata object with title, authors, etc.\n\n\n\n\n\n\n\nget_chapters(include_text: bool = true) → list[chapter]…"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter",
+          "text": "class epub2text.Chapter(id: str, title: str, text: str, char_count: int, parent_id: str | None = None, level: int = 0)[source]\nBases: object\n\nRepresents a single chapter or section in an EPUB.\n\n\n\nid: str\n\n\n\n\ntitle: str\n\n\n\n\ntext: str\n\n\n\n\nchar_count: int\n\n\n\n\nparent_id: str | None = None\n\n\n\n\nlevel: int = 0",
+          "lower": "class epub2text.chapter(id: str, title: str, text: str, char_count: int, parent_id: str | none = none, level: int = 0)[source]\nbases: object\n\nrepresents a single chapter or section in an epub.\n\n\n\nid: str\n\n\n\n\ntitle: str\n\n\n\n\ntext: str\n\n\n\n\nchar_count: int\n\n\n\n\nparent_id: str | none = none\n\n\n\n\nlevel: int = 0"
+        },
+        {
+          "anchor": "",
+          "heading": "Page",
+          "text": "class epub2text.Page(page_number: str, text: str, char_count: int, source: PageSource, chapter_id: str | None = None, chapter_title: str | None = None)[source]\nBases: object\n\nRepresents a single page in an EPUB.\n\nPages can come from two sources:\n1. EPUB page-list navigation (original print book pages)\n2. Synthetic generation (arbitrary page size based on characters/words)\n\n\n\npage_number: str\n\n\n\n\ntext: str\n\n\n\n\nchar_count: int\n\n\n\n\nsource: PageSource\n\n\n\n\nchapter_id: str | None = None\n\n\n\n\nchapter_title: str | None = None",
+          "lower": "class epub2text.page(page_number: str, text: str, char_count: int, source: pagesource, chapter_id: str | none = none, chapter_title: str | none = none)[source]\nbases: object\n\nrepresents a single page in an epub.\n\npages can come from two sources:\n1. epub page-list navigation (original print book pages)\n2. synthetic generation (arbitrary page size based on characters/words)\n\n\n\npage_number: str\n\n\n\n\ntext: str\n\n\n\n\nchar_count: int\n\n\n\n\nsource: pagesource\n\n\n\n\nchapter_id: str | none = none\n\n\n\n\nchapter_title: str | none = none"
+        },
+        {
+          "anchor": "",
+          "heading": "PageSource",
+          "text": "class epub2text.PageSource(*values)[source]\nBases: Enum\n\nSource of page information.\n\n\n\nEPUB_PAGE_LIST = 'epub_page_list'\n\n\n\n\nSYNTHETIC = 'synthetic'",
+          "lower": "class epub2text.pagesource(*values)[source]\nbases: enum\n\nsource of page information.\n\n\n\nepub_page_list = 'epub_page_list'\n\n\n\n\nsynthetic = 'synthetic'"
+        },
+        {
+          "anchor": "",
+          "heading": "Metadata",
+          "text": "class epub2text.Metadata(title: str | None = None, authors: list[str] = <factory>, publisher: str | None = None, publication_year: str | None = None, description: str | None = None, identifier: str | None = None, language: str | None = None, contributors: list[str] = <factory>, rights: str | None = None, coverage: str | None = None)[source]\nBases: object\n\nEPUB metadata.\n\n\n\ntitle: str | None = None\n\n\n\n\nauthors: list[str]\n\n\n\n\npublisher: str | None = None\n\n\n\n\npublication_year: str | None = None\n\n\n\n\ndescription: str | None = None\n\n\n\n\nidentifier: str | None = None\n\n\n\n\nlanguage: str | None = None\n\n\n\n\ncontributors: list[str]\n\n\n\n\nrights: str | None = None\n\n\n\n\ncoverage: str | None = None",
+          "lower": "class epub2text.metadata(title: str | none = none, authors: list[str] = <factory>, publisher: str | none = none, publication_year: str | none = none, description: str | none = none, identifier: str | none = none, language: str | none = none, contributors: list[str] = <factory>, rights: str | none = none, coverage: str | none = none)[source]\nbases: object\n\nepub metadata.\n\n\n\ntitle: str | none = none\n\n\n\n\nauthors: list[str]\n\n\n\n\npublisher: str | none = none\n\n\n\n\npublication_year: str | none = none\n\n\n\n\ndescription: str | none = none\n\n\n\n\nidentifier: str | none = none\n\n\n\n\nlanguage: str | none = none\n\n\n\n\ncontributors: list[str]\n\n\n\n\nrights: str | none = none\n\n\n\n\ncoverage: str | none = none"
+        },
+        {
+          "anchor": "",
+          "heading": "StructuredEpubExtraction",
+          "text": "class epub2text.StructuredEpubExtraction(source_path: 'str', source_sha256: 'str', package: 'EpubPackageInfo', documents: 'list[SourceDocument]', navigation: 'list[NavigationEntry]', blocks: 'list[TextBlock]', segments: 'list[TextSegment]', diagnostics: 'list[Diagnostic]')[source]\nBases: object\n\n\n\nsource_path: str\n\n\n\n\nsource_sha256: str\n\n\n\n\npackage: EpubPackageInfo\n\n\n\n\ndocuments: list[SourceDocument]\n\n\n\n\nnavigation: list[NavigationEntry]\n\n\n\n\nblocks: list[TextBlock]\n\n\n\n\nsegments: list[TextSegment]\n\n\n\n\ndiagnostics: list[Diagnostic]\n\n\n\n\nto_dict(*, include_raw: bool = False, include_runs: bool = True, include_segments: bool = True, include_xhtml_fragments: bool = False, include_markdown_fragments: bool = False) → dict[str, Any][source]\n\n\n\n\nto_json(*, include_raw: bool = False, inclu…",
+          "lower": "class epub2text.structuredepubextraction(source_path: 'str', source_sha256: 'str', package: 'epubpackageinfo', documents: 'list[sourcedocument]', navigation: 'list[navigationentry]', blocks: 'list[textblock]', segments: 'list[textsegment]', diagnostics: 'list[diagnostic]')[source]\nbases: object\n\n\n\nsource_path: str\n\n\n\n\nsource_sha256: str\n\n\n\n\npackage: epubpackageinfo\n\n\n\n\ndocuments: list[sourcedocument]\n\n\n\n\nnavigation: list[navigationentry]\n\n\n\n\nblocks: list[textblock]\n\n\n\n\nsegments: list[textsegment]\n\n\n\n\ndiagnostics: list[diagnostic]\n\n\n\n\nto_dict(*, include_raw: bool = false, include_runs: bool = true, include_segments: bool = true, include_xhtml_fragments: bool = false, include_markdown_fragments: bool = false) → dict[str, any][source]\n\n\n\n\nto_json(*, include_raw: bool = false, inclu…"
+        },
+        {
+          "anchor": "",
+          "heading": "TextBlock",
+          "text": "class epub2text.TextBlock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | None', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | None', outer_byte_end: 'int | None', inner_byte_start: 'int | None', inner_byte_end: 'int | None', text: 'str', text_sha256: 'str', runs: 'list[ContentRun]', chapter_id: 'str | None', chapter_title: 'str | None', page_number: 'str | None', extraction_policy: 'str', diagnostics: 'list[Diagnostic]', xhtml_fragment: 'XhtmlFragment | None' = None, markdown_fragment: 'MarkdownFragment | None' = None)[source]\nBases: object\n\n\n\nid: str\n\n\n\n\ndocument_id: str\n\n\n\n\ndocument_href: s…",
+          "lower": "class epub2text.textblock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | none', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | none', outer_byte_end: 'int | none', inner_byte_start: 'int | none', inner_byte_end: 'int | none', text: 'str', text_sha256: 'str', runs: 'list[contentrun]', chapter_id: 'str | none', chapter_title: 'str | none', page_number: 'str | none', extraction_policy: 'str', diagnostics: 'list[diagnostic]', xhtml_fragment: 'xhtmlfragment | none' = none, markdown_fragment: 'markdownfragment | none' = none)[source]\nbases: object\n\n\n\nid: str\n\n\n\n\ndocument_id: str\n\n\n\n\ndocument_href: s…"
+        },
+        {
+          "anchor": "",
+          "heading": "TextSegment",
+          "text": "class epub2text.TextSegment(id: 'str', block_id: 'str', mode: 'str', index: 'int', text: 'str', block_text_start: 'int', block_text_end: 'int', document_text_ranges: 'tuple[SourceRange, ...]', chapter_id: 'str | None', page_number: 'str | None', diagnostics: 'list[Diagnostic]', xhtml_fragment: 'XhtmlFragment | None' = None, markdown_fragment: 'MarkdownFragment | None' = None)[source]\nBases: object\n\n\n\nid: str\n\n\n\n\nblock_id: str\n\n\n\n\nmode: str\n\n\n\n\nindex: int\n\n\n\n\ntext: str\n\n\n\n\nblock_text_start: int\n\n\n\n\nblock_text_end: int\n\n\n\n\ndocument_text_ranges: tuple[SourceRange, ...]\n\n\n\n\nchapter_id: str | None\n\n\n\n\npage_number: str | None\n\n\n\n\ndiagnostics: list[Diagnostic]\n\n\n\n\nxhtml_fragment: XhtmlFragment | None = None\n\n\n\n\nmarkdown_fragment: MarkdownFragment | None = None",
+          "lower": "class epub2text.textsegment(id: 'str', block_id: 'str', mode: 'str', index: 'int', text: 'str', block_text_start: 'int', block_text_end: 'int', document_text_ranges: 'tuple[sourcerange, ...]', chapter_id: 'str | none', page_number: 'str | none', diagnostics: 'list[diagnostic]', xhtml_fragment: 'xhtmlfragment | none' = none, markdown_fragment: 'markdownfragment | none' = none)[source]\nbases: object\n\n\n\nid: str\n\n\n\n\nblock_id: str\n\n\n\n\nmode: str\n\n\n\n\nindex: int\n\n\n\n\ntext: str\n\n\n\n\nblock_text_start: int\n\n\n\n\nblock_text_end: int\n\n\n\n\ndocument_text_ranges: tuple[sourcerange, ...]\n\n\n\n\nchapter_id: str | none\n\n\n\n\npage_number: str | none\n\n\n\n\ndiagnostics: list[diagnostic]\n\n\n\n\nxhtml_fragment: xhtmlfragment | none = none\n\n\n\n\nmarkdown_fragment: markdownfragment | none = none"
+        },
+        {
+          "anchor": "",
+          "heading": "XhtmlFragment",
+          "text": "class epub2text.XhtmlFragment(text: 'str', xhtml: 'str', tag_skeleton: 'tuple[str, ...]', source_char_start: 'int | None', source_char_end: 'int | None', diagnostics: 'list[Diagnostic]')[source]\nBases: object\n\n\n\ntext: str\n\n\n\n\nxhtml: str\n\n\n\n\ntag_skeleton: tuple[str, ...]\n\n\n\n\nsource_char_start: int | None\n\n\n\n\nsource_char_end: int | None\n\n\n\n\ndiagnostics: list[Diagnostic]",
+          "lower": "class epub2text.xhtmlfragment(text: 'str', xhtml: 'str', tag_skeleton: 'tuple[str, ...]', source_char_start: 'int | none', source_char_end: 'int | none', diagnostics: 'list[diagnostic]')[source]\nbases: object\n\n\n\ntext: str\n\n\n\n\nxhtml: str\n\n\n\n\ntag_skeleton: tuple[str, ...]\n\n\n\n\nsource_char_start: int | none\n\n\n\n\nsource_char_end: int | none\n\n\n\n\ndiagnostics: list[diagnostic]"
+        },
+        {
+          "anchor": "",
+          "heading": "ExtractionPolicy",
+          "text": "class epub2text.ExtractionPolicy(block_tags: 'frozenset[str]' = frozenset({'h6', 'li', 'td', 'figcaption', 'blockquote', 'h2', 'h4', 'h1', 'th', 'h5', 'h3', 'p', 'caption', 'dt', 'dd'}), skip_tags: 'frozenset[str]' = frozenset({'head', 'noscript', 'script', 'style', 'title'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'kbd', 'samp', 'tt', 'var', 'code'}), include_footnotes: 'bool' = True, include_sup_sub: 'bool' = True, normalize_whitespace: 'bool' = False, remove_duplicate_titles: 'bool' = False, include_nav_documents: 'bool' = False, include_non_linear_spine: 'bool' = False, strict_offsets: 'bool' = False, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'em', 'rt', 'strong', 'dfn', 'rp', 'code', 'sub', 'sup', 'b', 'small', 'samp', 'a', 'data', 'cite', 'wbr', 'span',…",
+          "lower": "class epub2text.extractionpolicy(block_tags: 'frozenset[str]' = frozenset({'h6', 'li', 'td', 'figcaption', 'blockquote', 'h2', 'h4', 'h1', 'th', 'h5', 'h3', 'p', 'caption', 'dt', 'dd'}), skip_tags: 'frozenset[str]' = frozenset({'head', 'noscript', 'script', 'style', 'title'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'kbd', 'samp', 'tt', 'var', 'code'}), include_footnotes: 'bool' = true, include_sup_sub: 'bool' = true, normalize_whitespace: 'bool' = false, remove_duplicate_titles: 'bool' = false, include_nav_documents: 'bool' = false, include_non_linear_spine: 'bool' = false, strict_offsets: 'bool' = false, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'em', 'rt', 'strong', 'dfn', 'rp', 'code', 'sub', 'sup', 'b', 'small', 'samp', 'a', 'data', 'cite', 'wbr', 'span',…"
+        },
+        {
+          "anchor": "",
+          "heading": "extract_epub_structure",
+          "text": "epub2text.extract_epub_structure(filepath: str, *, include_raw_documents: bool = False, include_offsets: bool = True, include_inline_runs: bool = True, include_segments: bool = False, include_xhtml_fragments: bool = False, include_markdown_fragments: bool = False, markdown_flavor: Literal['commonmark', 'gfm'] | None = None, policy: ExtractionPolicy | None = None) → StructuredEpubExtraction[source]",
+          "lower": "epub2text.extract_epub_structure(filepath: str, *, include_raw_documents: bool = false, include_offsets: bool = true, include_inline_runs: bool = true, include_segments: bool = false, include_xhtml_fragments: bool = false, include_markdown_fragments: bool = false, markdown_flavor: literal['commonmark', 'gfm'] | none = none, policy: extractionpolicy | none = none) → structuredepubextraction[source]"
+        },
+        {
+          "anchor": "",
+          "heading": "Bookmark",
+          "text": "class epub2text.Bookmark(chapter_index: int, line_offset: int, percentage: float, last_read: str, title: str)[source]\nBases: object\n\nRepresents a reading position bookmark.\n\n\n\nchapter_index: int\n\n\n\n\nline_offset: int\n\n\n\n\npercentage: float\n\n\n\n\nlast_read: str\n\n\n\n\ntitle: str\n\n\n\n\nclassmethod create(chapter_index: int, line_offset: int, percentage: float, title: str) → Bookmark[source]\nCreate a new bookmark with current timestamp.\n\n\n\n\n\nclassmethod from_dict(data: dict[str, Any]) → Bookmark[source]\nCreate a Bookmark from a dictionary.",
+          "lower": "class epub2text.bookmark(chapter_index: int, line_offset: int, percentage: float, last_read: str, title: str)[source]\nbases: object\n\nrepresents a reading position bookmark.\n\n\n\nchapter_index: int\n\n\n\n\nline_offset: int\n\n\n\n\npercentage: float\n\n\n\n\nlast_read: str\n\n\n\n\ntitle: str\n\n\n\n\nclassmethod create(chapter_index: int, line_offset: int, percentage: float, title: str) → bookmark[source]\ncreate a new bookmark with current timestamp.\n\n\n\n\n\nclassmethod from_dict(data: dict[str, any]) → bookmark[source]\ncreate a bookmark from a dictionary."
+        },
+        {
+          "anchor": "",
+          "heading": "BookmarkManager",
+          "text": "class epub2text.BookmarkManager(bookmark_file: Path | None = None)[source]\nBases: object\n\nManages bookmarks for EPUB files.\n\n\n\n__init__(bookmark_file: Path | None = None) → None[source]\nInitialize bookmark manager.\n\n\nArgs:\nbookmark_file: Path to bookmark JSON file.Defaults to ~/.epub2text/bookmarks.json\n\n\n\n\n\n\n\n\n\nsave(epub_path: str, bookmark: Bookmark) → None[source]\nSave bookmark for a specific EPUB file.\n\n\nArgs:epub_path: Path to the EPUB file\nbookmark: Bookmark data to save\n\n\n\n\n\n\n\nload(epub_path: str) → Bookmark | None[source]\nLoad bookmark for a specific EPUB file.\n\n\nArgs:epub_path: Path to the EPUB file\n\n\nReturns:Bookmark if found, None otherwise\n\n\n\n\n\n\n\ndelete(epub_path: str) → bool[source]\nDelete bookmark for a specific EPUB file.\n\n\nArgs:epub_path: Path to the EPUB file\n\n\nRetur…",
+          "lower": "class epub2text.bookmarkmanager(bookmark_file: path | none = none)[source]\nbases: object\n\nmanages bookmarks for epub files.\n\n\n\n__init__(bookmark_file: path | none = none) → none[source]\ninitialize bookmark manager.\n\n\nargs:\nbookmark_file: path to bookmark json file.defaults to ~/.epub2text/bookmarks.json\n\n\n\n\n\n\n\n\n\nsave(epub_path: str, bookmark: bookmark) → none[source]\nsave bookmark for a specific epub file.\n\n\nargs:epub_path: path to the epub file\nbookmark: bookmark data to save\n\n\n\n\n\n\n\nload(epub_path: str) → bookmark | none[source]\nload bookmark for a specific epub file.\n\n\nargs:epub_path: path to the epub file\n\n\nreturns:bookmark if found, none otherwise\n\n\n\n\n\n\n\ndelete(epub_path: str) → bool[source]\ndelete bookmark for a specific epub file.\n\n\nargs:epub_path: path to the epub file\n\n\nretur…"
+        },
+        {
+          "anchor": "",
+          "heading": "EpubReader",
+          "text": "class epub2text.EpubReader(content: str, chapters: list[Chapter], title: str, epub_path: str, page_size: int | None = None, show_header: bool = True, show_footer: bool = True, start_line: int = 0, start_chapter: int | None = None, bookmark_manager: BookmarkManager | None = None, width: int | None = None)[source]\nBases: object\n\nInteractive terminal reader for EPUB content.\n\n\n\n__init__(content: str, chapters: list[Chapter], title: str, epub_path: str, page_size: int | None = None, show_header: bool = True, show_footer: bool = True, start_line: int = 0, start_chapter: int | None = None, bookmark_manager: BookmarkManager | None = None, width: int | None = None) → None[source]\nInitialize the EPUB reader.\n\n\nArgs:content: Full text content with chapter titles separated by 4 linebreaks\nchapters…",
+          "lower": "class epub2text.epubreader(content: str, chapters: list[chapter], title: str, epub_path: str, page_size: int | none = none, show_header: bool = true, show_footer: bool = true, start_line: int = 0, start_chapter: int | none = none, bookmark_manager: bookmarkmanager | none = none, width: int | none = none)[source]\nbases: object\n\ninteractive terminal reader for epub content.\n\n\n\n__init__(content: str, chapters: list[chapter], title: str, epub_path: str, page_size: int | none = none, show_header: bool = true, show_footer: bool = true, start_line: int = 0, start_chapter: int | none = none, bookmark_manager: bookmarkmanager | none = none, width: int | none = none) → none[source]\ninitialize the epub reader.\n\n\nargs:content: full text content with chapter titles separated by 4 linebreaks\nchapters…"
+        },
+        {
+          "anchor": "",
+          "heading": "ReaderState",
+          "text": "class epub2text.ReaderState(current_line: int, chapter_index: int, percentage: float, quit_requested: bool)[source]\nBases: object\n\nState returned when reader exits.\n\n\n\ncurrent_line: int\n\n\n\n\nchapter_index: int\n\n\n\n\npercentage: float\n\n\n\n\nquit_requested: bool",
+          "lower": "class epub2text.readerstate(current_line: int, chapter_index: int, percentage: float, quit_requested: bool)[source]\nbases: object\n\nstate returned when reader exits.\n\n\n\ncurrent_line: int\n\n\n\n\nchapter_index: int\n\n\n\n\npercentage: float\n\n\n\n\nquit_requested: bool"
+        },
+        {
+          "anchor": "",
+          "heading": "TextCleaner",
+          "text": "class epub2text.TextCleaner(remove_page_numbers: bool = True, remove_footnotes: bool = True, replace_single_newlines: bool = True, normalize_whitespace: bool = True, preserve_single_newlines: bool = False)[source]\nBases: object\n\nSmart text cleaning with configurable options.\n\n\n\n__init__(remove_page_numbers: bool = True, remove_footnotes: bool = True, replace_single_newlines: bool = True, normalize_whitespace: bool = True, preserve_single_newlines: bool = False)[source]\nInitialize text cleaner with options.\n\n\nArgs:\nremove_page_numbers: Remove standalone and end-of-line pagenumbers\n\n\n\nremove_footnotes: Remove bracketed footnote markers like [1]\nreplace_single_newlines: Replace single newlines with spaces\n\n\n(preserve paragraphs)\n\n\n\nnormalize_whitespace: Collapse multiple spaces to single s…",
+          "lower": "class epub2text.textcleaner(remove_page_numbers: bool = true, remove_footnotes: bool = true, replace_single_newlines: bool = true, normalize_whitespace: bool = true, preserve_single_newlines: bool = false)[source]\nbases: object\n\nsmart text cleaning with configurable options.\n\n\n\n__init__(remove_page_numbers: bool = true, remove_footnotes: bool = true, replace_single_newlines: bool = true, normalize_whitespace: bool = true, preserve_single_newlines: bool = false)[source]\ninitialize text cleaner with options.\n\n\nargs:\nremove_page_numbers: remove standalone and end-of-line pagenumbers\n\n\n\nremove_footnotes: remove bracketed footnote markers like [1]\nreplace_single_newlines: replace single newlines with spaces\n\n\n(preserve paragraphs)\n\n\n\nnormalize_whitespace: collapse multiple spaces to single s…"
+        },
+        {
+          "anchor": "",
+          "heading": "clean_text",
+          "text": "epub2text.clean_text(text: str, remove_page_numbers: bool = True, remove_footnotes: bool = True, replace_single_newlines: bool = True, normalize_whitespace: bool = True, preserve_single_newlines: bool = False) → str[source]\nClean text with smart options (convenience function).\n\n\nArgs:text: Raw text to clean\nremove_page_numbers: Remove standalone and end-of-line page numbers\nremove_footnotes: Remove bracketed footnote markers like [1]\nreplace_single_newlines: Replace single newlines with spaces\nnormalize_whitespace: Collapse multiple spaces to single space\npreserve_single_newlines: Keep single newlines as paragraph separators\n\n\nReturns:Cleaned text",
+          "lower": "epub2text.clean_text(text: str, remove_page_numbers: bool = true, remove_footnotes: bool = true, replace_single_newlines: bool = true, normalize_whitespace: bool = true, preserve_single_newlines: bool = false) → str[source]\nclean text with smart options (convenience function).\n\n\nargs:text: raw text to clean\nremove_page_numbers: remove standalone and end-of-line page numbers\nremove_footnotes: remove bracketed footnote markers like [1]\nreplace_single_newlines: replace single newlines with spaces\nnormalize_whitespace: collapse multiple spaces to single space\npreserve_single_newlines: keep single newlines as paragraph separators\n\n\nreturns:cleaned text"
+        },
+        {
+          "anchor": "",
+          "heading": "format_paragraphs",
+          "text": "epub2text.formatters.format_paragraphs(text: str, separator: str = '  ', one_line_per_paragraph: bool = False) → str[source]\nFormat text with paragraph separators.\n\nThis function works without phrasplit.\n\n\nArgs:text: Input text with paragraph breaks (double newlines)\nseparator: String to prepend to new paragraphs (default: “  “ two spaces)\none_line_per_paragraph: If True, collapse each paragraph to single line\n\n\nReturns:Formatted text with separator at start of each new paragraph.\nChapter titles (lines preceded by 4+ newlines) are preserved.",
+          "lower": "epub2text.formatters.format_paragraphs(text: str, separator: str = '  ', one_line_per_paragraph: bool = false) → str[source]\nformat text with paragraph separators.\n\nthis function works without phrasplit.\n\n\nargs:text: input text with paragraph breaks (double newlines)\nseparator: string to prepend to new paragraphs (default: “  “ two spaces)\none_line_per_paragraph: if true, collapse each paragraph to single line\n\n\nreturns:formatted text with separator at start of each new paragraph.\nchapter titles (lines preceded by 4+ newlines) are preserved."
+        },
+        {
+          "anchor": "",
+          "heading": "format_sentences",
+          "text": "epub2text.formatters.format_sentences(text: str, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nFormat text with one sentence per line.\n\n\nArgs:text: Input text with paragraph breaks\nseparator: String to prepend at paragraph boundaries (default: “  “)\nlanguage_model: spaCy language model to use\n\n\nReturns:Text with one sentence per line, separator at paragraph boundaries.\nChapter titles are preserved.",
+          "lower": "epub2text.formatters.format_sentences(text: str, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nformat text with one sentence per line.\n\n\nargs:text: input text with paragraph breaks\nseparator: string to prepend at paragraph boundaries (default: “  “)\nlanguage_model: spacy language model to use\n\n\nreturns:text with one sentence per line, separator at paragraph boundaries.\nchapter titles are preserved."
+        },
+        {
+          "anchor": "",
+          "heading": "format_clauses",
+          "text": "epub2text.formatters.format_clauses(text: str, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nFormat text with one clause per line (split at commas).\n\nUses spaCy for sentence detection, then splits each sentence at commas.\nThe comma stays at the end of each clause, creating natural pause points\nfor text-to-speech processing.\n\nRequires phrasplit to be installed.\n\n\nArgs:text: Input text with paragraph breaks\nseparator: String to prepend at paragraph boundaries (default: “  “)\nlanguage_model: spaCy language model to use\n\n\nReturns:Text with one clause per line, separator at paragraph boundaries.\nChapter titles are preserved.\n\n\nExample:Input: “I do like coffee, and I like wine.”\nOutput:\n\n\n“I do like coffee,\nand I like wine.”",
+          "lower": "epub2text.formatters.format_clauses(text: str, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nformat text with one clause per line (split at commas).\n\nuses spacy for sentence detection, then splits each sentence at commas.\nthe comma stays at the end of each clause, creating natural pause points\nfor text-to-speech processing.\n\nrequires phrasplit to be installed.\n\n\nargs:text: input text with paragraph breaks\nseparator: string to prepend at paragraph boundaries (default: “  “)\nlanguage_model: spacy language model to use\n\n\nreturns:text with one clause per line, separator at paragraph boundaries.\nchapter titles are preserved.\n\n\nexample:input: “i do like coffee, and i like wine.”\noutput:\n\n\n“i do like coffee,\nand i like wine.”"
+        },
+        {
+          "anchor": "",
+          "heading": "split_long_lines",
+          "text": "epub2text.formatters.split_long_lines(text: str, max_length: int, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nSplit lines exceeding max_length at clause/sentence boundaries.\n\nStrategy:\n1. First try to split at sentence boundaries\n2. If still too long, split at clause boundaries (commas, semicolons, etc.)\n3. If still too long, split at word boundaries\n\n\nArgs:text: Input text (may already be formatted)\nmax_length: Maximum line length in characters\nseparator: Paragraph separator (preserved)\nlanguage_model: spaCy language model to use\n\n\nReturns:Text with long lines split. Chapter titles are preserved.",
+          "lower": "epub2text.formatters.split_long_lines(text: str, max_length: int, separator: str = '  ', language_model: str = 'en_core_web_sm') → str[source]\nsplit lines exceeding max_length at clause/sentence boundaries.\n\nstrategy:\n1. first try to split at sentence boundaries\n2. if still too long, split at clause boundaries (commas, semicolons, etc.)\n3. if still too long, split at word boundaries\n\n\nargs:text: input text (may already be formatted)\nmax_length: maximum line length in characters\nseparator: paragraph separator (preserved)\nlanguage_model: spacy language model to use\n\n\nreturns:text with long lines split. chapter titles are preserved."
+        },
+        {
+          "anchor": "",
+          "heading": "collapse_paragraph",
+          "text": "epub2text.formatters.collapse_paragraph(paragraph: str) → str[source]\nCollapse a paragraph to a single line.\n\nReplaces internal newlines with spaces.\n\n\nArgs:paragraph: Single paragraph text\n\n\nReturns:Paragraph as single line",
+          "lower": "epub2text.formatters.collapse_paragraph(paragraph: str) → str[source]\ncollapse a paragraph to a single line.\n\nreplaces internal newlines with spaces.\n\n\nargs:paragraph: single paragraph text\n\n\nreturns:paragraph as single line"
+        },
+        {
+          "anchor": "",
+          "heading": "split_paragraphs",
+          "text": "epub2text.formatters.split_paragraphs(text: str) → list[str][source]\nSplit text into paragraphs (separated by double newlines).\n\nApplies preprocessing to fix hyphenated line breaks and normalize whitespace.\n\n\nArgs:text: Input text\n\n\nReturns:List of paragraphs (non-empty, stripped)",
+          "lower": "epub2text.formatters.split_paragraphs(text: str) → list[str][source]\nsplit text into paragraphs (separated by double newlines).\n\napplies preprocessing to fix hyphenated line breaks and normalize whitespace.\n\n\nargs:text: input text\n\n\nreturns:list of paragraphs (non-empty, stripped)"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2txt",
+          "text": "epub2text.epub2txt(filepath: str, outputlist: bool = False, clean: bool = True, timeout: float | tuple[float, float] = (10.0, 30.0), max_bytes: int = 209715200, user_agent: str | None = None, allowed_schemes: tuple[str, ...] = ('https', 'http')) → str | list[str][source]\nExtract text from EPUB file (compatibility function for old epub2txt API).\n\n\nArgs:filepath: Path to EPUB file or URL\noutputlist: If True, return list of chapter texts; if False,\n\n\nreturn single string\n\n\n\nclean: If True, apply text cleaning; if False, minimal processing\ntimeout: Connection/read timeout for URL downloads (seconds)\nmax_bytes: Maximum allowed download size for URLs\nuser_agent: Optional User-Agent header for URL downloads\nallowed_schemes: Allowed URL schemes for downloads\n\n\nReturns:Either a single string of a…",
+          "lower": "epub2text.epub2txt(filepath: str, outputlist: bool = false, clean: bool = true, timeout: float | tuple[float, float] = (10.0, 30.0), max_bytes: int = 209715200, user_agent: str | none = none, allowed_schemes: tuple[str, ...] = ('https', 'http')) → str | list[str][source]\nextract text from epub file (compatibility function for old epub2txt api).\n\n\nargs:filepath: path to epub file or url\noutputlist: if true, return list of chapter texts; if false,\n\n\nreturn single string\n\n\n\nclean: if true, apply text cleaning; if false, minimal processing\ntimeout: connection/read timeout for url downloads (seconds)\nmax_bytes: maximum allowed download size for urls\nuser_agent: optional user-agent header for url downloads\nallowed_schemes: allowed url schemes for downloads\n\n\nreturns:either a single string of a…"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Usage",
+          "text": "Parse an EPUB file and extract metadata:\n\nfrom epub2text import EPUBParser\n\nparser = EPUBParser(\"book.epub\")\n\n# Get metadata\nmetadata = parser.get_metadata()\nprint(f\"Title: {metadata.title}\")\nprint(f\"Authors: {', '.join(metadata.authors)}\")\nprint(f\"Language: {metadata.language}\")\n\n# Get all chapters\nchapters = parser.get_chapters()\nfor chapter in chapters:\n    print(f\"{chapter.title}: {chapter.char_count:,} characters\")\n\n# Extract all text\nfull_text = parser.extract_chapters()",
+          "lower": "parse an epub file and extract metadata:\n\nfrom epub2text import epubparser\n\nparser = epubparser(\"book.epub\")\n\n# get metadata\nmetadata = parser.get_metadata()\nprint(f\"title: {metadata.title}\")\nprint(f\"authors: {', '.join(metadata.authors)}\")\nprint(f\"language: {metadata.language}\")\n\n# get all chapters\nchapters = parser.get_chapters()\nfor chapter in chapters:\n    print(f\"{chapter.title}: {chapter.char_count:,} characters\")\n\n# extract all text\nfull_text = parser.extract_chapters()"
+        },
+        {
+          "anchor": "",
+          "heading": "Working with Pages",
+          "text": "Extract and work with pages:\n\nfrom epub2text import EPUBParser\n\nparser = EPUBParser(\"book.epub\")\n\n# Check if EPUB has page-list navigation\nif parser.has_page_list():\n    print(\"EPUB contains original page numbers\")\n\n# Get pages (from page-list or generate synthetic pages)\npages = parser.get_pages(synthetic_page_size=2000, use_words=False)\n\nfor page in pages:\n    print(f\"Page {page.page_number}: {page.char_count} chars\")\n    print(f\"  Source: {page.source.value}\")\n    print(f\"  Chapter: {page.chapter_title}\")\n\n# Extract text organized by pages\npage_text = parser.extract_pages(\n    page_numbers=[\"1\", \"2\", \"3\"],\n    deduplicate_chapter_titles=True,\n    skip_toc=True  # Skip table of contents\n)",
+          "lower": "extract and work with pages:\n\nfrom epub2text import epubparser\n\nparser = epubparser(\"book.epub\")\n\n# check if epub has page-list navigation\nif parser.has_page_list():\n    print(\"epub contains original page numbers\")\n\n# get pages (from page-list or generate synthetic pages)\npages = parser.get_pages(synthetic_page_size=2000, use_words=false)\n\nfor page in pages:\n    print(f\"page {page.page_number}: {page.char_count} chars\")\n    print(f\"  source: {page.source.value}\")\n    print(f\"  chapter: {page.chapter_title}\")\n\n# extract text organized by pages\npage_text = parser.extract_pages(\n    page_numbers=[\"1\", \"2\", \"3\"],\n    deduplicate_chapter_titles=true,\n    skip_toc=true  # skip table of contents\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter Selection",
+          "text": "Extract specific chapters:\n\nfrom epub2text import EPUBParser\n\nparser = EPUBParser(\"book.epub\")\nchapters = parser.get_chapters()\n\n# Extract first 3 chapters\nchapter_ids = [chapters[0].id, chapters[1].id, chapters[2].id]\ntext = parser.extract_chapters(chapter_ids)",
+          "lower": "extract specific chapters:\n\nfrom epub2text import epubparser\n\nparser = epubparser(\"book.epub\")\nchapters = parser.get_chapters()\n\n# extract first 3 chapters\nchapter_ids = [chapters[0].id, chapters[1].id, chapters[2].id]\ntext = parser.extract_chapters(chapter_ids)"
+        },
+        {
+          "anchor": "",
+          "heading": "Custom Text Cleaning",
+          "text": "Apply custom cleaning options:\n\nfrom epub2text import EPUBParser, TextCleaner\n\nparser = EPUBParser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# Custom cleaning\ncleaner = TextCleaner(\n    remove_footnotes=True,\n    remove_page_numbers=True,\n    normalize_whitespace=True,\n    replace_single_newlines=True,\n)\ncleaned_text = cleaner.clean(text)",
+          "lower": "apply custom cleaning options:\n\nfrom epub2text import epubparser, textcleaner\n\nparser = epubparser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# custom cleaning\ncleaner = textcleaner(\n    remove_footnotes=true,\n    remove_page_numbers=true,\n    normalize_whitespace=true,\n    replace_single_newlines=true,\n)\ncleaned_text = cleaner.clean(text)"
+        },
+        {
+          "anchor": "",
+          "heading": "Sentence Formatting",
+          "text": "Format text with one sentence per line:\n\nfrom epub2text import EPUBParser\nfrom epub2text.formatters import format_sentences\n\nparser = EPUBParser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# One sentence per line\nformatted = format_sentences(text, separator=\"  \")",
+          "lower": "format text with one sentence per line:\n\nfrom epub2text import epubparser\nfrom epub2text.formatters import format_sentences\n\nparser = epubparser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# one sentence per line\nformatted = format_sentences(text, separator=\"  \")"
+        },
+        {
+          "anchor": "",
+          "heading": "Clause Formatting",
+          "text": "Format text with one clause per line:\n\nfrom epub2text import EPUBParser\nfrom epub2text.formatters import format_clauses\n\nparser = EPUBParser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# One clause per line (split at commas, semicolons)\nformatted = format_clauses(text, separator=\"  \")",
+          "lower": "format text with one clause per line:\n\nfrom epub2text import epubparser\nfrom epub2text.formatters import format_clauses\n\nparser = epubparser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# one clause per line (split at commas, semicolons)\nformatted = format_clauses(text, separator=\"  \")"
+        },
+        {
+          "anchor": "",
+          "heading": "Line Splitting",
+          "text": "Split long lines at clause boundaries:\n\nfrom epub2text import EPUBParser\nfrom epub2text.formatters import split_long_lines\n\nparser = EPUBParser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# Split lines exceeding 80 characters\nsplit_text = split_long_lines(text, max_length=80)",
+          "lower": "split long lines at clause boundaries:\n\nfrom epub2text import epubparser\nfrom epub2text.formatters import split_long_lines\n\nparser = epubparser(\"book.epub\")\ntext = parser.extract_chapters()\n\n# split lines exceeding 80 characters\nsplit_text = split_long_lines(text, max_length=80)"
+        },
+        {
+          "anchor": "",
+          "heading": "URL Support",
+          "text": "Extract from EPUB files hosted online:\n\nfrom epub2text import epub2txt\n\n# Download and extract from URL\ntext = epub2txt(\"https://example.com/book.epub\")\n\n# Get list of chapters from URL\nchapters = epub2txt(\"https://example.com/book.epub\", outputlist=True)",
+          "lower": "extract from epub files hosted online:\n\nfrom epub2text import epub2txt\n\n# download and extract from url\ntext = epub2txt(\"https://example.com/book.epub\")\n\n# get list of chapters from url\nchapters = epub2txt(\"https://example.com/book.epub\", outputlist=true)"
+        },
+        {
+          "anchor": "",
+          "heading": "Bookmark Management",
+          "text": "Manage reading bookmarks:\n\nfrom epub2text.bookmarks import BookmarkManager, Bookmark\n\n# Create bookmark manager (uses ~/.epub2text/bookmarks.json)\nmanager = BookmarkManager()\n\n# Save bookmark\nbookmark = Bookmark.create(\n    chapter_index=3,\n    line_offset=150,\n    percentage=45.5,\n    title=\"My Book Title\"\n)\nmanager.save(\"/path/to/book.epub\", bookmark)\n\n# Load bookmark\nbookmark = manager.load(\"/path/to/book.epub\")\nif bookmark:\n    print(f\"Resume at {bookmark.percentage:.1f}%\")\n\n# List all bookmarks\nall_bookmarks = manager.list_all()\nfor path, bm in all_bookmarks.items():\n    print(f\"{bm.title}: {bm.percentage:.1f}%\")",
+          "lower": "manage reading bookmarks:\n\nfrom epub2text.bookmarks import bookmarkmanager, bookmark\n\n# create bookmark manager (uses ~/.epub2text/bookmarks.json)\nmanager = bookmarkmanager()\n\n# save bookmark\nbookmark = bookmark.create(\n    chapter_index=3,\n    line_offset=150,\n    percentage=45.5,\n    title=\"my book title\"\n)\nmanager.save(\"/path/to/book.epub\", bookmark)\n\n# load bookmark\nbookmark = manager.load(\"/path/to/book.epub\")\nif bookmark:\n    print(f\"resume at {bookmark.percentage:.1f}%\")\n\n# list all bookmarks\nall_bookmarks = manager.list_all()\nfor path, bm in all_bookmarks.items():\n    print(f\"{bm.title}: {bm.percentage:.1f}%\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Full Metadata Access",
+          "text": "Access all Dublin Core metadata fields:\n\nfrom epub2text import EPUBParser\n\nparser = EPUBParser(\"book.epub\")\nmetadata = parser.get_metadata()\n\nprint(f\"Title: {metadata.title}\")\nprint(f\"Authors: {metadata.authors}\")\nprint(f\"Contributors: {metadata.contributors}\")\nprint(f\"Publisher: {metadata.publisher}\")\nprint(f\"Publication Year: {metadata.publication_year}\")\nprint(f\"Identifier: {metadata.identifier}\")\nprint(f\"Language: {metadata.language}\")\nprint(f\"Rights: {metadata.rights}\")\nprint(f\"Coverage: {metadata.coverage}\")\nprint(f\"Description: {metadata.description}\")",
+          "lower": "access all dublin core metadata fields:\n\nfrom epub2text import epubparser\n\nparser = epubparser(\"book.epub\")\nmetadata = parser.get_metadata()\n\nprint(f\"title: {metadata.title}\")\nprint(f\"authors: {metadata.authors}\")\nprint(f\"contributors: {metadata.contributors}\")\nprint(f\"publisher: {metadata.publisher}\")\nprint(f\"publication year: {metadata.publication_year}\")\nprint(f\"identifier: {metadata.identifier}\")\nprint(f\"language: {metadata.language}\")\nprint(f\"rights: {metadata.rights}\")\nprint(f\"coverage: {metadata.coverage}\")\nprint(f\"description: {metadata.description}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2text",
+          "text": "Main package exports:\n\n\nEPUBParser - Main parser class\n\n\nChapter - Chapter data model\n\n\nPage - Page data model\n\n\nPageSource - Page source enumeration\n\n\nMetadata - Metadata data model\n\n\nTextCleaner - Text cleaning class\n\n\nclean_text - Convenience function for text cleaning\n\n\nepub2txt - Compatibility function\n\n\nBookmark - Bookmark data model\n\n\nBookmarkManager - Bookmark management class\n\n\nEpubReader - Interactive terminal reader\n\n\nReaderState - Reader state data model",
+          "lower": "main package exports:\n\n\nepubparser - main parser class\n\n\nchapter - chapter data model\n\n\npage - page data model\n\n\npagesource - page source enumeration\n\n\nmetadata - metadata data model\n\n\ntextcleaner - text cleaning class\n\n\nclean_text - convenience function for text cleaning\n\n\nepub2txt - compatibility function\n\n\nbookmark - bookmark data model\n\n\nbookmarkmanager - bookmark management class\n\n\nepubreader - interactive terminal reader\n\n\nreaderstate - reader state data model"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2text.formatters",
+          "text": "Text formatting utilities:\n\n\nformat_paragraphs - Format text with paragraph separators\n\n\nformat_sentences - One sentence per line formatting\n\n\nformat_clauses - One clause per line formatting\n\n\nsplit_long_lines - Split long lines at clause boundaries\n\n\nsplit_paragraphs - Split text into paragraph list\n\n\ncollapse_paragraph - Collapse paragraph to single line",
+          "lower": "text formatting utilities:\n\n\nformat_paragraphs - format text with paragraph separators\n\n\nformat_sentences - one sentence per line formatting\n\n\nformat_clauses - one clause per line formatting\n\n\nsplit_long_lines - split long lines at clause boundaries\n\n\nsplit_paragraphs - split text into paragraph list\n\n\ncollapse_paragraph - collapse paragraph to single line"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2text.cleaner",
+          "text": "Text cleaning utilities:\n\n\nTextCleaner - Configurable text cleaner class\n\n\nclean_text - Convenience function\n\n\ncalculate_text_length - Calculate text length excluding markers",
+          "lower": "text cleaning utilities:\n\n\ntextcleaner - configurable text cleaner class\n\n\nclean_text - convenience function\n\n\ncalculate_text_length - calculate text length excluding markers"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2text.bookmarks",
+          "text": "Bookmark management:\n\n\nBookmark - Bookmark data class\n\n\nBookmarkManager - Bookmark persistence manager",
+          "lower": "bookmark management:\n\n\nbookmark - bookmark data class\n\n\nbookmarkmanager - bookmark persistence manager"
+        },
+        {
+          "anchor": "",
+          "heading": "epub2text.reader",
+          "text": "Interactive terminal reader:\n\n\nEpubReader - Main reader class\n\n\nReaderState - State information when reader exits",
+          "lower": "interactive terminal reader:\n\n\nepubreader - main reader class\n\n\nreaderstate - state information when reader exits"
+        }
+      ]
+    },
+    {
+      "url": "/tools/epub2text/changelog/",
+      "title": "epub2text Changelog",
+      "snippet": "All notable changes to epub2text will be documented here.\n\nThe format is based on Keep a Changelog, and\nthis project adheres to Semantic Ver …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "All notable changes to epub2text will be documented here.\n\nThe format is based on Keep a Changelog, and\nthis project adheres to Semantic Versioning.",
+          "lower": "all notable changes to epub2text will be documented here.\n\nthe format is based on keep a changelog, and\nthis project adheres to semantic versioning."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "get_chapters() method now supports include_text parameter for metadata-only\nextraction\n\n\nFull Dublin Core metadata support: identifier, language, contributors, rights,\ncoverage\n\n\nNew extract command formatting options:\n\n\n--paragraphs, -p: One line per paragraph\n\n\n--sentences, -s: One sentence per line (requires spaCy)\n\n\n--max-length, -m N: Split long lines at clause boundaries\n\n\n--separator TEXT: Custom paragraph separator (default: two spaces)\n\n\n--empty-lines: Use empty lines between paragraphs\n\n\n--offset N: Skip first N lines of output\n\n\n--limit N: Limit output to N lines\n\n\n--line-numbers, -n: Add line numbers to output\n\n\n\n\n\nNew info command --format option: panel (default), table, or json\n\n\nEllipsis handling: ... and . . . are no longer treated as sentence boundaries\n\n\nComprehensive te…",
+          "lower": "get_chapters() method now supports include_text parameter for metadata-only\nextraction\n\n\nfull dublin core metadata support: identifier, language, contributors, rights,\ncoverage\n\n\nnew extract command formatting options:\n\n\n--paragraphs, -p: one line per paragraph\n\n\n--sentences, -s: one sentence per line (requires spacy)\n\n\n--max-length, -m n: split long lines at clause boundaries\n\n\n--separator text: custom paragraph separator (default: two spaces)\n\n\n--empty-lines: use empty lines between paragraphs\n\n\n--offset n: skip first n lines of output\n\n\n--limit n: limit output to n lines\n\n\n--line-numbers, -n: add line numbers to output\n\n\n\n\n\nnew info command --format option: panel (default), table, or json\n\n\nellipsis handling: ... and . . . are no longer treated as sentence boundaries\n\n\ncomprehensive te…"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "BREAKING: Chapter format changed from <<CHAPTER: Title>> to clean separation\nwith newlines\n\n\nFirst chapter: {title}\\n\\n{content}\n\n\nSubsequent chapters: \\n\\n\\n\\n{title}\\n\\n{content}\n\n\nFour linebreaks before chapter title, two linebreaks after\n\n\nMore readable and natural text output\n\n\n\n\n\nRefactored extract command with cleaner, more intuitive options\n\n\nImproved get_metadata() function with reduced complexity\n\n\nDefault paragraph separator changed from newlines to two-space prefix",
+          "lower": "breaking: chapter format changed from <<chapter: title>> to clean separation\nwith newlines\n\n\nfirst chapter: {title}\\n\\n{content}\n\n\nsubsequent chapters: \\n\\n\\n\\n{title}\\n\\n{content}\n\n\nfour linebreaks before chapter title, two linebreaks after\n\n\nmore readable and natural text output\n\n\n\n\n\nrefactored extract command with cleaner, more intuitive options\n\n\nimproved get_metadata() function with reduced complexity\n\n\ndefault paragraph separator changed from newlines to two-space prefix"
+        },
+        {
+          "anchor": "",
+          "heading": "Removed",
+          "text": "Deprecated --format-style option (replaced by --paragraphs, --sentences)\n\n\nDeprecated --no-clean option (replaced by --raw)\n\n\nDeprecated --no-chapter-titles option (replaced by --no-markers)\n\n\nDeprecated --no-empty-lines option (default behavior now uses separators)",
+          "lower": "deprecated --format-style option (replaced by --paragraphs, --sentences)\n\n\ndeprecated --no-clean option (replaced by --raw)\n\n\ndeprecated --no-chapter-titles option (replaced by --no-markers)\n\n\ndeprecated --no-empty-lines option (default behavior now uses separators)"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Initial release\n\n\nEPUB parsing with NAV HTML (EPUB3) and NCX (EPUB2) support\n\n\nChapter listing with table and tree formats\n\n\nText extraction with chapter selection\n\n\nSmart text cleaning (footnotes, page numbers, whitespace)\n\n\nRich terminal UI with progress indicators\n\n\nPython library API",
+          "lower": "initial release\n\n\nepub parsing with nav html (epub3) and ncx (epub2) support\n\n\nchapter listing with table and tree formats\n\n\ntext extraction with chapter selection\n\n\nsmart text cleaning (footnotes, page numbers, whitespace)\n\n\nrich terminal ui with progress indicators\n\n\npython library api"
+        }
+      ]
+    },
+    {
+      "url": "/tools/epub2text/",
+      "title": "epub2text Documentation",
+      "snippet": "A niche CLI tool to extract text from EPUB files with smart cleaning capabilities.\n\n\nContents:\n\n\nInstallation\nRequirements\n\nOptional Depende …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "epub2text Documentation",
+          "text": "A niche CLI tool to extract text from EPUB files with smart cleaning capabilities.\n\n\nContents:\n\n\nInstallation\nRequirements\n\nOptional Dependencies\n\nBasic Installation\n\nInstallation with Extras\n\nDevelopment Installation\n\nRunning Tests\n\nPre-commit Hooks\n\n\n\n\nUsage Guide\nList Chapters\n\nExtract Text\n\nList Pages\n\nInteractive Reader\n\nShow Metadata\n\nChapter and Page Markers\n\nExamples\n\n\n\n\nAPI Reference\nCore Classes\n\nData Models\n\nStructured extraction\n\nBookmarks\n\nInteractive Reader\n\nText Cleaning\n\nText Formatting\n\nCompatibility Function\n\nUsage Examples\n\nModule Index\n\n\n\n\nChangelog\n[Unreleased]\n\n[0.1.0] - 2025-01-01",
+          "lower": "a niche cli tool to extract text from epub files with smart cleaning capabilities.\n\n\ncontents:\n\n\ninstallation\nrequirements\n\noptional dependencies\n\nbasic installation\n\ninstallation with extras\n\ndevelopment installation\n\nrunning tests\n\npre-commit hooks\n\n\n\n\nusage guide\nlist chapters\n\nextract text\n\nlist pages\n\ninteractive reader\n\nshow metadata\n\nchapter and page markers\n\nexamples\n\n\n\n\napi reference\ncore classes\n\ndata models\n\nstructured extraction\n\nbookmarks\n\ninteractive reader\n\ntext cleaning\n\ntext formatting\n\ncompatibility function\n\nusage examples\n\nmodule index\n\n\n\n\nchangelog\n[unreleased]\n\n[0.1.0] - 2025-01-01"
+        },
+        {
+          "anchor": "",
+          "heading": "Features",
+          "text": "Smart Navigation Parsing: Supports both EPUB3 (NAV HTML) and EPUB2 (NCX)\nnavigation formats\n\n\nMultiple Extraction Modes:\n\n\nChapter-based extraction with selective range support\n\n\nPage-based extraction (using EPUB page-list or synthetic pages)\n\n\nProject Gutenberg format output with proper formatting\n\n\n\n\n\nInteractive Terminal Reader:\n\n\nVim-style navigation (j/k, Space/b, n/p for chapters)\n\n\nBookmark support with automatic resume\n\n\nAdjustable page size and content width\n\n\n\n\n\nFlexible Output Formatting:\n\n\nOne paragraph per line with customizable separators\n\n\nOne sentence per line using spaCy NLP\n\n\nOne clause per line (split at commas, semicolons)\n\n\nAutomatic line splitting at clause boundaries for long lines\n\n\n\n\n\nSmart Text Cleaning:\n\n\nRemove bracketed footnotes ([1], [42])\n\n\nRemove page numb…",
+          "lower": "smart navigation parsing: supports both epub3 (nav html) and epub2 (ncx)\nnavigation formats\n\n\nmultiple extraction modes:\n\n\nchapter-based extraction with selective range support\n\n\npage-based extraction (using epub page-list or synthetic pages)\n\n\nproject gutenberg format output with proper formatting\n\n\n\n\n\ninteractive terminal reader:\n\n\nvim-style navigation (j/k, space/b, n/p for chapters)\n\n\nbookmark support with automatic resume\n\n\nadjustable page size and content width\n\n\n\n\n\nflexible output formatting:\n\n\none paragraph per line with customizable separators\n\n\none sentence per line using spacy nlp\n\n\none clause per line (split at commas, semicolons)\n\n\nautomatic line splitting at clause boundaries for long lines\n\n\n\n\n\nsmart text cleaning:\n\n\nremove bracketed footnotes ([1], [42])\n\n\nremove page numb…"
+        },
+        {
+          "anchor": "",
+          "heading": "Quick Start",
+          "text": "Install epub2text:\n\npip install epub2text\n\n\n\n\nExtract text from an EPUB file:\n\nepub2text extract book.epub\n\n\n\n\nExtract by pages:\n\nepub2text extract-pages book.epub\n\n\n\n\nList chapters:\n\nepub2text list book.epub\n\n\n\n\nList pages:\n\nepub2text pages book.epub\n\n\n\n\nRead interactively:\n\nepub2text read book.epub\n\n\n\n\nShow metadata:\n\nepub2text info book.epub",
+          "lower": "install epub2text:\n\npip install epub2text\n\n\n\n\nextract text from an epub file:\n\nepub2text extract book.epub\n\n\n\n\nextract by pages:\n\nepub2text extract-pages book.epub\n\n\n\n\nlist chapters:\n\nepub2text list book.epub\n\n\n\n\nlist pages:\n\nepub2text pages book.epub\n\n\n\n\nread interactively:\n\nepub2text read book.epub\n\n\n\n\nshow metadata:\n\nepub2text info book.epub"
+        },
+        {
+          "anchor": "",
+          "heading": "Indices and tables",
+          "text": "Index\n\n\nModule Index\n\n\nSearch Page",
+          "lower": "index\n\n\nmodule index\n\n\nsearch page"
+        }
+      ]
+    },
+    {
+      "url": "/tools/epub2text/installation/",
+      "title": "epub2text Installation",
+      "snippet": "Python >= 3.10\n\n\nclick >= 8.0.0\n\n\nrich >= 13.0.0\n\n\nebooklib >= 0.18\n\n\nbeautifulsoup4 >= 4.12.0\n\n\ndefusedxml >= 0.7.1\nlxml: For better HTML p …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Requirements",
+          "text": "Python >= 3.10\n\n\nclick >= 8.0.0\n\n\nrich >= 13.0.0\n\n\nebooklib >= 0.18\n\n\nbeautifulsoup4 >= 4.12.0\n\n\ndefusedxml >= 0.7.1",
+          "lower": "python >= 3.10\n\n\nclick >= 8.0.0\n\n\nrich >= 13.0.0\n\n\nebooklib >= 0.18\n\n\nbeautifulsoup4 >= 4.12.0\n\n\ndefusedxml >= 0.7.1"
+        },
+        {
+          "anchor": "",
+          "heading": "Optional Dependencies",
+          "text": "lxml: For better HTML parsing performance\n\n\nphrasplit: For sentence-level and clause-level formatting (depends on spaCy)",
+          "lower": "lxml: for better html parsing performance\n\n\nphrasplit: for sentence-level and clause-level formatting (depends on spacy)"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Installation",
+          "text": "Install epub2text from PyPI:\n\npip install epub2text",
+          "lower": "install epub2text from pypi:\n\npip install epub2text"
+        },
+        {
+          "anchor": "",
+          "heading": "Installation with Extras",
+          "text": "For better HTML parsing performance:\n\npip install epub2text[lxml]\n\n\n\n\nAfter installing, download a spaCy language model:\n\npython -m spacy download en_core_web_sm\n\n\n\n\nFor all optional features:\n\npip install epub2text[lxml,sentences]",
+          "lower": "for better html parsing performance:\n\npip install epub2text[lxml]\n\n\n\n\nafter installing, download a spacy language model:\n\npython -m spacy download en_core_web_sm\n\n\n\n\nfor all optional features:\n\npip install epub2text[lxml,sentences]"
+        },
+        {
+          "anchor": "",
+          "heading": "Development Installation",
+          "text": "Clone the repository and install in development mode:\n\ngit clone https://github.com/buchwandler/epub2text\ncd epub2text\npip install -e \".[dev]\"\n\n\n\n\nThis installs all development dependencies including:\n\n\npytest for testing\n\n\nruff for linting\n\n\npre-commit for code quality hooks",
+          "lower": "clone the repository and install in development mode:\n\ngit clone https://github.com/buchwandler/epub2text\ncd epub2text\npip install -e \".[dev]\"\n\n\n\n\nthis installs all development dependencies including:\n\n\npytest for testing\n\n\nruff for linting\n\n\npre-commit for code quality hooks"
+        },
+        {
+          "anchor": "",
+          "heading": "Running Tests",
+          "text": "Run the test suite:\n\npytest tests/\n\n\n\n\nRun with coverage:\n\npytest tests/ --cov=epub2text --cov-report=html",
+          "lower": "run the test suite:\n\npytest tests/\n\n\n\n\nrun with coverage:\n\npytest tests/ --cov=epub2text --cov-report=html"
+        },
+        {
+          "anchor": "",
+          "heading": "Pre-commit Hooks",
+          "text": "Install pre-commit hooks for code quality:\n\npre-commit install\n\n\n\n\nRun hooks manually:\n\npre-commit run --all-files",
+          "lower": "install pre-commit hooks for code quality:\n\npre-commit install\n\n\n\n\nrun hooks manually:\n\npre-commit run --all-files"
+        }
+      ]
+    },
+    {
+      "url": "/tools/epub2text/structured_extraction/",
+      "title": "epub2text Structured extraction",
+      "snippet": "Structured extraction is the read-only EPUB inspection API for downstream tools that\nneed stable source mapping. It is separate from the pla …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Structured extraction",
+          "text": "Structured extraction is the read-only EPUB inspection API for downstream tools that\nneed stable source mapping. It is separate from the plain-text reading APIs.\nepub2txt() and EPUBParser.extract_chapters() keep producing cleaned text for\nreaders, while EPUBParser.extract_structured() exposes package metadata, spine source\ndocuments, navigation entries, text blocks, inline runs, segments, and diagnostics.",
+          "lower": "structured extraction is the read-only epub inspection api for downstream tools that\nneed stable source mapping. it is separate from the plain-text reading apis.\nepub2txt() and epubparser.extract_chapters() keep producing cleaned text for\nreaders, while epubparser.extract_structured() exposes package metadata, spine source\ndocuments, navigation entries, text blocks, inline runs, segments, and diagnostics."
+        },
+        {
+          "anchor": "",
+          "heading": "Plain text versus structured extraction",
+          "text": "Plain-text extraction may normalize whitespace, remove duplicate titles, inject readable\nseparators, or otherwise format content for humans. Structured extraction does not\nperform those destructive reading transformations by default. Block text is visible text\nonly and does not contain internal placeholder tokens such as __TAG_001__.",
+          "lower": "plain-text extraction may normalize whitespace, remove duplicate titles, inject readable\nseparators, or otherwise format content for humans. structured extraction does not\nperform those destructive reading transformations by default. block text is visible text\nonly and does not contain internal placeholder tokens such as __tag_001__."
+        },
+        {
+          "anchor": "",
+          "heading": "No EPUB rebuilding",
+          "text": "epub2text only reports what text exists and where it came from. It does not write EPUB\nfiles, rebuild ZIP packages, apply translations, write OPF/NAV/NCX files, or replace\nXHTML text. Downstream projects that need writing should use a separate writer package.",
+          "lower": "epub2text only reports what text exists and where it came from. it does not write epub\nfiles, rebuild zip packages, apply translations, write opf/nav/ncx files, or replace\nxhtml text. downstream projects that need writing should use a separate writer package."
+        },
+        {
+          "anchor": "",
+          "heading": "Data model overview",
+          "text": "The structured API uses dataclasses:\n\n\nEpubPackageInfo for package metadata, manifest items, and spine order.\n\n\nSourceDocument for decoded spine XHTML/HTML and raw-byte hashes.\n\n\nNavigationEntry for flattened, deterministic navigation entries.\n\n\nTextBlock for prose blocks with source ranges and visible text.\n\n\nTextRun, InlineTagRun, and EntityRun for ordered content runs.\n\n\nTextSegment for sentence, paragraph, or clause slices.\n\n\nDiagnostic for loss, fallback, and unresolved-reference reporting.\n\n\nXhtmlFragment for opt-in sanitized inline XHTML attached to blocks and segments.\n\n\nMarkdownFragment for opt-in Markdown translations of inline XHTML attached to blocks\nand segments.",
+          "lower": "the structured api uses dataclasses:\n\n\nepubpackageinfo for package metadata, manifest items, and spine order.\n\n\nsourcedocument for decoded spine xhtml/html and raw-byte hashes.\n\n\nnavigationentry for flattened, deterministic navigation entries.\n\n\ntextblock for prose blocks with source ranges and visible text.\n\n\ntextrun, inlinetagrun, and entityrun for ordered content runs.\n\n\ntextsegment for sentence, paragraph, or clause slices.\n\n\ndiagnostic for loss, fallback, and unresolved-reference reporting.\n\n\nxhtmlfragment for opt-in sanitized inline xhtml attached to blocks and segments.\n\n\nmarkdownfragment for opt-in markdown translations of inline xhtml attached to blocks\nand segments."
+        },
+        {
+          "anchor": "",
+          "heading": "Offset semantics",
+          "text": "Character offsets point into SourceDocument.text. Byte offsets are included when a\nchar-to-byte map can be built for the detected encoding. For exact blocks,\nouter_char_start to outer_char_end slices the full source element and\ninner_char_start to inner_char_end slices the inner source. Text-bearing runs join\nto exactly TextBlock.text.",
+          "lower": "character offsets point into sourcedocument.text. byte offsets are included when a\nchar-to-byte map can be built for the detected encoding. for exact blocks,\nouter_char_start to outer_char_end slices the full source element and\ninner_char_start to inner_char_end slices the inner source. text-bearing runs join\nto exactly textblock.text."
+        },
+        {
+          "anchor": "",
+          "heading": "XHTML fragments",
+          "text": "Call EPUBParser.extract_structured(include_xhtml_fragments=True) or\nextract_epub_structure(..., include_xhtml_fragments=True) to attach xhtml_fragment\nto each TextBlock. When include_segments=True is also set, each TextSegment\nreceives a fragment for its visible text range. Fragments are rendered from structured\nruns, not by serializing BeautifulSoup. They preserve allowed inline tags such as em,\nstrong, span, a, code, br, and wbr while omitting block tags, scripts, and\nevent handlers. XhtmlFragment.text is the represented visible text and should match\nthe visible text of XhtmlFragment.xhtml.\n\nThe default policy keeps global safe attributes such as class, id, lang,\nxml:lang, dir, title, and epub:type. Links may also keep href. Disallowed tags\nor attributes produce diagnostics such as xhtm…",
+          "lower": "call epubparser.extract_structured(include_xhtml_fragments=true) or\nextract_epub_structure(..., include_xhtml_fragments=true) to attach xhtml_fragment\nto each textblock. when include_segments=true is also set, each textsegment\nreceives a fragment for its visible text range. fragments are rendered from structured\nruns, not by serializing beautifulsoup. they preserve allowed inline tags such as em,\nstrong, span, a, code, br, and wbr while omitting block tags, scripts, and\nevent handlers. xhtmlfragment.text is the represented visible text and should match\nthe visible text of xhtmlfragment.xhtml.\n\nthe default policy keeps global safe attributes such as class, id, lang,\nxml:lang, dir, title, and epub:type. links may also keep href. disallowed tags\nor attributes produce diagnostics such as xhtm…"
+        },
+        {
+          "anchor": "",
+          "heading": "Markdown fragments",
+          "text": "Call EPUBParser.extract_structured(include_markdown_fragments=True) or\nextract_epub_structure(..., include_markdown_fragments=True) to attach\nmarkdown_fragment to each TextBlock. When include_segments=True is also set, each\nTextSegment receives a fragment for its visible text range. Markdown fragments are\nrendered from structured runs, not from serialized XHTML.\n\nMarkdownFragment.markdown is a readable, lossy representation of the same visible text\nrange as xhtml_fragment. The default flavor is commonmark and callers may select\ngfm with markdown_flavor=\"gfm\" or the CLI --markdown-flavor option. The first\nrenderer preserves emphasis, strong text, safe inline links, code-like spans, and hard\nline breaks. Unsupported or unsafe inline tags unwrap or drop with diagnostics such as\nmarkdown_frag…",
+          "lower": "call epubparser.extract_structured(include_markdown_fragments=true) or\nextract_epub_structure(..., include_markdown_fragments=true) to attach\nmarkdown_fragment to each textblock. when include_segments=true is also set, each\ntextsegment receives a fragment for its visible text range. markdown fragments are\nrendered from structured runs, not from serialized xhtml.\n\nmarkdownfragment.markdown is a readable, lossy representation of the same visible text\nrange as xhtml_fragment. the default flavor is commonmark and callers may select\ngfm with markdown_flavor=\"gfm\" or the cli --markdown-flavor option. the first\nrenderer preserves emphasis, strong text, safe inline links, code-like spans, and hard\nline breaks. unsupported or unsafe inline tags unwrap or drop with diagnostics such as\nmarkdown_frag…"
+        },
+        {
+          "anchor": "",
+          "heading": "CLI examples",
+          "text": "epub2text extract-structure book.epub --xhtml-fragments -o structure.json\nepub2text extract-structure book.epub --markdown-fragments --markdown-flavor gfm -o structure.json\nepub2text extract-structure book.epub --segments sentence --xhtml-fragments --markdown-fragments -o structure.json",
+          "lower": "epub2text extract-structure book.epub --xhtml-fragments -o structure.json\nepub2text extract-structure book.epub --markdown-fragments --markdown-flavor gfm -o structure.json\nepub2text extract-structure book.epub --segments sentence --xhtml-fragments --markdown-fragments -o structure.json"
+        },
+        {
+          "anchor": "",
+          "heading": "Diagnostics and strict mode",
+          "text": "Diagnostics use severities info, warning, and error with stable codes such as\nmissing_nav, unresolved_href, unresolved_fragment, encoding_fallback, and\noffset_unavailable. ExtractionPolicy includes strict_offsets for callers that want\nwarning and error diagnostics to fail closed.",
+          "lower": "diagnostics use severities info, warning, and error with stable codes such as\nmissing_nav, unresolved_href, unresolved_fragment, encoding_fallback, and\noffset_unavailable. extractionpolicy includes strict_offsets for callers that want\nwarning and error diagnostics to fail closed."
+        },
+        {
+          "anchor": "",
+          "heading": "JSON export example",
+          "text": "from epub2text import EPUBParser\n\nparser = EPUBParser(\"book.epub\")\nextraction = parser.extract_structured(include_segments=True)\ndata = extraction.to_json(include_raw=False, include_runs=True, indent=2)\n\n\n\n\nThe JSON export embeds schema epub2text.structured.v1 and supports omitting raw source\ntext, runs, or segments for smaller output.",
+          "lower": "from epub2text import epubparser\n\nparser = epubparser(\"book.epub\")\nextraction = parser.extract_structured(include_segments=true)\ndata = extraction.to_json(include_raw=false, include_runs=true, indent=2)\n\n\n\n\nthe json export embeds schema epub2text.structured.v1 and supports omitting raw source\ntext, runs, or segments for smaller output."
+        },
+        {
+          "anchor": "",
+          "heading": "Downstream consumer notes",
+          "text": "Downstream tools should consume block and segment IDs, preserve diagnostics and schema\nversion, and use source offsets from structured extraction instead of inferring offsets\nfrom cleaned text. Consumers that require lossless rebuilding should fail closed when\ndiagnostics report non-lossless extraction.",
+          "lower": "downstream tools should consume block and segment ids, preserve diagnostics and schema\nversion, and use source offsets from structured extraction instead of inferring offsets\nfrom cleaned text. consumers that require lossless rebuilding should fail closed when\ndiagnostics report non-lossless extraction."
+        }
+      ]
+    },
+    {
+      "url": "/tools/epub2text/usage/",
+      "title": "epub2text Usage Guide",
+      "snippet": "epub2text provides several commands for working with EPUB files: list, extract,\nextract-pages, extract-gutenberg, pages, read, and info.\nDis …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Usage Guide",
+          "text": "epub2text provides several commands for working with EPUB files: list, extract,\nextract-pages, extract-gutenberg, pages, read, and info.",
+          "lower": "epub2text provides several commands for working with epub files: list, extract,\nextract-pages, extract-gutenberg, pages, read, and info."
+        },
+        {
+          "anchor": "",
+          "heading": "List Chapters",
+          "text": "Display all chapters in an EPUB file:\n\n# Table format (default)\nepub2text list book.epub\n\n# Tree format (shows hierarchy)\nepub2text list book.epub --format tree\n\n\n\n\nThe table format shows chapter numbers, titles, character counts, and nesting levels.\nThe tree format displays the hierarchical structure of nested chapters.",
+          "lower": "display all chapters in an epub file:\n\n# table format (default)\nepub2text list book.epub\n\n# tree format (shows hierarchy)\nepub2text list book.epub --format tree\n\n\n\n\nthe table format shows chapter numbers, titles, character counts, and nesting levels.\nthe tree format displays the hierarchical structure of nested chapters."
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Extraction",
+          "text": "Extract all chapters to stdout:\n\nepub2text extract book.epub\n\n\n\n\nExtract to a file:\n\nepub2text extract book.epub -o output.txt",
+          "lower": "extract all chapters to stdout:\n\nepub2text extract book.epub\n\n\n\n\nextract to a file:\n\nepub2text extract book.epub -o output.txt"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter Selection",
+          "text": "Extract specific chapters by number:\n\n# Single chapter\nepub2text extract book.epub -c 1\n\n# Multiple chapters\nepub2text extract book.epub -c 1,3,5\n\n# Chapter range\nepub2text extract book.epub -c 1-5\n\n# Complex range\nepub2text extract book.epub -c 1-5,7,9-12 -o selected.txt\n\n\n\n\nInteractive chapter selection:\n\nepub2text extract book.epub --interactive",
+          "lower": "extract specific chapters by number:\n\n# single chapter\nepub2text extract book.epub -c 1\n\n# multiple chapters\nepub2text extract book.epub -c 1,3,5\n\n# chapter range\nepub2text extract book.epub -c 1-5\n\n# complex range\nepub2text extract book.epub -c 1-5,7,9-12 -o selected.txt\n\n\n\n\ninteractive chapter selection:\n\nepub2text extract book.epub --interactive"
+        },
+        {
+          "anchor": "",
+          "heading": "Output Formatting",
+          "text": "Paragraph Mode (-p, --paragraphs): One line per paragraph:\n\nepub2text extract book.epub --paragraphs\n\n\n\n\nSentence Mode (-s, --sentences): One line per sentence (requires phrasplit/spaCy):\n\nepub2text extract book.epub --sentences\n\n\n\n\nClause Mode (--comma): One line per clause (split at commas, semicolons):\n\nepub2text extract book.epub --comma\n\n\n\n\nCombined Modes: Combine sentence and clause splitting:\n\nepub2text extract book.epub --sentences --comma\n\n\n\n\nMax Line Length (-m, --max-length): Split long lines at clause boundaries:\n\nepub2text extract book.epub --max-length 80\n\n\n\n\nParagraph Separators:\n\nBy default, paragraphs are separated by two spaces at the start of each new paragraph.\nYou can customize this behavior:\n\n# Use empty lines between paragraphs\nepub2text extract book.epub --empty-li…",
+          "lower": "paragraph mode (-p, --paragraphs): one line per paragraph:\n\nepub2text extract book.epub --paragraphs\n\n\n\n\nsentence mode (-s, --sentences): one line per sentence (requires phrasplit/spacy):\n\nepub2text extract book.epub --sentences\n\n\n\n\nclause mode (--comma): one line per clause (split at commas, semicolons):\n\nepub2text extract book.epub --comma\n\n\n\n\ncombined modes: combine sentence and clause splitting:\n\nepub2text extract book.epub --sentences --comma\n\n\n\n\nmax line length (-m, --max-length): split long lines at clause boundaries:\n\nepub2text extract book.epub --max-length 80\n\n\n\n\nparagraph separators:\n\nby default, paragraphs are separated by two spaces at the start of each new paragraph.\nyou can customize this behavior:\n\n# use empty lines between paragraphs\nepub2text extract book.epub --empty-li…"
+        },
+        {
+          "anchor": "",
+          "heading": "Text Cleaning Options",
+          "text": "By default, epub2text applies smart text cleaning. You can disable or customize it:\n\n# Disable all cleaning (raw output)\nepub2text extract book.epub --raw\n\n# Keep bracketed footnotes like [1]\nepub2text extract book.epub --keep-footnotes\n\n# Keep page numbers\nepub2text extract book.epub --keep-page-numbers\n\n# Hide chapter markers\nepub2text extract book.epub --no-markers",
+          "lower": "by default, epub2text applies smart text cleaning. you can disable or customize it:\n\n# disable all cleaning (raw output)\nepub2text extract book.epub --raw\n\n# keep bracketed footnotes like [1]\nepub2text extract book.epub --keep-footnotes\n\n# keep page numbers\nepub2text extract book.epub --keep-page-numbers\n\n# hide chapter markers\nepub2text extract book.epub --no-markers"
+        },
+        {
+          "anchor": "",
+          "heading": "Output Control",
+          "text": "Control which lines are output:\n\n# Skip first 10 lines\nepub2text extract book.epub --offset 10\n\n# Limit to 100 lines\nepub2text extract book.epub --limit 100\n\n# Add line numbers\nepub2text extract book.epub --line-numbers",
+          "lower": "control which lines are output:\n\n# skip first 10 lines\nepub2text extract book.epub --offset 10\n\n# limit to 100 lines\nepub2text extract book.epub --limit 100\n\n# add line numbers\nepub2text extract book.epub --line-numbers"
+        },
+        {
+          "anchor": "",
+          "heading": "Language Model",
+          "text": "For sentence-level formatting, you can specify a different spaCy language model:\n\n# Use German language model\nepub2text extract book.epub --sentences --language-model de_core_news_sm",
+          "lower": "for sentence-level formatting, you can specify a different spacy language model:\n\n# use german language model\nepub2text extract book.epub --sentences --language-model de_core_news_sm"
+        },
+        {
+          "anchor": "",
+          "heading": "Extract by Pages",
+          "text": "Extract content organized by pages instead of chapters:\n\n# Extract all pages (uses EPUB page-list if available, otherwise synthetic)\nepub2text extract-pages book.epub\n\n# Extract specific page range\nepub2text extract-pages book.epub --pages 1-10\n\n# Generate synthetic pages with custom size (characters)\nepub2text extract-pages book.epub --page-size 2000\n\n# Use word count for synthetic pages\nepub2text extract-pages book.epub --use-words --page-size 350\n\n# Show front matter (TOC, acknowledgements, etc.)\nepub2text extract-pages book.epub --show-front-matter\n\n# Keep duplicate chapter titles in pages\nepub2text extract-pages book.epub --keep-duplicate-titles\n\n\n\n\nPage-based extraction features:\n\n\nUses EPUB page-list navigation when available (original print book pages)\n\n\nGenerates synthetic pages…",
+          "lower": "extract content organized by pages instead of chapters:\n\n# extract all pages (uses epub page-list if available, otherwise synthetic)\nepub2text extract-pages book.epub\n\n# extract specific page range\nepub2text extract-pages book.epub --pages 1-10\n\n# generate synthetic pages with custom size (characters)\nepub2text extract-pages book.epub --page-size 2000\n\n# use word count for synthetic pages\nepub2text extract-pages book.epub --use-words --page-size 350\n\n# show front matter (toc, acknowledgements, etc.)\nepub2text extract-pages book.epub --show-front-matter\n\n# keep duplicate chapter titles in pages\nepub2text extract-pages book.epub --keep-duplicate-titles\n\n\n\n\npage-based extraction features:\n\n\nuses epub page-list navigation when available (original print book pages)\n\n\ngenerates synthetic pages…"
+        },
+        {
+          "anchor": "",
+          "heading": "Extract in Project Gutenberg Format",
+          "text": "Generate text in Project Gutenberg format with proper headers and formatting:\n\n# Extract complete book in Gutenberg format\nepub2text extract-gutenberg book.epub\n\n# Save to specific file (default: {book-title}.txt)\nepub2text extract-gutenberg book.epub -o output.txt\n\n# Extract specific chapters\nepub2text extract-gutenberg book.epub --chapters 1-10\n\n# Interactive chapter selection\nepub2text extract-gutenberg book.epub --interactive\n\n\n\n\nFeatures of Gutenberg format:\n\n\nProject Gutenberg-style header with metadata\n\n\nTable of Contents\n\n\nTwo spaces after sentences and colons\n\n\n72-character line wrapping\n\n\nProper chapter formatting with uppercase titles\n\n\nAutomatic filtering of front matter chapters",
+          "lower": "generate text in project gutenberg format with proper headers and formatting:\n\n# extract complete book in gutenberg format\nepub2text extract-gutenberg book.epub\n\n# save to specific file (default: {book-title}.txt)\nepub2text extract-gutenberg book.epub -o output.txt\n\n# extract specific chapters\nepub2text extract-gutenberg book.epub --chapters 1-10\n\n# interactive chapter selection\nepub2text extract-gutenberg book.epub --interactive\n\n\n\n\nfeatures of gutenberg format:\n\n\nproject gutenberg-style header with metadata\n\n\ntable of contents\n\n\ntwo spaces after sentences and colons\n\n\n72-character line wrapping\n\n\nproper chapter formatting with uppercase titles\n\n\nautomatic filtering of front matter chapters"
+        },
+        {
+          "anchor": "",
+          "heading": "List Pages",
+          "text": "View all pages in an EPUB file:\n\n# List pages (shows EPUB page-list or generates synthetic pages)\nepub2text pages book.epub\n\n# Customize synthetic page size (in characters)\nepub2text pages book.epub --page-size 2000\n\n# Use word count instead of character count\nepub2text pages book.epub --use-words --page-size 350\n\n\n\n\nThe pages command displays:\n\n\nPage numbers (from page-list or generated: “1”, “2”, “3”, …)\n\n\nCharacter count per page\n\n\nSource type (print page-list or synthetic)\n\n\nChapter assignment for each page\n\n\nTotal character count",
+          "lower": "view all pages in an epub file:\n\n# list pages (shows epub page-list or generates synthetic pages)\nepub2text pages book.epub\n\n# customize synthetic page size (in characters)\nepub2text pages book.epub --page-size 2000\n\n# use word count instead of character count\nepub2text pages book.epub --use-words --page-size 350\n\n\n\n\nthe pages command displays:\n\n\npage numbers (from page-list or generated: “1”, “2”, “3”, …)\n\n\ncharacter count per page\n\n\nsource type (print page-list or synthetic)\n\n\nchapter assignment for each page\n\n\ntotal character count"
+        },
+        {
+          "anchor": "",
+          "heading": "Interactive Reader",
+          "text": "Read EPUB files directly in your terminal with vim-style navigation:\n\n# Start reading from the beginning\nepub2text read book.epub\n\n# Resume from last bookmark\nepub2text read book.epub --resume\n\n# Start at specific chapter\nepub2text read book.epub --chapter 5\n\n# Start at specific line\nepub2text read book.epub --line 100\n\n# Format as sentences while reading\nepub2text read book.epub --sentences\n\n# Format as clauses\nepub2text read book.epub --comma\n\n# Set maximum content width for better readability\nepub2text read book.epub --width 80\n\n# Hide header or footer\nepub2text read book.epub --no-header --no-footer\n\n\n\n\nNavigation Keys:\n\n\nj / ↓ - Scroll down one line\n\n\nk / ↑ - Scroll up one line\n\n\nSpace / PgDn - Next page\n\n\nb / PgUp - Previous page\n\n\nn - Next chapter\n\n\np - Previous chapter\n\n\ng / Home…",
+          "lower": "read epub files directly in your terminal with vim-style navigation:\n\n# start reading from the beginning\nepub2text read book.epub\n\n# resume from last bookmark\nepub2text read book.epub --resume\n\n# start at specific chapter\nepub2text read book.epub --chapter 5\n\n# start at specific line\nepub2text read book.epub --line 100\n\n# format as sentences while reading\nepub2text read book.epub --sentences\n\n# format as clauses\nepub2text read book.epub --comma\n\n# set maximum content width for better readability\nepub2text read book.epub --width 80\n\n# hide header or footer\nepub2text read book.epub --no-header --no-footer\n\n\n\n\nnavigation keys:\n\n\nj / ↓ - scroll down one line\n\n\nk / ↑ - scroll up one line\n\n\nspace / pgdn - next page\n\n\nb / pgup - previous page\n\n\nn - next chapter\n\n\np - previous chapter\n\n\ng / home…"
+        },
+        {
+          "anchor": "",
+          "heading": "Show Metadata",
+          "text": "Display EPUB metadata and statistics:\n\n# Panel format (default)\nepub2text info book.epub\n\n# Table format\nepub2text info book.epub --format table\n\n# JSON format (for scripting)\nepub2text info book.epub --format json\n\n\n\n\nThe info command displays:\n\n\nTitle\n\n\nAuthors\n\n\nContributors\n\n\nPublisher\n\n\nPublication Year\n\n\nIdentifier (ISBN, UUID, etc.)\n\n\nLanguage\n\n\nRights (copyright)\n\n\nCoverage\n\n\nDescription\n\n\nChapter count\n\n\nPage count (from page-list or estimated)\n\n\nTotal character count",
+          "lower": "display epub metadata and statistics:\n\n# panel format (default)\nepub2text info book.epub\n\n# table format\nepub2text info book.epub --format table\n\n# json format (for scripting)\nepub2text info book.epub --format json\n\n\n\n\nthe info command displays:\n\n\ntitle\n\n\nauthors\n\n\ncontributors\n\n\npublisher\n\n\npublication year\n\n\nidentifier (isbn, uuid, etc.)\n\n\nlanguage\n\n\nrights (copyright)\n\n\ncoverage\n\n\ndescription\n\n\nchapter count\n\n\npage count (from page-list or estimated)\n\n\ntotal character count"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter Markers",
+          "text": "Extracted text includes chapter titles with clear visual separation:\n\nChapter Title\n\nChapter text content here...\n\n\nNext Chapter\n\nMore content...\n\n\n\n\nThe first chapter appears as {title}\\n\\n{content}, while subsequent chapters are\nseparated by four linebreaks before the title, then two linebreaks after the title.\n\nUse --no-markers to hide chapter titles from the output.",
+          "lower": "extracted text includes chapter titles with clear visual separation:\n\nchapter title\n\nchapter text content here...\n\n\nnext chapter\n\nmore content...\n\n\n\n\nthe first chapter appears as {title}\\n\\n{content}, while subsequent chapters are\nseparated by four linebreaks before the title, then two linebreaks after the title.\n\nuse --no-markers to hide chapter titles from the output."
+        },
+        {
+          "anchor": "",
+          "heading": "Page Markers",
+          "text": "When using extract-pages, pages are marked with the format <<PAGE: N>>:\n\nChapter Title\n\n<<PAGE: 1>>\n\nFirst page content...\n\n<<PAGE: 2>>\n\nSecond page content...\n\n\n\n\nUse --no-markers to hide these page markers from the output.",
+          "lower": "when using extract-pages, pages are marked with the format <<page: n>>:\n\nchapter title\n\n<<page: 1>>\n\nfirst page content...\n\n<<page: 2>>\n\nsecond page content...\n\n\n\n\nuse --no-markers to hide these page markers from the output."
+        },
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "Extract a book for text-to-speech processing:\n\n# One sentence per line, suitable for TTS\nepub2text extract book.epub --sentences -o book.txt\n\n# One clause per line (even better for TTS)\nepub2text extract book.epub --comma -o book.txt\n\n\n\n\nCreate a clean plain text version:\n\n# Paragraphs with empty lines, no markers\nepub2text extract book.epub --paragraphs --empty-lines --no-markers -o book.txt\n\n\n\n\nExtract specific chapters with line length limit:\n\n# Chapters 1-5 with max 100 chars per line\nepub2text extract book.epub -c 1-5 --max-length 100 -o excerpt.txt\n\n\n\n\nExtract by page numbers:\n\n# Extract pages 1-20 from EPUB page-list\nepub2text extract-pages book.epub --pages 1-20 -o chapter1.txt\n\n# Generate synthetic pages and extract first 10\nepub2text extract-pages book.epub --page-size 500 --pag…",
+          "lower": "extract a book for text-to-speech processing:\n\n# one sentence per line, suitable for tts\nepub2text extract book.epub --sentences -o book.txt\n\n# one clause per line (even better for tts)\nepub2text extract book.epub --comma -o book.txt\n\n\n\n\ncreate a clean plain text version:\n\n# paragraphs with empty lines, no markers\nepub2text extract book.epub --paragraphs --empty-lines --no-markers -o book.txt\n\n\n\n\nextract specific chapters with line length limit:\n\n# chapters 1-5 with max 100 chars per line\nepub2text extract book.epub -c 1-5 --max-length 100 -o excerpt.txt\n\n\n\n\nextract by page numbers:\n\n# extract pages 1-20 from epub page-list\nepub2text extract-pages book.epub --pages 1-20 -o chapter1.txt\n\n# generate synthetic pages and extract first 10\nepub2text extract-pages book.epub --page-size 500 --pag…"
+        }
+      ]
+    }
+  ]
+}

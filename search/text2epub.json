@@ -1,0 +1,307 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "text2epub",
+  "entries": [
+    {
+      "url": "/tools/text2epub/api/",
+      "title": "text2epub Python API reference",
+      "snippet": "This page documents the stable public API exposed from text2epub.__init__.\nclass text2epub.Author(name: 'str', file_as: 'str | None' = None, …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Python API reference",
+          "text": "This page documents the stable public API exposed from text2epub.__init__.",
+          "lower": "this page documents the stable public api exposed from text2epub.__init__."
+        },
+        {
+          "anchor": "",
+          "heading": "Models",
+          "text": "class text2epub.Author(name: 'str', file_as: 'str | None' = None, role: 'str | None' = None)[source]\n\n\nname: str\n\n\n\n\nfile_as: str | None\n\n\n\n\nrole: str | None\n\n\n\n\n__init__(name: str, file_as: str | None = None, role: str | None = None) → None\n\n\n\n\n\n\nclass text2epub.EpubMetadata(title: 'str', language: 'str' = 'en', creators: 'list[str | Author]' = <factory>, contributors: 'list[str | Author]' = <factory>, publisher: 'str | None' = None, description: 'str | None' = None, identifier: 'str | None' = None, rights: 'str | None' = None, date: 'str | None' = None)[source]\n\n\ntitle: str\n\n\n\n\nlanguage: str\n\n\n\n\ncreators: list[str | Author]\n\n\n\n\ncontributors: list[str | Author]\n\n\n\n\npublisher: str | None\n\n\n\n\ndescription: str | None\n\n\n\n\nidentifier: str | None\n\n\n\n\nrights: str | None\n\n\n\n\ndate:…",
+          "lower": "class text2epub.author(name: 'str', file_as: 'str | none' = none, role: 'str | none' = none)[source]\n\n\nname: str\n\n\n\n\nfile_as: str | none\n\n\n\n\nrole: str | none\n\n\n\n\n__init__(name: str, file_as: str | none = none, role: str | none = none) → none\n\n\n\n\n\n\nclass text2epub.epubmetadata(title: 'str', language: 'str' = 'en', creators: 'list[str | author]' = <factory>, contributors: 'list[str | author]' = <factory>, publisher: 'str | none' = none, description: 'str | none' = none, identifier: 'str | none' = none, rights: 'str | none' = none, date: 'str | none' = none)[source]\n\n\ntitle: str\n\n\n\n\nlanguage: str\n\n\n\n\ncreators: list[str | author]\n\n\n\n\ncontributors: list[str | author]\n\n\n\n\npublisher: str | none\n\n\n\n\ndescription: str | none\n\n\n\n\nidentifier: str | none\n\n\n\n\nrights: str | none\n\n\n\n\ndate:…"
+        },
+        {
+          "anchor": "",
+          "heading": "Markdown builders",
+          "text": "Use these helpers for general-purpose Markdown projects.\n\n\n\ntext2epub.discover_markdown_chapters(input_path: Path | str, *, pattern: str = '*.md', recursive: bool = False) → list[MarkdownChapter][source]\nDiscover Markdown chapters from a file or folder.\n\nFiles are returned in filename order, which makes naming schemes such as\n00-front-matter.md, 01-introduction.md and 02-chapter.md a\nstable way to control EPUB spine order.\n\n\nParameters:\n\ninput_path – A Markdown file or a directory containing Markdown files.\n\n\npattern – Glob pattern used when input_path is a directory.\n\n\nrecursive – Use recursive directory discovery with Path.rglob.\n\n\n\n\nReturns:\nMarkdown chapters ready to pass to MarkdownBook.\n\n\nRaises:\nBuildError – If the input does not exist or no matching Markdown files\n    are found.…",
+          "lower": "use these helpers for general-purpose markdown projects.\n\n\n\ntext2epub.discover_markdown_chapters(input_path: path | str, *, pattern: str = '*.md', recursive: bool = false) → list[markdownchapter][source]\ndiscover markdown chapters from a file or folder.\n\nfiles are returned in filename order, which makes naming schemes such as\n00-front-matter.md, 01-introduction.md and 02-chapter.md a\nstable way to control epub spine order.\n\n\nparameters:\n\ninput_path – a markdown file or a directory containing markdown files.\n\n\npattern – glob pattern used when input_path is a directory.\n\n\nrecursive – use recursive directory discovery with path.rglob.\n\n\n\n\nreturns:\nmarkdown chapters ready to pass to markdownbook.\n\n\nraises:\nbuilderror – if the input does not exist or no matching markdown files\n    are found.…"
+        },
+        {
+          "anchor": "",
+          "heading": "XHTML builder",
+          "text": "text2epub.create_epub(metadata: EpubMetadata, chapters: Sequence[XhtmlChapter], output_path: Path | str, *, options: BuildOptions | None = None, assets: Sequence[RenderedAsset] | None = None) → Path[source]",
+          "lower": "text2epub.create_epub(metadata: epubmetadata, chapters: sequence[xhtmlchapter], output_path: path | str, *, options: buildoptions | none = none, assets: sequence[renderedasset] | none = none) → path[source]"
+        },
+        {
+          "anchor": "",
+          "heading": "Rebuilds",
+          "text": "text2epub.rebuild_epub(plan: ReplacementPlan, output_path: Path | str) → ReplacementReport[source]",
+          "lower": "text2epub.rebuild_epub(plan: replacementplan, output_path: path | str) → replacementreport[source]"
+        },
+        {
+          "anchor": "",
+          "heading": "Exceptions",
+          "text": "exception text2epub.errors.Text2EpubError[source]\nBase exception for text2epub.\n\n\n\n\n\nexception text2epub.errors.BuildError[source]\nRaised when generated EPUB creation fails.\n\n\n\n\n\nexception text2epub.errors.ValidationError[source]\nRaised when validation detects an unsafe or invalid EPUB.\n\n\n\n\n\nexception text2epub.errors.ReplacementError[source]\nRaised when a replacement plan cannot be applied safely.\n\n\n\n\n\nexception text2epub.errors.PackageError[source]\nRaised when ZIP package handling fails.\n\n\n\n\n\nexception text2epub.errors.UnsafeFragmentError[source]\nRaised when inline XHTML fragments are unsafe.",
+          "lower": "exception text2epub.errors.text2epuberror[source]\nbase exception for text2epub.\n\n\n\n\n\nexception text2epub.errors.builderror[source]\nraised when generated epub creation fails.\n\n\n\n\n\nexception text2epub.errors.validationerror[source]\nraised when validation detects an unsafe or invalid epub.\n\n\n\n\n\nexception text2epub.errors.replacementerror[source]\nraised when a replacement plan cannot be applied safely.\n\n\n\n\n\nexception text2epub.errors.packageerror[source]\nraised when zip package handling fails.\n\n\n\n\n\nexception text2epub.errors.unsafefragmenterror[source]\nraised when inline xhtml fragments are unsafe."
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/cli/",
+      "title": "text2epub Command-line interface",
+      "snippet": "text2epub version\n\n\n\n\nPrints the package version reported by text2epub._version.\ntext2epub markdown INPUT.md -o OUTPUT.epub\ntext2epub markdo …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Version",
+          "text": "text2epub version\n\n\n\n\nPrints the package version reported by text2epub._version.",
+          "lower": "text2epub version\n\n\n\n\nprints the package version reported by text2epub._version."
+        },
+        {
+          "anchor": "",
+          "heading": "Build from Markdown",
+          "text": "text2epub markdown INPUT.md -o OUTPUT.epub\ntext2epub markdown CHAPTER_DIR -o OUTPUT.epub --title \"Book\" --language en\ntext2epub markdown CHAPTER_DIR -o OUTPUT.epub --title-page --toc-page --toc-page-numbers\ntext2epub markdown CHAPTER_DIR -o OUTPUT.epub --allow-inline-xhtml\n\n\n\n\nWhen CHAPTER_DIR is a directory, direct *.md children are sorted by filename\nand used as spine order. This supports manuscript folders such as:\n\nchapters/\n├── 00-front-matter.md\n├── 01-introduction.md\n└── 02-chapter.md\n\n\n\n\nOptions:\n\n\n--title, --language, --creator, --identifier, --publisher, --description, --rights, --date: metadata fields.\n\n\n--no-ncx: omit the EPUB 2 NCX table of contents file.\n\n\n--non-deterministic: use fresh UUID/timestamps instead of deterministic output.\n\n\n--allow-remote-resources: allow remote…",
+          "lower": "text2epub markdown input.md -o output.epub\ntext2epub markdown chapter_dir -o output.epub --title \"book\" --language en\ntext2epub markdown chapter_dir -o output.epub --title-page --toc-page --toc-page-numbers\ntext2epub markdown chapter_dir -o output.epub --allow-inline-xhtml\n\n\n\n\nwhen chapter_dir is a directory, direct *.md children are sorted by filename\nand used as spine order. this supports manuscript folders such as:\n\nchapters/\n├── 00-front-matter.md\n├── 01-introduction.md\n└── 02-chapter.md\n\n\n\n\noptions:\n\n\n--title, --language, --creator, --identifier, --publisher, --description, --rights, --date: metadata fields.\n\n\n--no-ncx: omit the epub 2 ncx table of contents file.\n\n\n--non-deterministic: use fresh uuid/timestamps instead of deterministic output.\n\n\n--allow-remote-resources: allow remote…"
+        },
+        {
+          "anchor": "",
+          "heading": "Rebuild an EPUB",
+          "text": "text2epub rebuild SOURCE.epub MANIFEST.json REPLACEMENTS.json -o OUTPUT.epub\n\n\n\n\nThe replacements file contains a replacements array:\n\n{\n  \"replacements\": [\n    {\n      \"block_id\": \"spine-0001:block-000001\",\n      \"text\": \"Updated text.\",\n      \"expected_source\": \"Original text.\",\n      \"allow_inline_xhtml\": false\n    }\n  ]\n}\n\n\n\n\nOptions:\n\n\n--allow-unresolved-tokens: disable unresolved-token failure for rebuild output.\n\n\n--json: print the replacement report as JSON.",
+          "lower": "text2epub rebuild source.epub manifest.json replacements.json -o output.epub\n\n\n\n\nthe replacements file contains a replacements array:\n\n{\n  \"replacements\": [\n    {\n      \"block_id\": \"spine-0001:block-000001\",\n      \"text\": \"updated text.\",\n      \"expected_source\": \"original text.\",\n      \"allow_inline_xhtml\": false\n    }\n  ]\n}\n\n\n\n\noptions:\n\n\n--allow-unresolved-tokens: disable unresolved-token failure for rebuild output.\n\n\n--json: print the replacement report as json."
+        },
+        {
+          "anchor": "",
+          "heading": "Validate an EPUB",
+          "text": "text2epub validate OUTPUT.epub\ntext2epub validate OUTPUT.epub --json\n\n\n\n\nValidation checks ZIP readability, the EPUB mimetype entry,\nMETA-INF/container.xml, and unresolved-token patterns in text entries.",
+          "lower": "text2epub validate output.epub\ntext2epub validate output.epub --json\n\n\n\n\nvalidation checks zip readability, the epub mimetype entry,\nmeta-inf/container.xml, and unresolved-token patterns in text entries."
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/getting-started/",
+      "title": "text2epub Getting started",
+      "snippet": "python -m pip install -e .\npython -m pip install -e \".[dev]\"\n\n\n\n\nInstall the documentation dependencies when building the Sphinx site:\n\npyth …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Install for development",
+          "text": "python -m pip install -e .\npython -m pip install -e \".[dev]\"\n\n\n\n\nInstall the documentation dependencies when building the Sphinx site:\n\npython -m pip install -e \".[docs]\"",
+          "lower": "python -m pip install -e .\npython -m pip install -e \".[dev]\"\n\n\n\n\ninstall the documentation dependencies when building the sphinx site:\n\npython -m pip install -e \".[docs]\""
+        },
+        {
+          "anchor": "",
+          "heading": "Create an EPUB from a folder",
+          "text": "Create a folder whose Markdown filenames define reading order:\n\nmanuscript/\n├── 00-front-matter.md\n├── 01-introduction.md\n└── 02-chapter.md\n\n\n\n\nThe first file may include simple front matter:\n\n---\ntitle: Example Book\nlanguage: en\nauthor: Ada Lovelace\n---\n\n# Introduction\n\nHello world.\n\n\n\n\nBuild the EPUB from Python:\n\nfrom pathlib import Path\n\nfrom text2epub import BuildOptions, create_epub_from_markdown_folder\n\ncreate_epub_from_markdown_folder(\n    Path(\"manuscript\"),\n    Path(\"example.epub\"),\n    options=BuildOptions(\n        include_title_page=True,\n        include_toc_page=True,\n        toc_page_numbers=True,\n    ),\n)\n\n\n\n\nOr use the CLI:\n\ntext2epub markdown manuscript/ -o example.epub --title-page --toc-page --toc-page-numbers",
+          "lower": "create a folder whose markdown filenames define reading order:\n\nmanuscript/\n├── 00-front-matter.md\n├── 01-introduction.md\n└── 02-chapter.md\n\n\n\n\nthe first file may include simple front matter:\n\n---\ntitle: example book\nlanguage: en\nauthor: ada lovelace\n---\n\n# introduction\n\nhello world.\n\n\n\n\nbuild the epub from python:\n\nfrom pathlib import path\n\nfrom text2epub import buildoptions, create_epub_from_markdown_folder\n\ncreate_epub_from_markdown_folder(\n    path(\"manuscript\"),\n    path(\"example.epub\"),\n    options=buildoptions(\n        include_title_page=true,\n        include_toc_page=true,\n        toc_page_numbers=true,\n    ),\n)\n\n\n\n\nor use the cli:\n\ntext2epub markdown manuscript/ -o example.epub --title-page --toc-page --toc-page-numbers"
+        },
+        {
+          "anchor": "",
+          "heading": "Create an EPUB from one Markdown file",
+          "text": "Create a Markdown chapter:\n\n# Chapter One\n\nHello world.\n\n\n\n\nBuild the EPUB from Python:\n\nfrom pathlib import Path\n\nfrom text2epub import BuildOptions, EpubMetadata, create_epub_from_markdown_files\n\ncreate_epub_from_markdown_files(\n    [Path(\"chapter-01.md\")],\n    Path(\"example.epub\"),\n    metadata=EpubMetadata(title=\"Example Book\", language=\"en\"),\n    options=BuildOptions(include_title_page=True, include_toc_page=True),\n)\n\n\n\n\nOr use the CLI:\n\ntext2epub markdown chapter-01.md -o example.epub --title \"Example Book\" --language en --title-page --toc-page",
+          "lower": "create a markdown chapter:\n\n# chapter one\n\nhello world.\n\n\n\n\nbuild the epub from python:\n\nfrom pathlib import path\n\nfrom text2epub import buildoptions, epubmetadata, create_epub_from_markdown_files\n\ncreate_epub_from_markdown_files(\n    [path(\"chapter-01.md\")],\n    path(\"example.epub\"),\n    metadata=epubmetadata(title=\"example book\", language=\"en\"),\n    options=buildoptions(include_title_page=true, include_toc_page=true),\n)\n\n\n\n\nor use the cli:\n\ntext2epub markdown chapter-01.md -o example.epub --title \"example book\" --language en --title-page --toc-page"
+        },
+        {
+          "anchor": "",
+          "heading": "Validate output",
+          "text": "text2epub validate example.epub\n\n\n\n\nA successful response confirms that the archive has the expected EPUB ZIP basics\nand that known unresolved internal tokens were not found in text entries. Run\nEPUBCheck separately before publication.",
+          "lower": "text2epub validate example.epub\n\n\n\n\na successful response confirms that the archive has the expected epub zip basics\nand that known unresolved internal tokens were not found in text entries. run\nepubcheck separately before publication."
+        },
+        {
+          "anchor": "",
+          "heading": "Add a title page and visible contents page",
+          "text": "Set include_title_page=True to add a generated title page to the EPUB spine.\nSet include_toc_page=True to add a reader-visible table of contents page. The\nEPUB NAV file is still generated separately for reader navigation.\n\ntoc_page_numbers=True requests automatic page numbers in the generated TOC page\nusing CSS target-counter(). EPUB readers do not share one universal page model,\nso unsupported readers will show the linked entries without page numbers.",
+          "lower": "set include_title_page=true to add a generated title page to the epub spine.\nset include_toc_page=true to add a reader-visible table of contents page. the\nepub nav file is still generated separately for reader navigation.\n\ntoc_page_numbers=true requests automatic page numbers in the generated toc page\nusing css target-counter(). epub readers do not share one universal page model,\nso unsupported readers will show the linked entries without page numbers."
+        },
+        {
+          "anchor": "",
+          "heading": "Safe inline XHTML",
+          "text": "By default, raw HTML in Markdown is escaped. Enable safe inline XHTML when source\nparagraphs intentionally contain EPUB-safe inline tags:\n\ntext2epub markdown manuscript/ -o example.epub --allow-inline-xhtml\n\n\n\n\nfrom text2epub import BuildOptions\n\noptions = BuildOptions(allow_inline_xhtml=True)\n\n\n\n\nThis preserves This is <em>important</em>. as XHTML. Raw block XHTML, scripts,\nevent handler attributes, and javascript: links are rejected.",
+          "lower": "by default, raw html in markdown is escaped. enable safe inline xhtml when source\nparagraphs intentionally contain epub-safe inline tags:\n\ntext2epub markdown manuscript/ -o example.epub --allow-inline-xhtml\n\n\n\n\nfrom text2epub import buildoptions\n\noptions = buildoptions(allow_inline_xhtml=true)\n\n\n\n\nthis preserves this is <em>important</em>. as xhtml. raw block xhtml, scripts,\nevent handler attributes, and javascript: links are rejected."
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/",
+      "title": "text2epub documentation",
+      "snippet": "text2epub is a typed Python package for creating EPUB files from text-first\nworkflows and for safely rebuilding existing EPUB packages from …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "text2epub documentation",
+          "text": "text2epub is a typed Python package for creating EPUB files from text-first\nworkflows and for safely rebuilding existing EPUB packages from structured\nextraction manifests.\n\nThe general-purpose creation workflow supports single Markdown files, folders of\nordered Markdown chapters, explicit chapter lists, and already-rendered XHTML\nbodies. The rebuild workflow remains conservative for automation tools such as\nbooktx, where preserving unchanged ZIP entries and failing closed on stale\ninputs matters.\n\n\nUser guide\n\n\nGetting started\nInstall for development\n\nCreate an EPUB from a folder\n\nCreate an EPUB from one Markdown file\n\nValidate output\n\nAdd a title page and visible contents page\n\nSafe inline XHTML\n\n\n\n\nMarkdown to EPUB\nFolder schema\n\nInputs\n\nGenerated title and contents pages\n\nFront matter…",
+          "lower": "text2epub is a typed python package for creating epub files from text-first\nworkflows and for safely rebuilding existing epub packages from structured\nextraction manifests.\n\nthe general-purpose creation workflow supports single markdown files, folders of\nordered markdown chapters, explicit chapter lists, and already-rendered xhtml\nbodies. the rebuild workflow remains conservative for automation tools such as\nbooktx, where preserving unchanged zip entries and failing closed on stale\ninputs matters.\n\n\nuser guide\n\n\ngetting started\ninstall for development\n\ncreate an epub from a folder\n\ncreate an epub from one markdown file\n\nvalidate output\n\nadd a title page and visible contents page\n\nsafe inline xhtml\n\n\n\n\nmarkdown to epub\nfolder schema\n\ninputs\n\ngenerated title and contents pages\n\nfront matter…"
+        },
+        {
+          "anchor": "",
+          "heading": "Supported workflows",
+          "text": "Generate a new EPUB from one Markdown file.\n\n\nGenerate a new EPUB from a folder of Markdown chapters sorted by filename.\n\n\nAdd generated title and reader-visible contents pages to Markdown or XHTML builds.\n\n\nRequest automatic TOC page numbers for reading systems that support CSS paged-media counters.\n\n\nDiscover chapters from manuscript naming schemes such as 00-front-matter.md,\n01-introduction.md, and 02-chapter.md.\n\n\nBuild an EPUB from already-rendered XHTML chapter bodies.\n\n\nRebuild an existing EPUB from a manifest plus replacement JSON.\n\n\nValidate the basic ZIP/package structure and scan text entries for unresolved\ninternal tokens.",
+          "lower": "generate a new epub from one markdown file.\n\n\ngenerate a new epub from a folder of markdown chapters sorted by filename.\n\n\nadd generated title and reader-visible contents pages to markdown or xhtml builds.\n\n\nrequest automatic toc page numbers for reading systems that support css paged-media counters.\n\n\ndiscover chapters from manuscript naming schemes such as 00-front-matter.md,\n01-introduction.md, and 02-chapter.md.\n\n\nbuild an epub from already-rendered xhtml chapter bodies.\n\n\nrebuild an existing epub from a manifest plus replacement json.\n\n\nvalidate the basic zip/package structure and scan text entries for unresolved\ninternal tokens."
+        },
+        {
+          "anchor": "",
+          "heading": "Design priorities",
+          "text": "Make the common Markdown-to-EPUB path easy for general Python users.\n\n\nKeep output deterministic by default so builds are reproducible.\n\n\nPreserve source EPUB bytes for no-op and identity rebuilds.\n\n\nFail closed when rebuild inputs are stale or unsafe.\n\n\nKeep generated front matter optional so scripts can choose plain chapter-only output or book-like output.\n\n\nKeep the public API small enough for automation tools and scripts.",
+          "lower": "make the common markdown-to-epub path easy for general python users.\n\n\nkeep output deterministic by default so builds are reproducible.\n\n\npreserve source epub bytes for no-op and identity rebuilds.\n\n\nfail closed when rebuild inputs are stale or unsafe.\n\n\nkeep generated front matter optional so scripts can choose plain chapter-only output or book-like output.\n\n\nkeep the public api small enough for automation tools and scripts."
+        },
+        {
+          "anchor": "",
+          "heading": "Limits",
+          "text": "text2epub validate is a package-level smoke check. It does not replace\nEPUBCheck and does not perform full EPUB specification validation of OPF, NAV,\nNCX, XHTML, CSS, or remote-resource policy.",
+          "lower": "text2epub validate is a package-level smoke check. it does not replace\nepubcheck and does not perform full epub specification validation of opf, nav,\nncx, xhtml, css, or remote-resource policy."
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/markdown/",
+      "title": "text2epub Markdown to EPUB",
+      "snippet": "The Markdown workflow renders Markdown to XHTML chapters, packages local image\nassets, generates EPUB metadata files, and writes a determini …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Markdown to EPUB",
+          "text": "The Markdown workflow renders Markdown to XHTML chapters, packages local image\nassets, generates EPUB metadata files, and writes a deterministic ZIP package by\ndefault.",
+          "lower": "the markdown workflow renders markdown to xhtml chapters, packages local image\nassets, generates epub metadata files, and writes a deterministic zip package by\ndefault."
+        },
+        {
+          "anchor": "",
+          "heading": "Folder schema",
+          "text": "For general-purpose projects, keep the manuscript in a folder and name files so\nsorted filenames match reading order:\n\nmanuscript/\n├── 00-front-matter.md\n├── 01-introduction.md\n├── 02-chapter.md\n└── 99-appendix.md\n\n\n\n\nThe Python helper discovers direct *.md children and returns them in filename\norder:\n\nfrom pathlib import Path\n\nfrom text2epub import BuildOptions, create_epub_from_markdown_folder\n\ncreate_epub_from_markdown_folder(\n    Path(\"manuscript\"),\n    Path(\"book.epub\"),\n    options=BuildOptions(\n        include_title_page=True,\n        include_toc_page=True,\n        toc_page_numbers=True,\n    ),\n)\n\n\n\n\nUse discover_markdown_chapters when you want to inspect or customize the\nchapter list before building:\n\nfrom pathlib import Path\n\nfrom text2epub import EpubMetadata, MarkdownBook, crea…",
+          "lower": "for general-purpose projects, keep the manuscript in a folder and name files so\nsorted filenames match reading order:\n\nmanuscript/\n├── 00-front-matter.md\n├── 01-introduction.md\n├── 02-chapter.md\n└── 99-appendix.md\n\n\n\n\nthe python helper discovers direct *.md children and returns them in filename\norder:\n\nfrom pathlib import path\n\nfrom text2epub import buildoptions, create_epub_from_markdown_folder\n\ncreate_epub_from_markdown_folder(\n    path(\"manuscript\"),\n    path(\"book.epub\"),\n    options=buildoptions(\n        include_title_page=true,\n        include_toc_page=true,\n        toc_page_numbers=true,\n    ),\n)\n\n\n\n\nuse discover_markdown_chapters when you want to inspect or customize the\nchapter list before building:\n\nfrom pathlib import path\n\nfrom text2epub import epubmetadata, markdownbook, crea…"
+        },
+        {
+          "anchor": "",
+          "heading": "Inputs",
+          "text": "text2epub markdown accepts either one Markdown file or a directory. For\ndirectories, direct *.md children are sorted by filename and used as spine\norder.\n\ntext2epub markdown manuscript/ -o book.epub --title \"Book\" --language en --title-page --toc-page --toc-page-numbers\n\n\n\n\nThe Python folder helper exposes the same default. Set recursive=True when you\nwant matching files below nested folders sorted by relative path.",
+          "lower": "text2epub markdown accepts either one markdown file or a directory. for\ndirectories, direct *.md children are sorted by filename and used as spine\norder.\n\ntext2epub markdown manuscript/ -o book.epub --title \"book\" --language en --title-page --toc-page --toc-page-numbers\n\n\n\n\nthe python folder helper exposes the same default. set recursive=true when you\nwant matching files below nested folders sorted by relative path."
+        },
+        {
+          "anchor": "",
+          "heading": "Generated title and contents pages",
+          "text": "The EPUB package always includes the EPUB NAV document for reading-system\nnavigation. For book-like manuscripts you can also insert reader-visible pages\ninto the spine:\n\nfrom text2epub import BuildOptions\n\noptions = BuildOptions(\n    include_title_page=True,\n    include_toc_page=True,\n    toc_page_numbers=True,\n)\n\n\n\n\nThe generated title page uses metadata such as title, description, creators,\npublisher, date, and rights. The generated contents page links to the Markdown\nchapters, not to the generated front-matter pages.\n\ntoc_page_numbers=True writes CSS using target-counter(attr(href), page). This\nrequests automatic page numbers from reading systems that support paged-media\ncounters. EPUB readers without that support keep the TOC links but omit the page\nnumbers.",
+          "lower": "the epub package always includes the epub nav document for reading-system\nnavigation. for book-like manuscripts you can also insert reader-visible pages\ninto the spine:\n\nfrom text2epub import buildoptions\n\noptions = buildoptions(\n    include_title_page=true,\n    include_toc_page=true,\n    toc_page_numbers=true,\n)\n\n\n\n\nthe generated title page uses metadata such as title, description, creators,\npublisher, date, and rights. the generated contents page links to the markdown\nchapters, not to the generated front-matter pages.\n\ntoc_page_numbers=true writes css using target-counter(attr(href), page). this\nrequests automatic page numbers from reading systems that support paged-media\ncounters. epub readers without that support keep the toc links but omit the page\nnumbers."
+        },
+        {
+          "anchor": "",
+          "heading": "Front matter",
+          "text": "The first Markdown file may include simple YAML-like front matter. Only\nkey: value lines are parsed.\n\n---\ntitle: Front Matter Title\nlanguage: en\nauthor: Ada Lovelace\npublisher: Example Press\ndescription: Short description.\nrights: Copyright holder/date.\ndate: 2026-06-22\nidentifier: urn:uuid:example\n---\n\n# Chapter One\n\n\n\n\nExplicit metadata passed through the Python API or CLI takes precedence over\nfront matter.",
+          "lower": "the first markdown file may include simple yaml-like front matter. only\nkey: value lines are parsed.\n\n---\ntitle: front matter title\nlanguage: en\nauthor: ada lovelace\npublisher: example press\ndescription: short description.\nrights: copyright holder/date.\ndate: 2026-06-22\nidentifier: urn:uuid:example\n---\n\n# chapter one\n\n\n\n\nexplicit metadata passed through the python api or cli takes precedence over\nfront matter."
+        },
+        {
+          "anchor": "",
+          "heading": "Headings",
+          "text": "Headings receive stable IDs generated from heading text:\n\n# Hello World\n\n## Hello World\n\n\n\n\nThe rendered IDs become hello-world and hello-world-2. The first # heading\nin each file is used as the chapter title when no explicit chapter title is set.",
+          "lower": "headings receive stable ids generated from heading text:\n\n# hello world\n\n## hello world\n\n\n\n\nthe rendered ids become hello-world and hello-world-2. the first # heading\nin each file is used as the chapter title when no explicit chapter title is set."
+        },
+        {
+          "anchor": "",
+          "heading": "Images",
+          "text": "Local images are copied into OEBPS/Images/ and chapter image references are\nrewritten to relative package paths.\n\n![Cover](cover.png)\n\n\n\n\nRemote images are rejected by default. Set allow_remote_resources=True in\nBuildOptions or pass --allow-remote-resources to leave remote image URLs\nexternal. External resources may not be accepted by all stores or reading\nsystems.",
+          "lower": "local images are copied into oebps/images/ and chapter image references are\nrewritten to relative package paths.\n\n![cover](cover.png)\n\n\n\n\nremote images are rejected by default. set allow_remote_resources=true in\nbuildoptions or pass --allow-remote-resources to leave remote image urls\nexternal. external resources may not be accepted by all stores or reading\nsystems."
+        },
+        {
+          "anchor": "",
+          "heading": "Links and safe inline XHTML",
+          "text": "Raw HTML in Markdown is escaped by default. Links with javascript: URLs are rejected.\nOther links are escaped during XHTML serialization.\n\nEnable safe inline XHTML when your Markdown text intentionally contains EPUB-safe\nphrasing markup, for example from an epub2text structured fragment export:\n\nfrom text2epub import BuildOptions\n\noptions = BuildOptions(allow_inline_xhtml=True)\n\n\n\n\ntext2epub markdown manuscript/ -o book.epub --allow-inline-xhtml\n\n\n\n\nWith this option, Markdown such as This is <em>important</em>. is emitted as\ninline XHTML instead of escaped text. The builder rejects raw block XHTML, scripts,\nevent handler attributes, and javascript: links. Use Markdown syntax for block\nstructure and reserve raw XHTML for inline phrasing tags such as <em>,\n<strong>, <span>, <a>, <code>, <su…",
+          "lower": "raw html in markdown is escaped by default. links with javascript: urls are rejected.\nother links are escaped during xhtml serialization.\n\nenable safe inline xhtml when your markdown text intentionally contains epub-safe\nphrasing markup, for example from an epub2text structured fragment export:\n\nfrom text2epub import buildoptions\n\noptions = buildoptions(allow_inline_xhtml=true)\n\n\n\n\ntext2epub markdown manuscript/ -o book.epub --allow-inline-xhtml\n\n\n\n\nwith this option, markdown such as this is <em>important</em>. is emitted as\ninline xhtml instead of escaped text. the builder rejects raw block xhtml, scripts,\nevent handler attributes, and javascript: links. use markdown syntax for block\nstructure and reserve raw xhtml for inline phrasing tags such as <em>,\n<strong>, <span>, <a>, <code>, <su…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/rebuild/",
+      "title": "text2epub Safe EPUB rebuilds",
+      "snippet": "The rebuild workflow applies text replacements to an existing EPUB using an extraction manifest. It is designed for automated translation or …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Safe EPUB rebuilds",
+          "text": "The rebuild workflow applies text replacements to an existing EPUB using an extraction manifest. It is designed for automated translation or post-processing systems that must preserve source package entries whenever possible.",
+          "lower": "the rebuild workflow applies text replacements to an existing epub using an extraction manifest. it is designed for automated translation or post-processing systems that must preserve source package entries whenever possible."
+        },
+        {
+          "anchor": "",
+          "heading": "Replacement plan",
+          "text": "from pathlib import Path\n\nfrom text2epub import Replacement, ReplacementPlan, rebuild_epub\n\nreport = rebuild_epub(\n    ReplacementPlan(\n        source_epub=Path(\"source.epub\"),\n        extraction_manifest=Path(\"manifest.json\"),\n        replacements=[\n            Replacement(\n                block_id=\"spine-0001:block-000001\",\n                text=\"Translated paragraph.\",\n                expected_source=\"Original paragraph.\",\n                allow_inline_xhtml=False,\n            )\n        ],\n    ),\n    Path(\"rebuilt.epub\"),\n)\n\nprint(report.changed_entries)",
+          "lower": "from pathlib import path\n\nfrom text2epub import replacement, replacementplan, rebuild_epub\n\nreport = rebuild_epub(\n    replacementplan(\n        source_epub=path(\"source.epub\"),\n        extraction_manifest=path(\"manifest.json\"),\n        replacements=[\n            replacement(\n                block_id=\"spine-0001:block-000001\",\n                text=\"translated paragraph.\",\n                expected_source=\"original paragraph.\",\n                allow_inline_xhtml=false,\n            )\n        ],\n    ),\n    path(\"rebuilt.epub\"),\n)\n\nprint(report.changed_entries)"
+        },
+        {
+          "anchor": "",
+          "heading": "Manifest shape",
+          "text": "The extraction manifest can be supplied as a mapping or JSON file. The expected schema is intentionally small:\n\n{\n  \"schema_version\": 1,\n  \"source_sha256\": \"sha256-of-source-epub\",\n  \"entries\": [\n    {\n      \"href\": \"OEBPS/Text/chapter01.xhtml\",\n      \"media_type\": \"application/xhtml+xml\",\n      \"spine_index\": 1,\n      \"raw_sha256\": \"sha256-of-entry-bytes\",\n      \"blocks\": [\n        {\n          \"block_id\": \"spine-0001:block-000001\",\n          \"text\": \"Original paragraph.\",\n          \"source_start\": 128,\n          \"source_end\": 147,\n          \"replacement_mode\": \"text_node_sequence\"\n        }\n      ]\n    }\n  ]\n}\n\n\n\n\nsource_sha256 and raw_sha256 are optional, but strongly recommended. When present, they protect against applying replacements to the wrong source file or a stale ZIP entry.",
+          "lower": "the extraction manifest can be supplied as a mapping or json file. the expected schema is intentionally small:\n\n{\n  \"schema_version\": 1,\n  \"source_sha256\": \"sha256-of-source-epub\",\n  \"entries\": [\n    {\n      \"href\": \"oebps/text/chapter01.xhtml\",\n      \"media_type\": \"application/xhtml+xml\",\n      \"spine_index\": 1,\n      \"raw_sha256\": \"sha256-of-entry-bytes\",\n      \"blocks\": [\n        {\n          \"block_id\": \"spine-0001:block-000001\",\n          \"text\": \"original paragraph.\",\n          \"source_start\": 128,\n          \"source_end\": 147,\n          \"replacement_mode\": \"text_node_sequence\"\n        }\n      ]\n    }\n  ]\n}\n\n\n\n\nsource_sha256 and raw_sha256 are optional, but strongly recommended. when present, they protect against applying replacements to the wrong source file or a stale zip entry."
+        },
+        {
+          "anchor": "",
+          "heading": "Replacement modes",
+          "text": "text_node_sequence replaces the byte-decoded text range from source_start to source_end.\n\nwhole_block_body replaces body_source_start to body_source_end when present, otherwise it falls back to source_start and source_end. This mode supports safe inline XHTML fragments.",
+          "lower": "text_node_sequence replaces the byte-decoded text range from source_start to source_end.\n\nwhole_block_body replaces body_source_start to body_source_end when present, otherwise it falls back to source_start and source_end. this mode supports safe inline xhtml fragments."
+        },
+        {
+          "anchor": "",
+          "heading": "Safety checks",
+          "text": "A rebuild fails when:\n\n\nthe source EPUB fails basic package validation,\n\n\nthe manifest source hash does not match the source EPUB,\n\n\na replacement references an unknown or duplicate block,\n\n\nsource offsets are missing, invalid, outside the entry, or overlapping,\n\n\nthe current source fragment differs from the manifest fragment,\n\n\na replacement leaks configured internal placeholder tokens,\n\n\nan inline XHTML fragment contains forbidden tags, attributes, event handlers, JavaScript links, or malformed XML.\n\n\n\nNo-op plans and identity replacements copy the source EPUB without rewriting entries. Rebuilds do not operate in place; use a distinct output path.",
+          "lower": "a rebuild fails when:\n\n\nthe source epub fails basic package validation,\n\n\nthe manifest source hash does not match the source epub,\n\n\na replacement references an unknown or duplicate block,\n\n\nsource offsets are missing, invalid, outside the entry, or overlapping,\n\n\nthe current source fragment differs from the manifest fragment,\n\n\na replacement leaks configured internal placeholder tokens,\n\n\nan inline xhtml fragment contains forbidden tags, attributes, event handlers, javascript links, or malformed xml.\n\n\n\nno-op plans and identity replacements copy the source epub without rewriting entries. rebuilds do not operate in place; use a distinct output path."
+        },
+        {
+          "anchor": "",
+          "heading": "Output rewrite (language and CSS)",
+          "text": "rebuild_epub accepts an optional OutputRewriteOptions through\nReplacementPlan.output_rewrite. It is the supported way to update\npublication-level metadata when replacement text changes the publication\nlanguage, and to inject deterministic, caller-owned CSS. text2epub does not\nchoose a target language or interpret injected CSS - those concerns stay with\nthe caller.\n\nfrom text2epub import OutputRewriteOptions, ReplacementPlan, rebuild_epub\n\nreport = rebuild_epub(\n    ReplacementPlan(\n        source_epub=\"source.epub\",\n        output_rewrite=OutputRewriteOptions(\n            language=\"es\",\n            patch_package_language=True,\n            patch_content_language=True,\n            css_text=\"p { hyphens: auto; }\",\n        ),\n    ),\n    \"rebuilt.epub\",\n)\nprint(report.output_rewrite)\n\n\n\n\nWhen…",
+          "lower": "rebuild_epub accepts an optional outputrewriteoptions through\nreplacementplan.output_rewrite. it is the supported way to update\npublication-level metadata when replacement text changes the publication\nlanguage, and to inject deterministic, caller-owned css. text2epub does not\nchoose a target language or interpret injected css - those concerns stay with\nthe caller.\n\nfrom text2epub import outputrewriteoptions, replacementplan, rebuild_epub\n\nreport = rebuild_epub(\n    replacementplan(\n        source_epub=\"source.epub\",\n        output_rewrite=outputrewriteoptions(\n            language=\"es\",\n            patch_package_language=true,\n            patch_content_language=true,\n            css_text=\"p { hyphens: auto; }\",\n        ),\n    ),\n    \"rebuilt.epub\",\n)\nprint(report.output_rewrite)\n\n\n\n\nwhen…"
+        },
+        {
+          "anchor": "",
+          "heading": "Language",
+          "text": "language is required when any of patch_package_language,\npatch_content_language, or patch_body_language is enabled.\n\n\npatch_package_language updates the primary OPF dc:language (adding one if\nnone exists, preserving additional distinct dc:language values).\n\n\npatch_content_language sets the root html@lang and html@xml:lang.\n\n\npatch_body_language additionally sets body@lang/body@xml:lang and is\ninvalid unless content language patching is enabled.\n\n\nExisting descendant language attributes (for example a lang=\"fr\" quote) are\npreserved.\n\n\nLanguage tags are validated as BCP-47-style: empty, whitespace-only,\nunderscore-form, and otherwise syntactically invalid tags are rejected.",
+          "lower": "language is required when any of patch_package_language,\npatch_content_language, or patch_body_language is enabled.\n\n\npatch_package_language updates the primary opf dc:language (adding one if\nnone exists, preserving additional distinct dc:language values).\n\n\npatch_content_language sets the root html@lang and html@xml:lang.\n\n\npatch_body_language additionally sets body@lang/body@xml:lang and is\ninvalid unless content language patching is enabled.\n\n\nexisting descendant language attributes (for example a lang=\"fr\" quote) are\npreserved.\n\n\nlanguage tags are validated as bcp-47-style: empty, whitespace-only,\nunderscore-form, and otherwise syntactically invalid tags are rejected."
+        },
+        {
+          "anchor": "",
+          "heading": "CSS",
+          "text": "css_text is caller-owned CSS. text2epub validates that it is text and injects\nit as a single <style id=\"text2epub-output-policy\" type=\"text/css\"> element.\n\n\nstyle_id must be a valid XML/HTML id token.\n\n\nZero matching styles insert one at the end of <head>; one matching style\nreplaces its text; more than one is an error rather than an arbitrary repair.\n\n\nA missing <head> is an error for a targeted XHTML document.\n\n\ncss_text=None means do not inspect or change generated styles. An empty\nstring is an explicit request to remove an existing matching style.\n\n\nApplying identical options twice produces one style and no semantic change\n(idempotent).\n\n\nCSS is skipped for fixed-layout content unless\ninject_css_into_fixed_layout=True. Language patching still applies to\nfixed-layout XHTML.\n\n\n\ntext2epu…",
+          "lower": "css_text is caller-owned css. text2epub validates that it is text and injects\nit as a single <style id=\"text2epub-output-policy\" type=\"text/css\"> element.\n\n\nstyle_id must be a valid xml/html id token.\n\n\nzero matching styles insert one at the end of <head>; one matching style\nreplaces its text; more than one is an error rather than an arbitrary repair.\n\n\na missing <head> is an error for a targeted xhtml document.\n\n\ncss_text=none means do not inspect or change generated styles. an empty\nstring is an explicit request to remove an existing matching style.\n\n\napplying identical options twice produces one style and no semantic change\n(idempotent).\n\n\ncss is skipped for fixed-layout content unless\ninject_css_into_fixed_layout=true. language patching still applies to\nfixed-layout xhtml.\n\n\n\ntext2epu…"
+        },
+        {
+          "anchor": "",
+          "heading": "Content targeting",
+          "text": "content_scope selects which XHTML documents the rewrite applies to:\n\n\nreplacement-manifest uses the unique XHTML hrefs from the extraction\nmanifest (requires a manifest even when there are no replacements).\n\n\nspine uses XHTML manifest items referenced by the spine, in spine order.\n\n\nspine-and-navigation (default) uses spine items plus the navigation\ndocument, deduplicated in archive order.\n\n\nexplicit uses content_hrefs, resolved relative to the OPF unless they\nalready name an exact archive member. Empty lists, duplicate or traversal\nhrefs, hrefs absent from the manifest, non-XHTML targets, and archive\nduplicate-name ambiguity are rejected.\n\n\n\nThe OPF is located through META-INF/container.xml, so rebuilt sources are not\nrequired to keep their package at OEBPS/content.opf.",
+          "lower": "content_scope selects which xhtml documents the rewrite applies to:\n\n\nreplacement-manifest uses the unique xhtml hrefs from the extraction\nmanifest (requires a manifest even when there are no replacements).\n\n\nspine uses xhtml manifest items referenced by the spine, in spine order.\n\n\nspine-and-navigation (default) uses spine items plus the navigation\ndocument, deduplicated in archive order.\n\n\nexplicit uses content_hrefs, resolved relative to the opf unless they\nalready name an exact archive member. empty lists, duplicate or traversal\nhrefs, hrefs absent from the manifest, non-xhtml targets, and archive\nduplicate-name ambiguity are rejected.\n\n\n\nthe opf is located through meta-inf/container.xml, so rebuilt sources are not\nrequired to keep their package at oebps/content.opf."
+        },
+        {
+          "anchor": "",
+          "heading": "Reporting and atomic output",
+          "text": "When a non-None rewrite object is supplied, ReplacementReport.output_rewrite\nis populated with an OutputRewriteReport (with applied=False for an\neffective no-op). ReplacementReport.changed_entries is the archive-order\nunion of block-replacement, OPF, content-language, and CSS changes;\nreplacement_count continues to count requested block replacements only.\n\nOutput publication is atomic: a sibling temporary EPUB is written in the\ndestination directory, validated, and only then moved into place. On any\nfailure the temporary file is removed and an existing destination is left\nuntouched.",
+          "lower": "when a non-none rewrite object is supplied, replacementreport.output_rewrite\nis populated with an outputrewritereport (with applied=false for an\neffective no-op). replacementreport.changed_entries is the archive-order\nunion of block-replacement, opf, content-language, and css changes;\nreplacement_count continues to count requested block replacements only.\n\noutput publication is atomic: a sibling temporary epub is written in the\ndestination directory, validated, and only then moved into place. on any\nfailure the temporary file is removed and an existing destination is left\nuntouched."
+        }
+      ]
+    },
+    {
+      "url": "/tools/text2epub/release-checklist/",
+      "title": "text2epub Release checklist",
+      "snippet": "Use this checklist before publishing a package or tagging a release.\npython -m pip install -e \".[dev]\"\npython -m pytest -q\npython -m compile …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Release checklist",
+          "text": "Use this checklist before publishing a package or tagging a release.",
+          "lower": "use this checklist before publishing a package or tagging a release."
+        },
+        {
+          "anchor": "",
+          "heading": "Required checks",
+          "text": "python -m pip install -e \".[dev]\"\npython -m pytest -q\npython -m compileall -q text2epub tests\npython -m text2epub version\n\n\n\n\nRun Ruff when the dependency is installed:\n\npython -m ruff check .\npython -m ruff format --check .\n\n\n\n\nBuild and inspect distributions from a git checkout or release archive:\n\npython -m build\npython -m twine check dist/*",
+          "lower": "python -m pip install -e \".[dev]\"\npython -m pytest -q\npython -m compileall -q text2epub tests\npython -m text2epub version\n\n\n\n\nrun ruff when the dependency is installed:\n\npython -m ruff check .\npython -m ruff format --check .\n\n\n\n\nbuild and inspect distributions from a git checkout or release archive:\n\npython -m build\npython -m twine check dist/*"
+        },
+        {
+          "anchor": "",
+          "heading": "Manual review",
+          "text": "Confirm the version produced by package metadata, text2epub.__version__, and text2epub version is identical.\n\n\nConfirm LICENSE exists and matches the configured project license and classifiers.\n\n\nRun EPUBCheck against generated sample EPUBs.\n\n\nTest the CLI against a real booktx extraction manifest.\n\n\nConfirm docs build with python -m sphinx -b html docs docs/_build/html.\n\n\nConfirm release notes describe any manifest schema, safety, or CLI behavior changes.",
+          "lower": "confirm the version produced by package metadata, text2epub.__version__, and text2epub version is identical.\n\n\nconfirm license exists and matches the configured project license and classifiers.\n\n\nrun epubcheck against generated sample epubs.\n\n\ntest the cli against a real booktx extraction manifest.\n\n\nconfirm docs build with python -m sphinx -b html docs docs/_build/html.\n\n\nconfirm release notes describe any manifest schema, safety, or cli behavior changes."
+        },
+        {
+          "anchor": "",
+          "heading": "Current validation boundary",
+          "text": "validate_epub_package is a basic package-level check. It is suitable as a smoke test but not as a publication-grade EPUB validator.",
+          "lower": "validate_epub_package is a basic package-level check. it is suitable as a smoke test but not as a publication-grade epub validator."
+        }
+      ]
+    }
+  ]
+}
