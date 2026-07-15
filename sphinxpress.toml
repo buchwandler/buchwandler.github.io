@@ -80,6 +80,7 @@ docs_root = "../../odoo17/booktx/docs"
 conf_dir = "../../odoo17/booktx/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/booktx"
+description = "Profile-first translation toolchain for ebooks."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
@@ -91,6 +92,7 @@ docs_root = "../../odoo17/epub2text/docs"
 conf_dir = "../../odoo17/epub2text/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/epub2text"
+description = "Extract text from EPUB files with smart cleaning and navigation."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
@@ -103,6 +105,7 @@ docs_root = "../../odoo17/phrasplit/docs"
 conf_dir = "../../odoo17/phrasplit/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/phrasplit"
+description = "Split text into sentences, clauses, or paragraphs."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
@@ -115,6 +118,7 @@ docs_root = "../../odoo17/text2epub/docs"
 conf_dir = "../../odoo17/text2epub/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/text2epub"
+description = "Build EPUB ebooks from Markdown and text sources."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
@@ -127,6 +131,7 @@ docs_root = "../sphinxpress/docs"
 conf_dir = "../sphinxpress/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/sphinxpress"
+description = "Publish multiple Sphinx documentation projects as one site and book."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
