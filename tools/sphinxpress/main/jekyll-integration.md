@@ -6,7 +6,7 @@ nav_tool: sphinxpress-main
 docs_project: "sphinxpress"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "09a59f01d37f01d85cf3192286583685dc1d52e3"
+docs_commit: "6a613ce68493d49bfd742a87f7d18979a0456a7f"
 search_enabled: true
 ---
 
@@ -208,8 +208,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 }
 
 @media (prefers-color-scheme: dark) {
-  html:not([data-theme="light"]) .sphinxpress-doc{
-
+  html:not([data-theme="light"]) .sphinxpress-doc {
     --sp-hl-surface: #131a2c;
     --sp-hl-border: #2a3550;
     --sp-hl-text: #e6ebf5;
@@ -230,7 +229,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 .sphinxpress-doc div[class*=" highlight-"] {
   margin: 1.25rem 0;
   border: 1px solid var(--sp-hl-border);
-  border-radius: .5rem;
+  border-radius: 0.5rem;
   overflow: hidden;
   background: var(--sp-hl-surface);
 }
@@ -245,65 +244,145 @@ html[data-theme="dark"] .sphinxpress-doc {
 .sphinxpress-doc div[class^="highlight-"] pre,
 .sphinxpress-doc div[class*=" highlight-"] pre {
   margin: 0;
-  padding: .85rem 1rem;
+  padding: 0.85rem 1rem;
   background: transparent;
   color: var(--sp-hl-text);
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-  font-size: .88rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+    "Liberation Mono", "Courier New", monospace;
+  font-size: 0.88rem;
   line-height: 1.5;
   overflow-x: auto;
 }
 
-.sphinxpress-doc .hll { background-color: var(--sp-hl-hll); }
+.sphinxpress-doc .hll {
+  background-color: var(--sp-hl-hll);
+}
 
 /* Comments */
-.sphinxpress-doc .c, .sphinxpress-doc .ch, .sphinxpress-doc .cm,
-.sphinxpress-doc .cp, .sphinxpress-doc .cpf, .sphinxpress-doc .c1,
-.sphinxpress-doc .cs { color: var(--sp-hl-comment); font-style: italic; }
+.sphinxpress-doc .c,
+.sphinxpress-doc .ch,
+.sphinxpress-doc .cm,
+.sphinxpress-doc .cp,
+.sphinxpress-doc .cpf,
+.sphinxpress-doc .c1,
+.sphinxpress-doc .cs {
+  color: var(--sp-hl-comment);
+  font-style: italic;
+}
 
 /* Keywords */
-.sphinxpress-doc .k, .sphinxpress-doc .kc, .sphinxpress-doc .kd,
-.sphinxpress-doc .kn, .sphinxpress-doc .kp, .sphinxpress-doc .kr,
-.sphinxpress-doc .kt { color: var(--sp-hl-keyword); font-weight: 600; }
+.sphinxpress-doc .k,
+.sphinxpress-doc .kc,
+.sphinxpress-doc .kd,
+.sphinxpress-doc .kn,
+.sphinxpress-doc .kp,
+.sphinxpress-doc .kr,
+.sphinxpress-doc .kt {
+  color: var(--sp-hl-keyword);
+  font-weight: 600;
+}
 
 /* Strings */
-.sphinxpress-doc .s, .sphinxpress-doc .s1, .sphinxpress-doc .s2,
-.sphinxpress-doc .sb, .sphinxpress-doc .sc, .sphinxpress-doc .sd,
-.sphinxpress-doc .se, .sphinxpress-doc .sh, .sphinxpress-doc .si,
-.sphinxpress-doc .sx, .sphinxpress-doc .sr, .sphinxpress-doc .ss,
-.sphinxpress-doc .sa { color: var(--sp-hl-string); }
+.sphinxpress-doc .s,
+.sphinxpress-doc .s1,
+.sphinxpress-doc .s2,
+.sphinxpress-doc .sb,
+.sphinxpress-doc .sc,
+.sphinxpress-doc .sd,
+.sphinxpress-doc .se,
+.sphinxpress-doc .sh,
+.sphinxpress-doc .si,
+.sphinxpress-doc .sx,
+.sphinxpress-doc .sr,
+.sphinxpress-doc .ss,
+.sphinxpress-doc .sa {
+  color: var(--sp-hl-string);
+}
 
 /* Numbers */
-.sphinxpress-doc .m, .sphinxpress-doc .mb, .sphinxpress-doc .mf,
-.sphinxpress-doc .mh, .sphinxpress-doc .mi, .sphinxpress-doc .mo { color: var(--sp-hl-number); }
+.sphinxpress-doc .m,
+.sphinxpress-doc .mb,
+.sphinxpress-doc .mf,
+.sphinxpress-doc .mh,
+.sphinxpress-doc .mi,
+.sphinxpress-doc .mo {
+  color: var(--sp-hl-number);
+}
 
 /* Operators */
-.sphinxpress-doc .o, .sphinxpress-doc .ow { color: var(--sp-hl-keyword); }
+.sphinxpress-doc .o,
+.sphinxpress-doc .ow {
+  color: var(--sp-hl-keyword);
+}
 
 /* Names: identifiers, namespaces, attributes, punctuation, default text */
-.sphinxpress-doc .n, .sphinxpress-doc .nn, .sphinxpress-doc .nx,
-.sphinxpress-doc .py, .sphinxpress-doc .nv, .sphinxpress-doc .vc,
-.sphinxpress-doc .vg, .sphinxpress-doc .vi, .sphinxpress-doc .p { color: var(--sp-hl-text); }
+.sphinxpress-doc .n,
+.sphinxpress-doc .nn,
+.sphinxpress-doc .nx,
+.sphinxpress-doc .py,
+.sphinxpress-doc .nv,
+.sphinxpress-doc .vc,
+.sphinxpress-doc .vg,
+.sphinxpress-doc .vi,
+.sphinxpress-doc .p {
+  color: var(--sp-hl-text);
+}
 
 /* Functions, classes, namespaces (declaration) */
-.sphinxpress-doc .na, .sphinxpress-doc .nc, .sphinxpress-doc .nd,
-.sphinxpress-doc .nf { color: var(--sp-hl-name); font-weight: 600; }
+.sphinxpress-doc .na,
+.sphinxpress-doc .nc,
+.sphinxpress-doc .nd,
+.sphinxpress-doc .nf {
+  color: var(--sp-hl-name);
+  font-weight: 600;
+}
 
 /* Builtins */
-.sphinxpress-doc .nb, .sphinxpress-doc .bp { color: var(--sp-hl-builtin); }
+.sphinxpress-doc .nb,
+.sphinxpress-doc .bp {
+  color: var(--sp-hl-builtin);
+}
 
 /* Exceptions, tag names, errors, diff */
-.sphinxpress-doc .ne { color: var(--sp-hl-error); font-weight: 600; }
-.sphinxpress-doc .nt { color: var(--sp-hl-keyword); font-weight: 600; }
-.sphinxpress-doc .err { color: var(--sp-hl-error); background: var(--sp-hl-error-bg); }
-.sphinxpress-doc .gd { color: var(--sp-hl-error); }
-.sphinxpress-doc .gi { color: var(--sp-hl-string); }
-.sphinxpress-doc .gh { color: var(--sp-hl-text); font-weight: 600; }
-.sphinxpress-doc .go, .sphinxpress-doc .gp { color: var(--sp-hl-muted); }
-.sphinxpress-doc .gs { font-weight: 600; }
-.sphinxpress-doc .gu { color: var(--sp-hl-name); font-weight: 600; }
-.sphinxpress-doc .gt { color: var(--sp-hl-error); }
-.sphinxpress-doc .w { color: transparent; }
+.sphinxpress-doc .ne {
+  color: var(--sp-hl-error);
+  font-weight: 600;
+}
+.sphinxpress-doc .nt {
+  color: var(--sp-hl-keyword);
+  font-weight: 600;
+}
+.sphinxpress-doc .err {
+  color: var(--sp-hl-error);
+  background: var(--sp-hl-error-bg);
+}
+.sphinxpress-doc .gd {
+  color: var(--sp-hl-error);
+}
+.sphinxpress-doc .gi {
+  color: var(--sp-hl-string);
+}
+.sphinxpress-doc .gh {
+  color: var(--sp-hl-text);
+  font-weight: 600;
+}
+.sphinxpress-doc .go,
+.sphinxpress-doc .gp {
+  color: var(--sp-hl-muted);
+}
+.sphinxpress-doc .gs {
+  font-weight: 600;
+}
+.sphinxpress-doc .gu {
+  color: var(--sp-hl-name);
+  font-weight: 600;
+}
+.sphinxpress-doc .gt {
+  color: var(--sp-hl-error);
+}
+.sphinxpress-doc .w {
+  color: transparent;
+}
 
 @media print {
   .sphinxpress-doc div[class^="highlight-"],
@@ -538,6 +617,14 @@ sphinxpress keep generating pages that reference <code class="docutils literal n
 <li><p>Or render the file directly from the package if the consuming site is willing
 to point its <code class="docutils literal notranslate"><span class="pre">layout:</span></code> value at a vendored copy of the file.</p></li>
 </ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">sync-layout</span></code> command keeps the consumer’s copy in step with the
+package. It writes the package file to <code class="docutils literal notranslate"><span class="pre">&lt;site.root&gt;/_layouts/&lt;site.layout&gt;.html</span></code>
+(path derived from the existing <code class="docutils literal notranslate"><span class="pre">[site].root</span></code> and <code class="docutils literal notranslate"><span class="pre">[site].layout</span></code> keys). The
+default policy is safe: identical files are skipped silently, and a file that
+has drifted from the package is refused (exit 1) with a unified diff printed for
+inspection. Re-run with <code class="docutils literal notranslate"><span class="pre">--force</span></code> to overwrite, or <code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> to print the
+diff without writing. CI scripts that want a hard gate on drift can run
+<code class="docutils literal notranslate"><span class="pre">sphinxpress</span> <span class="pre">sync-layout</span></code> directly and treat exit 1 as a failure.</p>
 <section id="minimal-front-matter">
 <h3>Minimal front matter</h3>
 <p>A generated tool page needs at least the following front matter to use the

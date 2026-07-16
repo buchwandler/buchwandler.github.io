@@ -73,7 +73,7 @@ permalink: /tools/
       <p>Publish multiple Sphinx documentation projects as one site and book.</p>
       <div class="card-links">
         <a href="/tools/sphinxpress/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.3" rel="external noopener">Latest release: v0.1.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/sphinxpress" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
