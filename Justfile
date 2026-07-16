@@ -7,6 +7,9 @@ install:
 sphinxpress-build:
     sphinxpress build-site --all
 
+sync:
+    sphinxpress sync-layout --force
+
 sphinxpress-check:
     sphinxpress check
 
