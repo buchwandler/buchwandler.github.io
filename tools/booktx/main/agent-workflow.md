@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
 search_enabled: true
 ---
 
@@ -605,14 +605,17 @@ report a booktx isolation bug.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">tasks/TASK.source.block.txt</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ingest/TASK.block.txt</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ingest/TASK.json</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasks/TASK.concordance.md</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tasks/TASK.concordance.json</span></code></p></li>
 </ul>
 <p>The task JSON also records the dotted baseline version plus the immutable
 context-view snapshot used for that task.</p>
 </section>
 <section id="fill-the-durable-ingest-file">
 <h2>4. Fill the durable ingest file</h2>
-<p>Read <code class="docutils literal notranslate"><span class="pre">tasks/TASK.agent.md</span></code> first. Translate only the record bodies in
-<code class="docutils literal notranslate"><span class="pre">ingest/TASK.block.txt</span></code>. Keep record ids and placeholders unchanged. Treat
+<p>Read all three generated task files before writing: <code class="docutils literal notranslate"><span class="pre">tasks/TASK.agent.md</span></code>,
+<code class="docutils literal notranslate"><span class="pre">tasks/TASK.source.block.txt</span></code>, and <code class="docutils literal notranslate"><span class="pre">ingest/TASK.block.txt</span></code>. Translate only the
+record bodies in <code class="docutils literal notranslate"><span class="pre">ingest/TASK.block.txt</span></code>. Keep record ids and placeholders unchanged. Treat
 <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">glossary:</span></code>, <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">style:</span></code>, and <code class="docutils literal notranslate"><span class="pre">#</span> <span class="pre">termbase:</span></code> as source-only directives; never
 copy them into target text.</p>
 </section>
@@ -631,6 +634,17 @@ booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class
 </div>
 <p>Lint is read-only. If lint fails, repair the same ingest file and rerun lint
 once. If the same failure class remains, stop and report it.</p>
+<p>For historical consistency, use booktx-mediated lookup. Binding context,
+glossary, termbase, and protected-name rules win over observed usage. Use one
+batched lookup per batch when possible:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--source-regex<span class="w"> </span><span class="s1">&#39;Beetle girl|the Wasps|Avaris the Spider|Salmae cavalry&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--jsonl
+</pre></div>
+</div>
+<p>Do not Grep/Search canonical stores, context history, or generated editor
+indexes in isolated agent mode. The concordance report is advisory evidence,
+not approval or policy.</p>
 </section>
 <section id="validate-and-build">
 <h2>6. Validate and build</h2>
@@ -647,7 +661,7 @@ booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </s
 </pre></div>
 </div>
 <p>This writes <code class="docutils literal notranslate"><span class="pre">source-index.json</span></code>, <code class="docutils literal notranslate"><span class="pre">target-index.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">source-target-index.json</span></code> into the profile directory. Use <code class="docutils literal notranslate"><span class="pre">rg</span></code> to search translated terms without English source false positives (<code class="docutils literal notranslate"><span class="pre">rg</span> <span class="pre">&quot;Wespen&quot;</span> <span class="pre">target-index.json</span></code>) or source terms without target matches (<code class="docutils literal notranslate"><span class="pre">rg</span> <span class="pre">&quot;Wasp&quot;</span> <span class="pre">source-index.json</span></code>). Use <code class="docutils literal notranslate"><span class="pre">nvim</span> <span class="pre">source-target-index.json</span></code> for side-by-side scanning.</p>
-<p>The three files are generated artifacts. Do not edit them manually and do not use them as build input.</p>
+<p>The three files are generated artifacts. Do not edit them manually and do not use them as build input. They are optional human/editor exploration artifacts, not the agent consistency protocol; use <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">search</span></code> or <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">concordance</span></code> instead.</p>
 </section>
 <section id="longer-bounded-runs">
 <h2>7. Longer bounded runs</h2>
@@ -668,6 +682,10 @@ mint a new dotted version by itself.
 Stop when the todo goal is complete, when <code class="docutils literal notranslate"><span class="pre">todo-status</span></code> says it is complete, or
 when a stop condition occurs. Report partial progress if conversation or tool
 budget runs low. <code class="docutils literal notranslate"><span class="pre">--max-run-words</span></code> is advisory only.</p>
+<p>An incomplete successful insert is not a stop condition. Query the exact todo
+status, inspect its <code class="docutils literal notranslate"><span class="pre">must_continue</span></code> and <code class="docutils literal notranslate"><span class="pre">next_safe_command</span></code> state, and resume
+the same todo in the same assistant turn. Do not ask the user to say
+<code class="docutils literal notranslate"><span class="pre">continue</span></code> unless an explicit stop condition or harness limit has occurred.</p>
 </section>
 <section id="guardrails">
 <h2>Guardrails</h2>
@@ -835,6 +853,30 @@ Der vollständig korrigierte deutsche Zielsatz.
 isolated profile contract is active at a time, so run isolated grammar
 benchmarks sequentially in one project unless you split them across worktrees
 or separate project copies.</p>
+</section>
+<section id="grammar-judge-revision-profiles">
+<h2>Grammar judge revision profiles</h2>
+<p>Selection profiles are judge workflows, never translation workflows. Prepare them before starting the harness:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>prepare-grammar<span class="w"> </span>.<span class="w"> </span>--source-profile<span class="w"> </span>SOURCE<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--write
+<span class="nb">cd</span><span class="w"> </span>translations/JUDGE
+booktx<span class="w"> </span>mode<span class="w"> </span>.
+booktx<span class="w"> </span>doctor<span class="w"> </span>isolation<span class="w"> </span>.
+booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>.
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">todo-next</span> <span class="pre">.</span> <span class="pre">--chapters</span> <span class="pre">N</span> <span class="pre">--write</span> <span class="pre">--resume</span></code> for bounded chapter work. Use only explicit <code class="docutils literal notranslate"><span class="pre">copy</span></code>/<code class="docutils literal notranslate"><span class="pre">edited</span></code> decisions and never run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span></code> mutators in a selection profile. If a profile is contaminated by direct translation writes or lacks judge provenance, create a fresh profile; do not synthesize decisions from the contaminated output.</p>
+<p>A judge task is one bounded batch; a judge todo is the immutable user-requested
+scope. One-command-at-a-time is a safety rule, not a one-batch-per-turn limit.
+For chapter ranges, prefer explicit <code class="docutils literal notranslate"><span class="pre">--from-chapter</span></code> and <code class="docutils literal notranslate"><span class="pre">--through-chapter</span></code>
+options plus <code class="docutils literal notranslate"><span class="pre">--batch-records</span></code>, <code class="docutils literal notranslate"><span class="pre">--batch-sentences</span></code>, <code class="docutils literal notranslate"><span class="pre">--batch-words</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">--batch-rendered-lines</span></code> limits. Compatibility <code class="docutils literal notranslate"><span class="pre">--max-*</span></code> options remain accepted
+during migration.</p>
+<p>The required agent loop is sequential but unbounded by batch count: run
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">todo-status</span> <span class="pre">.</span> <span class="pre">--latest</span> <span class="pre">--json</span></code>, stop only if the todo is complete
+or a documented blocker exists, otherwise run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">todo-resume</span> <span class="pre">.</span> <span class="pre">--latest</span></code>, read/edit/lint/insert one task, and repeat status in the same turn.
+A successful insert is not a stop condition. Before reporting progress, use the
+persisted status counts; never estimate from attempted tasks. If an unavoidable
+harness limit interrupts the loop, report the exact status and resume command.</p>
 </section>
 </section>
 </div>

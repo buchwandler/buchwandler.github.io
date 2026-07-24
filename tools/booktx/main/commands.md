@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
 search_enabled: true
 ---
 
@@ -574,6 +574,8 @@ booktx<span class="w"> </span>context<span class="w"> </span>approve<span class=
 booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>glossary<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>glossary<span class="w"> </span>mandate<span class="w"> </span>./book<span class="w"> </span><span class="s2">&quot;Empire&quot;</span><span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Imperium&quot;</span><span class="w"> </span>--forbid<span class="w"> </span><span class="s2">&quot;Reich&quot;</span>
+booktx<span class="w"> </span>glossary<span class="w"> </span>add-variant<span class="w"> </span>./book<span class="w"> </span><span class="s2">&quot;Beetle-kinden&quot;</span><span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Käferartige&quot;</span><span class="w"> </span>--usage<span class="w"> </span>vocative
+booktx<span class="w"> </span>glossary<span class="w"> </span>set-usage<span class="w"> </span>./book<span class="w"> </span><span class="s2">&quot;Dragonfly-kinden&quot;</span><span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--person-singular<span class="w"> </span><span class="s2">&quot;Angehörige der Libellenart&quot;</span>
 booktx<span class="w"> </span>identity<span class="w"> </span><span class="nb">set</span><span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--actor<span class="w"> </span>user:NAME<span class="w"> </span>--harness<span class="w"> </span>codex<span class="w"> </span>--model<span class="w"> </span>MODEL
 </pre></div>
 </div>
@@ -617,6 +619,13 @@ booktx<span class="w"> </span>judge<span class="w"> </span>create-profile<span c
 booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--write
 booktx<span class="w"> </span>judge<span class="w"> </span>prepare-grammar<span class="w"> </span>./book<span class="w"> </span>--source-profile<span class="w"> </span>PROFILE<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--write
 booktx<span class="w"> </span>judge<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE
+booktx<span class="w"> </span>judge<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--from-chapter<span class="w"> </span><span class="m">0001</span><span class="w"> </span>--through-chapter<span class="w"> </span><span class="m">0010</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--batch-records<span class="w"> </span><span class="m">40</span><span class="w"> </span>--batch-sentences<span class="w"> </span><span class="m">60</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">1800</span><span class="w"> </span>--write<span class="w"> </span>--resume
+booktx<span class="w"> </span>judge<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--latest<span class="w"> </span>--json
+booktx<span class="w"> </span>judge<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--latest<span class="w"> </span>--format<span class="w"> </span>decisions
+booktx<span class="w"> </span>judge<span class="w"> </span>lint-decisions<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--judge-task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>judge-ingest/TASK.decisions.txt<span class="w"> </span>--format<span class="w"> </span>decisions
+booktx<span class="w"> </span>judge<span class="w"> </span>audit-copies<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0001</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">series</span> <span class="pre">prepare</span></code> stops for the human context review. <code class="docutils literal notranslate"><span class="pre">review</span></code> configures and
@@ -638,6 +647,8 @@ booktx<span class="w"> </span>translate<span class="w"> </span>compare<span clas
 booktx<span class="w"> </span>translate<span class="w"> </span>revise-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Revised target&quot;</span>
 booktx<span class="w"> </span>translate<span class="w"> </span>revise-block<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>ingest/fixes.block.txt<span class="w"> </span>--format<span class="w"> </span>block<span class="w"> </span>--activate
 booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w"> </span>--before<span class="w"> </span><span class="m">1</span><span class="w"> </span>--after<span class="w"> </span><span class="m">1</span>
+booktx<span class="w"> </span>translate<span class="w"> </span>concordance<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--auto<span class="w"> </span>--json
+booktx<span class="w"> </span>translate<span class="w"> </span>todo-doctor<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--overlaps
 </pre></div>
 </div>
 <p>The agent workflow requires approved context, bounded tasks, unchanged record
@@ -709,12 +720,14 @@ booktx epub inspect
 booktx extract
 booktx glossary
 booktx glossary add
+booktx glossary add-variant
 booktx glossary audit
 booktx glossary export
 booktx glossary import
 booktx glossary mandate
 booktx glossary remove
 booktx glossary reset
+booktx glossary set-usage
 booktx glossary status
 booktx guide
 booktx identity
@@ -727,6 +740,12 @@ booktx judge create-profile
 booktx judge prepare-grammar
 booktx judge prepare-isolation
 booktx judge status
+booktx judge todo-next
+booktx judge todo-status
+booktx judge todo-resume
+booktx judge insert
+booktx judge lint-decisions
+booktx judge audit-copies
 booktx profile
 booktx profile compare
 booktx profile create

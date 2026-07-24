@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: fc8afbf14d54f5c9f7a039604dd363efd213c130
+source_commit: 53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334
 source_url: https://github.com/buchwandler/booktx/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/booktx

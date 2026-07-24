@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
 search_enabled: true
 ---
 

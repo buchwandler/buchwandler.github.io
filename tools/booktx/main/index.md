@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
 search_enabled: true
 ---
 
@@ -675,6 +675,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="agent-workflow/#b-quality-review-pass-workflow">7b. Quality review pass workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="agent-workflow/#judge-selection-workflow">Judge / selection workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="agent-workflow/#isolated-judge-workflow">Isolated judge workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="agent-workflow/#grammar-judge-revision-profiles">Grammar judge revision profiles</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="translation-contract/">Translation contract</a><ul>
@@ -759,12 +760,17 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_task_dir"><code class="docutils literal notranslate"><span class="pre">translation_task_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_task_path"><code class="docutils literal notranslate"><span class="pre">translation_task_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_task_source_block_path"><code class="docutils literal notranslate"><span class="pre">translation_task_source_block_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_task_concordance_json_path"><code class="docutils literal notranslate"><span class="pre">translation_task_concordance_json_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_task_concordance_markdown_path"><code class="docutils literal notranslate"><span class="pre">translation_task_concordance_markdown_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_ingest_dir"><code class="docutils literal notranslate"><span class="pre">translation_ingest_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_ingest_path"><code class="docutils literal notranslate"><span class="pre">translation_ingest_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_ingest_block_path"><code class="docutils literal notranslate"><span class="pre">translation_ingest_block_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_todo_dir"><code class="docutils literal notranslate"><span class="pre">translation_todo_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_todo_json_path"><code class="docutils literal notranslate"><span class="pre">translation_todo_json_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_todo_markdown_path"><code class="docutils literal notranslate"><span class="pre">translation_todo_markdown_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_todo_lifecycle_path"><code class="docutils literal notranslate"><span class="pre">translation_todo_lifecycle_path()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_validation_receipt_dir"><code class="docutils literal notranslate"><span class="pre">translation_validation_receipt_dir()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.translation_validation_receipt_path"><code class="docutils literal notranslate"><span class="pre">translation_validation_receipt_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.review_todo_dir"><code class="docutils literal notranslate"><span class="pre">review_todo_dir()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.review_todo_json_path"><code class="docutils literal notranslate"><span class="pre">review_todo_json_path()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.config.review_todo_markdown_path"><code class="docutils literal notranslate"><span class="pre">review_todo_markdown_path()</span></code></a></li>
@@ -829,10 +835,14 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.ApplicableTermbaseEntrySnapshot"><code class="docutils literal notranslate"><span class="pre">ApplicableTermbaseEntrySnapshot</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.ApplicableTermbaseFindingSnapshot"><code class="docutils literal notranslate"><span class="pre">ApplicableTermbaseFindingSnapshot</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTaskRecord"><code class="docutils literal notranslate"><span class="pre">TranslationTaskRecord</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTaskContextRecord"><code class="docutils literal notranslate"><span class="pre">TranslationTaskContextRecord</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTask"><code class="docutils literal notranslate"><span class="pre">TranslationTask</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.StatusTotals"><code class="docutils literal notranslate"><span class="pre">StatusTotals</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTodoChapter"><code class="docutils literal notranslate"><span class="pre">TranslationTodoChapter</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTodo"><code class="docutils literal notranslate"><span class="pre">TranslationTodo</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.TranslationTodoLifecycle"><code class="docutils literal notranslate"><span class="pre">TranslationTodoLifecycle</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.AgentNextAction"><code class="docutils literal notranslate"><span class="pre">AgentNextAction</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.SubmissionQualityConfig"><code class="docutils literal notranslate"><span class="pre">SubmissionQualityConfig</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.NamesFile"><code class="docutils literal notranslate"><span class="pre">NamesFile</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.SourceAnalysisPatternsConfig"><code class="docutils literal notranslate"><span class="pre">SourceAnalysisPatternsConfig</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#booktx.models.SourceAnalysisGenericLemmasConfig"><code class="docutils literal notranslate"><span class="pre">SourceAnalysisGenericLemmasConfig</span></code></a></li>
