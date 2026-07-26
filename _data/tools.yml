@@ -18,3 +18,8 @@
   description: Publish multiple Sphinx documentation projects as one site and book.
   docs_url: /tools/sphinxpress/
   repo_url: https://github.com/buchwandler/sphinxpress
+- name: kokorog2p
+  description: A unified multi-language G2P library for Kokoro TTS.
+  docs_url: /tools/kokorog2p/
+  repo_url: https://github.com/buchwandler/kokorog2p
+  pypi_url: https://pypi.org/project/kokorog2p/

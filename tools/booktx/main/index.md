@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
+docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
 search_enabled: true
 ---
 
@@ -573,6 +573,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li><p><a class="reference internal" href="troubleshooting/"><span class="std std-doc">Troubleshooting</span></a></p></li>
 <li><p><a class="reference internal" href="maintenance/"><span class="std std-doc">Maintenance</span></a></p></li>
 <li><p><a class="reference internal" href="development/"><span class="std std-doc">Development</span></a></p></li>
+<li><p><a class="reference internal" href="releasing/"><span class="std std-doc">Releasing</span></a></p></li>
 </ul>
 </section>
 <section id="reference">
@@ -1052,6 +1053,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="development/#runtime-dependencies">Runtime dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development/#docs-dependencies">Docs dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development/#test-commands">Test commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="development/#canonical-quality-gate">Canonical quality gate</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development/#current-test-clusters">Current test clusters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development/#coding-standards">Coding standards</a></li>
 <li class="toctree-l2"><a class="reference internal" href="development/#versioning">Versioning</a></li>
@@ -1059,6 +1061,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="development/#durable-model-import-contracts">Durable model import contracts</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="releasing/">Releasing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mypy-baseline/">Mypy status</a></li>
 <li class="toctree-l1"><a class="reference internal" href="maintenance/">Maintenance</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="maintenance/#diagnostics">Diagnostics</a></li>

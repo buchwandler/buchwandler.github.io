@@ -376,8 +376,14 @@
         {
           "anchor": "",
           "heading": "Test commands",
-          "text": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx\n\n\n\n\nFor documentation changes, install the docs extra and run the repository’s\nwarnings-as-errors check:\n\npython -m pytest tests/test_docs_consistency.py -q\nsphinx-build -W -b html docs docs/_build/check\nbash -n docs/build.sh\ngit diff --check\n\n\n\n\nThe same Sphinx check is available as make -C docs check. For a local HTML\nand optional PDF build after dependencies are installed, run ./docs/build.sh;\nthe script uses the same -W warnings-as-errors policy. Generated files stay\nunder docs/_build/ and should not be committed.",
-          "lower": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx\n\n\n\n\nfor documentation changes, install the docs extra and run the repository’s\nwarnings-as-errors check:\n\npython -m pytest tests/test_docs_consistency.py -q\nsphinx-build -w -b html docs docs/_build/check\nbash -n docs/build.sh\ngit diff --check\n\n\n\n\nthe same sphinx check is available as make -c docs check. for a local html\nand optional pdf build after dependencies are installed, run ./docs/build.sh;\nthe script uses the same -w warnings-as-errors policy. generated files stay\nunder docs/_build/ and should not be committed."
+          "text": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx",
+          "lower": "pytest -q\nruff check .\n\n\n\n\npytest -q\nruff check .\nmypy booktx"
+        },
+        {
+          "anchor": "",
+          "heading": "Canonical quality gate",
+          "text": "Before a checkout is installed into a translation environment, run the\nrepository quality gate from a clean project-root checkout:\n\npython scripts/quality_gate.py --require-clean --artifact-dir dist \\\n  --evidence-file /tmp/booktx-quality-gate.json\n\n\n\n\nThe gate runs compilation, the static command-catalog check, focused CLI import\ntests, the full test suite, Ruff, mypy, package building, and help smoke tests\nagainst the wheel installed in a temporary virtual environment. It stops at\nthe first failed stage and prints the failed command. The evidence records the\nchecked-out commit SHA, Python version, wheel filename and SHA-256, quality\nresult, and installation target. Do not install an untested dirty checkout.\n\nThe release workflow uses the same command and publishes the exact dist/\nartifa…",
+          "lower": "before a checkout is installed into a translation environment, run the\nrepository quality gate from a clean project-root checkout:\n\npython scripts/quality_gate.py --require-clean --artifact-dir dist \\\n  --evidence-file /tmp/booktx-quality-gate.json\n\n\n\n\nthe gate runs compilation, the static command-catalog check, focused cli import\ntests, the full test suite, ruff, mypy, package building, and help smoke tests\nagainst the wheel installed in a temporary virtual environment. it stops at\nthe first failed stage and prints the failed command. the evidence records the\nchecked-out commit sha, python version, wheel filename and sha-256, quality\nresult, and installation target. do not install an untested dirty checkout.\n\nthe release workflow uses the same command and publishes the exact dist/\nartifa…"
         },
         {
           "anchor": "",
@@ -529,8 +535,8 @@
         {
           "anchor": "",
           "heading": "Formats and maintenance",
-          "text": "Markdown\n\n\nEPUB\n\n\nTroubleshooting\n\n\nMaintenance\n\n\nDevelopment",
-          "lower": "markdown\n\n\nepub\n\n\ntroubleshooting\n\n\nmaintenance\n\n\ndevelopment"
+          "text": "Markdown\n\n\nEPUB\n\n\nTroubleshooting\n\n\nMaintenance\n\n\nDevelopment\n\n\nReleasing",
+          "lower": "markdown\n\n\nepub\n\n\ntroubleshooting\n\n\nmaintenance\n\n\ndevelopment\n\n\nreleasing"
         },
         {
           "anchor": "",
@@ -789,6 +795,19 @@
           "heading": "6. Continue with the guides",
           "text": "Project layout describes shared and profile-local paths.\n\n\nProfiles describes runtime resolution and isolation.\n\n\nContext describes policy approval and provenance.\n\n\nCommands is the current CLI reference.\n\n\nAgent workflow describes durable task work.\n\n\nSeries workflows prepares the next book with a review stop.\n\n\nMarkdown and EPUB describe format behavior.\n\n\nTroubleshooting maps failures to safe remediation.",
           "lower": "project layout describes shared and profile-local paths.\n\n\nprofiles describes runtime resolution and isolation.\n\n\ncontext describes policy approval and provenance.\n\n\ncommands is the current cli reference.\n\n\nagent workflow describes durable task work.\n\n\nseries workflows prepares the next book with a review stop.\n\n\nmarkdown and epub describe format behavior.\n\n\ntroubleshooting maps failures to safe remediation."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/releasing/",
+      "title": "booktx Releasing",
+      "snippet": "booktx must pass the canonical quality gate before a package is published or\ninstalled into the translation harness. The release checkout mu …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Releasing",
+          "text": "booktx must pass the canonical quality gate before a package is published or\ninstalled into the translation harness. The release checkout must be clean so\nthe tested wheel corresponds to the exact checked-out commit.\n\nFrom the repository root, run:\n\npython scripts/quality_gate.py \\\n  --require-clean \\\n  --artifact-dir dist \\\n  --evidence-file /tmp/booktx-quality-gate.json\n\n\n\n\nDo not rebuild the package after this command. Publish the wheel and source\ndistribution already in dist/. Preserve the evidence with the release\nrecord, including:\n\n\nthe commit SHA;\n\n\nthe Python version;\n\n\nthe wheel filename and SHA-256;\n\n\nthe quality-gate result; and\n\n\nthe temporary installation target used for CLI smoke tests.\n\n\n\nThe release workflow runs this gate before its publish step. A failed gate or\ndirty c…",
+          "lower": "booktx must pass the canonical quality gate before a package is published or\ninstalled into the translation harness. the release checkout must be clean so\nthe tested wheel corresponds to the exact checked-out commit.\n\nfrom the repository root, run:\n\npython scripts/quality_gate.py \\\n  --require-clean \\\n  --artifact-dir dist \\\n  --evidence-file /tmp/booktx-quality-gate.json\n\n\n\n\ndo not rebuild the package after this command. publish the wheel and source\ndistribution already in dist/. preserve the evidence with the release\nrecord, including:\n\n\nthe commit sha;\n\n\nthe python version;\n\n\nthe wheel filename and sha-256;\n\n\nthe quality-gate result; and\n\n\nthe temporary installation target used for cli smoke tests.\n\n\n\nthe release workflow runs this gate before its publish step. a failed gate or\ndirty c…"
         }
       ]
     },

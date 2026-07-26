@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "53bb0086e09ef08f4a79fb9d8a53b1ef1b37b334"
+docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
 search_enabled: true
 ---
 
@@ -590,6 +590,24 @@ ruff<span class="w"> </span>check<span class="w"> </span>.
 mypy<span class="w"> </span>booktx
 </pre></div>
 </div>
+</section>
+<section id="canonical-quality-gate">
+<h2>Canonical quality gate</h2>
+<p>Before a checkout is installed into a translation environment, run the
+repository quality gate from a clean project-root checkout:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/quality_gate.py<span class="w"> </span>--require-clean<span class="w"> </span>--artifact-dir<span class="w"> </span>dist<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--evidence-file<span class="w"> </span>/tmp/booktx-quality-gate.json
+</pre></div>
+</div>
+<p>The gate runs compilation, the static command-catalog check, focused CLI import
+tests, the full test suite, Ruff, mypy, package building, and help smoke tests
+against the wheel installed in a temporary virtual environment. It stops at
+the first failed stage and prints the failed command. The evidence records the
+checked-out commit SHA, Python version, wheel filename and SHA-256, quality
+result, and installation target. Do not install an untested dirty checkout.</p>
+<p>The release workflow uses the same command and publishes the exact <code class="docutils literal notranslate"><span class="pre">dist/</span></code>
+artifacts produced by that successful run. Pull requests and <code class="docutils literal notranslate"><span class="pre">main</span></code>, <code class="docutils literal notranslate"><span class="pre">master</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">release/*</span></code> branches run the gate on Python 3.10 and 3.13.</p>
 <p>For documentation changes, install the <code class="docutils literal notranslate"><span class="pre">docs</span></code> extra and run the repository’s
 warnings-as-errors check:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/test_docs_consistency.py<span class="w"> </span>-q

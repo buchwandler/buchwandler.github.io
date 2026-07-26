@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">5<span>focused tools</span></div>
+    <div class="hero-stat">6<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -75,6 +75,16 @@ permalink: /tools/
         <a href="/tools/sphinxpress/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/sphinxpress" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>kokorog2p</h3>
+      <p>A unified multi-language G2P library for Kokoro TTS.</p>
+      <div class="card-links">
+        <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.6.7" rel="external noopener">Latest release: v0.6.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>
