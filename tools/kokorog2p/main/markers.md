@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,10 +542,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="marker-delimited-helper-guide">
 <h1>Marker-Delimited Helper Guide</h1>
-<p>The marker-delimited helper provides a simple, human-friendly way to mark text spans for pronunciation overrides without complex syntax. It’s designed as a lightweight alternative for users who don’t need full markup capabilities.</p>
+<p>The marker-delimited helper provides a simple, human-friendly way to mark text spans for
+pronunciation overrides without complex syntax. It’s designed as a lightweight
+alternative for users who don’t need full markup capabilities.</p>
 <section id="overview">
 <h2>Overview</h2>
-<p>The marker system uses simple delimiters (like <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) to mark text spans, then lets you assign attributes to those spans using Python dictionaries. This two-step process separates the marking from the attribute assignment.</p>
+<p>The marker system uses simple delimiters (like <code class="docutils literal notranslate"><span class="pre">&#64;</span></code>) to mark text spans, then lets you
+assign attributes to those spans using Python dictionaries. This two-step process
+separates the marking from the attribute assignment.</p>
 </section>
 <section id="basic-usage">
 <h2>Basic Usage</h2>
@@ -795,7 +799,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="p">}</span>
 </pre></div>
 </div>
-<p><strong>Note:</strong> <code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">lang</span></code> are special attributes handled by kokorog2p. Other attributes are stored in token metadata for downstream processing.</p>
+<p><strong>Note:</strong> <code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">lang</span></code> are special attributes handled by kokorog2p. Other attributes
+are stored in token metadata for downstream processing.</p>
 </section>
 </section>
 <section id="custom-markers">

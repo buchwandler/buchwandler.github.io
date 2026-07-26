@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/languages/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -835,7 +835,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="spanish-es">
 <h2>Spanish (es)</h2>
-<p>Spanish G2P is rule-based with comprehensive phonological rules for both European and Latin American dialects.</p>
+<p>Spanish G2P is rule-based with comprehensive phonological rules for both European and
+Latin American dialects.</p>
 <section id="id10">
 <h3>Features</h3>
 <ul class="simple">
@@ -1052,7 +1053,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="korean-ko">
 <h2>Korean (ko)</h2>
-<p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological rules.</p>
+<p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological
+rules.</p>
 <section id="id25">
 <h3>Features</h3>
 <ul class="simple">
@@ -1136,7 +1138,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="mixed-language-support">
 <h2>Mixed-Language Support</h2>
-<p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing each word to the appropriate G2P engine.</p>
+<p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing
+each word to the appropriate G2P engine.</p>
 <section id="id31">
 <h3>Features</h3>
 <ul class="simple">
@@ -1182,7 +1185,7 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
 <span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;result&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -1198,7 +1201,7 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
     <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
 <span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">result_type</span><span class="o">=</span><span class="s2">&quot;result&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1211,7 +1214,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span>
     <span class="s2">&quot;Hello, mein Freund! This is wunderbar.&quot;</span><span class="p">,</span>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+    <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
@@ -1324,17 +1327,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="fallback-languages">
 <h2>Fallback Languages</h2>
-<p>For languages not explicitly supported, kokorog2p falls back to espeak-ng:</p>
+<p>Spanish, Italian, and Portuguese have native rule-based implementations. For languages
+not explicitly supported, select the eSpeak backend explicitly:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
-<span class="c1"># Spanish (uses espeak-ng)</span>
+<span class="c1"># Native Spanish implementation</span>
 <span class="n">g2p_es</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;es-es&quot;</span><span class="p">)</span>
 
-<span class="c1"># Italian (uses espeak-ng)</span>
+<span class="c1"># Native Italian implementation</span>
 <span class="n">g2p_it</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;it-it&quot;</span><span class="p">)</span>
 
-<span class="c1"># Portuguese (uses espeak-ng)</span>
+<span class="c1"># Native Portuguese implementation</span>
 <span class="n">g2p_pt</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;pt-br&quot;</span><span class="p">)</span>
+
+<span class="c1"># Explicit eSpeak backend for another language</span>
+<span class="n">g2p_nl</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;nl&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>This provides basic support for 100+ languages via espeak-ng.</p>

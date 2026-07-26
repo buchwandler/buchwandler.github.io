@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/quickstart/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -549,7 +549,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
 <span class="c1"># Convert text to phonemes</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="n">phonemes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">phonemes</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># hˈɛlO wˈɜɹld!</span>
 </pre></div>
 </div>
@@ -580,19 +581,19 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
 <span class="c1"># US English (default)</span>
-<span class="n">us_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">us_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
 <span class="c1"># British English</span>
-<span class="n">gb_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span>
+<span class="n">gb_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
 <span class="c1"># German</span>
-<span class="n">de_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="n">de_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
 <span class="c1"># French</span>
-<span class="n">fr_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
+<span class="n">fr_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
 <span class="c1"># Czech</span>
-<span class="n">cs_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Dobrý den&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">)</span>
+<span class="n">cs_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Dobrý den&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
 <span class="c1"># Mixed-language (German with English words)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
@@ -604,8 +605,9 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
     <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
 <span class="p">)</span>
-<span class="n">mixed_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span>
-                   <span class="n">resturn_type</span><span class="o">=</span><span class="s2">&quot;phonemes&quot;</span><span class="p">)</span>
+<span class="n">mixed_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span>
+<span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 </pre></div>
 </div>
 </section>

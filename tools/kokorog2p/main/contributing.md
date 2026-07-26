@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h2>Development Setup</h2>
 <ol class="arabic">
 <li><p><strong>Clone the repository</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/kokorog2p.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/kokorog2p.git
 <span class="nb">cd</span><span class="w"> </span>kokorog2p
 </pre></div>
 </div>

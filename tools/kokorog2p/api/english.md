@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/english/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -1026,7 +1026,7 @@ for k, v in iterable:</p>
 <div><p>d[k] = v</p>
 </div></blockquote>
 </dd>
-<dt>dict(<a href="#id9"><span class="problematic" id="id10">**</span></a>kwargs) -&gt; new dictionary initialized with the name=value pairs</dt><dd><p>in the keyword argument list.  For example:  dict(one=1, two=2)</p>
+<dt>dict(<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs) -&gt; new dictionary initialized with the name=value pairs</dt><dd><p>in the keyword argument list.  For example:  dict(one=1, two=2)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1054,8 +1054,8 @@ for k, v in iterable:</p>
 </section>
 <section id="spacy-model-selection">
 <h3>spaCy Model Selection</h3>
-<p>English G2P uses spaCy for POS tagging when <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>. You can choose the
-spaCy English model with <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code>:</p>
+<p>English G2P uses spaCy for POS tagging when <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>. You can choose the spaCy
+English model with <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
 
 <span class="c1"># Default model (recommended balance)</span>
@@ -1138,7 +1138,7 @@ spaCy English model with <code class="docutils literal notranslate"><span class=
 </div>
 <p><strong>Normalized Characters:</strong></p>
 <ul class="simple">
-<li><p>Apostrophes: <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> <a href="#id11"><span class="problematic" id="id12">``</span></a>`` `` <code class="docutils literal notranslate"><span class="pre">´</span></code> <code class="docutils literal notranslate"><span class="pre">ʹ</span></code> <code class="docutils literal notranslate"><span class="pre">′</span></code> <code class="docutils literal notranslate"><span class="pre">＇</span></code> → <code class="docutils literal notranslate"><span class="pre">'</span></code></p></li>
+<li><p>Apostrophes: <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> `` `` <code class="docutils literal notranslate"><span class="pre">´</span></code> <code class="docutils literal notranslate"><span class="pre">ʹ</span></code> <code class="docutils literal notranslate"><span class="pre">′</span></code> <code class="docutils literal notranslate"><span class="pre">＇</span></code> → <code class="docutils literal notranslate"><span class="pre">'</span></code></p></li>
 <li><p>Ellipsis: <code class="docutils literal notranslate"><span class="pre">...</span></code> <code class="docutils literal notranslate"><span class="pre">.</span> <span class="pre">.</span> <span class="pre">.</span></code> <code class="docutils literal notranslate"><span class="pre">..</span></code> <code class="docutils literal notranslate"><span class="pre">....</span></code> → <code class="docutils literal notranslate"><span class="pre">…</span></code></p></li>
 <li><p>Dashes (when spaced): <code class="docutils literal notranslate"><span class="pre">-</span></code> <code class="docutils literal notranslate"><span class="pre">--</span></code> <code class="docutils literal notranslate"><span class="pre">–</span></code> <code class="docutils literal notranslate"><span class="pre">―</span></code> <code class="docutils literal notranslate"><span class="pre">‒</span></code> <code class="docutils literal notranslate"><span class="pre">−</span></code> → <code class="docutils literal notranslate"><span class="pre">—</span></code></p></li>
 </ul>

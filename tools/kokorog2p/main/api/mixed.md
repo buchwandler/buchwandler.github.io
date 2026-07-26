@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,9 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="multilang-preprocessing">
 <h1>Multilang Preprocessing</h1>
-<p>The multilang preprocessor detects word-level languages with
-<code class="docutils literal notranslate"><span class="pre">lingua-language-detector</span></code> and returns <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> objects for
-language switching. It integrates with the span-based phonemization API.</p>
+<p>The multilang preprocessor detects word-level languages with <code class="docutils literal notranslate"><span class="pre">lingua-language-detector</span></code>
+and returns <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> objects for language switching. It integrates with the
+span-based phonemization API.</p>
 <section id="api">
 <h2>API</h2>
 <dl class="py function">

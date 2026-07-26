@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -576,16 +576,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 <p><strong>When to disable dictionaries:</strong></p>
 <ul class="simple">
-<li><p><strong>Disable silver</strong> (<code class="docutils literal notranslate"><span class="pre">load_silver=False</span></code>):
-* Resource-constrained environments (limited memory)
-* Real-time applications (faster initialization)
-* You only need common vocabulary
-* Production deployments where performance is critical</p></li>
-<li><p><strong>Disable both</strong> (<code class="docutils literal notranslate"><span class="pre">load_gold=False,</span> <span class="pre">load_silver=False</span></code>):
-* Ultra-fast initialization is critical
-* You’re fine with espeak-only fallback
-* Minimal memory footprint required
-* Testing or prototyping</p></li>
+<li><p><strong>Disable silver</strong> (<code class="docutils literal notranslate"><span class="pre">load_silver=False</span></code>): * Resource-constrained environments
+(limited memory) * Real-time applications (faster initialization) * You only need
+common vocabulary * Production deployments where performance is critical</p></li>
+<li><p><strong>Disable both</strong> (<code class="docutils literal notranslate"><span class="pre">load_gold=False,</span> <span class="pre">load_silver=False</span></code>): * Ultra-fast initialization
+is critical * You’re fine with espeak-only fallback * Minimal memory footprint
+required * Testing or prototyping</p></li>
 </ul>
 <p><strong>Default (both enabled) provides:</strong></p>
 <ul class="simple">
@@ -817,7 +813,8 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 </section>
 <section id="quote-handling">
 <h2>Quote Handling</h2>
-<p>kokorog2p provides sophisticated quote handling with support for nested quotes and automatic conversion to curly quotes.</p>
+<p>kokorog2p provides sophisticated quote handling with support for nested quotes and
+automatic conversion to curly quotes.</p>
 <section id="nested-quote-detection">
 <h3>Nested Quote Detection</h3>
 <p>The tokenizer supports two modes for handling quotes:</p>
@@ -843,8 +840,10 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 </ul>
 <p><strong>Important</strong>: Nesting only works with different quote types:</p>
 <ul class="simple">
-<li><p>✅ <strong>Supported</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;outer</span> <span class="pre">`inner`</span> <span class="pre">text&quot;</span></code> → depths <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">1]</span></code> (different quotes)</p></li>
-<li><p>❌ <strong>NOT supported</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;level1</span> <span class="pre">&quot;level2&quot;&quot;</span></code> → depths <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code> (same quotes alternate)</p></li>
+<li><p>✅ <strong>Supported</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;outer</span> <span class="pre">`inner`</span> <span class="pre">text&quot;</span></code> → depths <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">2,</span> <span class="pre">2,</span> <span class="pre">1]</span></code> (different
+quotes)</p></li>
+<li><p>❌ <strong>NOT supported</strong>: <code class="docutils literal notranslate"><span class="pre">&quot;level1</span> <span class="pre">&quot;level2&quot;&quot;</span></code> → depths <code class="docutils literal notranslate"><span class="pre">[1,</span> <span class="pre">1,</span> <span class="pre">1,</span> <span class="pre">1]</span></code> (same quotes
+alternate)</p></li>
 </ul>
 <p>Examples:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.pipeline.tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">RegexTokenizer</span>
@@ -884,7 +883,8 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 </section>
 <section id="curly-quote-conversion">
 <h3>Curly Quote Conversion</h3>
-<p>The tokenizer automatically converts straight quotes to curly quotes based on nesting depth:</p>
+<p>The tokenizer automatically converts straight quotes to curly quotes based on nesting
+depth:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
@@ -936,7 +936,8 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <h2>Punctuation Handling</h2>
 <section id="automatic-normalization">
 <h3>Automatic Normalization</h3>
-<p>kokorog2p automatically normalizes punctuation variants to ensure consistency with Kokoro TTS vocabulary:</p>
+<p>kokorog2p automatically normalizes punctuation variants to ensure consistency with
+Kokoro TTS vocabulary:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
@@ -964,9 +965,11 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <p><strong>Normalization Rules:</strong></p>
 <ul class="simple">
 <li><p><strong>Ellipsis</strong>: All variants (<code class="docutils literal notranslate"><span class="pre">...</span></code>, <code class="docutils literal notranslate"><span class="pre">.</span> <span class="pre">.</span> <span class="pre">.</span></code>, <code class="docutils literal notranslate"><span class="pre">..</span></code>, <code class="docutils literal notranslate"><span class="pre">....</span></code>) → <code class="docutils literal notranslate"><span class="pre">…</span></code> (U+2026)</p></li>
-<li><p><strong>Em dash</strong>: All dash types when spaced (<code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">--</span></code>, <code class="docutils literal notranslate"><span class="pre">–</span></code>, <code class="docutils literal notranslate"><span class="pre">—</span></code>, <code class="docutils literal notranslate"><span class="pre">―</span></code>, <code class="docutils literal notranslate"><span class="pre">‒</span></code>, <code class="docutils literal notranslate"><span class="pre">−</span></code>) → <code class="docutils literal notranslate"><span class="pre">—</span></code> (U+2014)</p></li>
-<li><p><strong>Hyphens in compound words</strong>: Preserved during tokenization, then removed in phoneme output</p></li>
-<li><p><strong>Apostrophes</strong>: All variants (<code class="docutils literal notranslate"><span class="pre">'</span></code>, <code class="docutils literal notranslate"><span class="pre">'</span></code>, <code class="docutils literal notranslate"><span class="pre">'</span></code>, <a href="#id1"><span class="problematic" id="id2">``</span></a><code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">``´</span></code>, etc.) → <code class="docutils literal notranslate"><span class="pre">'</span></code> (U+0027)</p></li>
+<li><p><strong>Em dash</strong>: All dash types when spaced (<code class="docutils literal notranslate"><span class="pre">-</span></code>, <code class="docutils literal notranslate"><span class="pre">--</span></code>, <code class="docutils literal notranslate"><span class="pre">–</span></code>, <code class="docutils literal notranslate"><span class="pre">—</span></code>, <code class="docutils literal notranslate"><span class="pre">―</span></code>, <code class="docutils literal notranslate"><span class="pre">‒</span></code>, <code class="docutils literal notranslate"><span class="pre">−</span></code>) → <code class="docutils literal notranslate"><span class="pre">—</span></code>
+(U+2014)</p></li>
+<li><p><strong>Hyphens in compound words</strong>: Preserved during tokenization, then removed in phoneme
+output</p></li>
+<li><p><strong>Apostrophes</strong>: All variants (<code class="docutils literal notranslate"><span class="pre">'</span></code>, <code class="docutils literal notranslate"><span class="pre">'</span></code>, <code class="docutils literal notranslate"><span class="pre">'</span></code>, <code class="docutils literal notranslate"><span class="pre">,</span> <span class="pre">``´</span></code>, etc.) → <code class="docutils literal notranslate"><span class="pre">'</span></code> (U+0027)</p></li>
 </ul>
 </section>
 <section id="manual-normalization">
@@ -1160,8 +1163,8 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 </section>
 <section id="multilang-preprocessing">
 <h2>Multilang Preprocessing</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">preprocess_multilang</span></code> to get language override spans for mixed-language text.
-This integrates with the span-based phonemization API.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">preprocess_multilang</span></code> to get language override spans for mixed-language text. This
+integrates with the span-based phonemization API.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
 
@@ -1226,10 +1229,12 @@ This integrates with the span-based phonemization API.</p>
 </section>
 <section id="error-handling">
 <h2>Error Handling</h2>
-<p>kokorog2p provides robust error handling to help you debug issues, especially in CI/CD environments.</p>
+<p>kokorog2p provides robust error handling to help you debug issues, especially in CI/CD
+environments.</p>
 <section id="strict-mode-default">
 <h3>Strict Mode (Default)</h3>
-<p>By default, kokorog2p uses <strong>strict mode</strong> (<code class="docutils literal notranslate"><span class="pre">strict=True</span></code>), which raises clear exceptions when backend initialization or phonemization fails:</p>
+<p>By default, kokorog2p uses <strong>strict mode</strong> (<code class="docutils literal notranslate"><span class="pre">strict=True</span></code>), which raises clear
+exceptions when backend initialization or phonemization fails:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
 <span class="c1"># Strict mode is the default</span>
@@ -1254,7 +1259,8 @@ This integrates with the span-based phonemization API.</p>
 </section>
 <section id="lenient-mode-backward-compatible">
 <h3>Lenient Mode (Backward Compatible)</h3>
-<p>For backward compatibility with older versions (&lt; 0.4.0) that silently failed, you can use <strong>lenient mode</strong> (<code class="docutils literal notranslate"><span class="pre">strict=False</span></code>):</p>
+<p>For backward compatibility with older versions (&lt; 0.4.0) that silently failed, you can
+use <strong>lenient mode</strong> (<code class="docutils literal notranslate"><span class="pre">strict=False</span></code>):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
 <span class="c1"># Lenient mode logs errors but doesn&#39;t raise exceptions</span>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -835,7 +835,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="spanish-es">
 <h2>Spanish (es)</h2>
-<p>Spanish G2P is rule-based with comprehensive phonological rules for both European and Latin American dialects.</p>
+<p>Spanish G2P is rule-based with comprehensive phonological rules for both European and
+Latin American dialects.</p>
 <section id="id10">
 <h3>Features</h3>
 <ul class="simple">
@@ -1052,7 +1053,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="korean-ko">
 <h2>Korean (ko)</h2>
-<p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological rules.</p>
+<p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological
+rules.</p>
 <section id="id25">
 <h3>Features</h3>
 <ul class="simple">
@@ -1136,7 +1138,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="mixed-language-support">
 <h2>Mixed-Language Support</h2>
-<p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing each word to the appropriate G2P engine.</p>
+<p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing
+each word to the appropriate G2P engine.</p>
 <section id="id31">
 <h3>Features</h3>
 <ul class="simple">
@@ -1324,8 +1327,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="fallback-languages">
 <h2>Fallback Languages</h2>
-<p>Spanish, Italian, and Portuguese have native rule-based implementations. For
-languages not explicitly supported, select the eSpeak backend explicitly:</p>
+<p>Spanish, Italian, and Portuguese have native rule-based implementations. For languages
+not explicitly supported, select the eSpeak backend explicitly:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
 <span class="c1"># Native Spanish implementation</span>

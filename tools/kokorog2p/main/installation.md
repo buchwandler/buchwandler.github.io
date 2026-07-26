@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -664,7 +664,7 @@ if missing). You can override this with <code class="docutils literal notranslat
 <section id="development-installation">
 <h2>Development Installation</h2>
 <p>For development, clone the repository and install in editable mode:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/kokorog2p.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/kokorog2p.git
 <span class="nb">cd</span><span class="w"> </span>kokorog2p
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
@@ -691,7 +691,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </pre></div>
 </div>
 <p><strong>Windows:</strong></p>
-<p>Download the installer from the <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">espeak-ng releases page</a>.</p>
+<p>Download the installer from the
+<a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">espeak-ng releases page</a>.</p>
 </section>
 </section>
 <section id="verifying-installation">
@@ -729,8 +730,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <section id="missing-language-models">
 <h3>Missing Language Models</h3>
 <p>If spaCy models are missing:</p>
-<p>kokorog2p never downloads models during import or inference. Install the
-requested model explicitly in the environment that runs the application:</p>
+<p>kokorog2p never downloads models during import or inference. Install the requested model
+explicitly in the environment that runs the application:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default English model used by kokorog2p</span>
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
 

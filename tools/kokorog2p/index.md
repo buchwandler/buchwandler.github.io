@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,7 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="welcome-to-kokorog2p-s-documentation">
 <h1>Welcome to kokorog2p’s documentation!</h1>
-<p><strong>kokorog2p</strong> is a unified G2P (Grapheme-to-Phoneme) library for Kokoro TTS, providing high-quality text-to-phoneme conversion for multiple languages.</p>
+<p><strong>kokorog2p</strong> is a unified G2P (Grapheme-to-Phoneme) library for Kokoro TTS, providing
+high-quality text-to-phoneme conversion for multiple languages.</p>
 <a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/kokorog2p.svg" />
 </a>
 <a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/kokorog2p.svg" />
@@ -550,10 +551,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="features">
 <h2>Features</h2>
 <ul class="simple">
-<li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian, Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
-<li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing multiple languages</p></li>
+<li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian,
+Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
+<li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing
+multiple languages</p></li>
 <li><p><strong>Dictionary-based lookup</strong> with large gold/silver tier lexicons for select languages</p></li>
-<li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological rules</p></li>
+<li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological
+rules</p></li>
 <li><p><strong>espeak-ng integration</strong> as a fallback for out-of-vocabulary words</p></li>
 <li><p><strong>Automatic IPA to Kokoro phoneme conversion</strong></p></li>
 <li><p><strong>Number and currency handling</strong> across all languages</p></li>
@@ -566,15 +570,15 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
 <span class="c1"># English</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># hˈɛlO wˈɜɹld!</span>
 
 <span class="c1"># German</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># ɡuːtn̩ taːk</span>
 
 <span class="c1"># French</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
+<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># bɔ̃ʒuʁ</span>
 </pre></div>
 </div>
@@ -664,11 +668,6 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#api-reference">API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#common-use-cases">Common Use Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#persistence">Persistence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#advanced-working-with-the-expander-directly">Advanced: Working with the Expander Directly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#notes">Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#example-script">Example Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#see-also">See Also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="phonemes/">Phoneme Inventory</a><ul>

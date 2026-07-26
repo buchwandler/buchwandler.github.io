@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -1054,8 +1054,8 @@ for k, v in iterable:</p>
 </section>
 <section id="spacy-model-selection">
 <h3>spaCy Model Selection</h3>
-<p>English G2P uses spaCy for POS tagging when <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>. You can choose the
-spaCy English model with <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code>:</p>
+<p>English G2P uses spaCy for POS tagging when <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>. You can choose the spaCy
+English model with <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
 
 <span class="c1"># Default model (recommended balance)</span>

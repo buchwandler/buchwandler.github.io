@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/phonemes/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,7 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="phoneme-inventory">
 <h1>Phoneme Inventory</h1>
-<p>kokorog2p uses the Kokoro TTS phoneme inventory, which is based on IPA (International Phonetic Alphabet).</p>
+<p>kokorog2p uses the Kokoro TTS phoneme inventory, which is based on IPA (International
+Phonetic Alphabet).</p>
 <section id="kokoro-phoneme-set">
 <h2>Kokoro Phoneme Set</h2>
 <p>The Kokoro phoneme set consists of 45 phonemes plus punctuation markers.</p>
@@ -692,7 +693,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </tr>
 </tbody>
 </table>
-<p>Note: <code class="docutils literal notranslate"><span class="pre">O</span></code> is a Kokoro-specific simplification of the GOAT vowel, used instead of <code class="docutils literal notranslate"><span class="pre">oʊ</span></code> in some contexts.</p>
+<p>Note: <code class="docutils literal notranslate"><span class="pre">O</span></code> is a Kokoro-specific simplification of the GOAT vowel, used instead of <code class="docutils literal notranslate"><span class="pre">oʊ</span></code> in
+some contexts.</p>
 </section>
 </section>
 <section id="consonants">
@@ -1067,7 +1069,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 </tbody>
 </table>
 </section>
-<section id="id3">
+<section id="id1">
 <h3>Consonants</h3>
 <table class="docutils align-default">
 <colgroup>
@@ -1266,10 +1268,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="references">
 <h2>References</h2>
 <ul class="simple">
-<li><p><a class="reference external" href="https://www.internationalphoneticassociation.org/content/ipa-chart">IPA Chart</a> - Official IPA reference</p></li>
+<li><p><a class="reference external" href="https://www.internationalphoneticassociation.org/content/ipa-chart">IPA Chart</a> -
+Official IPA reference</p></li>
 <li><p><a class="reference external" href="https://github.com/hexgrad/Kokoro-82M">Kokoro TTS</a> - Kokoro TTS model</p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/English_phonology">English Phonology</a> - Wikipedia reference</p></li>
-<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Standard_German_phonology">German Phonology</a> - Wikipedia reference</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/English_phonology">English Phonology</a> - Wikipedia
+reference</p></li>
+<li><p><a class="reference external" href="https://en.wikipedia.org/wiki/Standard_German_phonology">German Phonology</a> -
+Wikipedia reference</p></li>
 </ul>
 </section>
 </section>

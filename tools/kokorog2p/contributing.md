@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/contributing/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h2>Development Setup</h2>
 <ol class="arabic">
 <li><p><strong>Clone the repository</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/hexgrad/kokorog2p.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/kokorog2p.git
 <span class="nb">cd</span><span class="w"> </span>kokorog2p
 </pre></div>
 </div>
@@ -659,8 +659,8 @@ xdg-open<span class="w"> </span>_build/html/index.html<span class="w">  </span><
 </li>
 <li><p><strong>Update documentation</strong>:</p>
 <ul class="simple">
-<li><p>Add to <code class="docutils literal notranslate"><span class="pre">docs/languages.rst</span></code></p></li>
-<li><p>Create <code class="docutils literal notranslate"><span class="pre">docs/api/newlanguage.rst</span></code></p></li>
+<li><p>Add to <code class="docutils literal notranslate"><span class="pre">docs/languages.md</span></code></p></li>
+<li><p>Create <code class="docutils literal notranslate"><span class="pre">docs/api/newlanguage.md</span></code></p></li>
 </ul>
 </li>
 </ol>

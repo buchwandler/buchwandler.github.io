@@ -83,7 +83,7 @@ permalink: /tools/
       <p>A unified multi-language G2P library for Kokoro TTS.</p>
       <div class="card-links">
         <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.6.7" rel="external noopener">Latest release: v0.6.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.0" rel="external noopener">Latest release: v0.7.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

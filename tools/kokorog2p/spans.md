@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/spans/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,10 +542,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="span-based-phonemization-guide">
 <h1>Span-Based Phonemization Guide</h1>
-<p>This document explains the span-based (offset-based) phonemization system in kokorog2p, which provides deterministic, pipeline-friendly text-to-phoneme conversion.</p>
+<p>This document explains the span-based (offset-based) phonemization system in kokorog2p,
+which provides deterministic, pipeline-friendly text-to-phoneme conversion.</p>
 <section id="overview">
 <h2>Overview</h2>
-<p>The span-based system uses <strong>character offsets</strong> to precisely identify and override specific portions of text during phonemization. This approach is more robust than word-based matching because it handles:</p>
+<p>The span-based system uses <strong>character offsets</strong> to precisely identify and override
+specific portions of text during phonemization. This approach is more robust than
+word-based matching because it handles:</p>
 <ul class="simple">
 <li><p><strong>Duplicate words</strong> with different pronunciations (e.g., “the cat the dog”)</p></li>
 <li><p><strong>Partial word matches</strong> (e.g., distinguishing “cat” from “category”)</p></li>
@@ -570,7 +573,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 <p><strong>Key Properties:</strong></p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">char_start</span></code> and <code class="docutils literal notranslate"><span class="pre">char_end</span></code> are <strong>character offsets</strong> in the clean text (after markup removal)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">char_start</span></code> and <code class="docutils literal notranslate"><span class="pre">char_end</span></code> are <strong>character offsets</strong> in the clean text (after markup
+removal)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">char_end</span></code> is <strong>exclusive</strong> (Python slice convention: <code class="docutils literal notranslate"><span class="pre">text[char_start:char_end]</span></code>)</p></li>
 <li><p>Multiple tokens can reference the same text position if tokenization creates sub-parts</p></li>
 <li><p>Whitespace is inferred from offsets (tokens are words/punctuation only)</p></li>
@@ -630,10 +634,10 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="extended-text-layer">
 <h2>Extended Text Layer</h2>
-<p>Span alignment always uses <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> offsets. When abbreviations or numbers
-are expanded for phonemization, the expanded form is stored on each token’s
-<code class="docutils literal notranslate"><span class="pre">extended_text</span></code> and in <code class="docutils literal notranslate"><span class="pre">PhonemizeResult.extended_text</span></code>. This keeps character
-offsets stable while allowing the phonemizer to speak the expanded form.</p>
+<p>Span alignment always uses <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> offsets. When abbreviations or numbers are
+expanded for phonemization, the expanded form is stored on each token’s <code class="docutils literal notranslate"><span class="pre">extended_text</span></code>
+and in <code class="docutils literal notranslate"><span class="pre">PhonemizeResult.extended_text</span></code>. This keeps character offsets stable while
+allowing the phonemizer to speak the expanded form.</p>
 <p>Example:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Meet Mr. Smith&quot;</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
@@ -649,8 +653,10 @@ offsets stable while allowing the phonemizer to speak the expanded form.</p>
 <h3>Basic Rules</h3>
 <ol class="arabic simple">
 <li><p><strong>Zero-indexed</strong>: First character is at position <code class="docutils literal notranslate"><span class="pre">0</span></code></p></li>
-<li><p><strong>Exclusive end</strong>: Range <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code> means characters from <code class="docutils literal notranslate"><span class="pre">start</span></code> up to but not including <code class="docutils literal notranslate"><span class="pre">end</span></code></p></li>
-<li><p><strong>Clean text reference</strong>: Offsets refer to text <strong>after</strong> markup removal but <strong>before</strong> normalization</p></li>
+<li><p><strong>Exclusive end</strong>: Range <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code> means characters from <code class="docutils literal notranslate"><span class="pre">start</span></code> up to but not
+including <code class="docutils literal notranslate"><span class="pre">end</span></code></p></li>
+<li><p><strong>Clean text reference</strong>: Offsets refer to text <strong>after</strong> markup removal but
+<strong>before</strong> normalization</p></li>
 </ol>
 </section>
 <section id="examples">
@@ -694,7 +700,8 @@ offsets stable while allowing the phonemizer to speak the expanded form.</p>
 <p><strong>Matching Logic:</strong></p>
 <ul class="simple">
 <li><p><strong>Exact match</strong>: Override span exactly matches token span → Apply override</p></li>
-<li><p><strong>Partial overlap</strong> (snap mode): Override partially overlaps token → Apply with warning</p></li>
+<li><p><strong>Partial overlap</strong> (snap mode): Override partially overlaps token → Apply with
+warning</p></li>
 <li><p><strong>No overlap</strong>: Override doesn’t touch token → Skip</p></li>
 </ul>
 <p><strong>Advantages:</strong></p>
@@ -748,7 +755,8 @@ offsets stable while allowing the phonemizer to speak the expanded form.</p>
 </section>
 <section id="overlap-handling">
 <h2>Overlap Handling</h2>
-<p>When an override partially overlaps with a token, the system can handle it in two ways via the <code class="docutils literal notranslate"><span class="pre">overlap</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">phonemize()</span></code>:</p>
+<p>When an override partially overlaps with a token, the system can handle it in two ways
+via the <code class="docutils literal notranslate"><span class="pre">overlap</span></code> parameter in <code class="docutils literal notranslate"><span class="pre">phonemize()</span></code>:</p>
 <section id="snap-mode-default">
 <h3>Snap Mode (Default)</h3>
 <p>Apply the override and emit a warning:</p>
@@ -809,7 +817,8 @@ offsets stable while allowing the phonemizer to speak the expanded form.</p>
 <span class="c1"># Uses provided phonemes for &quot;read&quot; instead of G2P lookup</span>
 </pre></div>
 </div>
-<p><strong>Phoneme Override Priority:</strong> If both <code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">lang</span></code> are specified, <code class="docutils literal notranslate"><span class="pre">ph</span></code> takes precedence:</p>
+<p><strong>Phoneme Override Priority:</strong> If both <code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">lang</span></code> are specified, <code class="docutils literal notranslate"><span class="pre">ph</span></code> takes
+precedence:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span> <span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;fr&quot;</span><span class="p">})</span>
 <span class="c1"># &quot;ph&quot; is used, &quot;lang&quot; is ignored for this span</span>
 </pre></div>

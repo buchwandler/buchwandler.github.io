@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,7 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="welcome-to-kokorog2p-s-documentation">
 <h1>Welcome to kokorog2p’s documentation!</h1>
-<p><strong>kokorog2p</strong> is a unified G2P (Grapheme-to-Phoneme) library for Kokoro TTS, providing high-quality text-to-phoneme conversion for multiple languages.</p>
+<p><strong>kokorog2p</strong> is a unified G2P (Grapheme-to-Phoneme) library for Kokoro TTS, providing
+high-quality text-to-phoneme conversion for multiple languages.</p>
 <a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/kokorog2p.svg" />
 </a>
 <a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/kokorog2p.svg" />
@@ -550,10 +551,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="features">
 <h2>Features</h2>
 <ul class="simple">
-<li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian, Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
-<li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing multiple languages</p></li>
+<li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian,
+Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
+<li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing
+multiple languages</p></li>
 <li><p><strong>Dictionary-based lookup</strong> with large gold/silver tier lexicons for select languages</p></li>
-<li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological rules</p></li>
+<li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological
+rules</p></li>
 <li><p><strong>espeak-ng integration</strong> as a fallback for out-of-vocabulary words</p></li>
 <li><p><strong>Automatic IPA to Kokoro phoneme conversion</strong></p></li>
 <li><p><strong>Number and currency handling</strong> across all languages</p></li>
@@ -664,11 +668,6 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#api-reference">API Reference</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#common-use-cases">Common Use Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#persistence">Persistence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#advanced-working-with-the-expander-directly">Advanced: Working with the Expander Directly</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#notes">Notes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#example-script">Example Script</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#troubleshooting">Troubleshooting</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#see-also">See Also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="phonemes/">Phoneme Inventory</a><ul>

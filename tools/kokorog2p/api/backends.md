@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/backends/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.6.7"
-docs_commit: "70a5d4380691f335427d20f10e64706f66dc62bd"
+docs_ref: "v0.7.0"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -784,7 +784,7 @@ strict: If True (default), raise exceptions on errors. If False,</p>
 <div><p>log warnings and return empty results for backward compatibility.</p>
 </div></blockquote>
 <p>version: Model version (default: “1.0”).
-<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs: Additional arguments (ignored).</p>
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Additional arguments (ignored).</p>
 </dd>
 </dl>
 </dd></dl>

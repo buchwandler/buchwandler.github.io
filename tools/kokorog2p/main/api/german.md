@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -542,7 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="german-api">
 <h1>German API</h1>
-<p>German G2P provides phoneme conversion using a large 738k+ entry dictionary with rule-based fallback.</p>
+<p>German G2P provides phoneme conversion using a large 738k+ entry dictionary with
+rule-based fallback.</p>
 <section id="main-class">
 <h2>Main Class</h2>
 <dl class="py class">

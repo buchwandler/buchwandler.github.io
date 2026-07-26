@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7b035d508497fa5eab439b590c70126f305baa92"
+docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
 search_enabled: true
 ---
 
@@ -544,11 +544,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>Abbreviation Customization Guide</h1>
 <section id="overview">
 <h2>Overview</h2>
-<p>The <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> library provides a flexible abbreviation expansion system that allows you to customize which abbreviations are expanded and how. This is particularly useful when:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> library provides a flexible abbreviation expansion system that allows
+you to customize which abbreviations are expanded and how. This is particularly useful
+when:</p>
 <ul class="simple">
 <li><p>You want to disable specific abbreviations</p></li>
 <li><p>You need to add custom abbreviations for domain-specific terms</p></li>
-<li><p>You want to change how an abbreviation expands (e.g., always expand “Dr.” to “Drive” instead of “Doctor”)</p></li>
+<li><p>You want to change how an abbreviation expands (e.g., always expand “Dr.” to “Drive”
+instead of “Doctor”)</p></li>
 <li><p>You need context-aware expansions (e.g., “St.” → “Street” vs “Saint”)</p></li>
 </ul>
 </section>
@@ -815,7 +818,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="persistence">
 <h2>Persistence</h2>
-<p>Changes to abbreviations <strong>persist</strong> across <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> calls because they modify the singleton abbreviation expander:</p>
+<p>Changes to abbreviations <strong>persist</strong> across <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> calls because they modify the
+singleton abbreviation expander:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># First instance</span>
 <span class="n">g2p1</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
 <span class="n">g2p1</span><span class="o">.</span><span class="n">add_abbreviation</span><span class="p">(</span><span class="s2">&quot;Custom.&quot;</span><span class="p">,</span> <span class="s2">&quot;Customized&quot;</span><span class="p">)</span>
@@ -834,12 +838,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p><code class="docutils literal notranslate"><span class="pre">clear_cache()</span></code> only clears cached G2P instances; it does not reset
-abbreviation expanders. <code class="docutils literal notranslate"><span class="pre">reset_abbreviations()</span></code> resets expanders and
-clears cached G2P instances.</p>
-</div>
-</section>
-<section id="advanced-working-with-the-expander-directly">
-<h2>Advanced: Working with the Expander Directly</h2>
+abbreviation expanders. <code class="docutils literal notranslate"><span class="pre">reset_abbreviations()</span></code> resets expanders and clears cached G2P
+instances. :::</p>
+<p class="rubric" id="advanced-working-with-the-expander-directly">Advanced: Working with the Expander Directly</p>
 <p>You can also work directly with the abbreviation expander:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en.abbreviations</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_expander</span>
 
@@ -853,22 +854,21 @@ clears cached G2P instances.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">entry</span><span class="o">.</span><span class="n">description</span><span class="p">)</span>       <span class="c1"># Description</span>
 </pre></div>
 </div>
-</section>
-<section id="notes">
-<h2>Notes</h2>
+<p class="rubric" id="notes">Notes</p>
 <ol class="arabic simple">
-<li><p><strong>Case Sensitivity</strong>: By default, abbreviations are case-insensitive. Use <code class="docutils literal notranslate"><span class="pre">case_sensitive=True</span></code> if you need exact matching.</p></li>
-<li><p><strong>Singleton Behavior</strong>: The abbreviation expander is a singleton, so changes affect all G2P instances using the same language.</p></li>
-<li><p><strong>Context Detection</strong>: Context-aware expansions require <code class="docutils literal notranslate"><span class="pre">enable_context_detection=True</span></code> (default) when creating the G2P instance.</p></li>
-<li><p><strong>Order Matters</strong>: When removing and adding the same abbreviation, make sure to remove first, then add.</p></li>
+<li><p><strong>Case Sensitivity</strong>: By default, abbreviations are case-insensitive. Use
+<code class="docutils literal notranslate"><span class="pre">case_sensitive=True</span></code> if you need exact matching.</p></li>
+<li><p><strong>Singleton Behavior</strong>: The abbreviation expander is a singleton, so changes affect
+all G2P instances using the same language.</p></li>
+<li><p><strong>Context Detection</strong>: Context-aware expansions require
+<code class="docutils literal notranslate"><span class="pre">enable_context_detection=True</span></code> (default) when creating the G2P instance.</p></li>
+<li><p><strong>Order Matters</strong>: When removing and adding the same abbreviation, make sure to
+remove first, then add.</p></li>
 </ol>
-</section>
-<section id="example-script">
-<h2>Example Script</h2>
-<p>See <code class="docutils literal notranslate"><span class="pre">examples/abbreviation_customization.py</span></code> for a complete working example demonstrating all features.</p>
-</section>
-<section id="troubleshooting">
-<h2>Troubleshooting</h2>
+<p class="rubric" id="example-script">Example Script</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">examples/abbreviation_customization.py</span></code> for a complete working example
+demonstrating all features.</p>
+<p class="rubric" id="troubleshooting">Troubleshooting</p>
 <p><strong>Q: My custom abbreviation isn’t being expanded.</strong></p>
 <p>A: Check:</p>
 <ul class="simple">
@@ -877,17 +877,21 @@ clears cached G2P instances.</p>
 <li><p>Use <code class="docutils literal notranslate"><span class="pre">has_abbreviation()</span></code> to verify it was added</p></li>
 </ul>
 <p><strong>Q: Changes don’t persist after restarting.</strong></p>
-<p>A: Abbreviation customizations are in-memory only. If you need persistent customizations, add them at startup or create a configuration system.</p>
+<p>A: Abbreviation customizations are in-memory only. If you need persistent
+customizations, add them at startup or create a configuration system.</p>
 <p><strong>Q: Context-aware expansion isn’t working.</strong></p>
-<p>A: Make sure <code class="docutils literal notranslate"><span class="pre">enable_context_detection=True</span></code> when creating the G2P instance (it’s the default).</p>
-</section>
-<section id="see-also">
-<h2>See Also</h2>
+<p>A: Make sure <code class="docutils literal notranslate"><span class="pre">enable_context_detection=True</span></code> when creating the G2P instance (it’s the
+default).</p>
+<p class="rubric" id="see-also">See Also</p>
 <ul class="simple">
-<li><p><a class="reference external" href="https://github.com/holgern/kokorog2p/blob/main/kokorog2p/en/abbreviations.py">English Abbreviations Source</a> - Default abbreviations</p></li>
-<li><p><a class="reference external" href="https://github.com/holgern/kokorog2p/blob/main/kokorog2p/pipeline/abbreviations.py">Abbreviation Pipeline</a> - Base framework</p></li>
-<li><p><a class="reference external" href="https://github.com/holgern/kokorog2p/blob/main/examples/abbreviation_customization.py">Examples</a> - Working examples</p></li>
+<li><p><a class="reference external" href="https://github.com/buchwandler/kokorog2p/blob/main/kokorog2p/en/abbreviations.py">English Abbreviations Source</a> -
+Default abbreviations</p></li>
+<li><p><a class="reference external" href="https://github.com/buchwandler/kokorog2p/blob/main/kokorog2p/pipeline/abbreviations.py">Abbreviation Pipeline</a> -
+Base framework</p></li>
+<li><p><a class="reference external" href="https://github.com/buchwandler/kokorog2p/blob/main/examples/abbreviation_customization.py">Examples</a> -
+Working examples</p></li>
 </ul>
+</div>
 </section>
 </section>
 </div>
