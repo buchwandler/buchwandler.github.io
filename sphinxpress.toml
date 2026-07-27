@@ -59,7 +59,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro"]
 
 [pdf]
 builder = "weasyprint"
@@ -149,3 +149,15 @@ version_refs = { main = "main" }
 
 
 
+
+[[projects]]
+name = "pykokoro"
+title = "pykokoro"
+docs_root = "../pykokoro/docs"
+conf_dir = "../pykokoro/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/pykokoro"
+description = "A Python library for Kokoro TTS using ONNX runtime."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }

@@ -23,3 +23,8 @@
   docs_url: /tools/kokorog2p/
   repo_url: https://github.com/buchwandler/kokorog2p
   pypi_url: https://pypi.org/project/kokorog2p/
+- name: pykokoro
+  description: A Python library for Kokoro TTS using ONNX runtime.
+  docs_url: /tools/pykokoro/
+  repo_url: https://github.com/buchwandler/pykokoro
+  pypi_url: https://pypi.org/project/pykokoro/
