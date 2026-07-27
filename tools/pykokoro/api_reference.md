@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -561,6 +561,178 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="generationconfig">
 <h3>GenerationConfig</h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykokoro.</span></span><span class="sig-name descname"><span class="pre">GenerationConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'tts'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'manual'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'auto'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'tts'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_clause</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.6</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_paragraph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pause_variance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_short_sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pykokoro/generation_config/#GenerationConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configuration for audio generation in the KokoroPipeline.</p>
+<p>Groups all generation-time parameters for easier reuse and documentation.
+Instances are immutable (frozen) to prevent accidental modification.</p>
+<p>This config groups generation parameters into a reusable configuration object
+for PipelineConfig. You can create a config once and reuse it across multiple
+runs, with the ability to override individual parameters using kwargs.</p>
+<dl>
+<dt>Priority order when using both config and kwargs:</dt><dd><ol class="arabic simple">
+<li><p>kwargs (highest priority - explicit per-call overrides)</p></li>
+<li><p>config (medium priority - structured configuration)</p></li>
+<li><p>defaults (lowest priority - fallback values)</p></li>
+</ol>
+</dd>
+<dt>Attributes:</dt><dd><dl>
+<dt>speed: Speech speed multiplier. 1.0 = normal speed, 0.5 = half speed,</dt><dd><p>2.0 = double speed. Must be &gt; 0.0. Default: 1.0</p>
+</dd>
+<dt>lang: Default language code for text-to-phoneme conversion.</dt><dd><p>Examples: ‘en-us’, ‘en-gb’, ‘es’, ‘fr’, ‘de’, ‘it’, ‘pt’, ‘ja’,
+‘ko’, ‘zh’, ‘hi’. Can be overridden per-segment with SSMD
+[text]{lang=”fr”} syntax. Default: “en-us”</p>
+</dd>
+<dt>is_phonemes: If True, treat input text as IPA phonemes instead of</dt><dd><p>regular text, bypassing text-to-phoneme conversion. Default: False</p>
+</dd>
+<dt>pause_mode: Pause handling strategy:</dt><dd><ul class="simple">
+<li><p>“tts” (default): TTS generates pauses naturally at sentence
+boundaries. SSMD pauses are preserved. Best for natural speech.</p></li>
+<li><p>“manual”: PyKokoro controls pauses with precision. Silence is
+trimmed from segment boundaries and SSMD pauses are preserved.
+Best for precise timing control.</p></li>
+<li><p>“auto”: PyKokoro automatically inserts pauses at sentence and
+paragraph boundaries, and adds clause pauses when long sentences
+are split. Silence is trimmed from segment boundaries.</p></li>
+</ul>
+<p>Default: “tts”</p>
+</dd>
+<dt>pause_clause: Duration in seconds for SSMD …c (comma) breaks and</dt><dd><p>automatic clause boundary pauses when pause_mode=”manual” or “auto”.
+Must be &gt;= 0.0. Default: 0.3</p>
+</dd>
+<dt>pause_sentence: Duration in seconds for SSMD …s (sentence) breaks and</dt><dd><p>automatic sentence boundary pauses when pause_mode=”manual” or “auto”.
+Must be &gt;= 0.0. Default: 0.6</p>
+</dd>
+<dt>pause_paragraph: Duration in seconds for SSMD …p (paragraph) breaks and</dt><dd><p>automatic paragraph boundary pauses when pause_mode=”manual” or “auto”.
+Must be &gt;= 0.0. Default: 1.0</p>
+</dd>
+<dt>pause_variance: Standard deviation in seconds for Gaussian variance added</dt><dd><p>to automatic pauses. Only applies when pause_mode=”manual” or “auto”.
+Default 0.05 (±100ms at 95% confidence). Set to 0.0 to disable
+variance. Must be &gt;= 0.0. Default: 0.05</p>
+</dd>
+<dt>random_seed: Optional random seed for reproducible pause variance.</dt><dd><p>If None, pauses will vary between runs. If set to an integer,
+pause variance will be reproducible. Default: None</p>
+</dd>
+<dt>enable_short_sentence: Override short sentence handling for this run.</dt><dd><ul class="simple">
+<li><p>None (default): Use config setting from PipelineConfig</p></li>
+<li><p>True: Force enable short sentence handling</p></li>
+<li><p>False: Force disable short sentence handling</p></li>
+</ul>
+<p>Default: None</p>
+</dd>
+</dl>
+</dd>
+<dt>Example:</dt><dd><p>Basic usage with config:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">config</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Reuse config across multiple generations:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="n">speed</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+<span class="gp">... </span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;First sentence.&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">res2</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Second sentence.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Override specific parameters using kwargs:</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">res</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+<span class="gp">... </span>    <span class="s2">&quot;Fast speech&quot;</span><span class="p">,</span>
+<span class="gp">... </span>    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">),</span>
+<span class="gp">... </span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.speed">
+<span class="sig-name descname"><span class="pre">speed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.lang">
+<span class="sig-name descname"><span class="pre">lang</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'en-us'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.is_phonemes">
+<span class="sig-name descname"><span class="pre">is_phonemes</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.pause_mode">
+<span class="sig-name descname"><span class="pre">pause_mode</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'tts'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'manual'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'auto'</span></span><span class="p"><span class="pre">]</span></span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'tts'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.pause_clause">
+<span class="sig-name descname"><span class="pre">pause_clause</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.3</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.pause_sentence">
+<span class="sig-name descname"><span class="pre">pause_sentence</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.6</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.pause_paragraph">
+<span class="sig-name descname"><span class="pre">pause_paragraph</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1.0</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.pause_variance">
+<span class="sig-name descname"><span class="pre">pause_variance</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0.05</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.random_seed">
+<span class="sig-name descname"><span class="pre">random_seed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.enable_short_sentence">
+<span class="sig-name descname"><span class="pre">enable_short_sentence</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.__post_init__">
+<span class="sig-name descname"><span class="pre">__post_init__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/pykokoro/generation_config/#GenerationConfig.__post_init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validate configuration parameters after initialization.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pykokoro.GenerationConfig.merge_with_kwargs">
+<span class="sig-name descname"><span class="pre">merge_with_kwargs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/pykokoro/generation_config/#GenerationConfig.merge_with_kwargs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Merge config with kwargs, with kwargs taking priority.</p>
+<p>This is used internally by KokoroPipeline to merge the config
+object with individual parameter overrides. Only non-None kwargs
+will override config values.</p>
+<dl>
+<dt>Args:</dt><dd><p><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Individual parameter overrides (None values are ignored)</p>
+</dd>
+<dt>Returns:</dt><dd><p>Dictionary with merged parameters (non-None kwargs override config)</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">config</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merged</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">merge_with_kwargs</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">2.0</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merged</span><span class="p">[</span><span class="s2">&quot;speed&quot;</span><span class="p">]</span>
+<span class="go">2.0</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">merged</span><span class="p">[</span><span class="s2">&quot;lang&quot;</span><span class="p">]</span>  <span class="c1"># Not overridden because kwarg was None</span>
+<span class="go">&#39;en-gb&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 <section id="pipeline-helpers">
@@ -617,8 +789,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="model-and-voice-utilities">
 <h2>Model and Voice Utilities</h2>
-<p>These utilities live in <code class="docutils literal notranslate"><span class="pre">pykokoro.onnx_backend</span></code> and are used for model and
-voice management.</p>
+<p>These utilities live in <code class="docutils literal notranslate"><span class="pre">pykokoro.onnx_backend</span></code> and are used for model and voice
+management.</p>
 </section>
 <section id="configuration-helpers">
 <h2>Configuration Helpers</h2>

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -542,21 +542,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation-guide">
 <h1>Installation Guide</h1>
-<p>PyKokoro can be installed using pip and requires Python 3.9 or higher.</p>
+<p>PyKokoro can be installed using pip and requires Python 3.10 or higher.</p>
 <section id="basic-installation">
 <h2>Basic Installation</h2>
 <p>Install the latest stable version from PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
 </pre></div>
 </div>
-<p>This will install PyKokoro with CPU support using ONNX Runtime.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
+distributions. Install exactly one provider extra per environment.</p>
 </section>
 <section id="gpu-support">
 <h2>GPU Support</h2>
 <p>For GPU acceleration, install with the GPU extras:</p>
 <section id="nvidia-cuda">
 <h3>NVIDIA CUDA</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro<span class="o">[</span>gpu<span class="o">]</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span>
 </pre></div>
 </div>
 <p>This installs <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> for NVIDIA CUDA support.</p>
@@ -564,7 +565,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="amd-rocm">
 <h3>AMD ROCm</h3>
 <p>For AMD GPUs with ROCm:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
 pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-rocm
 </pre></div>
 </div>
@@ -583,8 +584,8 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 <section id="python-version">
 <h3>Python Version</h3>
 <ul class="simple">
-<li><p>Python 3.9 or higher</p></li>
-<li><p>Tested on Python 3.9, 3.10, 3.11, 3.12, and 3.13</p></li>
+<li><p>Python 3.10 or higher</p></li>
+<li><p>Tested on Python 3.10, 3.11, 3.12, and 3.13</p></li>
 </ul>
 </section>
 <section id="dependencies">
@@ -627,8 +628,8 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="installing-spacy-optional">
 <h3>Installing spaCy (Optional)</h3>
-<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware
-spaCy tokenization in G2P:</p>
+<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware spaCy
+tokenization in G2P:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
@@ -689,7 +690,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <p>If GPU acceleration isn’t working:</p>
 <ol class="arabic simple">
 <li><p>Verify CUDA/ROCm is installed: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> (NVIDIA) or <code class="docutils literal notranslate"><span class="pre">rocm-smi</span></code> (AMD)</p></li>
-<li><p>Check ONNX Runtime GPU: <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
+<li><p>Check ONNX Runtime GPU:
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
 <li><p>Ensure you have the correct ONNX Runtime version for your CUDA version</p></li>
 </ol>
 </section>
@@ -703,7 +705,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li><p>For GitHub models, ensure the release URLs are accessible</p></li>
 </ol>
 <p><strong>Manual Model Download:</strong></p>
-<p>PyKokoro automatically downloads models on first use, but you can trigger downloads manually:</p>
+<p>PyKokoro automatically downloads models on first use, but you can trigger downloads
+manually:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
 
 <span class="c1"># HuggingFace v1.0 (default - 54 voices, 8 quality options)</span>
@@ -732,10 +735,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </div>
 <p>Models are cached in:</p>
 <ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
-<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
+<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
+<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
+<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
+<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
 </ul>
 </section>
 </section>

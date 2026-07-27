@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/advanced_features/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -796,15 +796,15 @@ can be updated by replacing <code class="docutils literal notranslate"><span cla
 </pre></div>
 </div>
 <p><strong>Pause Variance Details:</strong></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">pause_variance</span></code> parameter adds Gaussian (normal distribution) variance to
-pause durations, making speech sound more natural:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pause_variance</span></code> parameter adds Gaussian (normal distribution) variance to pause
+durations, making speech sound more natural:</p>
 <ul class="simple">
 <li><p><strong>0.0</strong> - No variance, exact pause durations</p></li>
 <li><p><strong>0.05</strong> - Default, ±100ms at 95% confidence interval</p></li>
 <li><p><strong>0.1</strong> - Higher variance, ±200ms at 95% confidence</p></li>
 </ul>
-<p>The variance ensures that pauses are never exactly the same length, mimicking
-natural human speech rhythm.</p>
+<p>The variance ensures that pauses are never exactly the same length, mimicking natural
+human speech rhythm.</p>
 <p><strong>Reproducibility:</strong></p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">random_seed</span></code> for consistent output across runs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same output every time</span>
@@ -1105,15 +1105,28 @@ v1.1-zh with English text for now.</p>
 </section>
 <section id="short-sentence-handling">
 <h2>Short Sentence Handling</h2>
-<p>PyKokoro improves short, single-word sentences by surrounding the word with a
-pause marker. You can tune settins via <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>:</p>
+<p>PyKokoro improves short sentences by adding context before synthesis. You can tune
+settings via <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.short_sentence_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShortSentenceConfig</span>
 
 <span class="n">short_config</span> <span class="o">=</span> <span class="n">ShortSentenceConfig</span><span class="p">(</span>
+    <span class="n">min_phoneme_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;randomized-phrase&quot;</span><span class="p">,</span>
+    <span class="n">phrase_fallback_tries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
     <span class="n">phoneme_pretext</span><span class="o">=</span><span class="s2">&quot;…&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
+<p>Phrase-based modes use the <code class="docutils literal notranslate"><span class="pre">energy-valley</span></code> cutter, which may fail to find confident
+boundaries. In that case, phrase modes try up to <code class="docutils literal notranslate"><span class="pre">phrase_fallback_tries</span></code> alternate
+phrase templates before falling back to wrap mode.</p>
+<p>Phrase-based short-sentence handling can slow down processing because of these retries,
+but it usually improves the audio for very short segments much more than simple
+wrapping.</p>
+<p>For phrase-based short-sentence handling, prefer these voices in order: <code class="docutils literal notranslate"><span class="pre">am_santa</span></code>,
+<code class="docutils literal notranslate"><span class="pre">af_nicole</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_lewis</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_george</span></code>, <code class="docutils literal notranslate"><span class="pre">af_bella</span></code>, <code class="docutils literal notranslate"><span class="pre">am_echo</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sky</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sarah</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bm_fable</span></code>, <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">am_michael</span></code>, <code class="docutils literal notranslate"><span class="pre">af_alloy</span></code>, <code class="docutils literal notranslate"><span class="pre">af_nova</span></code>, <code class="docutils literal notranslate"><span class="pre">bf_isabella</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">am_adam</span></code>.</p>
 </section>
 <section id="configuration-management">
 <h2>Configuration Management</h2>
@@ -1163,7 +1176,8 @@ pause marker. You can tune settins via <code class="docutils literal notranslate
 <p>Use <code class="docutils literal notranslate"><span class="pre">q6</span></code> or <code class="docutils literal notranslate"><span class="pre">q8</span></code> for production; <code class="docutils literal notranslate"><span class="pre">fp16</span></code> only when quality is critical.</p>
 </li>
 <li><p><strong>Use pause_mode for Long Text</strong></p>
-<p>Using <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> with appropriate pause settings improves quality for long text.</p>
+<p>Using <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> with appropriate pause settings improves quality for long
+text.</p>
 </li>
 </ol>
 </section>
@@ -1171,7 +1185,8 @@ pause marker. You can tune settins via <code class="docutils literal notranslate
 <h2>Internal Architecture</h2>
 <section id="understanding-pykokoro-s-internal-structure">
 <h3>Understanding PyKokoro’s Internal Structure</h3>
-<p>PyKokoro uses a modular architecture with specialized manager classes for different responsibilities:</p>
+<p>PyKokoro uses a modular architecture with specialized manager classes for different
+responsibilities:</p>
 <p><strong>OnnxSessionManager</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/onnx_session.py</span></code>)</p>
 <p>Manages ONNX Runtime session creation and configuration:</p>
 <ul class="simple">
@@ -1210,7 +1225,8 @@ pause marker. You can tune settins via <code class="docutils literal notranslate
 </section>
 <section id="using-manager-classes-directly">
 <h3>Using Manager Classes Directly</h3>
-<p>While most users interact with the high-level <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> API, advanced users can work with manager classes directly:</p>
+<p>While most users interact with the high-level <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> API, advanced users can work with
+manager classes directly:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.onnx_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnnxSessionManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.voice_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceManager</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.audio_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">AudioGenerator</span>

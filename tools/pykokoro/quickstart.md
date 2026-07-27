@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -581,7 +581,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="choosing-a-voice">
 <h3>Choosing a Voice</h3>
-<p>PyKokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). Here are some popular ones:</p>
+<p>PyKokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). Here are some popular
+ones:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="c1"># American English</span>
@@ -613,8 +614,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">audio6</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
 </pre></div>
 </div>
-<p>To see all available voices, check the README or use the voice listing examples
-in <code class="docutils literal notranslate"><span class="pre">examples/voices.py</span></code>.</p>
+<p>To see all available voices, check the README or use the voice listing examples in
+<code class="docutils literal notranslate"><span class="pre">examples/voices.py</span></code>.</p>
 </section>
 <section id="adjusting-speech-speed">
 <h3>Adjusting Speech Speed</h3>
@@ -660,11 +661,9 @@ in <code class="docutils literal notranslate"><span class="pre">examples/voices.
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;with_pauses.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Pause syntax (SSMD breaks):
-* <code class="docutils literal notranslate"><span class="pre">...c</span></code> - Short/comma pause (0.3 seconds, default)
-* <code class="docutils literal notranslate"><span class="pre">...s</span></code> - Medium/sentence pause (0.6 seconds, default)
-* <code class="docutils literal notranslate"><span class="pre">...p</span></code> - Long/paragraph pause (1.0 seconds, default)
-* <code class="docutils literal notranslate"><span class="pre">...500ms</span></code> - Custom duration pause (e.g., 500 milliseconds)</p>
+<p>Pause syntax (SSMD breaks): * <code class="docutils literal notranslate"><span class="pre">...c</span></code> - Short/comma pause (0.3 seconds, default) *
+<code class="docutils literal notranslate"><span class="pre">...s</span></code> - Medium/sentence pause (0.6 seconds, default) * <code class="docutils literal notranslate"><span class="pre">...p</span></code> - Long/paragraph pause
+(1.0 seconds, default) * <code class="docutils literal notranslate"><span class="pre">...500ms</span></code> - Custom duration pause (e.g., 500 milliseconds)</p>
 </section>
 <section id="reusing-the-pipeline">
 <h3>Reusing the Pipeline</h3>
@@ -680,8 +679,8 @@ in <code class="docutils literal notranslate"><span class="pre">examples/voices.
 </section>
 <section id="choosing-spacy-model-size-auto">
 <h3>Choosing spaCy Model Size (Auto)</h3>
-<p>If you use spaCy-based tokenization/splitting, you can keep language-aware
-auto selection and choose only the model size:</p>
+<p>If you use spaCy-based tokenization/splitting, you can keep language-aware auto
+selection and choose only the model size:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GenerationConfig</span><span class="p">,</span>
     <span class="n">KokoroPipeline</span><span class="p">,</span>

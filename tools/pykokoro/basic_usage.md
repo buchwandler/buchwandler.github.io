@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -592,8 +592,8 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 </section>
 <section id="using-local-model-files">
 <h3>Using Local Model Files</h3>
-<p>If you already have the ONNX model and voices files locally, pass their paths
-through <code class="docutils literal notranslate"><span class="pre">PipelineConfig</span></code>:</p>
+<p>If you already have the ONNX model and voices files locally, pass their paths through
+<code class="docutils literal notranslate"><span class="pre">PipelineConfig</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
@@ -695,7 +695,8 @@ through <code class="docutils literal notranslate"><span class="pre">PipelineCon
 <h2>Voice Selection</h2>
 <p>Voice names follow the pattern: <code class="docutils literal notranslate"><span class="pre">{accent}_{gender}_{name}</span></code></p>
 <ul class="simple">
-<li><p><strong>Accent</strong>: <code class="docutils literal notranslate"><span class="pre">af</span></code> (American Female), <code class="docutils literal notranslate"><span class="pre">am</span></code> (American Male), <code class="docutils literal notranslate"><span class="pre">bf</span></code> (British Female), <code class="docutils literal notranslate"><span class="pre">bm</span></code> (British Male)</p></li>
+<li><p><strong>Accent</strong>: <code class="docutils literal notranslate"><span class="pre">af</span></code> (American Female), <code class="docutils literal notranslate"><span class="pre">am</span></code> (American Male), <code class="docutils literal notranslate"><span class="pre">bf</span></code> (British Female), <code class="docutils literal notranslate"><span class="pre">bm</span></code>
+(British Male)</p></li>
 <li><p><strong>Gender</strong>: <code class="docutils literal notranslate"><span class="pre">f</span></code> (female), <code class="docutils literal notranslate"><span class="pre">m</span></code> (male)</p></li>
 <li><p><strong>Name</strong>: Specific voice identifier</p></li>
 </ul>
@@ -816,7 +817,7 @@ through <code class="docutils literal notranslate"><span class="pre">PipelineCon
 <p>SSMD say-as syntax converts numbers, dates, and other formats:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I have [123](as: cardinal) apples and [12/31/2024](as: date, format: mdy).&quot;</span>
+<span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;I have [123]{as=&quot;cardinal&quot;} apples and [12/31/2024]{as=&quot;date&quot; format=&quot;mdy&quot;}.&#39;</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">))</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </pre></div>

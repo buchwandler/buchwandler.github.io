@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.6.5"
-docs_commit: "eabdeb5531180455b0255ced1a00093faf1d0fef"
+docs_ref: "v0.7.0"
+docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
 search_enabled: true
 ---
 
@@ -542,8 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="pykokoro-documentation">
 <h1>PyKokoro Documentation</h1>
-<p>PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model.
-It provides high-quality, natural-sounding speech generation with support for multiple
+<p>PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It
+provides high-quality, natural-sounding speech generation with support for multiple
 languages, voices, and advanced features like pause control and text splitting.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
@@ -627,10 +627,19 @@ languages, voices, and advanced features like pause control and text splitting.<
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#version-0-0-4-tbd">Version 0.0.4 (TBD)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#version-0-0-3-2026-01-07">Version 0.0.3 (2026-01-07)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#version-0-0-1-2025-01-06">Version 0.0.1 (2025-01-06)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#version-0-0-1-initial-release">Version 0.0.1 (Initial Release)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.7.0] - 2026-07-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.6.5] - 2026-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.6.4] - 2026-01-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.6.3] - 2026-01-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.6.2] - 2026-01-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.6.1] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.6.0] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.5.1] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.5.0] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.4.0] - 2026-01-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.3.0] - 2026-01-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.2.0] - 2026-01-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.0] - 2026-01-07</a></li>
 </ul>
 </li>
 </ul>
@@ -639,14 +648,20 @@ languages, voices, and advanced features like pause control and text splitting.<
 <h2>Features</h2>
 <ul class="simple">
 <li><p><strong>High-Quality TTS</strong>: Natural-sounding speech synthesis using the Kokoro model</p></li>
-<li><p><strong>Multiple Languages</strong>: Support for English (US/GB), Spanish, French, German, Italian, Portuguese, Hindi, Japanese, Korean, and Chinese</p></li>
-<li><p><strong>Voice Selection</strong>: Choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various styles and accents</p></li>
+<li><p><strong>Multiple Languages</strong>: Support for English (US/GB), Spanish, French, German, Italian,
+Portuguese, Hindi, Japanese, Korean, and Chinese</p></li>
+<li><p><strong>Voice Selection</strong>: Choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various
+styles and accents</p></li>
 <li><p><strong>Voice Blending</strong>: Create custom voice styles by blending multiple voices</p></li>
-<li><p><strong>Text Normalization</strong>: Automatic say-as support for numbers, dates, phone numbers, and more using SSMD markup</p></li>
-<li><p><strong>Pause Control</strong>: Add precise pauses using SSMD break syntax: <cite>…c</cite>, <cite>…s</cite>, <cite>…p</cite>, <cite>…500ms</cite></p></li>
-<li><p><strong>Smart Text Splitting</strong>: Automatically split long text at sentence, paragraph, or clause boundaries</p></li>
+<li><p><strong>Text Normalization</strong>: Automatic say-as support for numbers, dates, phone numbers,
+and more using SSMD markup</p></li>
+<li><p><strong>Pause Control</strong>: Add precise pauses using SSMD break syntax: <code class="docutils literal notranslate"><span class="pre">...c</span></code>, <code class="docutils literal notranslate"><span class="pre">...s</span></code>, <code class="docutils literal notranslate"><span class="pre">...p</span></code>,
+<code class="docutils literal notranslate"><span class="pre">...500ms</span></code></p></li>
+<li><p><strong>Smart Text Splitting</strong>: Automatically split long text at sentence, paragraph, or
+clause boundaries</p></li>
 <li><p><strong>Language-Aware spaCy Models</strong>: Auto-resolve spaCy package names from language + size</p></li>
-<li><p><strong>Phoneme-Based Generation</strong>: Generate speech directly from phonemes for precise control</p></li>
+<li><p><strong>Phoneme-Based Generation</strong>: Generate speech directly from phonemes for precise
+control</p></li>
 <li><p><strong>GPU Acceleration</strong>: Optional GPU support for faster generation</p></li>
 <li><p><strong>Flexible Audio Processing</strong>: Trim silence, adjust speed, and more</p></li>
 <li><p><strong>Composable Pipeline Stages</strong>: Swap doc parsing, splitting, g2p, and audio stages</p></li>
@@ -700,8 +715,8 @@ languages, voices, and advanced features like pause control and text splitting.<
 </section>
 <section id="license">
 <h2>License</h2>
-<p>PyKokoro is released under the MIT License. The Kokoro model itself is subject
-to its own license terms.</p>
+<p>PyKokoro is released under the MIT License. The Kokoro model itself is subject to its
+own license terms.</p>
 </section>
 </section>
 <section id="indices-and-tables">

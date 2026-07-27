@@ -154,8 +154,8 @@
         {
           "anchor": "",
           "heading": "Short Sentence Handling",
-          "text": "PyKokoro improves short, single-word sentences by surrounding the word with a\npause marker. You can tune settins via ShortSentenceConfig:\n\nfrom pykokoro.short_sentence_handler import ShortSentenceConfig\n\nshort_config = ShortSentenceConfig(\n    phoneme_pretext=\"…\",\n)",
-          "lower": "pykokoro improves short, single-word sentences by surrounding the word with a\npause marker. you can tune settins via shortsentenceconfig:\n\nfrom pykokoro.short_sentence_handler import shortsentenceconfig\n\nshort_config = shortsentenceconfig(\n    phoneme_pretext=\"…\",\n)"
+          "text": "PyKokoro improves short sentences by adding context before synthesis. You can tune\nsettings via ShortSentenceConfig:\n\nfrom pykokoro.short_sentence_handler import ShortSentenceConfig\n\nshort_config = ShortSentenceConfig(\n    min_phoneme_length=10,\n    resolve_mode=\"randomized-phrase\",\n    phrase_fallback_tries=3,\n    phoneme_pretext=\"…\",\n)\n\n\n\n\nPhrase-based modes use the energy-valley cutter, which may fail to find confident\nboundaries. In that case, phrase modes try up to phrase_fallback_tries alternate\nphrase templates before falling back to wrap mode.\n\nPhrase-based short-sentence handling can slow down processing because of these retries,\nbut it usually improves the audio for very short segments much more than simple\nwrapping.\n\nFor phrase-based short-sentence handling, prefer these voices…",
+          "lower": "pykokoro improves short sentences by adding context before synthesis. you can tune\nsettings via shortsentenceconfig:\n\nfrom pykokoro.short_sentence_handler import shortsentenceconfig\n\nshort_config = shortsentenceconfig(\n    min_phoneme_length=10,\n    resolve_mode=\"randomized-phrase\",\n    phrase_fallback_tries=3,\n    phoneme_pretext=\"…\",\n)\n\n\n\n\nphrase-based modes use the energy-valley cutter, which may fail to find confident\nboundaries. in that case, phrase modes try up to phrase_fallback_tries alternate\nphrase templates before falling back to wrap mode.\n\nphrase-based short-sentence handling can slow down processing because of these retries,\nbut it usually improves the audio for very short segments much more than simple\nwrapping.\n\nfor phrase-based short-sentence handling, prefer these voices…"
         },
         {
           "anchor": "",
@@ -172,20 +172,20 @@
         {
           "anchor": "",
           "heading": "Performance Tips",
-          "text": "Reuse Kokoro Instance\n\nDon’t create a new Kokoro() for each request - initialize once and reuse.\n\n\n\nUse GPU When Available\n\nGPU acceleration provides 3-10x speedup.\n\n\n\nBatch Processing\n\nProcess multiple texts in one session to avoid initialization overhead.\n\n\n\nChoose Appropriate Model Quality\n\nUse q6 or q8 for production; fp16 only when quality is critical.\n\n\n\nUse pause_mode for Long Text\n\nUsing pause_mode=\"auto\" with appropriate pause settings improves quality for long text.",
-          "lower": "reuse kokoro instance\n\ndon’t create a new kokoro() for each request - initialize once and reuse.\n\n\n\nuse gpu when available\n\ngpu acceleration provides 3-10x speedup.\n\n\n\nbatch processing\n\nprocess multiple texts in one session to avoid initialization overhead.\n\n\n\nchoose appropriate model quality\n\nuse q6 or q8 for production; fp16 only when quality is critical.\n\n\n\nuse pause_mode for long text\n\nusing pause_mode=\"auto\" with appropriate pause settings improves quality for long text."
+          "text": "Reuse Kokoro Instance\n\nDon’t create a new Kokoro() for each request - initialize once and reuse.\n\n\n\nUse GPU When Available\n\nGPU acceleration provides 3-10x speedup.\n\n\n\nBatch Processing\n\nProcess multiple texts in one session to avoid initialization overhead.\n\n\n\nChoose Appropriate Model Quality\n\nUse q6 or q8 for production; fp16 only when quality is critical.\n\n\n\nUse pause_mode for Long Text\n\nUsing pause_mode=\"auto\" with appropriate pause settings improves quality for long\ntext.",
+          "lower": "reuse kokoro instance\n\ndon’t create a new kokoro() for each request - initialize once and reuse.\n\n\n\nuse gpu when available\n\ngpu acceleration provides 3-10x speedup.\n\n\n\nbatch processing\n\nprocess multiple texts in one session to avoid initialization overhead.\n\n\n\nchoose appropriate model quality\n\nuse q6 or q8 for production; fp16 only when quality is critical.\n\n\n\nuse pause_mode for long text\n\nusing pause_mode=\"auto\" with appropriate pause settings improves quality for long\ntext."
         },
         {
           "anchor": "",
           "heading": "Understanding PyKokoro’s Internal Structure",
-          "text": "PyKokoro uses a modular architecture with specialized manager classes for different responsibilities:\n\nOnnxSessionManager (pykokoro/onnx_session.py)\n\nManages ONNX Runtime session creation and configuration:\n\n\nAutomatic provider selection (CUDA → ROCm → CPU)\n\n\nSession options and execution providers\n\n\nFallback handling when GPU is unavailable\n\n\n\nVoiceManager (pykokoro/voice_manager.py)\n\nHandles voice loading and blending:\n\n\nLoads voice embeddings from binary files\n\n\nImplements voice blending with weighted combinations\n\n\nValidates voice availability across model variants\n\n\n\nAudioGenerator (pykokoro/audio_generator.py)\n\nManages the audio generation pipeline:\n\n\nConverts phonemes to tokens\n\n\nRuns ONNX inference for audio generation\n\n\nHandles speed adjustment and audio post-processing\n\n\n\nMixedL…",
-          "lower": "pykokoro uses a modular architecture with specialized manager classes for different responsibilities:\n\nonnxsessionmanager (pykokoro/onnx_session.py)\n\nmanages onnx runtime session creation and configuration:\n\n\nautomatic provider selection (cuda → rocm → cpu)\n\n\nsession options and execution providers\n\n\nfallback handling when gpu is unavailable\n\n\n\nvoicemanager (pykokoro/voice_manager.py)\n\nhandles voice loading and blending:\n\n\nloads voice embeddings from binary files\n\n\nimplements voice blending with weighted combinations\n\n\nvalidates voice availability across model variants\n\n\n\naudiogenerator (pykokoro/audio_generator.py)\n\nmanages the audio generation pipeline:\n\n\nconverts phonemes to tokens\n\n\nruns onnx inference for audio generation\n\n\nhandles speed adjustment and audio post-processing\n\n\n\nmixedl…"
+          "text": "PyKokoro uses a modular architecture with specialized manager classes for different\nresponsibilities:\n\nOnnxSessionManager (pykokoro/onnx_session.py)\n\nManages ONNX Runtime session creation and configuration:\n\n\nAutomatic provider selection (CUDA → ROCm → CPU)\n\n\nSession options and execution providers\n\n\nFallback handling when GPU is unavailable\n\n\n\nVoiceManager (pykokoro/voice_manager.py)\n\nHandles voice loading and blending:\n\n\nLoads voice embeddings from binary files\n\n\nImplements voice blending with weighted combinations\n\n\nValidates voice availability across model variants\n\n\n\nAudioGenerator (pykokoro/audio_generator.py)\n\nManages the audio generation pipeline:\n\n\nConverts phonemes to tokens\n\n\nRuns ONNX inference for audio generation\n\n\nHandles speed adjustment and audio post-processing\n\n\n\nMixedL…",
+          "lower": "pykokoro uses a modular architecture with specialized manager classes for different\nresponsibilities:\n\nonnxsessionmanager (pykokoro/onnx_session.py)\n\nmanages onnx runtime session creation and configuration:\n\n\nautomatic provider selection (cuda → rocm → cpu)\n\n\nsession options and execution providers\n\n\nfallback handling when gpu is unavailable\n\n\n\nvoicemanager (pykokoro/voice_manager.py)\n\nhandles voice loading and blending:\n\n\nloads voice embeddings from binary files\n\n\nimplements voice blending with weighted combinations\n\n\nvalidates voice availability across model variants\n\n\n\naudiogenerator (pykokoro/audio_generator.py)\n\nmanages the audio generation pipeline:\n\n\nconverts phonemes to tokens\n\n\nruns onnx inference for audio generation\n\n\nhandles speed adjustment and audio post-processing\n\n\n\nmixedl…"
         },
         {
           "anchor": "",
           "heading": "Using Manager Classes Directly",
-          "text": "While most users interact with the high-level Kokoro API, advanced users can work with manager classes directly:\n\nfrom pykokoro.onnx_session import OnnxSessionManager\nfrom pykokoro.voice_manager import VoiceManager\nfrom pykokoro.audio_generator import AudioGenerator\n\n# Create ONNX session with custom options\nsession_manager = OnnxSessionManager(\n    device=\"cuda\",\n    providers=[\"CUDAExecutionProvider\"],\n    user_session_options={\"intra_op_num_threads\": 4}\n)\n\nsession = session_manager.create_session(\n    model_path=\"/path/to/model.onnx\"\n)\n\n# Load voices with custom blend\nvoice_manager = VoiceManager(model_source=\"huggingface\")\nvoice_manager.load_voices(\"/path/to/voices.bin\")\nvoice_data = voice_manager.get_blended_voice(\"af_bella*0.7 + af_sarah*0.3\")\n\n# Generate audio\naudio_gen = AudioGene…",
-          "lower": "while most users interact with the high-level kokoro api, advanced users can work with manager classes directly:\n\nfrom pykokoro.onnx_session import onnxsessionmanager\nfrom pykokoro.voice_manager import voicemanager\nfrom pykokoro.audio_generator import audiogenerator\n\n# create onnx session with custom options\nsession_manager = onnxsessionmanager(\n    device=\"cuda\",\n    providers=[\"cudaexecutionprovider\"],\n    user_session_options={\"intra_op_num_threads\": 4}\n)\n\nsession = session_manager.create_session(\n    model_path=\"/path/to/model.onnx\"\n)\n\n# load voices with custom blend\nvoice_manager = voicemanager(model_source=\"huggingface\")\nvoice_manager.load_voices(\"/path/to/voices.bin\")\nvoice_data = voice_manager.get_blended_voice(\"af_bella*0.7 + af_sarah*0.3\")\n\n# generate audio\naudio_gen = audiogene…"
+          "text": "While most users interact with the high-level Kokoro API, advanced users can work with\nmanager classes directly:\n\nfrom pykokoro.onnx_session import OnnxSessionManager\nfrom pykokoro.voice_manager import VoiceManager\nfrom pykokoro.audio_generator import AudioGenerator\n\n# Create ONNX session with custom options\nsession_manager = OnnxSessionManager(\n    device=\"cuda\",\n    providers=[\"CUDAExecutionProvider\"],\n    user_session_options={\"intra_op_num_threads\": 4}\n)\n\nsession = session_manager.create_session(\n    model_path=\"/path/to/model.onnx\"\n)\n\n# Load voices with custom blend\nvoice_manager = VoiceManager(model_source=\"huggingface\")\nvoice_manager.load_voices(\"/path/to/voices.bin\")\nvoice_data = voice_manager.get_blended_voice(\"af_bella*0.7 + af_sarah*0.3\")\n\n# Generate audio\naudio_gen = AudioGene…",
+          "lower": "while most users interact with the high-level kokoro api, advanced users can work with\nmanager classes directly:\n\nfrom pykokoro.onnx_session import onnxsessionmanager\nfrom pykokoro.voice_manager import voicemanager\nfrom pykokoro.audio_generator import audiogenerator\n\n# create onnx session with custom options\nsession_manager = onnxsessionmanager(\n    device=\"cuda\",\n    providers=[\"cudaexecutionprovider\"],\n    user_session_options={\"intra_op_num_threads\": 4}\n)\n\nsession = session_manager.create_session(\n    model_path=\"/path/to/model.onnx\"\n)\n\n# load voices with custom blend\nvoice_manager = voicemanager(model_source=\"huggingface\")\nvoice_manager.load_voices(\"/path/to/voices.bin\")\nvoice_data = voice_manager.get_blended_voice(\"af_bella*0.7 + af_sarah*0.3\")\n\n# generate audio\naudio_gen = audiogene…"
         },
         {
           "anchor": "",
@@ -220,6 +220,12 @@
         },
         {
           "anchor": "",
+          "heading": "GenerationConfig",
+          "text": "class pykokoro.GenerationConfig(speed: float = 1.0, lang: str = 'en-us', is_phonemes: bool = False, pause_mode: Literal['tts', 'manual', 'auto'] = 'tts', pause_clause: float = 0.3, pause_sentence: float = 0.6, pause_paragraph: float = 1.0, pause_variance: float = 0.05, random_seed: int | None = None, enable_short_sentence: bool | None = None)[source]\nBases: object\n\nConfiguration for audio generation in the KokoroPipeline.\n\nGroups all generation-time parameters for easier reuse and documentation.\nInstances are immutable (frozen) to prevent accidental modification.\n\nThis config groups generation parameters into a reusable configuration object\nfor PipelineConfig. You can create a config once and reuse it across multiple\nruns, with the ability to override individual parameters using kwargs.…",
+          "lower": "class pykokoro.generationconfig(speed: float = 1.0, lang: str = 'en-us', is_phonemes: bool = false, pause_mode: literal['tts', 'manual', 'auto'] = 'tts', pause_clause: float = 0.3, pause_sentence: float = 0.6, pause_paragraph: float = 1.0, pause_variance: float = 0.05, random_seed: int | none = none, enable_short_sentence: bool | none = none)[source]\nbases: object\n\nconfiguration for audio generation in the kokoropipeline.\n\ngroups all generation-time parameters for easier reuse and documentation.\ninstances are immutable (frozen) to prevent accidental modification.\n\nthis config groups generation parameters into a reusable configuration object\nfor pipelineconfig. you can create a config once and reuse it across multiple\nruns, with the ability to override individual parameters using kwargs.…"
+        },
+        {
+          "anchor": "",
           "heading": "VoiceBlend",
           "text": "from pykokoro import KokoroPipeline, PipelineConfig\nfrom pykokoro.onnx_backend import VoiceBlend\n\nblend = VoiceBlend.parse(\"af_bella:60,af_sarah:40\")\npipe = KokoroPipeline(PipelineConfig(voice=blend))\nresult = pipe.run(\"Blended voice example\")",
           "lower": "from pykokoro import kokoropipeline, pipelineconfig\nfrom pykokoro.onnx_backend import voiceblend\n\nblend = voiceblend.parse(\"af_bella:60,af_sarah:40\")\npipe = kokoropipeline(pipelineconfig(voice=blend))\nresult = pipe.run(\"blended voice example\")"
@@ -233,8 +239,8 @@
         {
           "anchor": "",
           "heading": "Model and Voice Utilities",
-          "text": "These utilities live in pykokoro.onnx_backend and are used for model and\nvoice management.",
-          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and\nvoice management."
+          "text": "These utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.",
+          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement."
         },
         {
           "anchor": "",
@@ -270,8 +276,8 @@
         {
           "anchor": "",
           "heading": "Using Local Model Files",
-          "text": "If you already have the ONNX model and voices files locally, pass their paths\nthrough PipelineConfig:\n\nfrom pathlib import Path\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    voice=\"af_bella\",\n    generation=GenerationConfig(lang=\"en-us\"),\n    model_path=Path(\"/models/kokoro.onnx\"),\n    voices_path=Path(\"/models/voices.bin.npz\"),\n)\npipe = KokoroPipeline(config)\nresult = pipe.run(\"Using local model files.\")",
-          "lower": "if you already have the onnx model and voices files locally, pass their paths\nthrough pipelineconfig:\n\nfrom pathlib import path\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    voice=\"af_bella\",\n    generation=generationconfig(lang=\"en-us\"),\n    model_path=path(\"/models/kokoro.onnx\"),\n    voices_path=path(\"/models/voices.bin.npz\"),\n)\npipe = kokoropipeline(config)\nresult = pipe.run(\"using local model files.\")"
+          "text": "If you already have the ONNX model and voices files locally, pass their paths through\nPipelineConfig:\n\nfrom pathlib import Path\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    voice=\"af_bella\",\n    generation=GenerationConfig(lang=\"en-us\"),\n    model_path=Path(\"/models/kokoro.onnx\"),\n    voices_path=Path(\"/models/voices.bin.npz\"),\n)\npipe = KokoroPipeline(config)\nresult = pipe.run(\"Using local model files.\")",
+          "lower": "if you already have the onnx model and voices files locally, pass their paths through\npipelineconfig:\n\nfrom pathlib import path\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    voice=\"af_bella\",\n    generation=generationconfig(lang=\"en-us\"),\n    model_path=path(\"/models/kokoro.onnx\"),\n    voices_path=path(\"/models/voices.bin.npz\"),\n)\npipe = kokoropipeline(config)\nresult = pipe.run(\"using local model files.\")"
         },
         {
           "anchor": "",
@@ -294,8 +300,8 @@
         {
           "anchor": "",
           "heading": "Voice Selection",
-          "text": "Voice names follow the pattern: {accent}_{gender}_{name}\n\n\nAccent: af (American Female), am (American Male), bf (British Female), bm (British Male)\n\n\nGender: f (female), m (male)\n\n\nName: Specific voice identifier\n\n\n\nUse the voice name in PipelineConfig:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"bf_emma\"))\nresult = pipe.run(\"Hello from the UK!\")",
-          "lower": "voice names follow the pattern: {accent}_{gender}_{name}\n\n\naccent: af (american female), am (american male), bf (british female), bm (british male)\n\n\ngender: f (female), m (male)\n\n\nname: specific voice identifier\n\n\n\nuse the voice name in pipelineconfig:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"bf_emma\"))\nresult = pipe.run(\"hello from the uk!\")"
+          "text": "Voice names follow the pattern: {accent}_{gender}_{name}\n\n\nAccent: af (American Female), am (American Male), bf (British Female), bm\n(British Male)\n\n\nGender: f (female), m (male)\n\n\nName: Specific voice identifier\n\n\n\nUse the voice name in PipelineConfig:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"bf_emma\"))\nresult = pipe.run(\"Hello from the UK!\")",
+          "lower": "voice names follow the pattern: {accent}_{gender}_{name}\n\n\naccent: af (american female), am (american male), bf (british female), bm\n(british male)\n\n\ngender: f (female), m (male)\n\n\nname: specific voice identifier\n\n\n\nuse the voice name in pipelineconfig:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"bf_emma\"))\nresult = pipe.run(\"hello from the uk!\")"
         },
         {
           "anchor": "",
@@ -330,8 +336,8 @@
         {
           "anchor": "",
           "heading": "Text Normalization (Say-As)",
-          "text": "SSMD say-as syntax converts numbers, dates, and other formats:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ntext = \"I have [123](as: cardinal) apples and [12/31/2024](as: date, format: mdy).\"\npipe = KokoroPipeline(PipelineConfig(voice=\"af_sarah\"))\nresult = pipe.run(text)",
-          "lower": "ssmd say-as syntax converts numbers, dates, and other formats:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ntext = \"i have [123](as: cardinal) apples and [12/31/2024](as: date, format: mdy).\"\npipe = kokoropipeline(pipelineconfig(voice=\"af_sarah\"))\nresult = pipe.run(text)"
+          "text": "SSMD say-as syntax converts numbers, dates, and other formats:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ntext = 'I have [123]{as=\"cardinal\"} apples and [12/31/2024]{as=\"date\" format=\"mdy\"}.'\npipe = KokoroPipeline(PipelineConfig(voice=\"af_sarah\"))\nresult = pipe.run(text)",
+          "lower": "ssmd say-as syntax converts numbers, dates, and other formats:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ntext = 'i have [123]{as=\"cardinal\"} apples and [12/31/2024]{as=\"date\" format=\"mdy\"}.'\npipe = kokoropipeline(pipelineconfig(voice=\"af_sarah\"))\nresult = pipe.run(text)"
         },
         {
           "anchor": "",
@@ -356,31 +362,181 @@
     {
       "url": "/tools/pykokoro/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Bug Fixes:\n\n\nFixed deprecated local_dir_use_symlinks parameter in HuggingFace downloads (removes deprecation warnings)\n\n\nFixed Windows CI te …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded phrase-based …",
       "sections": [
         {
           "anchor": "",
-          "heading": "Version 0.0.4 (TBD)",
-          "text": "Bug Fixes:\n\n\nFixed deprecated local_dir_use_symlinks parameter in HuggingFace downloads (removes deprecation warnings)\n\n\nFixed Windows CI test failures related to temporary file permissions in encoding detection tests\n\n\nProperly close temporary files before deletion to support Windows file locking behavior\n\n\n\nBreaking Changes:\n\n\nRemoved redundant v1.1-zh-hf model variant - Use model_variant=\"v1.1-zh\" with model_source=\"huggingface\" instead\n\n\nChanged cache directory structure to ~/.cache/pykokoro/{models|voices}/{source}/{variant}/\n\n\nRemoved deprecated functions: download_model_hf_v11zh(), download_voices_hf_v11zh(), download_all_models_hf_v11zh()\n\n\nFunction signatures updated: download_model(), download_voice(), download_all_voices(), and download_all_models() now require variant paramete…",
-          "lower": "bug fixes:\n\n\nfixed deprecated local_dir_use_symlinks parameter in huggingface downloads (removes deprecation warnings)\n\n\nfixed windows ci test failures related to temporary file permissions in encoding detection tests\n\n\nproperly close temporary files before deletion to support windows file locking behavior\n\n\n\nbreaking changes:\n\n\nremoved redundant v1.1-zh-hf model variant - use model_variant=\"v1.1-zh\" with model_source=\"huggingface\" instead\n\n\nchanged cache directory structure to ~/.cache/pykokoro/{models|voices}/{source}/{variant}/\n\n\nremoved deprecated functions: download_model_hf_v11zh(), download_voices_hf_v11zh(), download_all_models_hf_v11zh()\n\n\nfunction signatures updated: download_model(), download_voice(), download_all_voices(), and download_all_models() now require variant paramete…"
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
         },
         {
           "anchor": "",
-          "heading": "Version 0.0.3 (2026-01-07)",
-          "text": "Major Refactoring:\n\n\nExtracted internal manager classes for better code organization\n\n\nReduced codebase complexity by ~706 lines (12% reduction)\n\n\nImproved maintainability with better separation of concerns\n\n\n100% backward compatibility maintained - no breaking changes\n\n\n\nNew Internal Classes:\n\n\nAdded OnnxSessionManager class for ONNX Runtime session management\n\n\nAdded VoiceManager class for voice loading and blending operations\n\n\nAdded AudioGenerator class for audio generation pipeline\n\n\nAdded MixedLanguageHandler class for automatic language detection\n\n\nAdded PhonemeDictionary class for custom word-to-phoneme mappings\n\n\n\nCode Quality:\n\n\nReduced onnx_backend.py by 436 lines\n\n\nReduced tokenizer.py by 270 lines\n\n\nAdded comprehensive test coverage for new manager classes\n\n\nAll pre-commit ho…",
-          "lower": "major refactoring:\n\n\nextracted internal manager classes for better code organization\n\n\nreduced codebase complexity by ~706 lines (12% reduction)\n\n\nimproved maintainability with better separation of concerns\n\n\n100% backward compatibility maintained - no breaking changes\n\n\n\nnew internal classes:\n\n\nadded onnxsessionmanager class for onnx runtime session management\n\n\nadded voicemanager class for voice loading and blending operations\n\n\nadded audiogenerator class for audio generation pipeline\n\n\nadded mixedlanguagehandler class for automatic language detection\n\n\nadded phonemedictionary class for custom word-to-phoneme mappings\n\n\n\ncode quality:\n\n\nreduced onnx_backend.py by 436 lines\n\n\nreduced tokenizer.py by 270 lines\n\n\nadded comprehensive test coverage for new manager classes\n\n\nall pre-commit ho…"
+          "heading": "Added",
+          "text": "Added phrase-based short-sentence handling with energy-valley cutting for improved\nannunciation of short phrases\n\n\nAdded SHA256 verification, pinned HF revisions with offline mode, and stale download\nlock recovery",
+          "lower": "added phrase-based short-sentence handling with energy-valley cutting for improved\nannunciation of short phrases\n\n\nadded sha256 verification, pinned hf revisions with offline mode, and stale download\nlock recovery"
         },
         {
           "anchor": "",
-          "heading": "Version 0.0.1 (2025-01-06)",
-          "text": "Breaking Changes:\n\n\nRemoved PhonemeBook class - moved to separate ebook package\n\n\nRemoved PhonemeChapter class - moved to separate ebook package\n\n\nRemoved create_phoneme_book_from_chapters() function\n\n\nRemoved FORMAT_VERSION constant\n\n\nDeleted examples/phoneme_export.py example\n\n\n\nNew Features:\n\n\nAdded split_and_phonemize_text() function for standalone text processing\n\n\nAdded enable_pauses parameter to create() method for pause marker support\n\n\nAdded pause markers: (.), (..), (...) for controlling speech pauses (DEPRECATED - use SSMD break syntax instead: ...c, ...s, ...p)\n\n\nAdded pause_short, pause_medium, pause_long parameters for custom pause durations\n\n\nAdded split_mode parameter to create() for intelligent text splitting (DEPRECATED in v0.4.0 - use pause_mode instead)\n\n\nAdded trim_si…",
-          "lower": "breaking changes:\n\n\nremoved phonemebook class - moved to separate ebook package\n\n\nremoved phonemechapter class - moved to separate ebook package\n\n\nremoved create_phoneme_book_from_chapters() function\n\n\nremoved format_version constant\n\n\ndeleted examples/phoneme_export.py example\n\n\n\nnew features:\n\n\nadded split_and_phonemize_text() function for standalone text processing\n\n\nadded enable_pauses parameter to create() method for pause marker support\n\n\nadded pause markers: (.), (..), (...) for controlling speech pauses (deprecated - use ssmd break syntax instead: ...c, ...s, ...p)\n\n\nadded pause_short, pause_medium, pause_long parameters for custom pause durations\n\n\nadded split_mode parameter to create() for intelligent text splitting (deprecated in v0.4.0 - use pause_mode instead)\n\n\nadded trim_si…"
+          "heading": "Changed",
+          "text": "Changed SSMD syntax to [text]{key=”value”} annotation format, replacing legacy\nshorthand notations\n\n\nChanged HuggingFace v1.0 ONNX repository to use timestamped model variant",
+          "lower": "changed ssmd syntax to [text]{key=”value”} annotation format, replacing legacy\nshorthand notations\n\n\nchanged huggingface v1.0 onnx repository to use timestamped model variant"
         },
         {
           "anchor": "",
-          "heading": "Version 0.0.1 (Initial Release)",
-          "text": "Initial Features:\n\n\nText-to-speech synthesis using Kokoro model\n\n\nSupport for 54 voices (v1.0) across multiple languages\n\n\nSupport for English (US/GB), Spanish, French, German, Italian, Portuguese, Hindi, Japanese, Korean, Chinese\n\n\nVoice blending capabilities\n\n\nPhoneme-based generation\n\n\nGPU acceleration support (CUDA/ROCm)\n\n\nModel quality options (fp16, q8, q6)\n\n\nSpeed control\n\n\nBasic tokenizer functionality\n\n\nAudio trimming utilities\n\n\nConfiguration management\n\n\nModel and voice downloading\n\n\nPhonemeBook and PhonemeChapter classes for document processing\n\n\nspaCy integration for sentence splitting\n\n\nMixed language support",
-          "lower": "initial features:\n\n\ntext-to-speech synthesis using kokoro model\n\n\nsupport for 54 voices (v1.0) across multiple languages\n\n\nsupport for english (us/gb), spanish, french, german, italian, portuguese, hindi, japanese, korean, chinese\n\n\nvoice blending capabilities\n\n\nphoneme-based generation\n\n\ngpu acceleration support (cuda/rocm)\n\n\nmodel quality options (fp16, q8, q6)\n\n\nspeed control\n\n\nbasic tokenizer functionality\n\n\naudio trimming utilities\n\n\nconfiguration management\n\n\nmodel and voice downloading\n\n\nphonemebook and phonemechapter classes for document processing\n\n\nspacy integration for sentence splitting\n\n\nmixed language support"
+          "heading": "Fixed",
+          "text": "Fixed Windows download cache path handling for model and voice files\n\n\nFixed voice name in English example script",
+          "lower": "fixed windows download cache path handling for model and voice files\n\n\nfixed voice name in english example script"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Changed documentation format from reStructuredText to Markdown for improved\nreadability and GitHub rendering",
+          "lower": "changed documentation format from restructuredtext to markdown for improved\nreadability and github rendering"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added better support for spaCy models across all languages",
+          "lower": "added better support for spacy models across all languages"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added automatic pause mode that adds pauses after sentences",
+          "lower": "added automatic pause mode that adds pauses after sentences"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Changed documentation with updated usage examples",
+          "lower": "changed documentation with updated usage examples"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added German language support with ONNX model files",
+          "lower": "added german language support with onnx model files"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added threading support for concurrent audio generation",
+          "lower": "added threading support for concurrent audio generation"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Windows cache path handling and default backend selection",
+          "lower": "fixed windows cache path handling and default backend selection"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed unit tests and mypy type errors",
+          "lower": "fixed unit tests and mypy type errors"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added integrated splitter into doc parsers, removing separate splitter pipeline\n\n\nAdded automatic language detection based on voice selection\n\n\nAdded improved SSMD parsing with better span handling",
+          "lower": "added integrated splitter into doc parsers, removing separate splitter pipeline\n\n\nadded automatic language detection based on voice selection\n\n\nadded improved ssmd parsing with better span handling"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed pipeline lifecycle and audio generator for better stability",
+          "lower": "changed pipeline lifecycle and audio generator for better stability"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed paragraph splitting, pause parsing, and voice downloading",
+          "lower": "fixed paragraph splitting, pause parsing, and voice downloading"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added model_path and voices_path settings in pipeline",
+          "lower": "added model_path and voices_path settings in pipeline"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed missing espeak and soundfile dependencies",
+          "lower": "fixed missing espeak and soundfile dependencies"
+        },
+        {
+          "anchor": "",
+          "heading": "Removed",
+          "text": "Removed deprecated _phoneme_dictionary",
+          "lower": "removed deprecated _phoneme_dictionary"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added new pipeline architecture with improved phoneme handling\n\n\nAdded improved PhonemeSegment with better prosody support\n\n\nAdded improved pipeline architecture with multiple fixes",
+          "lower": "added new pipeline architecture with improved phoneme handling\n\n\nadded improved phonemesegment with better prosody support\n\n\nadded improved pipeline architecture with multiple fixes"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nChanged all examples to use new pipeline format",
+          "lower": "changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nchanged all examples to use new pipeline format"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed phrasplit splitter and kokorog2p issues",
+          "lower": "fixed phrasplit splitter and kokorog2p issues"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added audio transcript support for better unit testing and debugging",
+          "lower": "added audio transcript support for better unit testing and debugging"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed SSMD parser to adapt to new phoneme syntax in kokorog2p",
+          "lower": "changed ssmd parser to adapt to new phoneme syntax in kokorog2p"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed SSMD parser and detection logic",
+          "lower": "fixed ssmd parser and detection logic"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added GenerationConfig dataclass to simplify TTS API\n\n\nAdded heading support from SSMD markup\n\n\nAdded configurable short sentence handler with multiple strategies",
+          "lower": "added generationconfig dataclass to simplify tts api\n\n\nadded heading support from ssmd markup\n\n\nadded configurable short sentence handler with multiple strategies"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed SSMD phoneme override bug in segment merging\n\n\nFixed short sentence handling and unit tests",
+          "lower": "fixed ssmd phoneme override bug in segment merging\n\n\nfixed short sentence handling and unit tests"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added SSMD syntax support with voice switching and prosody control\n\n\nAdded says-as implementation for cardinal, ordinal, and telephone numbers\n\n\nAdded optimal phoneme length calculation",
+          "lower": "added ssmd syntax support with voice switching and prosody control\n\n\nadded says-as implementation for cardinal, ordinal, and telephone numbers\n\n\nadded optimal phoneme length calculation"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed tokenizer and improved backend stability",
+          "lower": "changed tokenizer and improved backend stability"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added model and voice download with manager classes for better code organization\n\n\nAdded configurable pause times for clause, sentence, and paragraph boundaries\n\n\nAdded session parameter configuration and pause variance support\n\n\nAdded HuggingFace Kokoro v1.1-zh model support\n\n\nAdded automatic splitting when max token limit is reached",
+          "lower": "added model and voice download with manager classes for better code organization\n\n\nadded configurable pause times for clause, sentence, and paragraph boundaries\n\n\nadded session parameter configuration and pause variance support\n\n\nadded huggingface kokoro v1.1-zh model support\n\n\nadded automatic splitting when max token limit is reached"
         }
       ]
     },
@@ -472,19 +628,19 @@
     {
       "url": "/tools/pykokoro/",
       "title": "PyKokoro Documentation",
-      "snippet": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model.\nIt provides high-quality, natural-sounding speech gene …",
+      "snippet": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech gene …",
       "sections": [
         {
           "anchor": "",
           "heading": "PyKokoro Documentation",
-          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model.\nIt provides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nNext Steps\n\n\n\n\nInstallation Guide\nBasic Installation\n\nGPU Support\n\nSystem Requirements\n\nDevelopment Installation\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nPause Control\n\nText Normalization (Say-As)\n\nError Handling\n\nBatch Processing\n\nNext Steps\n\n\n\n\nAdvanced Features\nVoice Blending\n\nPhoneme-Based Generation\n\nAdvanced Text…",
-          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model.\nit provides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nnext steps\n\n\n\n\ninstallation guide\nbasic installation\n\ngpu support\n\nsystem requirements\n\ndevelopment installation\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\npause control\n\ntext normalization (say-as)\n\nerror handling\n\nbatch processing\n\nnext steps\n\n\n\n\nadvanced features\nvoice blending\n\nphoneme-based generation\n\nadvanced text…"
+          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nNext Steps\n\n\n\n\nInstallation Guide\nBasic Installation\n\nGPU Support\n\nSystem Requirements\n\nDevelopment Installation\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nPause Control\n\nText Normalization (Say-As)\n\nError Handling\n\nBatch Processing\n\nNext Steps\n\n\n\n\nAdvanced Features\nVoice Blending\n\nPhoneme-Based Generation\n\nAdvanced Text…",
+          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model. it\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nnext steps\n\n\n\n\ninstallation guide\nbasic installation\n\ngpu support\n\nsystem requirements\n\ndevelopment installation\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\npause control\n\ntext normalization (say-as)\n\nerror handling\n\nbatch processing\n\nnext steps\n\n\n\n\nadvanced features\nvoice blending\n\nphoneme-based generation\n\nadvanced text…"
         },
         {
           "anchor": "",
           "heading": "Features",
-          "text": "High-Quality TTS: Natural-sounding speech synthesis using the Kokoro model\n\n\nMultiple Languages: Support for English (US/GB), Spanish, French, German, Italian, Portuguese, Hindi, Japanese, Korean, and Chinese\n\n\nVoice Selection: Choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various styles and accents\n\n\nVoice Blending: Create custom voice styles by blending multiple voices\n\n\nText Normalization: Automatic say-as support for numbers, dates, phone numbers, and more using SSMD markup\n\n\nPause Control: Add precise pauses using SSMD break syntax: …c, …s, …p, …500ms\n\n\nSmart Text Splitting: Automatically split long text at sentence, paragraph, or clause boundaries\n\n\nLanguage-Aware spaCy Models: Auto-resolve spaCy package names from language + size\n\n\nPhoneme-Based Generation: Generate spe…",
-          "lower": "high-quality tts: natural-sounding speech synthesis using the kokoro model\n\n\nmultiple languages: support for english (us/gb), spanish, french, german, italian, portuguese, hindi, japanese, korean, and chinese\n\n\nvoice selection: choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various styles and accents\n\n\nvoice blending: create custom voice styles by blending multiple voices\n\n\ntext normalization: automatic say-as support for numbers, dates, phone numbers, and more using ssmd markup\n\n\npause control: add precise pauses using ssmd break syntax: …c, …s, …p, …500ms\n\n\nsmart text splitting: automatically split long text at sentence, paragraph, or clause boundaries\n\n\nlanguage-aware spacy models: auto-resolve spacy package names from language + size\n\n\nphoneme-based generation: generate spe…"
+          "text": "High-Quality TTS: Natural-sounding speech synthesis using the Kokoro model\n\n\nMultiple Languages: Support for English (US/GB), Spanish, French, German, Italian,\nPortuguese, Hindi, Japanese, Korean, and Chinese\n\n\nVoice Selection: Choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various\nstyles and accents\n\n\nVoice Blending: Create custom voice styles by blending multiple voices\n\n\nText Normalization: Automatic say-as support for numbers, dates, phone numbers,\nand more using SSMD markup\n\n\nPause Control: Add precise pauses using SSMD break syntax: ...c, ...s, ...p,\n...500ms\n\n\nSmart Text Splitting: Automatically split long text at sentence, paragraph, or\nclause boundaries\n\n\nLanguage-Aware spaCy Models: Auto-resolve spaCy package names from language + size\n\n\nPhoneme-Based Generation: Gene…",
+          "lower": "high-quality tts: natural-sounding speech synthesis using the kokoro model\n\n\nmultiple languages: support for english (us/gb), spanish, french, german, italian,\nportuguese, hindi, japanese, korean, and chinese\n\n\nvoice selection: choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various\nstyles and accents\n\n\nvoice blending: create custom voice styles by blending multiple voices\n\n\ntext normalization: automatic say-as support for numbers, dates, phone numbers,\nand more using ssmd markup\n\n\npause control: add precise pauses using ssmd break syntax: ...c, ...s, ...p,\n...500ms\n\n\nsmart text splitting: automatically split long text at sentence, paragraph, or\nclause boundaries\n\n\nlanguage-aware spacy models: auto-resolve spacy package names from language + size\n\n\nphoneme-based generation: gene…"
         },
         {
           "anchor": "",
@@ -513,8 +669,8 @@
         {
           "anchor": "",
           "heading": "License",
-          "text": "PyKokoro is released under the MIT License. The Kokoro model itself is subject\nto its own license terms.",
-          "lower": "pykokoro is released under the mit license. the kokoro model itself is subject\nto its own license terms."
+          "text": "PyKokoro is released under the MIT License. The Kokoro model itself is subject to its\nown license terms.",
+          "lower": "pykokoro is released under the mit license. the kokoro model itself is subject to its\nown license terms."
         },
         {
           "anchor": "",
@@ -527,19 +683,19 @@
     {
       "url": "/tools/pykokoro/installation/",
       "title": "pykokoro Installation Guide",
-      "snippet": "PyKokoro can be installed using pip and requires Python 3.9 or higher.\nInstall the latest stable version from PyPI:\n\npip install pykokoro …",
+      "snippet": "PyKokoro can be installed using pip and requires Python 3.10 or higher.\nInstall the latest stable version from PyPI:\n\npip install \"pykokoro[ …",
       "sections": [
         {
           "anchor": "",
           "heading": "Installation Guide",
-          "text": "PyKokoro can be installed using pip and requires Python 3.9 or higher.",
-          "lower": "pykokoro can be installed using pip and requires python 3.9 or higher."
+          "text": "PyKokoro can be installed using pip and requires Python 3.10 or higher.",
+          "lower": "pykokoro can be installed using pip and requires python 3.10 or higher."
         },
         {
           "anchor": "",
           "heading": "Basic Installation",
-          "text": "Install the latest stable version from PyPI:\n\npip install pykokoro\n\n\n\n\nThis will install PyKokoro with CPU support using ONNX Runtime.",
-          "lower": "install the latest stable version from pypi:\n\npip install pykokoro\n\n\n\n\nthis will install pykokoro with cpu support using onnx runtime."
+          "text": "Install the latest stable version from PyPI:\n\npip install \"pykokoro[cpu]\"\n\n\n\n\nThe cpu, gpu, openvino, and directml extras are alternative ONNX Runtime\ndistributions. Install exactly one provider extra per environment.",
+          "lower": "install the latest stable version from pypi:\n\npip install \"pykokoro[cpu]\"\n\n\n\n\nthe cpu, gpu, openvino, and directml extras are alternative onnx runtime\ndistributions. install exactly one provider extra per environment."
         },
         {
           "anchor": "",
@@ -550,14 +706,14 @@
         {
           "anchor": "",
           "heading": "NVIDIA CUDA",
-          "text": "pip install pykokoro[gpu]\n\n\n\n\nThis installs onnxruntime-gpu for NVIDIA CUDA support.",
-          "lower": "pip install pykokoro[gpu]\n\n\n\n\nthis installs onnxruntime-gpu for nvidia cuda support."
+          "text": "pip install \"pykokoro[gpu]\"\n\n\n\n\nThis installs onnxruntime-gpu for NVIDIA CUDA support.",
+          "lower": "pip install \"pykokoro[gpu]\"\n\n\n\n\nthis installs onnxruntime-gpu for nvidia cuda support."
         },
         {
           "anchor": "",
           "heading": "AMD ROCm",
-          "text": "For AMD GPUs with ROCm:\n\npip install pykokoro\npip install onnxruntime-rocm",
-          "lower": "for amd gpus with rocm:\n\npip install pykokoro\npip install onnxruntime-rocm"
+          "text": "For AMD GPUs with ROCm:\n\npip install \"pykokoro[cpu]\"\npip install onnxruntime-rocm",
+          "lower": "for amd gpus with rocm:\n\npip install \"pykokoro[cpu]\"\npip install onnxruntime-rocm"
         },
         {
           "anchor": "",
@@ -568,8 +724,8 @@
         {
           "anchor": "",
           "heading": "Python Version",
-          "text": "Python 3.9 or higher\n\n\nTested on Python 3.9, 3.10, 3.11, 3.12, and 3.13",
-          "lower": "python 3.9 or higher\n\n\ntested on python 3.9, 3.10, 3.11, 3.12, and 3.13"
+          "text": "Python 3.10 or higher\n\n\nTested on Python 3.10, 3.11, 3.12, and 3.13",
+          "lower": "python 3.10 or higher\n\n\ntested on python 3.10, 3.11, 3.12, and 3.13"
         },
         {
           "anchor": "",
@@ -586,8 +742,8 @@
         {
           "anchor": "",
           "heading": "Installing spaCy (Optional)",
-          "text": "For advanced text splitting with pause_mode=\"auto\" and language-aware\nspaCy tokenization in G2P:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md\n\n\n\n\n\nNote\n\nTokenizerConfig.spacy_model defaults to \"auto\" and resolves package\nnames from language + size (default size: md). For example:\nen-us -> en_core_web_md and de -> de_core_news_md.",
-          "lower": "for advanced text splitting with pause_mode=\"auto\" and language-aware\nspacy tokenization in g2p:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md\n\n\n\n\n\nnote\n\ntokenizerconfig.spacy_model defaults to \"auto\" and resolves package\nnames from language + size (default size: md). for example:\nen-us -> en_core_web_md and de -> de_core_news_md."
+          "text": "For advanced text splitting with pause_mode=\"auto\" and language-aware spaCy\ntokenization in G2P:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md\n\n\n\n\n\nNote\n\nTokenizerConfig.spacy_model defaults to \"auto\" and resolves package\nnames from language + size (default size: md). For example:\nen-us -> en_core_web_md and de -> de_core_news_md.",
+          "lower": "for advanced text splitting with pause_mode=\"auto\" and language-aware spacy\ntokenization in g2p:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md\n\n\n\n\n\nnote\n\ntokenizerconfig.spacy_model defaults to \"auto\" and resolves package\nnames from language + size (default size: md). for example:\nen-us -> en_core_web_md and de -> de_core_news_md."
         },
         {
           "anchor": "",
@@ -616,33 +772,33 @@
         {
           "anchor": "",
           "heading": "GPU Not Detected",
-          "text": "If GPU acceleration isn’t working:\n\n\nVerify CUDA/ROCm is installed: nvidia-smi (NVIDIA) or rocm-smi (AMD)\n\n\nCheck ONNX Runtime GPU: python -c \"import onnxruntime; print(onnxruntime.get_available_providers())\"\n\n\nEnsure you have the correct ONNX Runtime version for your CUDA version",
-          "lower": "if gpu acceleration isn’t working:\n\n\nverify cuda/rocm is installed: nvidia-smi (nvidia) or rocm-smi (amd)\n\n\ncheck onnx runtime gpu: python -c \"import onnxruntime; print(onnxruntime.get_available_providers())\"\n\n\nensure you have the correct onnx runtime version for your cuda version"
+          "text": "If GPU acceleration isn’t working:\n\n\nVerify CUDA/ROCm is installed: nvidia-smi (NVIDIA) or rocm-smi (AMD)\n\n\nCheck ONNX Runtime GPU:\npython -c \"import onnxruntime; print(onnxruntime.get_available_providers())\"\n\n\nEnsure you have the correct ONNX Runtime version for your CUDA version",
+          "lower": "if gpu acceleration isn’t working:\n\n\nverify cuda/rocm is installed: nvidia-smi (nvidia) or rocm-smi (amd)\n\n\ncheck onnx runtime gpu:\npython -c \"import onnxruntime; print(onnxruntime.get_available_providers())\"\n\n\nensure you have the correct onnx runtime version for your cuda version"
         },
         {
           "anchor": "",
           "heading": "Model Download Issues",
-          "text": "If model downloads fail:\n\n\nCheck your internet connection\n\n\nVerify you have write permissions to the cache directory\n\n\nTry downloading manually and placing in ~/.cache/pykokoro/\n\n\nFor GitHub models, ensure the release URLs are accessible\n\n\n\nManual Model Download:\n\nPyKokoro automatically downloads models on first use, but you can trigger downloads manually:\n\nfrom pykokoro import Kokoro\n\n# HuggingFace v1.0 (default - 54 voices, 8 quality options)\nkokoro = Kokoro(model_quality=\"fp16\")  # Auto-downloads from HuggingFace\n\n# HuggingFace v1.1-zh (103 voices, 8 quality options)\nkokoro = Kokoro(\n    model_variant=\"v1.1-zh\",\n    model_quality=\"q8\"  # Auto-downloads from HuggingFace\n)\n\n# GitHub v1.0 (54 voices, 4 quality options)\nkokoro = Kokoro(\n    model_source=\"github\",\n    model_variant=\"v1.0\",…",
-          "lower": "if model downloads fail:\n\n\ncheck your internet connection\n\n\nverify you have write permissions to the cache directory\n\n\ntry downloading manually and placing in ~/.cache/pykokoro/\n\n\nfor github models, ensure the release urls are accessible\n\n\n\nmanual model download:\n\npykokoro automatically downloads models on first use, but you can trigger downloads manually:\n\nfrom pykokoro import kokoro\n\n# huggingface v1.0 (default - 54 voices, 8 quality options)\nkokoro = kokoro(model_quality=\"fp16\")  # auto-downloads from huggingface\n\n# huggingface v1.1-zh (103 voices, 8 quality options)\nkokoro = kokoro(\n    model_variant=\"v1.1-zh\",\n    model_quality=\"q8\"  # auto-downloads from huggingface\n)\n\n# github v1.0 (54 voices, 4 quality options)\nkokoro = kokoro(\n    model_source=\"github\",\n    model_variant=\"v1.0\",…"
+          "text": "If model downloads fail:\n\n\nCheck your internet connection\n\n\nVerify you have write permissions to the cache directory\n\n\nTry downloading manually and placing in ~/.cache/pykokoro/\n\n\nFor GitHub models, ensure the release URLs are accessible\n\n\n\nManual Model Download:\n\nPyKokoro automatically downloads models on first use, but you can trigger downloads\nmanually:\n\nfrom pykokoro import Kokoro\n\n# HuggingFace v1.0 (default - 54 voices, 8 quality options)\nkokoro = Kokoro(model_quality=\"fp16\")  # Auto-downloads from HuggingFace\n\n# HuggingFace v1.1-zh (103 voices, 8 quality options)\nkokoro = Kokoro(\n    model_variant=\"v1.1-zh\",\n    model_quality=\"q8\"  # Auto-downloads from HuggingFace\n)\n\n# GitHub v1.0 (54 voices, 4 quality options)\nkokoro = Kokoro(\n    model_source=\"github\",\n    model_variant=\"v1.0\",…",
+          "lower": "if model downloads fail:\n\n\ncheck your internet connection\n\n\nverify you have write permissions to the cache directory\n\n\ntry downloading manually and placing in ~/.cache/pykokoro/\n\n\nfor github models, ensure the release urls are accessible\n\n\n\nmanual model download:\n\npykokoro automatically downloads models on first use, but you can trigger downloads\nmanually:\n\nfrom pykokoro import kokoro\n\n# huggingface v1.0 (default - 54 voices, 8 quality options)\nkokoro = kokoro(model_quality=\"fp16\")  # auto-downloads from huggingface\n\n# huggingface v1.1-zh (103 voices, 8 quality options)\nkokoro = kokoro(\n    model_variant=\"v1.1-zh\",\n    model_quality=\"q8\"  # auto-downloads from huggingface\n)\n\n# github v1.0 (54 voices, 4 quality options)\nkokoro = kokoro(\n    model_source=\"github\",\n    model_variant=\"v1.0\",…"
         }
       ]
     },
     {
       "url": "/tools/pykokoro/pipeline_stages/",
       "title": "pykokoro Pipeline Usage and Stages",
-      "snippet": "KokoroPipeline is the configurable engine behind the high-level\nKokoro class. Use it when you want to swap parsing/segmentation stages,\nrun …",
+      "snippet": "KokoroPipeline is the configurable engine behind the high-level Kokoro class. Use it\nwhen you want to swap parsing/segmentation stages, run …",
       "sections": [
         {
           "anchor": "",
           "heading": "Pipeline Usage and Stages",
-          "text": "KokoroPipeline is the configurable engine behind the high-level\nKokoro class. Use it when you want to swap parsing/segmentation stages,\nrun custom G2P logic, or control model loading at a lower level.",
-          "lower": "kokoropipeline is the configurable engine behind the high-level\nkokoro class. use it when you want to swap parsing/segmentation stages,\nrun custom g2p logic, or control model loading at a lower level."
+          "text": "KokoroPipeline is the configurable engine behind the high-level Kokoro class. Use it\nwhen you want to swap parsing/segmentation stages, run custom G2P logic, or control\nmodel loading at a lower level.",
+          "lower": "kokoropipeline is the configurable engine behind the high-level kokoro class. use it\nwhen you want to swap parsing/segmentation stages, run custom g2p logic, or control\nmodel loading at a lower level."
         },
         {
           "anchor": "",
           "heading": "Pipeline overview",
-          "text": "The default pipeline wiring is:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\nDefault stage classes:\n\n\nSsmdDocumentParser\n\n\nKokoroG2PAdapter\n\n\nOnnxPhonemeProcessorAdapter\n\n\nOnnxAudioGenerationAdapter\n\n\nOnnxAudioPostprocessingAdapter\n\n\n\nIf any of the audio stages are omitted, the pipeline builds a Kokoro ONNX\nbackend and wires the missing adapters automatically.",
-          "lower": "the default pipeline wiring is:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\ndefault stage classes:\n\n\nssmddocumentparser\n\n\nkokorog2padapter\n\n\nonnxphonemeprocessoradapter\n\n\nonnxaudiogenerationadapter\n\n\nonnxaudiopostprocessingadapter\n\n\n\nif any of the audio stages are omitted, the pipeline builds a kokoro onnx\nbackend and wires the missing adapters automatically."
+          "text": "The default pipeline wiring is:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\nDefault stage classes:\n\n\nSsmdDocumentParser\n\n\nKokoroG2PAdapter\n\n\nOnnxPhonemeProcessorAdapter\n\n\nOnnxAudioGenerationAdapter\n\n\nOnnxAudioPostprocessingAdapter\n\n\n\nIf any of the audio stages are omitted, the pipeline builds a Kokoro ONNX backend and\nwires the missing adapters automatically.",
+          "lower": "the default pipeline wiring is:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\ndefault stage classes:\n\n\nssmddocumentparser\n\n\nkokorog2padapter\n\n\nonnxphonemeprocessoradapter\n\n\nonnxaudiogenerationadapter\n\n\nonnxaudiopostprocessingadapter\n\n\n\nif any of the audio stages are omitted, the pipeline builds a kokoro onnx backend and\nwires the missing adapters automatically."
         },
         {
           "anchor": "",
@@ -659,62 +815,62 @@
         {
           "anchor": "",
           "heading": "Core",
-          "text": "voice: Default voice name (str) or VoiceBlend used unless SSMD\nmetadata overrides the voice per segment.\n\n\ngeneration: GenerationConfig instance with speed, language, pause\nhandling, and phoneme controls.",
-          "lower": "voice: default voice name (str) or voiceblend used unless ssmd\nmetadata overrides the voice per segment.\n\n\ngeneration: generationconfig instance with speed, language, pause\nhandling, and phoneme controls."
+          "text": "voice: Default voice name (str) or VoiceBlend used unless SSMD metadata\noverrides the voice per segment.\n\n\ngeneration: GenerationConfig instance with speed, language, pause handling, and\nphoneme controls.",
+          "lower": "voice: default voice name (str) or voiceblend used unless ssmd metadata\noverrides the voice per segment.\n\n\ngeneration: generationconfig instance with speed, language, pause handling, and\nphoneme controls."
         },
         {
           "anchor": "",
           "heading": "Model and provider",
-          "text": "model_quality: \"fp32\", \"fp16\", \"fp16-gpu\", \"q8\",\n\"q8f16\", \"q4\", \"q4f16\", \"uint8\", \"uint8f16\".\nNone uses the backend default.\n\n\nmodel_source: \"huggingface\" or \"github\".\n\n\nmodel_variant: \"v1.0\" or \"v1.1-zh\".\n\n\nmodel_path: Path to a local ONNX model file. Overrides model download.\n\n\nvoices_path: Path to a local voices file. Overrides voice download.\n\n\nprovider: ONNX provider name (\"auto\", \"cpu\", \"cuda\",\n\"openvino\", \"directml\", \"coreml\").\n\n\nprovider_options: Dict of provider/session options passed to ONNX Runtime.\n\n\nsession_options: Pre-built onnxruntime.SessionOptions (advanced use).",
-          "lower": "model_quality: \"fp32\", \"fp16\", \"fp16-gpu\", \"q8\",\n\"q8f16\", \"q4\", \"q4f16\", \"uint8\", \"uint8f16\".\nnone uses the backend default.\n\n\nmodel_source: \"huggingface\" or \"github\".\n\n\nmodel_variant: \"v1.0\" or \"v1.1-zh\".\n\n\nmodel_path: path to a local onnx model file. overrides model download.\n\n\nvoices_path: path to a local voices file. overrides voice download.\n\n\nprovider: onnx provider name (\"auto\", \"cpu\", \"cuda\",\n\"openvino\", \"directml\", \"coreml\").\n\n\nprovider_options: dict of provider/session options passed to onnx runtime.\n\n\nsession_options: pre-built onnxruntime.sessionoptions (advanced use)."
+          "text": "model_quality: \"fp32\", \"fp16\", \"fp16-gpu\", \"q8\", \"q8f16\", \"q4\",\n\"q4f16\", \"uint8\", \"uint8f16\". None uses the backend default.\n\n\nmodel_source: \"huggingface\" or \"github\".\n\n\nmodel_variant: \"v1.0\" or \"v1.1-zh\".\n\n\nmodel_path: Path to a local ONNX model file. Overrides model download.\n\n\nvoices_path: Path to a local voices file. Overrides voice download.\n\n\nprovider: ONNX provider name (\"auto\", \"cpu\", \"cuda\", \"openvino\",\n\"directml\", \"coreml\").\n\n\nprovider_options: Dict of provider/session options passed to ONNX Runtime.\n\n\nsession_options: Pre-built onnxruntime.SessionOptions (advanced use).",
+          "lower": "model_quality: \"fp32\", \"fp16\", \"fp16-gpu\", \"q8\", \"q8f16\", \"q4\",\n\"q4f16\", \"uint8\", \"uint8f16\". none uses the backend default.\n\n\nmodel_source: \"huggingface\" or \"github\".\n\n\nmodel_variant: \"v1.0\" or \"v1.1-zh\".\n\n\nmodel_path: path to a local onnx model file. overrides model download.\n\n\nvoices_path: path to a local voices file. overrides voice download.\n\n\nprovider: onnx provider name (\"auto\", \"cpu\", \"cuda\", \"openvino\",\n\"directml\", \"coreml\").\n\n\nprovider_options: dict of provider/session options passed to onnx runtime.\n\n\nsession_options: pre-built onnxruntime.sessionoptions (advanced use)."
         },
         {
           "anchor": "",
           "heading": "Tokenizer and phoneme handling",
-          "text": "tokenizer_config: TokenizerConfig used by SSMD parsing and kokorog2p.\n\n\ntokenizer_config.spacy_model: spaCy package name or \"auto\".\n\n\ntokenizer_config.spacy_model_size: package tier for auto mode\n(\"sm\", \"md\", \"lg\", \"trf\"). Default: \"md\".\n\n\nespeak_config: Deprecated espeak configuration. Prefer TokenizerConfig.\n\n\nshort_sentence_config: ShortSentenceConfig for short-sentence handling.\n\n\noverlap_mode: \"snap\" clips overlapping SSMD spans to segment bounds,\n\"strict\" drops partial spans and emits trace warnings.\n\n\n\nHelper for auto spaCy model tier:\n\nfrom pykokoro import PipelineConfig, with_spacy_model_size\n\ncfg = PipelineConfig(voice=\"af_bella\")\ncfg = with_spacy_model_size(cfg, size=\"md\")",
-          "lower": "tokenizer_config: tokenizerconfig used by ssmd parsing and kokorog2p.\n\n\ntokenizer_config.spacy_model: spacy package name or \"auto\".\n\n\ntokenizer_config.spacy_model_size: package tier for auto mode\n(\"sm\", \"md\", \"lg\", \"trf\"). default: \"md\".\n\n\nespeak_config: deprecated espeak configuration. prefer tokenizerconfig.\n\n\nshort_sentence_config: shortsentenceconfig for short-sentence handling.\n\n\noverlap_mode: \"snap\" clips overlapping ssmd spans to segment bounds,\n\"strict\" drops partial spans and emits trace warnings.\n\n\n\nhelper for auto spacy model tier:\n\nfrom pykokoro import pipelineconfig, with_spacy_model_size\n\ncfg = pipelineconfig(voice=\"af_bella\")\ncfg = with_spacy_model_size(cfg, size=\"md\")"
+          "text": "tokenizer_config: TokenizerConfig used by SSMD parsing and kokorog2p.\n\n\ntokenizer_config.spacy_model: spaCy package name or \"auto\".\n\n\ntokenizer_config.spacy_model_size: package tier for auto mode (\"sm\", \"md\",\n\"lg\", \"trf\"). Default: \"md\".\n\n\nespeak_config: Deprecated espeak configuration. Prefer TokenizerConfig.\n\n\nshort_sentence_config: ShortSentenceConfig for short-sentence handling.\n\n\noverlap_mode: \"snap\" clips overlapping SSMD spans to segment bounds, \"strict\"\ndrops partial spans and emits trace warnings.\n\n\n\nHelper for auto spaCy model tier:\n\nfrom pykokoro import PipelineConfig, with_spacy_model_size\n\ncfg = PipelineConfig(voice=\"af_bella\")\ncfg = with_spacy_model_size(cfg, size=\"md\")",
+          "lower": "tokenizer_config: tokenizerconfig used by ssmd parsing and kokorog2p.\n\n\ntokenizer_config.spacy_model: spacy package name or \"auto\".\n\n\ntokenizer_config.spacy_model_size: package tier for auto mode (\"sm\", \"md\",\n\"lg\", \"trf\"). default: \"md\".\n\n\nespeak_config: deprecated espeak configuration. prefer tokenizerconfig.\n\n\nshort_sentence_config: shortsentenceconfig for short-sentence handling.\n\n\noverlap_mode: \"snap\" clips overlapping ssmd spans to segment bounds, \"strict\"\ndrops partial spans and emits trace warnings.\n\n\n\nhelper for auto spacy model tier:\n\nfrom pykokoro import pipelineconfig, with_spacy_model_size\n\ncfg = pipelineconfig(voice=\"af_bella\")\ncfg = with_spacy_model_size(cfg, size=\"md\")"
         },
         {
           "anchor": "",
           "heading": "Other",
-          "text": "return_trace: Include Trace in AudioResult with timings/warnings.\n\n\nenable_deprecation_warnings: Reserved for compatibility warnings.\n\n\ncache_dir: Directory for the G2P disk cache (JSON files). Set None\nto disable caching.",
-          "lower": "return_trace: include trace in audioresult with timings/warnings.\n\n\nenable_deprecation_warnings: reserved for compatibility warnings.\n\n\ncache_dir: directory for the g2p disk cache (json files). set none\nto disable caching."
+          "text": "return_trace: Include Trace in AudioResult with timings/warnings.\n\n\nenable_deprecation_warnings: Reserved for compatibility warnings.\n\n\ncache_dir: Directory for the G2P disk cache (JSON files). Set None to disable\ncaching.",
+          "lower": "return_trace: include trace in audioresult with timings/warnings.\n\n\nenable_deprecation_warnings: reserved for compatibility warnings.\n\n\ncache_dir: directory for the g2p disk cache (json files). set none to disable\ncaching."
         },
         {
           "anchor": "",
           "heading": "GenerationConfig fields",
-          "text": "speed: Speech rate multiplier (1.0 is normal).\n\n\nlang: Default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: Treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims\nsegment silence and preserves explicit pauses, \"auto\" inserts pauses\nat sentence/paragraph boundaries and trims segment silence.\n\n\npause_clause: Default pause for SSMD ...c breaks (seconds).\n\n\npause_sentence: Default pause for SSMD ...s breaks (seconds).\n\n\npause_paragraph: Default pause for SSMD ...p breaks (seconds).\n\n\npause_variance: Stored for compatibility with the Kokoro API.\nThe pipeline stages do not currently apply variance.\n\n\nrandom_seed: Stored for compatibility with the Kokoro API.\nThe pipeline stages do not currently use the seed.\n\n\nena…",
-          "lower": "speed: speech rate multiplier (1.0 is normal).\n\n\nlang: default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims\nsegment silence and preserves explicit pauses, \"auto\" inserts pauses\nat sentence/paragraph boundaries and trims segment silence.\n\n\npause_clause: default pause for ssmd ...c breaks (seconds).\n\n\npause_sentence: default pause for ssmd ...s breaks (seconds).\n\n\npause_paragraph: default pause for ssmd ...p breaks (seconds).\n\n\npause_variance: stored for compatibility with the kokoro api.\nthe pipeline stages do not currently apply variance.\n\n\nrandom_seed: stored for compatibility with the kokoro api.\nthe pipeline stages do not currently use the seed.\n\n\nena…"
+          "text": "speed: Speech rate multiplier (1.0 is normal).\n\n\nlang: Default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: Treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand trims segment silence.\n\n\npause_clause: Default pause for SSMD ...c breaks (seconds).\n\n\npause_sentence: Default pause for SSMD ...s breaks (seconds).\n\n\npause_paragraph: Default pause for SSMD ...p breaks (seconds).\n\n\npause_variance: Stored for compatibility with the Kokoro API. The pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: Stored for compatibility with the Kokoro API. The pipeline stages do\nnot currently use the seed.\n\n\nena…",
+          "lower": "speed: speech rate multiplier (1.0 is normal).\n\n\nlang: default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand trims segment silence.\n\n\npause_clause: default pause for ssmd ...c breaks (seconds).\n\n\npause_sentence: default pause for ssmd ...s breaks (seconds).\n\n\npause_paragraph: default pause for ssmd ...p breaks (seconds).\n\n\npause_variance: stored for compatibility with the kokoro api. the pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: stored for compatibility with the kokoro api. the pipeline stages do\nnot currently use the seed.\n\n\nena…"
         },
         {
           "anchor": "",
           "heading": "Runtime overrides",
-          "text": "KokoroPipeline.run accepts overrides for any PipelineConfig field. The\nlang keyword is special-cased to update generation.lang for convenience.\n\nfrom dataclasses import replace\nfrom pykokoro import GenerationConfig\n\n# Override just the language\nresult = pipeline.run(\"Bonjour\", lang=\"fr\")\n\n# Override generation settings per call\nmanual = replace(\n    pipeline.config.generation,\n    pause_mode=\"manual\",\n    pause_sentence=0.5,\n)\nresult = pipeline.run(\"Hello...s world\", generation=manual)\n\n# Override model settings per call\nresult = pipeline.run(\"Quick test\", model_quality=\"q8\")",
-          "lower": "kokoropipeline.run accepts overrides for any pipelineconfig field. the\nlang keyword is special-cased to update generation.lang for convenience.\n\nfrom dataclasses import replace\nfrom pykokoro import generationconfig\n\n# override just the language\nresult = pipeline.run(\"bonjour\", lang=\"fr\")\n\n# override generation settings per call\nmanual = replace(\n    pipeline.config.generation,\n    pause_mode=\"manual\",\n    pause_sentence=0.5,\n)\nresult = pipeline.run(\"hello...s world\", generation=manual)\n\n# override model settings per call\nresult = pipeline.run(\"quick test\", model_quality=\"q8\")"
+          "text": "KokoroPipeline.run accepts overrides for any PipelineConfig field. The lang\nkeyword is special-cased to update generation.lang for convenience.\n\nfrom dataclasses import replace\nfrom pykokoro import GenerationConfig\n\n# Override just the language\nresult = pipeline.run(\"Bonjour\", lang=\"fr\")\n\n# Override generation settings per call\nmanual = replace(\n    pipeline.config.generation,\n    pause_mode=\"manual\",\n    pause_sentence=0.5,\n)\nresult = pipeline.run(\"Hello...s world\", generation=manual)\n\n# Override model settings per call\nresult = pipeline.run(\"Quick test\", model_quality=\"q8\")",
+          "lower": "kokoropipeline.run accepts overrides for any pipelineconfig field. the lang\nkeyword is special-cased to update generation.lang for convenience.\n\nfrom dataclasses import replace\nfrom pykokoro import generationconfig\n\n# override just the language\nresult = pipeline.run(\"bonjour\", lang=\"fr\")\n\n# override generation settings per call\nmanual = replace(\n    pipeline.config.generation,\n    pause_mode=\"manual\",\n    pause_sentence=0.5,\n)\nresult = pipeline.run(\"hello...s world\", generation=manual)\n\n# override model settings per call\nresult = pipeline.run(\"quick test\", model_quality=\"q8\")"
         },
         {
           "anchor": "",
           "heading": "SSMD document parser",
-          "text": "SsmdDocumentParser uses parse_ssmd_to_segments to turn SSMD markup into\nclean text plus metadata spans, pause boundaries, and sentence/paragraph\nsegments. It honors generation.pause_* values when converting break\nstrengths into durations.\n\nSupported SSMD features include:\n\n\nBreak markers: ...c, ...s, ...p, ...500ms\n\n\nLanguage overrides: [Bonjour](fr)\n\n\nPhoneme overrides: [tomato](ph: t eh m aa t ow)\n\n\nProsody markup (rate/pitch/volume) and emphasis\n\n\nVoice markers: [Hello]{voice=\"af_sarah\"}\n\n\n\nThe parser attaches SSMD metadata to annotation spans so later stages can\nselect per-segment voices and prosody.",
-          "lower": "ssmddocumentparser uses parse_ssmd_to_segments to turn ssmd markup into\nclean text plus metadata spans, pause boundaries, and sentence/paragraph\nsegments. it honors generation.pause_* values when converting break\nstrengths into durations.\n\nsupported ssmd features include:\n\n\nbreak markers: ...c, ...s, ...p, ...500ms\n\n\nlanguage overrides: [bonjour](fr)\n\n\nphoneme overrides: [tomato](ph: t eh m aa t ow)\n\n\nprosody markup (rate/pitch/volume) and emphasis\n\n\nvoice markers: [hello]{voice=\"af_sarah\"}\n\n\n\nthe parser attaches ssmd metadata to annotation spans so later stages can\nselect per-segment voices and prosody."
+          "text": "SsmdDocumentParser uses parse_ssmd_to_segments to turn SSMD markup into clean text\nplus metadata spans, pause boundaries, and sentence/paragraph segments. It honors\ngeneration.pause_* values when converting break strengths into durations.\n\nSupported SSMD features include:\n\n\nBreak markers: ...c, ...s, ...p, ...500ms\n\n\nLanguage overrides: [Bonjour]{lang=\"fr\"}\n\n\nIPA phoneme overrides: [tomato]{ipa=\"təˈmeɪtoʊ\"}\n\n\nProsody annotations: [text]{rate=\"fast\" pitch=\"high\" volume=\"loud\"}\n\n\nInline voice annotations and <div voice=\"af_sarah\"> directives\n\n\n\nThe parser attaches SSMD metadata to annotation spans so later stages can select\nper-segment language, voices, phonemes, and prosody. Sentence-level <div> language,\nvoice, and prosody directives are inherited by contained segments, while inline\nannot…",
+          "lower": "ssmddocumentparser uses parse_ssmd_to_segments to turn ssmd markup into clean text\nplus metadata spans, pause boundaries, and sentence/paragraph segments. it honors\ngeneration.pause_* values when converting break strengths into durations.\n\nsupported ssmd features include:\n\n\nbreak markers: ...c, ...s, ...p, ...500ms\n\n\nlanguage overrides: [bonjour]{lang=\"fr\"}\n\n\nipa phoneme overrides: [tomato]{ipa=\"təˈmeɪtoʊ\"}\n\n\nprosody annotations: [text]{rate=\"fast\" pitch=\"high\" volume=\"loud\"}\n\n\ninline voice annotations and <div voice=\"af_sarah\"> directives\n\n\n\nthe parser attaches ssmd metadata to annotation spans so later stages can select\nper-segment language, voices, phonemes, and prosody. sentence-level <div> language,\nvoice, and prosody directives are inherited by contained segments, while inline\nannot…"
         },
         {
           "anchor": "",
           "heading": "Plain text sentence splitting",
-          "text": "PlainTextDocumentParser uses the optional phrasplit package for\nsentence splitting. When phrasplit is unavailable, it falls back to a\nsingle segment. The language model is derived from generation.lang using\nspaCy package naming rules (for example en_core_web_sm for English).\n\nSplit boundaries are forced at SSMD pause boundaries and at spans that contain\nphoneme overrides so those overrides are kept intact. Set\nPYKOKORO_DEBUG_SEGMENTS=1 to log segment offsets.",
-          "lower": "plaintextdocumentparser uses the optional phrasplit package for\nsentence splitting. when phrasplit is unavailable, it falls back to a\nsingle segment. the language model is derived from generation.lang using\nspacy package naming rules (for example en_core_web_sm for english).\n\nsplit boundaries are forced at ssmd pause boundaries and at spans that contain\nphoneme overrides so those overrides are kept intact. set\npykokoro_debug_segments=1 to log segment offsets."
+          "text": "PlainTextDocumentParser uses the optional phrasplit package for sentence splitting.\nWhen phrasplit is unavailable, it falls back to a single segment. The language model\nis derived from generation.lang using spaCy package naming rules (for example\nen_core_web_sm for English).\n\nSplit boundaries are forced at SSMD pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. Set PYKOKORO_DEBUG_SEGMENTS=1 to log\nsegment offsets.",
+          "lower": "plaintextdocumentparser uses the optional phrasplit package for sentence splitting.\nwhen phrasplit is unavailable, it falls back to a single segment. the language model\nis derived from generation.lang using spacy package naming rules (for example\nen_core_web_sm for english).\n\nsplit boundaries are forced at ssmd pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. set pykokoro_debug_segments=1 to log\nsegment offsets."
         },
         {
           "anchor": "",
           "heading": "Kokoro G2P adapter",
-          "text": "KokoroG2PAdapter uses the kokorog2p package to produce phonemes and\ntoken IDs.\n\n\ngeneration.lang selects the G2P language.\n\n\ngeneration.is_phonemes treats input as phonemes and skips text G2P.\n\n\nSSMD ph/phonemes spans override phonemes for that segment.\n\n\ntokenizer_config is forwarded to kokorog2p.get_g2p.\n\n\nspacy_model=\"auto\" resolves per language (default size md).\n\n\ncache_dir enables on-disk caching of phonemes/tokens.\n\n\nLong phoneme token sequences are split into batches of\nMAX_PHONEME_LENGTH.",
-          "lower": "kokorog2padapter uses the kokorog2p package to produce phonemes and\ntoken ids.\n\n\ngeneration.lang selects the g2p language.\n\n\ngeneration.is_phonemes treats input as phonemes and skips text g2p.\n\n\nssmd ph/phonemes spans override phonemes for that segment.\n\n\ntokenizer_config is forwarded to kokorog2p.get_g2p.\n\n\nspacy_model=\"auto\" resolves per language (default size md).\n\n\ncache_dir enables on-disk caching of phonemes/tokens.\n\n\nlong phoneme token sequences are split into batches of\nmax_phoneme_length."
+          "text": "KokoroG2PAdapter uses the kokorog2p package to produce phonemes and token IDs.\n\n\ngeneration.lang selects the G2P language.\n\n\ngeneration.is_phonemes treats input as phonemes and skips text G2P.\n\n\nSSMD ph/phonemes spans override phonemes for that segment.\n\n\ntokenizer_config is forwarded to kokorog2p.get_g2p.\n\n\nspacy_model=\"auto\" resolves per language (default size md).\n\n\ncache_dir enables on-disk caching of phonemes/tokens.\n\n\nLong phoneme token sequences are split into batches of MAX_PHONEME_LENGTH.",
+          "lower": "kokorog2padapter uses the kokorog2p package to produce phonemes and token ids.\n\n\ngeneration.lang selects the g2p language.\n\n\ngeneration.is_phonemes treats input as phonemes and skips text g2p.\n\n\nssmd ph/phonemes spans override phonemes for that segment.\n\n\ntokenizer_config is forwarded to kokorog2p.get_g2p.\n\n\nspacy_model=\"auto\" resolves per language (default size md).\n\n\ncache_dir enables on-disk caching of phonemes/tokens.\n\n\nlong phoneme token sequences are split into batches of max_phoneme_length."
         },
         {
           "anchor": "",
           "heading": "Onnx phoneme processing",
-          "text": "OnnxPhonemeProcessorAdapter calls the ONNX backend to normalize tokens,\nskip empty segments, and apply short-sentence handling.\n\n\nshort_sentence_config controls defaults for short sentence handling.\n\n\ngeneration.enable_short_sentence can override the config per run.",
-          "lower": "onnxphonemeprocessoradapter calls the onnx backend to normalize tokens,\nskip empty segments, and apply short-sentence handling.\n\n\nshort_sentence_config controls defaults for short sentence handling.\n\n\ngeneration.enable_short_sentence can override the config per run."
+          "text": "OnnxPhonemeProcessorAdapter calls the ONNX backend to normalize tokens, skip empty\nsegments, and apply short-sentence handling.\n\n\nshort_sentence_config controls defaults for short sentence handling.\n\n\ngeneration.enable_short_sentence can override the config per run.",
+          "lower": "onnxphonemeprocessoradapter calls the onnx backend to normalize tokens, skip empty\nsegments, and apply short-sentence handling.\n\n\nshort_sentence_config controls defaults for short sentence handling.\n\n\ngeneration.enable_short_sentence can override the config per run."
         },
         {
           "anchor": "",
@@ -725,20 +881,20 @@
         {
           "anchor": "",
           "heading": "Onnx audio postprocessing",
-          "text": "OnnxAudioPostprocessingAdapter trims silence and concatenates segments.\n\n\ngeneration.pause_mode\" set to \"manual\" or \"auto\" enables silence\ntrimming before inserting explicit pauses.\n\n\nSSMD prosody metadata (rate/pitch/volume) is applied to each segment.\n\n\npause_before/pause_after values from G2P are inserted between segments.",
-          "lower": "onnxaudiopostprocessingadapter trims silence and concatenates segments.\n\n\ngeneration.pause_mode\" set to \"manual\" or \"auto\" enables silence\ntrimming before inserting explicit pauses.\n\n\nssmd prosody metadata (rate/pitch/volume) is applied to each segment.\n\n\npause_before/pause_after values from g2p are inserted between segments."
+          "text": "OnnxAudioPostprocessingAdapter trims silence and concatenates segments.\n\n\ngeneration.pause_mode\" set to \"manual\" or \"auto\" enables silence trimming before\ninserting explicit pauses.\n\n\nSSMD prosody metadata (rate/pitch/volume) is applied to each segment.\n\n\npause_before/pause_after values from G2P are inserted between segments.",
+          "lower": "onnxaudiopostprocessingadapter trims silence and concatenates segments.\n\n\ngeneration.pause_mode\" set to \"manual\" or \"auto\" enables silence trimming before\ninserting explicit pauses.\n\n\nssmd prosody metadata (rate/pitch/volume) is applied to each segment.\n\n\npause_before/pause_after values from g2p are inserted between segments."
         },
         {
           "anchor": "",
           "heading": "Customizing the pipeline",
-          "text": "You can replace individual stages or use the provided no-op adapters.\nThe showcase script demonstrates multiple wiring styles:\n\nexamples/pipeline_stage_showcase.py\n\nExample with explicit stage wiring:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\nfrom pykokoro.onnx_backend import Kokoro\nfrom pykokoro.stages.audio_generation.onnx import OnnxAudioGenerationAdapter\nfrom pykokoro.stages.audio_postprocessing.onnx import OnnxAudioPostprocessingAdapter\nfrom pykokoro.stages.doc_parsers.ssmd import SsmdDocumentParser\nfrom pykokoro.stages.g2p.kokorog2p import KokoroG2PAdapter\nfrom pykokoro.stages.phoneme_processing.onnx import OnnxPhonemeProcessorAdapter\n\ncfg = PipelineConfig(\n    voice=\"af_heart\",\n    generation=GenerationConfig(lang=\"en-us\"),\n)\nkokoro = Kokoro(model_quali…",
-          "lower": "you can replace individual stages or use the provided no-op adapters.\nthe showcase script demonstrates multiple wiring styles:\n\nexamples/pipeline_stage_showcase.py\n\nexample with explicit stage wiring:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\nfrom pykokoro.onnx_backend import kokoro\nfrom pykokoro.stages.audio_generation.onnx import onnxaudiogenerationadapter\nfrom pykokoro.stages.audio_postprocessing.onnx import onnxaudiopostprocessingadapter\nfrom pykokoro.stages.doc_parsers.ssmd import ssmddocumentparser\nfrom pykokoro.stages.g2p.kokorog2p import kokorog2padapter\nfrom pykokoro.stages.phoneme_processing.onnx import onnxphonemeprocessoradapter\n\ncfg = pipelineconfig(\n    voice=\"af_heart\",\n    generation=generationconfig(lang=\"en-us\"),\n)\nkokoro = kokoro(model_quali…"
+          "text": "You can replace individual stages or use the provided no-op adapters. The showcase\nscript demonstrates multiple wiring styles:\n\nexamples/pipeline_stage_showcase.py\n\nExample with explicit stage wiring:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\nfrom pykokoro.onnx_backend import Kokoro\nfrom pykokoro.stages.audio_generation.onnx import OnnxAudioGenerationAdapter\nfrom pykokoro.stages.audio_postprocessing.onnx import OnnxAudioPostprocessingAdapter\nfrom pykokoro.stages.doc_parsers.ssmd import SsmdDocumentParser\nfrom pykokoro.stages.g2p.kokorog2p import KokoroG2PAdapter\nfrom pykokoro.stages.phoneme_processing.onnx import OnnxPhonemeProcessorAdapter\n\ncfg = PipelineConfig(\n    voice=\"af_heart\",\n    generation=GenerationConfig(lang=\"en-us\"),\n)\nkokoro = Kokoro(model_quali…",
+          "lower": "you can replace individual stages or use the provided no-op adapters. the showcase\nscript demonstrates multiple wiring styles:\n\nexamples/pipeline_stage_showcase.py\n\nexample with explicit stage wiring:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\nfrom pykokoro.onnx_backend import kokoro\nfrom pykokoro.stages.audio_generation.onnx import onnxaudiogenerationadapter\nfrom pykokoro.stages.audio_postprocessing.onnx import onnxaudiopostprocessingadapter\nfrom pykokoro.stages.doc_parsers.ssmd import ssmddocumentparser\nfrom pykokoro.stages.g2p.kokorog2p import kokorog2padapter\nfrom pykokoro.stages.phoneme_processing.onnx import onnxphonemeprocessoradapter\n\ncfg = pipelineconfig(\n    voice=\"af_heart\",\n    generation=generationconfig(lang=\"en-us\"),\n)\nkokoro = kokoro(model_quali…"
         },
         {
           "anchor": "",
           "heading": "Local model files and providers",
-          "text": "To load local ONNX artifacts, set model_path and voices_path.\nYou can also select a specific execution provider.\n\nfrom pathlib import Path\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ncfg = PipelineConfig(\n    voice=\"af_bella\",\n    model_path=Path(\"/models/kokoro.onnx\"),\n    voices_path=Path(\"/models/voices.bin\"),\n    provider=\"cuda\",\n    provider_options={\"device_id\": 0},\n)\npipeline = KokoroPipeline(cfg)\nresult = pipeline.run(\"Hello from local files.\")",
-          "lower": "to load local onnx artifacts, set model_path and voices_path.\nyou can also select a specific execution provider.\n\nfrom pathlib import path\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ncfg = pipelineconfig(\n    voice=\"af_bella\",\n    model_path=path(\"/models/kokoro.onnx\"),\n    voices_path=path(\"/models/voices.bin\"),\n    provider=\"cuda\",\n    provider_options={\"device_id\": 0},\n)\npipeline = kokoropipeline(cfg)\nresult = pipeline.run(\"hello from local files.\")"
+          "text": "To load local ONNX artifacts, set model_path and voices_path. You can also select a\nspecific execution provider.\n\nfrom pathlib import Path\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ncfg = PipelineConfig(\n    voice=\"af_bella\",\n    model_path=Path(\"/models/kokoro.onnx\"),\n    voices_path=Path(\"/models/voices.bin\"),\n    provider=\"cuda\",\n    provider_options={\"device_id\": 0},\n)\npipeline = KokoroPipeline(cfg)\nresult = pipeline.run(\"Hello from local files.\")",
+          "lower": "to load local onnx artifacts, set model_path and voices_path. you can also select a\nspecific execution provider.\n\nfrom pathlib import path\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ncfg = pipelineconfig(\n    voice=\"af_bella\",\n    model_path=path(\"/models/kokoro.onnx\"),\n    voices_path=path(\"/models/voices.bin\"),\n    provider=\"cuda\",\n    provider_options={\"device_id\": 0},\n)\npipeline = kokoropipeline(cfg)\nresult = pipeline.run(\"hello from local files.\")"
         }
       ]
     },
@@ -768,8 +924,8 @@
         {
           "anchor": "",
           "heading": "Choosing a Voice",
-          "text": "PyKokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). Here are some popular ones:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# American English\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\naudio1 = pipe.run(\"American female voice\").audio\npipe = KokoroPipeline(PipelineConfig(voice=\"am_adam\"))\naudio2 = pipe.run(\"American male voice\").audio\n\n# British English\npipe = KokoroPipeline(PipelineConfig(voice=\"bf_emma\"))\naudio3 = pipe.run(\"British female voice\").audio\npipe = KokoroPipeline(PipelineConfig(voice=\"bm_george\"))\naudio4 = pipe.run(\"British male voice\").audio\n\n# Other languages\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_nicole\",\n        generation=GenerationConfig(lang=\"es\"),\n    )\n)\naudio5 = pipe.run(\"Hola, mundo\").audio\npi…",
-          "lower": "pykokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). here are some popular ones:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# american english\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\naudio1 = pipe.run(\"american female voice\").audio\npipe = kokoropipeline(pipelineconfig(voice=\"am_adam\"))\naudio2 = pipe.run(\"american male voice\").audio\n\n# british english\npipe = kokoropipeline(pipelineconfig(voice=\"bf_emma\"))\naudio3 = pipe.run(\"british female voice\").audio\npipe = kokoropipeline(pipelineconfig(voice=\"bm_george\"))\naudio4 = pipe.run(\"british male voice\").audio\n\n# other languages\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_nicole\",\n        generation=generationconfig(lang=\"es\"),\n    )\n)\naudio5 = pipe.run(\"hola, mundo\").audio\npi…"
+          "text": "PyKokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). Here are some popular\nones:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# American English\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\naudio1 = pipe.run(\"American female voice\").audio\npipe = KokoroPipeline(PipelineConfig(voice=\"am_adam\"))\naudio2 = pipe.run(\"American male voice\").audio\n\n# British English\npipe = KokoroPipeline(PipelineConfig(voice=\"bf_emma\"))\naudio3 = pipe.run(\"British female voice\").audio\npipe = KokoroPipeline(PipelineConfig(voice=\"bm_george\"))\naudio4 = pipe.run(\"British male voice\").audio\n\n# Other languages\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_nicole\",\n        generation=GenerationConfig(lang=\"es\"),\n    )\n)\naudio5 = pipe.run(\"Hola, mundo\").audio\npi…",
+          "lower": "pykokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). here are some popular\nones:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# american english\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\naudio1 = pipe.run(\"american female voice\").audio\npipe = kokoropipeline(pipelineconfig(voice=\"am_adam\"))\naudio2 = pipe.run(\"american male voice\").audio\n\n# british english\npipe = kokoropipeline(pipelineconfig(voice=\"bf_emma\"))\naudio3 = pipe.run(\"british female voice\").audio\npipe = kokoropipeline(pipelineconfig(voice=\"bm_george\"))\naudio4 = pipe.run(\"british male voice\").audio\n\n# other languages\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_nicole\",\n        generation=generationconfig(lang=\"es\"),\n    )\n)\naudio5 = pipe.run(\"hola, mundo\").audio\npi…"
         },
         {
           "anchor": "",
@@ -780,8 +936,8 @@
         {
           "anchor": "",
           "heading": "Adding Pauses",
-          "text": "Add natural pauses in your speech using SSMD break syntax:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ntext = \"\"\"\nWelcome to the tutorial ...c\nThis is a short pause ...s\nAnd this is a longer pause ...p\nThese pauses make speech sound more natural.\n\"\"\"\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(text)\n\nimport soundfile as sf\nsf.write(\"with_pauses.wav\", result.audio, result.sample_rate)\n\n\n\n\nPause syntax (SSMD breaks):\n* ...c - Short/comma pause (0.3 seconds, default)\n* ...s - Medium/sentence pause (0.6 seconds, default)\n* ...p - Long/paragraph pause (1.0 seconds, default)\n* ...500ms - Custom duration pause (e.g., 500 milliseconds)",
-          "lower": "add natural pauses in your speech using ssmd break syntax:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ntext = \"\"\"\nwelcome to the tutorial ...c\nthis is a short pause ...s\nand this is a longer pause ...p\nthese pauses make speech sound more natural.\n\"\"\"\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(text)\n\nimport soundfile as sf\nsf.write(\"with_pauses.wav\", result.audio, result.sample_rate)\n\n\n\n\npause syntax (ssmd breaks):\n* ...c - short/comma pause (0.3 seconds, default)\n* ...s - medium/sentence pause (0.6 seconds, default)\n* ...p - long/paragraph pause (1.0 seconds, default)\n* ...500ms - custom duration pause (e.g., 500 milliseconds)"
+          "text": "Add natural pauses in your speech using SSMD break syntax:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\ntext = \"\"\"\nWelcome to the tutorial ...c\nThis is a short pause ...s\nAnd this is a longer pause ...p\nThese pauses make speech sound more natural.\n\"\"\"\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(text)\n\nimport soundfile as sf\nsf.write(\"with_pauses.wav\", result.audio, result.sample_rate)\n\n\n\n\nPause syntax (SSMD breaks): * ...c - Short/comma pause (0.3 seconds, default) *\n...s - Medium/sentence pause (0.6 seconds, default) * ...p - Long/paragraph pause\n(1.0 seconds, default) * ...500ms - Custom duration pause (e.g., 500 milliseconds)",
+          "lower": "add natural pauses in your speech using ssmd break syntax:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\ntext = \"\"\"\nwelcome to the tutorial ...c\nthis is a short pause ...s\nand this is a longer pause ...p\nthese pauses make speech sound more natural.\n\"\"\"\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(text)\n\nimport soundfile as sf\nsf.write(\"with_pauses.wav\", result.audio, result.sample_rate)\n\n\n\n\npause syntax (ssmd breaks): * ...c - short/comma pause (0.3 seconds, default) *\n...s - medium/sentence pause (0.6 seconds, default) * ...p - long/paragraph pause\n(1.0 seconds, default) * ...500ms - custom duration pause (e.g., 500 milliseconds)"
         },
         {
           "anchor": "",
@@ -792,8 +948,8 @@
         {
           "anchor": "",
           "heading": "Choosing spaCy Model Size (Auto)",
-          "text": "If you use spaCy-based tokenization/splitting, you can keep language-aware\nauto selection and choose only the model size:\n\nfrom pykokoro import (\n    GenerationConfig,\n    KokoroPipeline,\n    PipelineConfig,\n    with_spacy_model_size,\n)\n\nbase = PipelineConfig(\n    voice=\"af_bella\",\n    generation=GenerationConfig(lang=\"fr-fr\"),\n)\ncfg = with_spacy_model_size(base, size=\"md\")\npipe = KokoroPipeline(cfg)\nresult = pipe.run(\"Bonjour\")",
-          "lower": "if you use spacy-based tokenization/splitting, you can keep language-aware\nauto selection and choose only the model size:\n\nfrom pykokoro import (\n    generationconfig,\n    kokoropipeline,\n    pipelineconfig,\n    with_spacy_model_size,\n)\n\nbase = pipelineconfig(\n    voice=\"af_bella\",\n    generation=generationconfig(lang=\"fr-fr\"),\n)\ncfg = with_spacy_model_size(base, size=\"md\")\npipe = kokoropipeline(cfg)\nresult = pipe.run(\"bonjour\")"
+          "text": "If you use spaCy-based tokenization/splitting, you can keep language-aware auto\nselection and choose only the model size:\n\nfrom pykokoro import (\n    GenerationConfig,\n    KokoroPipeline,\n    PipelineConfig,\n    with_spacy_model_size,\n)\n\nbase = PipelineConfig(\n    voice=\"af_bella\",\n    generation=GenerationConfig(lang=\"fr-fr\"),\n)\ncfg = with_spacy_model_size(base, size=\"md\")\npipe = KokoroPipeline(cfg)\nresult = pipe.run(\"Bonjour\")",
+          "lower": "if you use spacy-based tokenization/splitting, you can keep language-aware auto\nselection and choose only the model size:\n\nfrom pykokoro import (\n    generationconfig,\n    kokoropipeline,\n    pipelineconfig,\n    with_spacy_model_size,\n)\n\nbase = pipelineconfig(\n    voice=\"af_bella\",\n    generation=generationconfig(lang=\"fr-fr\"),\n)\ncfg = with_spacy_model_size(base, size=\"md\")\npipe = kokoropipeline(cfg)\nresult = pipe.run(\"bonjour\")"
         },
         {
           "anchor": "",
