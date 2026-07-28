@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.0"
-docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
+docs_ref: "v0.7.1"
+docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
 search_enabled: true
 ---
 

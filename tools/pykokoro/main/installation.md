@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f17ad3a3f2dc22772e2788c6928694e47b6ec9a2"
+docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
 search_enabled: true
 ---
 
@@ -551,6 +551,20 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
 distributions. Install exactly one provider extra per environment.</p>
+<section id="android-termux-providers">
+<h3>Android/Termux Providers</h3>
+<p>PyKokoro accepts any provider spelling reported by the installed ONNX Runtime. For the
+Android/Termux runtime, both aliases and runtime names are valid:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
+
+<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">)</span>
+<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;xnnpack&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> to select the highest-priority available provider by capability.
+PyKokoro does not infer availability from platform names and does not suppress ONNX
+Runtime warnings.</p>
+</section>
 </section>
 <section id="gpu-support">
 <h2>GPU Support</h2>
@@ -744,6 +758,17 @@ manually:</p>
 <li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
 <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
 </ul>
+<p>The config is stored under <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/config/{variant}/config.json</span></code>. A
+source/variant/quality asset set is complete only when its config, model, and exact
+voice archive are all nonempty regular files. Downstream integrations can inspect the
+same paths without importing ONNX Runtime:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
+
+<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing:&quot;</span><span class="p">,</span> <span class="n">assets</span><span class="o">.</span><span class="n">missing</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 </section>
