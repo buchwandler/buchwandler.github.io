@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "242f1bbed847fb34ee087d9d40c6e8c06fa35143"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -619,7 +619,8 @@ pre-commit<span class="w"> </span>install
 <h2>Dependencies</h2>
 <p>SSMD has minimal runtime dependencies:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - sentence detection and splitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.3</span></code> - sentence detection and splitting; the 0.2.x line does not satisfy
+SSMD’s paragraph and markup round-trip contract</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code> - YAML front matter parsing</p></li>
 </ul>
 <p>Optional dependencies for development:</p>

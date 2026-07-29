@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "242f1bbed847fb34ee087d9d40c6e8c06fa35143"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -545,6 +545,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>This guide will help you get started with SSMD quickly.</p>
 <section id="basic-conversion">
 <h2>Basic Conversion</h2>
+<p>For machine-driven authoring, use the root-level JSON interface and check both the
+process exit status and command-specific result fields:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>create<span class="w"> </span>draft.ssmd<span class="w"> </span>-o<span class="w"> </span>output.ssmd<span class="w"> </span>--fail-on-warn
+ssmd<span class="w"> </span>--json<span class="w"> </span>lint<span class="w"> </span>output.ssmd<span class="w"> </span>--roundtrip<span class="w"> </span>--fail-on-warn
+ssmd<span class="w"> </span>--json<span class="w"> </span>inspect<span class="w"> </span>output.ssmd<span class="w"> </span>--spans
+ssmd<span class="w"> </span>--json<span class="w"> </span>to-ssml<span class="w"> </span>output.ssmd<span class="w"> </span>-o<span class="w"> </span>output.ssml
+ssmd<span class="w"> </span>--json<span class="w"> </span>text<span class="w"> </span>output.ssmd
+</pre></div>
+</div>
+<p>Creation is complete only when <code class="docutils literal notranslate"><span class="pre">result.created</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes_written</span></code> is nonzero, and
+the output exists; linting is complete only when <code class="docutils literal notranslate"><span class="pre">result.passed</span> <span class="pre">==</span> <span class="pre">true</span></code>.</p>
 <p>The simplest way to use SSMD is with the convenience functions:</p>
 <section id="ssmd-to-ssml">
 <h3>SSMD to SSML</h3>

@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "242f1bbed847fb34ee087d9d40c6e8c06fa35143"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -558,6 +558,15 @@ root must be a mapping.</p>
 <span class="w">  </span><span class="nt">sentence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250ms</span>
 <span class="w">  </span><span class="nt">paragraph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">700ms</span>
 <span class="nn">---</span>
+</pre></div>
+</div>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">title</span></code> front-matter key is portable document metadata. It must be a string
+and is preserved by formatting and authoring commands, but it is never spoken or
+included in plain-text or SSML speech output.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review podcast</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">Hello world.</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">voice</span></code> values in body directives and annotations are stable references. A reference can

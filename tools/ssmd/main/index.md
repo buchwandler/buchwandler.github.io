@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "242f1bbed847fb34ee087d9d40c6e8c06fa35143"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -659,6 +659,10 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/#basic-tts-integration">Basic TTS Integration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-8-0-unreleased">[v0.8.0] - Unreleased</a></li>
 </ul>
 </li>
 </ul>
