@@ -53,13 +53,14 @@ packages = [
   "text2epub==0.1.4",
   "booktx==0.4.1",
   "sphinxpress>=0.1.1",
+  "ssmd>=0.7.2",
 ]
 
 [book]
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd"]
 
 [pdf]
 builder = "weasyprint"
@@ -158,6 +159,18 @@ conf_dir = "../pykokoro/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/pykokoro"
 description = "A Python library for Kokoro TTS using ONNX runtime."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "ssmd"
+title = "ssmd"
+docs_root = "../ssmd/docs"
+conf_dir = "../ssmd/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/ssmd"
+description = "A lightweight alternative syntax for SSML (Speech Synthesis Markdown)."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

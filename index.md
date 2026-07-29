@@ -16,7 +16,7 @@ description: Open source tools for ebook text and conversion workflows
   </div>
   <div class="hero-panel" aria-label="buchwandler toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">7<span>focused tools</span></div>
+    <div class="hero-stat">8<span>focused tools</span></div>
     <p>File-based, reviewable state for ebook text and conversion pipelines.</p>
   </div>
 </section>

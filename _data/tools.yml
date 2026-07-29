@@ -28,3 +28,8 @@
   docs_url: /tools/pykokoro/
   repo_url: https://github.com/buchwandler/pykokoro
   pypi_url: https://pypi.org/project/pykokoro/
+- name: ssmd
+  description: A lightweight alternative syntax for SSML (Speech Synthesis Markdown).
+  docs_url: /tools/ssmd/
+  repo_url: https://github.com/buchwandler/ssmd
+  pypi_url: https://pypi.org/project/ssmd/

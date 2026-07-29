@@ -1,0 +1,677 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "ssmd-main",
+  "entries": [
+    {
+      "url": "/tools/ssmd/main/api/",
+      "title": "ssmd API Reference",
+      "snippet": "This page documents the public API of the SSMD library.\nThe primary class for creating and managing SSMD/SSML documents.",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "API Reference¶",
+          "text": "This page documents the public API of the SSMD library.",
+          "lower": "this page documents the public api of the ssmd library."
+        },
+        {
+          "anchor": "",
+          "heading": "Document¶",
+          "text": "The primary class for creating and managing SSMD/SSML documents.",
+          "lower": "the primary class for creating and managing ssmd/ssml documents."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/capabilities/",
+      "title": "ssmd TTS Engine Capabilities",
+      "snippet": "SSMD can automatically filter SSML features based on your TTS engine’s capabilities.\nThis ensures compatibility by converting unsupported fe …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "TTS Engine Capabilities¶",
+          "text": "SSMD can automatically filter SSML features based on your TTS engine’s capabilities.\nThis ensures compatibility by converting unsupported features to plain text.",
+          "lower": "ssmd can automatically filter ssml features based on your tts engine’s capabilities.\nthis ensures compatibility by converting unsupported features to plain text."
+        },
+        {
+          "anchor": "",
+          "heading": "Why Capabilities Matter¶",
+          "text": "Different TTS engines support different SSML features:\n\n\nBasic engines (pyttsx3, eSpeak) support limited SSML\n\n\nCloud services (Google, Azure, Amazon Polly) support full SSML\n\n\nCustom engines may have unique limitations\n\n\n\nWithout capability filtering, unsupported SSML tags could:\n\n\nBe ignored silently\n\n\nCause errors\n\n\nBe spoken as literal text\n\n\nBreak TTS playback\n\n\n\nSSMD solves this by automatically stripping unsupported features.",
+          "lower": "different tts engines support different ssml features:\n\n\nbasic engines (pyttsx3, espeak) support limited ssml\n\n\ncloud services (google, azure, amazon polly) support full ssml\n\n\ncustom engines may have unique limitations\n\n\n\nwithout capability filtering, unsupported ssml tags could:\n\n\nbe ignored silently\n\n\ncause errors\n\n\nbe spoken as literal text\n\n\nbreak tts playback\n\n\n\nssmd solves this by automatically stripping unsupported features."
+        },
+        {
+          "anchor": "",
+          "heading": "Using Capability Presets¶",
+          "text": "The easiest way is to use a built-in preset:\n\nfrom ssmd import Document\n\n# Configure for your TTS engine\ndoc = Document('*Hello* [world]{lang=\"fr\"}!', capabilities='espeak')\n\n# Unsupported features are automatically removed\nssml = doc.to_ssml()\n# eSpeak doesn't support emphasis or language\n# Output: <speak>Hello world!</speak>",
+          "lower": "the easiest way is to use a built-in preset:\n\nfrom ssmd import document\n\n# configure for your tts engine\ndoc = document('*hello* [world]{lang=\"fr\"}!', capabilities='espeak')\n\n# unsupported features are automatically removed\nssml = doc.to_ssml()\n# espeak doesn't support emphasis or language\n# output: <speak>hello world!</speak>"
+        },
+        {
+          "anchor": "",
+          "heading": "minimal¶",
+          "text": "Plain text only, no SSML features:\n\ndoc = Document(capabilities='minimal')\n\n\n\n\nSupported: None (all stripped to text)",
+          "lower": "plain text only, no ssml features:\n\ndoc = document(capabilities='minimal')\n\n\n\n\nsupported: none (all stripped to text)"
+        },
+        {
+          "anchor": "",
+          "heading": "pyttsx3¶",
+          "text": "For the pyttsx3 library (offline TTS):\n\ndoc = Document(capabilities='pyttsx3')\n\n\n\n\nSupported:\n\n\nProsody (volume, rate, pitch) - limited\n\n\nParagraphs\n\n\n\nNot supported:\n\n\nEmphasis\n\n\nBreaks\n\n\nLanguage switching\n\n\nPhonemes\n\n\nSay-as\n\n\nAudio\n\n\nMarks",
+          "lower": "for the pyttsx3 library (offline tts):\n\ndoc = document(capabilities='pyttsx3')\n\n\n\n\nsupported:\n\n\nprosody (volume, rate, pitch) - limited\n\n\nparagraphs\n\n\n\nnot supported:\n\n\nemphasis\n\n\nbreaks\n\n\nlanguage switching\n\n\nphonemes\n\n\nsay-as\n\n\naudio\n\n\nmarks"
+        },
+        {
+          "anchor": "",
+          "heading": "espeak¶",
+          "text": "For eSpeak/eSpeak-NG:\n\ndoc = Document(capabilities='espeak')\n\n\n\n\nSupported:\n\n\nBreaks (pauses)\n\n\nLanguage switching\n\n\nProsody (volume, rate, pitch)\n\n\nPhonemes (IPA and X-SAMPA)\n\n\nParagraphs\n\n\n\nNot supported:\n\n\nEmphasis\n\n\nSay-as\n\n\nAudio files\n\n\nMarks\n\n\nSubstitution",
+          "lower": "for espeak/espeak-ng:\n\ndoc = document(capabilities='espeak')\n\n\n\n\nsupported:\n\n\nbreaks (pauses)\n\n\nlanguage switching\n\n\nprosody (volume, rate, pitch)\n\n\nphonemes (ipa and x-sampa)\n\n\nparagraphs\n\n\n\nnot supported:\n\n\nemphasis\n\n\nsay-as\n\n\naudio files\n\n\nmarks\n\n\nsubstitution"
+        },
+        {
+          "anchor": "",
+          "heading": "google / azure / microsoft¶",
+          "text": "For cloud TTS services with full SSML support:\n\ndoc = Document(capabilities='google')\n# or\ndoc = Document(capabilities='azure')\n\n\n\n\nSupported: All standard SSML features\n\n\nEmphasis\n\n\nBreaks\n\n\nLanguage switching\n\n\nProsody\n\n\nPhonemes\n\n\nSay-as\n\n\nParagraphs\n\n\nMarks\n\n\nSubstitution\n\n\n\nNot supported:\n\n\nAudio files (varies by service)\n\n\nPlatform-specific extensions",
+          "lower": "for cloud tts services with full ssml support:\n\ndoc = document(capabilities='google')\n# or\ndoc = document(capabilities='azure')\n\n\n\n\nsupported: all standard ssml features\n\n\nemphasis\n\n\nbreaks\n\n\nlanguage switching\n\n\nprosody\n\n\nphonemes\n\n\nsay-as\n\n\nparagraphs\n\n\nmarks\n\n\nsubstitution\n\n\n\nnot supported:\n\n\naudio files (varies by service)\n\n\nplatform-specific extensions"
+        },
+        {
+          "anchor": "",
+          "heading": "polly / amazon¶",
+          "text": "For Amazon Polly with extensions:\n\ndoc = Document(capabilities='polly')\n\n\n\n\nSupported: All features including:\n\n\nAll standard SSML\n\n\nAmazon extensions (whisper, DRC)\n\n\nAudio files",
+          "lower": "for amazon polly with extensions:\n\ndoc = document(capabilities='polly')\n\n\n\n\nsupported: all features including:\n\n\nall standard ssml\n\n\namazon extensions (whisper, drc)\n\n\naudio files"
+        },
+        {
+          "anchor": "",
+          "heading": "full¶",
+          "text": "All features enabled (no filtering):\n\ndoc = Document(capabilities='full')\n\n\n\n\nUse this when you know your engine supports everything or want to test.",
+          "lower": "all features enabled (no filtering):\n\ndoc = document(capabilities='full')\n\n\n\n\nuse this when you know your engine supports everything or want to test."
+        },
+        {
+          "anchor": "",
+          "heading": "Capability Profiles and Linting¶",
+          "text": "Profiles describe which SSMD tags and attributes are supported without mutating output.\nUse them to validate input before conversion:\n\nfrom ssmd import get_profile, list_profiles, lint\n\nprofiles = list_profiles()\nprofile = get_profile(\"ssmd-core\")\nissues = lint(\"[Hello]{ext='whisper'}\", profile=\"kokoro\")\n\n\n\n\nProfiles are separate from runtime TTSCapabilities presets.",
+          "lower": "profiles describe which ssmd tags and attributes are supported without mutating output.\nuse them to validate input before conversion:\n\nfrom ssmd import get_profile, list_profiles, lint\n\nprofiles = list_profiles()\nprofile = get_profile(\"ssmd-core\")\nissues = lint(\"[hello]{ext='whisper'}\", profile=\"kokoro\")\n\n\n\n\nprofiles are separate from runtime ttscapabilities presets."
+        },
+        {
+          "anchor": "",
+          "heading": "Custom Capabilities¶",
+          "text": "Define exactly what your TTS engine supports:",
+          "lower": "define exactly what your tts engine supports:"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Example¶",
+          "text": "from ssmd import Document, TTSCapabilities\n\n# Create custom capability profile\ncaps = TTSCapabilities(\n    emphasis=False,      # No <emphasis> support\n    break_tags=True,     # Supports <break>\n    paragraph=True,      # Supports <p>\n    language=False,      # No language switching\n    prosody=True,        # Supports volume/rate/pitch\n    say_as=False,        # No <say-as>\n    audio=False,         # No audio files\n    mark=False,          # No markers\n    phoneme=False,       # No phonetic notation\n    substitution=False,  # No substitution\n)\n\ndoc = Document(capabilities=caps)",
+          "lower": "from ssmd import document, ttscapabilities\n\n# create custom capability profile\ncaps = ttscapabilities(\n    emphasis=false,      # no <emphasis> support\n    break_tags=true,     # supports <break>\n    paragraph=true,      # supports <p>\n    language=false,      # no language switching\n    prosody=true,        # supports volume/rate/pitch\n    say_as=false,        # no <say-as>\n    audio=false,         # no audio files\n    mark=false,          # no markers\n    phoneme=false,       # no phonetic notation\n    substitution=false,  # no substitution\n)\n\ndoc = document(capabilities=caps)"
+        },
+        {
+          "anchor": "",
+          "heading": "Partial Prosody Support¶",
+          "text": "Some engines support only certain prosody attributes:\n\nfrom ssmd import TTSCapabilities, ProsodySupport, Document\n\ncaps = TTSCapabilities(\n    prosody=ProsodySupport(\n        volume=True,     # Supports volume\n        rate=True,       # Supports rate\n        pitch=False,     # Does NOT support pitch\n    )\n)\n\ndoc = Document(capabilities=caps)\n\n# Pitch will be stripped, but volume and rate preserved\nssml = doc.to_ssml('[text]{volume=\"5\" rate=\"4\" pitch=\"5\"}')\n# → <prosody volume=\"x-loud\" rate=\"fast\">text</prosody>",
+          "lower": "some engines support only certain prosody attributes:\n\nfrom ssmd import ttscapabilities, prosodysupport, document\n\ncaps = ttscapabilities(\n    prosody=prosodysupport(\n        volume=true,     # supports volume\n        rate=true,       # supports rate\n        pitch=false,     # does not support pitch\n    )\n)\n\ndoc = document(capabilities=caps)\n\n# pitch will be stripped, but volume and rate preserved\nssml = doc.to_ssml('[text]{volume=\"5\" rate=\"4\" pitch=\"5\"}')\n# → <prosody volume=\"x-loud\" rate=\"fast\">text</prosody>"
+        },
+        {
+          "anchor": "",
+          "heading": "Extension Support¶",
+          "text": "Control platform-specific extensions:\n\ncaps = TTSCapabilities(\n    extensions={\n        'whisper': True,   # Amazon whisper effect\n        'drc': False,      # Dynamic range compression\n    }\n)\n\ndoc = Document(capabilities=caps)\n\nssml = doc.to_ssml('[secret]{ext=\"whisper\"}')\n# → <amazon:effect name=\"whispered\">secret</amazon:effect>",
+          "lower": "control platform-specific extensions:\n\ncaps = ttscapabilities(\n    extensions={\n        'whisper': true,   # amazon whisper effect\n        'drc': false,      # dynamic range compression\n    }\n)\n\ndoc = document(capabilities=caps)\n\nssml = doc.to_ssml('[secret]{ext=\"whisper\"}')\n# → <amazon:effect name=\"whispered\">secret</amazon:effect>"
+        },
+        {
+          "anchor": "",
+          "heading": "Capability Comparison¶",
+          "text": "Same input with different engines:",
+          "lower": "same input with different engines:"
+        },
+        {
+          "anchor": "",
+          "heading": "Input¶",
+          "text": "text = '*Hello* world... [this is loud]{volume=\"5\"}!'",
+          "lower": "text = '*hello* world... [this is loud]{volume=\"5\"}!'"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/changelog/",
+      "title": "ssmd Changelog",
+      "snippet": "",
+      "sections": []
+    },
+    {
+      "url": "/tools/ssmd/main/cli/",
+      "title": "ssmd Command Line Interface",
+      "snippet": "SSMD ships a command-line tool for creating, validating, converting, and formatting SSMD\nfiles. The CLI uses Typer/Click for command registr …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Command Line Interface¶",
+          "text": "SSMD ships a command-line tool for creating, validating, converting, and formatting SSMD\nfiles. The CLI uses Typer/Click for command registration and provides a root-level\n--json option for machine-readable output with stable success/error envelopes.\n\nAfter installing SSMD, the ssmd command is available:\n\npip install ssmd\nssmd --version\n\n\n\n\nYou can also run it as python -m ssmd.\n\n\nCommands\n\n\nExit codes",
+          "lower": "ssmd ships a command-line tool for creating, validating, converting, and formatting ssmd\nfiles. the cli uses typer/click for command registration and provides a root-level\n--json option for machine-readable output with stable success/error envelopes.\n\nafter installing ssmd, the ssmd command is available:\n\npip install ssmd\nssmd --version\n\n\n\n\nyou can also run it as python -m ssmd.\n\n\ncommands\n\n\nexit codes"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/examples/",
+      "title": "ssmd Examples",
+      "snippet": "This page provides practical examples of using SSMD in real-world scenarios.\nimport pyttsx3\nfrom ssmd import Document\n\n# Initialize TTS engi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Examples¶",
+          "text": "This page provides practical examples of using SSMD in real-world scenarios.",
+          "lower": "this page provides practical examples of using ssmd in real-world scenarios."
+        },
+        {
+          "anchor": "",
+          "heading": "pyttsx3 (Offline TTS)¶",
+          "text": "import pyttsx3\nfrom ssmd import Document\n\n# Initialize TTS engine\nengine = pyttsx3.init()\n\n# Create content with SSMD\ntext = \"\"\"\n# Welcome Message\n*Hello* and welcome!\nPlease ...500ms listen carefully.\nThis is [very fast]{rate=\"x-fast\"}.\n\"\"\"\n\n# Create document with pyttsx3 capabilities\ndoc = Document(text, capabilities='pyttsx3')\n\n# Convert to SSML\nssml = doc.to_ssml()\n\n# Speak (pyttsx3 handles SSML natively)\nengine.say(ssml)\nengine.runAndWait()",
+          "lower": "import pyttsx3\nfrom ssmd import document\n\n# initialize tts engine\nengine = pyttsx3.init()\n\n# create content with ssmd\ntext = \"\"\"\n# welcome message\n*hello* and welcome!\nplease ...500ms listen carefully.\nthis is [very fast]{rate=\"x-fast\"}.\n\"\"\"\n\n# create document with pyttsx3 capabilities\ndoc = document(text, capabilities='pyttsx3')\n\n# convert to ssml\nssml = doc.to_ssml()\n\n# speak (pyttsx3 handles ssml natively)\nengine.say(ssml)\nengine.runandwait()"
+        },
+        {
+          "anchor": "",
+          "heading": "Google Text-to-Speech¶",
+          "text": "from google.cloud import texttospeech\nfrom ssmd import Document\n\n# Initialize Google TTS client\nclient = texttospeech.TextToSpeechClient()\n\n# Create content\ntext = \"\"\"\n*Welcome* to our service.\n[Bonjour]{lang=\"fr\"} to our French users!\nPlease wait ...1s for the next message.\n\"\"\"\n\n# Create document with Google capabilities\ndoc = Document(text, capabilities='google')\n\n# Convert to SSML\nssml = doc.to_ssml()\n\n# Prepare TTS request\nsynthesis_input = texttospeech.SynthesisInput(ssml=ssml)\nvoice = texttospeech.VoiceSelectionParams(\n    language_code=\"en-US\",\n    name=\"en-US-Neural2-J\"\n)\naudio_config = texttospeech.AudioConfig(\n    audio_encoding=texttospeech.AudioEncoding.MP3\n)\n\n# Generate speech\nresponse = client.synthesize_speech(\n    input=synthesis_input,\n    voice=voice,\n    audio_config=au…",
+          "lower": "from google.cloud import texttospeech\nfrom ssmd import document\n\n# initialize google tts client\nclient = texttospeech.texttospeechclient()\n\n# create content\ntext = \"\"\"\n*welcome* to our service.\n[bonjour]{lang=\"fr\"} to our french users!\nplease wait ...1s for the next message.\n\"\"\"\n\n# create document with google capabilities\ndoc = document(text, capabilities='google')\n\n# convert to ssml\nssml = doc.to_ssml()\n\n# prepare tts request\nsynthesis_input = texttospeech.synthesisinput(ssml=ssml)\nvoice = texttospeech.voiceselectionparams(\n    language_code=\"en-us\",\n    name=\"en-us-neural2-j\"\n)\naudio_config = texttospeech.audioconfig(\n    audio_encoding=texttospeech.audioencoding.mp3\n)\n\n# generate speech\nresponse = client.synthesize_speech(\n    input=synthesis_input,\n    voice=voice,\n    audio_config=au…"
+        },
+        {
+          "anchor": "",
+          "heading": "Google TTS with Speaking Styles¶",
+          "text": "Google Cloud TTS supports speaking styles for Neural2 and Studio voices:\n\nfrom google.cloud import texttospeech\nfrom ssmd import Document\n\n# Configure Google TTS styles as extensions\ndoc = Document(config={\n    'extensions': {\n        'cheerful': lambda text: f'<google:style name=\"cheerful\">{text}</google:style>',\n        'calm': lambda text: f'<google:style name=\"calm\">{text}</google:style>',\n        'empathetic': lambda text: f'<google:style name=\"empathetic\">{text}</google:style>',\n        'apologetic': lambda text: f'<google:style name=\"apologetic\">{text}</google:style>',\n    }\n})\n\n# Build content with speaking styles\ndoc.add_sentence(\"[Welcome to our customer service!]{ext=\\\"cheerful\\\"}\")\ndoc.add_sentence(\"[We understand this must be frustrating.]{ext=\\\"empathetic\\\"}\")\ndoc.add_senten…",
+          "lower": "google cloud tts supports speaking styles for neural2 and studio voices:\n\nfrom google.cloud import texttospeech\nfrom ssmd import document\n\n# configure google tts styles as extensions\ndoc = document(config={\n    'extensions': {\n        'cheerful': lambda text: f'<google:style name=\"cheerful\">{text}</google:style>',\n        'calm': lambda text: f'<google:style name=\"calm\">{text}</google:style>',\n        'empathetic': lambda text: f'<google:style name=\"empathetic\">{text}</google:style>',\n        'apologetic': lambda text: f'<google:style name=\"apologetic\">{text}</google:style>',\n    }\n})\n\n# build content with speaking styles\ndoc.add_sentence(\"[welcome to our customer service!]{ext=\\\"cheerful\\\"}\")\ndoc.add_sentence(\"[we understand this must be frustrating.]{ext=\\\"empathetic\\\"}\")\ndoc.add_senten…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/",
+      "title": "SSMD - Speech Synthesis Markdown",
+      "snippet": "SSMD (Speech Synthesis Markdown) is a lightweight Python library that provides a\nhuman-friendly markdown-like syntax for creating SSML (Spee …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "SSMD - Speech Synthesis Markdown¶",
+          "text": "SSMD (Speech Synthesis Markdown) is a lightweight Python library that provides a\nhuman-friendly markdown-like syntax for creating SSML (Speech Synthesis Markup Language)\ndocuments. It’s designed to make TTS (Text-to-Speech) content more readable and\nmaintainable. See SPECIFICATION.md in the repo for the canonical syntax rules.",
+          "lower": "ssmd (speech synthesis markdown) is a lightweight python library that provides a\nhuman-friendly markdown-like syntax for creating ssml (speech synthesis markup language)\ndocuments. it’s designed to make tts (text-to-speech) content more readable and\nmaintainable. see specification.md in the repo for the canonical syntax rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Features¶",
+          "text": "✨ Markdown-like syntax - More intuitive than raw SSML\n\n🎯 Full SSML support - All major SSML features covered\n\n🔄 Bidirectional - Convert SSMD↔SSML or strip to plain text\n\n📊 Parser API - Extract structured data for custom TTS pipelines\n\n📝 TTS streaming - Iterate through sentences for real-time TTS\n\n🎛️ TTS capabilities - Auto-filter features based on engine support\n\n🎨 Extensible - Custom extensions for platform-specific features\n\n🧪 Type-safe - Full mypy type checking support",
+          "lower": "✨ markdown-like syntax - more intuitive than raw ssml\n\n🎯 full ssml support - all major ssml features covered\n\n🔄 bidirectional - convert ssmd↔ssml or strip to plain text\n\n📊 parser api - extract structured data for custom tts pipelines\n\n📝 tts streaming - iterate through sentences for real-time tts\n\n🎛️ tts capabilities - auto-filter features based on engine support\n\n🎨 extensible - custom extensions for platform-specific features\n\n🧪 type-safe - full mypy type checking support"
+        },
+        {
+          "anchor": "",
+          "heading": "Quick Example¶",
+          "text": "import ssmd\n\n# Convert SSMD to SSML\nssml = ssmd.to_ssml(\"Hello *world*!\")\n# → <speak>Hello <emphasis>world</emphasis>!</speak>\n\n# Convert SSML back to SSMD\nssmd_text = ssmd.from_ssml('<speak><emphasis>Hello</emphasis></speak>')\n# → *Hello*\n\n# Strip markup for plain text\nplain = ssmd.to_text(\"Hello *world* @marker!\")\n# → Hello world!\n\n# Or use the Parser API for structured data\nfrom ssmd import parse_paragraphs\n\nfor paragraph in parse_paragraphs(\"Hello *world*!\"):\n    for sentence in paragraph.sentences:\n        for seg in sentence.segments:\n            print(f\"Text: {seg.text}, Emphasis: {seg.emphasis}\")",
+          "lower": "import ssmd\n\n# convert ssmd to ssml\nssml = ssmd.to_ssml(\"hello *world*!\")\n# → <speak>hello <emphasis>world</emphasis>!</speak>\n\n# convert ssml back to ssmd\nssmd_text = ssmd.from_ssml('<speak><emphasis>hello</emphasis></speak>')\n# → *hello*\n\n# strip markup for plain text\nplain = ssmd.to_text(\"hello *world* @marker!\")\n# → hello world!\n\n# or use the parser api for structured data\nfrom ssmd import parse_paragraphs\n\nfor paragraph in parse_paragraphs(\"hello *world*!\"):\n    for sentence in paragraph.sentences:\n        for seg in sentence.segments:\n            print(f\"text: {seg.text}, emphasis: {seg.emphasis}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Table of Contents¶",
+          "text": "User Guide\n\n\nInstallation\nRequirements\n\nInstalling from PyPI\n\nInstalling from Source\n\nDevelopment Installation\n\nVerifying Installation\n\nDependencies\n\nUpgrading\n\nUninstalling\n\n\n\n\nQuick Start\nBasic Conversion\n\nUsing the Document API\n\nTTS Streaming\n\nDocument Editing\n\nAdvanced Document Operations\n\nWorking with TTS Engines\n\nCommon Patterns\n\nNext Steps\n\n\n\n\nCommand Line Interface\nExit codes\n\n\n\n\nSSMD Syntax Reference\nYAML front matter\n\nText and Emphasis\n\n\n\n\nTTS Engine Capabilities\nWhy Capabilities Matter\n\nUsing Capability Presets\n\nCapability Profiles and Linting\n\nCustom Capabilities\n\nCapability Comparison\n\n\n\n\nSpans\nCoordinate system\n\nExamples\n\nSentence offsets\n\n\n\n\nParser API\nWhen to Use the Parser\n\nOverview\n\nParser Functions\n\n\n\n\nSSML to SSMD Conversion\nBasic Conversion\n\nSupported SSML Elements\n\nD…",
+          "lower": "user guide\n\n\ninstallation\nrequirements\n\ninstalling from pypi\n\ninstalling from source\n\ndevelopment installation\n\nverifying installation\n\ndependencies\n\nupgrading\n\nuninstalling\n\n\n\n\nquick start\nbasic conversion\n\nusing the document api\n\ntts streaming\n\ndocument editing\n\nadvanced document operations\n\nworking with tts engines\n\ncommon patterns\n\nnext steps\n\n\n\n\ncommand line interface\nexit codes\n\n\n\n\nssmd syntax reference\nyaml front matter\n\ntext and emphasis\n\n\n\n\ntts engine capabilities\nwhy capabilities matter\n\nusing capability presets\n\ncapability profiles and linting\n\ncustom capabilities\n\ncapability comparison\n\n\n\n\nspans\ncoordinate system\n\nexamples\n\nsentence offsets\n\n\n\n\nparser api\nwhen to use the parser\n\noverview\n\nparser functions\n\n\n\n\nssml to ssmd conversion\nbasic conversion\n\nsupported ssml elements\n\nd…"
+        },
+        {
+          "anchor": "",
+          "heading": "Indices and tables¶",
+          "text": "Index\n\n\nModule Index\n\n\nSearch Page",
+          "lower": "index\n\n\nmodule index\n\n\nsearch page"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/installation/",
+      "title": "ssmd Installation",
+      "snippet": "Python 3.10 or higher\n\n\npip (Python package installer)\nThe easiest way to install SSMD is using pip:\n\npip install ssmd\n\n\n\n\nThis will install …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Requirements¶",
+          "text": "Python 3.10 or higher\n\n\npip (Python package installer)",
+          "lower": "python 3.10 or higher\n\n\npip (python package installer)"
+        },
+        {
+          "anchor": "",
+          "heading": "Installing from PyPI¶",
+          "text": "The easiest way to install SSMD is using pip:\n\npip install ssmd\n\n\n\n\nThis will install the latest stable release from PyPI.",
+          "lower": "the easiest way to install ssmd is using pip:\n\npip install ssmd\n\n\n\n\nthis will install the latest stable release from pypi."
+        },
+        {
+          "anchor": "",
+          "heading": "Installing from Source¶",
+          "text": "If you want to install from source or contribute to development:\n\n\nClone the repository:\n\n\n\ngit clone https://github.com/buchwandler/ssmd.git\ncd ssmd\n\n\n\n\n\nInstall in development mode:\n\n\n\npip install -e .\n\n\n\n\nThis will install SSMD in editable mode, so any changes you make to the source code will\nbe immediately reflected.",
+          "lower": "if you want to install from source or contribute to development:\n\n\nclone the repository:\n\n\n\ngit clone https://github.com/buchwandler/ssmd.git\ncd ssmd\n\n\n\n\n\ninstall in development mode:\n\n\n\npip install -e .\n\n\n\n\nthis will install ssmd in editable mode, so any changes you make to the source code will\nbe immediately reflected."
+        },
+        {
+          "anchor": "",
+          "heading": "Development Installation¶",
+          "text": "For development with all testing and documentation tools:\n\n# Clone and enter directory\ngit clone https://github.com/buchwandler/ssmd.git\ncd ssmd\n\n# Install with development dependencies\npip install -e \".[dev]\"\n\n# Install pre-commit hooks\npre-commit install\n\n\n\n\nThis installs additional dependencies for:\n\n\nTesting (pytest, pytest-cov)\n\n\nType checking (mypy)\n\n\nLinting and formatting (ruff)\n\n\nDocumentation building (Sphinx)\n\n\n\nThe optional ssml-maker integration tests are installed separately with\npip install -e \".[integration]\".",
+          "lower": "for development with all testing and documentation tools:\n\n# clone and enter directory\ngit clone https://github.com/buchwandler/ssmd.git\ncd ssmd\n\n# install with development dependencies\npip install -e \".[dev]\"\n\n# install pre-commit hooks\npre-commit install\n\n\n\n\nthis installs additional dependencies for:\n\n\ntesting (pytest, pytest-cov)\n\n\ntype checking (mypy)\n\n\nlinting and formatting (ruff)\n\n\ndocumentation building (sphinx)\n\n\n\nthe optional ssml-maker integration tests are installed separately with\npip install -e \".[integration]\"."
+        },
+        {
+          "anchor": "",
+          "heading": "Verifying Installation¶",
+          "text": "To verify that SSMD is installed correctly:\n\nimport ssmd\n\n# Check version\nprint(ssmd.__version__)\n\n# Quick test\nresult = ssmd.to_ssml(\"Hello *world*!\")\nprint(result)\n# Should output: <speak>Hello <emphasis>world</emphasis>!</speak>",
+          "lower": "to verify that ssmd is installed correctly:\n\nimport ssmd\n\n# check version\nprint(ssmd.__version__)\n\n# quick test\nresult = ssmd.to_ssml(\"hello *world*!\")\nprint(result)\n# should output: <speak>hello <emphasis>world</emphasis>!</speak>"
+        },
+        {
+          "anchor": "",
+          "heading": "Dependencies¶",
+          "text": "SSMD has minimal runtime dependencies:\n\n\nphrasplit - sentence detection and splitting\n\n\npyyaml - YAML front matter parsing\n\n\n\nOptional dependencies for development:\n\n\nTesting: pytest, pytest-cov\n\n\nType checking: mypy\n\n\nLinting: ruff\n\n\nDocumentation: Sphinx, sphinx-rtd-theme\n\n\nBuild: setuptools-scm, build",
+          "lower": "ssmd has minimal runtime dependencies:\n\n\nphrasplit - sentence detection and splitting\n\n\npyyaml - yaml front matter parsing\n\n\n\noptional dependencies for development:\n\n\ntesting: pytest, pytest-cov\n\n\ntype checking: mypy\n\n\nlinting: ruff\n\n\ndocumentation: sphinx, sphinx-rtd-theme\n\n\nbuild: setuptools-scm, build"
+        },
+        {
+          "anchor": "",
+          "heading": "Upgrading¶",
+          "text": "To upgrade to the latest version:\n\npip install --upgrade ssmd",
+          "lower": "to upgrade to the latest version:\n\npip install --upgrade ssmd"
+        },
+        {
+          "anchor": "",
+          "heading": "Uninstalling¶",
+          "text": "To remove SSMD from your system:\n\npip uninstall ssmd",
+          "lower": "to remove ssmd from your system:\n\npip uninstall ssmd"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/parser/",
+      "title": "ssmd Parser API",
+      "snippet": "The SSMD Parser provides an alternative to SSML generation by extracting structured data\nfrom SSMD text. This is useful when you need progra …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Parser API¶",
+          "text": "The SSMD Parser provides an alternative to SSML generation by extracting structured data\nfrom SSMD text. This is useful when you need programmatic control over SSMD features or\nwant to build custom TTS pipelines.",
+          "lower": "the ssmd parser provides an alternative to ssml generation by extracting structured data\nfrom ssmd text. this is useful when you need programmatic control over ssmd features or\nwant to build custom tts pipelines."
+        },
+        {
+          "anchor": "",
+          "heading": "When to Use the Parser¶",
+          "text": "Use the parser API when you need to:\n\n\nProcess SSMD features programmatically - Extract and handle features individually\n\n\nBuild custom TTS pipelines - Implement your own text-to-speech workflow\n\n\nHandle text transformations - Process say-as, substitution, and phoneme\nconversions\n\n\nCreate multi-voice dialogue systems - Build voice-specific processing pipelines\n\n\nAnalyze SSMD content - Extract metadata and features without generating SSML",
+          "lower": "use the parser api when you need to:\n\n\nprocess ssmd features programmatically - extract and handle features individually\n\n\nbuild custom tts pipelines - implement your own text-to-speech workflow\n\n\nhandle text transformations - process say-as, substitution, and phoneme\nconversions\n\n\ncreate multi-voice dialogue systems - build voice-specific processing pipelines\n\n\nanalyze ssmd content - extract metadata and features without generating ssml"
+        },
+        {
+          "anchor": "",
+          "heading": "Overview¶",
+          "text": "The parser extracts SSMD markup into structured segments, allowing you to process each\nfeature individually instead of generating a complete SSML document.\n\n from ssmd import parse_paragraphs\n\n script = \"\"\"\n <div voice=\"sarah\">\n Hello! Call [+1-555-0123]{as=\"telephone\"} for info.\n </div>\n\n <div voice=\"michael\">\n Thanks *Sarah*!\n </div>\n \"\"\"\n\n # Parse into structured paragraphs\nfor paragraph in parse_paragraphs(script):\n    for sentence in paragraph.sentences:\n        # Get voice configuration\n        voice_name = sentence.voice.name if sentence.voice else \"default\"\n\n        # Build complete text from segments\n        full_text = \"\"\n        for seg in sentence.segments:\n            # Handle text transformations\n            if seg.say_as:\n                text = convert_say_as(seg.text, seg.…",
+          "lower": "the parser extracts ssmd markup into structured segments, allowing you to process each\nfeature individually instead of generating a complete ssml document.\n\n from ssmd import parse_paragraphs\n\n script = \"\"\"\n <div voice=\"sarah\">\n hello! call [+1-555-0123]{as=\"telephone\"} for info.\n </div>\n\n <div voice=\"michael\">\n thanks *sarah*!\n </div>\n \"\"\"\n\n # parse into structured paragraphs\nfor paragraph in parse_paragraphs(script):\n    for sentence in paragraph.sentences:\n        # get voice configuration\n        voice_name = sentence.voice.name if sentence.voice else \"default\"\n\n        # build complete text from segments\n        full_text = \"\"\n        for seg in sentence.segments:\n            # handle text transformations\n            if seg.say_as:\n                text = convert_say_as(seg.text, seg.…"
+        },
+        {
+          "anchor": "",
+          "heading": "parse_paragraphs¶",
+          "text": "Parse SSMD text into structured paragraphs with sentences and segments.",
+          "lower": "parse ssmd text into structured paragraphs with sentences and segments."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/quickstart/",
+      "title": "ssmd Quick Start",
+      "snippet": "This guide will help you get started with SSMD quickly.\nThe simplest way to use SSMD is with the convenience functions:\nimport ssmd\n\n# Conve …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quick Start¶",
+          "text": "This guide will help you get started with SSMD quickly.",
+          "lower": "this guide will help you get started with ssmd quickly."
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Conversion¶",
+          "text": "The simplest way to use SSMD is with the convenience functions:",
+          "lower": "the simplest way to use ssmd is with the convenience functions:"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD to SSML¶",
+          "text": "import ssmd\n\n# Convert SSMD markup to SSML\nssml = ssmd.to_ssml(\"Hello *world*!\")\nprint(ssml)\n# Output: <speak>Hello <emphasis>world</emphasis>!</speak>\n\n# More complex example\nssml = ssmd.to_ssml(\"\"\"\n# Welcome\nHello *world*!\nThis is a ...500ms pause.\n[Bonjour]{lang=\"fr\"} everyone!\n\"\"\")",
+          "lower": "import ssmd\n\n# convert ssmd markup to ssml\nssml = ssmd.to_ssml(\"hello *world*!\")\nprint(ssml)\n# output: <speak>hello <emphasis>world</emphasis>!</speak>\n\n# more complex example\nssml = ssmd.to_ssml(\"\"\"\n# welcome\nhello *world*!\nthis is a ...500ms pause.\n[bonjour]{lang=\"fr\"} everyone!\n\"\"\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Strip Markup¶",
+          "text": "Remove all SSMD markup to get plain text:\n\nimport ssmd\n\nplain = ssmd.to_text(\"Hello *world* @marker!\")\nprint(plain)\n# Output: Hello world!",
+          "lower": "remove all ssmd markup to get plain text:\n\nimport ssmd\n\nplain = ssmd.to_text(\"hello *world* @marker!\")\nprint(plain)\n# output: hello world!"
+        },
+        {
+          "anchor": "",
+          "heading": "SSML to SSMD¶",
+          "text": "Convert SSML back to SSMD format:\n\nimport ssmd\n\nssml = '<speak><emphasis>Hello</emphasis> world</speak>'\nssmd_text = ssmd.from_ssml(ssml)\nprint(ssmd_text)\n# Output: *Hello* world",
+          "lower": "convert ssml back to ssmd format:\n\nimport ssmd\n\nssml = '<speak><emphasis>hello</emphasis> world</speak>'\nssmd_text = ssmd.from_ssml(ssml)\nprint(ssmd_text)\n# output: *hello* world"
+        },
+        {
+          "anchor": "",
+          "heading": "Using the Document API¶",
+          "text": "For building and managing TTS content, use the Document class:",
+          "lower": "for building and managing tts content, use the document class:"
+        },
+        {
+          "anchor": "",
+          "heading": "Creating Documents¶",
+          "text": "from ssmd import Document\n\n# Create an empty document\ndoc = Document()\n\n# Create with initial content\ndoc = Document(\"Hello *world*!\")\n\n# Create with configuration\ndoc = Document(\n    config={'auto_sentence_tags': True},\n    capabilities='pyttsx3'\n)",
+          "lower": "from ssmd import document\n\n# create an empty document\ndoc = document()\n\n# create with initial content\ndoc = document(\"hello *world*!\")\n\n# create with configuration\ndoc = document(\n    config={'auto_sentence_tags': true},\n    capabilities='pyttsx3'\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Building Documents¶",
+          "text": "from ssmd import Document\n\n# Build incrementally\ndoc = Document()\ndoc.add_sentence(\"Hello and *welcome*!\")\ndoc.add_sentence(\"This is SSMD.\")\ndoc.add_paragraph(\"Starting a new paragraph.\")\n\n# Method chaining\ndoc = Document() \\\n    .add(\"Hello \") \\\n    .add(\"*world*!\") \\\n    .add_sentence(\"Next sentence.\")",
+          "lower": "from ssmd import document\n\n# build incrementally\ndoc = document()\ndoc.add_sentence(\"hello and *welcome*!\")\ndoc.add_sentence(\"this is ssmd.\")\ndoc.add_paragraph(\"starting a new paragraph.\")\n\n# method chaining\ndoc = document() \\\n    .add(\"hello \") \\\n    .add(\"*world*!\") \\\n    .add_sentence(\"next sentence.\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Exporting Documents¶",
+          "text": "from ssmd import Document\n\ndoc = Document(\"Hello *world*!\")\n\n# Export to different formats\nssml = doc.to_ssml()      # SSML XML\nmarkdown = doc.to_ssmd()  # SSMD markdown\ntext = doc.to_text()      # Plain text\n\n# Access properties\nprint(doc.ssmd)           # Raw SSMD content\nprint(len(doc))           # Number of sentences\nprint(len(list(doc.paragraphs())))  # Number of paragraphs",
+          "lower": "from ssmd import document\n\ndoc = document(\"hello *world*!\")\n\n# export to different formats\nssml = doc.to_ssml()      # ssml xml\nmarkdown = doc.to_ssmd()  # ssmd markdown\ntext = doc.to_text()      # plain text\n\n# access properties\nprint(doc.ssmd)           # raw ssmd content\nprint(len(doc))           # number of sentences\nprint(len(list(doc.paragraphs())))  # number of paragraphs"
+        },
+        {
+          "anchor": "",
+          "heading": "TTS Streaming¶",
+          "text": "Iterate through documents sentence-by-sentence for TTS:\n\nfrom ssmd import Document\n\n# Create document\ndoc = Document(config={'auto_sentence_tags': True})\n\n# Build content\ndoc.add_paragraph(\"# Chapter 1\")\ndoc.add_sentence(\"Welcome to SSMD!\")\ndoc.add_sentence(\"This is the first sentence.\")\ndoc.add_sentence(\"This is the second sentence.\")\ndoc.add_paragraph(\"# Chapter 2\")\ndoc.add_sentence(\"Here's another chapter.\")\n\n# Iterate through sentences\nfor i, sentence in enumerate(doc.sentences(), 1):\n    print(f\"Sentence {i}: {sentence}\")\n    # Your TTS engine here:\n    # tts_engine.speak(sentence)\n\n# Access specific sentences\nsentence_count = len(list(doc.sentences()))\nprint(f\"Total sentences: {sentence_count}\")\nprint(f\"Total paragraphs: {len(list(doc.paragraphs()))}\")\nprint(f\"First: {doc[0]}\")\nprin…",
+          "lower": "iterate through documents sentence-by-sentence for tts:\n\nfrom ssmd import document\n\n# create document\ndoc = document(config={'auto_sentence_tags': true})\n\n# build content\ndoc.add_paragraph(\"# chapter 1\")\ndoc.add_sentence(\"welcome to ssmd!\")\ndoc.add_sentence(\"this is the first sentence.\")\ndoc.add_sentence(\"this is the second sentence.\")\ndoc.add_paragraph(\"# chapter 2\")\ndoc.add_sentence(\"here's another chapter.\")\n\n# iterate through sentences\nfor i, sentence in enumerate(doc.sentences(), 1):\n    print(f\"sentence {i}: {sentence}\")\n    # your tts engine here:\n    # tts_engine.speak(sentence)\n\n# access specific sentences\nsentence_count = len(list(doc.sentences()))\nprint(f\"total sentences: {sentence_count}\")\nprint(f\"total paragraphs: {len(list(doc.paragraphs()))}\")\nprint(f\"first: {doc[0]}\")\nprin…"
+        },
+        {
+          "anchor": "",
+          "heading": "Document Editing¶",
+          "text": "Documents are mutable and support list-like operations:\n\nfrom ssmd import Document\n\ndoc = Document(\"First. Second. Third.\")\n\n# Edit sentences\ndoc[0] = \"Modified first sentence.\"\ndel doc[1]  # Remove second sentence\n\n# String operations\ndoc.replace(\"sentence\", \"line\")\n\n# Insert content\ndoc.insert(0, \"New opening sentence.\")\n\n# Clear all content\ndoc.clear()",
+          "lower": "documents are mutable and support list-like operations:\n\nfrom ssmd import document\n\ndoc = document(\"first. second. third.\")\n\n# edit sentences\ndoc[0] = \"modified first sentence.\"\ndel doc[1]  # remove second sentence\n\n# string operations\ndoc.replace(\"sentence\", \"line\")\n\n# insert content\ndoc.insert(0, \"new opening sentence.\")\n\n# clear all content\ndoc.clear()"
+        },
+        {
+          "anchor": "",
+          "heading": "Advanced Document Operations¶",
+          "text": "from ssmd import Document\n\n# Load from SSML\ndoc = Document.from_ssml('<speak><emphasis>Hello</emphasis></speak>')\n\n# Merge documents\ndoc1 = Document(\"First document.\")\ndoc2 = Document(\"Second document.\")\ndoc1.merge(doc2, separator=\"\\n\\n\")\n\n# Split into sentences\nsentences = doc.split()  # Returns list of Document objects\n\n# Iterate with Document objects\nfor sent_doc in doc.sentences(as_documents=True):\n    ssml = sent_doc.to_ssml()\n    ssmd = sent_doc.to_ssmd()",
+          "lower": "from ssmd import document\n\n# load from ssml\ndoc = document.from_ssml('<speak><emphasis>hello</emphasis></speak>')\n\n# merge documents\ndoc1 = document(\"first document.\")\ndoc2 = document(\"second document.\")\ndoc1.merge(doc2, separator=\"\\n\\n\")\n\n# split into sentences\nsentences = doc.split()  # returns list of document objects\n\n# iterate with document objects\nfor sent_doc in doc.sentences(as_documents=true):\n    ssml = sent_doc.to_ssml()\n    ssmd = sent_doc.to_ssmd()"
+        },
+        {
+          "anchor": "",
+          "heading": "Working with TTS Engines¶",
+          "text": "Filter output based on engine capabilities:",
+          "lower": "filter output based on engine capabilities:"
+        },
+        {
+          "anchor": "",
+          "heading": "Using Presets¶",
+          "text": "from ssmd import Document\n\n# Use preset for eSpeak (limited SSML support)\ndoc = Document('*Hello* [world]{lang=\"fr\"}!', capabilities='espeak')\nssml = doc.to_ssml()\n# eSpeak doesn't support emphasis or language switching\n# Output: <speak>Hello world!</speak>\n\n# Use preset for Google TTS (full support)\ndoc = Document('*Hello* [world]{lang=\"fr\"}!', capabilities='google')\nssml = doc.to_ssml()\n# Output: <speak><emphasis>Hello</emphasis> <lang xml:lang=\"fr-FR\">world</lang>!</speak>\n\n\n\n\nAvailable presets:\n\n\nminimal - Plain text only\n\n\npyttsx3 - Basic prosody only\n\n\nespeak - Moderate support (breaks, prosody, phonemes)\n\n\ngoogle / azure - Full SSML support\n\n\npolly / amazon - Full + Amazon extensions\n\n\nfull - All features enabled",
+          "lower": "from ssmd import document\n\n# use preset for espeak (limited ssml support)\ndoc = document('*hello* [world]{lang=\"fr\"}!', capabilities='espeak')\nssml = doc.to_ssml()\n# espeak doesn't support emphasis or language switching\n# output: <speak>hello world!</speak>\n\n# use preset for google tts (full support)\ndoc = document('*hello* [world]{lang=\"fr\"}!', capabilities='google')\nssml = doc.to_ssml()\n# output: <speak><emphasis>hello</emphasis> <lang xml:lang=\"fr-fr\">world</lang>!</speak>\n\n\n\n\navailable presets:\n\n\nminimal - plain text only\n\n\npyttsx3 - basic prosody only\n\n\nespeak - moderate support (breaks, prosody, phonemes)\n\n\ngoogle / azure - full ssml support\n\n\npolly / amazon - full + amazon extensions\n\n\nfull - all features enabled"
+        },
+        {
+          "anchor": "",
+          "heading": "Custom Capabilities¶",
+          "text": "from ssmd import Document, TTSCapabilities\n\n# Define exactly what your TTS engine supports\ncaps = TTSCapabilities(\n    emphasis=True,\n    break_tags=True,\n    prosody=False,  # No prosody support\n    language=True\n)\n\ndoc = Document(\"*Hello* world!\", capabilities=caps)",
+          "lower": "from ssmd import document, ttscapabilities\n\n# define exactly what your tts engine supports\ncaps = ttscapabilities(\n    emphasis=true,\n    break_tags=true,\n    prosody=false,  # no prosody support\n    language=true\n)\n\ndoc = document(\"*hello* world!\", capabilities=caps)"
+        },
+        {
+          "anchor": "",
+          "heading": "Emphasis and Stress¶",
+          "text": "ssmd.to_ssml(\"This is *important*!\")\nssmd.to_ssml(\"This is **very important**!\")",
+          "lower": "ssmd.to_ssml(\"this is *important*!\")\nssmd.to_ssml(\"this is **very important**!\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Pauses and Breaks¶",
+          "text": "# Specific duration (required - bare ... is not a break)\nssmd.to_ssml(\"Hello ...500ms world\")\nssmd.to_ssml(\"Hello ...2s world\")\nssmd.to_ssml(\"Hello ...1s world\")  # 1 second\n\n# Strength-based\nssmd.to_ssml(\"Hello ...c world\")  # comma\nssmd.to_ssml(\"Hello ...s world\")  # sentence\nssmd.to_ssml(\"Hello ...p world\")  # paragraph\nssmd.to_ssml(\"Hello ...n world\")  # none/no break",
+          "lower": "# specific duration (required - bare ... is not a break)\nssmd.to_ssml(\"hello ...500ms world\")\nssmd.to_ssml(\"hello ...2s world\")\nssmd.to_ssml(\"hello ...1s world\")  # 1 second\n\n# strength-based\nssmd.to_ssml(\"hello ...c world\")  # comma\nssmd.to_ssml(\"hello ...s world\")  # sentence\nssmd.to_ssml(\"hello ...p world\")  # paragraph\nssmd.to_ssml(\"hello ...n world\")  # none/no break"
+        },
+        {
+          "anchor": "",
+          "heading": "Voice Control¶",
+          "text": "# Volume\nssmd.to_ssml('[loud]{volume=\"loud\"}')\nssmd.to_ssml('[very loud]{volume=\"x-loud\"}')\nssmd.to_ssml('[soft]{volume=\"soft\"}')\n\n# Speed\nssmd.to_ssml('[fast]{rate=\"fast\"}')\nssmd.to_ssml('[very fast]{rate=\"x-fast\"}')\nssmd.to_ssml('[slow]{rate=\"slow\"}')\n\n# Pitch\nssmd.to_ssml('[high]{pitch=\"high\"}')\nssmd.to_ssml('[very high]{pitch=\"x-high\"}')\nssmd.to_ssml('[low]{pitch=\"low\"}')",
+          "lower": "# volume\nssmd.to_ssml('[loud]{volume=\"loud\"}')\nssmd.to_ssml('[very loud]{volume=\"x-loud\"}')\nssmd.to_ssml('[soft]{volume=\"soft\"}')\n\n# speed\nssmd.to_ssml('[fast]{rate=\"fast\"}')\nssmd.to_ssml('[very fast]{rate=\"x-fast\"}')\nssmd.to_ssml('[slow]{rate=\"slow\"}')\n\n# pitch\nssmd.to_ssml('[high]{pitch=\"high\"}')\nssmd.to_ssml('[very high]{pitch=\"x-high\"}')\nssmd.to_ssml('[low]{pitch=\"low\"}')"
+        },
+        {
+          "anchor": "",
+          "heading": "Language Switching¶",
+          "text": "ssmd.to_ssml('[Bonjour]{lang=\"fr\"} everyone!')\nssmd.to_ssml('[Hola]{lang=\"es-MX\"} amigos!')\nssmd.to_ssml('[Hello]{lang=\"en-GB\"} there!')",
+          "lower": "ssmd.to_ssml('[bonjour]{lang=\"fr\"} everyone!')\nssmd.to_ssml('[hola]{lang=\"es-mx\"} amigos!')\nssmd.to_ssml('[hello]{lang=\"en-gb\"} there!')"
+        },
+        {
+          "anchor": "",
+          "heading": "Phonetic Pronunciation¶",
+          "text": "ssmd.to_ssml('[tomato]{ph=\"təˈmeɪtoʊ\"}')\nssmd.to_ssml('[hello]{ipa=\"həˈloʊ\"}')",
+          "lower": "ssmd.to_ssml('[tomato]{ph=\"təˈmeɪtoʊ\"}')\nssmd.to_ssml('[hello]{ipa=\"həˈloʊ\"}')"
+        },
+        {
+          "anchor": "",
+          "heading": "Next Steps¶",
+          "text": "Read the complete SSMD Syntax Reference reference\n\n\nLearn about TTS Engine Capabilities filtering\n\n\nExplore Examples for real-world use cases\n\n\nCheck the API Reference documentation for advanced usage",
+          "lower": "read the complete ssmd syntax reference reference\n\n\nlearn about tts engine capabilities filtering\n\n\nexplore examples for real-world use cases\n\n\ncheck the api reference documentation for advanced usage"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/spans/",
+      "title": "ssmd Spans",
+      "snippet": "SSMD spans report offsets in the cleaned text returned by parse_spans. The coordinate\nsystem matches ParseSpansResult.clean_text after marku …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Spans¶",
+          "text": "SSMD spans report offsets in the cleaned text returned by parse_spans. The coordinate\nsystem matches ParseSpansResult.clean_text after markup is removed and placeholders\nare unescaped.",
+          "lower": "ssmd spans report offsets in the cleaned text returned by parse_spans. the coordinate\nsystem matches parsespansresult.clean_text after markup is removed and placeholders\nare unescaped."
+        },
+        {
+          "anchor": "",
+          "heading": "Coordinate system¶",
+          "text": "Offsets refer to character indices in clean_text only.\n\n\nMarkup like *, [text]{...}, and <div ...> is removed before offsets are\ncomputed.\n\n\nEscaping via escape_ssmd_syntax() is reversible but not length-preserving; do not\nuse offsets from escaped text.",
+          "lower": "offsets refer to character indices in clean_text only.\n\n\nmarkup like *, [text]{...}, and <div ...> is removed before offsets are\ncomputed.\n\n\nescaping via escape_ssmd_syntax() is reversible but not length-preserving; do not\nuse offsets from escaped text."
+        },
+        {
+          "anchor": "",
+          "heading": "Examples¶",
+          "text": "import ssmd\n\nresult = ssmd.parse_spans(\"Hello [world]{lang='en'}\")\nprint(result.clean_text)  # \"Hello world\"\nprint(result.annotations[0])",
+          "lower": "import ssmd\n\nresult = ssmd.parse_spans(\"hello [world]{lang='en'}\")\nprint(result.clean_text)  # \"hello world\"\nprint(result.annotations[0])"
+        },
+        {
+          "anchor": "",
+          "heading": "Sentence offsets¶",
+          "text": "Use iter_sentences_spans() to align sentence text with clean_text:\n\nfor sentence, start, end in ssmd.iter_sentences_spans(\"Hello *world*. Next.\"):\n    print(sentence, start, end)",
+          "lower": "use iter_sentences_spans() to align sentence text with clean_text:\n\nfor sentence, start, end in ssmd.iter_sentences_spans(\"hello *world*. next.\"):\n    print(sentence, start, end)"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/ssml_conversion/",
+      "title": "ssmd SSML to SSMD Conversion",
+      "snippet": "SSMD supports bidirectional conversion: you can convert SSML back to SSMD format. This\nis useful for editing existing SSML, migrating from o …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "SSML to SSMD Conversion¶",
+          "text": "SSMD supports bidirectional conversion: you can convert SSML back to SSMD format. This\nis useful for editing existing SSML, migrating from other tools, or creating round-trip\nworkflows.",
+          "lower": "ssmd supports bidirectional conversion: you can convert ssml back to ssmd format. this\nis useful for editing existing ssml, migrating from other tools, or creating round-trip\nworkflows."
+        },
+        {
+          "anchor": "",
+          "heading": "Using the Convenience Function¶",
+          "text": "import ssmd\n\n# Convert SSML to SSMD\nssml = '<speak><emphasis>Hello</emphasis> world</speak>'\nssmd_text = ssmd.from_ssml(ssml)\nprint(ssmd_text)\n# Output: *Hello* world",
+          "lower": "import ssmd\n\n# convert ssml to ssmd\nssml = '<speak><emphasis>hello</emphasis> world</speak>'\nssmd_text = ssmd.from_ssml(ssml)\nprint(ssmd_text)\n# output: *hello* world"
+        },
+        {
+          "anchor": "",
+          "heading": "Using the Document Class¶",
+          "text": "from ssmd import Document\n\nssml = '<speak><emphasis>Hello</emphasis> world</speak>'\ndoc = Document.from_ssml(ssml)\nssmd_text = doc.to_ssmd()\nprint(ssmd_text)\n# Output: *Hello* world",
+          "lower": "from ssmd import document\n\nssml = '<speak><emphasis>hello</emphasis> world</speak>'\ndoc = document.from_ssml(ssml)\nssmd_text = doc.to_ssmd()\nprint(ssmd_text)\n# output: *hello* world"
+        },
+        {
+          "anchor": "",
+          "heading": "Emphasis¶",
+          "text": "# Moderate emphasis\nssmd.from_ssml('<emphasis>text</emphasis>')\n# → *text*\n\n# Strong emphasis\nssmd.from_ssml('<emphasis level=\"strong\">text</emphasis>')\n# → **text**",
+          "lower": "# moderate emphasis\nssmd.from_ssml('<emphasis>text</emphasis>')\n# → *text*\n\n# strong emphasis\nssmd.from_ssml('<emphasis level=\"strong\">text</emphasis>')\n# → **text**"
+        },
+        {
+          "anchor": "",
+          "heading": "Breaks¶",
+          "text": "# Time-based breaks\nssmd.from_ssml('<break time=\"500ms\"/>')\n# → ...500ms\n\nssmd.from_ssml('<break time=\"2s\"/>')\n# → ...2s\n\n# Strength-based breaks\nssmd.from_ssml('<break strength=\"weak\"/>')\n# → ...w\n\nssmd.from_ssml('<break strength=\"medium\"/>')\n# → ...c\n\nssmd.from_ssml('<break strength=\"strong\"/>')\n# → ...s",
+          "lower": "# time-based breaks\nssmd.from_ssml('<break time=\"500ms\"/>')\n# → ...500ms\n\nssmd.from_ssml('<break time=\"2s\"/>')\n# → ...2s\n\n# strength-based breaks\nssmd.from_ssml('<break strength=\"weak\"/>')\n# → ...w\n\nssmd.from_ssml('<break strength=\"medium\"/>')\n# → ...c\n\nssmd.from_ssml('<break strength=\"strong\"/>')\n# → ...s"
+        },
+        {
+          "anchor": "",
+          "heading": "Language¶",
+          "text": "# Full locale\nssmd.from_ssml('<lang xml:lang=\"fr-FR\">Bonjour</lang>')\n# → [Bonjour]{lang=\"fr\"}\n\n# Non-standard locales preserved\nssmd.from_ssml('<lang xml:lang=\"en-GB\">Hello</lang>')\n# → [Hello]{lang=\"en-GB\"}",
+          "lower": "# full locale\nssmd.from_ssml('<lang xml:lang=\"fr-fr\">bonjour</lang>')\n# → [bonjour]{lang=\"fr\"}\n\n# non-standard locales preserved\nssmd.from_ssml('<lang xml:lang=\"en-gb\">hello</lang>')\n# → [hello]{lang=\"en-gb\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Phonemes¶",
+          "text": "# IPA notation\nssmd.from_ssml('<phoneme alphabet=\"ipa\" ph=\"təˈmeɪtoʊ\">tomato</phoneme>')\n# → [tomato]{ph=\"təˈmeɪtoʊ\" alphabet=\"ipa\"}\n\n# X-SAMPA notation\nssmd.from_ssml('<phoneme alphabet=\"x-sampa\" ph=\"t@meIt@U\">tomato</phoneme>')\n# → [tomato]{ph=\"t@meIt@U\" alphabet=\"x-sampa\"}",
+          "lower": "# ipa notation\nssmd.from_ssml('<phoneme alphabet=\"ipa\" ph=\"təˈmeɪtoʊ\">tomato</phoneme>')\n# → [tomato]{ph=\"təˈmeɪtoʊ\" alphabet=\"ipa\"}\n\n# x-sampa notation\nssmd.from_ssml('<phoneme alphabet=\"x-sampa\" ph=\"t@meit@u\">tomato</phoneme>')\n# → [tomato]{ph=\"t@meit@u\" alphabet=\"x-sampa\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Prosody¶",
+          "text": "# Volume\nssmd.from_ssml('<prosody volume=\"loud\">text</prosody>')\n# → [text]{volume=\"loud\"}\n\nssmd.from_ssml('<prosody volume=\"x-loud\">text</prosody>')\n# → [text]{volume=\"x-loud\"}\n\n# Rate\nssmd.from_ssml('<prosody rate=\"fast\">text</prosody>')\n# → [text]{rate=\"fast\"}\n\n# Pitch\nssmd.from_ssml('<prosody pitch=\"high\">text</prosody>')\n# → [text]{pitch=\"high\"}\n\n# Multiple attributes\nssmd.from_ssml('<prosody volume=\"loud\" rate=\"fast\" pitch=\"high\">text</prosody>')\n# → [text]{volume=\"loud\" rate=\"fast\" pitch=\"high\"}",
+          "lower": "# volume\nssmd.from_ssml('<prosody volume=\"loud\">text</prosody>')\n# → [text]{volume=\"loud\"}\n\nssmd.from_ssml('<prosody volume=\"x-loud\">text</prosody>')\n# → [text]{volume=\"x-loud\"}\n\n# rate\nssmd.from_ssml('<prosody rate=\"fast\">text</prosody>')\n# → [text]{rate=\"fast\"}\n\n# pitch\nssmd.from_ssml('<prosody pitch=\"high\">text</prosody>')\n# → [text]{pitch=\"high\"}\n\n# multiple attributes\nssmd.from_ssml('<prosody volume=\"loud\" rate=\"fast\" pitch=\"high\">text</prosody>')\n# → [text]{volume=\"loud\" rate=\"fast\" pitch=\"high\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Say-As¶",
+          "text": "# Basic say-as\nssmd.from_ssml('<say-as interpret-as=\"telephone\">+1-555-1234</say-as>')\n# → [+1-555-1234]{as=\"telephone\"}\n\n# With format attribute\nssmd.from_ssml('<say-as interpret-as=\"date\" format=\"mdy\">12/31/2024</say-as>')\n# → [12/31/2024]{as=\"date\" format=\"mdy\"}",
+          "lower": "# basic say-as\nssmd.from_ssml('<say-as interpret-as=\"telephone\">+1-555-1234</say-as>')\n# → [+1-555-1234]{as=\"telephone\"}\n\n# with format attribute\nssmd.from_ssml('<say-as interpret-as=\"date\" format=\"mdy\">12/31/2024</say-as>')\n# → [12/31/2024]{as=\"date\" format=\"mdy\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Substitution¶",
+          "text": "ssmd.from_ssml('<sub alias=\"World Wide Web\">WWW</sub>')\n# → [WWW]{sub=\"World Wide Web\"}",
+          "lower": "ssmd.from_ssml('<sub alias=\"world wide web\">www</sub>')\n# → [www]{sub=\"world wide web\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Audio¶",
+          "text": "# With description\nssmd.from_ssml('<audio src=\"sound.mp3\">Alternative text</audio>')\n# → [Alternative text]{src=\"sound.mp3\"}\n\n# With desc tag\nssmd.from_ssml('<audio src=\"bell.mp3\"><desc>doorbell</desc></audio>')\n# → [doorbell]{src=\"bell.mp3\"}\n\n# No description\nssmd.from_ssml('<audio src=\"beep.mp3\"></audio>')\n# → []{src=\"beep.mp3\"}",
+          "lower": "# with description\nssmd.from_ssml('<audio src=\"sound.mp3\">alternative text</audio>')\n# → [alternative text]{src=\"sound.mp3\"}\n\n# with desc tag\nssmd.from_ssml('<audio src=\"bell.mp3\"><desc>doorbell</desc></audio>')\n# → [doorbell]{src=\"bell.mp3\"}\n\n# no description\nssmd.from_ssml('<audio src=\"beep.mp3\"></audio>')\n# → []{src=\"beep.mp3\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Marks¶",
+          "text": "ssmd.from_ssml('Text <mark name=\"here\"/> more text')\n# → Text @here more text",
+          "lower": "ssmd.from_ssml('text <mark name=\"here\"/> more text')\n# → text @here more text"
+        },
+        {
+          "anchor": "",
+          "heading": "Paragraphs¶",
+          "text": "ssml = '''<speak>\n<p>First paragraph.</p>\n<p>Second paragraph.</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# Output:\n# First paragraph.\n#\n# Second paragraph.",
+          "lower": "ssml = '''<speak>\n<p>first paragraph.</p>\n<p>second paragraph.</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# output:\n# first paragraph.\n#\n# second paragraph."
+        },
+        {
+          "anchor": "",
+          "heading": "Platform Extensions¶",
+          "text": "# Amazon whisper effect\nssml = '<amazon:effect name=\"whispered\">secret</amazon:effect>'\nssmd.from_ssml(ssml)\n# → [secret]{ext=\"whisper\"}",
+          "lower": "# amazon whisper effect\nssml = '<amazon:effect name=\"whispered\">secret</amazon:effect>'\nssmd.from_ssml(ssml)\n# → [secret]{ext=\"whisper\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Default Value Filtering¶",
+          "text": "SSMD automatically removes default/medium values to keep output clean:\n\n# Medium values are filtered out\nssml = '<prosody volume=\"medium\" rate=\"medium\" pitch=\"medium\">text</prosody>'\nssmd.from_ssml(ssml)\n# → text  (not [text]{volume=\"medium\" rate=\"medium\" pitch=\"medium\"})\n\n# Only non-default values are included\nssml = '<prosody volume=\"loud\" rate=\"medium\" pitch=\"medium\">text</prosody>'\nssmd.from_ssml(ssml)\n# → [text]{volume=\"loud\"}",
+          "lower": "ssmd automatically removes default/medium values to keep output clean:\n\n# medium values are filtered out\nssml = '<prosody volume=\"medium\" rate=\"medium\" pitch=\"medium\">text</prosody>'\nssmd.from_ssml(ssml)\n# → text  (not [text]{volume=\"medium\" rate=\"medium\" pitch=\"medium\"})\n\n# only non-default values are included\nssml = '<prosody volume=\"loud\" rate=\"medium\" pitch=\"medium\">text</prosody>'\nssmd.from_ssml(ssml)\n# → [text]{volume=\"loud\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Round-Trip Conversion¶",
+          "text": "Convert SSMD → SSML → SSMD preserving semantics:\n\nimport ssmd\n\n# Original SSMD\noriginal = '*Hello* [world]{lang=\"fr\"} ...500ms [loud]{volume=\"loud\"}'\n\n# Convert to SSML\nssml = ssmd.to_ssml(original)\nprint(ssml)\n# <speak><emphasis>Hello</emphasis> <lang xml:lang=\"fr-FR\">world</lang>\n#  <break time=\"500ms\"/> <prosody volume=\"loud\">loud</prosody></speak>\n\n# Convert back to SSMD\nrestored = ssmd.from_ssml(ssml)\nprint(restored)\n# *Hello* [world]{lang=\"fr\"} ...500ms [loud]{volume=\"loud\"}\n\n# Semantically equivalent, even if syntax differs slightly",
+          "lower": "convert ssmd → ssml → ssmd preserving semantics:\n\nimport ssmd\n\n# original ssmd\noriginal = '*hello* [world]{lang=\"fr\"} ...500ms [loud]{volume=\"loud\"}'\n\n# convert to ssml\nssml = ssmd.to_ssml(original)\nprint(ssml)\n# <speak><emphasis>hello</emphasis> <lang xml:lang=\"fr-fr\">world</lang>\n#  <break time=\"500ms\"/> <prosody volume=\"loud\">loud</prosody></speak>\n\n# convert back to ssmd\nrestored = ssmd.from_ssml(ssml)\nprint(restored)\n# *hello* [world]{lang=\"fr\"} ...500ms [loud]{volume=\"loud\"}\n\n# semantically equivalent, even if syntax differs slightly"
+        },
+        {
+          "anchor": "",
+          "heading": "Nested Elements¶",
+          "text": "ssml = '''<speak>\n<p>\n  <emphasis>Important:</emphasis>\n  <lang xml:lang=\"fr-FR\">\n    <prosody volume=\"loud\">Bonjour</prosody>\n  </lang>\n</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# Output: *Important:* [Bonjour]{lang=\"fr\" volume=\"loud\"}",
+          "lower": "ssml = '''<speak>\n<p>\n  <emphasis>important:</emphasis>\n  <lang xml:lang=\"fr-fr\">\n    <prosody volume=\"loud\">bonjour</prosody>\n  </lang>\n</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# output: *important:* [bonjour]{lang=\"fr\" volume=\"loud\"}"
+        },
+        {
+          "anchor": "",
+          "heading": "Mixed Content¶",
+          "text": "ssml = '''<speak>\n<p><emphasis>Hello</emphasis> world</p>\n<p>This is <prosody volume=\"loud\">important</prosody></p>\n<break time=\"500ms\"/>\n<p>Goodbye</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# Output:\n# *Hello* world\n#\n# This is [important]{volume=\"loud\"}\n#\n# ...500ms\n#\n# Goodbye",
+          "lower": "ssml = '''<speak>\n<p><emphasis>hello</emphasis> world</p>\n<p>this is <prosody volume=\"loud\">important</prosody></p>\n<break time=\"500ms\"/>\n<p>goodbye</p>\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# output:\n# *hello* world\n#\n# this is [important]{volume=\"loud\"}\n#\n# ...500ms\n#\n# goodbye"
+        },
+        {
+          "anchor": "",
+          "heading": "Whitespace Handling¶",
+          "text": "SSMD normalizes whitespace during conversion:\n\n# Extra whitespace is normalized\nssml = '''<speak>\n  <emphasis>\n    Hello\n  </emphasis>\n  world\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# → *Hello* world  (whitespace normalized)",
+          "lower": "ssmd normalizes whitespace during conversion:\n\n# extra whitespace is normalized\nssml = '''<speak>\n  <emphasis>\n    hello\n  </emphasis>\n  world\n</speak>'''\n\nssmd_text = ssmd.from_ssml(ssml)\n# → *hello* world  (whitespace normalized)"
+        },
+        {
+          "anchor": "",
+          "heading": "Invalid SSML¶",
+          "text": "import ssmd\n\ntry:\n    ssmd.from_ssml('<speak><invalid>text</invalid></speak>')\nexcept ValueError as e:\n    print(f\"Error: {e}\")\n\n# Invalid/unknown tags are treated as plain text",
+          "lower": "import ssmd\n\ntry:\n    ssmd.from_ssml('<speak><invalid>text</invalid></speak>')\nexcept valueerror as e:\n    print(f\"error: {e}\")\n\n# invalid/unknown tags are treated as plain text"
+        },
+        {
+          "anchor": "",
+          "heading": "Malformed XML¶",
+          "text": "try:\n    ssmd.from_ssml('<speak><emphasis>unclosed</speak>')\nexcept ValueError as e:\n    print(f\"XML Parse Error: {e}\")",
+          "lower": "try:\n    ssmd.from_ssml('<speak><emphasis>unclosed</speak>')\nexcept valueerror as e:\n    print(f\"xml parse error: {e}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration Options¶",
+          "text": "from ssmd import Document\n\nparser = Document(capabilities='espeak')\n\n# SSML features not supported by eSpeak will be simplified\nssml = '<speak><emphasis>Hello</emphasis></speak>'\ndoc = Document.from_ssml(ssml, capabilities='espeak')\nssmd_text = doc.to_ssmd()\n# eSpeak doesn't support emphasis, so output is just: Hello",
+          "lower": "from ssmd import document\n\nparser = document(capabilities='espeak')\n\n# ssml features not supported by espeak will be simplified\nssml = '<speak><emphasis>hello</emphasis></speak>'\ndoc = document.from_ssml(ssml, capabilities='espeak')\nssmd_text = doc.to_ssmd()\n# espeak doesn't support emphasis, so output is just: hello"
+        },
+        {
+          "anchor": "",
+          "heading": "Migration from Raw SSML¶",
+          "text": "from ssmd import Document\n\n# You have existing SSML files\nwith open('old_ssml.xml') as f:\n    ssml = f.read()\n\n# Convert to SSMD for easier editing\ndoc = Document.from_ssml(ssml)\nssmd_text = doc.to_ssmd()\n\nwith open('new_ssmd.txt', 'w') as f:\n    f.write(ssmd_text)",
+          "lower": "from ssmd import document\n\n# you have existing ssml files\nwith open('old_ssml.xml') as f:\n    ssml = f.read()\n\n# convert to ssmd for easier editing\ndoc = document.from_ssml(ssml)\nssmd_text = doc.to_ssmd()\n\nwith open('new_ssmd.txt', 'w') as f:\n    f.write(ssmd_text)"
+        },
+        {
+          "anchor": "",
+          "heading": "SSML Editor Backend¶",
+          "text": "from ssmd import Document\n\n# Load SSML for editing\ndef load_document(ssml_file):\n    with open(ssml_file) as f:\n        ssml = f.read()\n    return Document.from_ssml(ssml)\n\n# Save as SSML\ndef save_document(doc, ssml_file):\n    ssml = doc.to_ssml()\n    with open(ssml_file, 'w') as f:\n        f.write(ssml)",
+          "lower": "from ssmd import document\n\n# load ssml for editing\ndef load_document(ssml_file):\n    with open(ssml_file) as f:\n        ssml = f.read()\n    return document.from_ssml(ssml)\n\n# save as ssml\ndef save_document(doc, ssml_file):\n    ssml = doc.to_ssml()\n    with open(ssml_file, 'w') as f:\n        f.write(ssml)"
+        },
+        {
+          "anchor": "",
+          "heading": "Testing and Validation¶",
+          "text": "from ssmd import Document\n\n# Validate SSML by round-trip conversion\ndef validate_ssml(ssml_text):\n    try:\n        doc = Document.from_ssml(ssml_text)\n        restored_ssml = doc.to_ssml()\n        return True\n    except Exception as e:\n        print(f\"Validation failed: {e}\")\n        return False",
+          "lower": "from ssmd import document\n\n# validate ssml by round-trip conversion\ndef validate_ssml(ssml_text):\n    try:\n        doc = document.from_ssml(ssml_text)\n        restored_ssml = doc.to_ssml()\n        return true\n    except exception as e:\n        print(f\"validation failed: {e}\")\n        return false"
+        },
+        {
+          "anchor": "",
+          "heading": "Limitations¶",
+          "text": "Syntax differences: Round-trip conversion is semantically equivalent but may\nnormalize attribute order or quoting in annotations\n\n\nComments lost: XML comments are not preserved\n\n\nUnknown elements: Custom SSML elements are converted to plain text\n\n\nAttribute order: Attribute order may change but semantics are preserved\n\n\nWhitespace: Whitespace is normalized for readability",
+          "lower": "syntax differences: round-trip conversion is semantically equivalent but may\nnormalize attribute order or quoting in annotations\n\n\ncomments lost: xml comments are not preserved\n\n\nunknown elements: custom ssml elements are converted to plain text\n\n\nattribute order: attribute order may change but semantics are preserved\n\n\nwhitespace: whitespace is normalized for readability"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmd/main/syntax/",
+      "title": "SSMD Syntax Reference",
+      "snippet": "This page provides a complete reference for SSMD markup syntax.\nAn SSMD document may begin with a YAML front matter block. The opening delim …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "SSMD Syntax Reference¶",
+          "text": "This page provides a complete reference for SSMD markup syntax.",
+          "lower": "this page provides a complete reference for ssmd markup syntax."
+        },
+        {
+          "anchor": "",
+          "heading": "YAML front matter¶",
+          "text": "An SSMD document may begin with a YAML front matter block. The opening delimiter must be\nexactly --- on the first line; the closing delimiter is exactly --- or .... Four\nhyphens are ordinary content. Front matter is metadata, not spoken text, and the YAML\nroot must be a mapping.\n\n---\nvoice_bindings:\n  kokoro:\n    moderator: af_sarah\npause_defaults:\n  enabled: true\n  sentence: 250ms\n  paragraph: 700ms\n---\n\n\n\n\nvoice values in body directives and annotations are stable references. A reference can\nbe logical and resolved through voice_bindings, or direct when it is a concrete\nprovider voice ID. Effective precedence is built-in defaults, user config, document\nheader, then explicit CLI/API overrides. The local config file is an authoring facility\nand is not part of the portable document.\n\npause…",
+          "lower": "an ssmd document may begin with a yaml front matter block. the opening delimiter must be\nexactly --- on the first line; the closing delimiter is exactly --- or .... four\nhyphens are ordinary content. front matter is metadata, not spoken text, and the yaml\nroot must be a mapping.\n\n---\nvoice_bindings:\n  kokoro:\n    moderator: af_sarah\npause_defaults:\n  enabled: true\n  sentence: 250ms\n  paragraph: 700ms\n---\n\n\n\n\nvoice values in body directives and annotations are stable references. a reference can\nbe logical and resolved through voice_bindings, or direct when it is a concrete\nprovider voice id. effective precedence is built-in defaults, user config, document\nheader, then explicit cli/api overrides. the local config file is an authoring facility\nand is not part of the portable document.\n\npause…"
+        },
+        {
+          "anchor": "",
+          "heading": "Text and Emphasis¶",
+          "text": "SSMD supports all four SSML emphasis levels for fine-grained control over speech\nemphasis.",
+          "lower": "ssmd supports all four ssml emphasis levels for fine-grained control over speech\nemphasis."
+        },
+        {
+          "anchor": "",
+          "heading": "Moderate Emphasis¶",
+          "text": "Use single asterisks for moderate (default) emphasis:\n\nssmd.to_ssml(\"This is *important*\")\n# → <speak>This is <emphasis>important</emphasis></speak>",
+          "lower": "use single asterisks for moderate (default) emphasis:\n\nssmd.to_ssml(\"this is *important*\")\n# → <speak>this is <emphasis>important</emphasis></speak>"
+        },
+        {
+          "anchor": "",
+          "heading": "Strong Emphasis¶",
+          "text": "Use double asterisks for strong emphasis:\n\nssmd.to_ssml(\"This is **very important**\")\n# → <speak>This is <emphasis level=\"strong\">very important</emphasis></speak>",
+          "lower": "use double asterisks for strong emphasis:\n\nssmd.to_ssml(\"this is **very important**\")\n# → <speak>this is <emphasis level=\"strong\">very important</emphasis></speak>"
+        },
+        {
+          "anchor": "",
+          "heading": "Reduced Emphasis¶",
+          "text": "Use single underscores for reduced (subtle) emphasis:\n\nssmd.to_ssml(\"This is _less important_\")\n# → <speak>This is <emphasis level=\"reduced\">less important</emphasis></speak>",
+          "lower": "use single underscores for reduced (subtle) emphasis:\n\nssmd.to_ssml(\"this is _less important_\")\n# → <speak>this is <emphasis level=\"reduced\">less important</emphasis></speak>"
+        },
+        {
+          "anchor": "",
+          "heading": "No Emphasis¶",
+          "text": "Use explicit annotation syntax for no emphasis (rarely used):\n\nssmd.to_ssml('[monotone reading]{emphasis=\"none\"}')\n# → <speak><emphasis level=\"none\">monotone reading</emphasis></speak>\n\n\n\n\n\nNote\n\nThe “none” emphasis level is rarely needed in practice. It explicitly\ninstructs the TTS engine to speak without any emphasis, which can be useful for robotic\nor monotone speech effects. :::\n\nBreaks and Pauses\n\nTime-Based Breaks\n\nSpecify duration in milliseconds or seconds using ... followed by a time value:\n\nssmd.to_ssml(\"Wait ...500ms please\")\n# → <speak>Wait <break time=\"500ms\"/> please</speak>\n\nssmd.to_ssml(\"Wait ...2s please\")\n# → <speak>Wait <break time=\"2s\"/> please</speak>\n\n\n\n\n\nNote\n\nBare ... (without a time or strength code) is NOT treated as a break. It\nwill be preserved as literal ellip…",
+          "lower": "use explicit annotation syntax for no emphasis (rarely used):\n\nssmd.to_ssml('[monotone reading]{emphasis=\"none\"}')\n# → <speak><emphasis level=\"none\">monotone reading</emphasis></speak>\n\n\n\n\n\nnote\n\nthe “none” emphasis level is rarely needed in practice. it explicitly\ninstructs the tts engine to speak without any emphasis, which can be useful for robotic\nor monotone speech effects. :::\n\nbreaks and pauses\n\ntime-based breaks\n\nspecify duration in milliseconds or seconds using ... followed by a time value:\n\nssmd.to_ssml(\"wait ...500ms please\")\n# → <speak>wait <break time=\"500ms\"/> please</speak>\n\nssmd.to_ssml(\"wait ...2s please\")\n# → <speak>wait <break time=\"2s\"/> please</speak>\n\n\n\n\n\nnote\n\nbare ... (without a time or strength code) is not treated as a break. it\nwill be preserved as literal ellip…"
+        }
+      ]
+    }
+  ]
+}
