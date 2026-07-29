@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "ssmd Parser API"
-permalink: /tools/ssmd/parser/
+title: "ssmd Spans"
+permalink: /tools/ssmd/spans/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
@@ -540,70 +540,38 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="parser-api">
-<h1>Parser API</h1>
-<p>The SSMD Parser provides an alternative to SSML generation by extracting structured data
-from SSMD text. This is useful when you need programmatic control over SSMD features or
-want to build custom TTS pipelines.</p>
-<section id="when-to-use-the-parser">
-<h2>When to Use the Parser</h2>
-<p>Use the parser API when you need to:</p>
+<section id="spans">
+<h1>Spans</h1>
+<p>SSMD spans report offsets in the cleaned text returned by <code class="docutils literal notranslate"><span class="pre">parse_spans</span></code>. The coordinate
+system matches <code class="docutils literal notranslate"><span class="pre">ParseSpansResult.clean_text</span></code> after markup is removed and placeholders
+are unescaped.</p>
+<section id="coordinate-system">
+<h2>Coordinate system</h2>
 <ul class="simple">
-<li><p><strong>Process SSMD features programmatically</strong> - Extract and handle features individually</p></li>
-<li><p><strong>Build custom TTS pipelines</strong> - Implement your own text-to-speech workflow</p></li>
-<li><p><strong>Handle text transformations</strong> - Process say-as, substitution, and phoneme
-conversions</p></li>
-<li><p><strong>Create multi-voice dialogue systems</strong> - Build voice-specific processing pipelines</p></li>
-<li><p><strong>Analyze SSMD content</strong> - Extract metadata and features without generating SSML</p></li>
+<li><p>Offsets refer to character indices in <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> only.</p></li>
+<li><p>Markup like <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">[text]{...}</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">...&gt;</span></code> is removed before offsets are
+computed.</p></li>
+<li><p>Escaping via <code class="docutils literal notranslate"><span class="pre">escape_ssmd_syntax()</span></code> is reversible but not length-preserving; do not
+use offsets from escaped text.</p></li>
 </ul>
 </section>
-<section id="overview">
-<h2>Overview</h2>
-<p>The parser extracts SSMD markup into structured segments, allowing you to process each
-feature individually instead of generating a complete SSML document.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_paragraphs</span>
+<section id="examples">
+<h2>Examples</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
 
- <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"> &lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2"> Hello! Call [+1-555-0123]{as=&quot;telephone&quot;} for info.</span>
-<span class="s2"> &lt;/div&gt;</span>
-
-<span class="s2"> &lt;div voice=&quot;michael&quot;&gt;</span>
-<span class="s2"> Thanks *Sarah*!</span>
-<span class="s2"> &lt;/div&gt;</span>
-<span class="s2"> &quot;&quot;&quot;</span>
-
- <span class="c1"># Parse into structured paragraphs</span>
-<span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">parse_paragraphs</span><span class="p">(</span><span class="n">script</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
-        <span class="c1"># Get voice configuration</span>
-        <span class="n">voice_name</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
-
-        <span class="c1"># Build complete text from segments</span>
-        <span class="n">full_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
-            <span class="c1"># Handle text transformations</span>
-            <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">convert_say_as</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="o">.</span><span class="n">interpret_as</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span>
-            <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">phoneme</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>  <span class="c1"># TTS engine handles phoneme</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">full_text</span> <span class="o">+=</span> <span class="n">text</span>
-
-        <span class="c1"># Speak with TTS engine</span>
-        <span class="n">tts</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">full_text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice_name</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_spans</span><span class="p">(</span><span class="s2">&quot;Hello [world]{lang=&#39;en&#39;}&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">clean_text</span><span class="p">)</span>  <span class="c1"># &quot;Hello world&quot;</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">annotations</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>
-<section id="parser-functions">
-<h2>Parser Functions</h2>
-<section id="parse-paragraphs">
-<h3>parse_paragraphs</h3>
-<p>Parse SSMD text into structured paragraphs with sentences and segments.</p>
-</section>
+<section id="sentence-offsets">
+<h2>Sentence offsets</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">iter_sentences_spans()</span></code> to align sentence text with <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">sentence</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span> <span class="ow">in</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">iter_sentences_spans</span><span class="p">(</span><span class="s2">&quot;Hello *world*. Next.&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="p">,</span> <span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 </div>

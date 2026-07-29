@@ -5,8 +5,8 @@ permalink: /tools/ssmd/syntax/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -543,9 +543,45 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="ssmd-syntax-reference">
 <h1>SSMD Syntax Reference</h1>
 <p>This page provides a complete reference for SSMD markup syntax.</p>
+<section id="yaml-front-matter">
+<h2>YAML front matter</h2>
+<p>An SSMD document may begin with a YAML front matter block. The opening delimiter must be
+exactly <code class="docutils literal notranslate"><span class="pre">---</span></code> on the first line; the closing delimiter is exactly <code class="docutils literal notranslate"><span class="pre">---</span></code> or <code class="docutils literal notranslate"><span class="pre">...</span></code>. Four
+hyphens are ordinary content. Front matter is metadata, not spoken text, and the YAML
+root must be a mapping.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">voice_bindings</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">kokoro</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">moderator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">af_sarah</span>
+<span class="nt">pause_defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">sentence</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250ms</span>
+<span class="w">  </span><span class="nt">paragraph</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">700ms</span>
+<span class="nn">---</span>
+</pre></div>
+</div>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">title</span></code> front-matter key is portable document metadata. It must be a string
+and is preserved by formatting and authoring commands, but it is never spoken or
+included in plain-text or SSML speech output.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review podcast</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">Hello world.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">voice</span></code> values in body directives and annotations are stable references. A reference can
+be logical and resolved through <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code>, or direct when it is a concrete
+provider voice ID. Effective precedence is built-in defaults, user config, document
+header, then explicit CLI/API overrides. The local config file is an authoring facility
+and is not part of the portable document.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pause_defaults</span></code> accepts non-negative <code class="docutils literal notranslate"><span class="pre">ms</span></code> or <code class="docutils literal notranslate"><span class="pre">s</span></code> durations. Explicit body break markers
+take precedence; defaults do not insert visible pause markers into SSMD source. PyYAML
+serialization is deterministic but does not preserve YAML comments.</p>
+</section>
 <section id="text-and-emphasis">
 <h2>Text and Emphasis</h2>
-<p>SSMD supports all four SSML emphasis levels for fine-grained control over speech emphasis.</p>
+<p>SSMD supports all four SSML emphasis levels for fine-grained control over speech
+emphasis.</p>
 <section id="moderate-emphasis">
 <h3>Moderate Emphasis</h3>
 <p>Use single asterisks for moderate (default) emphasis:</p>
@@ -579,17 +615,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>The “none” emphasis level is rarely needed in practice. It explicitly instructs
-the TTS engine to speak without any emphasis, which can be useful for robotic
-or monotone speech effects.</p>
-</div>
-</section>
-</section>
-<section id="breaks-and-pauses">
-<h2>Breaks and Pauses</h2>
-<section id="time-based-breaks">
-<h3>Time-Based Breaks</h3>
-<p>Specify duration in milliseconds or seconds using <cite>…</cite> followed by a time value:</p>
+<p>The “none” emphasis level is rarely needed in practice. It explicitly
+instructs the TTS engine to speak without any emphasis, which can be useful for robotic
+or monotone speech effects. :::</p>
+<p class="rubric" id="breaks-and-pauses">Breaks and Pauses</p>
+<p class="rubric" id="time-based-breaks">Time-Based Breaks</p>
+<p>Specify duration in milliseconds or seconds using <code class="docutils literal notranslate"><span class="pre">...</span></code> followed by a time value:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;Wait ...500ms please&quot;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;Wait &lt;break time=&quot;500ms&quot;/&gt; please&lt;/speak&gt;</span>
 
@@ -599,12 +630,9 @@ or monotone speech effects.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Bare <cite>…</cite> (without a time or strength code) is NOT treated as a break.
-It will be preserved as literal ellipsis in your text.</p>
-</div>
-</section>
-<section id="strength-based-breaks">
-<h3>Strength-Based Breaks</h3>
+<p>Bare <code class="docutils literal notranslate"><span class="pre">...</span></code> (without a time or strength code) is NOT treated as a break. It
+will be preserved as literal ellipsis in your text. :::</p>
+<p class="rubric" id="strength-based-breaks">Strength-Based Breaks</p>
 <p>Use strength codes for semantic pauses:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;Hello ...n world&quot;</span><span class="p">)</span>   <span class="c1"># none</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;Hello ...w world&quot;</span><span class="p">)</span>   <span class="c1"># weak (x-weak)</span>
@@ -621,10 +649,7 @@ It will be preserved as literal ellipsis in your text.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> - sentence (strong)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> - paragraph (x-strong)</p></li>
 </ul>
-</section>
-</section>
-<section id="paragraphs">
-<h2>Paragraphs</h2>
+<p class="rubric" id="paragraphs">Paragraphs</p>
 <p>Blank lines separate paragraphs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
 <span class="s2">This is the first paragraph.</span>
@@ -639,9 +664,7 @@ It will be preserved as literal ellipsis in your text.</p>
 <span class="c1">#    This is the second paragraph.&lt;/speak&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="headings">
-<h2>Headings</h2>
+<p class="rubric" id="headings">Headings</p>
 <p>Use hash marks for headings (configurable):</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
@@ -664,12 +687,9 @@ It will be preserved as literal ellipsis in your text.</p>
 <span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="annotations">
-<h2>Annotations</h2>
+<p class="rubric" id="annotations">Annotations</p>
 <p>Annotations use the format <code class="docutils literal notranslate"><span class="pre">[text]{key=&quot;value&quot;}</span></code> where annotations can be:</p>
-<section id="language-codes">
-<h3>Language Codes</h3>
+<p class="rubric" id="language-codes">Language Codes</p>
 <p>Specify language with ISO codes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-complete to full locale</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Bonjour]{lang=&quot;fr&quot;}&#39;</span><span class="p">)</span>
@@ -691,13 +711,10 @@ It will be preserved as literal ellipsis in your text.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> → zh-CN</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">ru</span></code> → ru-RU</p></li>
 </ul>
-</section>
-<section id="voice-selection">
-<h3>Voice Selection</h3>
-<p>SSMD supports two ways to specify voices: <strong>inline annotations</strong> for short phrases
-and <strong>block directives</strong> for longer passages (ideal for dialogue and scripts).</p>
-<section id="inline-voice-annotations">
-<h4>Inline Voice Annotations</h4>
+<p class="rubric" id="voice-selection">Voice Selection</p>
+<p>SSMD supports two ways to specify voices: <strong>inline annotations</strong> for short phrases and
+<strong>block directives</strong> for longer passages (ideal for dialogue and scripts).</p>
+<p class="rubric" id="inline-voice-annotations">Inline Voice Annotations</p>
 <p>Perfect for short voice changes within a sentence:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple voice name</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Hello]{voice=&quot;Joanna&quot;}&#39;</span><span class="p">)</span>
@@ -723,9 +740,7 @@ and <strong>block directives</strong> for longer passages (ideal for dialogue an
 <li><p><code class="docutils literal notranslate"><span class="pre">gender=&quot;GENDER&quot;</span></code> - male, female, or neutral</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">variant=&quot;NUMBER&quot;</span></code> - Variant number for tiebreaking</p></li>
 </ul>
-</section>
-<section id="voice-directives-block-syntax">
-<h4>Voice Directives (Block Syntax)</h4>
+<p class="rubric" id="voice-directives-block-syntax">Voice Directives (Block Syntax)</p>
 <p>Perfect for dialogue, podcasts, and scripts with multiple speakers:</p>
 <blockquote>
 <div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -791,12 +806,8 @@ and <strong>block directives</strong> for longer passages (ideal for dialogue an
 </pre></div>
 </div>
 </div></blockquote>
-</section>
-</section>
-<section id="phonetic-pronunciation">
-<h3>Phonetic Pronunciation</h3>
-<section id="ipa-international-phonetic-alphabet">
-<h4>IPA (International Phonetic Alphabet)</h4>
+<p class="rubric" id="phonetic-pronunciation">Phonetic Pronunciation</p>
+<p class="rubric" id="ipa-international-phonetic-alphabet">IPA (International Phonetic Alphabet)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[tomato]{ph=&quot;təˈmeɪtoʊ&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;&lt;phoneme alphabet=&quot;ipa&quot; ph=&quot;təˈmeɪtoʊ&quot;&gt;tomato&lt;/phoneme&gt;&lt;/speak&gt;</span>
 
@@ -804,17 +815,12 @@ and <strong>block directives</strong> for longer passages (ideal for dialogue an
 <span class="c1"># → &lt;speak&gt;&lt;phoneme alphabet=&quot;ipa&quot; ph=&quot;həˈloʊ&quot;&gt;hello&lt;/phoneme&gt;&lt;/speak&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="x-sampa-extended-speech-assessment-methods-phonetic-alphabet">
-<h4>X-SAMPA (Extended Speech Assessment Methods Phonetic Alphabet)</h4>
+<p class="rubric" id="x-sampa-extended-speech-assessment-methods-phonetic-alphabet">X-SAMPA (Extended Speech Assessment Methods Phonetic Alphabet)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[dictionary]{sampa=&quot;dIkS@n@ri&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;&lt;phoneme alphabet=&quot;x-sampa&quot; ph=&quot;dIkS@n@ri&quot;&gt;dictionary&lt;/phoneme&gt;&lt;/speak&gt;</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="substitution-aliases">
-<h3>Substitution (Aliases)</h3>
+<p class="rubric" id="substitution-aliases">Substitution (Aliases)</p>
 <p>Replace text with alternative pronunciation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[H2O]{sub=&quot;water&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;&lt;sub alias=&quot;water&quot;&gt;H2O&lt;/sub&gt;&lt;/speak&gt;</span>
@@ -825,9 +831,7 @@ and <strong>block directives</strong> for longer passages (ideal for dialogue an
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[NATO]{sub=&quot;North Atlantic Treaty Organization&quot;}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="say-as-interpretations">
-<h3>Say-As Interpretations</h3>
+<p class="rubric" id="say-as-interpretations">Say-As Interpretations</p>
 <p>Control how text is interpreted:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Telephone number</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[+1-555-0123]{as=&quot;telephone&quot;}&#39;</span><span class="p">)</span>
@@ -872,12 +876,9 @@ and <strong>block directives</strong> for longer passages (ideal for dialogue an
 <li><p><code class="docutils literal notranslate"><span class="pre">address</span></code> - Street addresses</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">expletive</span></code> - Censored words</p></li>
 </ul>
-<p>The <code class="docutils literal notranslate"><span class="pre">detail</span></code> attribute (1-2) controls verbosity level and is platform-specific.
-Higher values generally provide more detailed pronunciation.</p>
-</section>
-</section>
-<section id="prosody-voice-control">
-<h2>Prosody (Voice Control)</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">detail</span></code> attribute (1-2) controls verbosity level and is platform-specific. Higher
+values generally provide more detailed pronunciation.</p>
+<p class="rubric" id="prosody-voice-control">Prosody (Voice Control)</p>
 <p>Use prosody annotations with explicit key/value pairs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[loud]{volume=&quot;loud&quot;}&#39;</span><span class="p">)</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[slow]{rate=&quot;slow&quot;}&#39;</span><span class="p">)</span>
@@ -885,8 +886,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[loud and fast]{volume=&quot;loud&quot; rate=&quot;fast&quot;}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="scale-based-values-1-5">
-<h3>Scale-Based Values (1-5)</h3>
+<p class="rubric" id="scale-based-values-1-5">Scale-Based Values (1-5)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[extra loud]{volume=&quot;5&quot;}&#39;</span><span class="p">)</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[extra fast]{rate=&quot;5&quot;}&#39;</span><span class="p">)</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[extra high]{pitch=&quot;5&quot;}&#39;</span><span class="p">)</span>
@@ -898,9 +898,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <li><p>Rate: 1=x-slow, 2=slow, 3=medium, 4=fast, 5=x-fast</p></li>
 <li><p>Pitch: 1=x-low, 2=low, 3=medium, 4=high, 5=x-high</p></li>
 </ul>
-</section>
-<section id="relative-values">
-<h3>Relative Values</h3>
+<p class="rubric" id="relative-values">Relative Values</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decibels for volume</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[louder]{volume=&quot;+6dB&quot;}&#39;</span><span class="p">)</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[quieter]{volume=&quot;-3dB&quot;}&#39;</span><span class="p">)</span>
@@ -912,12 +910,8 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[lower]{pitch=&quot;-5%&quot;}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="audio-files">
-<h2>Audio Files</h2>
-<section id="basic-audio">
-<h3>Basic Audio</h3>
+<p class="rubric" id="audio-files">Audio Files</p>
+<p class="rubric" id="basic-audio">Basic Audio</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># With description</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[doorbell]{src=&quot;https://example.com/sounds/bell.mp3&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;https://example.com/sounds/bell.mp3&quot;&gt;&lt;desc&gt;doorbell&lt;/desc&gt;&lt;/audio&gt;</span>
@@ -927,20 +921,15 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="c1"># → &lt;audio src=&quot;beep.mp3&quot;&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="audio-with-fallback">
-<h3>Audio with Fallback</h3>
+<p class="rubric" id="audio-with-fallback">Audio with Fallback</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[cat purring]{src=&quot;cat.ogg&quot; alt=&quot;Sound file not loaded&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;cat.ogg&quot;&gt;&lt;desc&gt;cat purring&lt;/desc&gt;Sound file not loaded&lt;/audio&gt;</span>
 </pre></div>
 </div>
 <p>The fallback text is spoken if the audio file can’t be played.</p>
-</section>
-<section id="advanced-audio-attributes">
-<h3>Advanced Audio Attributes</h3>
+<p class="rubric" id="advanced-audio-attributes">Advanced Audio Attributes</p>
 <p>SSMD supports advanced audio control through SSML attributes:</p>
-<section id="audio-clipping">
-<h4>Audio Clipping</h4>
+<p class="rubric" id="audio-clipping">Audio Clipping</p>
 <p>Play a portion of an audio file by specifying start and end times:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[music]{src=&quot;song.mp3&quot; clip=&quot;5s-30s&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;song.mp3&quot; clipBegin=&quot;5s&quot; clipEnd=&quot;30s&quot;&gt;&lt;desc&gt;music&lt;/desc&gt;&lt;/audio&gt;</span>
@@ -949,9 +938,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="c1"># → &lt;audio src=&quot;podcast.mp3&quot; clipBegin=&quot;0s&quot; clipEnd=&quot;10s&quot;&gt;&lt;desc&gt;intro&lt;/desc&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="speed-control">
-<h4>Speed Control</h4>
+<p class="rubric" id="speed-control">Speed Control</p>
 <p>Adjust playback speed using percentages:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[announcement]{src=&quot;speech.mp3&quot; speed=&quot;150%&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;speech.mp3&quot; speed=&quot;150%&quot;&gt;&lt;desc&gt;announcement&lt;/desc&gt;&lt;/audio&gt;</span>
@@ -960,9 +947,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="c1"># → &lt;audio src=&quot;message.mp3&quot; speed=&quot;80%&quot;&gt;&lt;desc&gt;slow&lt;/desc&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="repeat-audio">
-<h4>Repeat Audio</h4>
+<p class="rubric" id="repeat-audio">Repeat Audio</p>
 <p>Repeat audio playback a specific number of times:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[jingle]{src=&quot;ad.mp3&quot; repeat=&quot;3&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;ad.mp3&quot; repeatCount=&quot;3&quot;&gt;&lt;desc&gt;jingle&lt;/desc&gt;&lt;/audio&gt;</span>
@@ -971,9 +956,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="c1"># → &lt;audio src=&quot;alert.mp3&quot; repeatCount=&quot;5&quot;&gt;&lt;desc&gt;beep&lt;/desc&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="volume-adjustment">
-<h4>Volume Adjustment</h4>
+<p class="rubric" id="volume-adjustment">Volume Adjustment</p>
 <p>Control audio volume using decibel adjustment:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[alarm]{src=&quot;alert.mp3&quot; level=&quot;+6dB&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;alert.mp3&quot; soundLevel=&quot;+6dB&quot;&gt;&lt;desc&gt;alarm&lt;/desc&gt;&lt;/audio&gt;</span>
@@ -982,9 +965,7 @@ Higher values generally provide more detailed pronunciation.</p>
 <span class="c1"># → &lt;audio src=&quot;music.mp3&quot; soundLevel=&quot;-3dB&quot;&gt;&lt;desc&gt;background&lt;/desc&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="combining-attributes">
-<h4>Combining Attributes</h4>
+<p class="rubric" id="combining-attributes">Combining Attributes</p>
 <p>Multiple audio attributes can be combined with fallback text:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[bg music]{src=&quot;music.mp3&quot; clip=&quot;0s-10s&quot; speed=&quot;120%&quot; level=&quot;-3dB&quot; alt=&quot;Fallback text&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;music.mp3&quot; clipBegin=&quot;0s&quot; clipEnd=&quot;10s&quot; speed=&quot;120%&quot; soundLevel=&quot;-3dB&quot;&gt;</span>
@@ -997,14 +978,9 @@ Higher values generally provide more detailed pronunciation.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Audio attribute support varies by TTS platform. Amazon Polly and Google Cloud TTS
-support most of these features. Always test with your specific TTS engine.</p>
-</div>
-</section>
-</section>
-</section>
-<section id="markers">
-<h2>Markers</h2>
+<p>Audio attribute support varies by TTS platform. Amazon Polly and Google Cloud
+TTS support most of these features. Always test with your specific TTS engine. :::</p>
+<p class="rubric" id="markers">Markers</p>
 <p>Markers create synchronization points for events:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;I always wanted a @animal cat as a pet.&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;I always wanted a &lt;mark name=&quot;animal&quot;/&gt; cat as a pet.&lt;/speak&gt;</span>
@@ -1018,12 +994,9 @@ support most of these features. Always test with your specific TTS engine.</p>
 <span class="c1"># → Click now</span>
 </pre></div>
 </div>
-</section>
-<section id="extensions">
-<h2>Extensions</h2>
+<p class="rubric" id="extensions">Extensions</p>
 <p>Platform-specific extensions allow you to use TTS features beyond standard SSML.</p>
-<section id="amazon-polly-extensions">
-<h3>Amazon Polly Extensions</h3>
+<p class="rubric" id="amazon-polly-extensions">Amazon Polly Extensions</p>
 <p>Amazon Polly provides effects like whispering and dynamic range compression:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Whisper effect</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[secret message]{ext=&quot;whisper&quot;}&#39;</span><span class="p">)</span>
@@ -1034,9 +1007,7 @@ support most of these features. Always test with your specific TTS engine.</p>
 <span class="c1"># → &lt;amazon:effect name=&quot;drc&quot;&gt;announcement&lt;/amazon:effect&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="google-cloud-tts-speaking-styles">
-<h3>Google Cloud TTS Speaking Styles</h3>
+<p class="rubric" id="google-cloud-tts-speaking-styles">Google Cloud TTS Speaking Styles</p>
 <p>Google Cloud TTS supports speaking styles for Neural2 and Studio voices. You can
 configure these using SSMD’s extension system:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
@@ -1077,13 +1048,11 @@ configure these using SSMD’s extension system:</p>
 </ul>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Google TTS speaking styles are only supported by specific Neural2 and Studio voices.
-See the <a class="reference external" href="https://cloud.google.com/text-to-speech/docs/speaking-styles">Google Cloud TTS documentation</a>
-for voice compatibility.</p>
-</div>
-</section>
-<section id="custom-extensions">
-<h3>Custom Extensions</h3>
+<p>Google TTS speaking styles are only supported by specific Neural2 and Studio
+voices. See the
+<a class="reference external" href="https://cloud.google.com/text-to-speech/docs/speaking-styles">Google Cloud TTS documentation</a>
+for voice compatibility. :::</p>
+<p class="rubric" id="custom-extensions">Custom Extensions</p>
 <p>You can define your own extensions for any custom SSML tags your TTS platform supports:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
@@ -1099,10 +1068,7 @@ for voice compatibility.</p>
 </pre></div>
 </div>
 <p>For a complete Google TTS styles example, see <code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code>.</p>
-</section>
-</section>
-<section id="combining-multiple-annotations">
-<h2>Combining Multiple Annotations</h2>
+<p class="rubric" id="combining-multiple-annotations">Combining Multiple Annotations</p>
 <p>Multiple annotations can be space-separated inside the braces:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Bonjour]{lang=&quot;fr&quot; volume=&quot;5&quot; rate=&quot;2&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;lang xml:lang=&quot;fr-FR&quot;&gt;&lt;prosody volume=&quot;x-loud&quot; rate=&quot;slow&quot;&gt;Bonjour&lt;/prosody&gt;&lt;/lang&gt;</span>
@@ -1111,19 +1077,14 @@ for voice compatibility.</p>
 <span class="c1"># → &lt;prosody volume=&quot;x-loud&quot;&gt;&lt;say-as interpret-as=&quot;character&quot;&gt;important&lt;/say-as&gt;&lt;/prosody&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="escaping">
-<h2>Escaping</h2>
-<section id="xml-special-characters">
-<h3>XML Special Characters</h3>
+<p class="rubric" id="escaping">Escaping</p>
+<p class="rubric" id="xml-special-characters">XML Special Characters</p>
 <p>XML special characters are automatically escaped:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;5 &lt; 10 &amp; 10 &gt; 5&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;5 &amp;lt; 10 &amp;amp; 10 &amp;gt; 5&lt;/speak&gt;</span>
 </pre></div>
 </div>
-</section>
-<section id="security">
-<h3>Security</h3>
+<p class="rubric" id="security">Security</p>
 <p>All user input is automatically sanitized to prevent XML injection attacks. Special
 characters in both text content and annotation parameters are properly escaped:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Malicious input is safely escaped</span>
@@ -1134,13 +1095,12 @@ characters in both text content and annotation parameters are properly escaped:<
 <p>The library ensures:</p>
 <ul class="simple">
 <li><p><strong>XML validity</strong>: Output is always valid, well-formed XML</p></li>
-<li><p><strong>Injection prevention</strong>: User input cannot break out of attribute values or inject tags</p></li>
+<li><p><strong>Injection prevention</strong>: User input cannot break out of attribute values or inject
+tags</p></li>
 <li><p><strong>Automatic escaping</strong>: All special characters (<code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&amp;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">'</span></code>) are escaped</p></li>
 </ul>
 <p>You can safely use SSMD with untrusted user input in TTS applications.</p>
-</section>
-<section id="literal-asterisks">
-<h3>Literal Asterisks</h3>
+<p class="rubric" id="literal-asterisks">Literal Asterisks</p>
 <p>To include literal asterisks without emphasis, escape them or use different patterns:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These won&#39;t be treated as emphasis</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;2 * 3 = 6&#39;</span><span class="p">)</span>
@@ -1149,6 +1109,10 @@ characters in both text content and annotation parameters are properly escaped:<
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;* list item&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;* list item&lt;/speak&gt;</span>
 </pre></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 </section>
 </section>

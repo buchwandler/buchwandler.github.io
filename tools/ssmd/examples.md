@@ -5,8 +5,8 @@ permalink: /tools/ssmd/examples/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -668,12 +668,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p class="admonition-title">Note</p>
 <p>Speaking styles are only supported by specific Google Cloud TTS voices
 (Neural2 and Studio voices). See the complete example in
-<code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code>.</p>
-</div>
-</section>
-</section>
-<section id="amazon-polly">
-<h3>Amazon Polly</h3>
+<code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code>. :::</p>
+<p class="rubric" id="amazon-polly">Amazon Polly</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
@@ -706,12 +702,8 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;AudioStream&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="streaming-tts">
-<h2>Streaming TTS</h2>
-<section id="sentence-by-sentence-processing">
-<h3>Sentence-by-Sentence Processing</h3>
+<p class="rubric" id="streaming-tts">Streaming TTS</p>
+<p class="rubric" id="sentence-by-sentence-processing">Sentence-by-Sentence Processing</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
@@ -751,9 +743,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Playback complete!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="async-tts-streaming">
-<h3>Async TTS Streaming</h3>
+<p class="rubric" id="async-tts-streaming">Async TTS Streaming</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
@@ -785,10 +775,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="interactive-story-reader">
-<h2>Interactive Story Reader</h2>
+<p class="rubric" id="interactive-story-reader">Interactive Story Reader</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
 
@@ -858,11 +845,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">reader</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="content-management-system">
-<h2>Content Management System</h2>
-<section id="ssmd-cms-with-database">
-<h3>SSMD CMS with Database</h3>
+<p class="rubric" id="content-management-system">Content Management System</p>
+<p class="rubric" id="ssmd-cms-with-database">SSMD CMS with Database</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">to_ssml</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
@@ -942,12 +926,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="multi-language-support">
-<h2>Multi-Language Support</h2>
-<section id="language-aware-tts">
-<h3>Language-Aware TTS</h3>
+<p class="rubric" id="multi-language-support">Multi-Language Support</p>
+<p class="rubric" id="language-aware-tts">Language-Aware TTS</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">to_ssml</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">MultilingualTTS</span><span class="p">:</span>
@@ -986,10 +966,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="podcast-generator">
-<h2>Podcast Generator</h2>
+<p class="rubric" id="podcast-generator">Podcast Generator</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
@@ -1053,11 +1030,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated: </span><span class="si">{</span><span class="n">ssml_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="testing-and-validation">
-<h2>Testing and Validation</h2>
-<section id="ssmd-linter">
-<h3>SSMD Linter</h3>
+<p class="rubric" id="testing-and-validation">Testing and Validation</p>
+<p class="rubric" id="ssmd-linter">SSMD Linter</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">SSMDLinter</span><span class="p">:</span>
@@ -1100,12 +1074,8 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="complete-application-example">
-<h2>Complete Application Example</h2>
-<section id="voice-assistant-with-ssmd">
-<h3>Voice Assistant with SSMD</h3>
+<p class="rubric" id="complete-application-example">Complete Application Example</p>
+<p class="rubric" id="voice-assistant-with-ssmd">Voice Assistant with SSMD</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
 
@@ -1159,14 +1129,10 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">announce</span><span class="p">(</span><span class="s2">&quot;Weather Update&quot;</span><span class="p">,</span> <span class="s2">&quot;It&#39;s sunny with a high of 72 degrees&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="parser-api-examples">
-<h2>Parser API Examples</h2>
-<p>The Parser API extracts structured data from SSMD instead of generating SSML.
-This is useful for building custom TTS pipelines.</p>
-<section id="basic-segment-extraction">
-<h3>Basic Segment Extraction</h3>
+<p class="rubric" id="parser-api-examples">Parser API Examples</p>
+<p>The Parser API extracts structured data from SSMD instead of generating SSML. This is
+useful for building custom TTS pipelines.</p>
+<p class="rubric" id="basic-segment-extraction">Basic Segment Extraction</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_segments</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello *world*! This is ...500ms great.&quot;</span>
@@ -1180,9 +1146,7 @@ This is useful for building custom TTS pipelines.</p>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Break: </span><span class="si">{</span><span class="n">brk</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="multi-voice-dialogue-processing">
-<h3>Multi-Voice Dialogue Processing</h3>
+<p class="rubric" id="multi-voice-dialogue-processing">Multi-Voice Dialogue Processing</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -1205,9 +1169,7 @@ This is useful for building custom TTS pipelines.</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="custom-tts-pipeline">
-<h3>Custom TTS Pipeline</h3>
+<p class="rubric" id="custom-tts-pipeline">Custom TTS Pipeline</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
 
 <span class="k">class</span><span class="w"> </span><span class="nc">CustomTTS</span><span class="p">:</span>
@@ -1267,9 +1229,7 @@ This is useful for building custom TTS pipelines.</p>
 <span class="s2"> &quot;&quot;&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="text-transformation-example">
-<h3>Text Transformation Example</h3>
+<p class="rubric" id="text-transformation-example">Text Transformation Example</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_segments</span>
 
  <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -1290,12 +1250,9 @@ This is useful for building custom TTS pipelines.</p>
 </pre></div>
 </div>
 <p>For a complete parser demonstration, see <code class="docutils literal notranslate"><span class="pre">examples/parser_demo.py</span></code>.</p>
-</section>
-</section>
-<section id="see-also">
-<h2>See Also</h2>
+<p class="rubric" id="see-also">See Also</p>
 <ul class="simple">
-<li><p>Check the <cite>examples/</cite> directory in the repository for more runnable examples:</p>
+<li><p>Check the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory in the repository for more runnable examples:</p>
 <ul>
 <li><p><code class="docutils literal notranslate"><span class="pre">examples/parser_demo.py</span></code> - Complete parser API demonstration</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">examples/story_reader_demo.py</span></code> - Interactive story reader</p></li>
@@ -1308,6 +1265,9 @@ This is useful for building custom TTS pipelines.</p>
 <li><p>See <a class="reference internal" href="../parser/"><span class="doc">Parser API</span></a> for the Parser API guide</p></li>
 <li><p>See <a class="reference internal" href="../capabilities/"><span class="doc">TTS Engine Capabilities</span></a> for TTS engine integration details</p></li>
 </ul>
+</div>
+</section>
+</section>
 </section>
 </section>
 </div>

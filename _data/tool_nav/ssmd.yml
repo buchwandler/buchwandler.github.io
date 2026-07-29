@@ -4,17 +4,17 @@ nav_key: ssmd
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.7.2
-source_commit: 8404fcf18982f5b5ea3c02a8f30d6279eae78a74
-source_url: https://github.com/buchwandler/ssmd/releases/tag/v0.7.2
+source_ref: v0.8.0
+source_commit: 88dbf2f37a79732aea250a05ec70542121cff184
+source_url: https://github.com/buchwandler/ssmd/releases/tag/v0.8.0
 is_default: true
 repo_url: https://github.com/buchwandler/ssmd
-release_tag: v0.7.2
-release_url: https://github.com/buchwandler/ssmd/releases/tag/v0.7.2
+release_tag: v0.8.0
+release_url: https://github.com/buchwandler/ssmd/releases/tag/v0.8.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.7.2
+  ref: v0.8.0
   url: /tools/ssmd/
   current: true
 - name: main
@@ -32,12 +32,18 @@ entries:
 - slug: quickstart
   title: ssmd Quick Start
   url: /tools/ssmd/quickstart/
+- slug: cli
+  title: ssmd Command Line Interface
+  url: /tools/ssmd/cli/
 - slug: syntax
   title: SSMD Syntax Reference
   url: /tools/ssmd/syntax/
 - slug: capabilities
   title: ssmd TTS Engine Capabilities
   url: /tools/ssmd/capabilities/
+- slug: spans
+  title: ssmd Spans
+  url: /tools/ssmd/spans/
 - slug: parser
   title: ssmd Parser API
   url: /tools/ssmd/parser/
@@ -47,6 +53,9 @@ entries:
 - slug: examples
   title: ssmd Examples
   url: /tools/ssmd/examples/
+- slug: changelog
+  title: ssmd Changelog
+  url: /tools/ssmd/changelog/
 - slug: api
   title: ssmd API Reference
   url: /tools/ssmd/api/

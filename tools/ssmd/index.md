@@ -5,8 +5,8 @@ permalink: /tools/ssmd/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -549,7 +549,7 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <a class="reference external image-reference" href="https://pypi.org/project/ssmd/"><img alt="PyPI Version" src="https://img.shields.io/pypi/v/ssmd" />
 </a>
 <img alt="Python Versions" src="https://img.shields.io/pypi/pyversions/ssmd" />
-<a class="reference external image-reference" href="https://codecov.io/gh/holgern/ssmd"><img alt="Code Coverage" src="https://codecov.io/gh/holgern/ssmd/graph/badge.svg?token=iCHXwbjAXG" />
+<a class="reference external image-reference" href="https://codecov.io/gh/buchwandler/ssmd"><img alt="Code Coverage" src="https://codecov.io/gh/buchwandler/ssmd/graph/badge.svg?token=iCHXwbjAXG" />
 </a>
 <section id="features">
 <h2>Features</h2>
@@ -615,18 +615,13 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next Steps</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">Command Line Interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/#exit-codes">Exit codes</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="syntax/">SSMD Syntax Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="syntax/#yaml-front-matter">YAML front matter</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#text-and-emphasis">Text and Emphasis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#breaks-and-pauses">Breaks and Pauses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#paragraphs">Paragraphs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#headings">Headings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#annotations">Annotations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#prosody-voice-control">Prosody (Voice Control)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#audio-files">Audio Files</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#markers">Markers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#extensions">Extensions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#combining-multiple-annotations">Combining Multiple Annotations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="syntax/#escaping">Escaping</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="capabilities/">TTS Engine Capabilities</a><ul>
@@ -635,20 +630,18 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#capability-profiles-and-linting">Capability Profiles and Linting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#custom-capabilities">Custom Capabilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#capability-comparison">Capability Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#streaming-with-capabilities">Streaming with Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#testing-capabilities">Testing Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#fallback-behavior">Fallback Behavior</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#best-practices">Best Practices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#integration-example">Integration Example</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spans/">Spans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spans/#coordinate-system">Coordinate system</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#sentence-offsets">Sentence offsets</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parser/">Parser API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="parser/#when-to-use-the-parser">When to Use the Parser</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser/#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="parser/#parser-functions">Parser Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser/#data-structures">Data Structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser/#usage-examples">Usage Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser/#see-also">See Also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ssml_conversion/">SSML to SSMD Conversion</a><ul>
@@ -666,15 +659,10 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/#basic-tts-integration">Basic TTS Integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#streaming-tts">Streaming TTS</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#interactive-story-reader">Interactive Story Reader</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#content-management-system">Content Management System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#multi-language-support">Multi-Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#podcast-generator">Podcast Generator</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#testing-and-validation">Testing and Validation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#complete-application-example">Complete Application Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#parser-api-examples">Parser API Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-8-0-unreleased">[v0.8.0] - Unreleased</a></li>
 </ul>
 </li>
 </ul>
@@ -684,10 +672,6 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#core-classes">Core Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#convenience-functions">Convenience Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#parser-data-structures">Parser Data Structures</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#capability-presets">Capability Presets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#internal-modules">Internal Modules</a></li>
 </ul>
 </li>
 </ul>

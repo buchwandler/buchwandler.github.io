@@ -5,8 +5,8 @@ permalink: /tools/ssmd/ssml_conversion/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -542,9 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="ssml-to-ssmd-conversion">
 <h1>SSML to SSMD Conversion</h1>
-<p>SSMD supports bidirectional conversion: you can convert SSML back to SSMD format.
-This is useful for editing existing SSML, migrating from other tools, or creating
-round-trip workflows.</p>
+<p>SSMD supports bidirectional conversion: you can convert SSML back to SSMD format. This
+is useful for editing existing SSML, migrating from other tools, or creating round-trip
+workflows.</p>
 <section id="basic-conversion">
 <h2>Basic Conversion</h2>
 <section id="using-the-convenience-function">

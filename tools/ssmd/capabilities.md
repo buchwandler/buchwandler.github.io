@@ -5,8 +5,8 @@ permalink: /tools/ssmd/capabilities/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -681,8 +681,8 @@ This ensures compatibility by converting unsupported features to plain text.</p>
 </section>
 <section id="capability-profiles-and-linting">
 <h2>Capability Profiles and Linting</h2>
-<p>Profiles describe which SSMD tags and attributes are supported without mutating
-output. Use them to validate input before conversion:</p>
+<p>Profiles describe which SSMD tags and attributes are supported without mutating output.
+Use them to validate input before conversion:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_profile</span><span class="p">,</span> <span class="n">list_profiles</span><span class="p">,</span> <span class="n">lint</span>
 
 <span class="n">profiles</span> <span class="o">=</span> <span class="n">list_profiles</span><span class="p">()</span>
@@ -690,7 +690,7 @@ output. Use them to validate input before conversion:</p>
 <span class="n">issues</span> <span class="o">=</span> <span class="n">lint</span><span class="p">(</span><span class="s2">&quot;[Hello]{ext=&#39;whisper&#39;}&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;kokoro&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Profiles are separate from runtime <cite>TTSCapabilities</cite> presets.</p>
+<p>Profiles are separate from runtime <code class="docutils literal notranslate"><span class="pre">TTSCapabilities</span></code> presets.</p>
 </section>
 <section id="custom-capabilities">
 <h2>Custom Capabilities</h2>
@@ -767,143 +767,7 @@ output. Use them to validate input before conversion:</p>
 </section>
 <section id="output-by-engine">
 <h3>Output by Engine</h3>
-<table class="docutils align-default">
-<colgroup>
-<col style="width: 15.0%" />
-<col style="width: 85.0%" />
-</colgroup>
-<thead>
-<tr class="row-odd"><th class="head"><p>Engine</p></th>
-<th class="head"><p>Output SSML</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>minimal</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&lt;speak&gt;Hello</span> <span class="pre">world...</span> <span class="pre">this</span> <span class="pre">is</span> <span class="pre">loud!&lt;/speak&gt;</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>pyttsx3</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&lt;speak&gt;Hello</span> <span class="pre">world...</span> <span class="pre">&lt;prosody</span> <span class="pre">volume=&quot;x-loud&quot;&gt;this</span> <span class="pre">is</span> <span class="pre">loud&lt;/prosody&gt;!&lt;/speak&gt;</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>espeak</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&lt;speak&gt;Hello</span> <span class="pre">world&lt;break</span> <span class="pre">time=&quot;1000ms&quot;/&gt;</span> <span class="pre">&lt;prosody</span> <span class="pre">volume=&quot;x-loud&quot;&gt;this</span> <span class="pre">is</span> <span class="pre">loud&lt;/prosody&gt;!&lt;/speak&gt;</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>google</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt;</span> <span class="pre">world&lt;break</span> <span class="pre">time=&quot;1000ms&quot;/&gt;</span> <span class="pre">&lt;prosody</span> <span class="pre">volume=&quot;x-loud&quot;&gt;this</span> <span class="pre">is</span> <span class="pre">loud&lt;/prosody&gt;!&lt;/speak&gt;</span></code></p></td>
-</tr>
-</tbody>
-</table>
 </section>
-</section>
-<section id="streaming-with-capabilities">
-<h2>Streaming with Capabilities</h2>
-<p>Capability filtering works seamlessly with document streaming:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-
-<span class="c1"># Create document for specific engine</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># Welcome</span>
-<span class="s2">*Hello* world!</span>
-<span class="s2">[Bonjour]{lang=&quot;fr&quot;} everyone!</span>
-<span class="s2">This is [loud]{volume=&quot;loud&quot;}.</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">,</span> <span class="n">auto_sentence_tags</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># All sentences are pre-filtered for eSpeak</span>
-<span class="k">for</span> <span class="n">sentence_doc</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
-    <span class="n">tts_engine</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">sentence_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">())</span>
-    <span class="c1"># Emphasis and language are already removed</span>
-    <span class="c1"># Prosody is preserved</span>
-</pre></div>
-</div>
-</section>
-<section id="testing-capabilities">
-<h2>Testing Capabilities</h2>
-<p>Test what gets filtered:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
-
-<span class="n">engines</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;minimal&#39;</span><span class="p">,</span> <span class="s1">&#39;pyttsx3&#39;</span><span class="p">,</span> <span class="s1">&#39;espeak&#39;</span><span class="p">,</span> <span class="s1">&#39;google&#39;</span><span class="p">,</span> <span class="s1">&#39;polly&#39;</span><span class="p">]</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;*Emphasis* ...500ms [language]{lang=&quot;fr&quot;} [loud]{volume=&quot;loud&quot;}&#39;</span>
-
-<span class="k">for</span> <span class="n">engine</span> <span class="ow">in</span> <span class="n">engines</span><span class="p">:</span>
-    <span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="n">engine</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">engine</span><span class="si">:</span><span class="s2">10</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">ssml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>minimal    → &lt;speak&gt;Emphasis language loud&lt;/speak&gt;
-pyttsx3    → &lt;speak&gt;Emphasis language &lt;prosody volume=&quot;loud&quot;&gt;loud&lt;/prosody&gt;&lt;/speak&gt;
-espeak     → &lt;speak&gt;Emphasis &lt;break time=&quot;500ms&quot;/&gt; &lt;lang xml:lang=&quot;fr-FR&quot;&gt;language&lt;/lang&gt; &lt;prosody volume=&quot;loud&quot;&gt;loud&lt;/prosody&gt;&lt;/speak&gt;
-google     → &lt;speak&gt;&lt;emphasis&gt;Emphasis&lt;/emphasis&gt; &lt;break time=&quot;500ms&quot;/&gt; &lt;lang xml:lang=&quot;fr-FR&quot;&gt;language&lt;/lang&gt; &lt;prosody volume=&quot;loud&quot;&gt;loud&lt;/prosody&gt;&lt;/speak&gt;
-polly      → &lt;speak&gt;&lt;emphasis&gt;Emphasis&lt;/emphasis&gt; &lt;break time=&quot;500ms&quot;/&gt; &lt;lang xml:lang=&quot;fr-FR&quot;&gt;language&lt;/lang&gt; &lt;prosody volume=&quot;loud&quot;&gt;loud&lt;/prosody&gt;&lt;/speak&gt;
-</pre></div>
-</div>
-</section>
-<section id="fallback-behavior">
-<h2>Fallback Behavior</h2>
-<p>When a feature is unsupported:</p>
-<ol class="arabic simple">
-<li><p><strong>Text content is preserved</strong> - Never lost</p></li>
-<li><p><strong>Markup is stripped</strong> - Clean removal</p></li>
-<li><p><strong>Whitespace is normalized</strong> - No extra spaces</p></li>
-<li><p><strong>Nesting is handled</strong> - Inner content preserved</p></li>
-</ol>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># With emphasis support disabled</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
-
-<span class="c1"># Emphasis markup is removed, text preserved</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;This is *very important* info&quot;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;minimal&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;This is very important info&lt;/speak&gt;</span>
-</pre></div>
-</div>
-</section>
-<section id="best-practices">
-<h2>Best Practices</h2>
-<ol class="arabic simple">
-<li><p><strong>Match your engine</strong>: Use the appropriate preset or create custom capabilities</p></li>
-<li><p><strong>Test with your engine</strong>: Verify output works as expected</p></li>
-<li><p><strong>Graceful degradation</strong>: Write content that works even when features are stripped</p></li>
-<li><p><strong>Document requirements</strong>: Note which TTS engines your content supports</p></li>
-<li><p><strong>Use capability detection</strong>: Check engine capabilities at runtime if possible</p></li>
-</ol>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good: Works with any engine</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world! This is important.&quot;</span>
-
-<span class="c1"># Better: Adds features for engines that support them</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world! *This is important*.&quot;</span>
-
-<span class="c1"># Best: Provides alternatives</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Hello world!</span>
-<span class="s2">*This is important.*</span>
-<span class="s2">[This is very important.]{volume=&quot;5&quot; rate=&quot;2&quot;}</span>
-<span class="s2">&quot;&quot;&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="integration-example">
-<h2>Integration Example</h2>
-<p>Complete example with capability detection:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">TTSHandler</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine_name</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine_name</span> <span class="o">=</span> <span class="n">engine_name</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">):</span>
-        <span class="c1"># Convert with automatic filtering</span>
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_name</span><span class="p">)</span>
-        <span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-
-        <span class="c1"># Send to TTS engine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
-
-<span class="c1"># Usage</span>
-<span class="n">tts</span> <span class="o">=</span> <span class="n">TTSHandler</span><span class="p">(</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
-<span class="n">tts</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="s1">&#39;*Hello* [world]{lang=&quot;fr&quot;}!&#39;</span><span class="p">)</span>
-<span class="c1"># Automatically filtered for eSpeak compatibility</span>
-</pre></div>
-</div>
 </section>
 </section>
 </div>

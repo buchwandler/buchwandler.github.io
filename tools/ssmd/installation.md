@@ -5,8 +5,8 @@ permalink: /tools/ssmd/installation/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "8404fcf18982f5b5ea3c02a8f30d6279eae78a74"
+docs_ref: "v0.8.0"
+docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
 search_enabled: true
 ---
 
@@ -545,7 +545,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="requirements">
 <h2>Requirements</h2>
 <ul class="simple">
-<li><p>Python 3.9 or higher</p></li>
+<li><p>Python 3.10 or higher</p></li>
 <li><p>pip (Python package installer)</p></li>
 </ul>
 </section>
@@ -563,7 +563,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <ol class="arabic simple">
 <li><p>Clone the repository:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/ssmd.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ssmd.git
 <span class="nb">cd</span><span class="w"> </span>ssmd
 </pre></div>
 </div>
@@ -573,14 +573,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
 </div>
-<p>This will install SSMD in editable mode, so any changes you make to the source
-code will be immediately reflected.</p>
+<p>This will install SSMD in editable mode, so any changes you make to the source code will
+be immediately reflected.</p>
 </section>
 <section id="development-installation">
 <h2>Development Installation</h2>
 <p>For development with all testing and documentation tools:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Clone and enter directory</span>
-git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/ssmd.git
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ssmd.git
 <span class="nb">cd</span><span class="w"> </span>ssmd
 
 <span class="c1"># Install with development dependencies</span>
@@ -597,6 +597,8 @@ pre-commit<span class="w"> </span>install
 <li><p>Linting and formatting (ruff)</p></li>
 <li><p>Documentation building (Sphinx)</p></li>
 </ul>
+<p>The optional <code class="docutils literal notranslate"><span class="pre">ssml-maker</span></code> integration tests are installed separately with
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[integration]&quot;</span></code>.</p>
 </section>
 <section id="verifying-installation">
 <h2>Verifying Installation</h2>
@@ -617,7 +619,8 @@ pre-commit<span class="w"> </span>install
 <h2>Dependencies</h2>
 <p>SSMD has minimal runtime dependencies:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - sentence detection and splitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.3</span></code> - sentence detection and splitting; the 0.2.x line does not satisfy
+SSMD’s paragraph and markup round-trip contract</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code> - YAML front matter parsing</p></li>
 </ul>
 <p>Optional dependencies for development:</p>

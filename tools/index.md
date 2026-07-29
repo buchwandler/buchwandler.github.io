@@ -103,7 +103,7 @@ permalink: /tools/
       <p>A lightweight alternative syntax for SSML (Speech Synthesis Markdown).</p>
       <div class="card-links">
         <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.7.2" rel="external noopener">Latest release: v0.7.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.8.0" rel="external noopener">Latest release: v0.8.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
