@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
+docs_commit: "83ea8018377aac3e282aa5a3285e80403fd97794"
 search_enabled: true
 ---
 
@@ -794,6 +794,15 @@ management.</p>
 </section>
 <section id="configuration-helpers">
 <h2>Configuration Helpers</h2>
+</section>
+<section id="ssmd-0-8-api">
+<h2>SSMD 0.8 API</h2>
+<p>The public renderer configuration is <code class="docutils literal notranslate"><span class="pre">pykokoro.ssmd_config.SSMDRenderConfig</span></code> with
+<code class="docutils literal notranslate"><span class="pre">SSMDPauseOverrides</span></code>. <code class="docutils literal notranslate"><span class="pre">PipelineConfig(ssmd=...)</span></code> sets defaults, and <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">ssmd=...)</span></code>
+accepts a per-render replacement. <code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> contains copied title,
+binding, and pause metadata; <code class="docutils literal notranslate"><span class="pre">AudioResult.markers</span></code> contains structured marker sample
+offsets. Audio annotations require an explicit resolver and fall back to <code class="docutils literal notranslate"><span class="pre">alt</span></code> text;
+Kokoro extensions are rejected by profile validation.</p>
 </section>
 <section id="see-also">
 <h2>See Also</h2>

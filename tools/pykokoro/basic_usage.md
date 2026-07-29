@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.1"
-docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
+docs_ref: "v0.7.2"
+docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
 search_enabled: true
 ---
 
@@ -852,6 +852,31 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 <span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">filename</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="ssmd-0-8-portable-metadata">
+<h2>SSMD 0.8 portable metadata</h2>
+<p>SSMD front matter is parsed by default and removed before sentence parsing. Use logical
+roles in the body and bind them in the document header. API bindings override document
+bindings, explicit breaks override implicit defaults, and <code class="docutils literal notranslate"><span class="pre">parse_header=False</span></code> preserves
+literal leading delimiters. PyKokoro does not load SSMD user configuration files; audio
+annotations require an explicit resolver.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">SSMDRenderConfig</span>
+
+<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>
+<span class="s2">title: Portable podcast</span>
+<span class="s2">voice_bindings:</span>
+<span class="s2">  kokoro:</span>
+<span class="s2">    host: af_sarah</span>
+<span class="s2">pause_defaults:</span>
+<span class="s2">  enabled: true</span>
+<span class="s2">  paragraph: 700ms</span>
+<span class="s2">---</span>
+<span class="s2">&lt;div voice=&quot;host&quot;&gt;Welcome to the portable podcast.&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">ssmd</span><span class="o">=</span><span class="n">SSMDRenderConfig</span><span class="p">()))</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
 </section>

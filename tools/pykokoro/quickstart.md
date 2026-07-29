@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.1"
-docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
+docs_ref: "v0.7.2"
+docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
 search_enabled: true
 ---
 
@@ -756,6 +756,26 @@ selection and choose only the model size:</p>
 <span class="s2">&quot;&quot;&quot;</span>
 
 <span class="n">text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;welcome.wav&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="portable-ssmd-0-8-headers">
+<h2>Portable SSMD 0.8 headers</h2>
+<p>Valid first-line YAML front matter is consumed automatically. <code class="docutils literal notranslate"><span class="pre">title</span></code> is metadata only,
+and logical voice roles can be mapped without changing the spoken body. Use
+<code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(parse_header=False)</span></code> when the leading delimiter is literal text.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>
+<span class="s2">title: Quick review</span>
+<span class="s2">voice_bindings:</span>
+<span class="s2">  kokoro:</span>
+<span class="s2">    narrator: af_sarah</span>
+<span class="s2">---</span>
+<span class="s2">&lt;div voice=&quot;narrator&quot;&gt;This text uses a portable role.&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">())</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Quick review&quot;</span>
 </pre></div>
 </div>
 </section>

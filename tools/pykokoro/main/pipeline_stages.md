@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
+docs_commit: "83ea8018377aac3e282aa5a3285e80403fd97794"
 search_enabled: true
 ---
 
@@ -698,9 +698,10 @@ keyword is special-cased to update <code class="docutils literal notranslate"><s
 <h2>Stage behavior</h2>
 <section id="ssmd-document-parser">
 <h3>SSMD document parser</h3>
-<p><code class="docutils literal notranslate"><span class="pre">SsmdDocumentParser</span></code> uses <code class="docutils literal notranslate"><span class="pre">parse_ssmd_to_segments</span></code> to turn SSMD markup into clean text
-plus metadata spans, pause boundaries, and sentence/paragraph segments. It honors
-<code class="docutils literal notranslate"><span class="pre">generation.pause_*</span></code> values when converting break strengths into durations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SsmdDocumentParser</span></code> uses the SSMD 0.8 public front-matter parser and body-only
+segmentation to turn SSMD markup into clean text plus metadata spans, pause boundaries,
+and sentence/paragraph segments. Explicit break durations retain their processor
+mapping; implicit document defaults are reduced before G2P.</p>
 <p>Supported SSMD features include:</p>
 <ul class="simple">
 <li><p>Break markers: <code class="docutils literal notranslate"><span class="pre">...c</span></code>, <code class="docutils literal notranslate"><span class="pre">...s</span></code>, <code class="docutils literal notranslate"><span class="pre">...p</span></code>, <code class="docutils literal notranslate"><span class="pre">...500ms</span></code></p></li>
@@ -796,6 +797,16 @@ script demonstrates multiple wiring styles:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
+<section id="ssmd-0-8-document-controls">
+<h3>SSMD 0.8 document controls</h3>
+<p><code class="docutils literal notranslate"><span class="pre">PipelineConfig.ssmd</span></code> controls header parsing, provider-scoped API binding overrides,
+unknown-header strictness, missing-voice behavior, pause-default overrides, emphasis
+policy, and the explicit audio source resolver. Header bindings override direct logical
+references, while API bindings override header bindings. Document pause defaults are
+reduced before G2P; explicit breaks take precedence and simultaneous implicit defaults
+use the maximum duration. <code class="docutils literal notranslate"><span class="pre">DocumentResult.header</span></code>/<code class="docutils literal notranslate"><span class="pre">body</span></code> and
+<code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> expose copied metadata.</p>
+</section>
 </section>
 <section id="local-model-files-and-providers">
 <h2>Local model files and providers</h2>

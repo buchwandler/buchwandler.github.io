@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4f1a3652933a7facb8667786c575f8db65171c41"
+docs_commit: "83ea8018377aac3e282aa5a3285e80403fd97794"
 search_enabled: true
 ---
 
@@ -741,6 +741,13 @@ snippets in older examples, update them to the pipeline style shown below.</p>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="portable-ssmd-0-8-podcast">
+<h2>Portable SSMD 0.8 podcast</h2>
+<p>Prefer stable logical roles in portable documents. See
+<code class="docutils literal notranslate"><span class="pre">examples/ssmd_080_portable_podcast.py</span></code> for a runnable example using <code class="docutils literal notranslate"><span class="pre">host</span></code>, <code class="docutils literal notranslate"><span class="pre">cohost</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">guest</span></code> bindings, document pause defaults, and an API override. The body remains
+portable while a renderer selects concrete Kokoro voice IDs.</p>
 </section>
 <section id="see-also">
 <h2>See Also</h2>
