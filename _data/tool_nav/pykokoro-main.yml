@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 83ea8018377aac3e282aa5a3285e80403fd97794
+source_commit: 5eb1869636371065c626ef9194722c9aa896e24d
 source_url: https://github.com/buchwandler/pykokoro/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/pykokoro
-release_tag: v0.7.2
-release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.7.2
+release_tag: v0.7.4
+release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.7.4
 versions:
 - name: release
   label: Latest release
-  ref: v0.7.2
+  ref: v0.7.4
   url: /tools/pykokoro/
   current: false
 - name: main

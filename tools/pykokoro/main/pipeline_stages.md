@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "83ea8018377aac3e282aa5a3285e80403fd97794"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -806,6 +806,12 @@ references, while API bindings override header bindings. Document pause defaults
 reduced before G2P; explicit breaks take precedence and simultaneous implicit defaults
 use the maximum duration. <code class="docutils literal notranslate"><span class="pre">DocumentResult.header</span></code>/<code class="docutils literal notranslate"><span class="pre">body</span></code> and
 <code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> expose copied metadata.</p>
+<p>Emphasis capability policy is evaluated after phoneme processing and before
+<code class="docutils literal notranslate"><span class="pre">audio_generation</span></code>. <code class="docutils literal notranslate"><span class="pre">plain</span></code> preserves metadata without modifying audio, <code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one
+diagnostic per logical source segment, <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects before inference, and
+<code class="docutils literal notranslate"><span class="pre">approximate</span></code> adds deterministic volume metadata (<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>,
+<code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>). <code class="docutils literal notranslate"><span class="pre">none</span></code> is ordinary speech in every mode. Explicit prosody metadata is
+retained with precedence over approximation.</p>
 </section>
 </section>
 <section id="local-model-files-and-providers">

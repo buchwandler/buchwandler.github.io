@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/examples/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
+docs_ref: "v0.7.4"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 

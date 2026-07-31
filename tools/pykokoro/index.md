@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
+docs_ref: "v0.7.4"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -631,22 +631,22 @@ languages, voices, and advanced features like pause control and text splitting.<
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.7.3] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.7.2] - 2026-07-29</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased-ssmd-0-8-renderer-integration">Unreleased — SSMD 0.8 renderer integration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.7.1] - 2026-07-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.7.0] - 2026-07-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.6.5] - 2026-02-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.6.4] - 2026-01-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.6.3] - 2026-01-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.6.2] - 2026-01-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.6.1] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.6.0] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.5.1] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.5.0] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.4.0] - 2026-01-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id36">[0.3.0] - 2026-01-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.2.0] - 2026-01-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id42">[0.1.0] - 2026-01-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.7.1] - 2026-07-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.7.0] - 2026-07-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.6.5] - 2026-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.6.4] - 2026-01-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.6.3] - 2026-01-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.6.2] - 2026-01-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.6.1] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.6.0] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.5.1] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id31">[0.5.0] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.4.0] - 2026-01-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.3.0] - 2026-01-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id42">[0.2.0] - 2026-01-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id45">[0.1.0] - 2026-01-07</a></li>
 </ul>
 </li>
 </ul>
@@ -687,6 +687,7 @@ control</p></li>
 
 <span class="c1"># Save to file</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>

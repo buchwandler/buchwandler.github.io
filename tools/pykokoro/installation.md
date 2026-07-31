@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
+docs_ref: "v0.7.4"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -671,6 +671,7 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <h2>Verifying Installation</h2>
 <p>Test your installation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
 
 <span class="c1"># Quick test</span>
@@ -729,21 +730,21 @@ manually:</p>
 <span class="c1"># HuggingFace v1.1-zh (103 voices, 8 quality options)</span>
 <span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
     <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
+    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
 <span class="p">)</span>
 
 <span class="c1"># GitHub v1.0 (54 voices, 4 quality options)</span>
 <span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
     <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
     <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span>  <span class="c1"># Auto-downloads from GitHub</span>
+    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
 <span class="p">)</span>
 
 <span class="c1"># GitHub v1.1-zh (103 voices, fp32 only)</span>
 <span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
     <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
     <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span>  <span class="c1"># Auto-downloads from GitHub</span>
+    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
 <span class="p">)</span>
 </pre></div>
 </div>

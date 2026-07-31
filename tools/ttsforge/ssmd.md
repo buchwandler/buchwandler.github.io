@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Installation Guide"
-permalink: /tools/pykokoro/main/installation/
-nav_tool: pykokoro-main
-docs_project: "pykokoro"
-docs_variant: "main"
-docs_ref: "main"
-docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
+title: "ttsforge SSMD Editing"
+permalink: /tools/ttsforge/ssmd/
+nav_tool: ttsforge
+docs_project: "ttsforge"
+docs_variant: "release"
+docs_ref: "v0.1.2"
+docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
 search_enabled: true
 ---
 
@@ -540,237 +540,247 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="installation-guide">
-<h1>Installation Guide</h1>
-<p>PyKokoro can be installed using pip and requires Python 3.10 or higher.</p>
-<section id="basic-installation">
-<h2>Basic Installation</h2>
-<p>Install the latest stable version from PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
+<section id="ssmd-editing">
+<h1>SSMD Editing</h1>
+<p>SSMD (Speech Synthesis Markdown) is an intermediate text format used by ttsforge
+between EPUB extraction and TTS audio generation. It allows fine-grained control
+over pronunciation, pacing, and emphasis in your audiobooks.</p>
+<section id="how-ssmd-works">
+<h2>How SSMD Works</h2>
+<p>During conversion, ttsforge automatically generates <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> files for each chapter:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
+├── {book_title}_state.json
+├── chapter_001_intro.ssmd      # Editable text with speech markup
+├── chapter_001_intro.wav
+├── chapter_002_chapter1.ssmd
+├── chapter_002_chapter1.wav
+└── ...
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
-distributions. Install exactly one provider extra per environment.</p>
-<section id="android-termux-providers">
-<h3>Android/Termux Providers</h3>
-<p>PyKokoro accepts any provider spelling reported by the installed ONNX Runtime. For the
-Android/Termux runtime, both aliases and runtime names are valid:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;xnnpack&quot;</span><span class="p">)</span>
+<p>When you resume a conversion, ttsforge detects if you’ve edited any SSMD files
+(using MD5 hash comparison) and automatically regenerates the corresponding audio.</p>
+</section>
+<section id="basic-workflow">
+<h2>Basic Workflow</h2>
+<ol class="arabic">
+<li><p><strong>Start conversion</strong>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> to select the highest-priority available provider by capability.
-PyKokoro does not infer availability from platform names and does not suppress ONNX
-Runtime warnings.</p>
-</section>
-</section>
-<section id="gpu-support">
-<h2>GPU Support</h2>
-<p>For GPU acceleration, install with the GPU extras:</p>
-<section id="nvidia-cuda">
-<h3>NVIDIA CUDA</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span>
+</li>
+<li><p><strong>Pause conversion</strong> (Ctrl+C when needed)</p></li>
+<li><p><strong>Edit SSMD files</strong> to fix pronunciation or pacing:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>.book_chapters/chapter_001_intro.ssmd
 </pre></div>
 </div>
-<p>This installs <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> for NVIDIA CUDA support.</p>
-</section>
-<section id="amd-rocm">
-<h3>AMD ROCm</h3>
-<p>For AMD GPUs with ROCm:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-rocm
+</li>
+<li><p><strong>Resume conversion</strong> - automatically detects edits:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
-</section>
-<section id="custom-onnx-runtime">
-<h3>Custom ONNX Runtime</h3>
-<p>You can also install a specific ONNX Runtime version separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2<span class="w">  </span><span class="c1"># or your preferred version</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="system-requirements">
-<h2>System Requirements</h2>
-<section id="python-version">
-<h3>Python Version</h3>
-<ul class="simple">
-<li><p>Python 3.10 or higher</p></li>
-<li><p>Tested on Python 3.10, 3.11, 3.12, and 3.13</p></li>
-</ul>
-</section>
-<section id="dependencies">
-<h3>Dependencies</h3>
-<p>Core dependencies (automatically installed):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Array operations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code> - Model inference</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> - Phoneme generation (via <code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code> - Text-to-phoneme conversion</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">requests</span></code> - Model downloading</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tqdm</span></code> - Progress bars</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Enhanced phoneme dictionary</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - Intelligent text splitting</p></li>
-</ul>
-<p>Optional dependencies:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - For saving audio to WAV files (recommended)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> - For GPU acceleration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spacy</span></code> - For sentence/clause splitting and spaCy-aware G2P tokenization</p></li>
-</ul>
-</section>
-<section id="installing-espeak-ng">
-<h3>Installing espeak-ng</h3>
-<p>PyKokoro requires <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> to be installed on your system.</p>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download and install from: <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
-<p>Or use Chocolatey:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>choco<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-</section>
-<section id="installing-spacy-optional">
-<h3>Installing spaCy (Optional)</h3>
-<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware spaCy
-tokenization in G2P:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">TokenizerConfig.spacy_model</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> and resolves package
-names from language + size (default size: <code class="docutils literal notranslate"><span class="pre">md</span></code>). For example:
-<code class="docutils literal notranslate"><span class="pre">en-us</span> <span class="pre">-&gt;</span> <span class="pre">en_core_web_md</span></code> and <code class="docutils literal notranslate"><span class="pre">de</span> <span class="pre">-&gt;</span> <span class="pre">de_core_news_md</span></code>.</p>
-</div>
-</section>
-</section>
-<section id="development-installation">
-<h2>Development Installation</h2>
-<p>To install from source for development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/remixer-dec/pykokoro.git
-<span class="nb">cd</span><span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-</pre></div>
-</div>
-<p>This installs PyKokoro in editable mode with development dependencies.</p>
-</section>
-<section id="verifying-installation">
-<h2>Verifying Installation</h2>
-<p>Test your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-
-<span class="c1"># Quick test</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">Kokoro</span><span class="p">()</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> audio samples at </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="troubleshooting">
-<h2>Troubleshooting</h2>
-<section id="import-errors">
-<h3>Import Errors</h3>
-<p>If you get import errors, ensure all dependencies are installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pykokoro
-</pre></div>
-</div>
-</section>
-<section id="espeak-ng-not-found">
-<h3>espeak-ng Not Found</h3>
-<p>If you get errors about espeak-ng not being found:</p>
-<ol class="arabic simple">
-<li><p>Verify espeak-ng is installed: <code class="docutils literal notranslate"><span class="pre">espeak-ng</span> <span class="pre">--version</span></code></p></li>
-<li><p>Ensure it’s in your system PATH</p></li>
-<li><p>On Windows, you may need to restart your terminal after installation</p></li>
+</li>
 </ol>
 </section>
-<section id="gpu-not-detected">
-<h3>GPU Not Detected</h3>
-<p>If GPU acceleration isn’t working:</p>
-<ol class="arabic simple">
-<li><p>Verify CUDA/ROCm is installed: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> (NVIDIA) or <code class="docutils literal notranslate"><span class="pre">rocm-smi</span></code> (AMD)</p></li>
-<li><p>Check ONNX Runtime GPU:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
-<li><p>Ensure you have the correct ONNX Runtime version for your CUDA version</p></li>
-</ol>
-</section>
-<section id="model-download-issues">
-<h3>Model Download Issues</h3>
-<p>If model downloads fail:</p>
-<ol class="arabic simple">
-<li><p>Check your internet connection</p></li>
-<li><p>Verify you have write permissions to the cache directory</p></li>
-<li><p>Try downloading manually and placing in <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/</span></code></p></li>
-<li><p>For GitHub models, ensure the release URLs are accessible</p></li>
-</ol>
-<p><strong>Manual Model Download:</strong></p>
-<p>PyKokoro automatically downloads models on first use, but you can trigger downloads
-manually:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># HuggingFace v1.0 (default - 54 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16&quot;</span><span class="p">)</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-
-<span class="c1"># HuggingFace v1.1-zh (103 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.0 (54 voices, 4 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.1-zh (103 voices, fp32 only)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
+<section id="ssmd-syntax">
+<h2>SSMD Syntax</h2>
+<p>SSMD uses a simple markdown-like syntax for speech control.</p>
+<section id="structural-breaks">
+<h3>Structural Breaks</h3>
+<p>Control pauses between text segments:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>...p    # Paragraph break (0.5-1.0s pause)
+...s    # Sentence break (0.1-0.3s pause)
+...c    # Clause break (shorter pause)
 </pre></div>
 </div>
-<p>Models are cached in:</p>
+<p>Example:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>This is the first paragraph. ...s
+It has multiple sentences. ...p
+
+This is a second paragraph. ...s
+</pre></div>
+</div>
+</section>
+<section id="emphasis">
+<h3>Emphasis</h3>
+<p>Add vocal emphasis to words or phrases:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>*text*      # Moderate emphasis
+**text**    # Strong emphasis
+</pre></div>
+</div>
+<p>Example:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Harry was a *highly unusual* boy. ...s
+He **hated** the summer holidays. ...s
+</pre></div>
+</div>
+</section>
+<section id="custom-phonemes">
+<h3>Custom Phonemes</h3>
+<p>Override pronunciation using IPA phonemes:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[word]{ph=&quot;phoneme&quot;}
+</pre></div>
+</div>
+<p>Examples:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;} Granger was Harry&#39;s best friend. ...s
+The [API]{ph=&quot;ˌeɪpiˈaɪ&quot;} supports [JSON]{ph=&quot;dʒˈeɪsɑn&quot;}. ...s
+[Kubernetes]{ph=&quot;kubɚnˈɛtɪs&quot;} is a container orchestrator. ...s
+</pre></div>
+</div>
+</section>
+<section id="language-switching-planned">
+<h3>Language Switching (Planned)</h3>
+<p>Mark text as a different language (placeholder for future):</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}      # French text
+[Hola]{lang=&quot;es&quot;}         # Spanish text
+</pre></div>
+</div>
+</section>
+</section>
+<section id="complete-example">
+<h2>Complete Example</h2>
+<p>Here’s a complete SSMD file example:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
+
+[Harry]{ph=&quot;hæɹi&quot;} Potter was a *highly unusual* boy in many ways. ...s
+For one thing, he **hated** the summer holidays more than any other
+time of year. ...s For another, he really wanted to do his homework,
+but was forced to do it in secret, in the dead of the night. ...p
+
+And he also happened to be a wizard. ...p
+
+The [Dursleys]{ph=&quot;dɝzliz&quot;} had everything they wanted, but they
+also had a secret. ...s And their greatest fear was that somebody
+would discover it. ...p
+</pre></div>
+</div>
+</section>
+<section id="automatic-features">
+<h2>Automatic Features</h2>
+<p>SSMD files are automatically enhanced with:</p>
+<section id="phoneme-dictionary-injection">
+<h3>Phoneme Dictionary Injection</h3>
+<p>If you use <code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span></code>, all phoneme substitutions are automatically
+injected into the SSMD:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--phoneme-dict<span class="w"> </span>custom_phonemes.json
+</pre></div>
+</div>
+<p>The generated SSMD will include:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;} loved reading books. ...s
+</pre></div>
+</div>
+</section>
+<section id="html-emphasis-detection">
+<h3>HTML Emphasis Detection</h3>
+<p>Emphasis from the original EPUB HTML is automatically converted:</p>
 <ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
-<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;em&gt;text&lt;/em&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">*text*</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;strong&gt;text&lt;/strong&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">**text**</span></code></p></li>
 </ul>
-<p>The config is stored under <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/config/{variant}/config.json</span></code>. A
-source/variant/quality asset set is complete only when its config, model, and exact
-voice archive are all nonempty regular files. Downstream integrations can inspect the
-same paths without importing ONNX Runtime:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
+</section>
+<section id="structural-break-preservation">
+<h3>Structural Break Preservation</h3>
+<p>ttsforge preserves paragraph structure but does not insert explicit
+<code class="docutils literal notranslate"><span class="pre">...p</span></code> or <code class="docutils literal notranslate"><span class="pre">...s</span></code> markers. Sentence detection is handled internally by
+pykokoro at synthesis time. Use manual break markers only when you need
+precise control over pauses.</p>
+</section>
+</section>
+<section id="use-cases">
+<h2>Use Cases</h2>
+<section id="when-to-edit-ssmd">
+<h3>When to Edit SSMD</h3>
+<ol class="arabic simple">
+<li><p><strong>Pronunciation issues</strong>: Character names, technical terms, foreign words</p></li>
+<li><p><strong>Pacing problems</strong>: Adjust paragraph and sentence breaks for better flow</p></li>
+<li><p><strong>Emphasis corrections</strong>: Add or remove emphasis on specific words</p></li>
+<li><p><strong>Consistency</strong>: Ensure consistent pronunciation across chapters</p></li>
+</ol>
+</section>
+<section id="combining-with-phoneme-dictionary">
+<h3>Combining with Phoneme Dictionary</h3>
+<p>For best results, use both features together:</p>
+<ol class="arabic simple">
+<li><p>Create a phoneme dictionary for common names/terms</p></li>
+<li><p>Let ttsforge auto-inject into SSMD</p></li>
+<li><p>Edit SSMD files for chapter-specific tweaks</p></li>
+</ol>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Extract and review names</span>
+ttsforge<span class="w"> </span>extract-names<span class="w"> </span>book.epub
+vim<span class="w"> </span>custom_phonemes.json
 
-<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing:&quot;</span><span class="p">,</span> <span class="n">assets</span><span class="o">.</span><span class="n">missing</span><span class="p">)</span>
+<span class="c1"># 2. Start conversion (phonemes auto-injected into SSMD)</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--phoneme-dict<span class="w"> </span>custom_phonemes.json
+
+<span class="c1"># 3. Edit specific SSMD files as needed</span>
+vim<span class="w"> </span>.book_chapters/chapter_005.ssmd
+
+<span class="c1"># 4. Resume (regenerates edited chapters)</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
 </section>
+</section>
+<section id="tips-and-best-practices">
+<h2>Tips and Best Practices</h2>
+<ol class="arabic simple">
+<li><p><strong>Start with phoneme dictionary</strong>: Create a global dictionary first,
+then use SSMD for chapter-specific overrides</p></li>
+<li><p><strong>Test edits incrementally</strong>: Edit one chapter, let it regenerate,
+listen to verify before editing more</p></li>
+<li><p><strong>Use emphasis sparingly</strong>: Too much emphasis can sound unnatural</p></li>
+<li><p><strong>Keep backups</strong>: SSMD files are regenerated if missing, but manual
+edits are preserved</p></li>
+<li><p><strong>Consistent phonemes</strong>: Use the same IPA notation throughout for
+consistency</p></li>
+</ol>
+</section>
+<section id="technical-details">
+<h2>Technical Details</h2>
+<section id="hash-based-change-detection">
+<h3>Hash-Based Change Detection</h3>
+<p>ttsforge tracks SSMD file changes using MD5 hashes (12 characters) stored
+in the state file. When you resume:</p>
+<ol class="arabic simple">
+<li><p>Current SSMD file is hashed</p></li>
+<li><p>Compared with saved hash in state</p></li>
+<li><p>If different, audio is regenerated</p></li>
+<li><p>New hash is saved</p></li>
+</ol>
+</section>
+<section id="file-format">
+<h3>File Format</h3>
+<p>SSMD files are plain text UTF-8 files with the <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> extension.
+They can be edited with any text editor.</p>
+</section>
+<section id="error-handling">
+<h3>Error Handling</h3>
+<p>If SSMD generation fails, ttsforge falls back to plain text conversion
+and logs a warning. The conversion continues without SSMD features.</p>
+</section>
+<section id="validation">
+<h3>Validation</h3>
+<p>SSMD is not automatically validated during conversion. For manual checks,
+use the <code class="docutils literal notranslate"><span class="pre">validate_ssmd</span></code> helper from <code class="docutils literal notranslate"><span class="pre">ttsforge.ssmd_generator</span></code> to get
+warnings about unbalanced markers before you synthesize.</p>
+</section>
+</section>
+<section id="limitations">
+<h2>Limitations</h2>
+<ul class="simple">
+<li><p>Language switching is not yet implemented (planned feature)</p></li>
+<li><p>Phoneme syntax must use valid IPA characters</p></li>
+<li><p>Very long lines may be truncated in some editors</p></li>
+<li><p>Hash detection only works with resumable conversions</p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See Also</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quickstart/"><span class="doc">Quick Start Guide</span></a> - Getting started with ttsforge</p></li>
+<li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
+<li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - Configuration options</p></li>
+</ul>
+<p>For more SSMD examples and a quick reference, see <code class="docutils literal notranslate"><span class="pre">SSMD_QUICKSTART.md</span></code>
+in the repository root.</p>
 </section>
 </section>
 </div>

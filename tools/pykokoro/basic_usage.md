@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
+docs_ref: "v0.7.4"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -748,9 +748,7 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenizerConfig</span>
 
 <span class="n">tokenizer_config</span> <span class="o">=</span> <span class="n">TokenizerConfig</span><span class="p">(</span><span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;fr_core_news_sm&quot;</span><span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">tokenizer_config</span><span class="o">=</span><span class="n">tokenizer_config</span><span class="p">)</span>
-<span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">tokenizer_config</span><span class="o">=</span><span class="n">tokenizer_config</span><span class="p">))</span>
 </pre></div>
 </div>
 </section>
@@ -862,6 +860,14 @@ roles in the body and bind them in the document header. API bindings override do
 bindings, explicit breaks override implicit defaults, and <code class="docutils literal notranslate"><span class="pre">parse_header=False</span></code> preserves
 literal leading delimiters. PyKokoro does not load SSMD user configuration files; audio
 annotations require an explicit resolver.</p>
+<section id="emphasis-behavior">
+<h3>Emphasis behavior</h3>
+<p>The default <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;plain&quot;)</span></code> preserves emphasis metadata but
+leaves speech unmodified. Use <code class="docutils literal notranslate"><span class="pre">emphasis_mode=&quot;approximate&quot;</span></code> to opt into the core
+volume-only mapping <code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. <code class="docutils literal notranslate"><span class="pre">warn</span></code>
+keeps ordinary speech and reports one trace warning per logical source segment; <code class="docutils literal notranslate"><span class="pre">error</span></code>
+rejects effectful emphasis before inference. <code class="docutils literal notranslate"><span class="pre">emphasis=&quot;none&quot;</span></code> is silently accepted in
+every mode, and explicit prosody values take precedence.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">SSMDRenderConfig</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>
@@ -879,6 +885,7 @@ annotations require an explicit resolver.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
 </pre></div>
 </div>
+</section>
 </section>
 <section id="next-steps">
 <h2>Next Steps</h2>

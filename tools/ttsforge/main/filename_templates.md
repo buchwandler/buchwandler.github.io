@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Installation Guide"
-permalink: /tools/pykokoro/main/installation/
-nav_tool: pykokoro-main
-docs_project: "pykokoro"
+title: "ttsforge Filename Templates"
+permalink: /tools/ttsforge/main/filename_templates/
+nav_tool: ttsforge-main
+docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
+docs_commit: "54ab9e8d4c54ee8672a8cbf74ee79c35c1f0d0f7"
 search_enabled: true
 ---
 
@@ -540,234 +540,254 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="installation-guide">
-<h1>Installation Guide</h1>
-<p>PyKokoro can be installed using pip and requires Python 3.10 or higher.</p>
-<section id="basic-installation">
-<h2>Basic Installation</h2>
-<p>Install the latest stable version from PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
+<section id="filename-templates">
+<h1>Filename Templates</h1>
+<p>ttsforge uses configurable filename templates to name output files based on book
+metadata. This allows you to organize your audiobook library with consistent naming.</p>
+<section id="template-syntax">
+<h2>Template Syntax</h2>
+<p>Templates use Python’s format string syntax with curly braces for variable substitution:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{variable_name}
+{variable_name:format_spec}
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
-distributions. Install exactly one provider extra per environment.</p>
-<section id="android-termux-providers">
-<h3>Android/Termux Providers</h3>
-<p>PyKokoro accepts any provider spelling reported by the installed ONNX Runtime. For the
-Android/Termux runtime, both aliases and runtime names are valid:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;xnnpack&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> to select the highest-priority available provider by capability.
-PyKokoro does not infer availability from platform names and does not suppress ONNX
-Runtime warnings.</p>
-</section>
-</section>
-<section id="gpu-support">
-<h2>GPU Support</h2>
-<p>For GPU acceleration, install with the GPU extras:</p>
-<section id="nvidia-cuda">
-<h3>NVIDIA CUDA</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span>
-</pre></div>
-</div>
-<p>This installs <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> for NVIDIA CUDA support.</p>
-</section>
-<section id="amd-rocm">
-<h3>AMD ROCm</h3>
-<p>For AMD GPUs with ROCm:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-rocm
-</pre></div>
-</div>
-</section>
-<section id="custom-onnx-runtime">
-<h3>Custom ONNX Runtime</h3>
-<p>You can also install a specific ONNX Runtime version separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2<span class="w">  </span><span class="c1"># or your preferred version</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="system-requirements">
-<h2>System Requirements</h2>
-<section id="python-version">
-<h3>Python Version</h3>
+<p>For example:</p>
 <ul class="simple">
-<li><p>Python 3.10 or higher</p></li>
-<li><p>Tested on Python 3.10, 3.11, 3.12, and 3.13</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code> → <code class="docutils literal notranslate"><span class="pre">My</span> <span class="pre">Great</span> <span class="pre">Novel</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}</span></code> → <code class="docutils literal notranslate"><span class="pre">001</span></code> (zero-padded to 3 digits)</p></li>
 </ul>
 </section>
-<section id="dependencies">
-<h3>Dependencies</h3>
-<p>Core dependencies (automatically installed):</p>
+<section id="available-variables">
+<h2>Available Variables</h2>
+<p>The following variables are available in filename templates:</p>
+<p><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code> : The title of the book from EPUB metadata, or the configured
+<code class="docutils literal notranslate"><span class="pre">default_title</span></code> if no title is found.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">Empire</span> <span class="pre">in</span> <span class="pre">Black</span> <span class="pre">and</span> <span class="pre">Gold</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">{author}</span></code> : The author name from EPUB metadata, or “Unknown” if not found.</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">Adrian</span> <span class="pre">Tchaikovsky</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapter_title}</span></code> : The title of the current chapter (only available in chapter filename
+templates).</p>
+<p>Example: <code class="docutils literal notranslate"><span class="pre">Chapter</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">The</span> <span class="pre">Beginning</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapter_num}</span></code> : The chapter number (1-based). Supports format specifiers for padding.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Array operations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code> - Model inference</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> - Phoneme generation (via <code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code> - Text-to-phoneme conversion</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">requests</span></code> - Model downloading</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tqdm</span></code> - Progress bars</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Enhanced phoneme dictionary</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - Intelligent text splitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num}</span></code> → <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:02d}</span></code> → <code class="docutils literal notranslate"><span class="pre">01</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}</span></code> → <code class="docutils literal notranslate"><span class="pre">001</span></code></p></li>
 </ul>
-<p>Optional dependencies:</p>
+<p><code class="docutils literal notranslate"><span class="pre">{input_stem}</span></code> : The input filename without extension (useful for maintaining original
+naming).</p>
+<p>Example: If input is <code class="docutils literal notranslate"><span class="pre">my_book.epub</span></code>, this gives <code class="docutils literal notranslate"><span class="pre">my_book</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code> : A string representing the chapter selection, or empty if all
+chapters are selected.</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - For saving audio to WAV files (recommended)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> - For GPU acceleration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spacy</span></code> - For sentence/clause splitting and spaCy-aware G2P tokenization</p></li>
+<li><p>Single chapter: <code class="docutils literal notranslate"><span class="pre">chapter_1</span></code></p></li>
+<li><p>Range: <code class="docutils literal notranslate"><span class="pre">chapters_1-5</span></code></p></li>
+<li><p>Multiple: <code class="docutils literal notranslate"><span class="pre">chapters_1-3_5_7-10</span></code></p></li>
 </ul>
 </section>
-<section id="installing-espeak-ng">
-<h3>Installing espeak-ng</h3>
-<p>PyKokoro requires <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> to be installed on your system.</p>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download and install from: <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
-<p>Or use Chocolatey:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>choco<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-</section>
-<section id="installing-spacy-optional">
-<h3>Installing spaCy (Optional)</h3>
-<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware spaCy
-tokenization in G2P:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">TokenizerConfig.spacy_model</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> and resolves package
-names from language + size (default size: <code class="docutils literal notranslate"><span class="pre">md</span></code>). For example:
-<code class="docutils literal notranslate"><span class="pre">en-us</span> <span class="pre">-&gt;</span> <span class="pre">en_core_web_md</span></code> and <code class="docutils literal notranslate"><span class="pre">de</span> <span class="pre">-&gt;</span> <span class="pre">de_core_news_md</span></code>.</p>
-</div>
-</section>
-</section>
-<section id="development-installation">
-<h2>Development Installation</h2>
-<p>To install from source for development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/remixer-dec/pykokoro.git
-<span class="nb">cd</span><span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-</pre></div>
-</div>
-<p>This installs PyKokoro in editable mode with development dependencies.</p>
-</section>
-<section id="verifying-installation">
-<h2>Verifying Installation</h2>
-<p>Test your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
+<section id="template-types">
+<h2>Template Types</h2>
+<p>ttsforge uses three different filename templates for different purposes:</p>
+<section id="output-filename-template">
+<h3>Output Filename Template</h3>
+<p>Controls the name of the final audiobook file.</p>
+<p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">output_filename_template</span></code></p>
+<p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {book_title}&quot;</span>
 
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="c1"># Convert</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 
-<span class="c1"># Quick test</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">Kokoro</span><span class="p">()</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> audio samples at </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># Output: &quot;Adrian Tchaikovsky - Empire in Black and Gold.m4b&quot;</span>
 </pre></div>
 </div>
+</section>
+<section id="chapter-filename-template">
+<h3>Chapter Filename Template</h3>
+<p>Controls the names of intermediate chapter WAV files created during conversion.</p>
+<p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">chapter_filename_template</span></code></p>
+<p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}_{book_title}_{chapter_title}</span></code></p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command (chapter files in work directory)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>chapter_filename_template<span class="w"> </span><span class="s2">&quot;{chapter_num:03d}_{chapter_title}&quot;</span>
+
+<span class="c1"># Chapters will be named like:</span>
+<span class="c1"># 001_Prologue.wav</span>
+<span class="c1"># 002_The Beginning.wav</span>
+<span class="c1"># 003_Dark Times.wav</span>
+</pre></div>
+</div>
+</section>
+<section id="phoneme-export-template">
+<h3>Phoneme Export Template</h3>
+<p>Controls the name of phoneme JSON files created during export.</p>
+<p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">phoneme_export_template</span></code></p>
+<p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">export</span></code> command</p></li>
+</ul>
+<p><strong>Example:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>phoneme_export_template<span class="w"> </span><span class="s2">&quot;{book_title}_phonemes&quot;</span>
+
+<span class="c1"># Export</span>
+ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub
+
+<span class="c1"># Output: &quot;Empire in Black and Gold_phonemes.phonemes.json&quot;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="format-specifiers">
+<h2>Format Specifiers</h2>
+<p>Variables can include format specifiers after a colon:</p>
+<section id="number-formatting">
+<h3>Number Formatting</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{chapter_num:d}     → &quot;1&quot;          (integer)
+{chapter_num:02d}   → &quot;01&quot;         (zero-padded, 2 digits)
+{chapter_num:03d}   → &quot;001&quot;        (zero-padded, 3 digits)
+{chapter_num:04d}   → &quot;0001&quot;       (zero-padded, 4 digits)
+</pre></div>
+</div>
+</section>
+<section id="string-formatting">
+<h3>String Formatting</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{book_title}        → &quot;My Book&quot;    (full string)
+{book_title:.20}    → &quot;My Book&quot;    (max 20 chars, truncated if longer)
+</pre></div>
+</div>
+</section>
+</section>
+<section id="filename-sanitization">
+<h2>Filename Sanitization</h2>
+<p>All template values are automatically sanitized to be safe for filenames:</p>
+<ul class="simple">
+<li><p>Invalid characters (<code class="docutils literal notranslate"><span class="pre">/\:*?&quot;&lt;&gt;|</span></code>) are replaced with underscores</p></li>
+<li><p>Leading/trailing whitespace and dots are removed</p></li>
+<li><p>Multiple consecutive underscores are collapsed to single underscore</p></li>
+</ul>
+<p>For example:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;Book:</span> <span class="pre">The</span> <span class="pre">Story&quot;</span></code> → <code class="docutils literal notranslate"><span class="pre">&quot;Book_</span> <span class="pre">The</span> <span class="pre">Story&quot;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;What?&quot;</span></code> → <code class="docutils literal notranslate"><span class="pre">&quot;What_&quot;</span></code></p></li>
+</ul>
+</section>
+<section id="partial-chapter-selections">
+<h2>Partial Chapter Selections</h2>
+<p>When converting a subset of chapters, the <code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code> variable contains the
+selection, and it’s automatically appended to output filenames:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert chapters 1-5</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
+
+<span class="c1"># Output: &quot;Empire in Black and Gold_chapters_1-5.m4b&quot;</span>
+</pre></div>
+</div>
+<p>This ensures partial conversions don’t overwrite complete audiobooks.</p>
+</section>
+<section id="examples">
+<h2>Examples</h2>
+<section id="default-configuration">
+<h3>Default Configuration</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default templates</span>
+<span class="nv">output_filename_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{book_title}&quot;</span>
+<span class="nv">chapter_filename_template</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;{chapter_num:03d}_{book_title}_{chapter_title}&quot;</span>
+
+<span class="c1"># Input: &quot;Shadows of the Apt - Book 1.epub&quot;</span>
+<span class="c1"># Output: &quot;Empire in Black and Gold.m4b&quot;</span>
+<span class="c1"># Chapters: &quot;001_Empire in Black and Gold_Prologue.wav&quot;, etc.</span>
+</pre></div>
+</div>
+</section>
+<section id="author-first-naming">
+<h3>Author-First Naming</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set templates</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {book_title}&quot;</span>
+
+<span class="c1"># Input: &quot;shadows.epub&quot; (metadata: Author=&quot;Adrian Tchaikovsky&quot;, Title=&quot;Empire in Black and Gold&quot;)</span>
+<span class="c1"># Output: &quot;Adrian Tchaikovsky - Empire in Black and Gold.m4b&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="preserve-original-filename">
+<h3>Preserve Original Filename</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Use input filename</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{input_stem}&quot;</span>
+
+<span class="c1"># Input: &quot;my_audiobook.epub&quot;</span>
+<span class="c1"># Output: &quot;my_audiobook.m4b&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="series-naming">
+<h3>Series Naming</h3>
+<p>For books in a series, you might use the input filename if it contains series info:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {input_stem}&quot;</span>
+
+<span class="c1"># Input: &quot;01 - Empire in Black and Gold.epub&quot;</span>
+<span class="c1"># Output: &quot;Adrian Tchaikovsky - 01 - Empire in Black and Gold.m4b&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-chapter-names">
+<h3>Simple Chapter Names</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>chapter_filename_template<span class="w"> </span><span class="s2">&quot;{chapter_num:03d}&quot;</span>
+
+<span class="c1"># Chapters: &quot;001.wav&quot;, &quot;002.wav&quot;, &quot;003.wav&quot;, etc.</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="work-directory">
+<h2>Work Directory</h2>
+<p>During conversion, ttsforge creates a hidden work directory to store chapter files and
+state information:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
+├── 001_Empire in Black and Gold_Prologue.wav
+├── 002_Empire in Black and Gold_Chapter 1.wav
+├── ...
+└── Empire in Black and Gold_state.json
+</pre></div>
+</div>
+<p>The work directory is named after the book title and is cleaned up after successful
+conversion (unless <code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> is used).</p>
 </section>
 <section id="troubleshooting">
 <h2>Troubleshooting</h2>
-<section id="import-errors">
-<h3>Import Errors</h3>
-<p>If you get import errors, ensure all dependencies are installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pykokoro
-</pre></div>
-</div>
-</section>
-<section id="espeak-ng-not-found">
-<h3>espeak-ng Not Found</h3>
-<p>If you get errors about espeak-ng not being found:</p>
+<section id="filename-too-long">
+<h3>Filename too long</h3>
+<p>If output filenames are too long for your filesystem:</p>
 <ol class="arabic simple">
-<li><p>Verify espeak-ng is installed: <code class="docutils literal notranslate"><span class="pre">espeak-ng</span> <span class="pre">--version</span></code></p></li>
-<li><p>Ensure it’s in your system PATH</p></li>
-<li><p>On Windows, you may need to restart your terminal after installation</p></li>
+<li><p>Use shorter templates: <code class="docutils literal notranslate"><span class="pre">{input_stem}</span></code> instead of <code class="docutils literal notranslate"><span class="pre">{author}</span> <span class="pre">-</span> <span class="pre">{book_title}</span></code></p></li>
+<li><p>Truncate long values: <code class="docutils literal notranslate"><span class="pre">{book_title:.50}</span></code> limits title to 50 characters</p></li>
+<li><p>Use simpler chapter templates: <code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}</span></code></p></li>
 </ol>
 </section>
-<section id="gpu-not-detected">
-<h3>GPU Not Detected</h3>
-<p>If GPU acceleration isn’t working:</p>
-<ol class="arabic simple">
-<li><p>Verify CUDA/ROCm is installed: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> (NVIDIA) or <code class="docutils literal notranslate"><span class="pre">rocm-smi</span></code> (AMD)</p></li>
-<li><p>Check ONNX Runtime GPU:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
-<li><p>Ensure you have the correct ONNX Runtime version for your CUDA version</p></li>
-</ol>
+<section id="special-characters-in-titles">
+<h3>Special characters in titles</h3>
+<p>Characters that are invalid in filenames are automatically replaced with underscores. If
+you see unexpected underscores in filenames, check the original EPUB metadata for
+special characters.</p>
 </section>
-<section id="model-download-issues">
-<h3>Model Download Issues</h3>
-<p>If model downloads fail:</p>
-<ol class="arabic simple">
-<li><p>Check your internet connection</p></li>
-<li><p>Verify you have write permissions to the cache directory</p></li>
-<li><p>Try downloading manually and placing in <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/</span></code></p></li>
-<li><p>For GitHub models, ensure the release URLs are accessible</p></li>
-</ol>
-<p><strong>Manual Model Download:</strong></p>
-<p>PyKokoro automatically downloads models on first use, but you can trigger downloads
-manually:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># HuggingFace v1.0 (default - 54 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16&quot;</span><span class="p">)</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-
-<span class="c1"># HuggingFace v1.1-zh (103 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.0 (54 voices, 4 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.1-zh (103 voices, fp32 only)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Models are cached in:</p>
-<ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
-<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
-</ul>
-<p>The config is stored under <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/config/{variant}/config.json</span></code>. A
-source/variant/quality asset set is complete only when its config, model, and exact
-voice archive are all nonempty regular files. Downstream integrations can inspect the
-same paths without importing ONNX Runtime:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
-
-<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing:&quot;</span><span class="p">,</span> <span class="n">assets</span><span class="o">.</span><span class="n">missing</span><span class="p">)</span>
+<section id="duplicate-filenames">
+<h3>Duplicate filenames</h3>
+<p>If converting multiple books with the same title, use templates that include unique
+identifiers:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {book_title}&quot;</span>
+<span class="c1"># Or use input stem:</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{input_stem}&quot;</span>
 </pre></div>
 </div>
 </section>

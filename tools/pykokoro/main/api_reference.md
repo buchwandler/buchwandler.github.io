@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "83ea8018377aac3e282aa5a3285e80403fd97794"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -803,6 +803,13 @@ accepts a per-render replacement. <code class="docutils literal notranslate"><sp
 binding, and pause metadata; <code class="docutils literal notranslate"><span class="pre">AudioResult.markers</span></code> contains structured marker sample
 offsets. Audio annotations require an explicit resolver and fall back to <code class="docutils literal notranslate"><span class="pre">alt</span></code> text;
 Kokoro extensions are rejected by profile validation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig.emphasis_mode</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;plain&quot;</span></code>, preserving emphasis metadata
+without changing generated audio. <code class="docutils literal notranslate"><span class="pre">&quot;approximate&quot;</span></code> applies core volume-only mappings
+(<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>); explicit prosody values win.
+<code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> preserves audio and adds one <code class="docutils literal notranslate"><span class="pre">ssmd.emphasis_unsupported</span></code> warning per logical
+source segment, while <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> rejects effectful emphasis before inference. The <code class="docutils literal notranslate"><span class="pre">none</span></code>
+level is always a silent no-op. Approximation does not require the optional <code class="docutils literal notranslate"><span class="pre">prosody</span></code>
+extra.</p>
 </section>
 <section id="see-also">
 <h2>See Also</h2>

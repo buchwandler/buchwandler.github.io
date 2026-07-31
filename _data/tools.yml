@@ -33,3 +33,7 @@
   docs_url: /tools/ssmd/
   repo_url: https://github.com/buchwandler/ssmd
   pypi_url: https://pypi.org/project/ssmd/
+- name: ttsforge
+  description: A Python-based TTS automation framework with multi-engine support.
+  docs_url: /tools/ttsforge/
+  repo_url: https://github.com/buchwandler/ttsforge

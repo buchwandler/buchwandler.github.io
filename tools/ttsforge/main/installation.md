@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Installation Guide"
-permalink: /tools/pykokoro/main/installation/
-nav_tool: pykokoro-main
-docs_project: "pykokoro"
+title: "ttsforge Installation"
+permalink: /tools/ttsforge/main/installation/
+nav_tool: ttsforge-main
+docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
+docs_commit: "54ab9e8d4c54ee8672a8cbf74ee79c35c1f0d0f7"
 search_enabled: true
 ---
 
@@ -540,91 +540,48 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="installation-guide">
-<h1>Installation Guide</h1>
-<p>PyKokoro can be installed using pip and requires Python 3.10 or higher.</p>
-<section id="basic-installation">
-<h2>Basic Installation</h2>
-<p>Install the latest stable version from PyPI:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
-distributions. Install exactly one provider extra per environment.</p>
-<section id="android-termux-providers">
-<h3>Android/Termux Providers</h3>
-<p>PyKokoro accepts any provider spelling reported by the installed ONNX Runtime. For the
-Android/Termux runtime, both aliases and runtime names are valid:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;xnnpack&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> to select the highest-priority available provider by capability.
-PyKokoro does not infer availability from platform names and does not suppress ONNX
-Runtime warnings.</p>
-</section>
-</section>
-<section id="gpu-support">
-<h2>GPU Support</h2>
-<p>For GPU acceleration, install with the GPU extras:</p>
-<section id="nvidia-cuda">
-<h3>NVIDIA CUDA</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span>
-</pre></div>
-</div>
-<p>This installs <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> for NVIDIA CUDA support.</p>
-</section>
-<section id="amd-rocm">
-<h3>AMD ROCm</h3>
-<p>For AMD GPUs with ROCm:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-rocm
-</pre></div>
-</div>
-</section>
-<section id="custom-onnx-runtime">
-<h3>Custom ONNX Runtime</h3>
-<p>You can also install a specific ONNX Runtime version separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2<span class="w">  </span><span class="c1"># or your preferred version</span>
-</pre></div>
-</div>
-</section>
-</section>
+<section id="installation">
+<h1>Installation</h1>
+<p>This guide covers the installation of ttsforge and its dependencies.</p>
 <section id="system-requirements">
 <h2>System Requirements</h2>
-<section id="python-version">
-<h3>Python Version</h3>
 <ul class="simple">
-<li><p>Python 3.10 or higher</p></li>
-<li><p>Tested on Python 3.10, 3.11, 3.12, and 3.13</p></li>
+<li><p><strong>Python</strong>: 3.10 or later</p></li>
+<li><p><strong>Operating System</strong>: Linux, macOS, or Windows</p></li>
+<li><p><strong>Disk Space</strong>: ~330MB for ONNX models (downloaded automatically on first use)</p></li>
 </ul>
 </section>
 <section id="dependencies">
-<h3>Dependencies</h3>
-<p>Core dependencies (automatically installed):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Array operations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code> - Model inference</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> - Phoneme generation (via <code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code> - Text-to-phoneme conversion</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">requests</span></code> - Model downloading</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tqdm</span></code> - Progress bars</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Enhanced phoneme dictionary</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - Intelligent text splitting</p></li>
-</ul>
-<p>Optional dependencies:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - For saving audio to WAV files (recommended)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> - For GPU acceleration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spacy</span></code> - For sentence/clause splitting and spaCy-aware G2P tokenization</p></li>
-</ul>
+<h2>Dependencies</h2>
+<p>ttsforge requires the following external tools:</p>
+<section id="ffmpeg-required-for-mp3-flac-opus-m4b">
+<h3>ffmpeg (Required for MP3/FLAC/OPUS/M4B)</h3>
+<p>ffmpeg is required for MP3/FLAC/OPUS/M4B output and chapter merging.</p>
+<p><strong>Termux (Android):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pkg<span class="w"> </span>install<span class="w"> </span>ffmpeg
+</pre></div>
+</div>
+<p><strong>Ubuntu/Debian:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ffmpeg
+</pre></div>
+</div>
+<p><strong>macOS (Homebrew):</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>ffmpeg
+</pre></div>
+</div>
+<p><strong>Windows:</strong></p>
+<p>Download from <a class="reference external" href="https://ffmpeg.org/download.html">https://ffmpeg.org/download.html</a> and add it to <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
 </section>
-<section id="installing-espeak-ng">
-<h3>Installing espeak-ng</h3>
-<p>PyKokoro requires <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> to be installed on your system.</p>
+<section id="optional-bundled-ffmpeg-via-python-not-available-on-all-platforms">
+<h3>Optional: bundled ffmpeg via Python (not available on all platforms)</h3>
+<p>If you cannot install a system ffmpeg, you can try the optional prebuilt binaries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="espeak-ng-required-for-phonemization">
+<h3>espeak-ng (Required for Phonemization)</h3>
+<p>espeak-ng is used for text-to-phoneme conversion.</p>
 <p><strong>Ubuntu/Debian:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
 </pre></div>
@@ -634,142 +591,188 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </pre></div>
 </div>
 <p><strong>Windows:</strong></p>
-<p>Download and install from: <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
-<p>Or use Chocolatey:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>choco<span class="w"> </span>install<span class="w"> </span>espeak-ng
+<p>Download from <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
+</section>
+<section id="audio-playback-optional">
+<h3>Audio Playback (Optional)</h3>
+<p>Audio playback features (<code class="docutils literal notranslate"><span class="pre">--play</span></code> flags and the <code class="docutils literal notranslate"><span class="pre">read</span></code> command) require <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
+</pre></div>
+</div>
+<p>Or install directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sounddevice
 </pre></div>
 </div>
 </section>
-<section id="installing-spacy-optional">
-<h3>Installing spaCy (Optional)</h3>
-<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware spaCy
-tokenization in G2P:</p>
+<section id="spacy-models-optional">
+<h3>spaCy Models (Optional)</h3>
+<p>spaCy is used for sentence splitting, name extraction, and spaCy-aware phonemization
+workflows:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">TokenizerConfig.spacy_model</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> and resolves package
-names from language + size (default size: <code class="docutils literal notranslate"><span class="pre">md</span></code>). For example:
-<code class="docutils literal notranslate"><span class="pre">en-us</span> <span class="pre">-&gt;</span> <span class="pre">en_core_web_md</span></code> and <code class="docutils literal notranslate"><span class="pre">de</span> <span class="pre">-&gt;</span> <span class="pre">de_core_news_md</span></code>.</p>
+</section>
+</section>
+<section id="installing-ttsforge">
+<h2>Installing ttsforge</h2>
+<section id="from-pypi-recommended">
+<h3>From PyPI (Recommended)</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
+</pre></div>
+</div>
+<p>The base installation includes the CPU ONNX Runtime provider. Provider-dependent modules
+are loaded only when audio rendering starts, so <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ttsforge</span></code>, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code>,
+and configuration/inspection commands work without model initialization.</p>
+<p>Optional extras:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Audio playback (required for --play and read)</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
+
+<span class="c1"># Bundled ffmpeg binaries</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
+
+<span class="c1"># GPU acceleration</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
+</pre></div>
 </div>
 </section>
+<section id="from-source">
+<h3>From Source</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
+<span class="nb">cd</span><span class="w"> </span>ttsforge
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</pre></div>
+</div>
 </section>
 <section id="development-installation">
-<h2>Development Installation</h2>
-<p>To install from source for development:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/remixer-dec/pykokoro.git
-<span class="nb">cd</span><span class="w"> </span>pykokoro
+<h3>Development Installation</h3>
+<p>For development with testing and linting tools:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
+<span class="nb">cd</span><span class="w"> </span>ttsforge
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-<p>This installs PyKokoro in editable mode with development dependencies.</p>
+</section>
+</section>
+<section id="onnx-runtime-providers">
+<h2>ONNX Runtime Providers</h2>
+<p>Select a provider with an alias or full runtime provider name. The legacy Boolean
+interface remains available for compatibility, but NNAPI and XNNPACK are execution
+providers rather than GPU modes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cpu
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>xnnpack
+</pre></div>
+</div>
+<p>For CUDA, install the GPU extra in a fresh environment so CPU and GPU ONNX Runtime
+distributions are not installed together:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
+</pre></div>
+</div>
+<p>For Termux/Android with PyKokoro v0.7.1 and an ONNX Runtime build exposing NNAPI or
+XNNPACK:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
+ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> as a compatibility shortcut for <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> for
+<code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">cpu</span></code>. Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment
+override are handled by PyKokoro.</p>
+</section>
+<section id="mixed-language-support-optional">
+<h2>Mixed-Language Support (Optional)</h2>
+<p>For automatic detection and handling of multiple languages in text (e.g., German text
+with English technical terms):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lingua-language-detector
+</pre></div>
+</div>
+<p>Then enable mixed-language mode:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_mixed_language<span class="w"> </span><span class="nb">true</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_primary<span class="w"> </span>de
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_allowed<span class="w"> </span><span class="s2">&quot;[&#39;de&#39;, &#39;en-us&#39;]&quot;</span>
+</pre></div>
+</div>
+<p>Or use the <code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> flag with commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
+</pre></div>
+</div>
+</section>
+<section id="downloading-models">
+<h2>Downloading Models</h2>
+<p>ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically on
+first use. You can also download them proactively:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download models</span>
+ttsforge<span class="w"> </span>download
+
+<span class="c1"># Force re-download</span>
+ttsforge<span class="w"> </span>download<span class="w"> </span>--force
+</pre></div>
+</div>
+<p>Models are stored in:</p>
+<ul class="simple">
+<li><p>Linux: <code class="docutils literal notranslate"><span class="pre">~/.cache/ttsforge/</span></code></p></li>
+<li><p>macOS: <code class="docutils literal notranslate"><span class="pre">~/Library/Caches/ttsforge/</span></code></p></li>
+<li><p>Windows: <code class="docutils literal notranslate"><span class="pre">%LOCALAPPDATA%\ttsforge\Cache\</span></code></p></li>
+</ul>
 </section>
 <section id="verifying-installation">
 <h2>Verifying Installation</h2>
-<p>Test your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
+<p>Verify that ttsforge is installed correctly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check version</span>
+ttsforge<span class="w"> </span>--version
 
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="c1"># Show current configuration</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 
-<span class="c1"># Quick test</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">Kokoro</span><span class="p">()</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> audio samples at </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="c1"># Generate a sample audio file</span>
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span>
 </pre></div>
 </div>
+<p>If the sample command succeeds and creates <code class="docutils literal notranslate"><span class="pre">sample.wav</span></code>, ttsforge is ready to use.</p>
 </section>
 <section id="troubleshooting">
 <h2>Troubleshooting</h2>
-<section id="import-errors">
-<h3>Import Errors</h3>
-<p>If you get import errors, ensure all dependencies are installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pykokoro
-</pre></div>
-</div>
-</section>
-<section id="espeak-ng-not-found">
-<h3>espeak-ng Not Found</h3>
-<p>If you get errors about espeak-ng not being found:</p>
+<section id="ffmpeg-not-found">
+<h3>ffmpeg not found</h3>
+<p>If you see “ffmpeg not found” errors when creating M4B files:</p>
 <ol class="arabic simple">
-<li><p>Verify espeak-ng is installed: <code class="docutils literal notranslate"><span class="pre">espeak-ng</span> <span class="pre">--version</span></code></p></li>
-<li><p>Ensure it’s in your system PATH</p></li>
+<li><p>Ensure ffmpeg is installed (see above)</p></li>
+<li><p>Verify it’s in your PATH: <code class="docutils literal notranslate"><span class="pre">ffmpeg</span> <span class="pre">-version</span></code></p></li>
 <li><p>On Windows, you may need to restart your terminal after installation</p></li>
 </ol>
 </section>
-<section id="gpu-not-detected">
-<h3>GPU Not Detected</h3>
-<p>If GPU acceleration isn’t working:</p>
+<section id="espeak-ng-not-found">
+<h3>espeak-ng not found</h3>
+<p>If phonemization fails:</p>
 <ol class="arabic simple">
-<li><p>Verify CUDA/ROCm is installed: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> (NVIDIA) or <code class="docutils literal notranslate"><span class="pre">rocm-smi</span></code> (AMD)</p></li>
-<li><p>Check ONNX Runtime GPU:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
-<li><p>Ensure you have the correct ONNX Runtime version for your CUDA version</p></li>
+<li><p>Ensure espeak-ng is installed (see above)</p></li>
+<li><p>On Linux, the library should be <code class="docutils literal notranslate"><span class="pre">libespeak-ng.so.1</span></code></p></li>
+<li><p>On macOS with Homebrew, it’s typically at <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/lib/libespeak-ng.dylib</span></code></p></li>
 </ol>
 </section>
-<section id="model-download-issues">
-<h3>Model Download Issues</h3>
-<p>If model downloads fail:</p>
+<section id="model-download-fails">
+<h3>Model download fails</h3>
+<p>If model download fails:</p>
 <ol class="arabic simple">
 <li><p>Check your internet connection</p></li>
-<li><p>Verify you have write permissions to the cache directory</p></li>
-<li><p>Try downloading manually and placing in <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/</span></code></p></li>
-<li><p>For GitHub models, ensure the release URLs are accessible</p></li>
+<li><p>Try downloading manually with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">download</span></code></p></li>
+<li><p>Check disk space (~330MB required)</p></li>
+<li><p>The model directory can be found with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code></p></li>
 </ol>
-<p><strong>Manual Model Download:</strong></p>
-<p>PyKokoro automatically downloads models on first use, but you can trigger downloads
-manually:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># HuggingFace v1.0 (default - 54 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16&quot;</span><span class="p">)</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-
-<span class="c1"># HuggingFace v1.1-zh (103 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.0 (54 voices, 4 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.1-zh (103 voices, fp32 only)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Models are cached in:</p>
-<ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
-<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
-</ul>
-<p>The config is stored under <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/config/{variant}/config.json</span></code>. A
-source/variant/quality asset set is complete only when its config, model, and exact
-voice archive are all nonempty regular files. Downstream integrations can inspect the
-same paths without importing ONNX Runtime:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
-
-<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing:&quot;</span><span class="p">,</span> <span class="n">assets</span><span class="o">.</span><span class="n">missing</span><span class="p">)</span>
-</pre></div>
-</div>
+</section>
+<section id="gpu-not-detected">
+<h3>GPU not detected</h3>
+<p>If GPU acceleration isn’t working:</p>
+<ol class="arabic simple">
+<li><p>Ensure <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> is installed (not just <code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code>)</p></li>
+<li><p>Verify CUDA is properly installed</p></li>
+<li><p>Check GPU compatibility with ONNX Runtime</p></li>
+</ol>
 </section>
 </section>
 </section>

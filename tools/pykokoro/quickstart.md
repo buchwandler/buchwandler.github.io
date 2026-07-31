@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "1fb940367d131b95644fdd8b35e24cf9f6118953"
+docs_ref: "v0.7.4"
+docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
 search_enabled: true
 ---
 
@@ -623,21 +623,15 @@ ones:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="c1"># Normal speed (default)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)))</span>
 <span class="n">audio1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Normal speed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
 
 <span class="c1"># Slower (0.5x)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">0.5</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)))</span>
 <span class="n">audio2</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Slower speech&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
 
 <span class="c1"># Faster (1.5x)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.5</span><span class="p">))</span>
-<span class="p">)</span>
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)))</span>
 <span class="n">audio3</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Faster speech&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
 </pre></div>
 </div>
@@ -658,6 +652,7 @@ ones:</p>
 <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;with_pauses.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -723,6 +718,7 @@ selection and choose only the model size:</p>
 <span class="n">auto_result</span> <span class="o">=</span> <span class="n">auto_pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">long_text</span><span class="p">)</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;long_text.wav&quot;</span><span class="p">,</span> <span class="n">auto_result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">auto_result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -734,6 +730,7 @@ selection and choose only the model size:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
 
+
 <span class="k">def</span><span class="w"> </span><span class="nf">text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert text to speech and save to file.&quot;&quot;&quot;</span>
     <span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
@@ -744,6 +741,7 @@ selection and choose only the model size:</p>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
     <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved audio to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
 
 <span class="c1"># Example usage</span>
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -764,6 +762,12 @@ selection and choose only the model size:</p>
 <p>Valid first-line YAML front matter is consumed automatically. <code class="docutils literal notranslate"><span class="pre">title</span></code> is metadata only,
 and logical voice roles can be mapped without changing the spoken body. Use
 <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(parse_header=False)</span></code> when the leading delimiter is literal text.</p>
+<p>SSMD emphasis is metadata-only by default: <code class="docutils literal notranslate"><span class="pre">emphasis_mode=&quot;plain&quot;</span></code> preserves the
+annotation without changing speech. For audible, deterministic volume-only emphasis, opt
+in with <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;approximate&quot;)</span></code>; this maps strong to <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>,
+moderate to <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and reduced to <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. The <code class="docutils literal notranslate"><span class="pre">none</span></code> level is always a silent no-op.
+<code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one diagnostic per logical source segment, and <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects effectful
+emphasis before inference.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>

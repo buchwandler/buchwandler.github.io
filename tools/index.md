@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">8<span>focused tools</span></div>
+    <div class="hero-stat">9<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -93,7 +93,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.7.2" rel="external noopener">Latest release: v0.7.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.7.4" rel="external noopener">Latest release: v0.7.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -105,6 +105,16 @@ permalink: /tools/
         <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.8.0" rel="external noopener">Latest release: v0.8.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>ttsforge</h3>
+      <p>A Python-based TTS automation framework with multi-engine support.</p>
+      <div class="card-links">
+        <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.1.2" rel="external noopener">Latest release: v0.1.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>

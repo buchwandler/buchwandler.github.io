@@ -22,6 +22,7 @@ TOOL_REPOS = {
     "text2epub": "https://github.com/buchwandler/text2epub",
     "phrasplit": "https://github.com/buchwandler/phrasplit",
     "booktx": "https://github.com/buchwandler/booktx",
+    "ttsforge": "https://github.com/buchwandler/ttsforge",
 }
 
 GITHUB_API_URL = "https://api.github.com/repos/buchwandler/{tool}/releases/latest"
@@ -72,6 +73,18 @@ TITLE_OVERRIDES = {
         "development": "booktx development",
         "troubleshooting": "booktx troubleshooting",
     },
+    "ttsforge": {
+        "index": "ttsforge",
+        "quickstart": "ttsforge quickstart",
+        "installation": "ttsforge installation",
+        "configuration": "ttsforge configuration",
+        "voices": "ttsforge voices",
+        "ssmd": "ttsforge SSMD",
+        "cli": "ttsforge CLI",
+        "filename_templates": "ttsforge filename templates",
+        "testing": "ttsforge testing",
+        "api": "ttsforge API reference",
+    },
 }
 
 DESCRIPTION_OVERRIDES = {
@@ -120,6 +133,18 @@ DESCRIPTION_OVERRIDES = {
         "development": "Development setup and release workflow for booktx",
         "troubleshooting": "Common booktx problems and fixes",
     },
+    "ttsforge": {
+        "index": "A Python-based TTS automation framework with multi-engine support",
+        "quickstart": "Get started with ttsforge",
+        "installation": "Install ttsforge from PyPI or source",
+        "configuration": "Configure ttsforge engines and voices",
+        "voices": "Voice management and selection in ttsforge",
+        "ssmd": "SSMD support in ttsforge",
+        "cli": "ttsforge command-line interface reference",
+        "filename_templates": "Output filename template patterns",
+        "testing": "Testing ttsforge integrations",
+        "api": "Python API modules for ttsforge",
+    },
 }
 
 CARD_LABELS = {
@@ -159,6 +184,17 @@ CARD_LABELS = {
         "api": ("Python API", "Public API modules for booktx."),
         "development": ("Development", "Development setup and release workflow."),
         "troubleshooting": ("Troubleshooting", "Common problems and fixes."),
+    },
+    "ttsforge": {
+        "quickstart": ("Quickstart", "Get started with ttsforge."),
+        "installation": ("Installation", "Install ttsforge from PyPI or source."),
+        "configuration": ("Configuration", "Configure engines and voices."),
+        "voices": ("Voices", "Voice management and selection."),
+        "ssmd": ("SSMD", "SSMD support in ttsforge."),
+        "cli": ("CLI", "Command-line interface reference."),
+        "filename_templates": ("Filename templates", "Output filename template patterns."),
+        "testing": ("Testing", "Testing ttsforge integrations."),
+        "api": ("Python API", "Public API modules for ttsforge."),
     },
 }
 
