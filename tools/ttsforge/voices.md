@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/voices/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -542,8 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="voices">
 <h1>Voices</h1>
-<p>ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across
-9 languages.</p>
+<p>ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across 9
+languages.</p>
 <section id="voice-naming-convention">
 <h2>Voice Naming Convention</h2>
 <p>Voices follow a consistent naming pattern:</p>
@@ -1111,7 +1111,8 @@ ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span clas
 <h2>Voice Blending</h2>
 <p>Combine multiple voices for unique narration. You can specify voice blends in two ways:</p>
 <p><strong>Using –voice parameter (recommended):</strong></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter now auto-detects blend format when you include colons and commas:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter now auto-detects blend format when you include colons and
+commas:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 50/50 blend of two voices</span>
 ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_nicole:50,am_michael:50&quot;</span>
 
@@ -1133,9 +1134,9 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--voice<span class="w"> </span>af_sky<span class="w"> </span>--voice-blend<span class="w"> </span><span class="s2">&quot;af_nicole:60,am_michael:40&quot;</span>
 </pre></div>
 </div>
-<p>Voice blending creates a mixed voice by interpolating the voice embeddings.
-This can create interesting narrator voices, but results may vary. Blending works best
-with voices of the same language and similar characteristics.</p>
+<p>Voice blending creates a mixed voice by interpolating the voice embeddings. This can
+create interesting narrator voices, but results may vary. Blending works best with
+voices of the same language and similar characteristics.</p>
 </section>
 <section id="recommendations">
 <h2>Recommendations</h2>

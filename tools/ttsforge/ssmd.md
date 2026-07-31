@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge SSMD Editing"
+title: "ttsforge SSMD 0.8"
 permalink: /tools/ttsforge/ssmd/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -540,247 +540,125 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ssmd-editing">
-<h1>SSMD Editing</h1>
-<p>SSMD (Speech Synthesis Markdown) is an intermediate text format used by ttsforge
-between EPUB extraction and TTS audio generation. It allows fine-grained control
-over pronunciation, pacing, and emphasis in your audiobooks.</p>
-<section id="how-ssmd-works">
-<h2>How SSMD Works</h2>
-<p>During conversion, ttsforge automatically generates <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> files for each chapter:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
-├── {book_title}_state.json
-├── chapter_001_intro.ssmd      # Editable text with speech markup
-├── chapter_001_intro.wav
-├── chapter_002_chapter1.ssmd
-├── chapter_002_chapter1.wav
-└── ...
-</pre></div>
-</div>
-<p>When you resume a conversion, ttsforge detects if you’ve edited any SSMD files
-(using MD5 hash comparison) and automatically regenerates the corresponding audio.</p>
-</section>
+<section id="ssmd-0-8">
+<h1>SSMD 0.8</h1>
+<p>ttsforge treats SSMD 0.8 as a document format, not as decorated plain text. Generated,
+edited, and direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> documents are validated with the public <code class="docutils literal notranslate"><span class="pre">ssmd</span></code> APIs and the
+pykokoro Kokoro profile before synthesis. Header metadata is never sent to speech.</p>
 <section id="basic-workflow">
-<h2>Basic Workflow</h2>
-<ol class="arabic">
-<li><p><strong>Start conversion</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-</pre></div>
-</div>
-</li>
-<li><p><strong>Pause conversion</strong> (Ctrl+C when needed)</p></li>
-<li><p><strong>Edit SSMD files</strong> to fix pronunciation or pacing:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>vim<span class="w"> </span>.book_chapters/chapter_001_intro.ssmd
-</pre></div>
-</div>
-</li>
-<li><p><strong>Resume conversion</strong> - automatically detects edits:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-</pre></div>
-</div>
-</li>
-</ol>
-</section>
-<section id="ssmd-syntax">
-<h2>SSMD Syntax</h2>
-<p>SSMD uses a simple markdown-like syntax for speech control.</p>
-<section id="structural-breaks">
-<h3>Structural Breaks</h3>
-<p>Control pauses between text segments:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>...p    # Paragraph break (0.5-1.0s pause)
-...s    # Sentence break (0.1-0.3s pause)
-...c    # Clause break (shorter pause)
-</pre></div>
-</div>
-<p>Example:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>This is the first paragraph. ...s
-It has multiple sentences. ...p
-
-This is a second paragraph. ...s
-</pre></div>
-</div>
-</section>
-<section id="emphasis">
-<h3>Emphasis</h3>
-<p>Add vocal emphasis to words or phrases:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>*text*      # Moderate emphasis
-**text**    # Strong emphasis
-</pre></div>
-</div>
-<p>Example:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Harry was a *highly unusual* boy. ...s
-He **hated** the summer holidays. ...s
-</pre></div>
-</div>
-</section>
-<section id="custom-phonemes">
-<h3>Custom Phonemes</h3>
-<p>Override pronunciation using IPA phonemes:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[word]{ph=&quot;phoneme&quot;}
-</pre></div>
-</div>
-<p>Examples:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;} Granger was Harry&#39;s best friend. ...s
-The [API]{ph=&quot;ˌeɪpiˈaɪ&quot;} supports [JSON]{ph=&quot;dʒˈeɪsɑn&quot;}. ...s
-[Kubernetes]{ph=&quot;kubɚnˈɛtɪs&quot;} is a container orchestrator. ...s
-</pre></div>
-</div>
-</section>
-<section id="language-switching-planned">
-<h3>Language Switching (Planned)</h3>
-<p>Mark text as a different language (placeholder for future):</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}      # French text
-[Hola]{lang=&quot;es&quot;}         # Spanish text
-</pre></div>
-</div>
-</section>
-</section>
-<section id="complete-example">
-<h2>Complete Example</h2>
-<p>Here’s a complete SSMD file example:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
-
-[Harry]{ph=&quot;hæɹi&quot;} Potter was a *highly unusual* boy in many ways. ...s
-For one thing, he **hated** the summer holidays more than any other
-time of year. ...s For another, he really wanted to do his homework,
-but was forced to do it in secret, in the dead of the night. ...p
-
-And he also happened to be a wizard. ...p
-
-The [Dursleys]{ph=&quot;dɝzliz&quot;} had everything they wanted, but they
-also had a secret. ...s And their greatest fear was that somebody
-would discover it. ...p
-</pre></div>
-</div>
-</section>
-<section id="automatic-features">
-<h2>Automatic Features</h2>
-<p>SSMD files are automatically enhanced with:</p>
-<section id="phoneme-dictionary-injection">
-<h3>Phoneme Dictionary Injection</h3>
-<p>If you use <code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span></code>, all phoneme substitutions are automatically
-injected into the SSMD:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--phoneme-dict<span class="w"> </span>custom_phonemes.json
-</pre></div>
-</div>
-<p>The generated SSMD will include:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;} loved reading books. ...s
-</pre></div>
-</div>
-</section>
-<section id="html-emphasis-detection">
-<h3>HTML Emphasis Detection</h3>
-<p>Emphasis from the original EPUB HTML is automatically converted:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;em&gt;text&lt;/em&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">*text*</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">&lt;strong&gt;text&lt;/strong&gt;</span></code> → <code class="docutils literal notranslate"><span class="pre">**text**</span></code></p></li>
-</ul>
-</section>
-<section id="structural-break-preservation">
-<h3>Structural Break Preservation</h3>
-<p>ttsforge preserves paragraph structure but does not insert explicit
-<code class="docutils literal notranslate"><span class="pre">...p</span></code> or <code class="docutils literal notranslate"><span class="pre">...s</span></code> markers. Sentence detection is handled internally by
-pykokoro at synthesis time. Use manual break markers only when you need
-precise control over pauses.</p>
-</section>
-</section>
-<section id="use-cases">
-<h2>Use Cases</h2>
-<section id="when-to-edit-ssmd">
-<h3>When to Edit SSMD</h3>
-<ol class="arabic simple">
-<li><p><strong>Pronunciation issues</strong>: Character names, technical terms, foreign words</p></li>
-<li><p><strong>Pacing problems</strong>: Adjust paragraph and sentence breaks for better flow</p></li>
-<li><p><strong>Emphasis corrections</strong>: Add or remove emphasis on specific words</p></li>
-<li><p><strong>Consistency</strong>: Ensure consistent pronunciation across chapters</p></li>
-</ol>
-</section>
-<section id="combining-with-phoneme-dictionary">
-<h3>Combining with Phoneme Dictionary</h3>
-<p>For best results, use both features together:</p>
-<ol class="arabic simple">
-<li><p>Create a phoneme dictionary for common names/terms</p></li>
-<li><p>Let ttsforge auto-inject into SSMD</p></li>
-<li><p>Edit SSMD files for chapter-specific tweaks</p></li>
-</ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Extract and review names</span>
-ttsforge<span class="w"> </span>extract-names<span class="w"> </span>book.epub
-vim<span class="w"> </span>custom_phonemes.json
-
-<span class="c1"># 2. Start conversion (phonemes auto-injected into SSMD)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--phoneme-dict<span class="w"> </span>custom_phonemes.json
-
-<span class="c1"># 3. Edit specific SSMD files as needed</span>
-vim<span class="w"> </span>.book_chapters/chapter_005.ssmd
-
-<span class="c1"># 4. Resume (regenerates edited chapters)</span>
+<h2>Basic workflow</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--generate-ssmd
+<span class="c1"># edit the .ssmd files in the chapter directory</span>
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>.book_chapters/chapter_001.ssmd<span class="w"> </span>--strict
 ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
+<p>The generated files use truncated SHA-256 content hashes. An edited invalid file stops
+its chapter and is never silently replaced; an existing audio file is retained until a
+valid synthesis and its sidecars succeed.</p>
 </section>
+<section id="portable-document-example">
+<h2>Portable document example</h2>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>---
+title: Review podcast
+voice_bindings:
+  kokoro:
+    moderator: af_sarah
+    positive: af_bella
+pause_defaults:
+  enabled: true
+  sentence: 250ms
+  paragraph: 700ms
+  voice_change: 350ms
+---
+&lt;div voice=&quot;moderator&quot;&gt;
+Welcome to the review.
+&lt;/div&gt;
+
+&lt;div voice=&quot;positive&quot;&gt;
+The new format is portable. @approved
+&lt;/div&gt;
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">title</span></code> is metadata and is not spoken. Logical roles resolve through
+<code class="docutils literal notranslate"><span class="pre">voice_bindings.kokoro</span></code>. Explicit <code class="docutils literal notranslate"><span class="pre">...100ms</span></code> breaks beat implicit defaults; simultaneous
+implicit paragraph and voice changes use the longest duration. <code class="docutils literal notranslate"><span class="pre">&#64;approved</span></code> is retained
+as a marker event and exported to marker sidecars.</p>
 </section>
-<section id="tips-and-best-practices">
-<h2>Tips and Best Practices</h2>
-<ol class="arabic simple">
-<li><p><strong>Start with phoneme dictionary</strong>: Create a global dictionary first,
-then use SSMD for chapter-specific overrides</p></li>
-<li><p><strong>Test edits incrementally</strong>: Edit one chapter, let it regenerate,
-listen to verify before editing more</p></li>
-<li><p><strong>Use emphasis sparingly</strong>: Too much emphasis can sound unnatural</p></li>
-<li><p><strong>Keep backups</strong>: SSMD files are regenerated if missing, but manual
-edits are preserved</p></li>
-<li><p><strong>Consistent phonemes</strong>: Use the same IPA notation throughout for
-consistency</p></li>
-</ol>
+<section id="syntax">
+<h2>Syntax</h2>
+<p>Canonical inline annotations use <code class="docutils literal notranslate"><span class="pre">[text]{key=&quot;value&quot;}</span></code>:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;}
+[Bonjour]{lang=&quot;fr-FR&quot;}
+[100]{as=&quot;cardinal&quot;}
+[XML]{sub=&quot;extensible markup language&quot;}
+[fast words]{rate=&quot;fast&quot; volume=&quot;loud&quot;}
+...c ...s ...p ...250ms
+</pre></div>
+</div>
+<p>Moderate, strong, reduced, and none emphasis are parsed. Emphasis is spoken plainly by
+default: it does not add automatic volume, rate, or pitch changes, and its metadata is
+preserved. Use <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code> or the convenience flag
+<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt into segment-level volume/rate approximation; use <code class="docutils literal notranslate"><span class="pre">warn</span></code>
+or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter behavior. Explicit document prosody such as
+<code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode. Language, voice, prosody,
+say-as, substitution, phoneme, break, mark, paragraph, heading, and supported audio
+attributes are passed to the renderer.</p>
 </section>
-<section id="technical-details">
-<h2>Technical Details</h2>
-<section id="hash-based-change-detection">
-<h3>Hash-Based Change Detection</h3>
-<p>ttsforge tracks SSMD file changes using MD5 hashes (12 characters) stored
-in the state file. When you resume:</p>
-<ol class="arabic simple">
-<li><p>Current SSMD file is hashed</p></li>
-<li><p>Compared with saved hash in state</p></li>
-<li><p>If different, audio is regenerated</p></li>
-<li><p>New hash is saved</p></li>
-</ol>
+<section id="direct-ssmd-input">
+<h2>Direct SSMD input</h2>
+<p>An exact leading <code class="docutils literal notranslate"><span class="pre">---</span></code> line opens front matter and a matching <code class="docutils literal notranslate"><span class="pre">---</span></code> or <code class="docutils literal notranslate"><span class="pre">...</span></code> closes it.
+A <code class="docutils literal notranslate"><span class="pre">----</span></code> line is ordinary body text. Use <code class="docutils literal notranslate"><span class="pre">--no-ssmd-header</span></code> when an exact leading block
+is literal spoken text.</p>
+<p>For a direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> input, title precedence is explicit <code class="docutils literal notranslate"><span class="pre">--title</span></code> or API title, then
+header <code class="docutils literal notranslate"><span class="pre">title</span></code>, then the filename stem. The complete source, including front matter, is
+preserved for rendering.</p>
 </section>
-<section id="file-format">
-<h3>File Format</h3>
-<p>SSMD files are plain text UTF-8 files with the <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> extension.
-They can be edited with any text editor.</p>
+<section id="policies-and-diagnostics">
+<h2>Policies and diagnostics</h2>
+<p>Useful conversion options include:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--ssmd-unknown-header<span class="w"> </span>warn<span class="p">|</span>error<span class="p">|</span>ignore
+--ssmd-missing-voice<span class="w"> </span>error<span class="p">|</span>use-default
+--ssmd-emphasis<span class="w"> </span>plain<span class="p">|</span>approximate<span class="p">|</span>warn<span class="p">|</span>error
+--enable-ssmd-emphasis
+--detect-emphasis
+--ssmd-voice<span class="w"> </span><span class="nv">narrator</span><span class="o">=</span>af_sarah
+--pause-voice-change<span class="w"> </span><span class="m">0</span>.35
+--ssmd-audio-root<span class="w"> </span>./audio
+--ssmd-remote-audio
+--ssmd-fail-on-warning
+</pre></div>
+</div>
+<p>Diagnostics have stable codes and source locations. Inspect without loading ONNX using
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span></code> or <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span> <span class="pre">--json</span></code>. Validate with
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">validate</span> <span class="pre">FILE</span></code>; <code class="docutils literal notranslate"><span class="pre">--strict</span></code> promotes warnings to failures.</p>
+<p>Audio annotations use a document-relative local resolver with byte and duration limits.
+Remote audio is disabled by default; when enabled, only bounded HTTPS sources are
+accepted. Unresolved audio uses SSMD fallback text and emits an <code class="docutils literal notranslate"><span class="pre">ssmd.audio_fallback</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ssmd.audio_unresolved</span></code> diagnostic. Audio files are decoded and downmixed to mono before
+pykokoro applies SSMD transformations.</p>
 </section>
-<section id="error-handling">
-<h3>Error Handling</h3>
-<p>If SSMD generation fails, ttsforge falls back to plain text conversion
-and logs a warning. The conversion continues without SSMD features.</p>
-</section>
-<section id="validation">
-<h3>Validation</h3>
-<p>SSMD is not automatically validated during conversion. For manual checks,
-use the <code class="docutils literal notranslate"><span class="pre">validate_ssmd</span></code> helper from <code class="docutils literal notranslate"><span class="pre">ttsforge.ssmd_generator</span></code> to get
-warnings about unbalanced markers before you synthesize.</p>
-</section>
-</section>
-<section id="limitations">
-<h2>Limitations</h2>
+<section id="intentional-kokoro-limitations">
+<h2>Intentional Kokoro limitations</h2>
 <ul class="simple">
-<li><p>Language switching is not yet implemented (planned feature)</p></li>
-<li><p>Phoneme syntax must use valid IPA characters</p></li>
-<li><p>Very long lines may be truncated in some editors</p></li>
-<li><p>Hash detection only works with resumable conversions</p></li>
+<li><p>SSMD voice language, gender, and variant hints are preserved as metadata but do not
+select a Kokoro voice.</p></li>
+<li><p>SSMD extensions are rejected by default for the Kokoro profile.</p></li>
+<li><p>Emphasis is spoken plainly by default. EPUB styling detection and SSMD rendering are
+independent; use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> to extract italic/bold HTML and
+<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt into approximation.</p></li>
+<li><p>Remote audio is opt-in and bounded.</p></li>
+<li><p>Marks are exported as <code class="docutils literal notranslate"><span class="pre">chapter_NNN.markers.json</span></code> and an aggregate output sidecar
+rather than embedded in every audiobook container.</p></li>
 </ul>
 </section>
 <section id="see-also">
-<h2>See Also</h2>
+<h2>See also</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../quickstart/"><span class="doc">Quick Start Guide</span></a> - Getting started with ttsforge</p></li>
-<li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
-<li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - Configuration options</p></li>
+<li><p><a class="reference internal" href="../quickstart/"><span class="doc">Quick Start Guide</span></a></p></li>
+<li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a></p></li>
+<li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a></p></li>
 </ul>
-<p>For more SSMD examples and a quick reference, see <code class="docutils literal notranslate"><span class="pre">SSMD_QUICKSTART.md</span></code>
-in the repository root.</p>
 </section>
 </section>
 </div>

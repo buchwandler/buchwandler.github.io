@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/quickstart/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -574,7 +574,8 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w">
 </section>
 <section id="voice-blending">
 <h2>Voice Blending</h2>
-<p>Mix multiple voices for unique narration by specifying voice blends in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter:</p>
+<p>Mix multiple voices for unique narration by specifying voice blends in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code>
+parameter:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 50/50 blend of two voices</span>
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello world&quot;</span><span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_nicole:50,am_michael:50&quot;</span><span class="w"> </span>-p
 
@@ -585,7 +586,8 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span 
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Testing&quot;</span><span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_sky:40,af_bella:30,am_adam:30&quot;</span><span class="w"> </span>-p
 </pre></div>
 </div>
-<p>The format is: <code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2,...</span></code> where weights are percentages (0-100).</p>
+<p>The format is: <code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2,...</span></code> where weights are percentages
+(0-100).</p>
 <p>You can also use the traditional <code class="docutils literal notranslate"><span class="pre">--voice-blend</span></code> parameter:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--voice-blend<span class="w"> </span><span class="s2">&quot;af_nicole:50,am_michael:50&quot;</span>
 </pre></div>
@@ -690,8 +692,8 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span>--play
 </section>
 <section id="streaming-read-optional">
 <h2>Streaming Read (Optional)</h2>
-<p>Listen to an EPUB or text file in real-time with the <code class="docutils literal notranslate"><span class="pre">read</span></code> command.
-This requires the optional audio playback extra:</p>
+<p>Listen to an EPUB or text file in real-time with the <code class="docutils literal notranslate"><span class="pre">read</span></code> command. This requires the
+optional audio playback extra:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
 </pre></div>
 </div>
@@ -719,8 +721,8 @@ ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span clas
 </section>
 <section id="mixed-language-support">
 <h2>Mixed-Language Support</h2>
-<p>For books containing multiple languages (e.g., German text with English technical terms),
-ttsforge can automatically detect and handle different languages:</p>
+<p>For books containing multiple languages (e.g., German text with English technical
+terms), ttsforge can automatically detect and handle different languages:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a book with German and English text</span>
 ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
@@ -744,9 +746,11 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="se">\
 <li><p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> - Enable automatic language detection</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> - Primary/fallback language (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> - Comma-separated list of languages to detect</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> - Detection confidence threshold (0.0-1.0, default: 0.7)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> - Detection confidence threshold (0.0-1.0,
+default: 0.7)</p></li>
 </ul>
-<p><strong>Supported languages</strong>: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">tr</span></code>, <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code>/<code class="docutils literal notranslate"><span class="pre">cmn</span></code></p>
+<p><strong>Supported languages</strong>: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">tr</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code>/<code class="docutils literal notranslate"><span class="pre">cmn</span></code></p>
 <p><strong>Configuration</strong>: Set defaults in config:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_mixed_language<span class="w"> </span><span class="nb">true</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_primary<span class="w"> </span>de
@@ -757,8 +761,8 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 </section>
 <section id="ssmd-editing">
 <h2>SSMD Editing</h2>
-<p>ttsforge uses SSMD (Speech Synthesis Markdown) as an intermediate format between
-EPUB and audio. This allows you to fine-tune pronunciation and pacing.</p>
+<p>ttsforge uses SSMD (Speech Synthesis Markdown) as an intermediate format between EPUB
+and audio. This allows you to fine-tune pronunciation and pacing.</p>
 <p>During conversion, <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> files are automatically generated for each chapter:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
 ├── chapter_001_intro.ssmd
@@ -782,17 +786,28 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 ...s                               # Sentence break
 *text*                             # Moderate emphasis
 **text**                           # Strong emphasis
-[Hermione](ph: /hɝmˈIni/)          # Custom pronunciation
+[Hermione]{ph=&quot;hɝmˈIni&quot;}          # Custom pronunciation
 </pre></div>
 </div>
+<p>Emphasis is spoken plainly by default. To detect italic/bold EPUB styling and keep the
+resulting SSMD emphasis plain, use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--detect-emphasis
+</pre></div>
+</div>
+<p>To opt into approximate segment-level volume/rate changes, enable it separately:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--detect-emphasis<span class="w"> </span>--enable-ssmd-emphasis
+</pre></div>
+</div>
+<p>The persistent policy can be set with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">ssmd_emphasis_mode</span> <span class="pre">plain</span></code>.
+Explicit SSMD prosody remains supported in plain emphasis mode.</p>
 <p><strong>Example SSMD file</strong>:</p>
 <div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
 
-[Harry](ph: /hæɹi/) Potter was a *highly unusual* boy. ...s
+[Harry]{ph=&quot;hæɹi&quot;} Potter was a *highly unusual* boy. ...s
 He **hated** the summer holidays. ...p
 </pre></div>
 </div>
-<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD Editing</span></a>.</p>
+<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8</span></a>.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
@@ -803,13 +818,16 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 <span class="c1"># Set default format</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_format<span class="w"> </span>mp3
 
-<span class="c1"># Enable GPU acceleration</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_gpu<span class="w"> </span><span class="nb">true</span>
+<span class="c1"># Select an ONNX Runtime provider (Termux example)</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
 
 <span class="c1"># View all settings</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 </pre></div>
 </div>
+<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full
+<code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> names are also accepted. The legacy <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> flags
+map to <code class="docutils literal notranslate"><span class="pre">auto</span></code> and <code class="docutils literal notranslate"><span class="pre">cpu</span></code> respectively.</p>
 </section>
 <section id="complete-example">
 <h2>Complete Example</h2>
@@ -829,7 +847,7 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 <section id="next-steps">
 <h2>Next Steps</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD Editing</span></a> - SSMD editing and syntax reference</p></li>
+<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8</span></a> - SSMD editing and syntax reference</p></li>
 <li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
 <li><p><a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> - Detailed voice information</p></li>
 <li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - All configuration options</p></li>

@@ -60,7 +60,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig"]
 
 [pdf]
 builder = "weasyprint"
@@ -183,6 +183,18 @@ conf_dir = "../ttsforge/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/ttsforge"
 description = "A Python-based TTS automation framework with multi-engine support."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "audiosig"
+title = "audiosig"
+docs_root = "../audiosig/docs"
+conf_dir = "../audiosig/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/audiosig"
+description = "Portable, dependency-light audio signal processing for NumPy arrays."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

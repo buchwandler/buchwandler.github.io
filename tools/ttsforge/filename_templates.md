@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/filename_templates/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -546,8 +546,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 metadata. This allows you to organize your audiobook library with consistent naming.</p>
 <section id="template-syntax">
 <h2>Template Syntax</h2>
-<p>Templates use Python’s format string syntax with curly braces for variable
-substitution:</p>
+<p>Templates use Python’s format string syntax with curly braces for variable substitution:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{variable_name}
 {variable_name:format_spec}
 </pre></div>
@@ -561,35 +560,30 @@ substitution:</p>
 <section id="available-variables">
 <h2>Available Variables</h2>
 <p>The following variables are available in filename templates:</p>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></dt><dd><p>The title of the book from EPUB metadata, or the configured <code class="docutils literal notranslate"><span class="pre">default_title</span></code>
-if no title is found.</p>
+<p><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code> : The title of the book from EPUB metadata, or the configured
+<code class="docutils literal notranslate"><span class="pre">default_title</span></code> if no title is found.</p>
 <p>Example: <code class="docutils literal notranslate"><span class="pre">Empire</span> <span class="pre">in</span> <span class="pre">Black</span> <span class="pre">and</span> <span class="pre">Gold</span></code></p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{author}</span></code></dt><dd><p>The author name from EPUB metadata, or “Unknown” if not found.</p>
+<p><code class="docutils literal notranslate"><span class="pre">{author}</span></code> : The author name from EPUB metadata, or “Unknown” if not found.</p>
 <p>Example: <code class="docutils literal notranslate"><span class="pre">Adrian</span> <span class="pre">Tchaikovsky</span></code></p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{chapter_title}</span></code></dt><dd><p>The title of the current chapter (only available in chapter filename templates).</p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapter_title}</span></code> : The title of the current chapter (only available in chapter filename
+templates).</p>
 <p>Example: <code class="docutils literal notranslate"><span class="pre">Chapter</span> <span class="pre">1</span> <span class="pre">-</span> <span class="pre">The</span> <span class="pre">Beginning</span></code></p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{chapter_num}</span></code></dt><dd><p>The chapter number (1-based). Supports format specifiers for padding.</p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapter_num}</span></code> : The chapter number (1-based). Supports format specifiers for padding.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num}</span></code> → <code class="docutils literal notranslate"><span class="pre">1</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:02d}</span></code> → <code class="docutils literal notranslate"><span class="pre">01</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}</span></code> → <code class="docutils literal notranslate"><span class="pre">001</span></code></p></li>
 </ul>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{input_stem}</span></code></dt><dd><p>The input filename without extension (useful for maintaining original naming).</p>
+<p><code class="docutils literal notranslate"><span class="pre">{input_stem}</span></code> : The input filename without extension (useful for maintaining original
+naming).</p>
 <p>Example: If input is <code class="docutils literal notranslate"><span class="pre">my_book.epub</span></code>, this gives <code class="docutils literal notranslate"><span class="pre">my_book</span></code></p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code></dt><dd><p>A string representing the chapter selection, or empty if all chapters are selected.</p>
+<p><code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code> : A string representing the chapter selection, or empty if all
+chapters are selected.</p>
 <ul class="simple">
 <li><p>Single chapter: <code class="docutils literal notranslate"><span class="pre">chapter_1</span></code></p></li>
 <li><p>Range: <code class="docutils literal notranslate"><span class="pre">chapters_1-5</span></code></p></li>
 <li><p>Multiple: <code class="docutils literal notranslate"><span class="pre">chapters_1-3_5_7-10</span></code></p></li>
 </ul>
-</dd>
-</dl>
 </section>
 <section id="template-types">
 <h2>Template Types</h2>
@@ -599,9 +593,11 @@ if no title is found.</p>
 <p>Controls the name of the final audiobook file.</p>
 <p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">output_filename_template</span></code></p>
 <p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p>
-<p><strong>Used by:</strong>
-- <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command
-- <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p></li>
+</ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {book_title}&quot;</span>
@@ -618,9 +614,11 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 <p>Controls the names of intermediate chapter WAV files created during conversion.</p>
 <p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">chapter_filename_template</span></code></p>
 <p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}_{book_title}_{chapter_title}</span></code></p>
-<p><strong>Used by:</strong>
-- <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command (chapter files in work directory)
-- <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> command (chapter files in work directory)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">convert</span></code> command</p></li>
+</ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>chapter_filename_template<span class="w"> </span><span class="s2">&quot;{chapter_num:03d}_{chapter_title}&quot;</span>
@@ -637,8 +635,10 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 <p>Controls the name of phoneme JSON files created during export.</p>
 <p><strong>Config key:</strong> <code class="docutils literal notranslate"><span class="pre">phoneme_export_template</span></code></p>
 <p><strong>Default:</strong> <code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p>
-<p><strong>Used by:</strong>
-- <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">export</span></code> command</p>
+<p><strong>Used by:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">phonemes</span> <span class="pre">export</span></code> command</p></li>
+</ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set template</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>phoneme_export_template<span class="w"> </span><span class="s2">&quot;{book_title}_phonemes&quot;</span>
@@ -687,8 +687,8 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb"
 </section>
 <section id="partial-chapter-selections">
 <h2>Partial Chapter Selections</h2>
-<p>When converting a subset of chapters, the <code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code> variable contains
-the selection, and it’s automatically appended to output filenames:</p>
+<p>When converting a subset of chapters, the <code class="docutils literal notranslate"><span class="pre">{chapters_range}</span></code> variable contains the
+selection, and it’s automatically appended to output filenames:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert chapters 1-5</span>
 ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
 
@@ -752,8 +752,8 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 </section>
 <section id="work-directory">
 <h2>Work Directory</h2>
-<p>During conversion, ttsforge creates a hidden work directory to store chapter files
-and state information:</p>
+<p>During conversion, ttsforge creates a hidden work directory to store chapter files and
+state information:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
 ├── 001_Empire in Black and Gold_Prologue.wav
 ├── 002_Empire in Black and Gold_Chapter 1.wav
@@ -777,14 +777,14 @@ conversion (unless <code class="docutils literal notranslate"><span class="pre">
 </section>
 <section id="special-characters-in-titles">
 <h3>Special characters in titles</h3>
-<p>Characters that are invalid in filenames are automatically replaced with underscores.
-If you see unexpected underscores in filenames, check the original EPUB metadata
-for special characters.</p>
+<p>Characters that are invalid in filenames are automatically replaced with underscores. If
+you see unexpected underscores in filenames, check the original EPUB metadata for
+special characters.</p>
 </section>
 <section id="duplicate-filenames">
 <h3>Duplicate filenames</h3>
-<p>If converting multiple books with the same title, use templates that include
-unique identifiers:</p>
+<p>If converting multiple books with the same title, use templates that include unique
+identifiers:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{author} - {book_title}&quot;</span>
 <span class="c1"># Or use input stem:</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>output_filename_template<span class="w"> </span><span class="s2">&quot;{input_stem}&quot;</span>

@@ -5,13 +5,13 @@
     {
       "url": "/tools/ttsforge/api/",
       "title": "ttsforge API Reference",
-      "snippet": "This section documents the Python API for ttsforge, allowing programmatic use\nof the library.\nttsforge is organized into the following modul …",
+      "snippet": "This section documents the Python API for ttsforge, allowing programmatic use of the\nlibrary.\nttsforge is organized into the following modul …",
       "sections": [
         {
           "anchor": "",
           "heading": "API Reference",
-          "text": "This section documents the Python API for ttsforge, allowing programmatic use\nof the library.",
-          "lower": "this section documents the python api for ttsforge, allowing programmatic use\nof the library."
+          "text": "This section documents the Python API for ttsforge, allowing programmatic use of the\nlibrary.",
+          "lower": "this section documents the python api for ttsforge, allowing programmatic use of the\nlibrary."
         },
         {
           "anchor": "",
@@ -22,32 +22,32 @@
         {
           "anchor": "",
           "heading": "Core Modules",
-          "text": "ttsforge.cliCommand-line interface implementation using Click.\n\n\nttsforge.conversionMain conversion logic for EPUB to audiobook conversion.\n\n\nttsforge.phoneme_conversionConversion logic for pre-tokenized phoneme files.",
-          "lower": "ttsforge.clicommand-line interface implementation using click.\n\n\nttsforge.conversionmain conversion logic for epub to audiobook conversion.\n\n\nttsforge.phoneme_conversionconversion logic for pre-tokenized phoneme files."
+          "text": "ttsforge.cli : Command-line interface implementation using explicit typed Typer\nwrappers (with Click as the runtime substrate). App construction and help paths are\nprovider-independent; implementation modules are imported lazily.\n\nttsforge.paths : Provider-independent user configuration and advanced short-sentence\npath calculations.\n\nttsforge.conversion : Main conversion logic for EPUB to audiobook conversion.\n\nttsforge.phoneme_conversion : Conversion logic for pre-tokenized phoneme files.",
+          "lower": "ttsforge.cli : command-line interface implementation using explicit typed typer\nwrappers (with click as the runtime substrate). app construction and help paths are\nprovider-independent; implementation modules are imported lazily.\n\nttsforge.paths : provider-independent user configuration and advanced short-sentence\npath calculations.\n\nttsforge.conversion : main conversion logic for epub to audiobook conversion.\n\nttsforge.phoneme_conversion : conversion logic for pre-tokenized phoneme files."
         },
         {
           "anchor": "",
           "heading": "TTS Backend",
-          "text": "ttsforge.kokoro_runnerShared Kokoro ONNX runner used by conversion paths.\n\n\nttsforge.kokoro_langLanguage code helpers for Kokoro.\n\n\nttsforge.phonemesData structures for phoneme book representation.",
-          "lower": "ttsforge.kokoro_runnershared kokoro onnx runner used by conversion paths.\n\n\nttsforge.kokoro_langlanguage code helpers for kokoro.\n\n\nttsforge.phonemesdata structures for phoneme book representation."
+          "text": "ttsforge.kokoro_runner : Shared Kokoro ONNX runner used by conversion paths.\n\nttsforge.kokoro_lang : Language code helpers for Kokoro.\n\nttsforge.phonemes : Data structures for phoneme book representation.",
+          "lower": "ttsforge.kokoro_runner : shared kokoro onnx runner used by conversion paths.\n\nttsforge.kokoro_lang : language code helpers for kokoro.\n\nttsforge.phonemes : data structures for phoneme book representation."
         },
         {
           "anchor": "",
           "heading": "Utilities",
-          "text": "ttsforge.constantsConfiguration defaults, voice definitions, and language mappings.\n\n\nttsforge.utilsUtility functions for file handling, configuration, and formatting.\n\n\nttsforge.audio_mergeAudio concatenation and chapter marker handling.\n\n\nttsforge.chapter_selectionParsing helpers for chapter selection strings.\n\n\nttsforge.ssmd_generatorSSMD generation and validation helpers.\n\n\nttsforge.input_readerEPUB/text input parsing helpers.\n\n\nttsforge.name_extractorName extraction utilities for dictionary building.\n\n\nttsforge.vocabVocabulary utilities and metadata.",
-          "lower": "ttsforge.constantsconfiguration defaults, voice definitions, and language mappings.\n\n\nttsforge.utilsutility functions for file handling, configuration, and formatting.\n\n\nttsforge.audio_mergeaudio concatenation and chapter marker handling.\n\n\nttsforge.chapter_selectionparsing helpers for chapter selection strings.\n\n\nttsforge.ssmd_generatorssmd generation and validation helpers.\n\n\nttsforge.input_readerepub/text input parsing helpers.\n\n\nttsforge.name_extractorname extraction utilities for dictionary building.\n\n\nttsforge.vocabvocabulary utilities and metadata."
+          "text": "ttsforge.constants : Configuration defaults, voice definitions, and language\nmappings.\n\nttsforge.utils : Utility functions for file handling, configuration, and formatting.\n\nttsforge.audio_merge : Audio concatenation and chapter marker handling.\n\nttsforge.chapter_selection : Parsing helpers for chapter selection strings.\n\nttsforge.ssmd_generator : Canonical SSMD 0.8 generation, validation, deterministic\nfront matter, and SHA-256 content hashing helpers.\n\nttsforge.ssmd_support : Stable SSMD policy, document metadata, diagnostics, and\npykokoro config translation types. Inspection and validation do not initialize ONNX.\n\nttsforge.ssmd_audio : Bounded document-relative local and opt-in HTTPS audio source\nresolution.\n\nttsforge.input_reader : EPUB/text input parsing helpers.\n\nttsforge.name_extra…",
+          "lower": "ttsforge.constants : configuration defaults, voice definitions, and language\nmappings.\n\nttsforge.utils : utility functions for file handling, configuration, and formatting.\n\nttsforge.audio_merge : audio concatenation and chapter marker handling.\n\nttsforge.chapter_selection : parsing helpers for chapter selection strings.\n\nttsforge.ssmd_generator : canonical ssmd 0.8 generation, validation, deterministic\nfront matter, and sha-256 content hashing helpers.\n\nttsforge.ssmd_support : stable ssmd policy, document metadata, diagnostics, and\npykokoro config translation types. inspection and validation do not initialize onnx.\n\nttsforge.ssmd_audio : bounded document-relative local and opt-in https audio source\nresolution.\n\nttsforge.input_reader : epub/text input parsing helpers.\n\nttsforge.name_extra…"
         },
         {
           "anchor": "",
           "heading": "Basic Text-to-Speech",
-          "text": "from ttsforge.kokoro_lang import get_onnx_lang_code\nfrom ttsforge.kokoro_runner import KokoroRunOptions, KokoroRunner\n\n# Initialize runner\nopts = KokoroRunOptions(\n    voice=\"af_heart\",\n    speed=1.0,\n    use_gpu=False,\n    pause_clause=0.3,\n    pause_sentence=0.5,\n    pause_paragraph=0.9,\n    pause_variance=0.05,\n)\nrunner = KokoroRunner(opts, log=print)\nrunner.ensure_ready()\n\n# Generate audio\naudio = runner.synthesize(\n    \"Hello, world!\",\n    lang_code=get_onnx_lang_code(\"en-us\"),\n    pause_mode=\"tts\",\n    is_phonemes=False,\n)\n\n# Save to file\nimport soundfile as sf\nsf.write(\"output.wav\", audio, 24000)",
-          "lower": "from ttsforge.kokoro_lang import get_onnx_lang_code\nfrom ttsforge.kokoro_runner import kokororunoptions, kokororunner\n\n# initialize runner\nopts = kokororunoptions(\n    voice=\"af_heart\",\n    speed=1.0,\n    use_gpu=false,\n    pause_clause=0.3,\n    pause_sentence=0.5,\n    pause_paragraph=0.9,\n    pause_variance=0.05,\n)\nrunner = kokororunner(opts, log=print)\nrunner.ensure_ready()\n\n# generate audio\naudio = runner.synthesize(\n    \"hello, world!\",\n    lang_code=get_onnx_lang_code(\"en-us\"),\n    pause_mode=\"tts\",\n    is_phonemes=false,\n)\n\n# save to file\nimport soundfile as sf\nsf.write(\"output.wav\", audio, 24000)"
+          "text": "from ttsforge.kokoro_lang import get_onnx_lang_code\nfrom ttsforge.kokoro_runner import KokoroRunOptions, KokoroRunner\n\n# Initialize runner\nopts = KokoroRunOptions(\n    voice=\"af_heart\",\n    speed=1.0,\n    use_gpu=False,\n    onnx_provider=\"cpu\",\n    pause_clause=0.3,\n    pause_sentence=0.5,\n    pause_paragraph=0.9,\n    pause_variance=0.05,\n)\nrunner = KokoroRunner(opts, log=print)\nrunner.ensure_ready()\n\n# Generate audio\nresult = runner.synthesize(\n    \"Hello, world!\",\n    lang_code=get_onnx_lang_code(\"en-us\"),\n    pause_mode=\"tts\",\n    is_phonemes=False,\n)\n\n# Save to file\nimport soundfile as sf\nsf.write(\"output.wav\", result.audio, result.sample_rate)\nprint(result.document_metadata, result.markers)",
+          "lower": "from ttsforge.kokoro_lang import get_onnx_lang_code\nfrom ttsforge.kokoro_runner import kokororunoptions, kokororunner\n\n# initialize runner\nopts = kokororunoptions(\n    voice=\"af_heart\",\n    speed=1.0,\n    use_gpu=false,\n    onnx_provider=\"cpu\",\n    pause_clause=0.3,\n    pause_sentence=0.5,\n    pause_paragraph=0.9,\n    pause_variance=0.05,\n)\nrunner = kokororunner(opts, log=print)\nrunner.ensure_ready()\n\n# generate audio\nresult = runner.synthesize(\n    \"hello, world!\",\n    lang_code=get_onnx_lang_code(\"en-us\"),\n    pause_mode=\"tts\",\n    is_phonemes=false,\n)\n\n# save to file\nimport soundfile as sf\nsf.write(\"output.wav\", result.audio, result.sample_rate)\nprint(result.document_metadata, result.markers)"
         },
         {
           "anchor": "",
           "heading": "Converting an EPUB",
-          "text": "from pathlib import Path\nfrom ttsforge.conversion import ConversionOptions, TTSConverter\n\n# Configure conversion\noptions = ConversionOptions(\n    voice=\"am_adam\",\n    language=\"a\",\n    speed=1.0,\n    output_format=\"m4b\",\n    use_gpu=False,\n)\n\n# Create converter\nconverter = TTSConverter(options=options)\n\n# Convert EPUB\nresult = converter.convert_epub(\n    epub_path=Path(\"book.epub\"),\n    output_path=Path(\"book.m4b\"),\n)\n\nif result.success:\n    print(f\"Created: {result.output_path}\")\nelse:\n    print(f\"Error: {result.error_message}\")",
-          "lower": "from pathlib import path\nfrom ttsforge.conversion import conversionoptions, ttsconverter\n\n# configure conversion\noptions = conversionoptions(\n    voice=\"am_adam\",\n    language=\"a\",\n    speed=1.0,\n    output_format=\"m4b\",\n    use_gpu=false,\n)\n\n# create converter\nconverter = ttsconverter(options=options)\n\n# convert epub\nresult = converter.convert_epub(\n    epub_path=path(\"book.epub\"),\n    output_path=path(\"book.m4b\"),\n)\n\nif result.success:\n    print(f\"created: {result.output_path}\")\nelse:\n    print(f\"error: {result.error_message}\")"
+          "text": "from pathlib import Path\nfrom ttsforge.conversion import ConversionOptions, TTSConverter\n\n# Configure conversion\noptions = ConversionOptions(\n    voice=\"am_adam\",\n    language=\"a\",\n    speed=1.0,\n    output_format=\"m4b\",\n    use_gpu=False,\n    onnx_provider=\"nnapi\",\n)\n\n# Create converter\nconverter = TTSConverter(options=options)\n\n# Convert EPUB\nresult = converter.convert_epub(\n    epub_path=Path(\"book.epub\"),\n    output_path=Path(\"book.m4b\"),\n)\n\nif result.success:\n    print(f\"Created: {result.output_path}\")\nelse:\n    print(f\"Error: {result.error_message}\")",
+          "lower": "from pathlib import path\nfrom ttsforge.conversion import conversionoptions, ttsconverter\n\n# configure conversion\noptions = conversionoptions(\n    voice=\"am_adam\",\n    language=\"a\",\n    speed=1.0,\n    output_format=\"m4b\",\n    use_gpu=false,\n    onnx_provider=\"nnapi\",\n)\n\n# create converter\nconverter = ttsconverter(options=options)\n\n# convert epub\nresult = converter.convert_epub(\n    epub_path=path(\"book.epub\"),\n    output_path=path(\"book.m4b\"),\n)\n\nif result.success:\n    print(f\"created: {result.output_path}\")\nelse:\n    print(f\"error: {result.error_message}\")"
         },
         {
           "anchor": "",
@@ -60,19 +60,25 @@
           "heading": "Loading Configuration",
           "text": "from ttsforge.utils import load_config, save_config\n\n# Load current config\nconfig = load_config()\nprint(f\"Default voice: {config['default_voice']}\")\n\n# Modify and save\nconfig['default_voice'] = 'am_adam'\nsave_config(config)",
           "lower": "from ttsforge.utils import load_config, save_config\n\n# load current config\nconfig = load_config()\nprint(f\"default voice: {config['default_voice']}\")\n\n# modify and save\nconfig['default_voice'] = 'am_adam'\nsave_config(config)"
+        },
+        {
+          "anchor": "",
+          "heading": "Auto-generated API Documentation",
+          "text": "Constants for ttsforge - voices, languages, and formats.",
+          "lower": "constants for ttsforge - voices, languages, and formats."
         }
       ]
     },
     {
       "url": "/tools/ttsforge/cli/",
       "title": "ttsforge CLI Reference",
-      "snippet": "Complete command-line interface reference for ttsforge.\nttsforge --version    # Show version and exit\nttsforge --help       # Show help mess …",
+      "snippet": "Complete command-line interface reference for ttsforge.\n\nThe command tree is declared with explicit typed Typer wrappers. CLI startup, help, …",
       "sections": [
         {
           "anchor": "",
           "heading": "CLI Reference",
-          "text": "Complete command-line interface reference for ttsforge.",
-          "lower": "complete command-line interface reference for ttsforge."
+          "text": "Complete command-line interface reference for ttsforge.\n\nThe command tree is declared with explicit typed Typer wrappers. CLI startup, help, and\nversion output remain independent of the ONNX provider. The legacy --set KEY VALUE\nconfiguration grammar accepts repeated pairs, including values that begin with -.",
+          "lower": "complete command-line interface reference for ttsforge.\n\nthe command tree is declared with explicit typed typer wrappers. cli startup, help, and\nversion output remain independent of the onnx provider. the legacy --set key value\nconfiguration grammar accepts repeated pairs, including values that begin with -."
         },
         {
           "anchor": "",
@@ -89,14 +95,26 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "EPUB_FILEPath to the EPUB file to convert (required).",
-          "lower": "epub_filepath to the epub file to convert (required)."
+          "text": "EPUB_FILE : Path to the EPUB file to convert (required).",
+          "lower": "epub_file : path to the epub file to convert (required)."
         },
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-o, --output PATHOutput file path. Defaults to input filename with new extension in the same directory.\n\n\n-f, --format FORMATOutput audio format. Choices: wav, mp3, flac, opus, m4b.\nDefault: m4b.\n\n\n-v, --voice VOICEVoice to use for TTS. Can be a single voice name or a voice blend.\n\n\nSingle voice: af_heart, am_adam, etc.\n\n\nVoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\nSee Voices for available voices.\nDefault: af_heart.\n\n\n-l, --language LANGLanguage code for TTS. Choices: a (American English), b (British English),\ne (Spanish), f (French), h (Hindi), i (Italian), j (Japanese),\np (Brazilian Portuguese), z (Mandarin Chinese).\nDefault: auto-detected from EPUB metadata.\n\n\n--lang LANGOverride language for phonemization (e.g., de, fr, en-us).\nBy default, language is determ…",
-          "lower": "-o, --output pathoutput file path. defaults to input filename with new extension in the same directory.\n\n\n-f, --format formatoutput audio format. choices: wav, mp3, flac, opus, m4b.\ndefault: m4b.\n\n\n-v, --voice voicevoice to use for tts. can be a single voice name or a voice blend.\n\n\nsingle voice: af_heart, am_adam, etc.\n\n\nvoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\nsee voices for available voices.\ndefault: af_heart.\n\n\n-l, --language langlanguage code for tts. choices: a (american english), b (british english),\ne (spanish), f (french), h (hindi), i (italian), j (japanese),\np (brazilian portuguese), z (mandarin chinese).\ndefault: auto-detected from epub metadata.\n\n\n--lang langoverride language for phonemization (e.g., de, fr, en-us).\nby default, language is determ…"
+          "text": "-o, --output PATH : Output file path. Defaults to input filename with new extension in\nthe same directory.\n\n-f, --format FORMAT : Output audio format. Choices: wav, mp3, flac, opus,\nm4b. Default: m4b.\n\n-v, --voice VOICE : Voice to use for TTS. Can be a single voice name or a voice blend.\n\n\nSingle voice: af_heart, am_adam, etc.\n\n\nVoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\nSee Voices for available voices. Default: af_heart.\n\n-l, --language LANG : Language code for TTS. Choices: a (American English), b\n(British English), e (Spanish), f (French), h (Hindi), i (Italian), j\n(Japanese), p (Brazilian Portuguese), z (Mandarin Chinese). Default: auto-detected\nfrom EPUB metadata.\n\n--lang LANG : Override language for phonemization (e.g., de, fr, en-us). By\ndefault, languag…",
+          "lower": "-o, --output path : output file path. defaults to input filename with new extension in\nthe same directory.\n\n-f, --format format : output audio format. choices: wav, mp3, flac, opus,\nm4b. default: m4b.\n\n-v, --voice voice : voice to use for tts. can be a single voice name or a voice blend.\n\n\nsingle voice: af_heart, am_adam, etc.\n\n\nvoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\nsee voices for available voices. default: af_heart.\n\n-l, --language lang : language code for tts. choices: a (american english), b\n(british english), e (spanish), f (french), h (hindi), i (italian), j\n(japanese), p (brazilian portuguese), z (mandarin chinese). default: auto-detected\nfrom epub metadata.\n\n--lang lang : override language for phonemization (e.g., de, fr, en-us). by\ndefault, languag…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD 0.8 options",
+          "text": "--ssmd-header / --no-ssmd-header : Parse or preserve an exact leading front-matter\nblock.\n\n--ssmd-unknown-header POLICY : warn, error, or ignore unknown header keys.\n\n--ssmd-missing-voice POLICY : error or use-default for unresolved logical roles.\n\n--ssmd-emphasis MODE : plain, approximate, warn, or error. The default is the\npersisted ssmd_emphasis_mode value, normally plain. Plain speaks emphasis unchanged;\napproximate applies segment-level volume/rate changes.\n\n--enable-ssmd-emphasis : Convenience opt-in equivalent to\n--ssmd-emphasis approximate. It applies segment-level volume/rate changes to existing\nSSMD emphasis. Use --detect-emphasis separately when EPUB italic/bold styling should\nfirst be extracted into SSMD annotations. This flag cannot be combined with\n--ssmd-emphasis.\n\n--ssmd-v…",
+          "lower": "--ssmd-header / --no-ssmd-header : parse or preserve an exact leading front-matter\nblock.\n\n--ssmd-unknown-header policy : warn, error, or ignore unknown header keys.\n\n--ssmd-missing-voice policy : error or use-default for unresolved logical roles.\n\n--ssmd-emphasis mode : plain, approximate, warn, or error. the default is the\npersisted ssmd_emphasis_mode value, normally plain. plain speaks emphasis unchanged;\napproximate applies segment-level volume/rate changes.\n\n--enable-ssmd-emphasis : convenience opt-in equivalent to\n--ssmd-emphasis approximate. it applies segment-level volume/rate changes to existing\nssmd emphasis. use --detect-emphasis separately when epub italic/bold styling should\nfirst be extracted into ssmd annotations. this flag cannot be combined with\n--ssmd-emphasis.\n\n--ssmd-v…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD inspection",
+          "text": "These commands do not initialize ONNX:\n\nttsforge ssmd validate FILE\nttsforge ssmd validate FILE --strict\nttsforge ssmd inspect FILE --json\n\n\n\n\n-y, --yes : Skip confirmation prompts.\n\n--verbose : Show detailed output during conversion.\n\n--split-mode MODE : Text splitting mode. Choices: auto, line, paragraph,\nsentence, clause. Default: auto.\n\n--resume / --no-resume : Enable or disable resume capability. Default: enabled.\n\n--fresh : Discard any previous progress and start conversion from scratch.\n\n--generate-ssmd : Generate only SSMD files without creating audio (for manual\nediting).\n\n--detect-emphasis / --no-detect-emphasis : Detect emphasis (italic/bold) from EPUB\nHTML. Default: disabled.\n\n--keep-chapters : Keep individual chapter audio files after conversion.\n\n--voice-blend SPEC : Blend m…",
+          "lower": "these commands do not initialize onnx:\n\nttsforge ssmd validate file\nttsforge ssmd validate file --strict\nttsforge ssmd inspect file --json\n\n\n\n\n-y, --yes : skip confirmation prompts.\n\n--verbose : show detailed output during conversion.\n\n--split-mode mode : text splitting mode. choices: auto, line, paragraph,\nsentence, clause. default: auto.\n\n--resume / --no-resume : enable or disable resume capability. default: enabled.\n\n--fresh : discard any previous progress and start conversion from scratch.\n\n--generate-ssmd : generate only ssmd files without creating audio (for manual\nediting).\n\n--detect-emphasis / --no-detect-emphasis : detect emphasis (italic/bold) from epub\nhtml. default: disabled.\n\n--keep-chapters : keep individual chapter audio files after conversion.\n\n--voice-blend spec : blend m…"
         },
         {
           "anchor": "",
@@ -113,8 +131,8 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "EPUB_FILEPath to the EPUB file (required).",
-          "lower": "epub_filepath to the epub file (required)."
+          "text": "EPUB_FILE : Path to the EPUB file (required).",
+          "lower": "epub_file : path to the epub file (required)."
         },
         {
           "anchor": "",
@@ -131,8 +149,8 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "EPUB_FILEPath to the EPUB file (required).",
-          "lower": "epub_filepath to the epub file (required)."
+          "text": "EPUB_FILE : Path to the EPUB file (required).",
+          "lower": "epub_file : path to the epub file (required)."
         },
         {
           "anchor": "",
@@ -149,14 +167,14 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "TEXTText to convert. If not provided, uses default sample text.",
-          "lower": "texttext to convert. if not provided, uses default sample text."
+          "text": "TEXT : Text to convert. If not provided, uses default sample text.",
+          "lower": "text : text to convert. if not provided, uses default sample text."
         },
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-o, --output PATHOutput file path. Default: ./sample.wav.\n\n\n-f, --format FORMATOutput audio format. Default: wav.\n\n\n-v, --voice VOICETTS voice to use. Can be a single voice or voice blend.\n\n\nSingle voice: af_heart\n\n\nVoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\n\n-l, --language LANGLanguage for TTS.\n\n\n--lang LANGOverride language for phonemization (e.g., de, fr, en-us).\n\n\n-s, --speed FLOATSpeech speed. Default: 1.0.\n\n\n--gpu / --no-gpuEnable or disable GPU acceleration.\n\n\n--split-mode MODEText splitting mode.\n\n\n--verboseShow detailed output.\n\n\n-p, --playPlay audio directly (also saves to file if -o specified).\n\nNote: Playback requires the optional ttsforge[audio] extra.\n\n\n--use-mixed-languageEnable mixed-language support (auto-detect multiple languages in text).\n\n\n-…",
-          "lower": "-o, --output pathoutput file path. default: ./sample.wav.\n\n\n-f, --format formatoutput audio format. default: wav.\n\n\n-v, --voice voicetts voice to use. can be a single voice or voice blend.\n\n\nsingle voice: af_heart\n\n\nvoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\n\n-l, --language langlanguage for tts.\n\n\n--lang langoverride language for phonemization (e.g., de, fr, en-us).\n\n\n-s, --speed floatspeech speed. default: 1.0.\n\n\n--gpu / --no-gpuenable or disable gpu acceleration.\n\n\n--split-mode modetext splitting mode.\n\n\n--verboseshow detailed output.\n\n\n-p, --playplay audio directly (also saves to file if -o specified).\n\nnote: playback requires the optional ttsforge[audio] extra.\n\n\n--use-mixed-languageenable mixed-language support (auto-detect multiple languages in text).\n\n\n-…"
+          "text": "-o, --output PATH : Output file path. Default: ./sample.wav.\n\n-f, --format FORMAT : Output audio format. Default: wav.\n\n-v, --voice VOICE : TTS voice to use. Can be a single voice or voice blend.\n\n\nSingle voice: af_heart\n\n\nVoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\n-l, --language LANG : Language for TTS.\n\n--lang LANG : Override language for phonemization (e.g., de, fr, en-us).\n\n-s, --speed FLOAT : Speech speed. Default: 1.0.\n\n--gpu / --no-gpu : Compatibility shortcut mapping to auto or cpu.\n\n--provider PROVIDER : ONNX Runtime execution provider or alias.\n\n--split-mode MODE : Text splitting mode.\n\n--verbose : Show detailed output.\n\n-p, --play : Play audio directly (also saves to file if -o specified).\n\nNote: Playback requires the optional ttsforge[audio] extra.…",
+          "lower": "-o, --output path : output file path. default: ./sample.wav.\n\n-f, --format format : output audio format. default: wav.\n\n-v, --voice voice : tts voice to use. can be a single voice or voice blend.\n\n\nsingle voice: af_heart\n\n\nvoice blend: af_nicole:50,am_michael:50 (auto-detects blend format)\n\n\n\n-l, --language lang : language for tts.\n\n--lang lang : override language for phonemization (e.g., de, fr, en-us).\n\n-s, --speed float : speech speed. default: 1.0.\n\n--gpu / --no-gpu : compatibility shortcut mapping to auto or cpu.\n\n--provider provider : onnx runtime execution provider or alias.\n\n--split-mode mode : text splitting mode.\n\n--verbose : show detailed output.\n\n-p, --play : play audio directly (also saves to file if -o specified).\n\nnote: playback requires the optional ttsforge[audio] extra.…"
         },
         {
           "anchor": "",
@@ -173,14 +191,14 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "INPUT_FILEPath to EPUB/TXT file, or - to read from stdin. If omitted, reads stdin.",
-          "lower": "input_filepath to epub/txt file, or - to read from stdin. if omitted, reads stdin."
+          "text": "INPUT_FILE : Path to EPUB/TXT file, or - to read from stdin. If omitted, reads\nstdin.",
+          "lower": "input_file : path to epub/txt file, or - to read from stdin. if omitted, reads\nstdin."
         },
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-v, --voice VOICETTS voice to use.\n\n\n-l, --language LANGLanguage for TTS.\n\n\n-s, --speed FLOATSpeech speed. Default: 1.0.\n\n\n--gpu / --no-gpuEnable or disable GPU acceleration.\n\n\n--mode MODEContent mode: chapters or pages.\n\n\n-c, --chapters SELECTIONChapter selection for chapters mode.\n\n\n-p, --pages SELECTIONPage selection for pages mode.\n\n\n--start-chapter INTStart from specific chapter number (1-indexed).\n\n\n--start-page INTStart from specific page number (1-indexed).\n\n\n--page-size INTSynthetic page size in characters (default: 2000).\n\n\n--resumeResume from last saved position.\n\n\n--listList chapters/pages and exit without reading.\n\n\n--split MODEText splitting mode: sentence or paragraph.\n\n\n--pause-clause FLOATPause after clauses in seconds.\n\n\n--pause-sentence FLOATPause after sentences in sec…",
-          "lower": "-v, --voice voicetts voice to use.\n\n\n-l, --language langlanguage for tts.\n\n\n-s, --speed floatspeech speed. default: 1.0.\n\n\n--gpu / --no-gpuenable or disable gpu acceleration.\n\n\n--mode modecontent mode: chapters or pages.\n\n\n-c, --chapters selectionchapter selection for chapters mode.\n\n\n-p, --pages selectionpage selection for pages mode.\n\n\n--start-chapter intstart from specific chapter number (1-indexed).\n\n\n--start-page intstart from specific page number (1-indexed).\n\n\n--page-size intsynthetic page size in characters (default: 2000).\n\n\n--resumeresume from last saved position.\n\n\n--listlist chapters/pages and exit without reading.\n\n\n--split modetext splitting mode: sentence or paragraph.\n\n\n--pause-clause floatpause after clauses in seconds.\n\n\n--pause-sentence floatpause after sentences in sec…"
+          "text": "-v, --voice VOICE : TTS voice to use.\n\n-l, --language LANG : Language for TTS.\n\n-s, --speed FLOAT : Speech speed. Default: 1.0.\n\n--gpu / --no-gpu : Compatibility shortcut mapping to auto or cpu.\n\n--provider PROVIDER : ONNX Runtime execution provider or alias.\n\n--mode MODE : Content mode: chapters or pages.\n\n-c, --chapters SELECTION : Chapter selection for chapters mode.\n\n-p, --pages SELECTION : Page selection for pages mode.\n\n--start-chapter INT : Start from specific chapter number (1-indexed).\n\n--start-page INT : Start from specific page number (1-indexed).\n\n--page-size INT : Synthetic page size in characters (default: 2000).\n\n--resume : Resume from last saved position.\n\n--list : List chapters/pages and exit without reading.\n\n--split MODE : Text splitting mode: sentence or paragraph.\n\n--…",
+          "lower": "-v, --voice voice : tts voice to use.\n\n-l, --language lang : language for tts.\n\n-s, --speed float : speech speed. default: 1.0.\n\n--gpu / --no-gpu : compatibility shortcut mapping to auto or cpu.\n\n--provider provider : onnx runtime execution provider or alias.\n\n--mode mode : content mode: chapters or pages.\n\n-c, --chapters selection : chapter selection for chapters mode.\n\n-p, --pages selection : page selection for pages mode.\n\n--start-chapter int : start from specific chapter number (1-indexed).\n\n--start-page int : start from specific page number (1-indexed).\n\n--page-size int : synthetic page size in characters (default: 2000).\n\n--resume : resume from last saved position.\n\n--list : list chapters/pages and exit without reading.\n\n--split mode : text splitting mode: sentence or paragraph.\n\n--…"
         },
         {
           "anchor": "",
@@ -197,8 +215,8 @@
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-l, --language LANGFilter voices by language code.",
-          "lower": "-l, --language langfilter voices by language code."
+          "text": "-l, --language LANG : Filter voices by language code.",
+          "lower": "-l, --language lang : filter voices by language code."
         },
         {
           "anchor": "",
@@ -215,8 +233,8 @@
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-o, --output PATHOutput file path. Default: ./voices_demo.wav (or directory with --separate).\n\n\n-l, --language LANGFilter voices by language.\n\n\n-v, --voice VOICESSpecific voices to include (comma-separated).\nExample: af_heart,am_adam.\n\n\n-s, --speed FLOATSpeech speed. Default: 1.0.\n\n\n--gpu / --no-gpuEnable or disable GPU acceleration.\n\n\n--silence FLOATSilence between voice samples in seconds. Default: 0.5.\n\n\n--text TEXTCustom text to use. Use {voice} placeholder for voice name.\n\n\n--separateSave each voice as a separate file instead of concatenating.\n\n\n--blend SPECVoice blend to demo (e.g., af_nicole:50,am_michael:50).\n\n\n--blend-presetsDemo a curated set of voice blend combinations.\n\n\n-p, --playPlay audio directly instead of only saving files.\n\nNote: Playback requires the optional ttsforge[…",
-          "lower": "-o, --output pathoutput file path. default: ./voices_demo.wav (or directory with --separate).\n\n\n-l, --language langfilter voices by language.\n\n\n-v, --voice voicesspecific voices to include (comma-separated).\nexample: af_heart,am_adam.\n\n\n-s, --speed floatspeech speed. default: 1.0.\n\n\n--gpu / --no-gpuenable or disable gpu acceleration.\n\n\n--silence floatsilence between voice samples in seconds. default: 0.5.\n\n\n--text textcustom text to use. use {voice} placeholder for voice name.\n\n\n--separatesave each voice as a separate file instead of concatenating.\n\n\n--blend specvoice blend to demo (e.g., af_nicole:50,am_michael:50).\n\n\n--blend-presetsdemo a curated set of voice blend combinations.\n\n\n-p, --playplay audio directly instead of only saving files.\n\nnote: playback requires the optional ttsforge[…"
+          "text": "-o, --output PATH : Output file path. Default: ./voices_demo.wav (or directory with\n--separate).\n\n-l, --language LANG : Filter voices by language.\n\n-v, --voice VOICES : Specific voices to include (comma-separated). Example:\naf_heart,am_adam.\n\n-s, --speed FLOAT : Speech speed. Default: 1.0.\n\n--gpu / --no-gpu : Enable or disable GPU acceleration.\n\n--silence FLOAT : Silence between voice samples in seconds. Default: 0.5.\n\n--text TEXT : Custom text to use. Use {voice} placeholder for voice name.\n\n--separate : Save each voice as a separate file instead of concatenating.\n\n--blend SPEC : Voice blend to demo (e.g., af_nicole:50,am_michael:50).\n\n--blend-presets : Demo a curated set of voice blend combinations.\n\n-p, --play : Play audio directly instead of only saving files.\n\nNote: Playback requires…",
+          "lower": "-o, --output path : output file path. default: ./voices_demo.wav (or directory with\n--separate).\n\n-l, --language lang : filter voices by language.\n\n-v, --voice voices : specific voices to include (comma-separated). example:\naf_heart,am_adam.\n\n-s, --speed float : speech speed. default: 1.0.\n\n--gpu / --no-gpu : enable or disable gpu acceleration.\n\n--silence float : silence between voice samples in seconds. default: 0.5.\n\n--text text : custom text to use. use {voice} placeholder for voice name.\n\n--separate : save each voice as a separate file instead of concatenating.\n\n--blend spec : voice blend to demo (e.g., af_nicole:50,am_michael:50).\n\n--blend-presets : demo a curated set of voice blend combinations.\n\n-p, --play : play audio directly instead of only saving files.\n\nnote: playback requires…"
         },
         {
           "anchor": "",
@@ -233,8 +251,8 @@
         {
           "anchor": "",
           "heading": "Options",
-          "text": "--forceForce re-download even if files exist.",
-          "lower": "--forceforce re-download even if files exist."
+          "text": "--force : Force re-download even if files exist.",
+          "lower": "--force : force re-download even if files exist."
         },
         {
           "anchor": "",
@@ -251,14 +269,32 @@
         {
           "anchor": "",
           "heading": "Options",
-          "text": "--showShow current configuration.\n\n\n--resetReset configuration to defaults.\n\n\n--set KEY VALUESet a configuration option. Can be used multiple times.",
-          "lower": "--showshow current configuration.\n\n\n--resetreset configuration to defaults.\n\n\n--set key valueset a configuration option. can be used multiple times."
+          "text": "--show : Show current configuration.\n\n--reset : Reset configuration to defaults.\n\n--set KEY VALUE : Set a configuration option. Can be used multiple times.",
+          "lower": "--show : show current configuration.\n\n--reset : reset configuration to defaults.\n\n--set key value : set a configuration option. can be used multiple times."
         },
         {
           "anchor": "",
           "heading": "Examples",
-          "text": "# Show configuration\nttsforge config --show\n\n# Set default voice\nttsforge config --set default_voice am_adam\n\n# Set multiple options\nttsforge config --set default_voice af_sarah --set default_speed 1.1\n\n# Enable GPU\nttsforge config --set use_gpu true\n\n# Reset to defaults\nttsforge config --reset\n\n\n\n\nSee Configuration for all available options.",
-          "lower": "# show configuration\nttsforge config --show\n\n# set default voice\nttsforge config --set default_voice am_adam\n\n# set multiple options\nttsforge config --set default_voice af_sarah --set default_speed 1.1\n\n# enable gpu\nttsforge config --set use_gpu true\n\n# reset to defaults\nttsforge config --reset\n\n\n\n\nsee configuration for all available options."
+          "text": "# Show configuration\nttsforge config --show\n\n# Set default voice\nttsforge config --set default_voice am_adam\n\n# Set multiple options\nttsforge config --set default_voice af_sarah --set default_speed 1.1\n\n# Select the default ONNX provider\nttsforge config --set onnx_provider nnapi\n\n# Legacy compatibility shortcut\nttsforge config --set use_gpu true\n\n# Reset to defaults\nttsforge config --reset\n\n\n\n\nSee Configuration for all available options.",
+          "lower": "# show configuration\nttsforge config --show\n\n# set default voice\nttsforge config --set default_voice am_adam\n\n# set multiple options\nttsforge config --set default_voice af_sarah --set default_speed 1.1\n\n# select the default onnx provider\nttsforge config --set onnx_provider nnapi\n\n# legacy compatibility shortcut\nttsforge config --set use_gpu true\n\n# reset to defaults\nttsforge config --reset\n\n\n\n\nsee configuration for all available options."
+        },
+        {
+          "anchor": "",
+          "heading": "config short-sentence",
+          "text": "Create, link, or inspect the advanced short-sentence JSON configuration.\n\nttsforge config short-sentence [show|init|reset]\n\n\n\n\nCalled without an action, this command prints its help.",
+          "lower": "create, link, or inspect the advanced short-sentence json configuration.\n\nttsforge config short-sentence [show|init|reset]\n\n\n\n\ncalled without an action, this command prints its help."
+        },
+        {
+          "anchor": "",
+          "heading": "Arguments",
+          "text": "show : Show the advanced JSON config.\n\ninit : Write the advanced JSON config and update the ttsforge config to use it.\n\nreset : Recreate the advanced JSON config from defaults and update the ttsforge config\nto use it.",
+          "lower": "show : show the advanced json config.\n\ninit : write the advanced json config and update the ttsforge config to use it.\n\nreset : recreate the advanced json config from defaults and update the ttsforge config\nto use it."
+        },
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "# Create and link the advanced short-sentence config\nttsforge config short-sentence init\n\n# Show the advanced short-sentence config\nttsforge config short-sentence show\n\n# Reset the advanced short-sentence config to defaults\nttsforge config short-sentence reset\n\n\n\n\nThe former short-sentence-advanced-config root command remains available as a\ndeprecated compatibility alias.",
+          "lower": "# create and link the advanced short-sentence config\nttsforge config short-sentence init\n\n# show the advanced short-sentence config\nttsforge config short-sentence show\n\n# reset the advanced short-sentence config to defaults\nttsforge config short-sentence reset\n\n\n\n\nthe former short-sentence-advanced-config root command remains available as a\ndeprecated compatibility alias."
         },
         {
           "anchor": "",
@@ -275,14 +311,14 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "EPUB_FILEPath to the EPUB file (required).",
-          "lower": "epub_filepath to the epub file (required)."
+          "text": "EPUB_FILE : Path to the EPUB file (required).",
+          "lower": "epub_file : path to the epub file (required)."
         },
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-o, --output PATHOutput file path. Default: input filename with .phonemes.json.\n\n\n--readableExport as human-readable text format instead of JSON.\n\n\n-l, --language LANGLanguage code for phonemization. Default: a.\n\n\n--chapters SELECTIONChapters to export.\n\n\n--vocab-version VERSIONVocabulary version. Default: v1.0.\n\n\n--split-mode MODESplit mode: paragraph, sentence, or clause. Default: sentence.\n\n\n--max-chars INTMaximum characters per segment. Default: 300.",
-          "lower": "-o, --output pathoutput file path. default: input filename with .phonemes.json.\n\n\n--readableexport as human-readable text format instead of json.\n\n\n-l, --language langlanguage code for phonemization. default: a.\n\n\n--chapters selectionchapters to export.\n\n\n--vocab-version versionvocabulary version. default: v1.0.\n\n\n--split-mode modesplit mode: paragraph, sentence, or clause. default: sentence.\n\n\n--max-chars intmaximum characters per segment. default: 300."
+          "text": "-o, --output PATH : Output file path. Default: input filename with .phonemes.json.\n\n--readable : Export as human-readable text format instead of JSON.\n\n-l, --language LANG : Language code for phonemization. Default: a.\n\n--chapters SELECTION : Chapters to export.\n\n--vocab-version VERSION : Vocabulary version. Default: v1.0.\n\n--split-mode MODE : Split mode: paragraph, sentence, or clause. Default:\nsentence.\n\n--max-chars INT : Maximum characters per segment. Default: 300.",
+          "lower": "-o, --output path : output file path. default: input filename with .phonemes.json.\n\n--readable : export as human-readable text format instead of json.\n\n-l, --language lang : language code for phonemization. default: a.\n\n--chapters selection : chapters to export.\n\n--vocab-version version : vocabulary version. default: v1.0.\n\n--split-mode mode : split mode: paragraph, sentence, or clause. default:\nsentence.\n\n--max-chars int : maximum characters per segment. default: 300."
         },
         {
           "anchor": "",
@@ -299,14 +335,14 @@
         {
           "anchor": "",
           "heading": "Arguments",
-          "text": "PHONEME_FILEPath to the phoneme JSON file (required).",
-          "lower": "phoneme_filepath to the phoneme json file (required)."
+          "text": "PHONEME_FILE : Path to the phoneme JSON file (required).",
+          "lower": "phoneme_file : path to the phoneme json file (required)."
         },
         {
           "anchor": "",
           "heading": "Options",
-          "text": "-o, --output PATHOutput file path.\n\n\n-f, --format FORMATOutput audio format.\n\n\n-v, --voice VOICEVoice to use for TTS.\n\n\n-s, --speed FLOATSpeech speed. Default: 1.0.\n\n\n--gpu / --no-gpuEnable or disable GPU acceleration.\n\n\n--silence FLOATSilence between chapters. Default: 2.0.\n\n\n--pause-clause FLOATPause after clauses in seconds. Default: 0.5.\n\n\n--pause-sentence FLOATPause after sentences in seconds. Default: 0.7.\n\n\n--pause-paragraph FLOATPause after paragraphs in seconds. Default: 0.9.\n\n\n--pause-variance FLOATRandom variance added to pauses in seconds. Default: 0.05.\n\n\n--pause-mode MODEPause mode: tts, manual, or auto. Default: auto.\n\n\n--announce-chapters / --no-announce-chaptersRead chapter titles aloud before chapter content. Default: enabled.\n\n\n--chapter-pause FLOATPause after chapter t…",
-          "lower": "-o, --output pathoutput file path.\n\n\n-f, --format formatoutput audio format.\n\n\n-v, --voice voicevoice to use for tts.\n\n\n-s, --speed floatspeech speed. default: 1.0.\n\n\n--gpu / --no-gpuenable or disable gpu acceleration.\n\n\n--silence floatsilence between chapters. default: 2.0.\n\n\n--pause-clause floatpause after clauses in seconds. default: 0.5.\n\n\n--pause-sentence floatpause after sentences in seconds. default: 0.7.\n\n\n--pause-paragraph floatpause after paragraphs in seconds. default: 0.9.\n\n\n--pause-variance floatrandom variance added to pauses in seconds. default: 0.05.\n\n\n--pause-mode modepause mode: tts, manual, or auto. default: auto.\n\n\n--announce-chapters / --no-announce-chaptersread chapter titles aloud before chapter content. default: enabled.\n\n\n--chapter-pause floatpause after chapter t…"
+          "text": "-o, --output PATH : Output file path.\n\n-f, --format FORMAT : Output audio format.\n\n-v, --voice VOICE : Voice to use for TTS.\n\n-s, --speed FLOAT : Speech speed. Default: 1.0.\n\n--gpu / --no-gpu : Compatibility shortcut mapping to auto or cpu.\n\n--provider PROVIDER : ONNX Runtime execution provider or alias.\n\n--silence FLOAT : Silence between chapters. Default: 2.0.\n\n--pause-clause FLOAT : Pause after clauses in seconds. Default: 0.5.\n\n--pause-sentence FLOAT : Pause after sentences in seconds. Default: 0.7.\n\n--pause-paragraph FLOAT : Pause after paragraphs in seconds. Default: 0.9.\n\n--pause-variance FLOAT : Random variance added to pauses in seconds. Default: 0.05.\n\n--pause-mode MODE : Pause mode: tts, manual, or auto. Default: auto.\n\n--short-sentence TEXT : Short-sentence handling config. Ex…",
+          "lower": "-o, --output path : output file path.\n\n-f, --format format : output audio format.\n\n-v, --voice voice : voice to use for tts.\n\n-s, --speed float : speech speed. default: 1.0.\n\n--gpu / --no-gpu : compatibility shortcut mapping to auto or cpu.\n\n--provider provider : onnx runtime execution provider or alias.\n\n--silence float : silence between chapters. default: 2.0.\n\n--pause-clause float : pause after clauses in seconds. default: 0.5.\n\n--pause-sentence float : pause after sentences in seconds. default: 0.7.\n\n--pause-paragraph float : pause after paragraphs in seconds. default: 0.9.\n\n--pause-variance float : random variance added to pauses in seconds. default: 0.05.\n\n--pause-mode mode : pause mode: tts, manual, or auto. default: auto.\n\n--short-sentence text : short-sentence handling config. ex…"
         },
         {
           "anchor": "",
@@ -323,8 +359,8 @@
         {
           "anchor": "",
           "heading": "Options",
-          "text": "--statsShow detailed token statistics.",
-          "lower": "--statsshow detailed token statistics."
+          "text": "--stats : Show detailed token statistics.",
+          "lower": "--stats : show detailed token statistics."
         },
         {
           "anchor": "",
@@ -337,18 +373,6 @@
           "heading": "phonemes preview",
           "text": "Preview phonemes for given text.\n\nttsforge phonemes preview TEXT [OPTIONS]",
           "lower": "preview phonemes for given text.\n\nttsforge phonemes preview text [options]"
-        },
-        {
-          "anchor": "",
-          "heading": "Options",
-          "text": "-l, --language LANGLanguage code for phonemization. Default: a.\n\n\n-v, --voice VOICEVoice to use for audio preview (when using --play).\nCan be a single voice or voice blend (e.g., af_nicole:50,am_michael:50).\n\n\n--playGenerate and play audio preview of the phonemes.\n\nNote: Playback requires the optional ttsforge[audio] extra.\n\n\n--tokensShow token IDs in addition to phonemes.\n\n\n--vocab-version VERSIONVocabulary version. Default: v1.0.",
-          "lower": "-l, --language langlanguage code for phonemization. default: a.\n\n\n-v, --voice voicevoice to use for audio preview (when using --play).\ncan be a single voice or voice blend (e.g., af_nicole:50,am_michael:50).\n\n\n--playgenerate and play audio preview of the phonemes.\n\nnote: playback requires the optional ttsforge[audio] extra.\n\n\n--tokensshow token ids in addition to phonemes.\n\n\n--vocab-version versionvocabulary version. default: v1.0."
-        },
-        {
-          "anchor": "",
-          "heading": "Examples",
-          "text": "# Preview phonemes\nttsforge phonemes preview \"Hello, world!\"\n\n# With tokens\nttsforge phonemes preview \"Hello, world!\" --tokens\n\n# Different language\nttsforge phonemes preview \"Bonjour!\" -l f\n\n# With audio playback\nttsforge phonemes preview \"Test audio\" --play\n\n# With voice blend\nttsforge phonemes preview \"Test blend\" --voice \"af_nicole:60,am_michael:40\" --play",
-          "lower": "# preview phonemes\nttsforge phonemes preview \"hello, world!\"\n\n# with tokens\nttsforge phonemes preview \"hello, world!\" --tokens\n\n# different language\nttsforge phonemes preview \"bonjour!\" -l f\n\n# with audio playback\nttsforge phonemes preview \"test audio\" --play\n\n# with voice blend\nttsforge phonemes preview \"test blend\" --voice \"af_nicole:60,am_michael:40\" --play"
         }
       ]
     },
@@ -372,86 +396,98 @@
         {
           "anchor": "",
           "heading": "Managing Configuration",
-          "text": "View current configuration:\n\nttsforge config --show\n\n\n\n\nSet a configuration option:\n\nttsforge config --set KEY VALUE\n\n\n\n\nSet multiple options:\n\nttsforge config --set default_voice am_adam --set default_speed 1.1\n\n\n\n\nReset to defaults:\n\nttsforge config --reset",
-          "lower": "view current configuration:\n\nttsforge config --show\n\n\n\n\nset a configuration option:\n\nttsforge config --set key value\n\n\n\n\nset multiple options:\n\nttsforge config --set default_voice am_adam --set default_speed 1.1\n\n\n\n\nreset to defaults:\n\nttsforge config --reset"
+          "text": "View current configuration:\n\nttsforge config --show\n\n\n\n\nSet a configuration option:\n\nttsforge config --set KEY VALUE\n\n\n\n\nSet multiple options:\n\nttsforge config --set default_voice am_adam --set default_speed 1.1\n\n\n\n\nReset to defaults:\n\nttsforge config --reset\n\n\n\n\nAdvanced short-sentence JSON configuration:\n\nttsforge config short-sentence init\nttsforge config short-sentence show\nttsforge config short-sentence reset\n\n\n\n\nThe former short-sentence-advanced-config root command remains available as a\ndeprecated compatibility alias.",
+          "lower": "view current configuration:\n\nttsforge config --show\n\n\n\n\nset a configuration option:\n\nttsforge config --set key value\n\n\n\n\nset multiple options:\n\nttsforge config --set default_voice am_adam --set default_speed 1.1\n\n\n\n\nreset to defaults:\n\nttsforge config --reset\n\n\n\n\nadvanced short-sentence json configuration:\n\nttsforge config short-sentence init\nttsforge config short-sentence show\nttsforge config short-sentence reset\n\n\n\n\nthe former short-sentence-advanced-config root command remains available as a\ndeprecated compatibility alias."
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD 0.8 policies",
+          "text": "The following keys configure SSMD rendering. Persistent configuration is lower\nprecedence than a document header; explicit CLI/API values are higher precedence. Do not\nuse persistent pause_sentence or pause_paragraph values as SSMD header overrides.\n\nssmd_parse_header (boolean, default true) : Parse an exact leading --- block. Set\nfalse only for literal header text.\n\nssmd_unknown_header (warn, error, or ignore) : Policy for unknown header keys.\n\nssmd_missing_voice (error or use-default) : Policy for logical voice references\nthat cannot be resolved.\n\nssmd_validate_profile and ssmd_emphasis_mode : Validate Kokoro-supported constructs\nand choose plain (the default), approximate, warn, or error emphasis behavior.\nPlain emphasis is spoken normally without automatic prosody; explicit SSMD proso…",
+          "lower": "the following keys configure ssmd rendering. persistent configuration is lower\nprecedence than a document header; explicit cli/api values are higher precedence. do not\nuse persistent pause_sentence or pause_paragraph values as ssmd header overrides.\n\nssmd_parse_header (boolean, default true) : parse an exact leading --- block. set\nfalse only for literal header text.\n\nssmd_unknown_header (warn, error, or ignore) : policy for unknown header keys.\n\nssmd_missing_voice (error or use-default) : policy for logical voice references\nthat cannot be resolved.\n\nssmd_validate_profile and ssmd_emphasis_mode : validate kokoro-supported constructs\nand choose plain (the default), approximate, warn, or error emphasis behavior.\nplain emphasis is spoken normally without automatic prosody; explicit ssmd proso…"
         },
         {
           "anchor": "",
           "heading": "Voice and Language Settings",
-          "text": "default_voiceDefault TTS voice to use.\n\n\nType: string\n\n\nDefault: af_heart\n\n\nExample: ttsforge config --set default_voice am_adam\n\n\n\n\ndefault_languageDefault language code.\n\n\nType: string\n\n\nDefault: a (American English)\n\n\nChoices: a, b, e, f, h, i, j, p, z\n\n\nExample: ttsforge config --set default_language b\n\n\n\n\nphonemization_langOverride language for phonemization (e.g., de, fr, en-us).\n\n\nType: string or null\n\n\nDefault: None\n\n\nExample: ttsforge config --set phonemization_lang de\n\n\n\n\ndefault_speedDefault speech speed multiplier.\n\n\nType: float\n\n\nDefault: 1.0\n\n\nRange: 0.5 to 2.0\n\n\nExample: ttsforge config --set default_speed 1.1",
-          "lower": "default_voicedefault tts voice to use.\n\n\ntype: string\n\n\ndefault: af_heart\n\n\nexample: ttsforge config --set default_voice am_adam\n\n\n\n\ndefault_languagedefault language code.\n\n\ntype: string\n\n\ndefault: a (american english)\n\n\nchoices: a, b, e, f, h, i, j, p, z\n\n\nexample: ttsforge config --set default_language b\n\n\n\n\nphonemization_langoverride language for phonemization (e.g., de, fr, en-us).\n\n\ntype: string or null\n\n\ndefault: none\n\n\nexample: ttsforge config --set phonemization_lang de\n\n\n\n\ndefault_speeddefault speech speed multiplier.\n\n\ntype: float\n\n\ndefault: 1.0\n\n\nrange: 0.5 to 2.0\n\n\nexample: ttsforge config --set default_speed 1.1"
+          "text": "default_voice : Default TTS voice to use.\n\n\nType: string\n\n\nDefault: af_heart\n\n\nExample: ttsforge config --set default_voice am_adam\n\n\n\ndefault_language : Default language code.\n\n\nType: string\n\n\nDefault: a (American English)\n\n\nChoices: a, b, e, f, h, i, j, p, z\n\n\nExample: ttsforge config --set default_language b\n\n\n\nphonemization_lang : Override language for phonemization (e.g., de, fr, en-us).\n\n\nType: string or null\n\n\nDefault: None\n\n\nExample: ttsforge config --set phonemization_lang de\n\n\n\ndefault_speed : Default speech speed multiplier.\n\n\nType: float\n\n\nDefault: 1.0\n\n\nRange: 0.5 to 2.0\n\n\nExample: ttsforge config --set default_speed 1.1",
+          "lower": "default_voice : default tts voice to use.\n\n\ntype: string\n\n\ndefault: af_heart\n\n\nexample: ttsforge config --set default_voice am_adam\n\n\n\ndefault_language : default language code.\n\n\ntype: string\n\n\ndefault: a (american english)\n\n\nchoices: a, b, e, f, h, i, j, p, z\n\n\nexample: ttsforge config --set default_language b\n\n\n\nphonemization_lang : override language for phonemization (e.g., de, fr, en-us).\n\n\ntype: string or null\n\n\ndefault: none\n\n\nexample: ttsforge config --set phonemization_lang de\n\n\n\ndefault_speed : default speech speed multiplier.\n\n\ntype: float\n\n\ndefault: 1.0\n\n\nrange: 0.5 to 2.0\n\n\nexample: ttsforge config --set default_speed 1.1"
         },
         {
           "anchor": "",
           "heading": "Output Settings",
-          "text": "default_formatDefault output audio format.\n\n\nType: string\n\n\nDefault: m4b\n\n\nChoices: wav, mp3, flac, opus, m4b\n\n\nExample: ttsforge config --set default_format mp3",
-          "lower": "default_formatdefault output audio format.\n\n\ntype: string\n\n\ndefault: m4b\n\n\nchoices: wav, mp3, flac, opus, m4b\n\n\nexample: ttsforge config --set default_format mp3"
+          "text": "default_format : Default output audio format.\n\n\nType: string\n\n\nDefault: m4b\n\n\nChoices: wav, mp3, flac, opus, m4b\n\n\nExample: ttsforge config --set default_format mp3",
+          "lower": "default_format : default output audio format.\n\n\ntype: string\n\n\ndefault: m4b\n\n\nchoices: wav, mp3, flac, opus, m4b\n\n\nexample: ttsforge config --set default_format mp3"
         },
         {
           "anchor": "",
           "heading": "Processing Settings",
-          "text": "use_gpuEnable GPU acceleration for TTS inference.\n\n\nType: boolean\n\n\nDefault: false\n\n\nRequires: onnxruntime-gpu package\n\n\nExample: ttsforge config --set use_gpu true\n\n\n\n\nmodel_qualityONNX model quality/quantization.\n\n\nType: string\n\n\nDefault: fp32\n\n\nChoices: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16\n\n\nExample: ttsforge config --set model_quality fp16\n\n\n\n\nmodel_variantModel variant to download.\n\n\nType: string\n\n\nDefault: v1.0\n\n\nChoices: v1.0, v1.1-zh, v1.1-de\n\n\nExample: ttsforge config --set model_variant v1.1-de\n\n\n\n\nauto_detect_languageAutomatically detect language from EPUB metadata.\n\n\nType: boolean\n\n\nDefault: true\n\n\nExample: ttsforge config --set auto_detect_language false\n\n\n\n\ndefault_split_modeDefault text splitting mode for processing.\n\n\nType: string\n\n\nDefault: auto\n\n\nChoices: au…",
-          "lower": "use_gpuenable gpu acceleration for tts inference.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nrequires: onnxruntime-gpu package\n\n\nexample: ttsforge config --set use_gpu true\n\n\n\n\nmodel_qualityonnx model quality/quantization.\n\n\ntype: string\n\n\ndefault: fp32\n\n\nchoices: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16\n\n\nexample: ttsforge config --set model_quality fp16\n\n\n\n\nmodel_variantmodel variant to download.\n\n\ntype: string\n\n\ndefault: v1.0\n\n\nchoices: v1.0, v1.1-zh, v1.1-de\n\n\nexample: ttsforge config --set model_variant v1.1-de\n\n\n\n\nauto_detect_languageautomatically detect language from epub metadata.\n\n\ntype: boolean\n\n\ndefault: true\n\n\nexample: ttsforge config --set auto_detect_language false\n\n\n\n\ndefault_split_modedefault text splitting mode for processing.\n\n\ntype: string\n\n\ndefault: auto\n\n\nchoices: au…"
+          "text": "onnx_provider : ONNX Runtime execution provider used for synthesis. Use auto, cpu,\ncuda, openvino, directml/dml, coreml, nnapi, xnnpack, or a full\n*ExecutionProvider name. TTSForge validates the syntax and PyKokoro validates runtime\navailability.\n\n\nType: string\n\n\nDefault: cpu\n\n\nExamples: ttsforge config --set onnx_provider nnapi and\nttsforge config --set onnx_provider NnapiExecutionProvider\n\n\n\nuse_gpu : Legacy compatibility setting. true maps to onnx_provider=auto and\nfalse maps to onnx_provider=cpu when no provider is configured.\n\n\nType: boolean\n\n\nDefault: false\n\n\nExample: ttsforge config --set use_gpu true\n\n\n\nmodel_quality : ONNX model quality/quantization.\n\n\nType: string\n\n\nDefault: fp32\n\n\nChoices: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16\n\n\nExample: ttsforge config --set model_…",
+          "lower": "onnx_provider : onnx runtime execution provider used for synthesis. use auto, cpu,\ncuda, openvino, directml/dml, coreml, nnapi, xnnpack, or a full\n*executionprovider name. ttsforge validates the syntax and pykokoro validates runtime\navailability.\n\n\ntype: string\n\n\ndefault: cpu\n\n\nexamples: ttsforge config --set onnx_provider nnapi and\nttsforge config --set onnx_provider nnapiexecutionprovider\n\n\n\nuse_gpu : legacy compatibility setting. true maps to onnx_provider=auto and\nfalse maps to onnx_provider=cpu when no provider is configured.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nexample: ttsforge config --set use_gpu true\n\n\n\nmodel_quality : onnx model quality/quantization.\n\n\ntype: string\n\n\ndefault: fp32\n\n\nchoices: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16\n\n\nexample: ttsforge config --set model_…"
         },
         {
           "anchor": "",
           "heading": "Read Settings",
-          "text": "default_content_modeDefault content mode for read (chapters or pages).\n\n\nType: string\n\n\nDefault: chapters\n\n\nExample: ttsforge config --set default_content_mode pages\n\n\n\n\ndefault_page_sizeSynthetic page size in characters for read pages mode.\n\n\nType: integer\n\n\nDefault: 2000\n\n\nExample: ttsforge config --set default_page_size 2500",
-          "lower": "default_content_modedefault content mode for read (chapters or pages).\n\n\ntype: string\n\n\ndefault: chapters\n\n\nexample: ttsforge config --set default_content_mode pages\n\n\n\n\ndefault_page_sizesynthetic page size in characters for read pages mode.\n\n\ntype: integer\n\n\ndefault: 2000\n\n\nexample: ttsforge config --set default_page_size 2500"
+          "text": "default_content_mode : Default content mode for read (chapters or pages).\n\n\nType: string\n\n\nDefault: chapters\n\n\nExample: ttsforge config --set default_content_mode pages\n\n\n\ndefault_page_size : Synthetic page size in characters for read pages mode.\n\n\nType: integer\n\n\nDefault: 2000\n\n\nExample: ttsforge config --set default_page_size 2500",
+          "lower": "default_content_mode : default content mode for read (chapters or pages).\n\n\ntype: string\n\n\ndefault: chapters\n\n\nexample: ttsforge config --set default_content_mode pages\n\n\n\ndefault_page_size : synthetic page size in characters for read pages mode.\n\n\ntype: integer\n\n\ndefault: 2000\n\n\nexample: ttsforge config --set default_page_size 2500"
         },
         {
           "anchor": "",
           "heading": "Mixed-Language Settings",
-          "text": "use_mixed_languageEnable automatic detection and handling of multiple languages in text.\n\n\nType: boolean\n\n\nDefault: false\n\n\nRequires: lingua-language-detector package (pip install lingua-language-detector)\n\n\nExample: ttsforge config --set use_mixed_language true\n\n\n\n\nmixed_language_primaryPrimary/fallback language for mixed-language mode.\n\n\nType: string or null\n\n\nDefault: None\n\n\nSupported: en-us, en-gb, de, fr-fr, es, it, pt, pl, tr, ru, ko, ja, zh/cmn\n\n\nExample: ttsforge config --set mixed_language_primary de\n\n\n\n\nmixed_language_allowedList of languages allowed for auto-detection in mixed-language mode.\n\n\nType: list of strings or null\n\n\nDefault: None\n\n\nRequired when use_mixed_language is enabled\n\n\nExample: ttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nmixed_language_co…",
-          "lower": "use_mixed_languageenable automatic detection and handling of multiple languages in text.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nrequires: lingua-language-detector package (pip install lingua-language-detector)\n\n\nexample: ttsforge config --set use_mixed_language true\n\n\n\n\nmixed_language_primaryprimary/fallback language for mixed-language mode.\n\n\ntype: string or null\n\n\ndefault: none\n\n\nsupported: en-us, en-gb, de, fr-fr, es, it, pt, pl, tr, ru, ko, ja, zh/cmn\n\n\nexample: ttsforge config --set mixed_language_primary de\n\n\n\n\nmixed_language_allowedlist of languages allowed for auto-detection in mixed-language mode.\n\n\ntype: list of strings or null\n\n\ndefault: none\n\n\nrequired when use_mixed_language is enabled\n\n\nexample: ttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nmixed_language_co…"
+          "text": "use_mixed_language : Enable automatic detection and handling of multiple languages in\ntext.\n\n\nType: boolean\n\n\nDefault: false\n\n\nRequires: lingua-language-detector package (pip install lingua-language-detector)\n\n\nExample: ttsforge config --set use_mixed_language true\n\n\n\nmixed_language_primary : Primary/fallback language for mixed-language mode.\n\n\nType: string or null\n\n\nDefault: None\n\n\nSupported: en-us, en-gb, de, fr-fr, es, it, pt, pl, tr, ru, ko,\nja, zh/cmn\n\n\nExample: ttsforge config --set mixed_language_primary de\n\n\n\nmixed_language_allowed : List of languages allowed for auto-detection in\nmixed-language mode.\n\n\nType: list of strings or null\n\n\nDefault: None\n\n\nRequired when use_mixed_language is enabled\n\n\nExample: ttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\nmixed_langu…",
+          "lower": "use_mixed_language : enable automatic detection and handling of multiple languages in\ntext.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nrequires: lingua-language-detector package (pip install lingua-language-detector)\n\n\nexample: ttsforge config --set use_mixed_language true\n\n\n\nmixed_language_primary : primary/fallback language for mixed-language mode.\n\n\ntype: string or null\n\n\ndefault: none\n\n\nsupported: en-us, en-gb, de, fr-fr, es, it, pt, pl, tr, ru, ko,\nja, zh/cmn\n\n\nexample: ttsforge config --set mixed_language_primary de\n\n\n\nmixed_language_allowed : list of languages allowed for auto-detection in\nmixed-language mode.\n\n\ntype: list of strings or null\n\n\ndefault: none\n\n\nrequired when use_mixed_language is enabled\n\n\nexample: ttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\nmixed_langu…"
         },
         {
           "anchor": "",
           "heading": "Audio Timing Settings",
-          "text": "silence_between_chaptersSilence duration between chapters in seconds.\n\n\nType: float\n\n\nDefault: 2.0\n\n\nExample: ttsforge config --set silence_between_chapters 3.0\n\n\n\n\npause_clausePause after clauses in seconds.\n\n\nType: float\n\n\nDefault: 0.5\n\n\nExample: ttsforge config --set pause_clause 0.4\n\n\n\n\npause_sentencePause after sentences in seconds.\n\n\nType: float\n\n\nDefault: 0.7\n\n\nExample: ttsforge config --set pause_sentence 0.6\n\n\n\n\npause_paragraphPause after paragraphs in seconds.\n\n\nType: float\n\n\nDefault: 0.9\n\n\nExample: ttsforge config --set pause_paragraph 1.1\n\n\n\n\npause_varianceRandom variance added to pause durations in seconds.\n\n\nType: float\n\n\nDefault: 0.05\n\n\nExample: ttsforge config --set pause_variance 0.08\n\n\n\n\npause_modePause mode: tts, manual, or auto.\n\n\nType: string\n\n\nDefault: auto\n\n\nExample…",
-          "lower": "silence_between_chapterssilence duration between chapters in seconds.\n\n\ntype: float\n\n\ndefault: 2.0\n\n\nexample: ttsforge config --set silence_between_chapters 3.0\n\n\n\n\npause_clausepause after clauses in seconds.\n\n\ntype: float\n\n\ndefault: 0.5\n\n\nexample: ttsforge config --set pause_clause 0.4\n\n\n\n\npause_sentencepause after sentences in seconds.\n\n\ntype: float\n\n\ndefault: 0.7\n\n\nexample: ttsforge config --set pause_sentence 0.6\n\n\n\n\npause_paragraphpause after paragraphs in seconds.\n\n\ntype: float\n\n\ndefault: 0.9\n\n\nexample: ttsforge config --set pause_paragraph 1.1\n\n\n\n\npause_variancerandom variance added to pause durations in seconds.\n\n\ntype: float\n\n\ndefault: 0.05\n\n\nexample: ttsforge config --set pause_variance 0.08\n\n\n\n\npause_modepause mode: tts, manual, or auto.\n\n\ntype: string\n\n\ndefault: auto\n\n\nexample…"
+          "text": "silence_between_chapters : Silence duration between chapters in seconds.\n\n\nType: float\n\n\nDefault: 2.0\n\n\nExample: ttsforge config --set silence_between_chapters 3.0\n\n\n\npause_clause : Pause after clauses in seconds.\n\n\nType: float\n\n\nDefault: 0.5\n\n\nExample: ttsforge config --set pause_clause 0.4\n\n\n\npause_sentence : Pause after sentences in seconds.\n\n\nType: float\n\n\nDefault: 0.7\n\n\nExample: ttsforge config --set pause_sentence 0.6\n\n\n\npause_paragraph : Pause after paragraphs in seconds.\n\n\nType: float\n\n\nDefault: 0.9\n\n\nExample: ttsforge config --set pause_paragraph 1.1\n\n\n\npause_variance : Random variance added to pause durations in seconds.\n\n\nType: float\n\n\nDefault: 0.05\n\n\nExample: ttsforge config --set pause_variance 0.08\n\n\n\npause_mode : Pause mode: tts, manual, or auto.\n\n\nType: string\n\n\nDefault: a…",
+          "lower": "silence_between_chapters : silence duration between chapters in seconds.\n\n\ntype: float\n\n\ndefault: 2.0\n\n\nexample: ttsforge config --set silence_between_chapters 3.0\n\n\n\npause_clause : pause after clauses in seconds.\n\n\ntype: float\n\n\ndefault: 0.5\n\n\nexample: ttsforge config --set pause_clause 0.4\n\n\n\npause_sentence : pause after sentences in seconds.\n\n\ntype: float\n\n\ndefault: 0.7\n\n\nexample: ttsforge config --set pause_sentence 0.6\n\n\n\npause_paragraph : pause after paragraphs in seconds.\n\n\ntype: float\n\n\ndefault: 0.9\n\n\nexample: ttsforge config --set pause_paragraph 1.1\n\n\n\npause_variance : random variance added to pause durations in seconds.\n\n\ntype: float\n\n\ndefault: 0.05\n\n\nexample: ttsforge config --set pause_variance 0.08\n\n\n\npause_mode : pause mode: tts, manual, or auto.\n\n\ntype: string\n\n\ndefault: a…"
         },
         {
           "anchor": "",
           "heading": "Chapter Announcement Settings",
-          "text": "announce_chaptersRead chapter titles aloud before chapter content.\n\n\nType: boolean\n\n\nDefault: true\n\n\nExample: ttsforge config --set announce_chapters false\n\n\n\n\nchapter_pause_after_titlePause duration after the chapter title announcement in seconds.\n\n\nType: float\n\n\nDefault: 2.0\n\n\nExample: ttsforge config --set chapter_pause_after_title 1.5",
-          "lower": "announce_chaptersread chapter titles aloud before chapter content.\n\n\ntype: boolean\n\n\ndefault: true\n\n\nexample: ttsforge config --set announce_chapters false\n\n\n\n\nchapter_pause_after_titlepause duration after the chapter title announcement in seconds.\n\n\ntype: float\n\n\ndefault: 2.0\n\n\nexample: ttsforge config --set chapter_pause_after_title 1.5"
+          "text": "announce_chapters : Read chapter titles aloud before chapter content.\n\n\nType: boolean\n\n\nDefault: true\n\n\nExample: ttsforge config --set announce_chapters false\n\n\n\nchapter_pause_after_title : Pause duration after the chapter title announcement in\nseconds.\n\n\nType: float\n\n\nDefault: 2.0\n\n\nExample: ttsforge config --set chapter_pause_after_title 1.5",
+          "lower": "announce_chapters : read chapter titles aloud before chapter content.\n\n\ntype: boolean\n\n\ndefault: true\n\n\nexample: ttsforge config --set announce_chapters false\n\n\n\nchapter_pause_after_title : pause duration after the chapter title announcement in\nseconds.\n\n\ntype: float\n\n\ndefault: 2.0\n\n\nexample: ttsforge config --set chapter_pause_after_title 1.5"
         },
         {
           "anchor": "",
           "heading": "File Output Settings",
-          "text": "save_chapters_separatelySave individual chapter audio files.\n\n\nType: boolean\n\n\nDefault: false\n\n\nExample: ttsforge config --set save_chapters_separately true\n\n\n\n\nmerge_at_endMerge chapter files into final audiobook.\n\n\nType: boolean\n\n\nDefault: true\n\n\nExample: ttsforge config --set merge_at_end false",
-          "lower": "save_chapters_separatelysave individual chapter audio files.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nexample: ttsforge config --set save_chapters_separately true\n\n\n\n\nmerge_at_endmerge chapter files into final audiobook.\n\n\ntype: boolean\n\n\ndefault: true\n\n\nexample: ttsforge config --set merge_at_end false"
+          "text": "save_chapters_separately : Save individual chapter audio files.\n\n\nType: boolean\n\n\nDefault: false\n\n\nExample: ttsforge config --set save_chapters_separately true\n\n\n\nmerge_at_end : Merge chapter files into final audiobook.\n\n\nType: boolean\n\n\nDefault: true\n\n\nExample: ttsforge config --set merge_at_end false",
+          "lower": "save_chapters_separately : save individual chapter audio files.\n\n\ntype: boolean\n\n\ndefault: false\n\n\nexample: ttsforge config --set save_chapters_separately true\n\n\n\nmerge_at_end : merge chapter files into final audiobook.\n\n\ntype: boolean\n\n\ndefault: true\n\n\nexample: ttsforge config --set merge_at_end false"
         },
         {
           "anchor": "",
           "heading": "Filename Template Settings",
-          "text": "These settings control how output files are named. See Filename Templates for details.\n\n\noutput_filename_templateTemplate for final audiobook filenames.\n\n\nType: string\n\n\nDefault: {book_title}\n\n\nExample: ttsforge config --set output_filename_template \"{author}_{book_title}\"\n\n\n\n\nchapter_filename_templateTemplate for chapter WAV file names during conversion.\n\n\nType: string\n\n\nDefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\n\nExample: ttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n\n\n\nphoneme_export_templateTemplate for phoneme export filenames.\n\n\nType: string\n\n\nDefault: {book_title}\n\n\nExample: ttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n\n\n\ndefault_titleFallback title when book has no metadata.\n\n\nType: string\n\n\nDefault: Un…",
-          "lower": "these settings control how output files are named. see filename templates for details.\n\n\noutput_filename_templatetemplate for final audiobook filenames.\n\n\ntype: string\n\n\ndefault: {book_title}\n\n\nexample: ttsforge config --set output_filename_template \"{author}_{book_title}\"\n\n\n\n\nchapter_filename_templatetemplate for chapter wav file names during conversion.\n\n\ntype: string\n\n\ndefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\n\nexample: ttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n\n\n\nphoneme_export_templatetemplate for phoneme export filenames.\n\n\ntype: string\n\n\ndefault: {book_title}\n\n\nexample: ttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n\n\n\ndefault_titlefallback title when book has no metadata.\n\n\ntype: string\n\n\ndefault: un…"
+          "text": "These settings control how output files are named. See Filename Templates for\ndetails.\n\noutput_filename_template : Template for final audiobook filenames.\n\n\nType: string\n\n\nDefault: {book_title}\n\n\nExample: ttsforge config --set output_filename_template \"{author}_{book_title}\"\n\n\n\nchapter_filename_template : Template for chapter WAV file names during conversion.\n\n\nType: string\n\n\nDefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\n\nExample:\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n\n\nphoneme_export_template : Template for phoneme export filenames.\n\n\nType: string\n\n\nDefault: {book_title}\n\n\nExample: ttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n\n\ndefault_title : Fallback title when book has no metadata.\n\n\nType: string\n\n\nDef…",
+          "lower": "these settings control how output files are named. see filename templates for\ndetails.\n\noutput_filename_template : template for final audiobook filenames.\n\n\ntype: string\n\n\ndefault: {book_title}\n\n\nexample: ttsforge config --set output_filename_template \"{author}_{book_title}\"\n\n\n\nchapter_filename_template : template for chapter wav file names during conversion.\n\n\ntype: string\n\n\ndefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\n\nexample:\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n\n\nphoneme_export_template : template for phoneme export filenames.\n\n\ntype: string\n\n\ndefault: {book_title}\n\n\nexample: ttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n\n\ndefault_title : fallback title when book has no metadata.\n\n\ntype: string\n\n\ndef…"
         },
         {
           "anchor": "",
           "heading": "Complete Configuration Reference",
-          "text": "Option\n\nType\n\nDefault\n\nDescription\n\n\n\n\n\ndefault_voice\n\nstring\n\naf_heart\n\nDefault TTS voice\n\n\n\ndefault_language\n\nstring\n\na\n\nDefault language code\n\n\n\ndefault_speed\n\nfloat\n\n1.0\n\nSpeech speed multiplier\n\n\n\ndefault_format\n\nstring\n\nm4b\n\nOutput audio format\n\n\n\nuse_gpu\n\nboolean\n\nfalse\n\nEnable GPU acceleration\n\n\n\nmodel_quality\n\nstring\n\nfp32\n\nModel quality/quantization\n\n\n\nmodel_variant\n\nstring\n\nv1.0\n\nModel variant\n\n\n\nsilence_between_chapters\n\nfloat\n\n2.0\n\nSilence between chapters (seconds)\n\n\n\npause_clause\n\nfloat\n\n0.5\n\nClause pause (seconds)\n\n\n\npause_sentence\n\nfloat\n\n0.7\n\nSentence pause (seconds)\n\n\n\npause_paragraph\n\nfloat\n\n0.9\n\nParagraph pause (seconds)\n\n\n\npause_variance\n\nfloat\n\n0.05\n\nPause variance (seconds)\n\n\n\npause_mode\n\nstring\n\nauto\n\nPause mode (tts/manual/auto)\n\n\n\nannounce_chapters\n\nboolean\n\ntru…",
-          "lower": "option\n\ntype\n\ndefault\n\ndescription\n\n\n\n\n\ndefault_voice\n\nstring\n\naf_heart\n\ndefault tts voice\n\n\n\ndefault_language\n\nstring\n\na\n\ndefault language code\n\n\n\ndefault_speed\n\nfloat\n\n1.0\n\nspeech speed multiplier\n\n\n\ndefault_format\n\nstring\n\nm4b\n\noutput audio format\n\n\n\nuse_gpu\n\nboolean\n\nfalse\n\nenable gpu acceleration\n\n\n\nmodel_quality\n\nstring\n\nfp32\n\nmodel quality/quantization\n\n\n\nmodel_variant\n\nstring\n\nv1.0\n\nmodel variant\n\n\n\nsilence_between_chapters\n\nfloat\n\n2.0\n\nsilence between chapters (seconds)\n\n\n\npause_clause\n\nfloat\n\n0.5\n\nclause pause (seconds)\n\n\n\npause_sentence\n\nfloat\n\n0.7\n\nsentence pause (seconds)\n\n\n\npause_paragraph\n\nfloat\n\n0.9\n\nparagraph pause (seconds)\n\n\n\npause_variance\n\nfloat\n\n0.05\n\npause variance (seconds)\n\n\n\npause_mode\n\nstring\n\nauto\n\npause mode (tts/manual/auto)\n\n\n\nannounce_chapters\n\nboolean\n\ntru…"
+          "text": "Option\n\nType\n\nDefault\n\nDescription\n\n\n\n\n\ndefault_voice\n\nstring\n\naf_heart\n\nDefault TTS voice\n\n\n\ndefault_language\n\nstring\n\na\n\nDefault language code\n\n\n\ndefault_speed\n\nfloat\n\n1.0\n\nSpeech speed multiplier\n\n\n\ndefault_format\n\nstring\n\nm4b\n\nOutput audio format\n\n\n\nuse_gpu\n\nboolean\n\nfalse\n\nLegacy provider compatibility shortcut\n\n\n\nonnx_provider\n\nstring\n\ncpu\n\nONNX Runtime provider alias or full name\n\n\n\nmodel_quality\n\nstring\n\nfp32\n\nModel quality/quantization\n\n\n\nmodel_variant\n\nstring\n\nv1.0\n\nModel variant\n\n\n\nsilence_between_chapters\n\nfloat\n\n2.0\n\nSilence between chapters (seconds)\n\n\n\npause_clause\n\nfloat\n\n0.5\n\nClause pause (seconds)\n\n\n\npause_sentence\n\nfloat\n\n0.7\n\nSentence pause (seconds)\n\n\n\npause_paragraph\n\nfloat\n\n0.9\n\nParagraph pause (seconds)\n\n\n\npause_variance\n\nfloat\n\n0.05\n\nPause variance (seconds)\n\n\n\npa…",
+          "lower": "option\n\ntype\n\ndefault\n\ndescription\n\n\n\n\n\ndefault_voice\n\nstring\n\naf_heart\n\ndefault tts voice\n\n\n\ndefault_language\n\nstring\n\na\n\ndefault language code\n\n\n\ndefault_speed\n\nfloat\n\n1.0\n\nspeech speed multiplier\n\n\n\ndefault_format\n\nstring\n\nm4b\n\noutput audio format\n\n\n\nuse_gpu\n\nboolean\n\nfalse\n\nlegacy provider compatibility shortcut\n\n\n\nonnx_provider\n\nstring\n\ncpu\n\nonnx runtime provider alias or full name\n\n\n\nmodel_quality\n\nstring\n\nfp32\n\nmodel quality/quantization\n\n\n\nmodel_variant\n\nstring\n\nv1.0\n\nmodel variant\n\n\n\nsilence_between_chapters\n\nfloat\n\n2.0\n\nsilence between chapters (seconds)\n\n\n\npause_clause\n\nfloat\n\n0.5\n\nclause pause (seconds)\n\n\n\npause_sentence\n\nfloat\n\n0.7\n\nsentence pause (seconds)\n\n\n\npause_paragraph\n\nfloat\n\n0.9\n\nparagraph pause (seconds)\n\n\n\npause_variance\n\nfloat\n\n0.05\n\npause variance (seconds)\n\n\n\npa…"
         },
         {
           "anchor": "",
           "heading": "Example Configuration File",
-          "text": "Here’s an example config.json with custom settings:\n\n{\n  \"default_voice\": \"am_adam\",\n  \"default_language\": \"a\",\n  \"default_speed\": 1.1,\n  \"default_format\": \"m4b\",\n  \"use_gpu\": true,\n  \"model_quality\": \"fp32\",\n  \"model_variant\": \"v1.0\",\n   \"silence_between_chapters\": 2.5,\n  \"pause_clause\": 0.5,\n  \"pause_sentence\": 0.7,\n  \"pause_paragraph\": 0.9,\n  \"pause_variance\": 0.05,\n  \"pause_mode\": \"auto\",\n  \"enable_short_sentence\": None,\n  \"announce_chapters\": true,\n  \"chapter_pause_after_title\": 2.0,\n   \"save_chapters_separately\": false,\n   \"merge_at_end\": true,\n   \"auto_detect_language\": true,\n  \"phonemization_lang\": null,\n   \"default_split_mode\": \"sentence\",\n  \"default_content_mode\": \"chapters\",\n  \"default_page_size\": 2000,\n   \"output_filename_template\": \"{author} - {book_title}\",\n   \"chapter_filen…",
-          "lower": "here’s an example config.json with custom settings:\n\n{\n  \"default_voice\": \"am_adam\",\n  \"default_language\": \"a\",\n  \"default_speed\": 1.1,\n  \"default_format\": \"m4b\",\n  \"use_gpu\": true,\n  \"model_quality\": \"fp32\",\n  \"model_variant\": \"v1.0\",\n   \"silence_between_chapters\": 2.5,\n  \"pause_clause\": 0.5,\n  \"pause_sentence\": 0.7,\n  \"pause_paragraph\": 0.9,\n  \"pause_variance\": 0.05,\n  \"pause_mode\": \"auto\",\n  \"enable_short_sentence\": none,\n  \"announce_chapters\": true,\n  \"chapter_pause_after_title\": 2.0,\n   \"save_chapters_separately\": false,\n   \"merge_at_end\": true,\n   \"auto_detect_language\": true,\n  \"phonemization_lang\": null,\n   \"default_split_mode\": \"sentence\",\n  \"default_content_mode\": \"chapters\",\n  \"default_page_size\": 2000,\n   \"output_filename_template\": \"{author} - {book_title}\",\n   \"chapter_filen…"
+          "text": "Here’s an example config.json with custom settings:\n\n{\n  \"default_voice\": \"am_adam\",\n  \"default_language\": \"a\",\n  \"default_speed\": 1.1,\n  \"default_format\": \"m4b\",\n  \"use_gpu\": true,\n  \"model_quality\": \"fp32\",\n  \"model_variant\": \"v1.0\",\n  \"silence_between_chapters\": 2.5,\n  \"pause_clause\": 0.5,\n  \"pause_sentence\": 0.7,\n  \"pause_paragraph\": 0.9,\n  \"pause_variance\": 0.05,\n  \"pause_mode\": \"auto\",\n  \"enable_short_sentence\": null,\n  \"announce_chapters\": true,\n  \"chapter_pause_after_title\": 2.0,\n  \"save_chapters_separately\": false,\n  \"merge_at_end\": true,\n  \"auto_detect_language\": true,\n  \"phonemization_lang\": null,\n  \"default_split_mode\": \"sentence\",\n  \"default_content_mode\": \"chapters\",\n  \"default_page_size\": 2000,\n  \"output_filename_template\": \"{author} - {book_title}\",\n  \"chapter_filename_tem…",
+          "lower": "here’s an example config.json with custom settings:\n\n{\n  \"default_voice\": \"am_adam\",\n  \"default_language\": \"a\",\n  \"default_speed\": 1.1,\n  \"default_format\": \"m4b\",\n  \"use_gpu\": true,\n  \"model_quality\": \"fp32\",\n  \"model_variant\": \"v1.0\",\n  \"silence_between_chapters\": 2.5,\n  \"pause_clause\": 0.5,\n  \"pause_sentence\": 0.7,\n  \"pause_paragraph\": 0.9,\n  \"pause_variance\": 0.05,\n  \"pause_mode\": \"auto\",\n  \"enable_short_sentence\": null,\n  \"announce_chapters\": true,\n  \"chapter_pause_after_title\": 2.0,\n  \"save_chapters_separately\": false,\n  \"merge_at_end\": true,\n  \"auto_detect_language\": true,\n  \"phonemization_lang\": null,\n  \"default_split_mode\": \"sentence\",\n  \"default_content_mode\": \"chapters\",\n  \"default_page_size\": 2000,\n  \"output_filename_template\": \"{author} - {book_title}\",\n  \"chapter_filename_tem…"
         },
         {
           "anchor": "",
           "heading": "Command-Line Override",
-          "text": "Configuration values can be overridden on the command line. Command-line options\ntake precedence over configuration file settings:\n\n# Use configured voice, but override speed\nttsforge convert book.epub -s 1.2\n\n# Override voice and format\nttsforge convert book.epub -v bf_emma -f mp3",
-          "lower": "configuration values can be overridden on the command line. command-line options\ntake precedence over configuration file settings:\n\n# use configured voice, but override speed\nttsforge convert book.epub -s 1.2\n\n# override voice and format\nttsforge convert book.epub -v bf_emma -f mp3"
+          "text": "Configuration values can be overridden on the command line. Command-line options take\nprecedence over configuration file settings:\n\n# Use configured voice, but override speed\nttsforge convert book.epub -s 1.2\n\n# Override voice and format\nttsforge convert book.epub -v bf_emma -f mp3\n\n# Select a provider for one command\nttsforge sample \"Provider test\" --provider xnnpack\n\n\n\n\nProvider precedence is explicit --provider, then --gpu/--no-gpu, then\nonnx_provider, then legacy use_gpu, then CPU. PyKokoro may apply its documented\nONNX_PROVIDER environment override during runtime provider resolution.",
+          "lower": "configuration values can be overridden on the command line. command-line options take\nprecedence over configuration file settings:\n\n# use configured voice, but override speed\nttsforge convert book.epub -s 1.2\n\n# override voice and format\nttsforge convert book.epub -v bf_emma -f mp3\n\n# select a provider for one command\nttsforge sample \"provider test\" --provider xnnpack\n\n\n\n\nprovider precedence is explicit --provider, then --gpu/--no-gpu, then\nonnx_provider, then legacy use_gpu, then cpu. pykokoro may apply its documented\nonnx_provider environment override during runtime provider resolution."
         },
         {
           "anchor": "",
           "heading": "Environment Variables",
-          "text": "ttsforge does not currently support environment variables for configuration.\nUse the config file or command-line options instead.",
-          "lower": "ttsforge does not currently support environment variables for configuration.\nuse the config file or command-line options instead."
+          "text": "TTSForge configuration has no separate environment-variable file format. The PyKokoro\nruntime may still honor its documented ONNX_PROVIDER environment override after\nTTSForge resolves the configured provider.",
+          "lower": "ttsforge configuration has no separate environment-variable file format. the pykokoro\nruntime may still honor its documented onnx_provider environment override after\nttsforge resolves the configured provider."
+        },
+        {
+          "anchor": "",
+          "heading": "Model source status",
+          "text": "Set model_source to github when using the GitHub asset set. ttsforge config --show\nuses PyKokoro’s source/variant/quality-aware asset paths and reports missing assets. If\nthe configured set is incomplete but the alternate supported source is complete, the\ncommand reports that alternate and gives an activation command without silently\nswitching sources.\n\nOn Termux/Android, a typical setup is:\n\nttsforge config --set model_source github --set model_variant v1.0 \\\n   --set model_quality fp32 --set onnx_provider nnapi\nttsforge config --show",
+          "lower": "set model_source to github when using the github asset set. ttsforge config --show\nuses pykokoro’s source/variant/quality-aware asset paths and reports missing assets. if\nthe configured set is incomplete but the alternate supported source is complete, the\ncommand reports that alternate and gives an activation command without silently\nswitching sources.\n\non termux/android, a typical setup is:\n\nttsforge config --set model_source github --set model_variant v1.0 \\\n   --set model_quality fp32 --set onnx_provider nnapi\nttsforge config --show"
         }
       ]
     },
@@ -469,14 +505,14 @@
         {
           "anchor": "",
           "heading": "Template Syntax",
-          "text": "Templates use Python’s format string syntax with curly braces for variable\nsubstitution:\n\n{variable_name}\n{variable_name:format_spec}\n\n\n\n\nFor example:\n\n\n{book_title} → My Great Novel\n\n\n{chapter_num:03d} → 001 (zero-padded to 3 digits)",
-          "lower": "templates use python’s format string syntax with curly braces for variable\nsubstitution:\n\n{variable_name}\n{variable_name:format_spec}\n\n\n\n\nfor example:\n\n\n{book_title} → my great novel\n\n\n{chapter_num:03d} → 001 (zero-padded to 3 digits)"
+          "text": "Templates use Python’s format string syntax with curly braces for variable substitution:\n\n{variable_name}\n{variable_name:format_spec}\n\n\n\n\nFor example:\n\n\n{book_title} → My Great Novel\n\n\n{chapter_num:03d} → 001 (zero-padded to 3 digits)",
+          "lower": "templates use python’s format string syntax with curly braces for variable substitution:\n\n{variable_name}\n{variable_name:format_spec}\n\n\n\n\nfor example:\n\n\n{book_title} → my great novel\n\n\n{chapter_num:03d} → 001 (zero-padded to 3 digits)"
         },
         {
           "anchor": "",
           "heading": "Available Variables",
-          "text": "The following variables are available in filename templates:\n\n\n{book_title}The title of the book from EPUB metadata, or the configured default_title\nif no title is found.\n\nExample: Empire in Black and Gold\n\n\n{author}The author name from EPUB metadata, or “Unknown” if not found.\n\nExample: Adrian Tchaikovsky\n\n\n{chapter_title}The title of the current chapter (only available in chapter filename templates).\n\nExample: Chapter 1 - The Beginning\n\n\n{chapter_num}The chapter number (1-based). Supports format specifiers for padding.\n\n\n{chapter_num} → 1\n\n\n{chapter_num:02d} → 01\n\n\n{chapter_num:03d} → 001\n\n\n\n\n{input_stem}The input filename without extension (useful for maintaining original naming).\n\nExample: If input is my_book.epub, this gives my_book\n\n\n{chapters_range}A string representing the chapter…",
-          "lower": "the following variables are available in filename templates:\n\n\n{book_title}the title of the book from epub metadata, or the configured default_title\nif no title is found.\n\nexample: empire in black and gold\n\n\n{author}the author name from epub metadata, or “unknown” if not found.\n\nexample: adrian tchaikovsky\n\n\n{chapter_title}the title of the current chapter (only available in chapter filename templates).\n\nexample: chapter 1 - the beginning\n\n\n{chapter_num}the chapter number (1-based). supports format specifiers for padding.\n\n\n{chapter_num} → 1\n\n\n{chapter_num:02d} → 01\n\n\n{chapter_num:03d} → 001\n\n\n\n\n{input_stem}the input filename without extension (useful for maintaining original naming).\n\nexample: if input is my_book.epub, this gives my_book\n\n\n{chapters_range}a string representing the chapter…"
+          "text": "The following variables are available in filename templates:\n\n{book_title} : The title of the book from EPUB metadata, or the configured\ndefault_title if no title is found.\n\nExample: Empire in Black and Gold\n\n{author} : The author name from EPUB metadata, or “Unknown” if not found.\n\nExample: Adrian Tchaikovsky\n\n{chapter_title} : The title of the current chapter (only available in chapter filename\ntemplates).\n\nExample: Chapter 1 - The Beginning\n\n{chapter_num} : The chapter number (1-based). Supports format specifiers for padding.\n\n\n{chapter_num} → 1\n\n\n{chapter_num:02d} → 01\n\n\n{chapter_num:03d} → 001\n\n\n\n{input_stem} : The input filename without extension (useful for maintaining original\nnaming).\n\nExample: If input is my_book.epub, this gives my_book\n\n{chapters_range} : A string representing…",
+          "lower": "the following variables are available in filename templates:\n\n{book_title} : the title of the book from epub metadata, or the configured\ndefault_title if no title is found.\n\nexample: empire in black and gold\n\n{author} : the author name from epub metadata, or “unknown” if not found.\n\nexample: adrian tchaikovsky\n\n{chapter_title} : the title of the current chapter (only available in chapter filename\ntemplates).\n\nexample: chapter 1 - the beginning\n\n{chapter_num} : the chapter number (1-based). supports format specifiers for padding.\n\n\n{chapter_num} → 1\n\n\n{chapter_num:02d} → 01\n\n\n{chapter_num:03d} → 001\n\n\n\n{input_stem} : the input filename without extension (useful for maintaining original\nnaming).\n\nexample: if input is my_book.epub, this gives my_book\n\n{chapters_range} : a string representing…"
         },
         {
           "anchor": "",
@@ -487,20 +523,20 @@
         {
           "anchor": "",
           "heading": "Output Filename Template",
-          "text": "Controls the name of the final audiobook file.\n\nConfig key: output_filename_template\n\nDefault: {book_title}\n\nUsed by:\n- ttsforge convert command\n- ttsforge phonemes convert command\n\nExample:\n\n# Set template\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n\n# Convert\nttsforge convert book.epub\n\n# Output: \"Adrian Tchaikovsky - Empire in Black and Gold.m4b\"",
-          "lower": "controls the name of the final audiobook file.\n\nconfig key: output_filename_template\n\ndefault: {book_title}\n\nused by:\n- ttsforge convert command\n- ttsforge phonemes convert command\n\nexample:\n\n# set template\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n\n# convert\nttsforge convert book.epub\n\n# output: \"adrian tchaikovsky - empire in black and gold.m4b\""
+          "text": "Controls the name of the final audiobook file.\n\nConfig key: output_filename_template\n\nDefault: {book_title}\n\nUsed by:\n\n\nttsforge convert command\n\n\nttsforge phonemes convert command\n\n\n\nExample:\n\n# Set template\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n\n# Convert\nttsforge convert book.epub\n\n# Output: \"Adrian Tchaikovsky - Empire in Black and Gold.m4b\"",
+          "lower": "controls the name of the final audiobook file.\n\nconfig key: output_filename_template\n\ndefault: {book_title}\n\nused by:\n\n\nttsforge convert command\n\n\nttsforge phonemes convert command\n\n\n\nexample:\n\n# set template\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n\n# convert\nttsforge convert book.epub\n\n# output: \"adrian tchaikovsky - empire in black and gold.m4b\""
         },
         {
           "anchor": "",
           "heading": "Chapter Filename Template",
-          "text": "Controls the names of intermediate chapter WAV files created during conversion.\n\nConfig key: chapter_filename_template\n\nDefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\nUsed by:\n- ttsforge convert command (chapter files in work directory)\n- ttsforge phonemes convert command\n\nExample:\n\n# Set template\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n# Chapters will be named like:\n# 001_Prologue.wav\n# 002_The Beginning.wav\n# 003_Dark Times.wav",
-          "lower": "controls the names of intermediate chapter wav files created during conversion.\n\nconfig key: chapter_filename_template\n\ndefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\nused by:\n- ttsforge convert command (chapter files in work directory)\n- ttsforge phonemes convert command\n\nexample:\n\n# set template\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n# chapters will be named like:\n# 001_prologue.wav\n# 002_the beginning.wav\n# 003_dark times.wav"
+          "text": "Controls the names of intermediate chapter WAV files created during conversion.\n\nConfig key: chapter_filename_template\n\nDefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\nUsed by:\n\n\nttsforge convert command (chapter files in work directory)\n\n\nttsforge phonemes convert command\n\n\n\nExample:\n\n# Set template\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n# Chapters will be named like:\n# 001_Prologue.wav\n# 002_The Beginning.wav\n# 003_Dark Times.wav",
+          "lower": "controls the names of intermediate chapter wav files created during conversion.\n\nconfig key: chapter_filename_template\n\ndefault: {chapter_num:03d}_{book_title}_{chapter_title}\n\nused by:\n\n\nttsforge convert command (chapter files in work directory)\n\n\nttsforge phonemes convert command\n\n\n\nexample:\n\n# set template\nttsforge config --set chapter_filename_template \"{chapter_num:03d}_{chapter_title}\"\n\n# chapters will be named like:\n# 001_prologue.wav\n# 002_the beginning.wav\n# 003_dark times.wav"
         },
         {
           "anchor": "",
           "heading": "Phoneme Export Template",
-          "text": "Controls the name of phoneme JSON files created during export.\n\nConfig key: phoneme_export_template\n\nDefault: {book_title}\n\nUsed by:\n- ttsforge phonemes export command\n\nExample:\n\n# Set template\nttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n# Export\nttsforge phonemes export book.epub\n\n# Output: \"Empire in Black and Gold_phonemes.phonemes.json\"",
-          "lower": "controls the name of phoneme json files created during export.\n\nconfig key: phoneme_export_template\n\ndefault: {book_title}\n\nused by:\n- ttsforge phonemes export command\n\nexample:\n\n# set template\nttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n# export\nttsforge phonemes export book.epub\n\n# output: \"empire in black and gold_phonemes.phonemes.json\""
+          "text": "Controls the name of phoneme JSON files created during export.\n\nConfig key: phoneme_export_template\n\nDefault: {book_title}\n\nUsed by:\n\n\nttsforge phonemes export command\n\n\n\nExample:\n\n# Set template\nttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n# Export\nttsforge phonemes export book.epub\n\n# Output: \"Empire in Black and Gold_phonemes.phonemes.json\"",
+          "lower": "controls the name of phoneme json files created during export.\n\nconfig key: phoneme_export_template\n\ndefault: {book_title}\n\nused by:\n\n\nttsforge phonemes export command\n\n\n\nexample:\n\n# set template\nttsforge config --set phoneme_export_template \"{book_title}_phonemes\"\n\n# export\nttsforge phonemes export book.epub\n\n# output: \"empire in black and gold_phonemes.phonemes.json\""
         },
         {
           "anchor": "",
@@ -529,8 +565,8 @@
         {
           "anchor": "",
           "heading": "Partial Chapter Selections",
-          "text": "When converting a subset of chapters, the {chapters_range} variable contains\nthe selection, and it’s automatically appended to output filenames:\n\n# Convert chapters 1-5\nttsforge convert book.epub --chapters 1-5\n\n# Output: \"Empire in Black and Gold_chapters_1-5.m4b\"\n\n\n\n\nThis ensures partial conversions don’t overwrite complete audiobooks.",
-          "lower": "when converting a subset of chapters, the {chapters_range} variable contains\nthe selection, and it’s automatically appended to output filenames:\n\n# convert chapters 1-5\nttsforge convert book.epub --chapters 1-5\n\n# output: \"empire in black and gold_chapters_1-5.m4b\"\n\n\n\n\nthis ensures partial conversions don’t overwrite complete audiobooks."
+          "text": "When converting a subset of chapters, the {chapters_range} variable contains the\nselection, and it’s automatically appended to output filenames:\n\n# Convert chapters 1-5\nttsforge convert book.epub --chapters 1-5\n\n# Output: \"Empire in Black and Gold_chapters_1-5.m4b\"\n\n\n\n\nThis ensures partial conversions don’t overwrite complete audiobooks.",
+          "lower": "when converting a subset of chapters, the {chapters_range} variable contains the\nselection, and it’s automatically appended to output filenames:\n\n# convert chapters 1-5\nttsforge convert book.epub --chapters 1-5\n\n# output: \"empire in black and gold_chapters_1-5.m4b\"\n\n\n\n\nthis ensures partial conversions don’t overwrite complete audiobooks."
         },
         {
           "anchor": "",
@@ -565,8 +601,8 @@
         {
           "anchor": "",
           "heading": "Work Directory",
-          "text": "During conversion, ttsforge creates a hidden work directory to store chapter files\nand state information:\n\n.{book_title}_chapters/\n├── 001_Empire in Black and Gold_Prologue.wav\n├── 002_Empire in Black and Gold_Chapter 1.wav\n├── ...\n└── Empire in Black and Gold_state.json\n\n\n\n\nThe work directory is named after the book title and is cleaned up after successful\nconversion (unless --keep-chapters is used).",
-          "lower": "during conversion, ttsforge creates a hidden work directory to store chapter files\nand state information:\n\n.{book_title}_chapters/\n├── 001_empire in black and gold_prologue.wav\n├── 002_empire in black and gold_chapter 1.wav\n├── ...\n└── empire in black and gold_state.json\n\n\n\n\nthe work directory is named after the book title and is cleaned up after successful\nconversion (unless --keep-chapters is used)."
+          "text": "During conversion, ttsforge creates a hidden work directory to store chapter files and\nstate information:\n\n.{book_title}_chapters/\n├── 001_Empire in Black and Gold_Prologue.wav\n├── 002_Empire in Black and Gold_Chapter 1.wav\n├── ...\n└── Empire in Black and Gold_state.json\n\n\n\n\nThe work directory is named after the book title and is cleaned up after successful\nconversion (unless --keep-chapters is used).",
+          "lower": "during conversion, ttsforge creates a hidden work directory to store chapter files and\nstate information:\n\n.{book_title}_chapters/\n├── 001_empire in black and gold_prologue.wav\n├── 002_empire in black and gold_chapter 1.wav\n├── ...\n└── empire in black and gold_state.json\n\n\n\n\nthe work directory is named after the book title and is cleaned up after successful\nconversion (unless --keep-chapters is used)."
         },
         {
           "anchor": "",
@@ -577,33 +613,33 @@
         {
           "anchor": "",
           "heading": "Special characters in titles",
-          "text": "Characters that are invalid in filenames are automatically replaced with underscores.\nIf you see unexpected underscores in filenames, check the original EPUB metadata\nfor special characters.",
-          "lower": "characters that are invalid in filenames are automatically replaced with underscores.\nif you see unexpected underscores in filenames, check the original epub metadata\nfor special characters."
+          "text": "Characters that are invalid in filenames are automatically replaced with underscores. If\nyou see unexpected underscores in filenames, check the original EPUB metadata for\nspecial characters.",
+          "lower": "characters that are invalid in filenames are automatically replaced with underscores. if\nyou see unexpected underscores in filenames, check the original epub metadata for\nspecial characters."
         },
         {
           "anchor": "",
           "heading": "Duplicate filenames",
-          "text": "If converting multiple books with the same title, use templates that include\nunique identifiers:\n\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n# Or use input stem:\nttsforge config --set output_filename_template \"{input_stem}\"",
-          "lower": "if converting multiple books with the same title, use templates that include\nunique identifiers:\n\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n# or use input stem:\nttsforge config --set output_filename_template \"{input_stem}\""
+          "text": "If converting multiple books with the same title, use templates that include unique\nidentifiers:\n\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n# Or use input stem:\nttsforge config --set output_filename_template \"{input_stem}\"",
+          "lower": "if converting multiple books with the same title, use templates that include unique\nidentifiers:\n\nttsforge config --set output_filename_template \"{author} - {book_title}\"\n# or use input stem:\nttsforge config --set output_filename_template \"{input_stem}\""
         }
       ]
     },
     {
       "url": "/tools/ttsforge/",
       "title": "ttsforge Documentation",
-      "snippet": "ttsforge is a command-line tool for converting EPUB files to audiobooks using\nKokoro ONNX TTS (Text-to-Speech).\n\n\nUser Guide\n\n\nInstallation …",
+      "snippet": "ttsforge is a command-line tool for converting EPUB files to audiobooks using Kokoro\nONNX TTS (Text-to-Speech).\n\n\nUser Guide\n\n\nInstallation …",
       "sections": [
         {
           "anchor": "",
           "heading": "ttsforge Documentation",
-          "text": "ttsforge is a command-line tool for converting EPUB files to audiobooks using\nKokoro ONNX TTS (Text-to-Speech).\n\n\nUser Guide\n\n\nInstallation\nSystem Requirements\n\nDependencies\n\nInstalling ttsforge\n\nGPU Acceleration (Optional)\n\nMixed-Language Support (Optional)\n\nDownloading Models\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nQuick Start Guide\nBasic Conversion\n\nChoosing a Voice\n\nVoice Blending\n\nOutput Formats\n\nConverting Specific Chapters\n\nSpeed Control\n\nResumable Conversions\n\nPhoneme Pre-tokenization\n\nTesting TTS Settings\n\nStreaming Read (Optional)\n\nVoice Demo\n\nMixed-Language Support\n\nSSMD Editing\n\nConfiguration\n\nComplete Example\n\nNext Steps\n\n\n\n\nCLI Reference\nGlobal Options\n\nconvert\n\nlist\n\ninfo\n\nsample\n\nread\n\nvoices\n\ndemo\n\ndownload\n\nconfig\n\nphonemes\n\n\n\n\nSSMD Editing\nHow SSMD Works\n\nBasic Wor…",
-          "lower": "ttsforge is a command-line tool for converting epub files to audiobooks using\nkokoro onnx tts (text-to-speech).\n\n\nuser guide\n\n\ninstallation\nsystem requirements\n\ndependencies\n\ninstalling ttsforge\n\ngpu acceleration (optional)\n\nmixed-language support (optional)\n\ndownloading models\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nquick start guide\nbasic conversion\n\nchoosing a voice\n\nvoice blending\n\noutput formats\n\nconverting specific chapters\n\nspeed control\n\nresumable conversions\n\nphoneme pre-tokenization\n\ntesting tts settings\n\nstreaming read (optional)\n\nvoice demo\n\nmixed-language support\n\nssmd editing\n\nconfiguration\n\ncomplete example\n\nnext steps\n\n\n\n\ncli reference\nglobal options\n\nconvert\n\nlist\n\ninfo\n\nsample\n\nread\n\nvoices\n\ndemo\n\ndownload\n\nconfig\n\nphonemes\n\n\n\n\nssmd editing\nhow ssmd works\n\nbasic wor…"
+          "text": "ttsforge is a command-line tool for converting EPUB files to audiobooks using Kokoro\nONNX TTS (Text-to-Speech).\n\n\nUser Guide\n\n\nInstallation\nSystem Requirements\n\nDependencies\n\nInstalling ttsforge\n\nONNX Runtime Providers\n\nMixed-Language Support (Optional)\n\nDownloading Models\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nQuick Start Guide\nBasic Conversion\n\nChoosing a Voice\n\nVoice Blending\n\nOutput Formats\n\nConverting Specific Chapters\n\nSpeed Control\n\nResumable Conversions\n\nPhoneme Pre-tokenization\n\nTesting TTS Settings\n\nStreaming Read (Optional)\n\nVoice Demo\n\nMixed-Language Support\n\nSSMD Editing\n\nConfiguration\n\nComplete Example\n\nNext Steps\n\n\n\n\nCLI Reference\nGlobal Options\n\nconvert\n\nlist\n\ninfo\n\nsample\n\nread\n\nvoices\n\ndemo\n\ndownload\n\nconfig\n\nconfig short-sentence\n\nphonemes\n\n\n\n\nSSMD 0.8\nBasic workf…",
+          "lower": "ttsforge is a command-line tool for converting epub files to audiobooks using kokoro\nonnx tts (text-to-speech).\n\n\nuser guide\n\n\ninstallation\nsystem requirements\n\ndependencies\n\ninstalling ttsforge\n\nonnx runtime providers\n\nmixed-language support (optional)\n\ndownloading models\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nquick start guide\nbasic conversion\n\nchoosing a voice\n\nvoice blending\n\noutput formats\n\nconverting specific chapters\n\nspeed control\n\nresumable conversions\n\nphoneme pre-tokenization\n\ntesting tts settings\n\nstreaming read (optional)\n\nvoice demo\n\nmixed-language support\n\nssmd editing\n\nconfiguration\n\ncomplete example\n\nnext steps\n\n\n\n\ncli reference\nglobal options\n\nconvert\n\nlist\n\ninfo\n\nsample\n\nread\n\nvoices\n\ndemo\n\ndownload\n\nconfig\n\nconfig short-sentence\n\nphonemes\n\n\n\n\nssmd 0.8\nbasic workf…"
         },
         {
           "anchor": "",
           "heading": "Features",
-          "text": "EPUB to Audiobook Conversion: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS formats\n\n\n50+ High-Quality Voices: Support for 9 languages with multiple voice options\n\n\nSSMD Editing: Edit intermediate SSMD files to fine-tune pronunciation and pacing\n\n\nResumable Conversions: Long audiobook conversions can be interrupted and resumed\n\n\nPhoneme Pre-tokenization: Pre-process text to phonemes for faster batch conversions\n\n\nConfigurable Filename Templates: Customize output filenames with book metadata\n\n\nVoice Blending: Mix multiple voices for custom narration styles\n\n\nGPU Acceleration: Optional GPU support for faster processing\n\n\nChapter Selection: Convert specific chapters or chapter ranges\n\n\nMetadata Support: Automatic language detection and metadata embedding\n\n\nStreaming Read: Real-time play…",
-          "lower": "epub to audiobook conversion: convert epub files to m4b, mp3, wav, flac, or opus formats\n\n\n50+ high-quality voices: support for 9 languages with multiple voice options\n\n\nssmd editing: edit intermediate ssmd files to fine-tune pronunciation and pacing\n\n\nresumable conversions: long audiobook conversions can be interrupted and resumed\n\n\nphoneme pre-tokenization: pre-process text to phonemes for faster batch conversions\n\n\nconfigurable filename templates: customize output filenames with book metadata\n\n\nvoice blending: mix multiple voices for custom narration styles\n\n\ngpu acceleration: optional gpu support for faster processing\n\n\nchapter selection: convert specific chapters or chapter ranges\n\n\nmetadata support: automatic language detection and metadata embedding\n\n\nstreaming read: real-time play…"
+          "text": "EPUB to Audiobook Conversion: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS\nformats\n\n\n50+ High-Quality Voices: Support for 9 languages with multiple voice options\n\n\nSSMD Editing: Edit intermediate SSMD files to fine-tune pronunciation and pacing\n\n\nResumable Conversions: Long audiobook conversions can be interrupted and resumed\n\n\nPhoneme Pre-tokenization: Pre-process text to phonemes for faster batch\nconversions\n\n\nConfigurable Filename Templates: Customize output filenames with book metadata\n\n\nVoice Blending: Mix multiple voices for custom narration styles\n\n\nGPU Acceleration: Optional GPU support for faster processing\n\n\nChapter Selection: Convert specific chapters or chapter ranges\n\n\nMetadata Support: Automatic language detection and metadata embedding\n\n\nStreaming Read: Real-time play…",
+          "lower": "epub to audiobook conversion: convert epub files to m4b, mp3, wav, flac, or opus\nformats\n\n\n50+ high-quality voices: support for 9 languages with multiple voice options\n\n\nssmd editing: edit intermediate ssmd files to fine-tune pronunciation and pacing\n\n\nresumable conversions: long audiobook conversions can be interrupted and resumed\n\n\nphoneme pre-tokenization: pre-process text to phonemes for faster batch\nconversions\n\n\nconfigurable filename templates: customize output filenames with book metadata\n\n\nvoice blending: mix multiple voices for custom narration styles\n\n\ngpu acceleration: optional gpu support for faster processing\n\n\nchapter selection: convert specific chapters or chapter ranges\n\n\nmetadata support: automatic language detection and metadata embedding\n\n\nstreaming read: real-time play…"
         },
         {
           "anchor": "",
@@ -663,8 +699,8 @@
         {
           "anchor": "",
           "heading": "ffmpeg (Required for MP3/FLAC/OPUS/M4B)",
-          "text": "ffmpeg is required for MP3/FLAC/OPUS/M4B output and chapter merging.\n\nTermux (Android):\n\npkg install ffmpeg\n\n\n\n\nUbuntu/Debian:\n\nsudo apt-get install ffmpeg\n\n\n\n\nmacOS (Homebrew):\n\nbrew install ffmpeg\n\n\n\n\nWindows:\n\nDownload from https://ffmpeg.org/download.html and add to PATH.",
-          "lower": "ffmpeg is required for mp3/flac/opus/m4b output and chapter merging.\n\ntermux (android):\n\npkg install ffmpeg\n\n\n\n\nubuntu/debian:\n\nsudo apt-get install ffmpeg\n\n\n\n\nmacos (homebrew):\n\nbrew install ffmpeg\n\n\n\n\nwindows:\n\ndownload from https://ffmpeg.org/download.html and add to path."
+          "text": "ffmpeg is required for MP3/FLAC/OPUS/M4B output and chapter merging.\n\nTermux (Android):\n\npkg install ffmpeg\n\n\n\n\nUbuntu/Debian:\n\nsudo apt-get install ffmpeg\n\n\n\n\nmacOS (Homebrew):\n\nbrew install ffmpeg\n\n\n\n\nWindows:\n\nDownload from https://ffmpeg.org/download.html and add it to PATH.",
+          "lower": "ffmpeg is required for mp3/flac/opus/m4b output and chapter merging.\n\ntermux (android):\n\npkg install ffmpeg\n\n\n\n\nubuntu/debian:\n\nsudo apt-get install ffmpeg\n\n\n\n\nmacos (homebrew):\n\nbrew install ffmpeg\n\n\n\n\nwindows:\n\ndownload from https://ffmpeg.org/download.html and add it to path."
         },
         {
           "anchor": "",
@@ -681,44 +717,50 @@
         {
           "anchor": "",
           "heading": "Audio Playback (Optional)",
-          "text": "Audio playback features (--play flags and the read command) require\nsounddevice:\n\npip install \"ttsforge[audio]\"\n\n\n\n\nOr install directly:\n\npip install sounddevice",
-          "lower": "audio playback features (--play flags and the read command) require\nsounddevice:\n\npip install \"ttsforge[audio]\"\n\n\n\n\nor install directly:\n\npip install sounddevice"
+          "text": "Audio playback features (--play flags and the read command) require sounddevice:\n\npip install \"ttsforge[audio]\"\n\n\n\n\nOr install directly:\n\npip install sounddevice",
+          "lower": "audio playback features (--play flags and the read command) require sounddevice:\n\npip install \"ttsforge[audio]\"\n\n\n\n\nor install directly:\n\npip install sounddevice"
+        },
+        {
+          "anchor": "",
+          "heading": "spaCy Models (Optional)",
+          "text": "spaCy is used for sentence splitting, name extraction, and spaCy-aware phonemization\nworkflows:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md",
+          "lower": "spacy is used for sentence splitting, name extraction, and spacy-aware phonemization\nworkflows:\n\npip install spacy\npython -m spacy download en_core_web_sm\npython -m spacy download en_core_web_md"
         },
         {
           "anchor": "",
           "heading": "From PyPI (Recommended)",
-          "text": "pip install ttsforge\n\n\n\n\nOptional extras:\n\n# Audio playback (required for --play and read)\npip install \"ttsforge[audio]\"\n\n# Bundled ffmpeg binaries\npip install \"ttsforge[static_ffmpeg]\"\n\n# GPU acceleration\npip install \"ttsforge[gpu]\"",
-          "lower": "pip install ttsforge\n\n\n\n\noptional extras:\n\n# audio playback (required for --play and read)\npip install \"ttsforge[audio]\"\n\n# bundled ffmpeg binaries\npip install \"ttsforge[static_ffmpeg]\"\n\n# gpu acceleration\npip install \"ttsforge[gpu]\""
+          "text": "pip install ttsforge\n\n\n\n\nThe base installation includes the CPU ONNX Runtime provider. Provider-dependent modules\nare loaded only when audio rendering starts, so import ttsforge, ttsforge --help,\nand configuration/inspection commands work without model initialization.\n\nOptional extras:\n\n# Audio playback (required for --play and read)\npip install \"ttsforge[audio]\"\n\n# Bundled ffmpeg binaries\npip install \"ttsforge[static_ffmpeg]\"\n\n# GPU acceleration\npip install \"ttsforge[gpu]\"",
+          "lower": "pip install ttsforge\n\n\n\n\nthe base installation includes the cpu onnx runtime provider. provider-dependent modules\nare loaded only when audio rendering starts, so import ttsforge, ttsforge --help,\nand configuration/inspection commands work without model initialization.\n\noptional extras:\n\n# audio playback (required for --play and read)\npip install \"ttsforge[audio]\"\n\n# bundled ffmpeg binaries\npip install \"ttsforge[static_ffmpeg]\"\n\n# gpu acceleration\npip install \"ttsforge[gpu]\""
         },
         {
           "anchor": "",
           "heading": "From Source",
-          "text": "git clone https://github.com/holgern/ttsforge.git\ncd ttsforge\npip install -e .",
-          "lower": "git clone https://github.com/holgern/ttsforge.git\ncd ttsforge\npip install -e ."
+          "text": "git clone https://github.com/buchwandler/ttsforge.git\ncd ttsforge\npip install -e .",
+          "lower": "git clone https://github.com/buchwandler/ttsforge.git\ncd ttsforge\npip install -e ."
         },
         {
           "anchor": "",
           "heading": "Development Installation",
-          "text": "For development with testing and linting tools:\n\ngit clone https://github.com/holgern/ttsforge.git\ncd ttsforge\npip install -e \".[dev]\"",
-          "lower": "for development with testing and linting tools:\n\ngit clone https://github.com/holgern/ttsforge.git\ncd ttsforge\npip install -e \".[dev]\""
+          "text": "For development with testing and linting tools:\n\ngit clone https://github.com/buchwandler/ttsforge.git\ncd ttsforge\npip install -e \".[dev]\"",
+          "lower": "for development with testing and linting tools:\n\ngit clone https://github.com/buchwandler/ttsforge.git\ncd ttsforge\npip install -e \".[dev]\""
         },
         {
           "anchor": "",
-          "heading": "GPU Acceleration (Optional)",
-          "text": "For GPU-accelerated inference, install onnxruntime-gpu:\n\npip install onnxruntime-gpu\n\n\n\n\nThen enable GPU in your configuration:\n\nttsforge config --set use_gpu true\n\n\n\n\nOr use the --gpu flag with commands:\n\nttsforge convert book.epub --gpu",
-          "lower": "for gpu-accelerated inference, install onnxruntime-gpu:\n\npip install onnxruntime-gpu\n\n\n\n\nthen enable gpu in your configuration:\n\nttsforge config --set use_gpu true\n\n\n\n\nor use the --gpu flag with commands:\n\nttsforge convert book.epub --gpu"
+          "heading": "ONNX Runtime Providers",
+          "text": "Select a provider with an alias or full runtime provider name. The legacy Boolean\ninterface remains available for compatibility, but NNAPI and XNNPACK are execution\nproviders rather than GPU modes:\n\nttsforge config --set onnx_provider cpu\nttsforge sample \"Provider test\" --provider xnnpack\n\n\n\n\nFor CUDA, install the GPU extra in a fresh environment so CPU and GPU ONNX Runtime\ndistributions are not installed together:\n\npip install \"ttsforge[gpu]\"\nttsforge config --set onnx_provider cuda\n\n\n\n\nFor Termux/Android with PyKokoro v0.7.1 and an ONNX Runtime build exposing NNAPI or\nXNNPACK:\n\nttsforge config --set model_source github --set onnx_provider nnapi\nttsforge config --show\nttsforge sample \"Termux provider test\" --provider nnapi\n\n\n\n\nUse --gpu as a compatibility shortcut for --provider auto or…",
+          "lower": "select a provider with an alias or full runtime provider name. the legacy boolean\ninterface remains available for compatibility, but nnapi and xnnpack are execution\nproviders rather than gpu modes:\n\nttsforge config --set onnx_provider cpu\nttsforge sample \"provider test\" --provider xnnpack\n\n\n\n\nfor cuda, install the gpu extra in a fresh environment so cpu and gpu onnx runtime\ndistributions are not installed together:\n\npip install \"ttsforge[gpu]\"\nttsforge config --set onnx_provider cuda\n\n\n\n\nfor termux/android with pykokoro v0.7.1 and an onnx runtime build exposing nnapi or\nxnnpack:\n\nttsforge config --set model_source github --set onnx_provider nnapi\nttsforge config --show\nttsforge sample \"termux provider test\" --provider nnapi\n\n\n\n\nuse --gpu as a compatibility shortcut for --provider auto or…"
         },
         {
           "anchor": "",
           "heading": "Mixed-Language Support (Optional)",
-          "text": "For automatic detection and handling of multiple languages in text (e.g., German text with English technical terms):\n\npip install lingua-language-detector\n\n\n\n\nThen enable mixed-language mode:\n\nttsforge config --set use_mixed_language true\nttsforge config --set mixed_language_primary de\nttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nOr use the --use-mixed-language flag with commands:\n\nttsforge convert book.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us",
-          "lower": "for automatic detection and handling of multiple languages in text (e.g., german text with english technical terms):\n\npip install lingua-language-detector\n\n\n\n\nthen enable mixed-language mode:\n\nttsforge config --set use_mixed_language true\nttsforge config --set mixed_language_primary de\nttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nor use the --use-mixed-language flag with commands:\n\nttsforge convert book.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us"
+          "text": "For automatic detection and handling of multiple languages in text (e.g., German text\nwith English technical terms):\n\npip install lingua-language-detector\n\n\n\n\nThen enable mixed-language mode:\n\nttsforge config --set use_mixed_language true\nttsforge config --set mixed_language_primary de\nttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nOr use the --use-mixed-language flag with commands:\n\nttsforge convert book.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us",
+          "lower": "for automatic detection and handling of multiple languages in text (e.g., german text\nwith english technical terms):\n\npip install lingua-language-detector\n\n\n\n\nthen enable mixed-language mode:\n\nttsforge config --set use_mixed_language true\nttsforge config --set mixed_language_primary de\nttsforge config --set mixed_language_allowed \"['de', 'en-us']\"\n\n\n\n\nor use the --use-mixed-language flag with commands:\n\nttsforge convert book.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us"
         },
         {
           "anchor": "",
           "heading": "Downloading Models",
-          "text": "ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically\non first use. You can also download them proactively:\n\n# Download models\nttsforge download\n\n# Force re-download\nttsforge download --force\n\n\n\n\nModels are stored in:\n\n\nLinux: ~/.cache/ttsforge/\n\n\nmacOS: ~/Library/Caches/ttsforge/\n\n\nWindows: %LOCALAPPDATA%\\ttsforge\\Cache\\",
-          "lower": "ttsforge uses kokoro onnx models (~330mb total) which are downloaded automatically\non first use. you can also download them proactively:\n\n# download models\nttsforge download\n\n# force re-download\nttsforge download --force\n\n\n\n\nmodels are stored in:\n\n\nlinux: ~/.cache/ttsforge/\n\n\nmacos: ~/library/caches/ttsforge/\n\n\nwindows: %localappdata%\\ttsforge\\cache\\"
+          "text": "ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically on\nfirst use. You can also download them proactively:\n\n# Download models\nttsforge download\n\n# Force re-download\nttsforge download --force\n\n\n\n\nModels are stored in:\n\n\nLinux: ~/.cache/ttsforge/\n\n\nmacOS: ~/Library/Caches/ttsforge/\n\n\nWindows: %LOCALAPPDATA%\\ttsforge\\Cache\\",
+          "lower": "ttsforge uses kokoro onnx models (~330mb total) which are downloaded automatically on\nfirst use. you can also download them proactively:\n\n# download models\nttsforge download\n\n# force re-download\nttsforge download --force\n\n\n\n\nmodels are stored in:\n\n\nlinux: ~/.cache/ttsforge/\n\n\nmacos: ~/library/caches/ttsforge/\n\n\nwindows: %localappdata%\\ttsforge\\cache\\"
         },
         {
           "anchor": "",
@@ -778,8 +820,8 @@
         {
           "anchor": "",
           "heading": "Voice Blending",
-          "text": "Mix multiple voices for unique narration by specifying voice blends in the --voice parameter:\n\n# 50/50 blend of two voices\nttsforge sample \"Hello world\" --voice \"af_nicole:50,am_michael:50\" -p\n\n# Weighted blend (70% Nicole, 30% Michael)\nttsforge convert mybook.epub --voice \"af_nicole:70,am_michael:30\"\n\n# Three-way blend\nttsforge sample \"Testing\" --voice \"af_sky:40,af_bella:30,am_adam:30\" -p\n\n\n\n\nThe format is: voice1:weight1,voice2:weight2,... where weights are percentages (0-100).\n\nYou can also use the traditional --voice-blend parameter:\n\nttsforge convert mybook.epub --voice-blend \"af_nicole:50,am_michael:50\"",
-          "lower": "mix multiple voices for unique narration by specifying voice blends in the --voice parameter:\n\n# 50/50 blend of two voices\nttsforge sample \"hello world\" --voice \"af_nicole:50,am_michael:50\" -p\n\n# weighted blend (70% nicole, 30% michael)\nttsforge convert mybook.epub --voice \"af_nicole:70,am_michael:30\"\n\n# three-way blend\nttsforge sample \"testing\" --voice \"af_sky:40,af_bella:30,am_adam:30\" -p\n\n\n\n\nthe format is: voice1:weight1,voice2:weight2,... where weights are percentages (0-100).\n\nyou can also use the traditional --voice-blend parameter:\n\nttsforge convert mybook.epub --voice-blend \"af_nicole:50,am_michael:50\""
+          "text": "Mix multiple voices for unique narration by specifying voice blends in the --voice\nparameter:\n\n# 50/50 blend of two voices\nttsforge sample \"Hello world\" --voice \"af_nicole:50,am_michael:50\" -p\n\n# Weighted blend (70% Nicole, 30% Michael)\nttsforge convert mybook.epub --voice \"af_nicole:70,am_michael:30\"\n\n# Three-way blend\nttsforge sample \"Testing\" --voice \"af_sky:40,af_bella:30,am_adam:30\" -p\n\n\n\n\nThe format is: voice1:weight1,voice2:weight2,... where weights are percentages\n(0-100).\n\nYou can also use the traditional --voice-blend parameter:\n\nttsforge convert mybook.epub --voice-blend \"af_nicole:50,am_michael:50\"",
+          "lower": "mix multiple voices for unique narration by specifying voice blends in the --voice\nparameter:\n\n# 50/50 blend of two voices\nttsforge sample \"hello world\" --voice \"af_nicole:50,am_michael:50\" -p\n\n# weighted blend (70% nicole, 30% michael)\nttsforge convert mybook.epub --voice \"af_nicole:70,am_michael:30\"\n\n# three-way blend\nttsforge sample \"testing\" --voice \"af_sky:40,af_bella:30,am_adam:30\" -p\n\n\n\n\nthe format is: voice1:weight1,voice2:weight2,... where weights are percentages\n(0-100).\n\nyou can also use the traditional --voice-blend parameter:\n\nttsforge convert mybook.epub --voice-blend \"af_nicole:50,am_michael:50\""
         },
         {
           "anchor": "",
@@ -820,8 +862,8 @@
         {
           "anchor": "",
           "heading": "Streaming Read (Optional)",
-          "text": "Listen to an EPUB or text file in real-time with the read command.\nThis requires the optional audio playback extra:\n\npip install \"ttsforge[audio]\"\n\n\n\n\n# Read an EPUB aloud\nttsforge read mybook.epub\n\n# Read a text file\nttsforge read story.txt",
-          "lower": "listen to an epub or text file in real-time with the read command.\nthis requires the optional audio playback extra:\n\npip install \"ttsforge[audio]\"\n\n\n\n\n# read an epub aloud\nttsforge read mybook.epub\n\n# read a text file\nttsforge read story.txt"
+          "text": "Listen to an EPUB or text file in real-time with the read command. This requires the\noptional audio playback extra:\n\npip install \"ttsforge[audio]\"\n\n\n\n\n# Read an EPUB aloud\nttsforge read mybook.epub\n\n# Read a text file\nttsforge read story.txt",
+          "lower": "listen to an epub or text file in real-time with the read command. this requires the\noptional audio playback extra:\n\npip install \"ttsforge[audio]\"\n\n\n\n\n# read an epub aloud\nttsforge read mybook.epub\n\n# read a text file\nttsforge read story.txt"
         },
         {
           "anchor": "",
@@ -832,20 +874,20 @@
         {
           "anchor": "",
           "heading": "Mixed-Language Support",
-          "text": "For books containing multiple languages (e.g., German text with English technical terms),\nttsforge can automatically detect and handle different languages:\n\n# Convert a book with German and English text\nttsforge convert mybook.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n# Test with a sample\nttsforge sample \\\n    \"Das ist ein deutscher Satz. This is an English sentence.\" \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n\n\n\nRequirements: Install the language detector:\n\npip install lingua-language-detector\n\n\n\n\nOptions:\n\n\n--use-mixed-language - Enable automatic language detection\n\n\n--mixed-language-primary LANG - Primary/fallback language (e.g., de, en-us)\n\n\n--mixed-language-allo…",
-          "lower": "for books containing multiple languages (e.g., german text with english technical terms),\nttsforge can automatically detect and handle different languages:\n\n# convert a book with german and english text\nttsforge convert mybook.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n# test with a sample\nttsforge sample \\\n    \"das ist ein deutscher satz. this is an english sentence.\" \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n\n\n\nrequirements: install the language detector:\n\npip install lingua-language-detector\n\n\n\n\noptions:\n\n\n--use-mixed-language - enable automatic language detection\n\n\n--mixed-language-primary lang - primary/fallback language (e.g., de, en-us)\n\n\n--mixed-language-allo…"
+          "text": "For books containing multiple languages (e.g., German text with English technical\nterms), ttsforge can automatically detect and handle different languages:\n\n# Convert a book with German and English text\nttsforge convert mybook.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n# Test with a sample\nttsforge sample \\\n    \"Das ist ein deutscher Satz. This is an English sentence.\" \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n\n\n\nRequirements: Install the language detector:\n\npip install lingua-language-detector\n\n\n\n\nOptions:\n\n\n--use-mixed-language - Enable automatic language detection\n\n\n--mixed-language-primary LANG - Primary/fallback language (e.g., de, en-us)\n\n\n--mixed-language-allo…",
+          "lower": "for books containing multiple languages (e.g., german text with english technical\nterms), ttsforge can automatically detect and handle different languages:\n\n# convert a book with german and english text\nttsforge convert mybook.epub \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n# test with a sample\nttsforge sample \\\n    \"das ist ein deutscher satz. this is an english sentence.\" \\\n    --use-mixed-language \\\n    --mixed-language-primary de \\\n    --mixed-language-allowed de,en-us\n\n\n\n\nrequirements: install the language detector:\n\npip install lingua-language-detector\n\n\n\n\noptions:\n\n\n--use-mixed-language - enable automatic language detection\n\n\n--mixed-language-primary lang - primary/fallback language (e.g., de, en-us)\n\n\n--mixed-language-allo…"
         },
         {
           "anchor": "",
           "heading": "SSMD Editing",
-          "text": "ttsforge uses SSMD (Speech Synthesis Markdown) as an intermediate format between\nEPUB and audio. This allows you to fine-tune pronunciation and pacing.\n\nDuring conversion, .ssmd files are automatically generated for each chapter:\n\n.{book_title}_chapters/\n├── chapter_001_intro.ssmd\n├── chapter_001_intro.wav\n└── ...\n\n\n\n\nBasic workflow:\n\n# 1. Start conversion\nttsforge convert book.epub\n\n# 2. Pause (Ctrl+C) and edit SSMD files\nvim .book_chapters/chapter_001_intro.ssmd\n\n# 3. Resume - auto-detects edits and regenerates audio\nttsforge convert book.epub\n\n\n\n\nCommon SSMD syntax:\n\n...p                               # Paragraph break\n...s                               # Sentence break\n*text*                             # Moderate emphasis\n**text**                           # Strong emphasis\n[Hermione…",
-          "lower": "ttsforge uses ssmd (speech synthesis markdown) as an intermediate format between\nepub and audio. this allows you to fine-tune pronunciation and pacing.\n\nduring conversion, .ssmd files are automatically generated for each chapter:\n\n.{book_title}_chapters/\n├── chapter_001_intro.ssmd\n├── chapter_001_intro.wav\n└── ...\n\n\n\n\nbasic workflow:\n\n# 1. start conversion\nttsforge convert book.epub\n\n# 2. pause (ctrl+c) and edit ssmd files\nvim .book_chapters/chapter_001_intro.ssmd\n\n# 3. resume - auto-detects edits and regenerates audio\nttsforge convert book.epub\n\n\n\n\ncommon ssmd syntax:\n\n...p                               # paragraph break\n...s                               # sentence break\n*text*                             # moderate emphasis\n**text**                           # strong emphasis\n[hermione…"
+          "text": "ttsforge uses SSMD (Speech Synthesis Markdown) as an intermediate format between EPUB\nand audio. This allows you to fine-tune pronunciation and pacing.\n\nDuring conversion, .ssmd files are automatically generated for each chapter:\n\n.{book_title}_chapters/\n├── chapter_001_intro.ssmd\n├── chapter_001_intro.wav\n└── ...\n\n\n\n\nBasic workflow:\n\n# 1. Start conversion\nttsforge convert book.epub\n\n# 2. Pause (Ctrl+C) and edit SSMD files\nvim .book_chapters/chapter_001_intro.ssmd\n\n# 3. Resume - auto-detects edits and regenerates audio\nttsforge convert book.epub\n\n\n\n\nCommon SSMD syntax:\n\n...p                               # Paragraph break\n...s                               # Sentence break\n*text*                             # Moderate emphasis\n**text**                           # Strong emphasis\n[Hermione…",
+          "lower": "ttsforge uses ssmd (speech synthesis markdown) as an intermediate format between epub\nand audio. this allows you to fine-tune pronunciation and pacing.\n\nduring conversion, .ssmd files are automatically generated for each chapter:\n\n.{book_title}_chapters/\n├── chapter_001_intro.ssmd\n├── chapter_001_intro.wav\n└── ...\n\n\n\n\nbasic workflow:\n\n# 1. start conversion\nttsforge convert book.epub\n\n# 2. pause (ctrl+c) and edit ssmd files\nvim .book_chapters/chapter_001_intro.ssmd\n\n# 3. resume - auto-detects edits and regenerates audio\nttsforge convert book.epub\n\n\n\n\ncommon ssmd syntax:\n\n...p                               # paragraph break\n...s                               # sentence break\n*text*                             # moderate emphasis\n**text**                           # strong emphasis\n[hermione…"
         },
         {
           "anchor": "",
           "heading": "Configuration",
-          "text": "Set default options:\n\n# Set default voice\nttsforge config --set default_voice am_adam\n\n# Set default format\nttsforge config --set default_format mp3\n\n# Enable GPU acceleration\nttsforge config --set use_gpu true\n\n# View all settings\nttsforge config --show",
-          "lower": "set default options:\n\n# set default voice\nttsforge config --set default_voice am_adam\n\n# set default format\nttsforge config --set default_format mp3\n\n# enable gpu acceleration\nttsforge config --set use_gpu true\n\n# view all settings\nttsforge config --show"
+          "text": "Set default options:\n\n# Set default voice\nttsforge config --set default_voice am_adam\n\n# Set default format\nttsforge config --set default_format mp3\n\n# Select an ONNX Runtime provider (Termux example)\nttsforge config --set model_source github --set onnx_provider nnapi\n\n# View all settings\nttsforge config --show\n\n\n\n\nProvider aliases include auto, cpu, nnapi, and xnnpack; full\n*ExecutionProvider names are also accepted. The legacy --gpu and --no-gpu flags\nmap to auto and cpu respectively.",
+          "lower": "set default options:\n\n# set default voice\nttsforge config --set default_voice am_adam\n\n# set default format\nttsforge config --set default_format mp3\n\n# select an onnx runtime provider (termux example)\nttsforge config --set model_source github --set onnx_provider nnapi\n\n# view all settings\nttsforge config --show\n\n\n\n\nprovider aliases include auto, cpu, nnapi, and xnnpack; full\n*executionprovider names are also accepted. the legacy --gpu and --no-gpu flags\nmap to auto and cpu respectively."
         },
         {
           "anchor": "",
@@ -856,160 +898,89 @@
         {
           "anchor": "",
           "heading": "Next Steps",
-          "text": "SSMD Editing - SSMD editing and syntax reference\n\n\nCLI Reference - Complete command reference\n\n\nVoices - Detailed voice information\n\n\nConfiguration - All configuration options\n\n\nFilename Templates - Customize output filenames",
-          "lower": "ssmd editing - ssmd editing and syntax reference\n\n\ncli reference - complete command reference\n\n\nvoices - detailed voice information\n\n\nconfiguration - all configuration options\n\n\nfilename templates - customize output filenames"
+          "text": "SSMD 0.8 - SSMD editing and syntax reference\n\n\nCLI Reference - Complete command reference\n\n\nVoices - Detailed voice information\n\n\nConfiguration - All configuration options\n\n\nFilename Templates - Customize output filenames",
+          "lower": "ssmd 0.8 - ssmd editing and syntax reference\n\n\ncli reference - complete command reference\n\n\nvoices - detailed voice information\n\n\nconfiguration - all configuration options\n\n\nfilename templates - customize output filenames"
         }
       ]
     },
     {
       "url": "/tools/ttsforge/ssmd/",
-      "title": "ttsforge SSMD Editing",
-      "snippet": "SSMD (Speech Synthesis Markdown) is an intermediate text format used by ttsforge\nbetween EPUB extraction and TTS audio generation. It allows …",
+      "title": "ttsforge SSMD 0.8",
+      "snippet": "ttsforge treats SSMD 0.8 as a document format, not as decorated plain text. Generated,\nedited, and direct .ssmd documents are validated with …",
       "sections": [
         {
           "anchor": "",
-          "heading": "SSMD Editing",
-          "text": "SSMD (Speech Synthesis Markdown) is an intermediate text format used by ttsforge\nbetween EPUB extraction and TTS audio generation. It allows fine-grained control\nover pronunciation, pacing, and emphasis in your audiobooks.",
-          "lower": "ssmd (speech synthesis markdown) is an intermediate text format used by ttsforge\nbetween epub extraction and tts audio generation. it allows fine-grained control\nover pronunciation, pacing, and emphasis in your audiobooks."
+          "heading": "SSMD 0.8",
+          "text": "ttsforge treats SSMD 0.8 as a document format, not as decorated plain text. Generated,\nedited, and direct .ssmd documents are validated with the public ssmd APIs and the\npykokoro Kokoro profile before synthesis. Header metadata is never sent to speech.",
+          "lower": "ttsforge treats ssmd 0.8 as a document format, not as decorated plain text. generated,\nedited, and direct .ssmd documents are validated with the public ssmd apis and the\npykokoro kokoro profile before synthesis. header metadata is never sent to speech."
         },
         {
           "anchor": "",
-          "heading": "How SSMD Works",
-          "text": "During conversion, ttsforge automatically generates .ssmd files for each chapter:\n\n.{book_title}_chapters/\n├── {book_title}_state.json\n├── chapter_001_intro.ssmd      # Editable text with speech markup\n├── chapter_001_intro.wav\n├── chapter_002_chapter1.ssmd\n├── chapter_002_chapter1.wav\n└── ...\n\n\n\n\nWhen you resume a conversion, ttsforge detects if you’ve edited any SSMD files\n(using MD5 hash comparison) and automatically regenerates the corresponding audio.",
-          "lower": "during conversion, ttsforge automatically generates .ssmd files for each chapter:\n\n.{book_title}_chapters/\n├── {book_title}_state.json\n├── chapter_001_intro.ssmd      # editable text with speech markup\n├── chapter_001_intro.wav\n├── chapter_002_chapter1.ssmd\n├── chapter_002_chapter1.wav\n└── ...\n\n\n\n\nwhen you resume a conversion, ttsforge detects if you’ve edited any ssmd files\n(using md5 hash comparison) and automatically regenerates the corresponding audio."
+          "heading": "Basic workflow",
+          "text": "ttsforge convert book.epub --generate-ssmd\n# edit the .ssmd files in the chapter directory\nttsforge ssmd validate .book_chapters/chapter_001.ssmd --strict\nttsforge convert book.epub\n\n\n\n\nThe generated files use truncated SHA-256 content hashes. An edited invalid file stops\nits chapter and is never silently replaced; an existing audio file is retained until a\nvalid synthesis and its sidecars succeed.",
+          "lower": "ttsforge convert book.epub --generate-ssmd\n# edit the .ssmd files in the chapter directory\nttsforge ssmd validate .book_chapters/chapter_001.ssmd --strict\nttsforge convert book.epub\n\n\n\n\nthe generated files use truncated sha-256 content hashes. an edited invalid file stops\nits chapter and is never silently replaced; an existing audio file is retained until a\nvalid synthesis and its sidecars succeed."
         },
         {
           "anchor": "",
-          "heading": "Basic Workflow",
-          "text": "Start conversion:\n\nttsforge convert book.epub\n\n\n\n\n\n\nPause conversion (Ctrl+C when needed)\n\n\nEdit SSMD files to fix pronunciation or pacing:\n\nvim .book_chapters/chapter_001_intro.ssmd\n\n\n\n\n\n\nResume conversion - automatically detects edits:\n\nttsforge convert book.epub",
-          "lower": "start conversion:\n\nttsforge convert book.epub\n\n\n\n\n\n\npause conversion (ctrl+c when needed)\n\n\nedit ssmd files to fix pronunciation or pacing:\n\nvim .book_chapters/chapter_001_intro.ssmd\n\n\n\n\n\n\nresume conversion - automatically detects edits:\n\nttsforge convert book.epub"
+          "heading": "Portable document example",
+          "text": "---\ntitle: Review podcast\nvoice_bindings:\n  kokoro:\n    moderator: af_sarah\n    positive: af_bella\npause_defaults:\n  enabled: true\n  sentence: 250ms\n  paragraph: 700ms\n  voice_change: 350ms\n---\n<div voice=\"moderator\">\nWelcome to the review.\n</div>\n\n<div voice=\"positive\">\nThe new format is portable. @approved\n</div>\n\n\n\n\ntitle is metadata and is not spoken. Logical roles resolve through\nvoice_bindings.kokoro. Explicit ...100ms breaks beat implicit defaults; simultaneous\nimplicit paragraph and voice changes use the longest duration. @approved is retained\nas a marker event and exported to marker sidecars.",
+          "lower": "---\ntitle: review podcast\nvoice_bindings:\n  kokoro:\n    moderator: af_sarah\n    positive: af_bella\npause_defaults:\n  enabled: true\n  sentence: 250ms\n  paragraph: 700ms\n  voice_change: 350ms\n---\n<div voice=\"moderator\">\nwelcome to the review.\n</div>\n\n<div voice=\"positive\">\nthe new format is portable. @approved\n</div>\n\n\n\n\ntitle is metadata and is not spoken. logical roles resolve through\nvoice_bindings.kokoro. explicit ...100ms breaks beat implicit defaults; simultaneous\nimplicit paragraph and voice changes use the longest duration. @approved is retained\nas a marker event and exported to marker sidecars."
         },
         {
           "anchor": "",
-          "heading": "SSMD Syntax",
-          "text": "SSMD uses a simple markdown-like syntax for speech control.",
-          "lower": "ssmd uses a simple markdown-like syntax for speech control."
+          "heading": "Syntax",
+          "text": "Canonical inline annotations use [text]{key=\"value\"}:\n\n[Hermione]{ph=\"hɝmˈIni\"}\n[Bonjour]{lang=\"fr-FR\"}\n[100]{as=\"cardinal\"}\n[XML]{sub=\"extensible markup language\"}\n[fast words]{rate=\"fast\" volume=\"loud\"}\n...c ...s ...p ...250ms\n\n\n\n\nModerate, strong, reduced, and none emphasis are parsed. Emphasis is spoken plainly by\ndefault: it does not add automatic volume, rate, or pitch changes, and its metadata is\npreserved. Use --ssmd-emphasis approximate or the convenience flag\n--enable-ssmd-emphasis to opt into segment-level volume/rate approximation; use warn\nor error for stricter behavior. Explicit document prosody such as\n[fast words]{rate=\"fast\"} remains active in plain mode. Language, voice, prosody,\nsay-as, substitution, phoneme, break, mark, paragraph, heading, and supported audio\nattribut…",
+          "lower": "canonical inline annotations use [text]{key=\"value\"}:\n\n[hermione]{ph=\"hɝmˈini\"}\n[bonjour]{lang=\"fr-fr\"}\n[100]{as=\"cardinal\"}\n[xml]{sub=\"extensible markup language\"}\n[fast words]{rate=\"fast\" volume=\"loud\"}\n...c ...s ...p ...250ms\n\n\n\n\nmoderate, strong, reduced, and none emphasis are parsed. emphasis is spoken plainly by\ndefault: it does not add automatic volume, rate, or pitch changes, and its metadata is\npreserved. use --ssmd-emphasis approximate or the convenience flag\n--enable-ssmd-emphasis to opt into segment-level volume/rate approximation; use warn\nor error for stricter behavior. explicit document prosody such as\n[fast words]{rate=\"fast\"} remains active in plain mode. language, voice, prosody,\nsay-as, substitution, phoneme, break, mark, paragraph, heading, and supported audio\nattribut…"
         },
         {
           "anchor": "",
-          "heading": "Structural Breaks",
-          "text": "Control pauses between text segments:\n\n...p    # Paragraph break (0.5-1.0s pause)\n...s    # Sentence break (0.1-0.3s pause)\n...c    # Clause break (shorter pause)\n\n\n\n\nExample:\n\nThis is the first paragraph. ...s\nIt has multiple sentences. ...p\n\nThis is a second paragraph. ...s",
-          "lower": "control pauses between text segments:\n\n...p    # paragraph break (0.5-1.0s pause)\n...s    # sentence break (0.1-0.3s pause)\n...c    # clause break (shorter pause)\n\n\n\n\nexample:\n\nthis is the first paragraph. ...s\nit has multiple sentences. ...p\n\nthis is a second paragraph. ...s"
+          "heading": "Direct SSMD input",
+          "text": "An exact leading --- line opens front matter and a matching --- or ... closes it.\nA ---- line is ordinary body text. Use --no-ssmd-header when an exact leading block\nis literal spoken text.\n\nFor a direct .ssmd input, title precedence is explicit --title or API title, then\nheader title, then the filename stem. The complete source, including front matter, is\npreserved for rendering.",
+          "lower": "an exact leading --- line opens front matter and a matching --- or ... closes it.\na ---- line is ordinary body text. use --no-ssmd-header when an exact leading block\nis literal spoken text.\n\nfor a direct .ssmd input, title precedence is explicit --title or api title, then\nheader title, then the filename stem. the complete source, including front matter, is\npreserved for rendering."
         },
         {
           "anchor": "",
-          "heading": "Emphasis",
-          "text": "Add vocal emphasis to words or phrases:\n\n*text*      # Moderate emphasis\n**text**    # Strong emphasis\n\n\n\n\nExample:\n\nHarry was a *highly unusual* boy. ...s\nHe **hated** the summer holidays. ...s",
-          "lower": "add vocal emphasis to words or phrases:\n\n*text*      # moderate emphasis\n**text**    # strong emphasis\n\n\n\n\nexample:\n\nharry was a *highly unusual* boy. ...s\nhe **hated** the summer holidays. ...s"
+          "heading": "Policies and diagnostics",
+          "text": "Useful conversion options include:\n\n--ssmd-unknown-header warn|error|ignore\n--ssmd-missing-voice error|use-default\n--ssmd-emphasis plain|approximate|warn|error\n--enable-ssmd-emphasis\n--detect-emphasis\n--ssmd-voice narrator=af_sarah\n--pause-voice-change 0.35\n--ssmd-audio-root ./audio\n--ssmd-remote-audio\n--ssmd-fail-on-warning\n\n\n\n\nDiagnostics have stable codes and source locations. Inspect without loading ONNX using\nttsforge ssmd inspect FILE or ttsforge ssmd inspect FILE --json. Validate with\nttsforge ssmd validate FILE; --strict promotes warnings to failures.\n\nAudio annotations use a document-relative local resolver with byte and duration limits.\nRemote audio is disabled by default; when enabled, only bounded HTTPS sources are\naccepted. Unresolved audio uses SSMD fallback text and emits a…",
+          "lower": "useful conversion options include:\n\n--ssmd-unknown-header warn|error|ignore\n--ssmd-missing-voice error|use-default\n--ssmd-emphasis plain|approximate|warn|error\n--enable-ssmd-emphasis\n--detect-emphasis\n--ssmd-voice narrator=af_sarah\n--pause-voice-change 0.35\n--ssmd-audio-root ./audio\n--ssmd-remote-audio\n--ssmd-fail-on-warning\n\n\n\n\ndiagnostics have stable codes and source locations. inspect without loading onnx using\nttsforge ssmd inspect file or ttsforge ssmd inspect file --json. validate with\nttsforge ssmd validate file; --strict promotes warnings to failures.\n\naudio annotations use a document-relative local resolver with byte and duration limits.\nremote audio is disabled by default; when enabled, only bounded https sources are\naccepted. unresolved audio uses ssmd fallback text and emits a…"
         },
         {
           "anchor": "",
-          "heading": "Custom Phonemes",
-          "text": "Override pronunciation using IPA phonemes:\n\n[word]{ph=\"phoneme\"}\n\n\n\n\nExamples:\n\n[Hermione]{ph=\"hɝmˈIni\"} Granger was Harry's best friend. ...s\nThe [API]{ph=\"ˌeɪpiˈaɪ\"} supports [JSON]{ph=\"dʒˈeɪsɑn\"}. ...s\n[Kubernetes]{ph=\"kubɚnˈɛtɪs\"} is a container orchestrator. ...s",
-          "lower": "override pronunciation using ipa phonemes:\n\n[word]{ph=\"phoneme\"}\n\n\n\n\nexamples:\n\n[hermione]{ph=\"hɝmˈini\"} granger was harry's best friend. ...s\nthe [api]{ph=\"ˌeɪpiˈaɪ\"} supports [json]{ph=\"dʒˈeɪsɑn\"}. ...s\n[kubernetes]{ph=\"kubɚnˈɛtɪs\"} is a container orchestrator. ...s"
+          "heading": "Intentional Kokoro limitations",
+          "text": "SSMD voice language, gender, and variant hints are preserved as metadata but do not\nselect a Kokoro voice.\n\n\nSSMD extensions are rejected by default for the Kokoro profile.\n\n\nEmphasis is spoken plainly by default. EPUB styling detection and SSMD rendering are\nindependent; use --detect-emphasis to extract italic/bold HTML and\n--enable-ssmd-emphasis to opt into approximation.\n\n\nRemote audio is opt-in and bounded.\n\n\nMarks are exported as chapter_NNN.markers.json and an aggregate output sidecar\nrather than embedded in every audiobook container.",
+          "lower": "ssmd voice language, gender, and variant hints are preserved as metadata but do not\nselect a kokoro voice.\n\n\nssmd extensions are rejected by default for the kokoro profile.\n\n\nemphasis is spoken plainly by default. epub styling detection and ssmd rendering are\nindependent; use --detect-emphasis to extract italic/bold html and\n--enable-ssmd-emphasis to opt into approximation.\n\n\nremote audio is opt-in and bounded.\n\n\nmarks are exported as chapter_nnn.markers.json and an aggregate output sidecar\nrather than embedded in every audiobook container."
         },
         {
           "anchor": "",
-          "heading": "Language Switching (Planned)",
-          "text": "Mark text as a different language (placeholder for future):\n\n[Bonjour]{lang=\"fr\"}      # French text\n[Hola]{lang=\"es\"}         # Spanish text",
-          "lower": "mark text as a different language (placeholder for future):\n\n[bonjour]{lang=\"fr\"}      # french text\n[hola]{lang=\"es\"}         # spanish text"
-        },
+          "heading": "See also",
+          "text": "Quick Start Guide\n\n\nCLI Reference\n\n\nConfiguration",
+          "lower": "quick start guide\n\n\ncli reference\n\n\nconfiguration"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsforge/testing/",
+      "title": "ttsforge Testing and Coverage",
+      "snippet": "Run the normal test suite with:\n\npytest\n\n\n\n\nThe maintained coverage policy is staged so high-risk code has explicit gates while the\nreposito …",
+      "sections": [
         {
           "anchor": "",
-          "heading": "Complete Example",
-          "text": "Here’s a complete SSMD file example:\n\nChapter One ...p\n\n[Harry]{ph=\"hæɹi\"} Potter was a *highly unusual* boy in many ways. ...s\nFor one thing, he **hated** the summer holidays more than any other\ntime of year. ...s For another, he really wanted to do his homework,\nbut was forced to do it in secret, in the dead of the night. ...p\n\nAnd he also happened to be a wizard. ...p\n\nThe [Dursleys]{ph=\"dɝzliz\"} had everything they wanted, but they\nalso had a secret. ...s And their greatest fear was that somebody\nwould discover it. ...p",
-          "lower": "here’s a complete ssmd file example:\n\nchapter one ...p\n\n[harry]{ph=\"hæɹi\"} potter was a *highly unusual* boy in many ways. ...s\nfor one thing, he **hated** the summer holidays more than any other\ntime of year. ...s for another, he really wanted to do his homework,\nbut was forced to do it in secret, in the dead of the night. ...p\n\nand he also happened to be a wizard. ...p\n\nthe [dursleys]{ph=\"dɝzliz\"} had everything they wanted, but they\nalso had a secret. ...s and their greatest fear was that somebody\nwould discover it. ...p"
-        },
-        {
-          "anchor": "",
-          "heading": "Automatic Features",
-          "text": "SSMD files are automatically enhanced with:",
-          "lower": "ssmd files are automatically enhanced with:"
-        },
-        {
-          "anchor": "",
-          "heading": "Phoneme Dictionary Injection",
-          "text": "If you use --phoneme-dict, all phoneme substitutions are automatically\ninjected into the SSMD:\n\nttsforge convert book.epub --phoneme-dict custom_phonemes.json\n\n\n\n\nThe generated SSMD will include:\n\n[Hermione]{ph=\"hɝmˈIni\"} loved reading books. ...s",
-          "lower": "if you use --phoneme-dict, all phoneme substitutions are automatically\ninjected into the ssmd:\n\nttsforge convert book.epub --phoneme-dict custom_phonemes.json\n\n\n\n\nthe generated ssmd will include:\n\n[hermione]{ph=\"hɝmˈini\"} loved reading books. ...s"
-        },
-        {
-          "anchor": "",
-          "heading": "HTML Emphasis Detection",
-          "text": "Emphasis from the original EPUB HTML is automatically converted:\n\n\n<em>text</em> → *text*\n\n\n<strong>text</strong> → **text**",
-          "lower": "emphasis from the original epub html is automatically converted:\n\n\n<em>text</em> → *text*\n\n\n<strong>text</strong> → **text**"
-        },
-        {
-          "anchor": "",
-          "heading": "Structural Break Preservation",
-          "text": "ttsforge preserves paragraph structure but does not insert explicit\n...p or ...s markers. Sentence detection is handled internally by\npykokoro at synthesis time. Use manual break markers only when you need\nprecise control over pauses.",
-          "lower": "ttsforge preserves paragraph structure but does not insert explicit\n...p or ...s markers. sentence detection is handled internally by\npykokoro at synthesis time. use manual break markers only when you need\nprecise control over pauses."
-        },
-        {
-          "anchor": "",
-          "heading": "When to Edit SSMD",
-          "text": "Pronunciation issues: Character names, technical terms, foreign words\n\n\nPacing problems: Adjust paragraph and sentence breaks for better flow\n\n\nEmphasis corrections: Add or remove emphasis on specific words\n\n\nConsistency: Ensure consistent pronunciation across chapters",
-          "lower": "pronunciation issues: character names, technical terms, foreign words\n\n\npacing problems: adjust paragraph and sentence breaks for better flow\n\n\nemphasis corrections: add or remove emphasis on specific words\n\n\nconsistency: ensure consistent pronunciation across chapters"
-        },
-        {
-          "anchor": "",
-          "heading": "Combining with Phoneme Dictionary",
-          "text": "For best results, use both features together:\n\n\nCreate a phoneme dictionary for common names/terms\n\n\nLet ttsforge auto-inject into SSMD\n\n\nEdit SSMD files for chapter-specific tweaks\n\n\n\n# 1. Extract and review names\nttsforge extract-names book.epub\nvim custom_phonemes.json\n\n# 2. Start conversion (phonemes auto-injected into SSMD)\nttsforge convert book.epub --phoneme-dict custom_phonemes.json\n\n# 3. Edit specific SSMD files as needed\nvim .book_chapters/chapter_005.ssmd\n\n# 4. Resume (regenerates edited chapters)\nttsforge convert book.epub",
-          "lower": "for best results, use both features together:\n\n\ncreate a phoneme dictionary for common names/terms\n\n\nlet ttsforge auto-inject into ssmd\n\n\nedit ssmd files for chapter-specific tweaks\n\n\n\n# 1. extract and review names\nttsforge extract-names book.epub\nvim custom_phonemes.json\n\n# 2. start conversion (phonemes auto-injected into ssmd)\nttsforge convert book.epub --phoneme-dict custom_phonemes.json\n\n# 3. edit specific ssmd files as needed\nvim .book_chapters/chapter_005.ssmd\n\n# 4. resume (regenerates edited chapters)\nttsforge convert book.epub"
-        },
-        {
-          "anchor": "",
-          "heading": "Tips and Best Practices",
-          "text": "Start with phoneme dictionary: Create a global dictionary first,\nthen use SSMD for chapter-specific overrides\n\n\nTest edits incrementally: Edit one chapter, let it regenerate,\nlisten to verify before editing more\n\n\nUse emphasis sparingly: Too much emphasis can sound unnatural\n\n\nKeep backups: SSMD files are regenerated if missing, but manual\nedits are preserved\n\n\nConsistent phonemes: Use the same IPA notation throughout for\nconsistency",
-          "lower": "start with phoneme dictionary: create a global dictionary first,\nthen use ssmd for chapter-specific overrides\n\n\ntest edits incrementally: edit one chapter, let it regenerate,\nlisten to verify before editing more\n\n\nuse emphasis sparingly: too much emphasis can sound unnatural\n\n\nkeep backups: ssmd files are regenerated if missing, but manual\nedits are preserved\n\n\nconsistent phonemes: use the same ipa notation throughout for\nconsistency"
-        },
-        {
-          "anchor": "",
-          "heading": "Hash-Based Change Detection",
-          "text": "ttsforge tracks SSMD file changes using MD5 hashes (12 characters) stored\nin the state file. When you resume:\n\n\nCurrent SSMD file is hashed\n\n\nCompared with saved hash in state\n\n\nIf different, audio is regenerated\n\n\nNew hash is saved",
-          "lower": "ttsforge tracks ssmd file changes using md5 hashes (12 characters) stored\nin the state file. when you resume:\n\n\ncurrent ssmd file is hashed\n\n\ncompared with saved hash in state\n\n\nif different, audio is regenerated\n\n\nnew hash is saved"
-        },
-        {
-          "anchor": "",
-          "heading": "File Format",
-          "text": "SSMD files are plain text UTF-8 files with the .ssmd extension.\nThey can be edited with any text editor.",
-          "lower": "ssmd files are plain text utf-8 files with the .ssmd extension.\nthey can be edited with any text editor."
-        },
-        {
-          "anchor": "",
-          "heading": "Error Handling",
-          "text": "If SSMD generation fails, ttsforge falls back to plain text conversion\nand logs a warning. The conversion continues without SSMD features.",
-          "lower": "if ssmd generation fails, ttsforge falls back to plain text conversion\nand logs a warning. the conversion continues without ssmd features."
-        },
-        {
-          "anchor": "",
-          "heading": "Validation",
-          "text": "SSMD is not automatically validated during conversion. For manual checks,\nuse the validate_ssmd helper from ttsforge.ssmd_generator to get\nwarnings about unbalanced markers before you synthesize.",
-          "lower": "ssmd is not automatically validated during conversion. for manual checks,\nuse the validate_ssmd helper from ttsforge.ssmd_generator to get\nwarnings about unbalanced markers before you synthesize."
-        },
-        {
-          "anchor": "",
-          "heading": "Limitations",
-          "text": "Language switching is not yet implemented (planned feature)\n\n\nPhoneme syntax must use valid IPA characters\n\n\nVery long lines may be truncated in some editors\n\n\nHash detection only works with resumable conversions",
-          "lower": "language switching is not yet implemented (planned feature)\n\n\nphoneme syntax must use valid ipa characters\n\n\nvery long lines may be truncated in some editors\n\n\nhash detection only works with resumable conversions"
-        },
-        {
-          "anchor": "",
-          "heading": "See Also",
-          "text": "Quick Start Guide - Getting started with ttsforge\n\n\nCLI Reference - Complete command reference\n\n\nConfiguration - Configuration options\n\n\n\nFor more SSMD examples and a quick reference, see SSMD_QUICKSTART.md\nin the repository root.",
-          "lower": "quick start guide - getting started with ttsforge\n\n\ncli reference - complete command reference\n\n\nconfiguration - configuration options\n\n\n\nfor more ssmd examples and a quick reference, see ssmd_quickstart.md\nin the repository root."
+          "heading": "Testing and Coverage",
+          "text": "Run the normal test suite with:\n\npytest\n\n\n\n\nThe maintained coverage policy is staged so high-risk code has explicit gates while the\nrepository-wide target can be raised as the large CLI modules are decomposed:\n\n\nrepository branch coverage: 55% minimum;\n\n\nttsforge/audio_player.py: 80% minimum;\n\n\nttsforge/audio_merge.py: 75% minimum;\n\n\nchanged lines: 85% minimum;\n\n\nchanged resume/state lines are expected to meet the same 85% changed-line gate, which\nis stricter than the initial 80% target.\n\n\n\nThe complete policy is wired into tox:\n\ntox\n\n\n\n\nThe final changed-line check compares coverage.xml with origin/main using\ndiff-cover. A local checkout without that remote can run the first three coverage\ncommands directly and use an appropriate local base branch for the final comparison.",
+          "lower": "run the normal test suite with:\n\npytest\n\n\n\n\nthe maintained coverage policy is staged so high-risk code has explicit gates while the\nrepository-wide target can be raised as the large cli modules are decomposed:\n\n\nrepository branch coverage: 55% minimum;\n\n\nttsforge/audio_player.py: 80% minimum;\n\n\nttsforge/audio_merge.py: 75% minimum;\n\n\nchanged lines: 85% minimum;\n\n\nchanged resume/state lines are expected to meet the same 85% changed-line gate, which\nis stricter than the initial 80% target.\n\n\n\nthe complete policy is wired into tox:\n\ntox\n\n\n\n\nthe final changed-line check compares coverage.xml with origin/main using\ndiff-cover. a local checkout without that remote can run the first three coverage\ncommands directly and use an appropriate local base branch for the final comparison."
         }
       ]
     },
     {
       "url": "/tools/ttsforge/voices/",
       "title": "ttsforge Voices",
-      "snippet": "ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across\n9 languages.\nVoices follow a consistent naming pattern:\n\n{langu …",
+      "snippet": "ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across 9\nlanguages.\nVoices follow a consistent naming pattern:\n\n{langu …",
       "sections": [
         {
           "anchor": "",
           "heading": "Voices",
-          "text": "ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across\n9 languages.",
-          "lower": "ttsforge uses kokoro tts which provides 54 high-quality neural voices across\n9 languages."
+          "text": "ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across 9\nlanguages.",
+          "lower": "ttsforge uses kokoro tts which provides 54 high-quality neural voices across 9\nlanguages."
         },
         {
           "anchor": "",
@@ -1086,8 +1057,8 @@
         {
           "anchor": "",
           "heading": "Voice Blending",
-          "text": "Combine multiple voices for unique narration. You can specify voice blends in two ways:\n\nUsing –voice parameter (recommended):\n\nThe --voice parameter now auto-detects blend format when you include colons and commas:\n\n# 50/50 blend of two voices\nttsforge convert book.epub --voice \"af_nicole:50,am_michael:50\"\n\n# Weighted blend (70% Nicole, 30% Michael)\nttsforge convert book.epub --voice \"af_nicole:70,am_michael:30\"\n\n# Works with sample command\nttsforge sample \"Hello world\" --voice \"af_sky:60,bf_emma:40\" -p\n\n# Works with phonemes preview\nttsforge phonemes preview \"Test\" --voice \"am_adam:50,am_michael:50\" --play\n\n\n\n\nUsing –voice-blend parameter (traditional):\n\n# Explicit voice-blend parameter\nttsforge convert book.epub --voice-blend \"af_nicole:50,am_michael:50\"\n\n# Can combine with regular voi…",
-          "lower": "combine multiple voices for unique narration. you can specify voice blends in two ways:\n\nusing –voice parameter (recommended):\n\nthe --voice parameter now auto-detects blend format when you include colons and commas:\n\n# 50/50 blend of two voices\nttsforge convert book.epub --voice \"af_nicole:50,am_michael:50\"\n\n# weighted blend (70% nicole, 30% michael)\nttsforge convert book.epub --voice \"af_nicole:70,am_michael:30\"\n\n# works with sample command\nttsforge sample \"hello world\" --voice \"af_sky:60,bf_emma:40\" -p\n\n# works with phonemes preview\nttsforge phonemes preview \"test\" --voice \"am_adam:50,am_michael:50\" --play\n\n\n\n\nusing –voice-blend parameter (traditional):\n\n# explicit voice-blend parameter\nttsforge convert book.epub --voice-blend \"af_nicole:50,am_michael:50\"\n\n# can combine with regular voi…"
+          "text": "Combine multiple voices for unique narration. You can specify voice blends in two ways:\n\nUsing –voice parameter (recommended):\n\nThe --voice parameter now auto-detects blend format when you include colons and\ncommas:\n\n# 50/50 blend of two voices\nttsforge convert book.epub --voice \"af_nicole:50,am_michael:50\"\n\n# Weighted blend (70% Nicole, 30% Michael)\nttsforge convert book.epub --voice \"af_nicole:70,am_michael:30\"\n\n# Works with sample command\nttsforge sample \"Hello world\" --voice \"af_sky:60,bf_emma:40\" -p\n\n# Works with phonemes preview\nttsforge phonemes preview \"Test\" --voice \"am_adam:50,am_michael:50\" --play\n\n\n\n\nUsing –voice-blend parameter (traditional):\n\n# Explicit voice-blend parameter\nttsforge convert book.epub --voice-blend \"af_nicole:50,am_michael:50\"\n\n# Can combine with regular voi…",
+          "lower": "combine multiple voices for unique narration. you can specify voice blends in two ways:\n\nusing –voice parameter (recommended):\n\nthe --voice parameter now auto-detects blend format when you include colons and\ncommas:\n\n# 50/50 blend of two voices\nttsforge convert book.epub --voice \"af_nicole:50,am_michael:50\"\n\n# weighted blend (70% nicole, 30% michael)\nttsforge convert book.epub --voice \"af_nicole:70,am_michael:30\"\n\n# works with sample command\nttsforge sample \"hello world\" --voice \"af_sky:60,bf_emma:40\" -p\n\n# works with phonemes preview\nttsforge phonemes preview \"test\" --voice \"am_adam:50,am_michael:50\" --play\n\n\n\n\nusing –voice-blend parameter (traditional):\n\n# explicit voice-blend parameter\nttsforge convert book.epub --voice-blend \"af_nicole:50,am_michael:50\"\n\n# can combine with regular voi…"
         },
         {
           "anchor": "",

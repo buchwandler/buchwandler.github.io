@@ -37,3 +37,8 @@
   description: A Python-based TTS automation framework with multi-engine support.
   docs_url: /tools/ttsforge/
   repo_url: https://github.com/buchwandler/ttsforge
+- name: audiosig
+  description: Portable, dependency-light audio signal processing for NumPy arrays.
+  docs_url: /tools/audiosig/
+  repo_url: https://github.com/buchwandler/audiosig
+  pypi_url: https://pypi.org/project/audiosig/

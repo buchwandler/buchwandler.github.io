@@ -1,0 +1,686 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "audiosig-main",
+  "entries": [
+    {
+      "url": "/tools/audiosig/main/advanced/",
+      "title": "audiosig Advanced Topics",
+      "snippet": "AudioSig’s time stretching uses a phase vocoder algorithm:\n\n\nSTFT: Convert audio to frequency domain using Short-Time Fourier Transform\n\n\nPh …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Understanding the Phase Vocoder",
+          "text": "AudioSig’s time stretching uses a phase vocoder algorithm:\n\n\nSTFT: Convert audio to frequency domain using Short-Time Fourier Transform\n\n\nPhase Modification: Adjust phase to change timing while preserving pitch\n\n\nISTFT: Convert back to time domain",
+          "lower": "audiosig’s time stretching uses a phase vocoder algorithm:\n\n\nstft: convert audio to frequency domain using short-time fourier transform\n\n\nphase modification: adjust phase to change timing while preserving pitch\n\n\nistft: convert back to time domain"
+        },
+        {
+          "anchor": "",
+          "heading": "Parameters",
+          "text": "from audiosig import time_stretch\n\n# Control FFT resolution\nresult = time_stretch(\n    audio,\n    rate=1.2,\n    n_fft=4096,        # Higher = better frequency resolution, worse time resolution\n    hop_length=1024,   # Controls overlap between frames\n)",
+          "lower": "from audiosig import time_stretch\n\n# control fft resolution\nresult = time_stretch(\n    audio,\n    rate=1.2,\n    n_fft=4096,        # higher = better frequency resolution, worse time resolution\n    hop_length=1024,   # controls overlap between frames\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Trade-offs",
+          "text": "Larger n_fft: Better frequency separation, worse time precision\n\n\nSmaller n_fft: Better time precision, worse frequency separation\n\n\nhop_length: Typically n_fft // 4 for good quality",
+          "lower": "larger n_fft: better frequency separation, worse time precision\n\n\nsmaller n_fft: better time precision, worse frequency separation\n\n\nhop_length: typically n_fft // 4 for good quality"
+        },
+        {
+          "anchor": "",
+          "heading": "Resampling Internals",
+          "text": "AudioSig uses windowed-sinc interpolation:\n\nfrom audiosig import resample\n\n# Control filter characteristics\nresult = resample(\n    audio,\n    source_rate=48000,\n    target_rate=16000,\n    filter_width=64,     # Wider = sharper cutoff, slower\n    rolloff=0.945,       # Anti-aliasing filter rolloff\n    length_mode='round', # Output length calculation\n)",
+          "lower": "audiosig uses windowed-sinc interpolation:\n\nfrom audiosig import resample\n\n# control filter characteristics\nresult = resample(\n    audio,\n    source_rate=48000,\n    target_rate=16000,\n    filter_width=64,     # wider = sharper cutoff, slower\n    rolloff=0.945,       # anti-aliasing filter rolloff\n    length_mode='round', # output length calculation\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Length Modes",
+          "text": "'round': AudioSig’s default, matches historical behavior\n\n\n'ceil': Matches librosa’s output length semantics\n\n\n\nfrom audiosig import resample\n\n# Compare length modes\nresult_round = resample(audio, source_rate=44100, target_rate=16000, length_mode='round')\nresult_ceil = resample(audio, source_rate=44100, target_rate=16000, length_mode='ceil')\n\nprint(f\"Round: {len(result_round)}\")\nprint(f\"Ceil: {len(result_ceil)}\")",
+          "lower": "'round': audiosig’s default, matches historical behavior\n\n\n'ceil': matches librosa’s output length semantics\n\n\n\nfrom audiosig import resample\n\n# compare length modes\nresult_round = resample(audio, source_rate=44100, target_rate=16000, length_mode='round')\nresult_ceil = resample(audio, source_rate=44100, target_rate=16000, length_mode='ceil')\n\nprint(f\"round: {len(result_round)}\")\nprint(f\"ceil: {len(result_ceil)}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Normalized Energy VAD",
+          "text": "The normalized energy VAD works by:\n\n\nFraming the audio into non-overlapping segments\n\n\nComputing RMS energy per frame\n\n\nNormalizing to [0, 1] range\n\n\nThresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# The algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=False,            # Discard trailing partial frame\n)",
+          "lower": "the normalized energy vad works by:\n\n\nframing the audio into non-overlapping segments\n\n\ncomputing rms energy per frame\n\n\nnormalizing to [0, 1] range\n\n\nthresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# the algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=false,            # discard trailing partial frame\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Relative dB VAD",
+          "text": "The relative dB VAD works by:\n\n\nComputing short-time energy\n\n\nFinding peak energy\n\n\nSetting threshold relative to peak\n\n\nDetecting frames above threshold\n\n\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,  # 40 dB below peak\n)",
+          "lower": "the relative db vad works by:\n\n\ncomputing short-time energy\n\n\nfinding peak energy\n\n\nsetting threshold relative to peak\n\n\ndetecting frames above threshold\n\n\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,  # 40 db below peak\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Empty Audio",
+          "text": "import numpy as np\nfrom audiosig import trim, split\n\n# Empty arrays are handled gracefully\nempty = np.array([], dtype=np.float32)\n\n# trim returns empty array and [0, 0]\ntrimmed, interval = trim(empty)\nassert len(trimmed) == 0\nassert np.array_equal(interval, [0, 0])\n\n# split returns empty intervals\nintervals = split(empty)\nassert len(intervals) == 0\n\n\n\n\nAll public transformations, including time_stretch, pitch_shift, gain,\nnormalization, and resampling, accept an empty sample axis after validating\ntheir parameters and return an empty copy with the original shape and dtype.",
+          "lower": "import numpy as np\nfrom audiosig import trim, split\n\n# empty arrays are handled gracefully\nempty = np.array([], dtype=np.float32)\n\n# trim returns empty array and [0, 0]\ntrimmed, interval = trim(empty)\nassert len(trimmed) == 0\nassert np.array_equal(interval, [0, 0])\n\n# split returns empty intervals\nintervals = split(empty)\nassert len(intervals) == 0\n\n\n\n\nall public transformations, including time_stretch, pitch_shift, gain,\nnormalization, and resampling, accept an empty sample axis after validating\ntheir parameters and return an empty copy with the original shape and dtype."
+        },
+        {
+          "anchor": "",
+          "heading": "Silent Audio",
+          "text": "import numpy as np\nfrom audiosig import trim, peak_normalize\n\n# All-zeros audio\nsilence = np.zeros(24000, dtype=np.float32)\n\n# With the default peak-relative reference, uniform silence remains unchanged.\ntrimmed, interval = trim(silence, top_db=40.0, ref=np.max)\nassert len(trimmed) == 24000\nassert np.array_equal(interval, [0, 24000])\n\n# A fixed nonzero reference classifies the all-zero signal as silence.\ntrimmed, interval = trim(silence, top_db=40.0, ref=1.0)\nassert len(trimmed) == 0\nassert np.array_equal(interval, [0, 0])\n\n# Normalization preserves silence\nnormalized = peak_normalize(silence)\nassert np.all(normalized == 0)",
+          "lower": "import numpy as np\nfrom audiosig import trim, peak_normalize\n\n# all-zeros audio\nsilence = np.zeros(24000, dtype=np.float32)\n\n# with the default peak-relative reference, uniform silence remains unchanged.\ntrimmed, interval = trim(silence, top_db=40.0, ref=np.max)\nassert len(trimmed) == 24000\nassert np.array_equal(interval, [0, 24000])\n\n# a fixed nonzero reference classifies the all-zero signal as silence.\ntrimmed, interval = trim(silence, top_db=40.0, ref=1.0)\nassert len(trimmed) == 0\nassert np.array_equal(interval, [0, 0])\n\n# normalization preserves silence\nnormalized = peak_normalize(silence)\nassert np.all(normalized == 0)"
+        },
+        {
+          "anchor": "",
+          "heading": "Very Short Audio",
+          "text": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\n# Single sample\nsingle = np.array([0.5], dtype=np.float32)\n\n# Time stretching works with minimum length 1\nresult = time_stretch(single, rate=2.0)\nassert len(result) >= 1\n\n# Pitch shifting preserves length\nresult = pitch_shift(single, sample_rate=24000, semitones=3.0)\nassert len(result) == 1",
+          "lower": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\n# single sample\nsingle = np.array([0.5], dtype=np.float32)\n\n# time stretching works with minimum length 1\nresult = time_stretch(single, rate=2.0)\nassert len(result) >= 1\n\n# pitch shifting preserves length\nresult = pitch_shift(single, sample_rate=24000, semitones=3.0)\nassert len(result) == 1"
+        },
+        {
+          "anchor": "",
+          "heading": "Stereo Audio",
+          "text": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\n# Stereo audio: (2, samples)\nstereo = np.random.randn(2, 24000).astype(np.float32)\n\n# Processing works on last axis by default\nstretched = time_stretch(stereo, rate=1.1)\nassert stretched.shape[0] == 2  # Channels preserved\n\n# Can specify axis explicitly\nresult = time_stretch(stereo, rate=1.1, axis=-1)",
+          "lower": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\n# stereo audio: (2, samples)\nstereo = np.random.randn(2, 24000).astype(np.float32)\n\n# processing works on last axis by default\nstretched = time_stretch(stereo, rate=1.1)\nassert stretched.shape[0] == 2  # channels preserved\n\n# can specify axis explicitly\nresult = time_stretch(stereo, rate=1.1, axis=-1)"
+        },
+        {
+          "anchor": "",
+          "heading": "Batch Dimensions",
+          "text": "import numpy as np\nfrom audiosig import time_stretch\n\n# Batch of audio: (batch, channels, samples)\nbatch = np.random.randn(8, 2, 24000).astype(np.float32)\n\n# Processing preserves batch dimensions\nresult = time_stretch(batch, rate=1.2)\nassert result.shape == (8, 2, 20000)  # Shorter due to rate > 1",
+          "lower": "import numpy as np\nfrom audiosig import time_stretch\n\n# batch of audio: (batch, channels, samples)\nbatch = np.random.randn(8, 2, 24000).astype(np.float32)\n\n# processing preserves batch dimensions\nresult = time_stretch(batch, rate=1.2)\nassert result.shape == (8, 2, 20000)  # shorter due to rate > 1"
+        },
+        {
+          "anchor": "",
+          "heading": "Fail-Fast vs Fail-Open",
+          "text": "from audiosig import (\n    time_stretch,\n    AudioSignalError,\n    InvalidParameterError,\n    AudioShapeError,\n)\n\ndef safe_time_stretch(audio, rate, fail_fast=True):\n    \"\"\"Time stretch with error handling.\"\"\"\n    try:\n        return time_stretch(audio, rate=rate)\n    except InvalidParameterError as e:\n        if fail_fast:\n            raise\n        print(f\"Warning: {e}\")\n        return audio  # Return original\n    except AudioShapeError as e:\n        if fail_fast:\n            raise\n        print(f\"Warning: Invalid shape: {e}\")\n        return audio\n\n# Fail-fast (default)\nresult = safe_time_stretch(audio, rate=-1.0, fail_fast=True)\n\n# Fail-open (return original on error)\nresult = safe_time_stretch(audio, rate=-1.0, fail_fast=False)",
+          "lower": "from audiosig import (\n    time_stretch,\n    audiosignalerror,\n    invalidparametererror,\n    audioshapeerror,\n)\n\ndef safe_time_stretch(audio, rate, fail_fast=true):\n    \"\"\"time stretch with error handling.\"\"\"\n    try:\n        return time_stretch(audio, rate=rate)\n    except invalidparametererror as e:\n        if fail_fast:\n            raise\n        print(f\"warning: {e}\")\n        return audio  # return original\n    except audioshapeerror as e:\n        if fail_fast:\n            raise\n        print(f\"warning: invalid shape: {e}\")\n        return audio\n\n# fail-fast (default)\nresult = safe_time_stretch(audio, rate=-1.0, fail_fast=true)\n\n# fail-open (return original on error)\nresult = safe_time_stretch(audio, rate=-1.0, fail_fast=false)"
+        },
+        {
+          "anchor": "",
+          "heading": "Input Validation",
+          "text": "import numpy as np\nfrom audiosig import AudioShapeError\n\ndef validate_audio_input(audio, expected_sr=None):\n    \"\"\"Validate audio before processing.\"\"\"\n    if not isinstance(audio, np.ndarray):\n        raise TypeError(f\"Expected np.ndarray, got {type(audio)}\")\n\n    if audio.dtype not in (np.float32, np.float64):\n        raise ValueError(f\"Expected float32 or float64, got {audio.dtype}\")\n\n    if audio.ndim == 0:\n        raise ValueError(\"Audio must have at least 1 dimension\")\n\n    if audio.size == 0:\n        raise ValueError(\"Audio array is empty\")\n\n    return True",
+          "lower": "import numpy as np\nfrom audiosig import audioshapeerror\n\ndef validate_audio_input(audio, expected_sr=none):\n    \"\"\"validate audio before processing.\"\"\"\n    if not isinstance(audio, np.ndarray):\n        raise typeerror(f\"expected np.ndarray, got {type(audio)}\")\n\n    if audio.dtype not in (np.float32, np.float64):\n        raise valueerror(f\"expected float32 or float64, got {audio.dtype}\")\n\n    if audio.ndim == 0:\n        raise valueerror(\"audio must have at least 1 dimension\")\n\n    if audio.size == 0:\n        raise valueerror(\"audio array is empty\")\n\n    return true"
+        },
+        {
+          "anchor": "",
+          "heading": "Memory Layout",
+          "text": "import numpy as np\n\n# C-contiguous arrays are faster\naudio = np.ascontiguousarray(audio)\n\n# Fortran-contiguous for column-major operations\n# (not typically needed for audio)",
+          "lower": "import numpy as np\n\n# c-contiguous arrays are faster\naudio = np.ascontiguousarray(audio)\n\n# fortran-contiguous for column-major operations\n# (not typically needed for audio)"
+        },
+        {
+          "anchor": "",
+          "heading": "Chunked Processing",
+          "text": "import numpy as np\nfrom audiosig import time_stretch\n\ndef process_large_file(audio, rate, chunk_seconds=10, sample_rate=24000):\n    \"\"\"Process large audio in chunks.\"\"\"\n    chunk_size = chunk_seconds * sample_rate\n    results = []\n\n    for i in range(0, len(audio), chunk_size):\n        chunk = audio[i:i + chunk_size]\n        processed = time_stretch(chunk, rate=rate)\n        results.append(processed)\n\n    return np.concatenate(results)",
+          "lower": "import numpy as np\nfrom audiosig import time_stretch\n\ndef process_large_file(audio, rate, chunk_seconds=10, sample_rate=24000):\n    \"\"\"process large audio in chunks.\"\"\"\n    chunk_size = chunk_seconds * sample_rate\n    results = []\n\n    for i in range(0, len(audio), chunk_size):\n        chunk = audio[i:i + chunk_size]\n        processed = time_stretch(chunk, rate=rate)\n        results.append(processed)\n\n    return np.concatenate(results)"
+        },
+        {
+          "anchor": "",
+          "heading": "Type Selection",
+          "text": "import numpy as np\n\n# Float32: Good for most applications, lower memory\naudio_32 = np.random.randn(24000).astype(np.float32)\n\n# Float64: Higher precision, more memory\naudio_64 = np.random.randn(24000).astype(np.float64)\n\n# Processing preserves dtype\nfrom audiosig import time_stretch\nresult_32 = time_stretch(audio_32, rate=1.1)  # Returns float32\nresult_64 = time_stretch(audio_64, rate=1.1)  # Returns float64",
+          "lower": "import numpy as np\n\n# float32: good for most applications, lower memory\naudio_32 = np.random.randn(24000).astype(np.float32)\n\n# float64: higher precision, more memory\naudio_64 = np.random.randn(24000).astype(np.float64)\n\n# processing preserves dtype\nfrom audiosig import time_stretch\nresult_32 = time_stretch(audio_32, rate=1.1)  # returns float32\nresult_64 = time_stretch(audio_64, rate=1.1)  # returns float64"
+        },
+        {
+          "anchor": "",
+          "heading": "With librosa",
+          "text": "import librosa\nfrom audiosig import resample\n\n# Load with librosa\naudio, sr = librosa.load(\"file.wav\", sr=None)\n\n# Resample with AudioSig (NumPy-only)\nresampled = resample(audio, source_rate=sr, target_rate=16000)",
+          "lower": "import librosa\nfrom audiosig import resample\n\n# load with librosa\naudio, sr = librosa.load(\"file.wav\", sr=none)\n\n# resample with audiosig (numpy-only)\nresampled = resample(audio, source_rate=sr, target_rate=16000)"
+        },
+        {
+          "anchor": "",
+          "heading": "With soundfile",
+          "text": "import soundfile as sf\nfrom audiosig import trim, peak_normalize\n\n# Load audio\naudio, sr = sf.read(\"file.wav\")\n\n# Process with AudioSig\ntrimmed, _ = trim(audio, top_db=40.0)\nnormalized = peak_normalize(trimmed, peak=0.95)\n\n# Save\nsf.write(\"processed.wav\", normalized, sr)",
+          "lower": "import soundfile as sf\nfrom audiosig import trim, peak_normalize\n\n# load audio\naudio, sr = sf.read(\"file.wav\")\n\n# process with audiosig\ntrimmed, _ = trim(audio, top_db=40.0)\nnormalized = peak_normalize(trimmed, peak=0.95)\n\n# save\nsf.write(\"processed.wav\", normalized, sr)"
+        },
+        {
+          "anchor": "",
+          "heading": "With PyTorch",
+          "text": "import torch\nimport numpy as np\nfrom audiosig import time_stretch\n\n# Convert to numpy\naudio_torch = torch.randn(1, 24000)\naudio_np = audio_torch.numpy().squeeze()\n\n# Process with AudioSig\nprocessed_np = time_stretch(audio_np, rate=1.1)\n\n# Convert back to torch\nprocessed_torch = torch.from_numpy(processed_np).unsqueeze(0)",
+          "lower": "import torch\nimport numpy as np\nfrom audiosig import time_stretch\n\n# convert to numpy\naudio_torch = torch.randn(1, 24000)\naudio_np = audio_torch.numpy().squeeze()\n\n# process with audiosig\nprocessed_np = time_stretch(audio_np, rate=1.1)\n\n# convert back to torch\nprocessed_torch = torch.from_numpy(processed_np).unsqueeze(0)"
+        },
+        {
+          "anchor": "",
+          "heading": "Checking Intermediate Results",
+          "text": "import numpy as np\nfrom audiosig import frame_signal, frame_rms\n\ndef analyze_frames(audio, frame_length=2048, hop_length=512):\n    \"\"\"Debug frame analysis.\"\"\"\n    frames = frame_signal(audio, frame_length=frame_length, hop_length=hop_length)\n    rms = frame_rms(audio, frame_length=frame_length, hop_length=hop_length)\n\n    print(f\"Audio length: {len(audio)}\")\n    print(f\"Number of frames: {len(frames)}\")\n    print(f\"Frame shape: {frames.shape}\")\n    print(f\"RMS range: [{np.min(rms):.4f}, {np.max(rms):.4f}]\")\n\n    return frames, rms",
+          "lower": "import numpy as np\nfrom audiosig import frame_signal, frame_rms\n\ndef analyze_frames(audio, frame_length=2048, hop_length=512):\n    \"\"\"debug frame analysis.\"\"\"\n    frames = frame_signal(audio, frame_length=frame_length, hop_length=hop_length)\n    rms = frame_rms(audio, frame_length=frame_length, hop_length=hop_length)\n\n    print(f\"audio length: {len(audio)}\")\n    print(f\"number of frames: {len(frames)}\")\n    print(f\"frame shape: {frames.shape}\")\n    print(f\"rms range: [{np.min(rms):.4f}, {np.max(rms):.4f}]\")\n\n    return frames, rms"
+        },
+        {
+          "anchor": "",
+          "heading": "Performance Profiling",
+          "text": "import time\nimport numpy as np\nfrom audiosig import time_stretch\n\ndef profile_time_stretch(audio, rate, iterations=100):\n    \"\"\"Profile time_stretch performance.\"\"\"\n    times = []\n\n    for _ in range(iterations):\n        start = time.perf_counter()\n        result = time_stretch(audio, rate=rate)\n        end = time.perf_counter()\n        times.append(end - start)\n\n    avg_time = np.mean(times)\n    std_time = np.std(times)\n\n    print(f\"Average: {avg_time*1000:.2f} ms\")\n    print(f\"Std dev: {std_time*1000:.2f} ms\")\n    print(f\"Throughput: {len(audio) / avg_time / 1e6:.2f} Msamples/s\")\n\n    return avg_time, std_time",
+          "lower": "import time\nimport numpy as np\nfrom audiosig import time_stretch\n\ndef profile_time_stretch(audio, rate, iterations=100):\n    \"\"\"profile time_stretch performance.\"\"\"\n    times = []\n\n    for _ in range(iterations):\n        start = time.perf_counter()\n        result = time_stretch(audio, rate=rate)\n        end = time.perf_counter()\n        times.append(end - start)\n\n    avg_time = np.mean(times)\n    std_time = np.std(times)\n\n    print(f\"average: {avg_time*1000:.2f} ms\")\n    print(f\"std dev: {std_time*1000:.2f} ms\")\n    print(f\"throughput: {len(audio) / avg_time / 1e6:.2f} msamples/s\")\n\n    return avg_time, std_time"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/api-reference/",
+      "title": "AudioSig API Reference",
+      "snippet": "Change audio duration while approximately preserving pitch.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nrate (float): Stretch fac …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "time_stretch(audio, rate, *, axis=-1, n_fft=2048, hop_length=None)",
+          "text": "Change audio duration while approximately preserving pitch.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nrate (float): Stretch factor. Values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size. Defaults to n_fft // 4\n\n\n\nReturns: np.ndarray - Stretched audio with same dtype as input\n\nRaises:\n\n\nInvalidParameterError: If rate is not positive or parameters are invalid\n\n\nAudioShapeError: If audio array is invalid\n\n\n\nExample:\n\nimport numpy as np\nfrom audiosig import time_stretch\n\naudio = np.random.randn(24000).astype(np.float32)\nfaster = time_stretch(audio, rate=1.2)  # 20% faster\nslower = time_stretch(audio, rate=0.8)  # 20% slower",
+          "lower": "change audio duration while approximately preserving pitch.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nrate (float): stretch factor. values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size. defaults to n_fft // 4\n\n\n\nreturns: np.ndarray - stretched audio with same dtype as input\n\nraises:\n\n\ninvalidparametererror: if rate is not positive or parameters are invalid\n\n\naudioshapeerror: if audio array is invalid\n\n\n\nexample:\n\nimport numpy as np\nfrom audiosig import time_stretch\n\naudio = np.random.randn(24000).astype(np.float32)\nfaster = time_stretch(audio, rate=1.2)  # 20% faster\nslower = time_stretch(audio, rate=0.8)  # 20% slower"
+        },
+        {
+          "anchor": "",
+          "heading": "pitch_shift(audio, *, sample_rate, semitones, bins_per_octave=12, axis=-1, n_fft=2048, hop_length=None, filter_width=32)",
+          "text": "Shift pitch by semitones while preserving exact input duration.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsample_rate (int): Audio sample rate in Hz\n\n\nsemitones (float): Pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): Semitones per octave (default: 12)\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size\n\n\nfilter_width (int): Resampling filter width (default: 32)\n\n\n\nReturns: np.ndarray - Pitch-shifted audio with exact same length as input\n\nExample:\n\nfrom audiosig import pitch_shift\n\n# Raise pitch by 2 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=2.0)\n\n# Lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)",
+          "lower": "shift pitch by semitones while preserving exact input duration.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsample_rate (int): audio sample rate in hz\n\n\nsemitones (float): pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): semitones per octave (default: 12)\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size\n\n\nfilter_width (int): resampling filter width (default: 32)\n\n\n\nreturns: np.ndarray - pitch-shifted audio with exact same length as input\n\nexample:\n\nfrom audiosig import pitch_shift\n\n# raise pitch by 2 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=2.0)\n\n# lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)"
+        },
+        {
+          "anchor": "",
+          "heading": "apply_speech_effects(audio, *, sample_rate, rate=1.0, semitones=0.0, gain_db=0.0, axis=-1, clip=False, n_fft=2048, hop_length=None, filter_width=32, rolloff=0.945)",
+          "text": "Apply numeric speech effects in the order pitch shift, pitch-preserving time\nstretch, and gain. This compositor does not parse SSMD strings and raises\ntyped AudioSig exceptions for invalid input or parameters.",
+          "lower": "apply numeric speech effects in the order pitch shift, pitch-preserving time\nstretch, and gain. this compositor does not parse ssmd strings and raises\ntyped audiosig exceptions for invalid input or parameters."
+        },
+        {
+          "anchor": "",
+          "heading": "resample(audio, *, source_rate, target_rate, axis=-1, filter_width=32, rolloff=0.945, length_mode='round')",
+          "text": "Resample audio with a windowed-sinc anti-aliasing filter.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsource_rate (float): Source sample rate in Hz\n\n\ntarget_rate (float): Target sample rate in Hz\n\n\naxis (int): Sample axis (default: -1)\n\n\nfilter_width (int): Filter kernel width (default: 32)\n\n\nrolloff (float): Filter rolloff frequency (default: 0.945)\n\n\nlength_mode (str): Length calculation mode (‘round’ or ‘ceil’)\n\n\n\nReturns: np.ndarray - Resampled audio\n\nOutput Length:\n\n\nlength_mode='round': round(input_length * target_rate / source_rate)\n\n\nlength_mode='ceil': ceil(input_length * target_rate / source_rate)\n\n\n\nExample:\n\nfrom audiosig import resample\n\n# Downsample from 48kHz to 16kHz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# Upsample from 8kHz to…",
+          "lower": "resample audio with a windowed-sinc anti-aliasing filter.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsource_rate (float): source sample rate in hz\n\n\ntarget_rate (float): target sample rate in hz\n\n\naxis (int): sample axis (default: -1)\n\n\nfilter_width (int): filter kernel width (default: 32)\n\n\nrolloff (float): filter rolloff frequency (default: 0.945)\n\n\nlength_mode (str): length calculation mode (‘round’ or ‘ceil’)\n\n\n\nreturns: np.ndarray - resampled audio\n\noutput length:\n\n\nlength_mode='round': round(input_length * target_rate / source_rate)\n\n\nlength_mode='ceil': ceil(input_length * target_rate / source_rate)\n\n\n\nexample:\n\nfrom audiosig import resample\n\n# downsample from 48khz to 16khz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# upsample from 8khz to…"
+        },
+        {
+          "anchor": "",
+          "heading": "resample_to_length(audio, length, *, axis=-1, filter_width=32, rolloff=0.945)",
+          "text": "Resample audio to an exact sample count along the selected sample axis. This\nis a sample-count operation, not a sample-rate conversion. length may be\nzero; an empty input can only be resampled to zero samples.",
+          "lower": "resample audio to an exact sample count along the selected sample axis. this\nis a sample-count operation, not a sample-rate conversion. length may be\nzero; an empty input can only be resampled to zero samples."
+        },
+        {
+          "anchor": "",
+          "heading": "resample_speed(audio, speed, *, axis=-1, filter_width=32, rolloff=0.945)",
+          "text": "Change playback speed by resampling. Values above one make audio shorter and\nhigher pitched; values below one make it longer and lower pitched. Use\ntime_stretch when pitch should remain approximately unchanged.\n\nfrom audiosig import resample_speed, resample_to_length\n\nexact = resample_to_length(audio_48k, 12_000)\nfaster = resample_speed(audio_48k, speed=1.25)",
+          "lower": "change playback speed by resampling. values above one make audio shorter and\nhigher pitched; values below one make it longer and lower pitched. use\ntime_stretch when pitch should remain approximately unchanged.\n\nfrom audiosig import resample_speed, resample_to_length\n\nexact = resample_to_length(audio_48k, 12_000)\nfaster = resample_speed(audio_48k, speed=1.25)"
+        },
+        {
+          "anchor": "",
+          "heading": "apply_gain_db(audio, db, *, clip=False)",
+          "text": "Apply a decibel gain to audio.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\ndb (float): Gain in decibels (negative = attenuation)\n\n\nclip (bool): If True, clip output to [-1.0, 1.0] (default: False)\n\n\n\nReturns: np.ndarray - Gain-adjusted audio\n\nExample:\n\nfrom audiosig import apply_gain_db\n\nlouder = apply_gain_db(audio, db=6.0)    # +6 dB gain\nquieter = apply_gain_db(audio, db=-3.0)  # -3 dB attenuation\nclipped = apply_gain_db(audio, db=12.0, clip=True)",
+          "lower": "apply a decibel gain to audio.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\ndb (float): gain in decibels (negative = attenuation)\n\n\nclip (bool): if true, clip output to [-1.0, 1.0] (default: false)\n\n\n\nreturns: np.ndarray - gain-adjusted audio\n\nexample:\n\nfrom audiosig import apply_gain_db\n\nlouder = apply_gain_db(audio, db=6.0)    # +6 db gain\nquieter = apply_gain_db(audio, db=-3.0)  # -3 db attenuation\nclipped = apply_gain_db(audio, db=12.0, clip=true)"
+        },
+        {
+          "anchor": "",
+          "heading": "peak_normalize(audio, *, peak=1.0, eps=1e-12)",
+          "text": "Scale audio so its absolute peak equals the target value.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\npeak (float): Target peak amplitude (default: 1.0)\n\n\neps (float): Silence threshold (default: 1e-12)\n\n\n\nReturns: np.ndarray - Normalized audio\n\nExample:\n\nfrom audiosig import peak_normalize\n\n# Normalize to 0.9 peak\nnormalized = peak_normalize(audio, peak=0.9)\n\n# Silent audio is returned unchanged\nsilent = np.zeros(1000, dtype=np.float32)\nstill_silent = peak_normalize(silent)",
+          "lower": "scale audio so its absolute peak equals the target value.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\npeak (float): target peak amplitude (default: 1.0)\n\n\neps (float): silence threshold (default: 1e-12)\n\n\n\nreturns: np.ndarray - normalized audio\n\nexample:\n\nfrom audiosig import peak_normalize\n\n# normalize to 0.9 peak\nnormalized = peak_normalize(audio, peak=0.9)\n\n# silent audio is returned unchanged\nsilent = np.zeros(1000, dtype=np.float32)\nstill_silent = peak_normalize(silent)"
+        },
+        {
+          "anchor": "",
+          "heading": "normalized_energy_vad(audio, sample_rate, *, frame_duration_ms=5.0, energy_threshold=0.02, axis=-1, pad_end=False)",
+          "text": "Detect voice activity using normalized RMS energy.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsample_rate (int): Audio sample rate in Hz\n\n\nframe_duration_ms (float): Frame duration in milliseconds (default: 5.0)\n\n\nenergy_threshold (float): Threshold in [0, 1] (default: 0.02)\n\n\naxis (int): Sample axis (default: -1)\n\n\npad_end (bool): Include trailing partial frame (default: False)\n\n\n\nReturns: np.ndarray - Boolean array indicating active frames\n\nExample:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)\n\n# Count active frames\nactive_frames = np.sum(activity)",
+          "lower": "detect voice activity using normalized rms energy.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsample_rate (int): audio sample rate in hz\n\n\nframe_duration_ms (float): frame duration in milliseconds (default: 5.0)\n\n\nenergy_threshold (float): threshold in [0, 1] (default: 0.02)\n\n\naxis (int): sample axis (default: -1)\n\n\npad_end (bool): include trailing partial frame (default: false)\n\n\n\nreturns: np.ndarray - boolean array indicating active frames\n\nexample:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)\n\n# count active frames\nactive_frames = np.sum(activity)"
+        },
+        {
+          "anchor": "",
+          "heading": "relative_db_vad(audio, *, frame_length=2048, hop_length=512, threshold_db=40.0, top_db=None, axis=-1, pad_end=False)",
+          "text": "Detect voice activity using relative dB threshold.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nframe_length (int): Analysis frame length (default: 2048)\n\n\nhop_length (int): Hop length (default: 512)\n\n\nthreshold_db (float): dB below peak to consider active (default: 40.0)\n\n\ntop_db (float, optional): Alias for threshold_db\n\n\naxis (int): Sample axis (default: -1)\n\n\npad_end (bool): Include trailing partial frame (default: False)\n\n\n\nReturns: np.ndarray - Boolean array indicating active frames",
+          "lower": "detect voice activity using relative db threshold.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nframe_length (int): analysis frame length (default: 2048)\n\n\nhop_length (int): hop length (default: 512)\n\n\nthreshold_db (float): db below peak to consider active (default: 40.0)\n\n\ntop_db (float, optional): alias for threshold_db\n\n\naxis (int): sample axis (default: -1)\n\n\npad_end (bool): include trailing partial frame (default: false)\n\n\n\nreturns: np.ndarray - boolean array indicating active frames"
+        },
+        {
+          "anchor": "",
+          "heading": "energy_based_vad(audio, sample_rate=None, *, frame_duration_ms=5.0, energy_threshold=None, frame_length=2048, hop_length=512, threshold_db=40.0, top_db=None, axis=-1, pad_end=False)",
+          "text": "Unified voice activity detection interface.\n\nAlgorithm Selection:\n\n\nWith sample_rate: Uses normalized_energy_vad\n\n\nWithout sample_rate: Uses relative_db_vad\n\n\n\nReturns: np.ndarray - Boolean array indicating active frames",
+          "lower": "unified voice activity detection interface.\n\nalgorithm selection:\n\n\nwith sample_rate: uses normalized_energy_vad\n\n\nwithout sample_rate: uses relative_db_vad\n\n\n\nreturns: np.ndarray - boolean array indicating active frames"
+        },
+        {
+          "anchor": "",
+          "heading": "find_speech_start(audio, sample_rate=None, **kwargs)",
+          "text": "Find the first active sample index.\n\nReturns: int - First active sample index, or 0 if no activity",
+          "lower": "find the first active sample index.\n\nreturns: int - first active sample index, or 0 if no activity"
+        },
+        {
+          "anchor": "",
+          "heading": "find_speech_bounds(audio, sample_rate=None, **kwargs)",
+          "text": "Find speech start and end bounds.\n\nReturns: np.ndarray - [start, end] sample indices, or [0, 0] if no speech\n\nExample:\n\nfrom audiosig import find_speech_bounds\n\nbounds = find_speech_bounds(audio, sample_rate=24000)\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech = audio[start:end]",
+          "lower": "find speech start and end bounds.\n\nreturns: np.ndarray - [start, end] sample indices, or [0, 0] if no speech\n\nexample:\n\nfrom audiosig import find_speech_bounds\n\nbounds = find_speech_bounds(audio, sample_rate=24000)\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech = audio[start:end]"
+        },
+        {
+          "anchor": "",
+          "heading": "trim(audio, *, top_db=60.0, ref=np.max, frame_length=2048, hop_length=512, aggregate=np.max, axis=-1, center=True, pad_mode='constant')",
+          "text": "Trim leading and trailing silence.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\ntop_db (float): Silence threshold in dB (default: 60.0)\n\n\nref (float or callable): Reference amplitude (default: np.max)\n\n\nframe_length (int): Analysis frame length (default: 2048)\n\n\nhop_length (int): Hop length (default: 512)\n\n\naggregate (callable): Aggregation function (default: np.max)\n\n\naxis (int): Sample axis (default: -1)\n\n\ncenter (bool): Use centered frames (default: True)\n\n\npad_mode (str): Padding mode (default: ‘constant’)\n\n\n\nReturns: tuple[np.ndarray, np.ndarray] - (trimmed_audio, [start, end])\n\nExample:\n\nfrom audiosig import trim\n\ntrimmed, interval = trim(audio, top_db=40.0)\nprint(f\"Kept samples {interval[0]} to {interval[1]}\")",
+          "lower": "trim leading and trailing silence.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\ntop_db (float): silence threshold in db (default: 60.0)\n\n\nref (float or callable): reference amplitude (default: np.max)\n\n\nframe_length (int): analysis frame length (default: 2048)\n\n\nhop_length (int): hop length (default: 512)\n\n\naggregate (callable): aggregation function (default: np.max)\n\n\naxis (int): sample axis (default: -1)\n\n\ncenter (bool): use centered frames (default: true)\n\n\npad_mode (str): padding mode (default: ‘constant’)\n\n\n\nreturns: tuple[np.ndarray, np.ndarray] - (trimmed_audio, [start, end])\n\nexample:\n\nfrom audiosig import trim\n\ntrimmed, interval = trim(audio, top_db=40.0)\nprint(f\"kept samples {interval[0]} to {interval[1]}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "split(audio, *, top_db=60.0, ref=np.max, frame_length=2048, hop_length=512, aggregate=np.max, axis=-1, center=True, pad_mode='constant')",
+          "text": "Split audio into non-silent intervals.\n\nParameters: Same as trim()\n\nReturns: np.ndarray - Array of [start, end) half-open intervals, shape (n_intervals, 2)\n\nExample:\n\nfrom audiosig import split\n\nintervals = split(audio, top_db=40.0, frame_length=512, hop_length=128)\n\nfor start, end in intervals:\n    segment = audio[start:end]\n    process(segment)",
+          "lower": "split audio into non-silent intervals.\n\nparameters: same as trim()\n\nreturns: np.ndarray - array of [start, end) half-open intervals, shape (n_intervals, 2)\n\nexample:\n\nfrom audiosig import split\n\nintervals = split(audio, top_db=40.0, frame_length=512, hop_length=128)\n\nfor start, end in intervals:\n    segment = audio[start:end]\n    process(segment)"
+        },
+        {
+          "anchor": "",
+          "heading": "frame_signal(audio, *, frame_length=None, hop_length=None, sample_rate=None, frame_ms=20.0, hop_ms=10.0, axis=-1, center=False, pad_mode='constant', pad_end=False)",
+          "text": "Split audio into overlapping frames.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nframe_length (int, optional): Frame length in samples\n\n\nhop_length (int, optional): Hop length in samples\n\n\nsample_rate (int, optional): Sample rate (for ms conversion)\n\n\nframe_ms (float): Frame duration in ms (default: 20.0)\n\n\nhop_ms (float): Hop duration in ms (default: 10.0)\n\n\naxis (int): Sample axis (default: -1)\n\n\ncenter (bool): Center frames with padding (default: False)\n\n\npad_mode (str): Padding mode (default: ‘constant’)\n\n\npad_end (bool): Pad to include trailing samples (default: False)\n\n\n\nReturns: np.ndarray - Framed audio with shape (..., n_frames, frame_length)",
+          "lower": "split audio into overlapping frames.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nframe_length (int, optional): frame length in samples\n\n\nhop_length (int, optional): hop length in samples\n\n\nsample_rate (int, optional): sample rate (for ms conversion)\n\n\nframe_ms (float): frame duration in ms (default: 20.0)\n\n\nhop_ms (float): hop duration in ms (default: 10.0)\n\n\naxis (int): sample axis (default: -1)\n\n\ncenter (bool): center frames with padding (default: false)\n\n\npad_mode (str): padding mode (default: ‘constant’)\n\n\npad_end (bool): pad to include trailing samples (default: false)\n\n\n\nreturns: np.ndarray - framed audio with shape (..., n_frames, frame_length)"
+        },
+        {
+          "anchor": "",
+          "heading": "frame_rms(audio, *, frame_length=2048, hop_length=512, axis=-1, center=True, pad_mode='constant', pad_end=False, normalize=False, dtype=np.float32)",
+          "text": "Compute RMS amplitude for each frame.\n\nReturns: np.ndarray - RMS values per frame\n\nSet pad_end=True to include a zero-padded trailing partial frame. Set\nnormalize=True to scale each leading-dimension slice independently to\n[0, 1].",
+          "lower": "compute rms amplitude for each frame.\n\nreturns: np.ndarray - rms values per frame\n\nset pad_end=true to include a zero-padded trailing partial frame. set\nnormalize=true to scale each leading-dimension slice independently to\n[0, 1]."
+        },
+        {
+          "anchor": "",
+          "heading": "short_time_energy(audio, *, frame_length=2048, hop_length=512, axis=-1, center=False, pad_end=False)",
+          "text": "Calculate mean-square energy for each frame.\n\nReturns: np.ndarray - Energy values per frame",
+          "lower": "calculate mean-square energy for each frame.\n\nreturns: np.ndarray - energy values per frame"
+        },
+        {
+          "anchor": "",
+          "heading": "zero_crossing_rate(audio, *, frame_length=2048, hop_length=512, axis=-1, center=False, pad_end=False, normalize=False)",
+          "text": "Calculate zero-crossing rate for each frame.\n\nParameters:\n\n\nnormalize (bool): Normalize to [0, 1] range (default: False)\n\n\n\nReturns: np.ndarray - Zero-crossing rates per frame",
+          "lower": "calculate zero-crossing rate for each frame.\n\nparameters:\n\n\nnormalize (bool): normalize to [0, 1] range (default: false)\n\n\n\nreturns: np.ndarray - zero-crossing rates per frame"
+        },
+        {
+          "anchor": "",
+          "heading": "spectral_flux(audio, *, frame_length=2048, hop_length=512, axis=-1, center=False, pad_end=False, window='hann', normalize=False)",
+          "text": "Calculate spectral flux between adjacent frames.\n\nParameters:\n\n\nwindow (str): Window function (‘hann’ or ‘hamming’)\n\n\nnormalize (bool): Normalize to [0, 1] range (default: False)\n\n\n\nReturns: np.ndarray - Spectral flux values per frame",
+          "lower": "calculate spectral flux between adjacent frames.\n\nparameters:\n\n\nwindow (str): window function (‘hann’ or ‘hamming’)\n\n\nnormalize (bool): normalize to [0, 1] range (default: false)\n\n\n\nreturns: np.ndarray - spectral flux values per frame"
+        },
+        {
+          "anchor": "",
+          "heading": "amplitude_to_db(amplitude, *, ref=1.0, amin=1e-5, top_db=None)",
+          "text": "Convert amplitude to decibels.\n\nParameters:\n\n\namplitude (np.ndarray): Input amplitude values\n\n\nref (float or callable): Reference amplitude (default: 1.0)\n\n\namin (float): Minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): Clip to this range below peak\n\n\n\nReturns: np.ndarray - Decibel values",
+          "lower": "convert amplitude to decibels.\n\nparameters:\n\n\namplitude (np.ndarray): input amplitude values\n\n\nref (float or callable): reference amplitude (default: 1.0)\n\n\namin (float): minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): clip to this range below peak\n\n\n\nreturns: np.ndarray - decibel values"
+        },
+        {
+          "anchor": "",
+          "heading": "power_to_db(power, *, ref=1.0, amin=1e-10, top_db=None)",
+          "text": "Convert power to decibels.\n\nParameters:\n\n\npower (np.ndarray): Input power values\n\n\nref (float or callable): Reference power (default: 1.0)\n\n\namin (float): Minimum power floor (default: 1e-10)\n\n\ntop_db (float, optional): Clip to this range below peak\n\n\n\nReturns: np.ndarray - Decibel values",
+          "lower": "convert power to decibels.\n\nparameters:\n\n\npower (np.ndarray): input power values\n\n\nref (float or callable): reference power (default: 1.0)\n\n\namin (float): minimum power floor (default: 1e-10)\n\n\ntop_db (float, optional): clip to this range below peak\n\n\n\nreturns: np.ndarray - decibel values"
+        },
+        {
+          "anchor": "",
+          "heading": "rms(audio, *, axis=-1)",
+          "text": "Compute overall RMS amplitude.\n\nReturns: np.ndarray - RMS value(s)",
+          "lower": "compute overall rms amplitude.\n\nreturns: np.ndarray - rms value(s)"
+        },
+        {
+          "anchor": "",
+          "heading": "abs2(values, *, dtype=None)",
+          "text": "Compute squared magnitude for real or complex values.\n\nReturns: np.ndarray - Squared values",
+          "lower": "compute squared magnitude for real or complex values.\n\nreturns: np.ndarray - squared values"
+        },
+        {
+          "anchor": "",
+          "heading": "frames_to_samples(frames, *, hop_length=512, n_fft=None)",
+          "text": "Convert frame indices to sample indices.\n\nReturns: int or np.ndarray - Sample indices",
+          "lower": "convert frame indices to sample indices.\n\nreturns: int or np.ndarray - sample indices"
+        },
+        {
+          "anchor": "",
+          "heading": "median_filter_numpy(values, size=3, *, window_size=None, mode='edge')",
+          "text": "Apply median filter along the final axis.\n\nParameters:\n\n\nmode (str): Boundary mode (‘edge’ or ‘truncate’)\n\n\n\nReturns: np.ndarray - Filtered values",
+          "lower": "apply median filter along the final axis.\n\nparameters:\n\n\nmode (str): boundary mode (‘edge’ or ‘truncate’)\n\n\n\nreturns: np.ndarray - filtered values"
+        },
+        {
+          "anchor": "",
+          "heading": "non_silent_frames(audio, *, top_db=60.0, ref=np.max, frame_length=2048, hop_length=512, aggregate=np.max, axis=-1, center=True, pad_mode='constant')",
+          "text": "Return boolean mask of non-silent frames.\n\nReturns: np.ndarray - Boolean mask",
+          "lower": "return boolean mask of non-silent frames.\n\nreturns: np.ndarray - boolean mask"
+        },
+        {
+          "anchor": "",
+          "heading": "activity_to_intervals(activity, *, hop_length, sample_count, min_frames=1)",
+          "text": "Convert frame activity mask to clipped sample intervals. min_frames filters\nout active runs shorter than the requested number of frames.\n\nReturns: np.ndarray - Half-open [start, end) intervals",
+          "lower": "convert frame activity mask to clipped sample intervals. min_frames filters\nout active runs shorter than the requested number of frames.\n\nreturns: np.ndarray - half-open [start, end) intervals"
+        },
+        {
+          "anchor": "",
+          "heading": "AudioSignalError",
+          "text": "Base exception for all AudioSig operations.",
+          "lower": "base exception for all audiosig operations."
+        },
+        {
+          "anchor": "",
+          "heading": "InvalidParameterError(AudioSignalError, ValueError)",
+          "text": "Raised when a parameter is outside the supported domain.",
+          "lower": "raised when a parameter is outside the supported domain."
+        },
+        {
+          "anchor": "",
+          "heading": "AudioShapeError(AudioSignalError, ValueError)",
+          "text": "Raised when audio array shape or dtype is unsupported.",
+          "lower": "raised when audio array shape or dtype is unsupported."
+        },
+        {
+          "anchor": "",
+          "heading": "Type Annotations",
+          "text": "All public functions include full type annotations. The package is PEP 561 compatible with a py.typed marker.\n\nimport numpy as np\nfrom audiosig import time_stretch\n\n# Type checking works with mypy/pyright\nresult: np.ndarray = time_stretch(audio, rate=1.1)",
+          "lower": "all public functions include full type annotations. the package is pep 561 compatible with a py.typed marker.\n\nimport numpy as np\nfrom audiosig import time_stretch\n\n# type checking works with mypy/pyright\nresult: np.ndarray = time_stretch(audio, rate=1.1)"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/changelog/",
+      "title": "audiosig Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nPhase-vocoder time …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Phase-vocoder time stretching with configurable window size and overlap\n\n\nWindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\nPitch shifting via resample-then-stretch that preserves exact input length\n\n\nNormalized-energy and relative-dB voice activity detection algorithms\n\n\nRMS amplitude normalization and peak amplitude utilities\n\n\nSilence trimming and audio splitting with configurable frame parameters\n\n\nAudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\nTyped AudioSignalError exceptions for invalid arrays and parameters\n\n\nNumPy-only dependency with no native extensions required",
+          "lower": "phase-vocoder time stretching with configurable window size and overlap\n\n\nwindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\npitch shifting via resample-then-stretch that preserves exact input length\n\n\nnormalized-energy and relative-db voice activity detection algorithms\n\n\nrms amplitude normalization and peak amplitude utilities\n\n\nsilence trimming and audio splitting with configurable frame parameters\n\n\naudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\ntyped audiosignalerror exceptions for invalid arrays and parameters\n\n\nnumpy-only dependency with no native extensions required"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "README overview plus detailed API, getting-started, advanced, and examples documentation",
+          "lower": "readme overview plus detailed api, getting-started, advanced, and examples documentation"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Full test suite with quality, compatibility, and packaging tests",
+          "lower": "full test suite with quality, compatibility, and packaging tests"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/context/",
+      "title": "audiosig Documentation update context",
+      "snippet": "README.md\n\n\ndocs/index.rst\naudiosig/init.py\n\n\naudiosig/_framing.py\n\n\naudiosig/_resampling.py\n\n\naudiosig/_spectral.py\n\n\naudiosig/_validation. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Document inventory",
+          "text": "README.md\n\n\ndocs/index.rst",
+          "lower": "readme.md\n\n\ndocs/index.rst"
+        },
+        {
+          "anchor": "",
+          "heading": "Unlinked source inventory",
+          "text": "audiosig/init.py\n\n\naudiosig/_framing.py\n\n\naudiosig/_resampling.py\n\n\naudiosig/_spectral.py\n\n\naudiosig/_validation.py\n\n\naudiosig/_version.py\n\n\naudiosig/amplitude.py\n\n\naudiosig/effects.py\n\n\naudiosig/exceptions.py\n\n\naudiosig/silence.py\n\n\ntests/init.py\n\n\ntests/_quality_helpers.py\n\n\ntests/conftest.py\n\n\ntests/test_amplitude.py\n\n\ntests/test_effects.py\n\n\ntests/test_effects_quality.py\n\n\ntests/test_framing.py\n\n\ntests/test_librosa_compat.py\n\n\ntests/test_packaging.py\n\n\ntests/test_resampling.py\n\n\ntests/test_resampling_quality.py\n\n\ntests/test_silence.py\n\n\ntests/test_spectral.py\n\n\ntests/test_spectral_quality.py\n\n\ntests/test_trim_split_quality.py\n\n\ntests/test_trim_vad_compat.py\n\n\ntests/test_vad_quality.py\n\n\ntests/test_validation.py\n\n\n\nCreate or update relevant docs, then add links with docledger links add…",
+          "lower": "audiosig/init.py\n\n\naudiosig/_framing.py\n\n\naudiosig/_resampling.py\n\n\naudiosig/_spectral.py\n\n\naudiosig/_validation.py\n\n\naudiosig/_version.py\n\n\naudiosig/amplitude.py\n\n\naudiosig/effects.py\n\n\naudiosig/exceptions.py\n\n\naudiosig/silence.py\n\n\ntests/init.py\n\n\ntests/_quality_helpers.py\n\n\ntests/conftest.py\n\n\ntests/test_amplitude.py\n\n\ntests/test_effects.py\n\n\ntests/test_effects_quality.py\n\n\ntests/test_framing.py\n\n\ntests/test_librosa_compat.py\n\n\ntests/test_packaging.py\n\n\ntests/test_resampling.py\n\n\ntests/test_resampling_quality.py\n\n\ntests/test_silence.py\n\n\ntests/test_spectral.py\n\n\ntests/test_spectral_quality.py\n\n\ntests/test_trim_split_quality.py\n\n\ntests/test_trim_vad_compat.py\n\n\ntests/test_vad_quality.py\n\n\ntests/test_validation.py\n\n\n\ncreate or update relevant docs, then add links with docledger links add…"
+        },
+        {
+          "anchor": "",
+          "heading": "Unlinked changed sources",
+          "text": "None",
+          "lower": "none"
+        },
+        {
+          "anchor": "",
+          "heading": "Validation commands",
+          "text": "None configured",
+          "lower": "none configured"
+        },
+        {
+          "anchor": "",
+          "heading": "Agent rules",
+          "text": "Inspect affected or selected source units before editing docs.\n\n\nRewrite only the selected sections unless broader consistency requires more.\n\n\nDo not invent behavior.\n\n\nRun the configured validation commands when they exist.\n\n\nRun docledger mark-fresh --doc DOC --section SECTION --reason \"Docs updated after scan version VERSION.\" only after docs are updated and validated.",
+          "lower": "inspect affected or selected source units before editing docs.\n\n\nrewrite only the selected sections unless broader consistency requires more.\n\n\ndo not invent behavior.\n\n\nrun the configured validation commands when they exist.\n\n\nrun docledger mark-fresh --doc doc --section section --reason \"docs updated after scan version version.\" only after docs are updated and validated."
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/examples/",
+      "title": "AudioSig Examples",
+      "snippet": "import numpy as np\n\ndef create_sine_wave(frequency=440, duration=1.0, sample_rate=24000):\n    \"\"\"Create a sine wave for testing.\"\"\"\n    t = …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Creating Test Signals",
+          "text": "import numpy as np\n\ndef create_sine_wave(frequency=440, duration=1.0, sample_rate=24000):\n    \"\"\"Create a sine wave for testing.\"\"\"\n    t = np.linspace(0, duration, int(sample_rate * duration), dtype=np.float32)\n    return np.sin(2 * np.pi * frequency * t)\n\ndef create_chirp(f_start=220, f_end=880, duration=1.0, sample_rate=24000):\n    \"\"\"Create a frequency sweep for testing.\"\"\"\n    t = np.linspace(0, duration, int(sample_rate * duration), dtype=np.float32)\n    frequency = f_start + (f_end - f_start) * t / duration\n    phase = 2 * np.pi * (f_start * t + (f_end - f_start) * t**2 / (2 * duration))\n    return np.sin(phase).astype(np.float32)",
+          "lower": "import numpy as np\n\ndef create_sine_wave(frequency=440, duration=1.0, sample_rate=24000):\n    \"\"\"create a sine wave for testing.\"\"\"\n    t = np.linspace(0, duration, int(sample_rate * duration), dtype=np.float32)\n    return np.sin(2 * np.pi * frequency * t)\n\ndef create_chirp(f_start=220, f_end=880, duration=1.0, sample_rate=24000):\n    \"\"\"create a frequency sweep for testing.\"\"\"\n    t = np.linspace(0, duration, int(sample_rate * duration), dtype=np.float32)\n    frequency = f_start + (f_end - f_start) * t / duration\n    phase = 2 * np.pi * (f_start * t + (f_end - f_start) * t**2 / (2 * duration))\n    return np.sin(phase).astype(np.float32)"
+        },
+        {
+          "anchor": "",
+          "heading": "Time Stretching Examples",
+          "text": "from audiosig import time_stretch\n\n# Create a 1-second tone\naudio = create_sine_wave(440, duration=1.0)\n\n# Speed up by 50% (shorter duration)\nfaster = time_stretch(audio, rate=1.5)\nprint(f\"Original: {len(audio)} samples\")\nprint(f\"Faster: {len(faster)} samples\")  # ~16000 samples\n\n# Slow down by 50% (longer duration)\nslower = time_stretch(audio, rate=0.5)\nprint(f\"Slower: {len(slower)} samples\")  # ~48000 samples\n\n# Music tempo adjustment\ndef adjust_tempo(audio, tempo_factor):\n    \"\"\"Adjust audio tempo by a factor.\"\"\"\n    return time_stretch(audio, rate=tempo_factor)\n\n# Speech rate adjustment\ndef slow_speech(audio, factor=0.8):\n    \"\"\"Make speech slower and clearer.\"\"\"\n    return time_stretch(audio, rate=factor)",
+          "lower": "from audiosig import time_stretch\n\n# create a 1-second tone\naudio = create_sine_wave(440, duration=1.0)\n\n# speed up by 50% (shorter duration)\nfaster = time_stretch(audio, rate=1.5)\nprint(f\"original: {len(audio)} samples\")\nprint(f\"faster: {len(faster)} samples\")  # ~16000 samples\n\n# slow down by 50% (longer duration)\nslower = time_stretch(audio, rate=0.5)\nprint(f\"slower: {len(slower)} samples\")  # ~48000 samples\n\n# music tempo adjustment\ndef adjust_tempo(audio, tempo_factor):\n    \"\"\"adjust audio tempo by a factor.\"\"\"\n    return time_stretch(audio, rate=tempo_factor)\n\n# speech rate adjustment\ndef slow_speech(audio, factor=0.8):\n    \"\"\"make speech slower and clearer.\"\"\"\n    return time_stretch(audio, rate=factor)"
+        },
+        {
+          "anchor": "",
+          "heading": "Pitch Shifting Examples",
+          "text": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# Lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# Musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"Transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# A4 (440 Hz) to C5 (523 Hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)",
+          "lower": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# a4 (440 hz) to c5 (523 hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)"
+        },
+        {
+          "anchor": "",
+          "heading": "Resampling Examples",
+          "text": "from audiosig import resample, resample_speed, resample_to_length\n\n# Create audio at 48kHz\naudio_48k = create_sine_wave(440, duration=1.0, sample_rate=48000)\n\n# Downsample to 16kHz\naudio_16k = resample(audio_48k, source_rate=48000, target_rate=16000)\nprint(f\"48kHz: {len(audio_48k)} samples\")\nprint(f\"16kHz: {len(audio_16k)} samples\")  # 1/3 of original\n\n# Upsample to 96kHz\naudio_96k = resample(audio_48k, source_rate=48000, target_rate=96000)\nprint(f\"96kHz: {len(audio_96k)} samples\")  # 2x original\n\n# Exact sample-count and playback-speed operations\nexact = resample_to_length(audio_48k, 12_000)\nfaster_playback = resample_speed(audio_48k, speed=1.25)",
+          "lower": "from audiosig import resample, resample_speed, resample_to_length\n\n# create audio at 48khz\naudio_48k = create_sine_wave(440, duration=1.0, sample_rate=48000)\n\n# downsample to 16khz\naudio_16k = resample(audio_48k, source_rate=48000, target_rate=16000)\nprint(f\"48khz: {len(audio_48k)} samples\")\nprint(f\"16khz: {len(audio_16k)} samples\")  # 1/3 of original\n\n# upsample to 96khz\naudio_96k = resample(audio_48k, source_rate=48000, target_rate=96000)\nprint(f\"96khz: {len(audio_96k)} samples\")  # 2x original\n\n# exact sample-count and playback-speed operations\nexact = resample_to_length(audio_48k, 12_000)\nfaster_playback = resample_speed(audio_48k, speed=1.25)"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic VAD Usage",
+          "text": "from audiosig import normalized_energy_vad, energy_based_vad\n\n# Create audio with silence and speech\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 2, dtype=np.float32)  # 0.5s silence\nspeech = create_sine_wave(440, duration=0.5, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# Detect voice activity\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.1,\n)\n\nprint(f\"Active frames: {np.sum(activity)}\")\nprint(f\"Total frames: {len(activity)}\")",
+          "lower": "from audiosig import normalized_energy_vad, energy_based_vad\n\n# create audio with silence and speech\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 2, dtype=np.float32)  # 0.5s silence\nspeech = create_sine_wave(440, duration=0.5, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# detect voice activity\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.1,\n)\n\nprint(f\"active frames: {np.sum(activity)}\")\nprint(f\"total frames: {len(activity)}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Tuning VAD Parameters",
+          "text": "from audiosig import normalized_energy_vad\n\ndef detect_speech(audio, sample_rate, sensitivity='medium'):\n    \"\"\"Detect speech with different sensitivity levels.\"\"\"\n    thresholds = {\n        'low': 0.05,      # More permissive\n        'medium': 0.15,   # Balanced\n        'high': 0.30,     # More strict\n    }\n\n    return normalized_energy_vad(\n        audio,\n        sample_rate=sample_rate,\n        frame_duration_ms=10,\n        energy_threshold=thresholds[sensitivity],\n    )\n\n# Usage\nactivity = detect_speech(audio, sample_rate=24000, sensitivity='medium')",
+          "lower": "from audiosig import normalized_energy_vad\n\ndef detect_speech(audio, sample_rate, sensitivity='medium'):\n    \"\"\"detect speech with different sensitivity levels.\"\"\"\n    thresholds = {\n        'low': 0.05,      # more permissive\n        'medium': 0.15,   # balanced\n        'high': 0.30,     # more strict\n    }\n\n    return normalized_energy_vad(\n        audio,\n        sample_rate=sample_rate,\n        frame_duration_ms=10,\n        energy_threshold=thresholds[sensitivity],\n    )\n\n# usage\nactivity = detect_speech(audio, sample_rate=24000, sensitivity='medium')"
+        },
+        {
+          "anchor": "",
+          "heading": "Finding Speech Boundaries",
+          "text": "from audiosig import find_speech_bounds, find_speech_start\n\n# Create test audio\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 2, dtype=np.float32)\nspeech = create_sine_wave(440, duration=1.0, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# Find speech bounds\nbounds = find_speech_bounds(audio, sample_rate=sample_rate)\nprint(f\"Speech from {bounds[0]} to {bounds[1]}\")\n\n# Extract just the speech\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech_only = audio[start:end]\n\n# Find speech start\nstart_idx = find_speech_start(audio, sample_rate=sample_rate)\nprint(f\"Speech starts at sample {start_idx}\")",
+          "lower": "from audiosig import find_speech_bounds, find_speech_start\n\n# create test audio\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 2, dtype=np.float32)\nspeech = create_sine_wave(440, duration=1.0, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# find speech bounds\nbounds = find_speech_bounds(audio, sample_rate=sample_rate)\nprint(f\"speech from {bounds[0]} to {bounds[1]}\")\n\n# extract just the speech\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech_only = audio[start:end]\n\n# find speech start\nstart_idx = find_speech_start(audio, sample_rate=sample_rate)\nprint(f\"speech starts at sample {start_idx}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Trimming",
+          "text": "from audiosig import trim\n\n# Create audio with leading/trailing silence\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 4, dtype=np.float32)  # 0.25s silence\nspeech = create_sine_wave(440, duration=0.5, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# Trim silence\ntrimmed, interval = trim(audio, top_db=40.0)\n\nprint(f\"Original length: {len(audio)}\")\nprint(f\"Trimmed length: {len(trimmed)}\")\nprint(f\"Kept samples {interval[0]} to {interval[1]}\")",
+          "lower": "from audiosig import trim\n\n# create audio with leading/trailing silence\nsample_rate = 24000\nsilence = np.zeros(sample_rate // 4, dtype=np.float32)  # 0.25s silence\nspeech = create_sine_wave(440, duration=0.5, sample_rate=sample_rate)\naudio = np.concatenate([silence, speech, silence])\n\n# trim silence\ntrimmed, interval = trim(audio, top_db=40.0)\n\nprint(f\"original length: {len(audio)}\")\nprint(f\"trimmed length: {len(trimmed)}\")\nprint(f\"kept samples {interval[0]} to {interval[1]}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Splitting Audio Segments",
+          "text": "from audiosig import split\n\n# Create audio with multiple speech segments\nsample_rate = 24000\nsegment1 = create_sine_wave(440, duration=0.3, sample_rate=sample_rate)\nsegment2 = create_sine_wave(880, duration=0.3, sample_rate=sample_rate)\nsilence = np.zeros(sample_rate // 4, dtype=np.float32)\n\naudio = np.concatenate([segment1, silence, segment2, silence, segment1])\n\n# Split into non-silent segments\nintervals = split(audio, top_db=40.0, frame_length=512, hop_length=128)\n\nprint(f\"Found {len(intervals)} segments\")\nfor i, (start, end) in enumerate(intervals):\n    segment = audio[start:end]\n    print(f\"Segment {i}: samples {start}-{end} ({len(segment)} samples)\")",
+          "lower": "from audiosig import split\n\n# create audio with multiple speech segments\nsample_rate = 24000\nsegment1 = create_sine_wave(440, duration=0.3, sample_rate=sample_rate)\nsegment2 = create_sine_wave(880, duration=0.3, sample_rate=sample_rate)\nsilence = np.zeros(sample_rate // 4, dtype=np.float32)\n\naudio = np.concatenate([segment1, silence, segment2, silence, segment1])\n\n# split into non-silent segments\nintervals = split(audio, top_db=40.0, frame_length=512, hop_length=128)\n\nprint(f\"found {len(intervals)} segments\")\nfor i, (start, end) in enumerate(intervals):\n    segment = audio[start:end]\n    print(f\"segment {i}: samples {start}-{end} ({len(segment)} samples)\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Custom Trimming Parameters",
+          "text": "from audiosig import trim\n\ndef aggressive_trim(audio, top_db=20.0):\n    \"\"\"More aggressive silence removal.\"\"\"\n    return trim(audio, top_db=top_db, frame_length=1024, hop_length=64)\n\ndef gentle_trim(audio, top_db=60.0):\n    \"\"\"More conservative silence removal.\"\"\"\n    return trim(audio, top_db=top_db, frame_length=4096, hop_length=256)\n\n# Use different strategies\ntrimmed_aggressive, _ = aggressive_trim(audio)\ntrimmed_gentle, _ = gentle_trim(audio)",
+          "lower": "from audiosig import trim\n\ndef aggressive_trim(audio, top_db=20.0):\n    \"\"\"more aggressive silence removal.\"\"\"\n    return trim(audio, top_db=top_db, frame_length=1024, hop_length=64)\n\ndef gentle_trim(audio, top_db=60.0):\n    \"\"\"more conservative silence removal.\"\"\"\n    return trim(audio, top_db=top_db, frame_length=4096, hop_length=256)\n\n# use different strategies\ntrimmed_aggressive, _ = aggressive_trim(audio)\ntrimmed_gentle, _ = gentle_trim(audio)"
+        },
+        {
+          "anchor": "",
+          "heading": "Gain Control",
+          "text": "from audiosig import apply_gain_db\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Boost by 6 dB\nboosted = apply_gain_db(audio, db=6.0)\n\n# Attenuate by 10 dB\nattenuated = apply_gain_db(audio, db=-10.0)\n\n# With clipping protection\nloud_clipped = apply_gain_db(audio, db=20.0, clip=True)\n\n# Fade in/out effect\ndef fade_in(audio, duration_samples):\n    \"\"\"Apply linear fade in.\"\"\"\n    fade = np.linspace(0, 1, duration_samples, dtype=audio.dtype)\n    result = audio.copy()\n    result[:duration_samples] *= fade\n    return result\n\ndef fade_out(audio, duration_samples):\n    \"\"\"Apply linear fade out.\"\"\"\n    fade = np.linspace(1, 0, duration_samples, dtype=audio.dtype)\n    result = audio.copy()\n    result[-duration_samples:] *= fade\n    return result",
+          "lower": "from audiosig import apply_gain_db\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# boost by 6 db\nboosted = apply_gain_db(audio, db=6.0)\n\n# attenuate by 10 db\nattenuated = apply_gain_db(audio, db=-10.0)\n\n# with clipping protection\nloud_clipped = apply_gain_db(audio, db=20.0, clip=true)\n\n# fade in/out effect\ndef fade_in(audio, duration_samples):\n    \"\"\"apply linear fade in.\"\"\"\n    fade = np.linspace(0, 1, duration_samples, dtype=audio.dtype)\n    result = audio.copy()\n    result[:duration_samples] *= fade\n    return result\n\ndef fade_out(audio, duration_samples):\n    \"\"\"apply linear fade out.\"\"\"\n    fade = np.linspace(1, 0, duration_samples, dtype=audio.dtype)\n    result = audio.copy()\n    result[-duration_samples:] *= fade\n    return result"
+        },
+        {
+          "anchor": "",
+          "heading": "Normalization",
+          "text": "from audiosig import peak_normalize\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000) * 0.5\n\n# Normalize to peak 0.9\nnormalized = peak_normalize(audio, peak=0.9)\nprint(f\"Peak before: {np.max(np.abs(audio)):.3f}\")\nprint(f\"Peak after: {np.max(np.abs(normalized)):.3f}\")\n\n# Normalize to different targets\ndef normalize_to_target(audio, target_peak=0.95):\n    \"\"\"Normalize to specific peak level.\"\"\"\n    return peak_normalize(audio, peak=target_peak)",
+          "lower": "from audiosig import peak_normalize\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000) * 0.5\n\n# normalize to peak 0.9\nnormalized = peak_normalize(audio, peak=0.9)\nprint(f\"peak before: {np.max(np.abs(audio)):.3f}\")\nprint(f\"peak after: {np.max(np.abs(normalized)):.3f}\")\n\n# normalize to different targets\ndef normalize_to_target(audio, target_peak=0.95):\n    \"\"\"normalize to specific peak level.\"\"\"\n    return peak_normalize(audio, peak=target_peak)"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Framing",
+          "text": "from audiosig import frame_signal, frame_rms\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Split into frames\nframes = frame_signal(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n)\nprint(f\"Audio shape: {audio.shape}\")\nprint(f\"Frames shape: {frames.shape}\")  # (n_frames, 2048)\n\n# Compute RMS per frame\nrms_values = frame_rms(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n)\nprint(f\"RMS shape: {rms_values.shape}\")  # (n_frames,)",
+          "lower": "from audiosig import frame_signal, frame_rms\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# split into frames\nframes = frame_signal(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n)\nprint(f\"audio shape: {audio.shape}\")\nprint(f\"frames shape: {frames.shape}\")  # (n_frames, 2048)\n\n# compute rms per frame\nrms_values = frame_rms(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n)\nprint(f\"rms shape: {rms_values.shape}\")  # (n_frames,)"
+        },
+        {
+          "anchor": "",
+          "heading": "Feature Extraction",
+          "text": "from audiosig import (\n    short_time_energy,\n    zero_crossing_rate,\n    spectral_flux,\n)\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Short-time energy\nenergy = short_time_energy(audio, frame_length=2048, hop_length=512)\n\n# Zero-crossing rate\nzcr = zero_crossing_rate(audio, frame_length=2048, hop_length=512)\n\n# Spectral flux\nflux = spectral_flux(audio, frame_length=2048, hop_length=512)\n\nprint(f\"Energy shape: {energy.shape}\")\nprint(f\"ZCR shape: {zcr.shape}\")\nprint(f\"Flux shape: {flux.shape}\")",
+          "lower": "from audiosig import (\n    short_time_energy,\n    zero_crossing_rate,\n    spectral_flux,\n)\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# short-time energy\nenergy = short_time_energy(audio, frame_length=2048, hop_length=512)\n\n# zero-crossing rate\nzcr = zero_crossing_rate(audio, frame_length=2048, hop_length=512)\n\n# spectral flux\nflux = spectral_flux(audio, frame_length=2048, hop_length=512)\n\nprint(f\"energy shape: {energy.shape}\")\nprint(f\"zcr shape: {zcr.shape}\")\nprint(f\"flux shape: {flux.shape}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Audio Preprocessing Pipeline",
+          "text": "import numpy as np\nfrom audiosig import (\n    trim,\n    peak_normalize,\n    resample,\n    normalized_energy_vad,\n)\n\ndef preprocess_audio(audio, source_rate, target_rate=16000):\n    \"\"\"Complete audio preprocessing pipeline.\"\"\"\n    # 1. Trim silence\n    trimmed, _ = trim(audio, top_db=40.0)\n\n    # 2. Normalize amplitude\n    normalized = peak_normalize(trimmed, peak=0.95)\n\n    # 3. Resample if needed\n    if source_rate != target_rate:\n        resampled = resample(\n            normalized,\n            source_rate=source_rate,\n            target_rate=target_rate,\n        )\n    else:\n        resampled = normalized\n\n    return resampled\n\n# Usage\naudio_48k = load_audio(\"speech.wav\")  # Your audio loading function\nprocessed = preprocess_audio(audio_48k, source_rate=48000, target_rate=16000)",
+          "lower": "import numpy as np\nfrom audiosig import (\n    trim,\n    peak_normalize,\n    resample,\n    normalized_energy_vad,\n)\n\ndef preprocess_audio(audio, source_rate, target_rate=16000):\n    \"\"\"complete audio preprocessing pipeline.\"\"\"\n    # 1. trim silence\n    trimmed, _ = trim(audio, top_db=40.0)\n\n    # 2. normalize amplitude\n    normalized = peak_normalize(trimmed, peak=0.95)\n\n    # 3. resample if needed\n    if source_rate != target_rate:\n        resampled = resample(\n            normalized,\n            source_rate=source_rate,\n            target_rate=target_rate,\n        )\n    else:\n        resampled = normalized\n\n    return resampled\n\n# usage\naudio_48k = load_audio(\"speech.wav\")  # your audio loading function\nprocessed = preprocess_audio(audio_48k, source_rate=48000, target_rate=16000)"
+        },
+        {
+          "anchor": "",
+          "heading": "Speech Segmentation",
+          "text": "import numpy as np\nfrom audiosig import split, trim, normalized_energy_vad\n\ndef segment_speech(audio, sample_rate, min_duration_ms=100):\n    \"\"\"Segment audio into speech portions.\"\"\"\n    # Split into non-silent intervals\n    intervals = split(\n        audio,\n        top_db=35.0,\n        frame_length=512,\n        hop_length=128,\n    )\n\n    # Filter by minimum duration\n    min_samples = int(sample_rate * min_duration_ms / 1000)\n    segments = []\n\n    for start, end in intervals:\n        if (end - start) >= min_samples:\n            segments.append(audio[start:end])\n\n    return segments\n\n# Usage\naudio = load_audio(\"long_speech.wav\")\nsegments = segment_speech(audio, sample_rate=24000)\nprint(f\"Found {len(segments)} speech segments\")",
+          "lower": "import numpy as np\nfrom audiosig import split, trim, normalized_energy_vad\n\ndef segment_speech(audio, sample_rate, min_duration_ms=100):\n    \"\"\"segment audio into speech portions.\"\"\"\n    # split into non-silent intervals\n    intervals = split(\n        audio,\n        top_db=35.0,\n        frame_length=512,\n        hop_length=128,\n    )\n\n    # filter by minimum duration\n    min_samples = int(sample_rate * min_duration_ms / 1000)\n    segments = []\n\n    for start, end in intervals:\n        if (end - start) >= min_samples:\n            segments.append(audio[start:end])\n\n    return segments\n\n# usage\naudio = load_audio(\"long_speech.wav\")\nsegments = segment_speech(audio, sample_rate=24000)\nprint(f\"found {len(segments)} speech segments\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Batch Processing",
+          "text": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\ndef process_batch(audio_list, rate=1.0, semitones=0.0, sample_rate=24000):\n    \"\"\"Process a batch of audio files.\"\"\"\n    results = []\n\n    for audio in audio_list:\n        # Apply time stretch if needed\n        if rate != 1.0:\n            audio = time_stretch(audio, rate=rate)\n\n        # Apply pitch shift if needed\n        if semitones != 0.0:\n            audio = pitch_shift(\n                audio,\n                sample_rate=sample_rate,\n                semitones=semitones,\n            )\n\n        results.append(audio)\n\n    return results\n\n# Usage\naudio_files = [load_audio(f) for f in file_list]\nprocessed = process_batch(audio_files, rate=1.1, semitones=2.0)",
+          "lower": "import numpy as np\nfrom audiosig import time_stretch, pitch_shift\n\ndef process_batch(audio_list, rate=1.0, semitones=0.0, sample_rate=24000):\n    \"\"\"process a batch of audio files.\"\"\"\n    results = []\n\n    for audio in audio_list:\n        # apply time stretch if needed\n        if rate != 1.0:\n            audio = time_stretch(audio, rate=rate)\n\n        # apply pitch shift if needed\n        if semitones != 0.0:\n            audio = pitch_shift(\n                audio,\n                sample_rate=sample_rate,\n                semitones=semitones,\n            )\n\n        results.append(audio)\n\n    return results\n\n# usage\naudio_files = [load_audio(f) for f in file_list]\nprocessed = process_batch(audio_files, rate=1.1, semitones=2.0)"
+        },
+        {
+          "anchor": "",
+          "heading": "Memory Efficiency",
+          "text": "import numpy as np\n\n# Process in chunks for large files\ndef process_large_audio(audio, chunk_size=24000):\n    \"\"\"Process large audio in chunks.\"\"\"\n    results = []\n    for i in range(0, len(audio), chunk_size):\n        chunk = audio[i:i + chunk_size]\n        processed = process_chunk(chunk)  # Your processing function\n        results.append(processed)\n    return np.concatenate(results)",
+          "lower": "import numpy as np\n\n# process in chunks for large files\ndef process_large_audio(audio, chunk_size=24000):\n    \"\"\"process large audio in chunks.\"\"\"\n    results = []\n    for i in range(0, len(audio), chunk_size):\n        chunk = audio[i:i + chunk_size]\n        processed = process_chunk(chunk)  # your processing function\n        results.append(processed)\n    return np.concatenate(results)"
+        },
+        {
+          "anchor": "",
+          "heading": "Using Appropriate dtypes",
+          "text": "# For storage efficiency\naudio_int16 = (audio * 32767).astype(np.int16)\n\n# For processing (always use float)\naudio_float = audio_int16.astype(np.float32) / 32767.0\n\n# AudioSig preserves dtype\nfrom audiosig import time_stretch\nresult = time_stretch(audio_float, rate=1.1)  # Returns float32",
+          "lower": "# for storage efficiency\naudio_int16 = (audio * 32767).astype(np.int16)\n\n# for processing (always use float)\naudio_float = audio_int16.astype(np.float32) / 32767.0\n\n# audiosig preserves dtype\nfrom audiosig import time_stretch\nresult = time_stretch(audio_float, rate=1.1)  # returns float32"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/getting-started/",
+      "title": "audiosig Getting Started with AudioSig",
+      "snippet": "Install AudioSig from PyPI:\n\npip install audiosig\n\n\n\n\nFor development with test dependencies:\n\npip install audiosig[dev]\nimport numpy as np …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "Install AudioSig from PyPI:\n\npip install audiosig\n\n\n\n\nFor development with test dependencies:\n\npip install audiosig[dev]",
+          "lower": "install audiosig from pypi:\n\npip install audiosig\n\n\n\n\nfor development with test dependencies:\n\npip install audiosig[dev]"
+        },
+        {
+          "anchor": "",
+          "heading": "Basic Audio Processing",
+          "text": "import numpy as np\nfrom audiosig import pitch_shift, time_stretch, resample\n\n# Create a sample audio signal (1 second at 24kHz)\nsample_rate = 24_000\nt = np.linspace(0, 1, sample_rate, dtype=np.float32)\naudio = np.sin(2 * np.pi * 440 * t)  # 440 Hz sine wave\n\n# Time stretching (make audio 20% faster)\nfaster = time_stretch(audio, rate=1.2)\n\n# Pitch shifting (raise pitch by 2 semitones)\nhigher = pitch_shift(audio, sample_rate=sample_rate, semitones=2.0)\n\n# Resampling (convert from 24kHz to 16kHz)\nresampled = resample(audio, source_rate=24_000, target_rate=16_000)",
+          "lower": "import numpy as np\nfrom audiosig import pitch_shift, time_stretch, resample\n\n# create a sample audio signal (1 second at 24khz)\nsample_rate = 24_000\nt = np.linspace(0, 1, sample_rate, dtype=np.float32)\naudio = np.sin(2 * np.pi * 440 * t)  # 440 hz sine wave\n\n# time stretching (make audio 20% faster)\nfaster = time_stretch(audio, rate=1.2)\n\n# pitch shifting (raise pitch by 2 semitones)\nhigher = pitch_shift(audio, sample_rate=sample_rate, semitones=2.0)\n\n# resampling (convert from 24khz to 16khz)\nresampled = resample(audio, source_rate=24_000, target_rate=16_000)"
+        },
+        {
+          "anchor": "",
+          "heading": "Silence Detection and Trimming",
+          "text": "from audiosig import trim, split, normalized_energy_vad\n\n# Trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# Split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# Voice Activity Detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)",
+          "lower": "from audiosig import trim, split, normalized_energy_vad\n\n# trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# voice activity detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Amplitude Processing",
+          "text": "from audiosig import apply_gain_db, peak_normalize\n\n# Apply gain in decibels\nlouder = apply_gain_db(audio, db=6.0)\n\n# Normalize to peak amplitude\nnormalized = peak_normalize(audio, peak=0.9)",
+          "lower": "from audiosig import apply_gain_db, peak_normalize\n\n# apply gain in decibels\nlouder = apply_gain_db(audio, db=6.0)\n\n# normalize to peak amplitude\nnormalized = peak_normalize(audio, peak=0.9)"
+        },
+        {
+          "anchor": "",
+          "heading": "Array Shapes",
+          "text": "AudioSig accepts arrays in these shapes:\n\n\n1D: (samples,) - Single channel audio\n\n\n2D: (channels, samples) - Multi-channel audio\n\n\nnD: (..., samples) - Batch dimensions followed by sample axis\n\n\n\nThe sample axis defaults to the last dimension (axis=-1).",
+          "lower": "audiosig accepts arrays in these shapes:\n\n\n1d: (samples,) - single channel audio\n\n\n2d: (channels, samples) - multi-channel audio\n\n\nnd: (..., samples) - batch dimensions followed by sample axis\n\n\n\nthe sample axis defaults to the last dimension (axis=-1)."
+        },
+        {
+          "anchor": "",
+          "heading": "Data types",
+          "text": "Audio inputs must be float32 or float64 NumPy arrays.\n\n\nAudio transforms such as gain, resampling, time stretching, pitch shifting,\nand trimming preserve the audio dtype.\n\n\nFeature and decibel functions may return float32 or float64 as documented.\n\n\nVAD functions return boolean masks.\n\n\nInterval and frame-index conversion functions return integer values.\n\n\nPublic operations do not mutate the input audio.",
+          "lower": "audio inputs must be float32 or float64 numpy arrays.\n\n\naudio transforms such as gain, resampling, time stretching, pitch shifting,\nand trimming preserve the audio dtype.\n\n\nfeature and decibel functions may return float32 or float64 as documented.\n\n\nvad functions return boolean masks.\n\n\ninterval and frame-index conversion functions return integer values.\n\n\npublic operations do not mutate the input audio."
+        },
+        {
+          "anchor": "",
+          "heading": "Time Stretching",
+          "text": "time_stretch(audio, rate) changes duration while preserving pitch:\n\n\nrate > 1.0: Faster and shorter\n\n\nrate < 1.0: Slower and longer\n\n\nrate = 1.0: No change (returns copy)\n\n\n\nfrom audiosig import time_stretch\n\n# Make audio 50% faster\nfaster = time_stretch(audio, rate=1.5)\n\n# Make audio 30% slower\nslower = time_stretch(audio, rate=0.7)",
+          "lower": "time_stretch(audio, rate) changes duration while preserving pitch:\n\n\nrate > 1.0: faster and shorter\n\n\nrate < 1.0: slower and longer\n\n\nrate = 1.0: no change (returns copy)\n\n\n\nfrom audiosig import time_stretch\n\n# make audio 50% faster\nfaster = time_stretch(audio, rate=1.5)\n\n# make audio 30% slower\nslower = time_stretch(audio, rate=0.7)"
+        },
+        {
+          "anchor": "",
+          "heading": "Pitch Shifting",
+          "text": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: Higher pitch\n\n\nsemitones < 0: Lower pitch\n\n\nsemitones = 0: No change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# Raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# Lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)",
+          "lower": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: higher pitch\n\n\nsemitones < 0: lower pitch\n\n\nsemitones = 0: no change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)"
+        },
+        {
+          "anchor": "",
+          "heading": "Resampling",
+          "text": "resample(audio, source_rate, target_rate) changes sample rate:\n\nfrom audiosig import resample\n\n# Downsample from 48kHz to 16kHz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# Upsample from 8kHz to 24kHz\nupsampled = resample(audio_8k, source_rate=8000, target_rate=24000)",
+          "lower": "resample(audio, source_rate, target_rate) changes sample rate:\n\nfrom audiosig import resample\n\n# downsample from 48khz to 16khz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# upsample from 8khz to 24khz\nupsampled = resample(audio_8k, source_rate=8000, target_rate=24000)"
+        },
+        {
+          "anchor": "",
+          "heading": "Voice Activity Detection (VAD)",
+          "text": "AudioSig provides two VAD algorithms:",
+          "lower": "audiosig provides two vad algorithms:"
+        },
+        {
+          "anchor": "",
+          "heading": "Normalized Energy VAD",
+          "text": "Best for speech detection with known sample rate:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,      # Frame size in milliseconds\n    energy_threshold=0.15,     # Threshold in [0, 1]\n    pad_end=False,             # Discard trailing partial frame\n)",
+          "lower": "best for speech detection with known sample rate:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,      # frame size in milliseconds\n    energy_threshold=0.15,     # threshold in [0, 1]\n    pad_end=false,             # discard trailing partial frame\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Relative dB VAD",
+          "text": "Best for general audio with relative threshold:\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,         # dB below peak\n)",
+          "lower": "best for general audio with relative threshold:\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,         # db below peak\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Unified Interface",
+          "text": "The energy_based_vad function selects the algorithm based on parameters:\n\nfrom audiosig import energy_based_vad\n\n# With sample_rate → normalized energy VAD\nactivity = energy_based_vad(audio, sample_rate=24000)\n\n# Without sample_rate → relative dB VAD\nactivity = energy_based_vad(audio, frame_length=2048, hop_length=512)",
+          "lower": "the energy_based_vad function selects the algorithm based on parameters:\n\nfrom audiosig import energy_based_vad\n\n# with sample_rate → normalized energy vad\nactivity = energy_based_vad(audio, sample_rate=24000)\n\n# without sample_rate → relative db vad\nactivity = energy_based_vad(audio, frame_length=2048, hop_length=512)"
+        },
+        {
+          "anchor": "",
+          "heading": "trim()",
+          "text": "Removes leading and trailing silence:\n\nfrom audiosig import trim\n\ntrimmed, interval = trim(\n    audio,\n    top_db=40.0,          # Silence threshold in dB\n    frame_length=2048,    # Analysis frame size\n    hop_length=128,       # Hop size\n)\n\n# interval is [start, end] sample indices\nprint(f\"Trimmed from sample {interval[0]} to {interval[1]}\")",
+          "lower": "removes leading and trailing silence:\n\nfrom audiosig import trim\n\ntrimmed, interval = trim(\n    audio,\n    top_db=40.0,          # silence threshold in db\n    frame_length=2048,    # analysis frame size\n    hop_length=128,       # hop size\n)\n\n# interval is [start, end] sample indices\nprint(f\"trimmed from sample {interval[0]} to {interval[1]}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "split()",
+          "text": "Returns all non-silent segments:\n\nfrom audiosig import split\n\nintervals = split(\n    audio,\n    top_db=40.0,\n    frame_length=512,\n    hop_length=128,\n)\n\n# Each interval is [start, end) half-open\nfor start, end in intervals:\n    segment = audio[start:end]\n    process_segment(segment)",
+          "lower": "returns all non-silent segments:\n\nfrom audiosig import split\n\nintervals = split(\n    audio,\n    top_db=40.0,\n    frame_length=512,\n    hop_length=128,\n)\n\n# each interval is [start, end) half-open\nfor start, end in intervals:\n    segment = audio[start:end]\n    process_segment(segment)"
+        },
+        {
+          "anchor": "",
+          "heading": "Error Handling",
+          "text": "AudioSig raises typed exceptions for invalid inputs:\n\nfrom audiosig import AudioSignalError, AudioShapeError, InvalidParameterError\n\ntry:\n    result = time_stretch(audio, rate=-1.0)\nexcept InvalidParameterError as e:\n    print(f\"Invalid parameter: {e}\")\nexcept AudioShapeError as e:\n    print(f\"Invalid audio shape: {e}\")\nexcept AudioSignalError as e:\n    print(f\"Audio processing error: {e}\")",
+          "lower": "audiosig raises typed exceptions for invalid inputs:\n\nfrom audiosig import audiosignalerror, audioshapeerror, invalidparametererror\n\ntry:\n    result = time_stretch(audio, rate=-1.0)\nexcept invalidparametererror as e:\n    print(f\"invalid parameter: {e}\")\nexcept audioshapeerror as e:\n    print(f\"invalid audio shape: {e}\")\nexcept audiosignalerror as e:\n    print(f\"audio processing error: {e}\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Next Steps",
+          "text": "See the API Reference for complete function documentation\n\n\nCheck the Examples for more usage patterns\n\n\nRead the Advanced Topics for performance tips and edge cases",
+          "lower": "see the api reference for complete function documentation\n\n\ncheck the examples for more usage patterns\n\n\nread the advanced topics for performance tips and edge cases"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/",
+      "title": "AudioSig",
+      "snippet": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides gain and normalization, resampling, …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "AudioSig",
+          "text": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides gain and normalization, resampling, time and pitch\neffects, silence trimming, interval extraction, frame features, and explicit\nvoice-activity detection policies.",
+          "lower": "audiosig is a portable, numpy-only signal-processing layer for speech and tts\napplications. it provides gain and normalization, resampling, time and pitch\neffects, silence trimming, interval extraction, frame features, and explicit\nvoice-activity detection policies."
+        },
+        {
+          "anchor": "",
+          "heading": "Public behavior",
+          "text": "The package accepts float32 and float64 NumPy arrays and keeps the\nsample axis explicit through the public APIs. split returns clipped,\nhalf-open non-silent sample intervals. normalized_energy_vad preserves its\nhistorical non-padded default; pass pad_end=True when trailing partial\nspeech must be analyzed. find_speech_bounds returns [0, 0] when no\nspeech is found.\n\nSee the repository README for the detailed replacement boundary and downstream\naudit status.",
+          "lower": "the package accepts float32 and float64 numpy arrays and keeps the\nsample axis explicit through the public apis. split returns clipped,\nhalf-open non-silent sample intervals. normalized_energy_vad preserves its\nhistorical non-padded default; pass pad_end=true when trailing partial\nspeech must be analyzed. find_speech_bounds returns [0, 0] when no\nspeech is found.\n\nsee the repository readme for the detailed replacement boundary and downstream\naudit status."
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nUnderstanding the Phase Vocoder\n\nResampling Internals\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDebugging and Profiling",
+          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nunderstanding the phase vocoder\n\nresampling internals\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\ndebugging and profiling"
+        },
+        {
+          "anchor": "",
+          "heading": "Indices and tables",
+          "text": "Index\n\n\nModule Index\n\n\nSearch Page",
+          "lower": "index\n\n\nmodule index\n\n\nsearch page"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/main/requirements/",
+      "title": "audiosig &lt;no title&gt;",
+      "snippet": "sphinx>=7.0.0\nsphinx-rtd-theme>=2.0.0\nsphinx-autobuild>=2024.0.0\nmyst-parser>=2.0.0\npillow",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "",
+          "text": "sphinx>=7.0.0\nsphinx-rtd-theme>=2.0.0\nsphinx-autobuild>=2024.0.0\nmyst-parser>=2.0.0\npillow",
+          "lower": "sphinx>=7.0.0\nsphinx-rtd-theme>=2.0.0\nsphinx-autobuild>=2024.0.0\nmyst-parser>=2.0.0\npillow"
+        }
+      ]
+    }
+  ]
+}

@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -543,6 +543,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="cli-reference">
 <h1>CLI Reference</h1>
 <p>Complete command-line interface reference for ttsforge.</p>
+<p>The command tree is declared with explicit typed Typer wrappers. CLI startup, help, and
+version output remain independent of the ONNX provider. The legacy <code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code>
+configuration grammar accepts repeated pairs, including values that begin with <code class="docutils literal notranslate"><span class="pre">-</span></code>.</p>
 <section id="global-options">
 <h2>Global Options</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>--version<span class="w">    </span><span class="c1"># Show version and exit</span>
@@ -558,106 +561,112 @@ ttsforge<span class="w"> </span>--help<span class="w">       </span><span class=
 </div>
 <section id="arguments">
 <h3>Arguments</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code></dt><dd><p>Path to the EPUB file to convert (required).</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file to convert (required).</p>
 </section>
 <section id="options">
 <h3>Options</h3>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></dt><dd><p>Output file path. Defaults to input filename with new extension in the same directory.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code></dt><dd><p>Output audio format. Choices: <code class="docutils literal notranslate"><span class="pre">wav</span></code>, <code class="docutils literal notranslate"><span class="pre">mp3</span></code>, <code class="docutils literal notranslate"><span class="pre">flac</span></code>, <code class="docutils literal notranslate"><span class="pre">opus</span></code>, <code class="docutils literal notranslate"><span class="pre">m4b</span></code>.
-Default: <code class="docutils literal notranslate"><span class="pre">m4b</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code></dt><dd><p>Voice to use for TTS. Can be a single voice name or a voice blend.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Defaults to input filename with new extension in
+the same directory.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format. Choices: <code class="docutils literal notranslate"><span class="pre">wav</span></code>, <code class="docutils literal notranslate"><span class="pre">mp3</span></code>, <code class="docutils literal notranslate"><span class="pre">flac</span></code>, <code class="docutils literal notranslate"><span class="pre">opus</span></code>,
+<code class="docutils literal notranslate"><span class="pre">m4b</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">m4b</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS. Can be a single voice name or a voice blend.</p>
 <ul class="simple">
 <li><p>Single voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">am_adam</span></code>, etc.</p></li>
 <li><p>Voice blend: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code> (auto-detects blend format)</p></li>
 </ul>
-<p>See <a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> for available voices.
-Default: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Language code for TTS. Choices: <code class="docutils literal notranslate"><span class="pre">a</span></code> (American English), <code class="docutils literal notranslate"><span class="pre">b</span></code> (British English),
-<code class="docutils literal notranslate"><span class="pre">e</span></code> (Spanish), <code class="docutils literal notranslate"><span class="pre">f</span></code> (French), <code class="docutils literal notranslate"><span class="pre">h</span></code> (Hindi), <code class="docutils literal notranslate"><span class="pre">i</span></code> (Italian), <code class="docutils literal notranslate"><span class="pre">j</span></code> (Japanese),
-<code class="docutils literal notranslate"><span class="pre">p</span></code> (Brazilian Portuguese), <code class="docutils literal notranslate"><span class="pre">z</span></code> (Mandarin Chinese).
-Default: auto-detected from EPUB metadata.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code></dt><dd><p>Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).
-By default, language is determined from the voice.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code></dt><dd><p>Speech speed multiplier (0.5 to 2.0). Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code></dt><dd><p>Enable or disable GPU acceleration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></dt><dd><p>Chapters to convert. Examples: <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, <code class="docutils literal notranslate"><span class="pre">1-3,5,7-10</span></code>, <code class="docutils literal notranslate"><span class="pre">all</span></code>.
-Default: all chapters (interactive selection if not specified).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Silence duration between chapters in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code></dt><dd><p>Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--enable-short-sentence</span></code></dt><dd><p>Enable special handling for short sentences (less than 5 words).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code></dt><dd><p>Read chapter titles aloud before chapter content. Default: enabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after chapter title announcement in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code></dt><dd><p>Title metadata for the audiobook. Defaults to EPUB title.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code></dt><dd><p>Author metadata for the audiobook. Defaults to EPUB author.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code></dt><dd><p>Cover image for M4B format.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code></dt><dd><p>Skip confirmation prompts.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--verbose</span></code></dt><dd><p>Show detailed output during conversion.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Text splitting mode. Choices: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">line</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code>.
-Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--resume</span> <span class="pre">/</span> <span class="pre">--no-resume</span></code></dt><dd><p>Enable or disable resume capability. Default: enabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--fresh</span></code></dt><dd><p>Discard any previous progress and start conversion from scratch.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code></dt><dd><p>Generate only SSMD files without creating audio (for manual editing).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code></dt><dd><p>Detect emphasis (italic/bold) from EPUB HTML. Default: disabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code></dt><dd><p>Keep individual chapter audio files after conversion.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code></dt><dd><p>Blend multiple voices (traditional method). Format: <code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2</span></code>.
-Example: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>.</p>
-<p><strong>Note:</strong> You can also specify blends directly in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter,
-which will auto-detect the blend format. Both methods work identically.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--voice-db</span> <span class="pre">PATH</span></code></dt><dd><p>Path to custom voice database (SQLite).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code></dt><dd><p>Path to custom phoneme dictionary JSON file for pronunciation overrides.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code></dt><dd><p>Make phoneme dictionary matching case-sensitive (default: case-insensitive).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code></dt><dd><p>Enable mixed-language support (auto-detect multiple languages in text).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code></dt><dd><p>Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).
-This language is used as the fallback when detection is uncertain.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code></dt><dd><p>Comma-separated list of allowed languages for detection (e.g., <code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>).
-Required when <code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> is enabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Detection confidence threshold for mixed-language mode (0.0-1.0).
-Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>. Higher values require more confidence for language switches.</p>
-</dd>
-</dl>
+<p>See <a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> for available voices. Default: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for TTS. Choices: <code class="docutils literal notranslate"><span class="pre">a</span></code> (American English), <code class="docutils literal notranslate"><span class="pre">b</span></code>
+(British English), <code class="docutils literal notranslate"><span class="pre">e</span></code> (Spanish), <code class="docutils literal notranslate"><span class="pre">f</span></code> (French), <code class="docutils literal notranslate"><span class="pre">h</span></code> (Hindi), <code class="docutils literal notranslate"><span class="pre">i</span></code> (Italian), <code class="docutils literal notranslate"><span class="pre">j</span></code>
+(Japanese), <code class="docutils literal notranslate"><span class="pre">p</span></code> (Brazilian Portuguese), <code class="docutils literal notranslate"><span class="pre">z</span></code> (Mandarin Chinese). Default: auto-detected
+from EPUB metadata.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>). By
+default, language is determined from the voice.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed multiplier (0.5 to 2.0). Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut: <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">auto</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
+<code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name). Available on <code class="docutils literal notranslate"><span class="pre">convert</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span> <span class="pre">convert</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapters to convert. Examples: <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, <code class="docutils literal notranslate"><span class="pre">1-3,5,7-10</span></code>,
+<code class="docutils literal notranslate"><span class="pre">all</span></code>. Default: all chapters (interactive selection if not specified).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence duration between chapters in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--disable-short-sentence</span></code> : Disable special handling for short sentences.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
+<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
+config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code> : Read chapter titles aloud before
+chapter content. Default: enabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code> : Pause after chapter title announcement in seconds. Default:
+<code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code> : Title metadata for the audiobook. Defaults to EPUB title.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code> : Author metadata for the audiobook. Defaults to EPUB author.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code> : Cover image for M4B format.</p>
+</section>
+<section id="ssmd-0-8-options">
+<h3>SSMD 0.8 options</h3>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-header</span> <span class="pre">/</span> <span class="pre">--no-ssmd-header</span></code> : Parse or preserve an exact leading front-matter
+block.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-unknown-header</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">warn</span></code>, <code class="docutils literal notranslate"><span class="pre">error</span></code>, or <code class="docutils literal notranslate"><span class="pre">ignore</span></code> unknown header keys.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-missing-voice</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">error</span></code> or <code class="docutils literal notranslate"><span class="pre">use-default</span></code> for unresolved logical roles.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">MODE</span></code> : <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code>. The default is the
+persisted <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> value, normally <code class="docutils literal notranslate"><span class="pre">plain</span></code>. Plain speaks emphasis unchanged;
+approximate applies segment-level volume/rate changes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> : Convenience opt-in equivalent to
+<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code>. It applies segment-level volume/rate changes to existing
+SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling should
+first be extracted into SSMD annotations. This flag cannot be combined with
+<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-voice</span> <span class="pre">ROLE=VOICE</span></code> : Repeatable explicit Kokoro binding override.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-pause-defaults</span> <span class="pre">/</span> <span class="pre">--no-ssmd-pause-defaults</span></code> and <code class="docutils literal notranslate"><span class="pre">--pause-voice-change</span> <span class="pre">FLOAT</span></code> :
+Explicit pause-default enablement and voice-change timing. Explicit pause values
+override document defaults; persistent config values do not.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-audio-root</span> <span class="pre">PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd-remote-audio</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd-audio-max-bytes</span> <span class="pre">INTEGER</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--ssmd-audio-max-duration</span> <span class="pre">FLOAT</span></code> : Secure bounded audio source policy. Remote sources
+require explicit opt-in.</p>
+</section>
+<section id="ssmd-inspection">
+<h3>SSMD inspection</h3>
+<p>These commands do not initialize ONNX:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>FILE
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>FILE<span class="w"> </span>--strict
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>inspect<span class="w"> </span>FILE<span class="w"> </span>--json
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code> : Skip confirmation prompts.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output during conversion.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode. Choices: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">line</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>,
+<code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--resume</span> <span class="pre">/</span> <span class="pre">--no-resume</span></code> : Enable or disable resume capability. Default: enabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> : Discard any previous progress and start conversion from scratch.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> : Generate only SSMD files without creating audio (for manual
+editing).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code> : Detect emphasis (italic/bold) from EPUB
+HTML. Default: disabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep individual chapter audio files after conversion.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code> : Blend multiple voices (traditional method). Format:
+<code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2</span></code>. Example: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>.</p>
+<p><strong>Note:</strong> You can also specify blends directly in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter, which will
+auto-detect the blend format. Both methods work identically.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-db</span> <span class="pre">PATH</span></code> : Path to custom voice database (SQLite).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file for pronunciation
+overrides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
+(default: case-insensitive).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Enable mixed-language support (auto-detect multiple languages
+in text).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> : Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>,
+<code class="docutils literal notranslate"><span class="pre">en-us</span></code>). This language is used as the fallback when detection is uncertain.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> : Comma-separated list of allowed languages for
+detection (e.g., <code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>). Required when <code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> is enabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> : Detection confidence threshold for mixed-language
+mode (0.0-1.0). Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>. Higher values require more confidence for language
+switches.</p>
 </section>
 <section id="examples">
 <h3>Examples</h3>
@@ -704,10 +713,7 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 </div>
 <section id="id1">
 <h3>Arguments</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code></dt><dd><p>Path to the EPUB file (required).</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
 </section>
 <section id="example">
 <h3>Example</h3>
@@ -725,10 +731,7 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 </div>
 <section id="id2">
 <h3>Arguments</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code></dt><dd><p>Path to the EPUB file (required).</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
 </section>
 <section id="id3">
 <h3>Example</h3>
@@ -746,52 +749,38 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 </div>
 <section id="id4">
 <h3>Arguments</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">TEXT</span></code></dt><dd><p>Text to convert. If not provided, uses default sample text.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">TEXT</span></code> : Text to convert. If not provided, uses default sample text.</p>
 </section>
 <section id="id5">
 <h3>Options</h3>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></dt><dd><p>Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./sample.wav</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code></dt><dd><p>Output audio format. Default: <code class="docutils literal notranslate"><span class="pre">wav</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code></dt><dd><p>TTS voice to use. Can be a single voice or voice blend.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./sample.wav</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format. Default: <code class="docutils literal notranslate"><span class="pre">wav</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : TTS voice to use. Can be a single voice or voice blend.</p>
 <ul class="simple">
 <li><p>Single voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code></p></li>
 <li><p>Voice blend: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code> (auto-detects blend format)</p></li>
 </ul>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Language for TTS.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code></dt><dd><p>Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code></dt><dd><p>Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code></dt><dd><p>Enable or disable GPU acceleration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Text splitting mode.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--verbose</span></code></dt><dd><p>Show detailed output.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code></dt><dd><p>Play audio directly (also saves to file if <code class="docutils literal notranslate"><span class="pre">-o</span></code> specified).</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly (also saves to file if <code class="docutils literal notranslate"><span class="pre">-o</span></code> specified).</p>
 <p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code></dt><dd><p>Enable mixed-language support (auto-detect multiple languages in text).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code></dt><dd><p>Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code></dt><dd><p>Comma-separated list of allowed languages (e.g., <code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Detection confidence threshold (0.0-1.0). Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code></dt><dd><p>Path to custom phoneme dictionary JSON file for pronunciation overrides.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code></dt><dd><p>Make phoneme dictionary matching case-sensitive (default: case-insensitive).</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Enable mixed-language support (auto-detect multiple languages
+in text).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> : Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>,
+<code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> : Comma-separated list of allowed languages (e.g.,
+<code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> : Detection confidence threshold (0.0-1.0). Default:
+<code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file for pronunciation
+overrides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
+(default: case-insensitive).</p>
 </section>
 <section id="id6">
 <h3>Examples</h3>
@@ -822,51 +811,35 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="se">\
 </div>
 <section id="id7">
 <h3>Arguments</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">INPUT_FILE</span></code></dt><dd><p>Path to EPUB/TXT file, or <code class="docutils literal notranslate"><span class="pre">-</span></code> to read from stdin. If omitted, reads stdin.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">INPUT_FILE</span></code> : Path to EPUB/TXT file, or <code class="docutils literal notranslate"><span class="pre">-</span></code> to read from stdin. If omitted, reads
+stdin.</p>
 </section>
 <section id="id8">
 <h3>Options</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code></dt><dd><p>TTS voice to use.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Language for TTS.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code></dt><dd><p>Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code></dt><dd><p>Enable or disable GPU acceleration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">MODE</span></code></dt><dd><p>Content mode: <code class="docutils literal notranslate"><span class="pre">chapters</span></code> or <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></dt><dd><p>Chapter selection for <code class="docutils literal notranslate"><span class="pre">chapters</span></code> mode.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--pages</span> <span class="pre">SELECTION</span></code></dt><dd><p>Page selection for <code class="docutils literal notranslate"><span class="pre">pages</span></code> mode.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--start-chapter</span> <span class="pre">INT</span></code></dt><dd><p>Start from specific chapter number (1-indexed).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--start-page</span> <span class="pre">INT</span></code></dt><dd><p>Start from specific page number (1-indexed).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--page-size</span> <span class="pre">INT</span></code></dt><dd><p>Synthetic page size in characters (default: 2000).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--resume</span></code></dt><dd><p>Resume from last saved position.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--list</span></code></dt><dd><p>List chapters/pages and exit without reading.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">MODE</span></code></dt><dd><p>Text splitting mode: <code class="docutils literal notranslate"><span class="pre">sentence</span></code> or <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after clauses in seconds.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after sentences in seconds.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after paragraphs in seconds.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code></dt><dd><p>Random variance added to pauses in seconds.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : TTS voice to use.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">MODE</span></code> : Content mode: <code class="docutils literal notranslate"><span class="pre">chapters</span></code> or <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapter selection for <code class="docutils literal notranslate"><span class="pre">chapters</span></code> mode.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--pages</span> <span class="pre">SELECTION</span></code> : Page selection for <code class="docutils literal notranslate"><span class="pre">pages</span></code> mode.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--start-chapter</span> <span class="pre">INT</span></code> : Start from specific chapter number (1-indexed).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--start-page</span> <span class="pre">INT</span></code> : Start from specific page number (1-indexed).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--page-size</span> <span class="pre">INT</span></code> : Synthetic page size in characters (default: 2000).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--resume</span></code> : Resume from last saved position.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--list</span></code> : List chapters/pages and exit without reading.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">MODE</span></code> : Text splitting mode: <code class="docutils literal notranslate"><span class="pre">sentence</span></code> or <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--disable-short-sentence</span></code> : Disable special handling for short sentences.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
+<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
+config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
 <p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
 </section>
 <section id="id9">
@@ -891,10 +864,7 @@ ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </s
 </div>
 <section id="id10">
 <h3>Options</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Filter voices by language code.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Filter voices by language code.</p>
 </section>
 <section id="id11">
 <h3>Examples</h3>
@@ -918,32 +888,20 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w">
 </div>
 <section id="id12">
 <h3>Options</h3>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></dt><dd><p>Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./voices_demo.wav</span></code> (or directory with <code class="docutils literal notranslate"><span class="pre">--separate</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Filter voices by language.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICES</span></code></dt><dd><p>Specific voices to include (comma-separated).
-Example: <code class="docutils literal notranslate"><span class="pre">af_heart,am_adam</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code></dt><dd><p>Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code></dt><dd><p>Enable or disable GPU acceleration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Silence between voice samples in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--text</span> <span class="pre">TEXT</span></code></dt><dd><p>Custom text to use. Use <code class="docutils literal notranslate"><span class="pre">{voice}</span></code> placeholder for voice name.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--separate</span></code></dt><dd><p>Save each voice as a separate file instead of concatenating.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--blend</span> <span class="pre">SPEC</span></code></dt><dd><p>Voice blend to demo (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--blend-presets</span></code></dt><dd><p>Demo a curated set of voice blend combinations.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code></dt><dd><p>Play audio directly instead of only saving files.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./voices_demo.wav</span></code> (or directory with
+<code class="docutils literal notranslate"><span class="pre">--separate</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Filter voices by language.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICES</span></code> : Specific voices to include (comma-separated). Example:
+<code class="docutils literal notranslate"><span class="pre">af_heart,am_adam</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Enable or disable GPU acceleration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between voice samples in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--text</span> <span class="pre">TEXT</span></code> : Custom text to use. Use <code class="docutils literal notranslate"><span class="pre">{voice}</span></code> placeholder for voice name.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--separate</span></code> : Save each voice as a separate file instead of concatenating.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--blend</span> <span class="pre">SPEC</span></code> : Voice blend to demo (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--blend-presets</span></code> : Demo a curated set of voice blend combinations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly instead of only saving files.</p>
 <p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-</dd>
-</dl>
 </section>
 <section id="id13">
 <h3>Examples</h3>
@@ -973,10 +931,7 @@ ttsforge<span class="w"> </span>demo<span class="w"> </span>--text<span class="w
 </div>
 <section id="id14">
 <h3>Options</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">--force</span></code></dt><dd><p>Force re-download even if files exist.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">--force</span></code> : Force re-download even if files exist.</p>
 </section>
 <section id="id15">
 <h3>Examples</h3>
@@ -998,14 +953,9 @@ ttsforge<span class="w"> </span>download<span class="w"> </span>--force
 <p>Configuration is stored in <code class="docutils literal notranslate"><span class="pre">~/.config/ttsforge/config.json</span></code>.</p>
 <section id="id16">
 <h3>Options</h3>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">--show</span></code></dt><dd><p>Show current configuration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--reset</span></code></dt><dd><p>Reset configuration to defaults.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code></dt><dd><p>Set a configuration option. Can be used multiple times.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">--show</span></code> : Show current configuration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--reset</span></code> : Reset configuration to defaults.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code> : Set a configuration option. Can be used multiple times.</p>
 </section>
 <section id="id17">
 <h3>Examples</h3>
@@ -1018,7 +968,10 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 <span class="c1"># Set multiple options</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_voice<span class="w"> </span>af_sarah<span class="w"> </span>--set<span class="w"> </span>default_speed<span class="w"> </span><span class="m">1</span>.1
 
-<span class="c1"># Enable GPU</span>
+<span class="c1"># Select the default ONNX provider</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
+
+<span class="c1"># Legacy compatibility shortcut</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_gpu<span class="w"> </span><span class="nb">true</span>
 
 <span class="c1"># Reset to defaults</span>
@@ -1026,6 +979,36 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--reset
 </pre></div>
 </div>
 <p>See <a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> for all available options.</p>
+</section>
+</section>
+<section id="config-short-sentence">
+<h2>config short-sentence</h2>
+<p>Create, link, or inspect the advanced short-sentence JSON configuration.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span><span class="o">[</span>show<span class="p">|</span>init<span class="p">|</span>reset<span class="o">]</span>
+</pre></div>
+</div>
+<p>Called without an action, this command prints its help.</p>
+<section id="id18">
+<h3>Arguments</h3>
+<p><code class="docutils literal notranslate"><span class="pre">show</span></code> : Show the advanced JSON config.</p>
+<p><code class="docutils literal notranslate"><span class="pre">init</span></code> : Write the advanced JSON config and update the ttsforge config to use it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">reset</span></code> : Recreate the advanced JSON config from defaults and update the ttsforge config
+to use it.</p>
+</section>
+<section id="id19">
+<h3>Examples</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create and link the advanced short-sentence config</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>init
+
+<span class="c1"># Show the advanced short-sentence config</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>show
+
+<span class="c1"># Reset the advanced short-sentence config to defaults</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>reset
+</pre></div>
+</div>
+<p>The former <code class="docutils literal notranslate"><span class="pre">short-sentence-advanced-config</span></code> root command remains available as a
+deprecated compatibility alias.</p>
 </section>
 </section>
 <section id="phonemes">
@@ -1037,33 +1020,22 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--reset
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>EPUB_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
-<section id="id18">
-<h4>Arguments</h4>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code></dt><dd><p>Path to the EPUB file (required).</p>
-</dd>
-</dl>
-</section>
-<section id="id19">
-<h4>Options</h4>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></dt><dd><p>Output file path. Default: input filename with <code class="docutils literal notranslate"><span class="pre">.phonemes.json</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--readable</span></code></dt><dd><p>Export as human-readable text format instead of JSON.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></dt><dd><p>Chapters to export.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code></dt><dd><p>Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Split mode: <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, or <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">sentence</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--max-chars</span> <span class="pre">INT</span></code></dt><dd><p>Maximum characters per segment. Default: <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
-</dd>
-</dl>
-</section>
 <section id="id20">
+<h4>Arguments</h4>
+<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
+</section>
+<section id="id21">
+<h4>Options</h4>
+<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: input filename with <code class="docutils literal notranslate"><span class="pre">.phonemes.json</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--readable</span></code> : Export as human-readable text format instead of JSON.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapters to export.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code> : Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Split mode: <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, or <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default:
+<code class="docutils literal notranslate"><span class="pre">sentence</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--max-chars</span> <span class="pre">INT</span></code> : Maximum characters per segment. Default: <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
+</section>
+<section id="id22">
 <h4>Examples</h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to phonemes</span>
 ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub
@@ -1086,63 +1058,44 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb"
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>PHONEME_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
-<section id="id21">
-<h4>Arguments</h4>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">PHONEME_FILE</span></code></dt><dd><p>Path to the phoneme JSON file (required).</p>
-</dd>
-</dl>
-</section>
-<section id="id22">
-<h4>Options</h4>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></dt><dd><p>Output file path.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code></dt><dd><p>Output audio format.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code></dt><dd><p>Voice to use for TTS.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code></dt><dd><p>Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code></dt><dd><p>Enable or disable GPU acceleration.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Silence between chapters. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code></dt><dd><p>Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code></dt><dd><p>Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code></dt><dd><p>Read chapter titles aloud before chapter content. Default: enabled.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code></dt><dd><p>Pause after chapter title announcement in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></dt><dd><p>Select chapters to convert.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code></dt><dd><p>Audiobook title.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code></dt><dd><p>Audiobook author.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code></dt><dd><p>Cover image path.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code></dt><dd><p>Blend multiple voices.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--voice-database</span> <span class="pre">PATH</span></code></dt><dd><p>Path to custom voice database.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--streaming</span> <span class="pre">/</span> <span class="pre">--no-streaming</span></code></dt><dd><p>Use streaming mode (faster, no resume). Default: resumable.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code></dt><dd><p>Keep intermediate chapter files.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code></dt><dd><p>Skip confirmation prompts.</p>
-</dd>
-</dl>
-</section>
 <section id="id23">
+<h4>Arguments</h4>
+<p><code class="docutils literal notranslate"><span class="pre">PHONEME_FILE</span></code> : Path to the phoneme JSON file (required).</p>
+</section>
+<section id="id24">
+<h4>Options</h4>
+<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between chapters. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
+<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
+config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code> : Read chapter titles aloud before
+chapter content. Default: enabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code> : Pause after chapter title announcement in seconds. Default:
+<code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Select chapters to convert.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code> : Audiobook title.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code> : Audiobook author.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code> : Cover image path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code> : Blend multiple voices.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-database</span> <span class="pre">PATH</span></code> : Path to custom voice database.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--streaming</span> <span class="pre">/</span> <span class="pre">--no-streaming</span></code> : Use streaming mode (faster, no resume). Default:
+resumable.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep intermediate chapter files.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code> : Skip confirmation prompts.</p>
+</section>
+<section id="id25">
 <h4>Examples</h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert phoneme file</span>
 ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>book.phonemes.json
@@ -1162,14 +1115,11 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span cla
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class="w"> </span>PHONEME_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
-<section id="id24">
+<section id="id26">
 <h4>Options</h4>
-<dl class="simple">
-<dt><code class="docutils literal notranslate"><span class="pre">--stats</span></code></dt><dd><p>Show detailed token statistics.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">--stats</span></code> : Show detailed token statistics.</p>
 </section>
-<section id="id25">
+<section id="id27">
 <h4>Examples</h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic info</span>
 ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class="w"> </span>book.phonemes.json
@@ -1186,24 +1136,17 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class=
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span>TEXT<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
 </pre></div>
 </div>
-<section id="id26">
+<section id="id28">
 <h4>Options</h4>
-<dl>
-<dt><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code></dt><dd><p>Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code></dt><dd><p>Voice to use for audio preview (when using <code class="docutils literal notranslate"><span class="pre">--play</span></code>).
-Can be a single voice or voice blend (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--play</span></code></dt><dd><p>Generate and play audio preview of the phonemes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for audio preview (when using <code class="docutils literal notranslate"><span class="pre">--play</span></code>). Can be a
+single voice or voice blend (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--play</span></code> : Generate and play audio preview of the phonemes.</p>
 <p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--tokens</span></code></dt><dd><p>Show token IDs in addition to phonemes.</p>
-</dd>
-<dt><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code></dt><dd><p>Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
-</dd>
-</dl>
+<p><code class="docutils literal notranslate"><span class="pre">--tokens</span></code> : Show token IDs in addition to phonemes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code> : Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
 </section>
-<section id="id27">
+<section id="id29">
 <h4>Examples</h4>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preview phonemes</span>
 ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span>

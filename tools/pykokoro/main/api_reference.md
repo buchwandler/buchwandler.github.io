@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5eb1869636371065c626ef9194722c9aa896e24d"
+docs_commit: "60617739f1b07f0a222584952f6a19bc9f737ad4"
 search_enabled: true
 ---
 
@@ -742,6 +742,16 @@ will override config values.</p>
 <h2>Result and Data Classes</h2>
 <section id="audioresult">
 <h3>AudioResult</h3>
+<p><code class="docutils literal notranslate"><span class="pre">AudioResult</span></code> owns references to its final waveform and any raw or processed per-segment
+waveforms. <code class="docutils literal notranslate"><span class="pre">AudioResult.release_segment_audio()</span></code> destructively and idempotently releases
+only segment arrays, while <code class="docutils literal notranslate"><span class="pre">AudioResult.release_audio()</span></code> also replaces the final
+waveform with an empty array of the same dtype. Metadata, markers, trace data, segments,
+and sample rate remain available. Callers should copy or retain <code class="docutils literal notranslate"><span class="pre">result.audio</span></code>
+separately before releasing it if they need that array afterward.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">PipelineConfig(retain_segment_audio=False)</span></code> for compact results when segment
+waveforms are not needed. This reduces retained memory after generation, but
+whole-result concatenation still occurs and peak memory remains dependent on input
+duration. A future streaming API is required for bounded peak memory.</p>
 </section>
 <section id="segment">
 <h3>Segment</h3>

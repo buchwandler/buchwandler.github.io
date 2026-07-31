@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/api/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -542,53 +542,43 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="api-reference">
 <h1>API Reference</h1>
-<p>This section documents the Python API for ttsforge, allowing programmatic use
-of the library.</p>
+<p>This section documents the Python API for ttsforge, allowing programmatic use of the
+library.</p>
 <section id="module-overview">
 <h2>Module Overview</h2>
 <p>ttsforge is organized into the following modules:</p>
 <section id="core-modules">
 <h3>Core Modules</h3>
-<dl class="simple">
-<dt><strong>ttsforge.cli</strong></dt><dd><p>Command-line interface implementation using Click.</p>
-</dd>
-<dt><strong>ttsforge.conversion</strong></dt><dd><p>Main conversion logic for EPUB to audiobook conversion.</p>
-</dd>
-<dt><strong>ttsforge.phoneme_conversion</strong></dt><dd><p>Conversion logic for pre-tokenized phoneme files.</p>
-</dd>
-</dl>
+<p><strong>ttsforge.cli</strong> : Command-line interface implementation using explicit typed Typer
+wrappers (with Click as the runtime substrate). App construction and help paths are
+provider-independent; implementation modules are imported lazily.</p>
+<p><strong>ttsforge.paths</strong> : Provider-independent user configuration and advanced short-sentence
+path calculations.</p>
+<p><strong>ttsforge.conversion</strong> : Main conversion logic for EPUB to audiobook conversion.</p>
+<p><strong>ttsforge.phoneme_conversion</strong> : Conversion logic for pre-tokenized phoneme files.</p>
 </section>
 <section id="tts-backend">
 <h3>TTS Backend</h3>
-<dl class="simple">
-<dt><strong>ttsforge.kokoro_runner</strong></dt><dd><p>Shared Kokoro ONNX runner used by conversion paths.</p>
-</dd>
-<dt><strong>ttsforge.kokoro_lang</strong></dt><dd><p>Language code helpers for Kokoro.</p>
-</dd>
-<dt><strong>ttsforge.phonemes</strong></dt><dd><p>Data structures for phoneme book representation.</p>
-</dd>
-</dl>
+<p><strong>ttsforge.kokoro_runner</strong> : Shared Kokoro ONNX runner used by conversion paths.</p>
+<p><strong>ttsforge.kokoro_lang</strong> : Language code helpers for Kokoro.</p>
+<p><strong>ttsforge.phonemes</strong> : Data structures for phoneme book representation.</p>
 </section>
 <section id="utilities">
 <h3>Utilities</h3>
-<dl class="simple">
-<dt><strong>ttsforge.constants</strong></dt><dd><p>Configuration defaults, voice definitions, and language mappings.</p>
-</dd>
-<dt><strong>ttsforge.utils</strong></dt><dd><p>Utility functions for file handling, configuration, and formatting.</p>
-</dd>
-<dt><strong>ttsforge.audio_merge</strong></dt><dd><p>Audio concatenation and chapter marker handling.</p>
-</dd>
-<dt><strong>ttsforge.chapter_selection</strong></dt><dd><p>Parsing helpers for chapter selection strings.</p>
-</dd>
-<dt><strong>ttsforge.ssmd_generator</strong></dt><dd><p>SSMD generation and validation helpers.</p>
-</dd>
-<dt><strong>ttsforge.input_reader</strong></dt><dd><p>EPUB/text input parsing helpers.</p>
-</dd>
-<dt><strong>ttsforge.name_extractor</strong></dt><dd><p>Name extraction utilities for dictionary building.</p>
-</dd>
-<dt><strong>ttsforge.vocab</strong></dt><dd><p>Vocabulary utilities and metadata.</p>
-</dd>
-</dl>
+<p><strong>ttsforge.constants</strong> : Configuration defaults, voice definitions, and language
+mappings.</p>
+<p><strong>ttsforge.utils</strong> : Utility functions for file handling, configuration, and formatting.</p>
+<p><strong>ttsforge.audio_merge</strong> : Audio concatenation and chapter marker handling.</p>
+<p><strong>ttsforge.chapter_selection</strong> : Parsing helpers for chapter selection strings.</p>
+<p><strong>ttsforge.ssmd_generator</strong> : Canonical SSMD 0.8 generation, validation, deterministic
+front matter, and SHA-256 content hashing helpers.</p>
+<p><strong>ttsforge.ssmd_support</strong> : Stable SSMD policy, document metadata, diagnostics, and
+pykokoro config translation types. Inspection and validation do not initialize ONNX.</p>
+<p><strong>ttsforge.ssmd_audio</strong> : Bounded document-relative local and opt-in HTTPS audio source
+resolution.</p>
+<p><strong>ttsforge.input_reader</strong> : EPUB/text input parsing helpers.</p>
+<p><strong>ttsforge.name_extractor</strong> : Name extraction utilities for dictionary building.</p>
+<p><strong>ttsforge.vocab</strong> : Vocabulary utilities and metadata.</p>
 </section>
 </section>
 <section id="quick-api-examples">
@@ -603,6 +593,7 @@ of the library.</p>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
     <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">onnx_provider</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
     <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
     <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
@@ -612,7 +603,7 @@ of the library.</p>
 <span class="n">runner</span><span class="o">.</span><span class="n">ensure_ready</span><span class="p">()</span>
 
 <span class="c1"># Generate audio</span>
-<span class="n">audio</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
     <span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span>
     <span class="n">lang_code</span><span class="o">=</span><span class="n">get_onnx_lang_code</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
     <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;tts&quot;</span><span class="p">,</span>
@@ -621,7 +612,8 @@ of the library.</p>
 
 <span class="c1"># Save to file</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">audio</span><span class="p">,</span> <span class="mi">24000</span><span class="p">)</span>
+<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">markers</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -637,6 +629,7 @@ of the library.</p>
     <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;m4b&quot;</span><span class="p">,</span>
     <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">onnx_provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># Create converter</span>
@@ -692,8 +685,9 @@ of the library.</p>
 </div>
 </section>
 </section>
-<section id="auto-generated-api-documentation">
-<h2>Auto-generated API Documentation</h2>
+<section id="module-ttsforge.constants">
+<span id="auto-generated-api-documentation"></span><h2>Auto-generated API Documentation</h2>
+<p>Constants for ttsforge - voices, languages, and formats.</p>
 </section>
 </section>
 </div>

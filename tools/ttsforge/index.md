@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -542,8 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="ttsforge-documentation">
 <h1>ttsforge Documentation</h1>
-<p><strong>ttsforge</strong> is a command-line tool for converting EPUB files to audiobooks using
-Kokoro ONNX TTS (Text-to-Speech).</p>
+<p><strong>ttsforge</strong> is a command-line tool for converting EPUB files to audiobooks using Kokoro
+ONNX TTS (Text-to-Speech).</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
@@ -551,7 +551,7 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#system-requirements">System Requirements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#installing-ttsforge">Installing ttsforge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#gpu-acceleration-optional">GPU Acceleration (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#onnx-runtime-providers">ONNX Runtime Providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#mixed-language-support-optional">Mixed-Language Support (Optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#downloading-models">Downloading Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
@@ -588,20 +588,18 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="cli/#demo">demo</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#download">download</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#config">config</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#config-short-sentence">config short-sentence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#phonemes">phonemes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD Editing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#how-ssmd-works">How SSMD Works</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#basic-workflow">Basic Workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#ssmd-syntax">SSMD Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#automatic-features">Automatic Features</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#use-cases">Use Cases</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#tips-and-best-practices">Tips and Best Practices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#technical-details">Technical Details</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#limitations">Limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#see-also">See Also</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#basic-workflow">Basic workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#portable-document-example">Portable document example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#syntax">Syntax</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#direct-ssmd-input">Direct SSMD input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#policies-and-diagnostics">Policies and diagnostics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#intentional-kokoro-limitations">Intentional Kokoro limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#see-also">See also</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="configuration/">Configuration</a><ul>
@@ -612,6 +610,7 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="configuration/#example-configuration-file">Example Configuration File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration/#command-line-override">Command-Line Override</a></li>
 <li class="toctree-l2"><a class="reference internal" href="configuration/#environment-variables">Environment Variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#model-source-status">Model source status</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="filename_templates/">Filename Templates</a><ul>
@@ -636,6 +635,7 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="voices/#language-code-reference">Language Code Reference</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="testing/">Testing and Coverage</a></li>
 </ul>
 </div>
 <div class="toctree-wrapper compound">
@@ -644,7 +644,7 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-overview">Module Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#quick-api-examples">Quick API Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#auto-generated-api-documentation">Auto-generated API Documentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#module-ttsforge.constants">Auto-generated API Documentation</a></li>
 </ul>
 </li>
 </ul>
@@ -652,11 +652,13 @@ Kokoro ONNX TTS (Text-to-Speech).</p>
 <section id="features">
 <h2>Features</h2>
 <ul class="simple">
-<li><p><strong>EPUB to Audiobook Conversion</strong>: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS formats</p></li>
+<li><p><strong>EPUB to Audiobook Conversion</strong>: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS
+formats</p></li>
 <li><p><strong>50+ High-Quality Voices</strong>: Support for 9 languages with multiple voice options</p></li>
 <li><p><strong>SSMD Editing</strong>: Edit intermediate SSMD files to fine-tune pronunciation and pacing</p></li>
 <li><p><strong>Resumable Conversions</strong>: Long audiobook conversions can be interrupted and resumed</p></li>
-<li><p><strong>Phoneme Pre-tokenization</strong>: Pre-process text to phonemes for faster batch conversions</p></li>
+<li><p><strong>Phoneme Pre-tokenization</strong>: Pre-process text to phonemes for faster batch
+conversions</p></li>
 <li><p><strong>Configurable Filename Templates</strong>: Customize output filenames with book metadata</p></li>
 <li><p><strong>Voice Blending</strong>: Mix multiple voices for custom narration styles</p></li>
 <li><p><strong>GPU Acceleration</strong>: Optional GPU support for faster processing</p></li>
@@ -713,14 +715,14 @@ ttsforge<span class="w"> </span>voices
 <h2>License</h2>
 <p>ttsforge is released under the MIT License.</p>
 </section>
-</section>
 <section id="indices-and-tables">
-<h1>Indices and tables</h1>
+<h2>Indices and tables</h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="genindex/"><span class="std std-ref">Index</span></a></p></li>
 <li><p><a class="reference internal" href="py-modindex/"><span class="std std-ref">Module Index</span></a></p></li>
 <li><p><a class="reference internal" href="search/"><span class="std std-ref">Search Page</span></a></p></li>
 </ul>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

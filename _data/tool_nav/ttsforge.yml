@@ -4,17 +4,17 @@ nav_key: ttsforge
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.2
-source_commit: b31ed08988a066157772e19eba570a9e97fda580
-source_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.1.2
+source_ref: v0.2.0
+source_commit: 266056286c4efa39be4ae54caa8d36a8f9c68776
+source_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.2.0
 is_default: true
 repo_url: https://github.com/buchwandler/ttsforge
-release_tag: v0.1.2
-release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.1.2
+release_tag: v0.2.0
+release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.2.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.2
+  ref: v0.2.0
   url: /tools/ttsforge/
   current: true
 - name: main
@@ -36,7 +36,7 @@ entries:
   title: ttsforge CLI Reference
   url: /tools/ttsforge/cli/
 - slug: ssmd
-  title: ttsforge SSMD Editing
+  title: ttsforge SSMD 0.8
   url: /tools/ttsforge/ssmd/
 - slug: configuration
   title: ttsforge Configuration
@@ -47,3 +47,6 @@ entries:
 - slug: voices
   title: ttsforge Voices
   url: /tools/ttsforge/voices/
+- slug: testing
+  title: ttsforge Testing and Coverage
+  url: /tools/ttsforge/testing/

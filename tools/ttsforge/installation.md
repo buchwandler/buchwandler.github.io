@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/installation/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "b31ed08988a066157772e19eba570a9e97fda580"
+docs_ref: "v0.2.0"
+docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
 search_enabled: true
 ---
 
@@ -570,7 +570,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 <p><strong>Windows:</strong></p>
-<p>Download from <a class="reference external" href="https://ffmpeg.org/download.html">https://ffmpeg.org/download.html</a> and add to PATH.</p>
+<p>Download from <a class="reference external" href="https://ffmpeg.org/download.html">https://ffmpeg.org/download.html</a> and add it to <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
 </section>
 <section id="optional-bundled-ffmpeg-via-python-not-available-on-all-platforms">
 <h3>Optional: bundled ffmpeg via Python (not available on all platforms)</h3>
@@ -595,13 +595,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="audio-playback-optional">
 <h3>Audio Playback (Optional)</h3>
-<p>Audio playback features (<code class="docutils literal notranslate"><span class="pre">--play</span></code> flags and the <code class="docutils literal notranslate"><span class="pre">read</span></code> command) require
-<code class="docutils literal notranslate"><span class="pre">sounddevice</span></code>:</p>
+<p>Audio playback features (<code class="docutils literal notranslate"><span class="pre">--play</span></code> flags and the <code class="docutils literal notranslate"><span class="pre">read</span></code> command) require <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code>:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
 </pre></div>
 </div>
 <p>Or install directly:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sounddevice
+</pre></div>
+</div>
+</section>
+<section id="spacy-models-optional">
+<h3>spaCy Models (Optional)</h3>
+<p>spaCy is used for sentence splitting, name extraction, and spaCy-aware phonemization
+workflows:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
+python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
+python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
 </pre></div>
 </div>
 </section>
@@ -613,6 +622,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
 </pre></div>
 </div>
+<p>The base installation includes the CPU ONNX Runtime provider. Provider-dependent modules
+are loaded only when audio rendering starts, so <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ttsforge</span></code>, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code>,
+and configuration/inspection commands work without model initialization.</p>
 <p>Optional extras:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Audio playback (required for --play and read)</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
@@ -627,7 +639,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot
 </section>
 <section id="from-source">
 <h3>From Source</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/ttsforge.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
 <span class="nb">cd</span><span class="w"> </span>ttsforge
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </pre></div>
@@ -636,31 +648,43 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <section id="development-installation">
 <h3>Development Installation</h3>
 <p>For development with testing and linting tools:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/holgern/ttsforge.git
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
 <span class="nb">cd</span><span class="w"> </span>ttsforge
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
 </section>
 </section>
-<section id="gpu-acceleration-optional">
-<h2>GPU Acceleration (Optional)</h2>
-<p>For GPU-accelerated inference, install onnxruntime-gpu:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu
+<section id="onnx-runtime-providers">
+<h2>ONNX Runtime Providers</h2>
+<p>Select a provider with an alias or full runtime provider name. The legacy Boolean
+interface remains available for compatibility, but NNAPI and XNNPACK are execution
+providers rather than GPU modes:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cpu
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>xnnpack
 </pre></div>
 </div>
-<p>Then enable GPU in your configuration:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_gpu<span class="w"> </span><span class="nb">true</span>
+<p>For CUDA, install the GPU extra in a fresh environment so CPU and GPU ONNX Runtime
+distributions are not installed together:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
 </pre></div>
 </div>
-<p>Or use the <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> flag with commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--gpu
+<p>For Termux/Android with PyKokoro v0.7.1 and an ONNX Runtime build exposing NNAPI or
+XNNPACK:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
+ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
 </pre></div>
 </div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> as a compatibility shortcut for <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> for
+<code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">cpu</span></code>. Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment
+override are handled by PyKokoro.</p>
 </section>
 <section id="mixed-language-support-optional">
 <h2>Mixed-Language Support (Optional)</h2>
-<p>For automatic detection and handling of multiple languages in text (e.g., German text with English technical terms):</p>
+<p>For automatic detection and handling of multiple languages in text (e.g., German text
+with English technical terms):</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lingua-language-detector
 </pre></div>
 </div>
@@ -680,8 +704,8 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 </section>
 <section id="downloading-models">
 <h2>Downloading Models</h2>
-<p>ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically
-on first use. You can also download them proactively:</p>
+<p>ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically on
+first use. You can also download them proactively:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download models</span>
 ttsforge<span class="w"> </span>download
 
