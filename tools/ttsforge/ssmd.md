@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/ssmd/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
+docs_ref: "v0.3.0"
+docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
 search_enabled: true
 ---
 
@@ -596,14 +596,16 @@ as a marker event and exported to marker sidecars.</p>
 ...c ...s ...p ...250ms
 </pre></div>
 </div>
-<p>Moderate, strong, reduced, and none emphasis are parsed. Emphasis is spoken plainly by
-default: it does not add automatic volume, rate, or pitch changes, and its metadata is
-preserved. Use <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code> or the convenience flag
-<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt into segment-level volume/rate approximation; use <code class="docutils literal notranslate"><span class="pre">warn</span></code>
-or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter behavior. Explicit document prosody such as
-<code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode. Language, voice, prosody,
-say-as, substitution, phoneme, break, mark, paragraph, heading, and supported audio
-attributes are passed to the renderer.</p>
+<p>Moderate, strong, reduced, and none emphasis are parsed. EPUB processing has three
+layers: epub2text performs semantic extraction, TTSForge preserves the resulting
+controlled Markdown in SSMD, and the SSMD emphasis policy controls audible rendering.
+Emphasis is spoken plainly by default: it does not add automatic volume, rate, or pitch
+changes, and its metadata is preserved. Use <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code> or the
+convenience flag <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt into segment-level volume/rate
+approximation; use <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter behavior. Explicit document prosody
+such as <code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode. Language, voice,
+prosody, say-as, substitution, phoneme, break, mark, paragraph, heading, and supported
+audio attributes are passed to the renderer.</p>
 </section>
 <section id="direct-ssmd-input">
 <h2>Direct SSMD input</h2>
@@ -632,11 +634,26 @@ preserved for rendering.</p>
 <p>Diagnostics have stable codes and source locations. Inspect without loading ONNX using
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span></code> or <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span> <span class="pre">--json</span></code>. Validate with
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">validate</span> <span class="pre">FILE</span></code>; <code class="docutils literal notranslate"><span class="pre">--strict</span></code> promotes warnings to failures.</p>
+<section id="prosody-method-selection">
+<h3>Prosody method selection</h3>
+<p><code class="docutils literal notranslate"><span class="pre">prosody_method</span></code> is independent of <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> and <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code>. It
+chooses the AudioSig algorithm used when an SSMD segment contains <code class="docutils literal notranslate"><span class="pre">rate</span></code> or <code class="docutils literal notranslate"><span class="pre">pitch</span></code>
+metadata. <code class="docutils literal notranslate"><span class="pre">wsola</span></code> is the default speech-oriented audiobook choice; <code class="docutils literal notranslate"><span class="pre">esola</span></code> is an
+experimental speech-oriented alternative; <code class="docutils literal notranslate"><span class="pre">psola</span></code> is accepted as an alias for AudioSig’s
+canonical <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>; and <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code> is a generic reference/fallback path. Keep
+fallbacks enabled unless testing strict behavior.</p>
+<p>The current <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode=approximate</span></code> profile changes gain only. Selecting ESOLA,
+WSOLA, or PSOLA does not change those fixed emphasis gains; the selected prosody method
+is used for explicit SSMD rate and pitch annotations. <code class="docutils literal notranslate"><span class="pre">plain</span></code> disables emphasis
+approximation but does not disable explicit rate, pitch, or volume annotations.</p>
 <p>Audio annotations use a document-relative local resolver with byte and duration limits.
 Remote audio is disabled by default; when enabled, only bounded HTTPS sources are
 accepted. Unresolved audio uses SSMD fallback text and emits an <code class="docutils literal notranslate"><span class="pre">ssmd.audio_fallback</span></code> or
 <code class="docutils literal notranslate"><span class="pre">ssmd.audio_unresolved</span></code> diagnostic. Audio files are decoded and downmixed to mono before
-pykokoro applies SSMD transformations.</p>
+pykokoro applies SSMD transformations. TTSForge retains source resolution, security
+limits, SoundFile decoding, and output orchestration; AudioSig supplies the reusable
+array downmix, while PyKokoro remains responsible for SSMD speed, gain, and resampling.</p>
+</section>
 </section>
 <section id="intentional-kokoro-limitations">
 <h2>Intentional Kokoro limitations</h2>
@@ -644,9 +661,10 @@ pykokoro applies SSMD transformations.</p>
 <li><p>SSMD voice language, gender, and variant hints are preserved as metadata but do not
 select a Kokoro voice.</p></li>
 <li><p>SSMD extensions are rejected by default for the Kokoro profile.</p></li>
-<li><p>Emphasis is spoken plainly by default. EPUB styling detection and SSMD rendering are
-independent; use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> to extract italic/bold HTML and
-<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt into approximation.</p></li>
+<li><p>Emphasis is spoken plainly by default. EPUB Markdown extraction and SSMD rendering are
+independent; use <code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">plain</span></code> only for legacy comparison,
+<code class="docutils literal notranslate"><span class="pre">--no-detect-emphasis</span></code> to unwrap inline emphasis, and <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> to opt
+into approximation.</p></li>
 <li><p>Remote audio is opt-in and bounded.</p></li>
 <li><p>Marks are exported as <code class="docutils literal notranslate"><span class="pre">chapter_NNN.markers.json</span></code> and an aggregate output sidecar
 rather than embedded in every audiobook container.</p></li>

@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
+docs_ref: "v0.3.0"
+docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
 search_enabled: true
 ---
 
@@ -618,10 +618,22 @@ block.</p>
 persisted <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> value, normally <code class="docutils literal notranslate"><span class="pre">plain</span></code>. Plain speaks emphasis unchanged;
 approximate applies segment-level volume/rate changes.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> : Convenience opt-in equivalent to
-<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code>. It applies segment-level volume/rate changes to existing
-SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling should
-first be extracted into SSMD annotations. This flag cannot be combined with
-<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code>. It applies the current deterministic gain-only
+approximation to existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB
+italic/bold styling should first be extracted into SSMD annotations. This flag cannot be
+combined with <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">[markdown|plain]</span></code> : Select structured chapter Markdown extraction
+(default) or the explicit legacy plain compatibility path.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code> : Preserve or unwrap EPUB italic and bold
+semantics in generated SSMD. Headings and scene breaks are preserved independently; when
+omitted, <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> from configuration is used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--prosody-method</span> <span class="pre">METHOD</span></code> : One-off override for the configured SSMD prosody algorithm:
+<code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>, <code class="docutils literal notranslate"><span class="pre">psola</span></code>, or <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code>. <code class="docutils literal notranslate"><span class="pre">psola</span></code> is the user-facing
+alias for AudioSig <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--prosody-strict</span> <span class="pre">/</span> <span class="pre">--no-prosody-strict</span></code> : Override whether prosody fallback is strict.
+Advanced tuning values remain available through persistent configuration. The conversion
+summary shows the effective method, fallbacks, strictness, clipping, FFT/hop, and
+boundary-blend values.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-voice</span> <span class="pre">ROLE=VOICE</span></code> : Repeatable explicit Kokoro binding override.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-pause-defaults</span> <span class="pre">/</span> <span class="pre">--no-ssmd-pause-defaults</span></code> and <code class="docutils literal notranslate"><span class="pre">--pause-voice-change</span> <span class="pre">FLOAT</span></code> :
 Explicit pause-default enablement and voice-change timing. Explicit pause values
@@ -646,8 +658,6 @@ ttsforge<span class="w"> </span>ssmd<span class="w"> </span>inspect<span class="
 <p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> : Discard any previous progress and start conversion from scratch.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> : Generate only SSMD files without creating audio (for manual
 editing).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code> : Detect emphasis (italic/bold) from EPUB
-HTML. Default: disabled.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep individual chapter audio files after conversion.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code> : Blend multiple voices (traditional method). Format:
 <code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2</span></code>. Example: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>.</p>

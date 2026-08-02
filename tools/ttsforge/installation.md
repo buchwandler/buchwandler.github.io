@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/installation/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
+docs_ref: "v0.3.0"
+docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
 search_enabled: true
 ---
 
@@ -554,6 +554,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="dependencies">
 <h2>Dependencies</h2>
 <p>ttsforge requires the following external tools:</p>
+<section id="audiosig-waveform-primitives">
+<h3>AudioSig waveform primitives</h3>
+<p>TTSForge depends directly on AudioSig <code class="docutils literal notranslate"><span class="pre">&gt;=0.1.1,&lt;0.2</span></code> for reusable NumPy waveform
+operations: duration-based silence generation and arithmetic-mean channel downmixing.
+NumPy remains a direct dependency for TTSForge arrays, composition, playback buffers,
+and bounded I/O buffers. SoundFile remains required for audio decoding and encoding;
+AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration layers.</p>
+</section>
 <section id="pykokoro-memory-api">
 <h3>PyKokoro memory API</h3>
 <p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>. This release provides the public

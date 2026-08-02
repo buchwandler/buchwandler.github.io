@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
+docs_ref: "v0.3.0"
+docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
 search_enabled: true
 ---
 
@@ -638,11 +638,11 @@ ONNX TTS (Text-to-Speech).</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="testing/">Testing and Coverage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.3.0] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.0] - 2026-07-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.2] - 2026-02-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.1.1] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.0] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.1.2] - 2026-02-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.1] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.1.0] - 2026-02-01</a></li>
 </ul>
 </li>
 </ul>

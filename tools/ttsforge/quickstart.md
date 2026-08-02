@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/quickstart/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
+docs_ref: "v0.3.0"
+docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
 search_enabled: true
 ---
 
@@ -789,12 +789,18 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 [Hermione]{ph=&quot;hɝmˈIni&quot;}          # Custom pronunciation
 </pre></div>
 </div>
-<p>Emphasis is spoken plainly by default. To detect italic/bold EPUB styling and keep the
-resulting SSMD emphasis plain, use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--detect-emphasis
+<p>EPUB conversion has three layers: epub2text performs semantic Markdown extraction,
+TTSForge generates editable SSMD while preserving that structure, and the SSMD policy
+controls audible rendering. Markdown extraction and emphasis preservation are enabled by
+default, while emphasis is spoken plainly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
-<p>To opt into approximate segment-level volume/rate changes, enable it separately:</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--no-detect-emphasis</span></code> to unwrap italic/bold delimiters without removing headings or
+scene breaks. Use <code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">plain</span></code> to compare against the legacy flattened
+source path. The persisted equivalents are <code class="docutils literal notranslate"><span class="pre">epub_content_mode</span></code> and <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code>.</p>
+<p>To opt into the current deterministic gain-only emphasis approximation, enable it
+separately:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--detect-emphasis<span class="w"> </span>--enable-ssmd-emphasis
 </pre></div>
 </div>
