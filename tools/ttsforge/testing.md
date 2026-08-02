@@ -6,7 +6,7 @@ nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
 docs_ref: "v0.2.0"
-docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
+docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
 search_enabled: true
 ---
 

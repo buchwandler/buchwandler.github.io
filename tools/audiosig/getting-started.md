@@ -5,8 +5,8 @@ permalink: /tools/audiosig/getting-started/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_ref: "v0.1.2"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 
@@ -576,6 +576,35 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 </section>
+<section id="constructing-silence-and-downmixing-channels">
+<h3>Constructing Silence and Downmixing Channels</h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">generate_silence</span></code> for deterministic mono silence. Its sample count uses
+the existing TTS/PyKokoro-compatible floor rule,
+<code class="docutils literal notranslate"><span class="pre">int(duration</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code>, and output is float32 unless float64 is
+requested:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_silence</span>
+
+<span class="n">pause</span> <span class="o">=</span> <span class="n">generate_silence</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">24_000</span><span class="p">)</span>
+<span class="n">precise_pause</span> <span class="o">=</span> <span class="n">generate_silence</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">24_000</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">downmix_to_mono</span></code> when the decoder has already produced a NumPy array.
+The basic API accepts finite real floating arrays shaped <code class="docutils literal notranslate"><span class="pre">(frames,)</span></code>,
+<code class="docutils literal notranslate"><span class="pre">(frames,</span> <span class="pre">channels)</span></code>, or <code class="docutils literal notranslate"><span class="pre">(channels,</span> <span class="pre">frames)</span></code> and returns contiguous,
+caller-owned results. SoundFile-style <code class="docutils literal notranslate"><span class="pre">(frames,</span> <span class="pre">channels)</span></code> data uses the
+default <code class="docutils literal notranslate"><span class="pre">channel_axis=-1</span></code>, while channels-first data uses <code class="docutils literal notranslate"><span class="pre">channel_axis=0</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">downmix_to_mono</span>
+
+<span class="n">mono</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">frames_first</span><span class="p">)</span>
+<span class="n">mono</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">channels_first</span><span class="p">,</span> <span class="n">channel_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Downmixing is an arithmetic mean in the source dtype with no clipping or
+normalization. Both functions return caller-owned arrays and raise typed
+<code class="docutils literal notranslate"><span class="pre">AudioSig</span></code> exceptions for invalid inputs. AudioSig does not decode files or
+stream long silence buffers; applications creating long files should write
+bounded silence chunks through their file layer.</p>
+</section>
 <section id="silence-detection-and-trimming">
 <h3>Silence Detection and Trimming</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">trim</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="n">normalized_energy_vad</span>
@@ -668,6 +697,24 @@ and trimming preserve the audio dtype.</p></li>
 <span class="n">lower</span> <span class="o">=</span> <span class="n">pitch_shift</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24000</span><span class="p">,</span> <span class="n">semitones</span><span class="o">=-</span><span class="mf">5.0</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>For experimental speech-only direct pitch/prosody processing, opt in with
+<code class="docutils literal notranslate"><span class="pre">method=&quot;td_psola&quot;</span></code>. Moderate changes only are supported; unvoiced regions are
+duration-scaled without pitch synthesis and formant preservation is not
+guaranteed:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_speech_effects</span><span class="p">,</span> <span class="n">pitch_shift</span>
+
+<span class="n">voice_up</span> <span class="o">=</span> <span class="n">pitch_shift</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span> <span class="n">semitones</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;td_psola&quot;</span><span class="p">)</span>
+<span class="n">slower_voice</span> <span class="o">=</span> <span class="n">apply_speech_effects</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">rate</span><span class="o">=</span><span class="mf">0.85</span><span class="p">,</span>
+    <span class="n">semitones</span><span class="o">=-</span><span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;td_psola&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>TD-PSOLA is experimental and intended for clean or mildly noisy speech, not
+music, polyphony, strong noise, reverb, creaky voice, or extreme shifts.</p>
 </section>
 <section id="resampling">
 <h3>Resampling</h3>

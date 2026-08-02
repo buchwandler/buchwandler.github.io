@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -662,13 +662,18 @@ you explicitly want low-priority phrase candidates to seed open glossary rows.</
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>BOOK<span class="w"> </span>--write<span class="w"> </span>--sync-profiles
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-report<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>both<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-template<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-apply<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>DECISIONS.json<span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-answer<span class="w"> </span>BOOK<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>TARGET<span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-skip<span class="w"> </span>BOOK<span class="w"> </span>CAND-...<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--disposition<span class="w"> </span>ignored<span class="w"> </span>--reason<span class="w"> </span><span class="s2">&quot;REASON&quot;</span><span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-status<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-if-open
 booktx<span class="w"> </span>context<span class="w"> </span>prefill<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--from-source-analysis<span class="w"> </span>--gate-readiness<span class="w"> </span>--write
 </pre></div>
 </div>
-<p>Run <code class="docutils literal notranslate"><span class="pre">interview-status</span> <span class="pre">--fail-if-open</span></code> before marking context ready when the workflow requires all source-policy questions to be resolved.</p>
+<p>The report is the stable human review surface; do not inspect
+<code class="docutils literal notranslate"><span class="pre">source-interview.json</span></code> directly or loop over one-candidate commands. Run
+<code class="docutils literal notranslate"><span class="pre">interview-status</span> <span class="pre">--fail-if-open</span></code> (or <code class="docutils literal notranslate"><span class="pre">series</span> <span class="pre">status</span></code>) before finalization.</p>
 </section>
 </section>
 <section id="typical-workflow">

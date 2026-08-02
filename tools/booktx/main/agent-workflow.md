@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -562,14 +562,24 @@ booktx<span class="w"> </span>profile<span class="w"> </span>list<span class="w"
 </pre></div>
 </div>
 <p>If multiple profiles exist, pass <code class="docutils literal notranslate"><span class="pre">--profile</span></code> on all translation-state commands.</p>
-<p>Before starting isolated translation, run the generic source-policy interview when source analysis is available:</p>
+<p>For the normal next-book workflow, use the high-level project-root commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>BOOK<span class="w"> </span>...<span class="w"> </span>--write
+<span class="c1"># or, for an existing prepared book:</span>
+booktx<span class="w"> </span>series<span class="w"> </span>review<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-report<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+<span class="c1"># Review/edit the generated decision manifest, then:</span>
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-apply<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>DECISIONS.json<span class="w"> </span>--write
+booktx<span class="w"> </span>series<span class="w"> </span>finalize<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+</pre></div>
+</div>
+<p>Before starting isolated translation, the lower-level source-policy interview is available when source analysis exists:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>BOOK<span class="w"> </span>--write<span class="w"> </span>--sync-profiles
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-status<span class="w"> </span>BOOK<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--fail-if-open
 </pre></div>
 </div>
-<p>Persist only user-approved answers with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">source</span> <span class="pre">interview-answer</span> <span class="pre">BOOK</span> <span class="pre">CAND-...</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--target</span> <span class="pre">TARGET</span> <span class="pre">--write</span></code>, or record explicit skips with <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">source</span> <span class="pre">interview-skip</span></code>.</p>
+<p>Persist batches through <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">interview-apply</span></code>; keep one-candidate answer/skip commands for interactive debugging only. Never use Python, <code class="docutils literal notranslate"><span class="pre">jq</span></code>, shell loops, or direct ledger JSON reads for normal preparation.</p>
 </section>
 <section id="isolated-evaluation-workflow">
 <h3>Isolated evaluation workflow</h3>

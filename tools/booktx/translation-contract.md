@@ -5,8 +5,8 @@ permalink: /tools/booktx/translation-contract/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -542,12 +542,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="translation-contract">
 <h1>Translation contract</h1>
-<p>Translation state is profile-local. New profiles currently use
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store.json</span></code> (<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>) as the
-durable current record store. The shard-based
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> backend is an explicit opt-in v3
-migration target. The version ledger, context, tasks, submissions, reviews,
-and reports are also profile-local.</p>
+<p>Translation state is profile-local. New profiles use the v3
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> backend, consisting of a manifest
+and per-chunk current, translation-candidate, and review-candidate files.
+Existing profiles keep their detected backend, including v2
+<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>. The version ledger, context, tasks, submissions,
+reviews, and reports are also profile-local.</p>
+<p>Readers validate one shared chunk revision across all three v3 shard files and
+retry while a transaction is publishing. Writers use a lock, staged journal,
+optimistic hashes/revisions, and roll-forward recovery after interruption. Use
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">store-status</span></code> for non-mutating health inspection.</p>
 <section id="task-metadata">
 <h2>Task metadata</h2>
 <p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">next</span></code> records the profile, target language and locale,

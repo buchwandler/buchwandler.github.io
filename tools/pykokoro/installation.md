@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.5"
-docs_commit: "60617739f1b07f0a222584952f6a19bc9f737ad4"
+docs_ref: "v0.8.0"
+docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
 search_enabled: true
 ---
 
@@ -606,21 +606,27 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 <h3>Dependencies</h3>
 <p>Core dependencies (automatically installed):</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Array operations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code> - Model inference</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> - Phoneme generation (via <code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">piper-phonemize</span></code> - Text-to-phoneme conversion</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">requests</span></code> - Model downloading</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tqdm</span></code> - Progress bars</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Enhanced phoneme dictionary</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Text-to-phoneme conversion</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - Intelligent text splitting</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Model tensors, voice vectors, and array operations</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">audiosig</span></code> - Audio signal processing for trim, VAD, resampling, gain, and speech
+prosody</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - Audio file I/O</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">platformdirs</span></code>, <code class="docutils literal notranslate"><span class="pre">chardet</span></code>, <code class="docutils literal notranslate"><span class="pre">charset-normalizer</span></code>, <code class="docutils literal notranslate"><span class="pre">huggingface-hub</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd</span></code>,
+<code class="docutils literal notranslate"><span class="pre">num2words</span></code>, <code class="docutils literal notranslate"><span class="pre">babel</span></code>, and <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> - runtime support</p></li>
 </ul>
 <p>Optional dependencies:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - For saving audio to WAV files (recommended)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> - For GPU acceleration</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">spacy</span></code> - For sentence/clause splitting and spaCy-aware G2P tokenization</p></li>
 </ul>
+<p>SSMD volume, pitch, and rate processing is provided by core AudioSig. No librosa, SciPy,
+audiomentations, signalsmith-stretch, or Python-stretch package is required. PyKokoro
+uses WSOLA as its default speech prosody backend and exposes experimental ESOLA and
+TD-PSOLA choices through <code class="docutils literal notranslate"><span class="pre">ProsodyConfig</span></code>. Before publishing a version that uses
+<code class="docutils literal notranslate"><span class="pre">apply_speech_effects</span></code>, verify the installed AudioSig minimum is the first published
+release containing that API and the <code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, and <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> methods; do not use
+an unverified development build or guessed release number in package metadata.</p>
 </section>
 <section id="installing-espeak-ng">
 <h3>Installing espeak-ng</h3>

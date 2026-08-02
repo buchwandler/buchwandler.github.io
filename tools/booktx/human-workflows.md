@@ -5,8 +5,8 @@ permalink: /tools/booktx/human-workflows/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -587,10 +587,15 @@ after lint passes.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>prepare<span class="w"> </span>./book5<span class="w"> </span>--source-file<span class="w"> </span>./book5.epub<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--from-book<span class="w"> </span>./book4<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--series-id<span class="w"> </span>series-id<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Series policy&quot;</span><span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-report<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+<span class="c1"># Review/edit .booktx/reports/source-interview-decisions.json.</span>
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-apply<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>.booktx/reports/source-interview-decisions.json<span class="w"> </span>--write
+booktx<span class="w"> </span>series<span class="w"> </span>finalize<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
 </pre></div>
 </div>
-<p>Review the generated policy before running <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>.</p>
+<p>For an existing book use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">review</span> <span class="pre">./book5</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--write</span></code>;
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">finalize</span></code> performs the final readiness and isolation checks.</p>
 </section>
 <section id="quality-workflows">
 <h2>Quality workflows</h2>

@@ -16,8 +16,8 @@
         {
           "anchor": "",
           "heading": "Collaborative translation workflow",
-          "text": "Start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nIf multiple profiles exist, pass --profile on all translation-state commands.\n\nBefore starting isolated translation, run the generic source-policy interview when source analysis is available:\n\nbooktx source analyze BOOK --write --sync-profiles\nbooktx source interview-plan BOOK --profile PROFILE --write\nbooktx source interview-next BOOK --profile PROFILE --format markdown\nbooktx source interview-status BOOK --profile PROFILE --fail-if-open\n\n\n\n\nPersist only user-approved answers with booktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write, or record explicit skips with booktx source interview-skip.",
-          "lower": "start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nif multiple profiles exist, pass --profile on all translation-state commands.\n\nbefore starting isolated translation, run the generic source-policy interview when source analysis is available:\n\nbooktx source analyze book --write --sync-profiles\nbooktx source interview-plan book --profile profile --write\nbooktx source interview-next book --profile profile --format markdown\nbooktx source interview-status book --profile profile --fail-if-open\n\n\n\n\npersist only user-approved answers with booktx source interview-answer book cand-... --profile profile --target target --write, or record explicit skips with booktx source interview-skip."
+          "text": "Start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nIf multiple profiles exist, pass --profile on all translation-state commands.\n\nFor the normal next-book workflow, use the high-level project-root commands:\n\nbooktx series prepare BOOK ... --write\n# or, for an existing prepared book:\nbooktx series review BOOK --profile PROFILE --write\nbooktx source interview-report BOOK --profile PROFILE --write\n# Review/edit the generated decision manifest, then:\nbooktx source interview-apply BOOK --profile PROFILE --file DECISIONS.json --write\nbooktx series finalize BOOK --profile PROFILE --write\n\n\n\n\nBefore starting isolated translation, the lower-level source-policy interview is available when source analysis exists:\n\nbooktx sour…",
+          "lower": "start at the project root when you need profile selection or cross-profile\nreview:\n\nbooktx status .\nbooktx profile list .\n\n\n\n\nif multiple profiles exist, pass --profile on all translation-state commands.\n\nfor the normal next-book workflow, use the high-level project-root commands:\n\nbooktx series prepare book ... --write\n# or, for an existing prepared book:\nbooktx series review book --profile profile --write\nbooktx source interview-report book --profile profile --write\n# review/edit the generated decision manifest, then:\nbooktx source interview-apply book --profile profile --file decisions.json --write\nbooktx series finalize book --profile profile --write\n\n\n\n\nbefore starting isolated translation, the lower-level source-policy interview is available when source analysis exists:\n\nbooktx sour…"
         },
         {
           "anchor": "",
@@ -125,8 +125,8 @@
         {
           "anchor": "",
           "heading": "API reference",
-          "text": "This page is generated reference material for selected internal Python modules.\nThe CLI and its documented JSON output are the user-facing interface. Python\nmodule names and function signatures may change between releases unless a\nseparate API contract says otherwise.\n\nThe durable model names currently include TranslationStoreV2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, EPUB span metadata, and the v3 shard models in\nbooktx.store.models. New profiles currently default to the v2 canonical\nstore, while the shard-based v3 backend under\ntranslations/<profile>/translation-store/ remains an explicit opt-in\nmigration target. TranslationStoreV2 remains the compatibility\nmaterialization model.\n\nThe reference is intentionally broad so genera…",
-          "lower": "this page is generated reference material for selected internal python modules.\nthe cli and its documented json output are the user-facing interface. python\nmodule names and function signatures may change between releases unless a\nseparate api contract says otherwise.\n\nthe durable model names currently include translationstorev2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, epub span metadata, and the v3 shard models in\nbooktx.store.models. new profiles currently default to the v2 canonical\nstore, while the shard-based v3 backend under\ntranslations/<profile>/translation-store/ remains an explicit opt-in\nmigration target. translationstorev2 remains the compatibility\nmaterialization model.\n\nthe reference is intentionally broad so genera…"
+          "text": "This page is generated reference material for selected internal Python modules.\nThe CLI and its documented JSON output are the user-facing interface. Python\nmodule names and function signatures may change between releases unless a\nseparate API contract says otherwise.\n\nThe durable model names currently include TranslationStoreV2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, EPUB span metadata, and the v3 shard models in\nbooktx.store.models. New profiles default to the shard-based v3 backend under\ntranslations/<profile>/translation-store/; existing profiles retain their\ndetected v1/v2/v3 backend. TranslationStoreV2 remains the compatibility\nmaterialization model.\n\nThe reference is intentionally broad so generated documentation can expo…",
+          "lower": "this page is generated reference material for selected internal python modules.\nthe cli and its documented json output are the user-facing interface. python\nmodule names and function signatures may change between releases unless a\nseparate api contract says otherwise.\n\nthe durable model names currently include translationstorev2, translation\nrecords and review candidates, context models, profile configuration, source\nmanifests, epub span metadata, and the v3 shard models in\nbooktx.store.models. new profiles default to the shard-based v3 backend under\ntranslations/<profile>/translation-store/; existing profiles retain their\ndetected v1/v2/v3 backend. translationstorev2 remains the compatibility\nmaterialization model.\n\nthe reference is intentionally broad so generated documentation can expo…"
         }
       ]
     },
@@ -156,8 +156,87 @@
         {
           "anchor": "",
           "heading": "Store and provenance",
-          "text": "New profiles currently default to the v2 canonical store. The shard-based v3\nstore under translations/<profile>/translation-store/ remains an explicit\nopt-in migration target until its stabilization gate is completed. When v3 is\nactive it stores a manifest plus per-chunk current, translation-candidate, and\nreview-candidate shards. TranslationStoreV2 remains the compatibility\nmaterialization model returned by the Python loader surface. Effective output\nstill chooses a valid review candidate before the current translation version.\nTask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\nGenerated compatibility exports, indexes, reports, and output are derived from\nthe canonical store and can be regenerated. Agents and operat…",
-          "lower": "new profiles currently default to the v2 canonical store. the shard-based v3\nstore under translations/<profile>/translation-store/ remains an explicit\nopt-in migration target until its stabilization gate is completed. when v3 is\nactive it stores a manifest plus per-chunk current, translation-candidate, and\nreview-candidate shards. translationstorev2 remains the compatibility\nmaterialization model returned by the python loader surface. effective output\nstill chooses a valid review candidate before the current translation version.\ntask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\ngenerated compatibility exports, indexes, reports, and output are derived from\nthe canonical store and can be regenerated. agents and operat…"
+          "text": "New profiles default to the v3 canonical store. Existing profiles remain on\ntheir detected backend and are never auto-migrated. V2 is the compatibility\ntranslation-store.json; v3 stores a manifest plus per-chunk current,\ntranslation-candidate, and review-candidate shards. Each changed chunk shares\none advancing revision across its three files, and normal readers retry around\npublication and validate cross-shard invariants. TranslationStoreV2 remains\nthe compatibility materialization model returned by the Python loader surface.\nEffective output still chooses a valid review candidate before the current\ntranslation version.\nTask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\nGenerated compatibility exports, indexes, repo…",
+          "lower": "new profiles default to the v3 canonical store. existing profiles remain on\ntheir detected backend and are never auto-migrated. v2 is the compatibility\ntranslation-store.json; v3 stores a manifest plus per-chunk current,\ntranslation-candidate, and review-candidate shards. each changed chunk shares\none advancing revision across its three files, and normal readers retry around\npublication and validate cross-shard invariants. translationstorev2 remains\nthe compatibility materialization model returned by the python loader surface.\neffective output still chooses a valid review candidate before the current\ntranslation version.\ntask context views and revision metadata preserve the source, baseline, and\npolicy evidence needed to validate provenance.\n\ngenerated compatibility exports, indexes, repo…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/changelog/",
+      "title": "booktx Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\n\n\n\nAll notable chan …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\n\n\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on Keep a Changelog, and this project adheres to Semantic Versioning.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead.\n\n\n\nall notable changes to this project will be documented in this file.\n\nthe format is based on keep a changelog, and this project adheres to semantic versioning."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added booktx translate store-status for canonical backend, source-hash, transaction, doctor, and legacy-copy visibility",
+          "lower": "added booktx translate store-status for canonical backend, source-hash, transaction, doctor, and legacy-copy visibility"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Promoted the v3 translation store to the default for newly created profiles\n\n\nExisting profiles continue using their detected backend and are never auto-migrated; explicit v2 creation, v2-to-v3 migration, backup, and rollback remain available",
+          "lower": "promoted the v3 translation store to the default for newly created profiles\n\n\nexisting profiles continue using their detected backend and are never auto-migrated; explicit v2 creation, v2-to-v3 migration, backup, and rollback remain available"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added a v3 translation store with a backend-neutral repository, a store doctor, and a crash-safe commit journal\n\n\nAdded a v3 store migration flow with plan, backup, parity, rollback, and a stale-lock policy gate\n\n\nAdded booktx translate lint-block, a per-task agent brief, and a shared block-protocol module",
+          "lower": "added a v3 translation store with a backend-neutral repository, a store doctor, and a crash-safe commit journal\n\n\nadded a v3 store migration flow with plan, backup, parity, rollback, and a stale-lock policy gate\n\n\nadded booktx translate lint-block, a per-task agent brief, and a shared block-protocol module"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed booktx translate migrate-store to accept --to, JSON output, custom backup, and a stale-lock policy",
+          "lower": "changed booktx translate migrate-store to accept --to, json output, custom backup, and a stale-lock policy"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed write_text_atomic to preserve newlines on Windows and updated the subprocess test to use sysconfig\n\n\nFixed v3 store lock acquisition to probe liveness on Windows and surface a clear stale-lock repair error",
+          "lower": "fixed write_text_atomic to preserve newlines on windows and updated the subprocess test to use sysconfig\n\n\nfixed v3 store lock acquisition to probe liveness on windows and surface a clear stale-lock repair error"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added agents write, status, and clean commands to generate per-harness AGENTS.md files and remove only booktx-generated files\n\n\nAdded context export-pack and import-pack commands for sharing series-wide policy (style, global rules, glossary, approved answers) across book profiles\n\n\nAdded EPUB output target-language metadata and a deterministic best-effort hyphenation stylesheet configurable via the [epub_output] hyphenation policy\n\n\nAdded booktx chapters detection with –audit comparing the EPUB table of contents against extracted chapter spans and the chapter map\n\n\nAdded review configure, rerun, deactivate, and revise-record commands plus bounded multi-pass review tasks, a qa-scan command, and EPUB output inspection\n\n\nAdded context mandate-term and audit-term with active-only validation b…",
+          "lower": "added agents write, status, and clean commands to generate per-harness agents.md files and remove only booktx-generated files\n\n\nadded context export-pack and import-pack commands for sharing series-wide policy (style, global rules, glossary, approved answers) across book profiles\n\n\nadded epub output target-language metadata and a deterministic best-effort hyphenation stylesheet configurable via the [epub_output] hyphenation policy\n\n\nadded booktx chapters detection with –audit comparing the epub table of contents against extracted chapter spans and the chapter map\n\n\nadded review configure, rerun, deactivate, and revise-record commands plus bounded multi-pass review tasks, a qa-scan command, and epub output inspection\n\n\nadded context mandate-term and audit-term with active-only validation b…"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed translation validation to detect quotation mismatches in translated targets",
+          "lower": "fixed translation validation to detect quotation mismatches in translated targets"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added pass-through validation profile for custom project workflows\n\n\nAdded isolated profile-root mode with independent state management per workspace\n\n\nAdded user-approval workflow for context generation\n\n\nImproved inline XHTML fragment handling with EPUB validation\n\n\nAdded translated content review system with acceptance workflow\n\n\nAdded large chapter workflow support with preflight validation\n\n\nAdded system hardening and bug fixes across CLI and task workflows\n\n\nImproved check and review workflow with enhanced validation\n\n\nAdded export-index command for profile-local editor QA indexes\n\n\nImproved context change CLI commands and agent skill instructions",
+          "lower": "added pass-through validation profile for custom project workflows\n\n\nadded isolated profile-root mode with independent state management per workspace\n\n\nadded user-approval workflow for context generation\n\n\nimproved inline xhtml fragment handling with epub validation\n\n\nadded translated content review system with acceptance workflow\n\n\nadded large chapter workflow support with preflight validation\n\n\nadded system hardening and bug fixes across cli and task workflows\n\n\nimproved check and review workflow with enhanced validation\n\n\nadded export-index command for profile-local editor qa indexes\n\n\nimproved context change cli commands and agent skill instructions"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed unit test coverage across acceptance, CLI, and translation modules",
+          "lower": "fixed unit test coverage across acceptance, cli, and translation modules"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added profile-based multi-language support with separate translation state per language\n\n\nAdded translation versioning with nested version tracks and improved part addressing via record refs\n\n\nAdded bounded multi-chapter run management with resumable task creation\n\n\nAdded chapter note context handling that excludes chapter-specific notes from context build hash\n\n\nAdded context markdown drift detection and safe overwrite guards for context.md\n\n\nAdded schema version for chunks with automatic rechunking and improved identity command\n\n\nAdded acceptance and submission system with submission resolution and progress tracking\n\n\nAdded profile migration tooling and identity module for resolving project state across layouts\n\n\nAdded translate CLI commands with improved agent skill instructions",
+          "lower": "added profile-based multi-language support with separate translation state per language\n\n\nadded translation versioning with nested version tracks and improved part addressing via record refs\n\n\nadded bounded multi-chapter run management with resumable task creation\n\n\nadded chapter note context handling that excludes chapter-specific notes from context build hash\n\n\nadded context markdown drift detection and safe overwrite guards for context.md\n\n\nadded schema version for chunks with automatic rechunking and improved identity command\n\n\nadded acceptance and submission system with submission resolution and progress tracking\n\n\nadded profile migration tooling and identity module for resolving project state across layouts\n\n\nadded translate cli commands with improved agent skill instructions"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed unit test failures in CLI context and epub IO tests\n\n\nFixed translation run model rebuild and agent status resolution",
+          "lower": "fixed unit test failures in cli context and epub io tests\n\n\nfixed translation run model rebuild and agent status resolution"
         }
       ]
     },
@@ -175,14 +254,14 @@
         {
           "anchor": "",
           "heading": "Human lifecycle",
-          "text": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book PROFILE --target de --target-locale de-DE --model MODEL\nbooktx guide ./book --profile PROFILE\nbooktx status ./book --profile PROFILE\nbooktx check ./book --profile PROFILE\nbooktx build ./book --profile PROFILE\n\n\n\n\nUse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the EPUB output inspection\nsurface.",
-          "lower": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book profile --target de --target-locale de-de --model model\nbooktx guide ./book --profile profile\nbooktx status ./book --profile profile\nbooktx check ./book --profile profile\nbooktx build ./book --profile profile\n\n\n\n\nuse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the epub output inspection\nsurface."
+          "text": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book PROFILE --target de --target-locale de-DE --model MODEL\nbooktx translate store-status ./book --profile PROFILE\nbooktx guide ./book --profile PROFILE\nbooktx status ./book --profile PROFILE\nbooktx check ./book --profile PROFILE\nbooktx build ./book --profile PROFILE\n\n\n\n\nUse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the EPUB output inspection\nsurface.",
+          "lower": "booktx init ./book --source-file ./book.epub --source-lang en\nbooktx extract ./book\nbooktx chapters ./book --audit\nbooktx profile create ./book profile --target de --target-locale de-de --model model\nbooktx translate store-status ./book --profile profile\nbooktx guide ./book --profile profile\nbooktx status ./book --profile profile\nbooktx check ./book --profile profile\nbooktx build ./book --profile profile\n\n\n\n\nuse booktx inspect for a read-only pre-extraction estimate and\nbooktx qa-scan for advanced target checks. booktx validate is the detailed\nvalidation command. booktx epub inspect is the epub output inspection\nsurface."
         },
         {
           "anchor": "",
           "heading": "Human decisions",
-          "text": "booktx context init ./book --profile PROFILE --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile PROFILE --write\nbooktx source interview-next ./book --profile PROFILE --format markdown\nbooktx context questionnaire ./book --profile PROFILE --stdout\nbooktx context approve ./book --profile PROFILE Q001 --text \"...\" --approved-by \"user:NAME\"\nbooktx context mark-ready ./book --profile PROFILE\nbooktx glossary status ./book --profile PROFILE\nbooktx glossary mandate ./book \"Empire\" --profile PROFILE --target \"Imperium\" --forbid \"Reich\"\nbooktx glossary add-variant ./book \"Beetle-kinden\" --profile PROFILE --target \"Käferartige\" --usage vocative\nbooktx glossary set-usage ./book \"Dragonfly-kinden\" --profile PROFILE --person-singular \"An…",
-          "lower": "booktx context init ./book --profile profile --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile profile --write\nbooktx source interview-next ./book --profile profile --format markdown\nbooktx context questionnaire ./book --profile profile --stdout\nbooktx context approve ./book --profile profile q001 --text \"...\" --approved-by \"user:name\"\nbooktx context mark-ready ./book --profile profile\nbooktx glossary status ./book --profile profile\nbooktx glossary mandate ./book \"empire\" --profile profile --target \"imperium\" --forbid \"reich\"\nbooktx glossary add-variant ./book \"beetle-kinden\" --profile profile --target \"käferartige\" --usage vocative\nbooktx glossary set-usage ./book \"dragonfly-kinden\" --profile profile --person-singular \"an…"
+          "text": "Series preparation commands:\n\nbooktx series review ./book --profile PROFILE --write\nbooktx series status ./book --profile PROFILE\nbooktx series finalize ./book --profile PROFILE --write\n\n\n\n\nbooktx context init ./book --profile PROFILE --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile PROFILE --write\nbooktx source interview-next ./book --profile PROFILE --format markdown\nbooktx source interview-report ./book --profile PROFILE --format both --write\nbooktx source interview-template ./book --profile PROFILE --write\nbooktx source interview-apply ./book --profile PROFILE \\\n  --file .booktx/reports/source-interview-decisions.json --write\nbooktx context questionnaire ./book --profile PROFILE --stdout\nbooktx context approve ./book…",
+          "lower": "series preparation commands:\n\nbooktx series review ./book --profile profile --write\nbooktx series status ./book --profile profile\nbooktx series finalize ./book --profile profile --write\n\n\n\n\nbooktx context init ./book --profile profile --non-interactive\nbooktx source analyze ./book --write --sync-profiles\nbooktx source interview-plan ./book --profile profile --write\nbooktx source interview-next ./book --profile profile --format markdown\nbooktx source interview-report ./book --profile profile --format both --write\nbooktx source interview-template ./book --profile profile --write\nbooktx source interview-apply ./book --profile profile \\\n  --file .booktx/reports/source-interview-decisions.json --write\nbooktx context questionnaire ./book --profile profile --stdout\nbooktx context approve ./book…"
         },
         {
           "anchor": "",
@@ -236,8 +315,8 @@
         {
           "anchor": "",
           "heading": "State of truth",
-          "text": "New profiles currently use TranslationStoreV2 as the canonical record store.\nWhen a profile opts into v3, translations/<profile>/translation-store/\nbecomes the canonical shard-based backend. TranslationStoreV2 remains the\ncompatibility materialization model used by the loader surface.\ntranslation-version-ledger.json records version history. Generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. Effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/.",
-          "lower": "new profiles currently use translationstorev2 as the canonical record store.\nwhen a profile opts into v3, translations/<profile>/translation-store/\nbecomes the canonical shard-based backend. translationstorev2 remains the\ncompatibility materialization model used by the loader surface.\ntranslation-version-ledger.json records version history. generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/."
+          "text": "New profiles use v3 as the canonical record store. Existing profiles remain on\nthe backend detected on disk; v2 is a single translation-store.json and v3 is\nthe manifest plus per-chunk shard backend under\ntranslations/<profile>/translation-store/. TranslationStoreV2 remains the\ncompatibility materialization model used at API and migration boundaries.\ntranslation-version-ledger.json records version history. Generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. Effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/.",
+          "lower": "new profiles use v3 as the canonical record store. existing profiles remain on\nthe backend detected on disk; v2 is a single translation-store.json and v3 is\nthe manifest plus per-chunk shard backend under\ntranslations/<profile>/translation-store/. translationstorev2 remains the\ncompatibility materialization model used at api and migration boundaries.\ntranslation-version-ledger.json records version history. generated\ntranslated/, editor indexes, reports, and output files are derived artifacts\nand can be rebuilt.\n\ntranslations/<profile>/context.json is authoritative context state.\ncontext.md is its rendered view. effective context views used by tasks are\nsnapshotted under context-history/views/<sha>/."
         },
         {
           "anchor": "",
@@ -291,8 +370,8 @@
         {
           "anchor": "",
           "heading": "Source-policy interview",
-          "text": "Use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. The interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze BOOK --write --sync-profiles\nbooktx source interview-plan BOOK --profile PROFILE --write\nbooktx source interview-next BOOK --profile PROFILE --format markdown\nbooktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write\nbooktx source interview-skip BOOK CAND-... --profile PROFILE --disposition ignored --reason \"REASON\" --write\nbooktx source interview-status BOOK --profile PROFILE --fail-if-open\nbooktx context prefill BOOK --profile PROFILE --from-source-analysis --gate-readiness --write\n\n\n\n\nRun interview-stat…",
-          "lower": "use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. the interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze book --write --sync-profiles\nbooktx source interview-plan book --profile profile --write\nbooktx source interview-next book --profile profile --format markdown\nbooktx source interview-answer book cand-... --profile profile --target target --write\nbooktx source interview-skip book cand-... --profile profile --disposition ignored --reason \"reason\" --write\nbooktx source interview-status book --profile profile --fail-if-open\nbooktx context prefill book --profile profile --from-source-analysis --gate-readiness --write\n\n\n\n\nrun interview-stat…"
+          "text": "Use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. The interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze BOOK --write --sync-profiles\nbooktx source interview-plan BOOK --profile PROFILE --write\nbooktx source interview-next BOOK --profile PROFILE --format markdown\nbooktx source interview-report BOOK --profile PROFILE --format both --write\nbooktx source interview-template BOOK --profile PROFILE --write\nbooktx source interview-apply BOOK --profile PROFILE --file DECISIONS.json --write\nbooktx source interview-answer BOOK CAND-... --profile PROFILE --target TARGET --write\nbooktx source interview-skip BOOK CAND-... --profile PROFILE --disposit…",
+          "lower": "use the generic interview commands when source-analysis candidates need user-approved profile policy before translation. the interview ledger is generated profile-local state; approved policy is stored in context and termbase commands.\n\nbooktx source analyze book --write --sync-profiles\nbooktx source interview-plan book --profile profile --write\nbooktx source interview-next book --profile profile --format markdown\nbooktx source interview-report book --profile profile --format both --write\nbooktx source interview-template book --profile profile --write\nbooktx source interview-apply book --profile profile --file decisions.json --write\nbooktx source interview-answer book cand-... --profile profile --target target --write\nbooktx source interview-skip book cand-... --profile profile --disposit…"
         },
         {
           "anchor": "",
@@ -492,8 +571,8 @@
         {
           "anchor": "",
           "heading": "Prepare the next series book",
-          "text": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile PROFILE --series-id series-id \\\n  --title \"Series policy\" --target de --target-locale de-DE --model MODEL --write\nbooktx context questionnaire ./book5 --profile PROFILE --stdout\n\n\n\n\nReview the generated policy before running context mark-ready.",
-          "lower": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile profile --series-id series-id \\\n  --title \"series policy\" --target de --target-locale de-de --model model --write\nbooktx context questionnaire ./book5 --profile profile --stdout\n\n\n\n\nreview the generated policy before running context mark-ready."
+          "text": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile PROFILE --series-id series-id \\\n  --title \"Series policy\" --target de --target-locale de-DE --model MODEL --write\nbooktx source interview-report ./book5 --profile PROFILE --write\n# Review/edit .booktx/reports/source-interview-decisions.json.\nbooktx source interview-apply ./book5 --profile PROFILE \\\n  --file .booktx/reports/source-interview-decisions.json --write\nbooktx series finalize ./book5 --profile PROFILE --write\n\n\n\n\nFor an existing book use booktx series review ./book5 --profile PROFILE --write;\nbooktx series finalize performs the final readiness and isolation checks.",
+          "lower": "booktx series prepare ./book5 --source-file ./book5.epub \\\n  --from-book ./book4 --profile profile --series-id series-id \\\n  --title \"series policy\" --target de --target-locale de-de --model model --write\nbooktx source interview-report ./book5 --profile profile --write\n# review/edit .booktx/reports/source-interview-decisions.json.\nbooktx source interview-apply ./book5 --profile profile \\\n  --file .booktx/reports/source-interview-decisions.json --write\nbooktx series finalize ./book5 --profile profile --write\n\n\n\n\nfor an existing book use booktx series review ./book5 --profile profile --write;\nbooktx series finalize performs the final readiness and isolation checks."
         },
         {
           "anchor": "",
@@ -529,14 +608,14 @@
         {
           "anchor": "",
           "heading": "Operating workflows",
-          "text": "Commands\n\n\nHuman workflows\n\n\nContext\n\n\nAgent workflow\n\n\nSeries workflows\n\n\nTranslation contract",
-          "lower": "commands\n\n\nhuman workflows\n\n\ncontext\n\n\nagent workflow\n\n\nseries workflows\n\n\ntranslation contract"
+          "text": "Commands\n\n\nHuman workflows\n\n\nContext\n\n\nAgent workflow\n\n\nSeries workflows\n\n\nTranslation contract\n\n\nTranslation store",
+          "lower": "commands\n\n\nhuman workflows\n\n\ncontext\n\n\nagent workflow\n\n\nseries workflows\n\n\ntranslation contract\n\n\ntranslation store"
         },
         {
           "anchor": "",
           "heading": "Formats and maintenance",
-          "text": "Markdown\n\n\nEPUB\n\n\nTroubleshooting\n\n\nMaintenance\n\n\nDevelopment\n\n\nReleasing",
-          "lower": "markdown\n\n\nepub\n\n\ntroubleshooting\n\n\nmaintenance\n\n\ndevelopment\n\n\nreleasing"
+          "text": "Markdown\n\n\nEPUB\n\n\nTroubleshooting\n\n\nMaintenance\n\n\nDevelopment\n\n\nReleasing\n\n\nChangelog",
+          "lower": "markdown\n\n\nepub\n\n\ntroubleshooting\n\n\nmaintenance\n\n\ndevelopment\n\n\nreleasing\n\n\nchangelog"
         },
         {
           "anchor": "",
@@ -566,8 +645,8 @@
         {
           "anchor": "",
           "heading": "Legacy migration",
-          "text": "booktx profile migrate-current ./book PROFILE\nbooktx translate import-legacy ./book --profile PROFILE\nbooktx translate migrate-store ./book --profile PROFILE\nbooktx translate migrate-inline-xhtml ./book --profile PROFILE\n\n\n\n\nUse migration commands only for legacy projects. Current projects use\nTranslationStoreV2 by default. The shard-based v3 store is opt-in through\nbooktx translate migrate-store ./book --profile PROFILE --to v3 --write.",
-          "lower": "booktx profile migrate-current ./book profile\nbooktx translate import-legacy ./book --profile profile\nbooktx translate migrate-store ./book --profile profile\nbooktx translate migrate-inline-xhtml ./book --profile profile\n\n\n\n\nuse migration commands only for legacy projects. current projects use\ntranslationstorev2 by default. the shard-based v3 store is opt-in through\nbooktx translate migrate-store ./book --profile profile --to v3 --write."
+          "text": "booktx profile migrate-current ./book PROFILE\nbooktx translate import-legacy ./book --profile PROFILE\nbooktx translate migrate-store ./book --profile PROFILE\nbooktx translate migrate-inline-xhtml ./book --profile PROFILE\n\n\n\n\nUse migration commands only for legacy projects. New profiles use v3 by\ndefault; existing profiles retain their detected backend. Inspect first with\nbooktx translate store-status ./book --profile PROFILE, then use the\ndry-run-first migration command when changing an existing profile:\nbooktx translate migrate-store ./book --profile PROFILE --to v3 --write.",
+          "lower": "booktx profile migrate-current ./book profile\nbooktx translate import-legacy ./book --profile profile\nbooktx translate migrate-store ./book --profile profile\nbooktx translate migrate-inline-xhtml ./book --profile profile\n\n\n\n\nuse migration commands only for legacy projects. new profiles use v3 by\ndefault; existing profiles retain their detected backend. inspect first with\nbooktx translate store-status ./book --profile profile, then use the\ndry-run-first migration command when changing an existing profile:\nbooktx translate migrate-store ./book --profile profile --to v3 --write."
         },
         {
           "anchor": "",
@@ -732,8 +811,8 @@
         {
           "anchor": "",
           "heading": "Profile-local state",
-          "text": "Each translations/<profile>/ directory is an isolation boundary. The\ncanonical store is v2 by default. When a profile opts into v3, the\ntranslation-store/ directory becomes the canonical shard backend; context.json\nand the version ledger are also durable state. Tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. They are\nrebuildable from source state and the profile store and are not the source of\ntruth.",
-          "lower": "each translations/<profile>/ directory is an isolation boundary. the\ncanonical store is v2 by default. when a profile opts into v3, the\ntranslation-store/ directory becomes the canonical shard backend; context.json\nand the version ledger are also durable state. tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. they are\nrebuildable from source state and the profile store and are not the source of\ntruth."
+          "text": "Each translations/<profile>/ directory is an isolation boundary. The\nnew profiles use v3 by default. Existing profiles keep their detected backend;\nthe v2 translation-store.json remains supported and the\ntranslation-store/ directory is the canonical v3 shard backend. context.json\nand the version ledger are also durable state. Tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. They are\nrebuildable from source state and the profile store and are not the source of\ntruth.",
+          "lower": "each translations/<profile>/ directory is an isolation boundary. the\nnew profiles use v3 by default. existing profiles keep their detected backend;\nthe v2 translation-store.json remains supported and the\ntranslation-store/ directory is the canonical v3 shard backend. context.json\nand the version ledger are also durable state. tasks, todos, submission files,\nreviews, judge artifacts, and reports remain profile-local.\n\ntranslated/, editor indexes, and output/ are generated artifacts. they are\nrebuildable from source state and the profile store and are not the source of\ntruth."
         },
         {
           "anchor": "",
@@ -825,8 +904,8 @@
         {
           "anchor": "",
           "heading": "Normal path",
-          "text": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"Shadows of the Apt German series context\" \\\n  --target de \\\n  --target-locale de-DE \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nThe command:\n\n\nInitializes or reuses the source project.\n\n\nExtracts source chunks when needed.\n\n\nRuns the EPUB chapter audit.\n\n\nCreates or reuses the target profile.\n\n\nImports the previous book’s reusable context policy.\n\n\nRuns source analysis and refreshes profile snapshots.\n\n\nPrefills context review work and renders context.md.\n\n\nWrites .booktx/reports/series-prepare.json and .md.\n\n\nStops before translation and before au…",
-          "lower": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"shadows of the apt german series context\" \\\n  --target de \\\n  --target-locale de-de \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nthe command:\n\n\ninitializes or reuses the source project.\n\n\nextracts source chunks when needed.\n\n\nruns the epub chapter audit.\n\n\ncreates or reuses the target profile.\n\n\nimports the previous book’s reusable context policy.\n\n\nruns source analysis and refreshes profile snapshots.\n\n\nprefills context review work and renders context.md.\n\n\nwrites .booktx/reports/series-prepare.json and .md.\n\n\nstops before translation and before au…"
+          "text": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"Shadows of the Apt German series context\" \\\n  --target de \\\n  --target-locale de-DE \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nThe command:\n\n\nInitializes or reuses the source project.\n\n\nExtracts source chunks when needed.\n\n\nRuns the EPUB chapter audit.\n\n\nCreates or reuses the target profile.\n\n\nImports the previous book’s reusable context policy.\n\n\nRuns source analysis and refreshes profile snapshots.\n\n\nPrefills context review work and renders context.md.\n\n\nBuilds the profile-local source-interview ledger, Markdown/JSON report, and\nhash-bound decis…",
+          "lower": "booktx series prepare ./book5 \\\n  --source-file ./book5/book5.epub \\\n  --from-book ./book4 \\\n  --from-profile de_glm_5_2 \\\n  --profile de_glm_5_2 \\\n  --series-id shadows-of-the-apt \\\n  --title \"shadows of the apt german series context\" \\\n  --target de \\\n  --target-locale de-de \\\n  --model zai/glm-5.2@high \\\n  --write \\\n  --write-termbase \\\n  --termbase-scope project\n\n\n\n\nthe command:\n\n\ninitializes or reuses the source project.\n\n\nextracts source chunks when needed.\n\n\nruns the epub chapter audit.\n\n\ncreates or reuses the target profile.\n\n\nimports the previous book’s reusable context policy.\n\n\nruns source analysis and refreshes profile snapshots.\n\n\nprefills context review work and renders context.md.\n\n\nbuilds the profile-local source-interview ledger, markdown/json report, and\nhash-bound decis…"
         },
         {
           "anchor": "",
@@ -851,13 +930,13 @@
     {
       "url": "/tools/booktx/main/translation-contract/",
       "title": "booktx Translation contract",
-      "snippet": "Translation state is profile-local. New profiles currently use\ntranslations/<profile>/translation-store.json (TranslationStoreV2) as the\ndur …",
+      "snippet": "Translation state is profile-local. New profiles use the v3\ntranslations/<profile>/translation-store/ backend, consisting of a manifest\nand …",
       "sections": [
         {
           "anchor": "",
           "heading": "Translation contract",
-          "text": "Translation state is profile-local. New profiles currently use\ntranslations/<profile>/translation-store.json (TranslationStoreV2) as the\ndurable current record store. The shard-based\ntranslations/<profile>/translation-store/ backend is an explicit opt-in v3\nmigration target. The version ledger, context, tasks, submissions, reviews,\nand reports are also profile-local.",
-          "lower": "translation state is profile-local. new profiles currently use\ntranslations/<profile>/translation-store.json (translationstorev2) as the\ndurable current record store. the shard-based\ntranslations/<profile>/translation-store/ backend is an explicit opt-in v3\nmigration target. the version ledger, context, tasks, submissions, reviews,\nand reports are also profile-local."
+          "text": "Translation state is profile-local. New profiles use the v3\ntranslations/<profile>/translation-store/ backend, consisting of a manifest\nand per-chunk current, translation-candidate, and review-candidate files.\nExisting profiles keep their detected backend, including v2\ntranslation-store.json. The version ledger, context, tasks, submissions,\nreviews, and reports are also profile-local.\n\nReaders validate one shared chunk revision across all three v3 shard files and\nretry while a transaction is publishing. Writers use a lock, staged journal,\noptimistic hashes/revisions, and roll-forward recovery after interruption. Use\nbooktx translate store-status for non-mutating health inspection.",
+          "lower": "translation state is profile-local. new profiles use the v3\ntranslations/<profile>/translation-store/ backend, consisting of a manifest\nand per-chunk current, translation-candidate, and review-candidate files.\nexisting profiles keep their detected backend, including v2\ntranslation-store.json. the version ledger, context, tasks, submissions,\nreviews, and reports are also profile-local.\n\nreaders validate one shared chunk revision across all three v3 shard files and\nretry while a transaction is publishing. writers use a lock, staged journal,\noptimistic hashes/revisions, and roll-forward recovery after interruption. use\nbooktx translate store-status for non-mutating health inspection."
         },
         {
           "anchor": "",
@@ -900,6 +979,43 @@
           "heading": "Glossary phrase collisions",
           "text": "Glossary enforcement uses the longest non-shadowed source span. If a shorter\nterm occurs inside a longer configured phrase, add the longer phrase or use\nnatural apposition rather than forcing an unnatural target token. A standalone\nshorter occurrence remains subject to its own rule.",
           "lower": "glossary enforcement uses the longest non-shadowed source span. if a shorter\nterm occurs inside a longer configured phrase, add the longer phrase or use\nnatural apposition rather than forcing an unnatural target token. a standalone\nshorter occurrence remains subject to its own rule."
+        }
+      ]
+    },
+    {
+      "url": "/tools/booktx/main/translation-store/",
+      "title": "booktx Translation store policy",
+      "snippet": "The translation store is profile-local canonical state. New profiles use v3;\nexisting profiles keep the backend detected from disk. Ordinary …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Translation store policy",
+          "text": "The translation store is profile-local canonical state. New profiles use v3;\nexisting profiles keep the backend detected from disk. Ordinary loading,\nvalidation, build, status, and acceptance commands never migrate an existing\nprofile implicitly.",
+          "lower": "the translation store is profile-local canonical state. new profiles use v3;\nexisting profiles keep the backend detected from disk. ordinary loading,\nvalidation, build, status, and acceptance commands never migrate an existing\nprofile implicitly."
+        },
+        {
+          "anchor": "",
+          "heading": "Backends and detection",
+          "text": "V3 is the directory translations/<profile>/translation-store/:\n\ntranslation-store/\n  manifest.json\n  current/0001.json\n  translation-candidates/0001.json\n  review-candidates/0001.json\n  transactions/\n\n\n\n\nEach file is per source chunk. The manifest is authoritative for the chunk\nset. If the v3 directory has a valid manifest, it wins detection. Otherwise a\ntranslation-store.json with version 2 is the canonical v2 backend. A missing\nstore is created only by the explicit creation policy: v3 for a new profile,\nor v2 through booktx profile create --store-format v2.",
+          "lower": "v3 is the directory translations/<profile>/translation-store/:\n\ntranslation-store/\n  manifest.json\n  current/0001.json\n  translation-candidates/0001.json\n  review-candidates/0001.json\n  transactions/\n\n\n\n\neach file is per source chunk. the manifest is authoritative for the chunk\nset. if the v3 directory has a valid manifest, it wins detection. otherwise a\ntranslation-store.json with version 2 is the canonical v2 backend. a missing\nstore is created only by the explicit creation policy: v3 for a new profile,\nor v2 through booktx profile create --store-format v2."
+        },
+        {
+          "anchor": "",
+          "heading": "Consistency and recovery",
+          "text": "Every changed chunk writes the same advancing revision to its current,\ntranslation-candidate, and review-candidate envelopes. A reader obtains all\nthree files inside a bounded revision boundary, validates source hashes and\ncandidate-selection invariants, and retries if a writer is publishing. Writers\nuse staged transaction journals, optimistic file hash/revision checks, a\nstore-root lock, and roll-forward recovery after interruption.\n\nThe doctor inventories the manifest and all shard directories. It reports\nmissing, orphan, incomplete, unexpected, revision-mismatched, invalid, and\npending-transaction state without repairing it. Run:\n\nbooktx translate store-status ./book --profile PROFILE\nbooktx translate store-status ./book --profile PROFILE --json",
+          "lower": "every changed chunk writes the same advancing revision to its current,\ntranslation-candidate, and review-candidate envelopes. a reader obtains all\nthree files inside a bounded revision boundary, validates source hashes and\ncandidate-selection invariants, and retries if a writer is publishing. writers\nuse staged transaction journals, optimistic file hash/revision checks, a\nstore-root lock, and roll-forward recovery after interruption.\n\nthe doctor inventories the manifest and all shard directories. it reports\nmissing, orphan, incomplete, unexpected, revision-mismatched, invalid, and\npending-transaction state without repairing it. run:\n\nbooktx translate store-status ./book --profile profile\nbooktx translate store-status ./book --profile profile --json"
+        },
+        {
+          "anchor": "",
+          "heading": "Migration and rollback",
+          "text": "Migration is explicit and dry-run first:\n\nbooktx translate migrate-store ./book --profile PROFILE --to v3 --json\nbooktx translate migrate-store ./book --profile PROFILE --to v3 --write\nbooktx translate migrate-store ./book --profile PROFILE --to v2 --write\n\n\n\n\nExisting profiles are not auto-migrated. A preserved v2 file may coexist with\nv3 after --keep-legacy-copy; v3 remains canonical and store-status reports\nthe legacy copy and its hash. Rollback flattens v3 into the v2 compatibility\nmodel, so v3-only layout metadata should be treated as operational provenance,\nnot record content.",
+          "lower": "migration is explicit and dry-run first:\n\nbooktx translate migrate-store ./book --profile profile --to v3 --json\nbooktx translate migrate-store ./book --profile profile --to v3 --write\nbooktx translate migrate-store ./book --profile profile --to v2 --write\n\n\n\n\nexisting profiles are not auto-migrated. a preserved v2 file may coexist with\nv3 after --keep-legacy-copy; v3 remains canonical and store-status reports\nthe legacy copy and its hash. rollback flattens v3 into the v2 compatibility\nmodel, so v3-only layout metadata should be treated as operational provenance,\nnot record content."
+        },
+        {
+          "anchor": "",
+          "heading": "Compatibility and promotion gate",
+          "text": "TranslationStoreV2 remains the compatibility in-memory model used for\nmigration, export, and APIs that need the legacy shape. The executable\nreadiness gate covers v2/v3 validation parity, consistent reads, revisions,\nprovenance, doctor inventory, workflow parity, recovery, store-status, default\npolicy, documentation, and available scalability checks. The quality gate runs\nthe focused store suite, parity suite, operational checks, full tests, and\npackaging checks.",
+          "lower": "translationstorev2 remains the compatibility in-memory model used for\nmigration, export, and apis that need the legacy shape. the executable\nreadiness gate covers v2/v3 validation parity, consistent reads, revisions,\nprovenance, doctor inventory, workflow parity, recovery, store-status, default\npolicy, documentation, and available scalability checks. the quality gate runs\nthe focused store suite, parity suite, operational checks, full tests, and\npackaging checks."
         }
       ]
     },
@@ -947,8 +1063,8 @@
         {
           "anchor": "",
           "heading": "Context and series preparation",
-          "text": "booktx series prepare is a project-root workflow. Provide exactly one policy\nsource, either --from-book or --pack, then review the generated questionnaire\nbefore context mark-ready. Do not run series preparation from a profile root.",
-          "lower": "booktx series prepare is a project-root workflow. provide exactly one policy\nsource, either --from-book or --pack, then review the generated questionnaire\nbefore context mark-ready. do not run series preparation from a profile root."
+          "text": "booktx series prepare is a project-root workflow. Provide exactly one policy\nsource, either --from-book or --pack, then review the generated interview\nreport and decision manifest. Apply reviewed decisions with\nsource interview-apply, then use series finalize. For an existing book,\nseries review is idempotent. Do not run series preparation from a profile root\nor inspect parent paths from isolated mode.",
+          "lower": "booktx series prepare is a project-root workflow. provide exactly one policy\nsource, either --from-book or --pack, then review the generated interview\nreport and decision manifest. apply reviewed decisions with\nsource interview-apply, then use series finalize. for an existing book,\nseries review is idempotent. do not run series preparation from a profile root\nor inspect parent paths from isolated mode."
         },
         {
           "anchor": "",

@@ -5,8 +5,8 @@ permalink: /tools/audiosig/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_ref: "v0.1.2"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 
@@ -592,7 +592,7 @@ audit status.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Topics</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#understanding-the-phase-vocoder">Understanding the Phase Vocoder</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#choosing-a-time-stretch-backend">Choosing a time-stretch backend</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#resampling-internals">Resampling Internals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#vad-algorithm-details">VAD Algorithm Details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#edge-cases-and-special-handling">Edge Cases and Special Handling</a></li>

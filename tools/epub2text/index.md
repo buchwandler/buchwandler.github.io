@@ -5,8 +5,8 @@ permalink: /tools/epub2text/
 nav_tool: epub2text
 docs_project: "epub2text"
 docs_variant: "release"
-docs_ref: "v0.2.7"
-docs_commit: "2d6e4d9639e1589234fad094d0de09c393c53ce3"
+docs_ref: "v0.2.8"
+docs_commit: "fbe58dd9381d44582ce7525956c090fd207df398"
 search_enabled: true
 ---
 

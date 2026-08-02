@@ -5,7 +5,7 @@ variant: release
 variant_label: Latest release
 variant_kind: release
 source_ref: v0.2.0
-source_commit: 266056286c4efa39be4ae54caa8d36a8f9c68776
+source_commit: 3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b
 source_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.2.0
 is_default: true
 repo_url: https://github.com/buchwandler/ttsforge
@@ -50,3 +50,6 @@ entries:
 - slug: testing
   title: ttsforge Testing and Coverage
   url: /tools/ttsforge/testing/
+- slug: changelog
+  title: ttsforge Changelog
+  url: /tools/ttsforge/changelog/

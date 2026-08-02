@@ -33,7 +33,7 @@ permalink: /tools/
       <p>Profile-first translation toolchain for ebooks.</p>
       <div class="card-links">
         <a href="/tools/booktx/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/booktx/releases/tag/v0.5.0" rel="external noopener">Latest release: v0.5.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/booktx/releases/tag/v0.5.1" rel="external noopener">Latest release: v0.5.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/booktx" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -43,7 +43,7 @@ permalink: /tools/
       <p>Extract text from EPUB files with smart cleaning and navigation.</p>
       <div class="card-links">
         <a href="/tools/epub2text/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/epub2text/releases/tag/v0.2.7" rel="external noopener">Latest release: v0.2.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/epub2text/releases/tag/v0.2.8" rel="external noopener">Latest release: v0.2.8 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/epub2text" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -93,7 +93,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.7.5" rel="external noopener">Latest release: v0.7.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.0" rel="external noopener">Latest release: v0.8.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -123,7 +123,7 @@ permalink: /tools/
       <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
       <div class="card-links">
         <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.0" rel="external noopener">Latest release: v0.1.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.2" rel="external noopener">Latest release: v0.1.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

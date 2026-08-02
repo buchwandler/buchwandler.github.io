@@ -5,25 +5,19 @@
     {
       "url": "/tools/audiosig/advanced/",
       "title": "audiosig Advanced Topics",
-      "snippet": "AudioSig’s time stretching uses a phase vocoder algorithm:\n\n\nSTFT: Convert audio to frequency domain using Short-Time Fourier Transform\n\n\nPh …",
+      "snippet": "AudioSig has three explicit time-stretch backends. The basic phase vocoder is a\ngeneric numerical reference path; it uses STFT/ISTFT phase p …",
       "sections": [
         {
           "anchor": "",
-          "heading": "Understanding the Phase Vocoder",
-          "text": "AudioSig’s time stretching uses a phase vocoder algorithm:\n\n\nSTFT: Convert audio to frequency domain using Short-Time Fourier Transform\n\n\nPhase Modification: Adjust phase to change timing while preserving pitch\n\n\nISTFT: Convert back to time domain",
-          "lower": "audiosig’s time stretching uses a phase vocoder algorithm:\n\n\nstft: convert audio to frequency domain using short-time fourier transform\n\n\nphase modification: adjust phase to change timing while preserving pitch\n\n\nistft: convert back to time domain"
+          "heading": "Choosing a time-stretch backend",
+          "text": "AudioSig has three explicit time-stretch backends. The basic phase vocoder is a\ngeneric numerical reference path; it uses STFT/ISTFT phase propagation and can\nsound phasey around transients. WSOLA is the speech-oriented default for\napply_speech_effects and searches for waveform-similar splice points in the\ntime domain. ESOLA is an experimental speech backend that aligns fixed\nwaveform frames using detected epochs; it supports 0.5 <= rate <= 2.0 and\nrequires sample_rate. WSOLA, ESOLA, and TD-PSOLA process every non-sample\ndimension as an independent lane, so they do not guarantee a stereo image or\nshared pitch/epoch decisions. For stereo speech where image coherence matters,\nprovide a shared analysis signal and apply its decisions in an application-level\nchannel wrapper; ordinary batch and…",
+          "lower": "audiosig has three explicit time-stretch backends. the basic phase vocoder is a\ngeneric numerical reference path; it uses stft/istft phase propagation and can\nsound phasey around transients. wsola is the speech-oriented default for\napply_speech_effects and searches for waveform-similar splice points in the\ntime domain. esola is an experimental speech backend that aligns fixed\nwaveform frames using detected epochs; it supports 0.5 <= rate <= 2.0 and\nrequires sample_rate. wsola, esola, and td-psola process every non-sample\ndimension as an independent lane, so they do not guarantee a stereo image or\nshared pitch/epoch decisions. for stereo speech where image coherence matters,\nprovide a shared analysis signal and apply its decisions in an application-level\nchannel wrapper; ordinary batch and…"
         },
         {
           "anchor": "",
-          "heading": "Parameters",
-          "text": "from audiosig import time_stretch\n\n# Control FFT resolution\nresult = time_stretch(\n    audio,\n    rate=1.2,\n    n_fft=4096,        # Higher = better frequency resolution, worse time resolution\n    hop_length=1024,   # Controls overlap between frames\n)",
-          "lower": "from audiosig import time_stretch\n\n# control fft resolution\nresult = time_stretch(\n    audio,\n    rate=1.2,\n    n_fft=4096,        # higher = better frequency resolution, worse time resolution\n    hop_length=1024,   # controls overlap between frames\n)"
-        },
-        {
-          "anchor": "",
-          "heading": "Trade-offs",
-          "text": "Larger n_fft: Better frequency separation, worse time precision\n\n\nSmaller n_fft: Better time precision, worse frequency separation\n\n\nhop_length: Typically n_fft // 4 for good quality",
-          "lower": "larger n_fft: better frequency separation, worse time precision\n\n\nsmaller n_fft: better time precision, worse frequency separation\n\n\nhop_length: typically n_fft // 4 for good quality"
+          "heading": "Backend trade-offs",
+          "text": "WSOLA frame/overlap/search: Defaults are 30/10/10 ms and are sample-rate aware; larger searches cost more and can select less stable matches.\n\n\nPhase-vocoder n_fft: Larger values improve frequency separation but worsen time precision.\n\n\nPhase-vocoder hop_length: Typically n_fft // 4 for the basic backend.\n\n\nESOLA frame/epoch alignment: Uses a fixed 20 ms frame, 50% synthesis\noverlap, NumPy epoch extraction, and a raised-cosine pairwise crossfade.\nIt is speech-specific and remains experimental until real-speech listening\nresults establish a stable benefit over WSOLA.\n\n\n\nThe standard compositor plans pitch and rate together using\ntsm_rate = rate / pitch_ratio, then resamples once when necessary. Selecting\nmethod=\"td_psola\" uses a separate direct pitch/prosody path instead: it tracks\nvoicing…",
+          "lower": "wsola frame/overlap/search: defaults are 30/10/10 ms and are sample-rate aware; larger searches cost more and can select less stable matches.\n\n\nphase-vocoder n_fft: larger values improve frequency separation but worsen time precision.\n\n\nphase-vocoder hop_length: typically n_fft // 4 for the basic backend.\n\n\nesola frame/epoch alignment: uses a fixed 20 ms frame, 50% synthesis\noverlap, numpy epoch extraction, and a raised-cosine pairwise crossfade.\nit is speech-specific and remains experimental until real-speech listening\nresults establish a stable benefit over wsola.\n\n\n\nthe standard compositor plans pitch and rate together using\ntsm_rate = rate / pitch_ratio, then resamples once when necessary. selecting\nmethod=\"td_psola\" uses a separate direct pitch/prosody path instead: it tracks\nvoicing…"
         },
         {
           "anchor": "",
@@ -144,25 +138,37 @@
     {
       "url": "/tools/audiosig/api-reference/",
       "title": "AudioSig API Reference",
-      "snippet": "Change audio duration while approximately preserving pitch.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nrate (float): Stretch fac …",
+      "snippet": "Return a newly allocated one-dimensional mono NumPy buffer filled with zeros.\nDuration is in seconds, sample rate is in samples per second, …",
       "sections": [
         {
           "anchor": "",
-          "heading": "time_stretch(audio, rate, *, axis=-1, n_fft=2048, hop_length=None)",
-          "text": "Change audio duration while approximately preserving pitch.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nrate (float): Stretch factor. Values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size. Defaults to n_fft // 4\n\n\n\nReturns: np.ndarray - Stretched audio with same dtype as input\n\nRaises:\n\n\nInvalidParameterError: If rate is not positive or parameters are invalid\n\n\nAudioShapeError: If audio array is invalid\n\n\n\nExample:\n\nimport numpy as np\nfrom audiosig import time_stretch\n\naudio = np.random.randn(24000).astype(np.float32)\nfaster = time_stretch(audio, rate=1.2)  # 20% faster\nslower = time_stretch(audio, rate=0.8)  # 20% slower",
-          "lower": "change audio duration while approximately preserving pitch.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nrate (float): stretch factor. values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size. defaults to n_fft // 4\n\n\n\nreturns: np.ndarray - stretched audio with same dtype as input\n\nraises:\n\n\ninvalidparametererror: if rate is not positive or parameters are invalid\n\n\naudioshapeerror: if audio array is invalid\n\n\n\nexample:\n\nimport numpy as np\nfrom audiosig import time_stretch\n\naudio = np.random.randn(24000).astype(np.float32)\nfaster = time_stretch(audio, rate=1.2)  # 20% faster\nslower = time_stretch(audio, rate=0.8)  # 20% slower"
+          "heading": "generate_silence(duration, sample_rate, *, dtype=np.float32)",
+          "text": "Return a newly allocated one-dimensional mono NumPy buffer filled with zeros.\nDuration is in seconds, sample rate is in samples per second, and the sample\ncount is exactly int(duration * sample_rate), so fractional sample counts\nare truncated. dtype must be a real NumPy floating dtype; the default is\nfloat32. Invalid duration, sample rate, and dtype values raise\nInvalidParameterError. Long silence creation should use bounded\napplication-level chunks rather than one arbitrarily large array.",
+          "lower": "return a newly allocated one-dimensional mono numpy buffer filled with zeros.\nduration is in seconds, sample rate is in samples per second, and the sample\ncount is exactly int(duration * sample_rate), so fractional sample counts\nare truncated. dtype must be a real numpy floating dtype; the default is\nfloat32. invalid duration, sample rate, and dtype values raise\ninvalidparametererror. long silence creation should use bounded\napplication-level chunks rather than one arbitrarily large array."
         },
         {
           "anchor": "",
-          "heading": "pitch_shift(audio, *, sample_rate, semitones, bins_per_octave=12, axis=-1, n_fft=2048, hop_length=None, filter_width=32)",
-          "text": "Shift pitch by semitones while preserving exact input duration.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsample_rate (int): Audio sample rate in Hz\n\n\nsemitones (float): Pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): Semitones per octave (default: 12)\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size\n\n\nfilter_width (int): Resampling filter width (default: 32)\n\n\n\nReturns: np.ndarray - Pitch-shifted audio with exact same length as input\n\nExample:\n\nfrom audiosig import pitch_shift\n\n# Raise pitch by 2 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=2.0)\n\n# Lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)",
-          "lower": "shift pitch by semitones while preserving exact input duration.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsample_rate (int): audio sample rate in hz\n\n\nsemitones (float): pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): semitones per octave (default: 12)\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size\n\n\nfilter_width (int): resampling filter width (default: 32)\n\n\n\nreturns: np.ndarray - pitch-shifted audio with exact same length as input\n\nexample:\n\nfrom audiosig import pitch_shift\n\n# raise pitch by 2 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=2.0)\n\n# lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)"
+          "heading": "downmix_to_mono(audio, *, channel_axis=-1)",
+          "text": "Return a caller-owned mono array by taking the arithmetic mean over the\nexplicit channel axis. Input must be a finite real floating one- or\ntwo-dimensional NumPy array; the source dtype and frame order are preserved.\nOne-dimensional input is already mono and is copied. The operation does not\nclip or normalize amplitude. Invalid shape, axis, dtype, or sample values\nraise AudioShapeError; the result is contiguous.\n\nfrom audiosig import downmix_to_mono, generate_silence\n\nsilence = generate_silence(0.5, 24_000)\nmono_soundfile = downmix_to_mono(frames_first, channel_axis=1)\nmono_audiosig = downmix_to_mono(channels_first, channel_axis=0)\n\n\n\n\nThese functions do not perform file decoding/encoding, URL handling, playback,\nstreaming, or audiobook composition.",
+          "lower": "return a caller-owned mono array by taking the arithmetic mean over the\nexplicit channel axis. input must be a finite real floating one- or\ntwo-dimensional numpy array; the source dtype and frame order are preserved.\none-dimensional input is already mono and is copied. the operation does not\nclip or normalize amplitude. invalid shape, axis, dtype, or sample values\nraise audioshapeerror; the result is contiguous.\n\nfrom audiosig import downmix_to_mono, generate_silence\n\nsilence = generate_silence(0.5, 24_000)\nmono_soundfile = downmix_to_mono(frames_first, channel_axis=1)\nmono_audiosig = downmix_to_mono(channels_first, channel_axis=0)\n\n\n\n\nthese functions do not perform file decoding/encoding, url handling, playback,\nstreaming, or audiobook composition."
         },
         {
           "anchor": "",
-          "heading": "apply_speech_effects(audio, *, sample_rate, rate=1.0, semitones=0.0, gain_db=0.0, axis=-1, clip=False, n_fft=2048, hop_length=None, filter_width=32, rolloff=0.945)",
-          "text": "Apply numeric speech effects in the order pitch shift, pitch-preserving time\nstretch, and gain. This compositor does not parse SSMD strings and raises\ntyped AudioSig exceptions for invalid input or parameters.",
-          "lower": "apply numeric speech effects in the order pitch shift, pitch-preserving time\nstretch, and gain. this compositor does not parse ssmd strings and raises\ntyped audiosig exceptions for invalid input or parameters."
+          "heading": "time_stretch(audio, rate, *, sample_rate=None, method='phase_vocoder', axis=-1, n_fft=2048, hop_length=None)",
+          "text": "Change audio duration while approximately preserving pitch.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nrate (float): Stretch factor. Values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\nsample_rate (int, optional): Required when method='wsola' or method='esola'; used for speech-time geometry\n\n\nmethod ('phase_vocoder', 'wsola', or 'esola'): Select the generic or speech-oriented backend. 'td_psola' is intentionally not a time_stretch method.\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size. Defaults to n_fft // 4\n\n\n\nReturns: np.ndarray - Stretched audio with same dtype as input\n\nRaises:\n\n\nInvalidParameterError: If rate is not positive or parameters are invalid\n\n\nAudioShapeError: If audio array…",
+          "lower": "change audio duration while approximately preserving pitch.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nrate (float): stretch factor. values > 1.0 make audio faster/shorter, < 1.0 slower/longer\n\n\nsample_rate (int, optional): required when method='wsola' or method='esola'; used for speech-time geometry\n\n\nmethod ('phase_vocoder', 'wsola', or 'esola'): select the generic or speech-oriented backend. 'td_psola' is intentionally not a time_stretch method.\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size. defaults to n_fft // 4\n\n\n\nreturns: np.ndarray - stretched audio with same dtype as input\n\nraises:\n\n\ninvalidparametererror: if rate is not positive or parameters are invalid\n\n\naudioshapeerror: if audio array…"
+        },
+        {
+          "anchor": "",
+          "heading": "pitch_shift(audio, *, sample_rate, semitones, bins_per_octave=12, method='phase_vocoder', axis=-1, n_fft=2048, hop_length=None, filter_width=32, rolloff=0.945)",
+          "text": "Shift pitch by semitones while preserving exact input duration.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsample_rate (int): Audio sample rate in Hz\n\n\nsemitones (float): Pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): Semitones per octave (default: 12)\n\n\naxis (int): Sample axis (default: -1)\n\n\nn_fft (int): FFT window size (default: 2048)\n\n\nhop_length (int, optional): Hop size\n\n\nfilter_width (int): Resampling filter width (default: 32)\n\n\nmethod ('phase_vocoder', 'wsola', 'esola', or 'td_psola'): Pitch method. td_psola directly synthesizes voiced speech and does not resample the complete waveform.\n\n\nrolloff (float): Pitch-resampler rolloff (default: 0.945)\n\n\n\nReturns: np.ndarray - Pitch-shifted audio with exact same length as input\n\nExamp…",
+          "lower": "shift pitch by semitones while preserving exact input duration.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsample_rate (int): audio sample rate in hz\n\n\nsemitones (float): pitch shift in semitones (positive = higher, negative = lower)\n\n\nbins_per_octave (int): semitones per octave (default: 12)\n\n\naxis (int): sample axis (default: -1)\n\n\nn_fft (int): fft window size (default: 2048)\n\n\nhop_length (int, optional): hop size\n\n\nfilter_width (int): resampling filter width (default: 32)\n\n\nmethod ('phase_vocoder', 'wsola', 'esola', or 'td_psola'): pitch method. td_psola directly synthesizes voiced speech and does not resample the complete waveform.\n\n\nrolloff (float): pitch-resampler rolloff (default: 0.945)\n\n\n\nreturns: np.ndarray - pitch-shifted audio with exact same length as input\n\nexamp…"
+        },
+        {
+          "anchor": "",
+          "heading": "apply_speech_effects(audio, *, sample_rate, rate=1.0, semitones=0.0, gain_db=0.0, axis=-1, clip=False, method='wsola', n_fft=2048, hop_length=None, filter_width=32, rolloff=0.945)",
+          "text": "Apply numeric speech effects using one planned pitch/rate time-scale pass,\noptional resampling, and gain. WSOLA is the default speech backend;\nmethod='phase_vocoder' selects the generic reference path,\nmethod='esola' selects the experimental epoch-synchronous path, and\nmethod='td_psola' selects the experimental direct speech pitch/prosody path.\nThe output length is exactly round(input_samples / rate) for non-empty input.\nTD-PSOLA supports 0.75 <= rate <= 1.5 and -6 <= semitones <= 6; it does not\nguarantee vocal-formant preservation. This compositor does not parse SSMD strings and raises typed\nAudioSig exceptions for invalid input or parameters.",
+          "lower": "apply numeric speech effects using one planned pitch/rate time-scale pass,\noptional resampling, and gain. wsola is the default speech backend;\nmethod='phase_vocoder' selects the generic reference path,\nmethod='esola' selects the experimental epoch-synchronous path, and\nmethod='td_psola' selects the experimental direct speech pitch/prosody path.\nthe output length is exactly round(input_samples / rate) for non-empty input.\ntd-psola supports 0.75 <= rate <= 1.5 and -6 <= semitones <= 6; it does not\nguarantee vocal-formant preservation. this compositor does not parse ssmd strings and raises typed\naudiosig exceptions for invalid input or parameters."
         },
         {
           "anchor": "",
@@ -343,7 +349,7 @@
     {
       "url": "/tools/audiosig/changelog/",
       "title": "audiosig Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nPhase-vocoder time …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded NumPy-only si …",
       "sections": [
         {
           "anchor": "",
@@ -354,20 +360,32 @@
         {
           "anchor": "",
           "heading": "Added",
-          "text": "Phase-vocoder time stretching with configurable window size and overlap\n\n\nWindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\nPitch shifting via resample-then-stretch that preserves exact input length\n\n\nNormalized-energy and relative-dB voice activity detection algorithms\n\n\nRMS amplitude normalization and peak amplitude utilities\n\n\nSilence trimming and audio splitting with configurable frame parameters\n\n\nAudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\nTyped AudioSignalError exceptions for invalid arrays and parameters\n\n\nNumPy-only dependency with no native extensions required",
-          "lower": "phase-vocoder time stretching with configurable window size and overlap\n\n\nwindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\npitch shifting via resample-then-stretch that preserves exact input length\n\n\nnormalized-energy and relative-db voice activity detection algorithms\n\n\nrms amplitude normalization and peak amplitude utilities\n\n\nsilence trimming and audio splitting with configurable frame parameters\n\n\naudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\ntyped audiosignalerror exceptions for invalid arrays and parameters\n\n\nnumpy-only dependency with no native extensions required"
+          "text": "Added NumPy-only silence generation and explicit-axis mono downmixing APIs for TTSForge compatibility",
+          "lower": "added numpy-only silence generation and explicit-axis mono downmixing apis for ttsforge compatibility"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added deterministic silence generation and explicit channel-axis arithmetic downmixing for portable TTS",
+          "lower": "added deterministic silence generation and explicit channel-axis arithmetic downmixing for portable tts"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Phase-vocoder time stretching with configurable window size and overlap\n\n\nNumPy-only WSOLA speech backend with explicit backend selection\n\n\nExperimental NumPy-only ESOLA speech backend with exact-length synthesis,\nepoch alignment, and explicit moderate-rate validation\n\n\nExperimental NumPy-only direct TD-PSOLA speech pitch/prosody backend with\nbounded pitch tracking, voiced-grain synthesis, and WSOLA unvoiced fallback\n\n\nSingle-pass pitch/rate compositor planner and deterministic quality harness\n\n\nWindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\nPitch shifting via resample-then-stretch that preserves exact input length\n\n\nNormalized-energy and relative-dB voice activity detection algorithms\n\n\nRMS amplitude normalization and peak amplitude u…",
+          "lower": "phase-vocoder time stretching with configurable window size and overlap\n\n\nnumpy-only wsola speech backend with explicit backend selection\n\n\nexperimental numpy-only esola speech backend with exact-length synthesis,\nepoch alignment, and explicit moderate-rate validation\n\n\nexperimental numpy-only direct td-psola speech pitch/prosody backend with\nbounded pitch tracking, voiced-grain synthesis, and wsola unvoiced fallback\n\n\nsingle-pass pitch/rate compositor planner and deterministic quality harness\n\n\nwindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\npitch shifting via resample-then-stretch that preserves exact input length\n\n\nnormalized-energy and relative-db voice activity detection algorithms\n\n\nrms amplitude normalization and peak amplitude u…"
         },
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "README overview plus detailed API, getting-started, advanced, and examples documentation",
-          "lower": "readme overview plus detailed api, getting-started, advanced, and examples documentation"
+          "text": "README overview plus detailed API, getting-started, advanced, and examples documentation\n\n\nBackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nESOLA speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\nTD-PSOLA experimental scope, conservative limits, fallback behavior, and\nreal-speech listening-evaluation gate",
+          "lower": "readme overview plus detailed api, getting-started, advanced, and examples documentation\n\n\nbackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nesola speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\ntd-psola experimental scope, conservative limits, fallback behavior, and\nreal-speech listening-evaluation gate"
         },
         {
           "anchor": "",
           "heading": "Quality",
-          "text": "Full test suite with quality, compatibility, and packaging tests",
-          "lower": "full test suite with quality, compatibility, and packaging tests"
+          "text": "Full test suite with quality, compatibility, and packaging tests\n\n\nDeterministic source-filter-style speech fixtures and local WAV comparison metrics",
+          "lower": "full test suite with quality, compatibility, and packaging tests\n\n\ndeterministic source-filter-style speech fixtures and local wav comparison metrics"
         }
       ]
     },
@@ -409,6 +427,37 @@
       ]
     },
     {
+      "url": "/tools/audiosig/esola-listening-evaluation-2026-07-31/",
+      "title": "audiosig ESOLA listening evaluation — 2026-07-31",
+      "snippet": "The repository contains no redistribution-safe or local real-speech WAV corpus\nand no listener responses. Consequently, this report records …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Status",
+          "text": "The repository contains no redistribution-safe or local real-speech WAV corpus\nand no listener responses. Consequently, this report records the required\nevaluation protocol and an honest not run result; it does not claim that\nESOLA is ready to replace WSOLA or become the default speech backend.\n\nSince this record was created, the implementation has added complete-frame\nendpoint extraction, a bounded adaptive 1.5-period trend-window estimate, and\nconfigurable one- versus two-pass ZFR detrending. Known-tone and synthetic-F0\nsweep checks are automated, but they are objective fixtures rather than\nlabelled natural-speech GCI evidence.",
+          "lower": "the repository contains no redistribution-safe or local real-speech wav corpus\nand no listener responses. consequently, this report records the required\nevaluation protocol and an honest not run result; it does not claim that\nesola is ready to replace wsola or become the default speech backend.\n\nsince this record was created, the implementation has added complete-frame\nendpoint extraction, a bounded adaptive 1.5-period trend-window estimate, and\nconfigurable one- versus two-pass zfr detrending. known-tone and synthetic-f0\nsweep checks are automated, but they are objective fixtures rather than\nlabelled natural-speech gci evidence."
+        },
+        {
+          "anchor": "",
+          "heading": "Planned utterance coverage",
+          "text": "The next evaluation should use at least one utterance in each category below,\nwith source license, attribution, sample rate, and filename recorded before\nrendering:\n\n\n\n#\n\nCategory\n\nListener result\n\n\n\n\n\n1\n\nlower-pitched voice\n\nnot run — corpus unavailable\n\n\n\n2\n\nhigher-pitched voice\n\nnot run — corpus unavailable\n\n\n\n3\n\nbreathy voice\n\nnot run — corpus unavailable\n\n\n\n4\n\nrapid F0 motion\n\nnot run — corpus unavailable\n\n\n\n5\n\nplosive-rich text\n\nnot run — corpus unavailable\n\n\n\n6\n\nfricative-rich text\n\nnot run — corpus unavailable\n\n\n\n7\n\nmixed voiced/unvoiced speech\n\nnot run — corpus unavailable\n\n\n\n8\n\nshort TTS fragment\n\nnot run — corpus unavailable\n\n\n\n9\n\nsilence boundaries\n\nnot run — corpus unavailable\n\n\n\n10\n\nmild background noise\n\nnot run — corpus unavailable",
+          "lower": "the next evaluation should use at least one utterance in each category below,\nwith source license, attribution, sample rate, and filename recorded before\nrendering:\n\n\n\n#\n\ncategory\n\nlistener result\n\n\n\n\n\n1\n\nlower-pitched voice\n\nnot run — corpus unavailable\n\n\n\n2\n\nhigher-pitched voice\n\nnot run — corpus unavailable\n\n\n\n3\n\nbreathy voice\n\nnot run — corpus unavailable\n\n\n\n4\n\nrapid f0 motion\n\nnot run — corpus unavailable\n\n\n\n5\n\nplosive-rich text\n\nnot run — corpus unavailable\n\n\n\n6\n\nfricative-rich text\n\nnot run — corpus unavailable\n\n\n\n7\n\nmixed voiced/unvoiced speech\n\nnot run — corpus unavailable\n\n\n\n8\n\nshort tts fragment\n\nnot run — corpus unavailable\n\n\n\n9\n\nsilence boundaries\n\nnot run — corpus unavailable\n\n\n\n10\n\nmild background noise\n\nnot run — corpus unavailable"
+        },
+        {
+          "anchor": "",
+          "heading": "Required matrix and protocol",
+          "text": "Render rates 0.75, 0.8, 1.2, 1.25, 1.5, 2.0 with WSOLA, ESOLA, and\nphase-vocoder diagnostic references. Include downstream pitch/rate combinations\nwhose computed ESOLA backend rate remains in 0.5 <= rate <= 2.0. Randomize\nA/B or ABX order, use at least two listeners, and record intelligibility,\nnaturalness, robotic/metallic character, pitch stability, transient duplication,\nbuzziness, flutter, clicks, and overall preference.",
+          "lower": "render rates 0.75, 0.8, 1.2, 1.25, 1.5, 2.0 with wsola, esola, and\nphase-vocoder diagnostic references. include downstream pitch/rate combinations\nwhose computed esola backend rate remains in 0.5 <= rate <= 2.0. randomize\na/b or abx order, use at least two listeners, and record intelligibility,\nnaturalness, robotic/metallic character, pitch stability, transient duplication,\nbuzziness, flutter, clicks, and overall preference."
+        },
+        {
+          "anchor": "",
+          "heading": "Promotion decision",
+          "text": "No listener ratings are available, so the 65% moderate-rate ESOLA preference\ngate is not evaluated. Defaults remain unchanged: phase vocoder for\ntime_stretch and pitch_shift, and WSOLA for apply_speech_effects.",
+          "lower": "no listener ratings are available, so the 65% moderate-rate esola preference\ngate is not evaluated. defaults remain unchanged: phase vocoder for\ntime_stretch and pitch_shift, and wsola for apply_speech_effects."
+        }
+      ]
+    },
+    {
       "url": "/tools/audiosig/examples/",
       "title": "AudioSig Examples",
       "snippet": "import numpy as np\n\ndef create_sine_wave(frequency=440, duration=1.0, sample_rate=24000):\n    \"\"\"Create a sine wave for testing.\"\"\"\n    t = …",
@@ -421,6 +470,12 @@
         },
         {
           "anchor": "",
+          "heading": "Silence and Channel Layouts",
+          "text": "import numpy as np\nfrom audiosig import downmix_to_mono, generate_silence\n\nsilence = generate_silence(0.5, 24_000)\nassert silence.shape == (12_000,)\n\nleft = np.ones(8, dtype=np.float32)\nright = np.zeros(8, dtype=np.float32)\nframes_first = np.column_stack([left, right])\nmono_frames = downmix_to_mono(frames_first)\n\nchannels_first = np.stack([left, right])\nmono_channels = downmix_to_mono(channels_first, channel_axis=0)\nnp.testing.assert_array_equal(mono_frames, 0.5)\nnp.testing.assert_array_equal(mono_channels, 0.5)\n\n\n\n\nSilence length uses int(duration * sample_rate) truncation. Silence accepts\nreal floating NumPy dtypes; downmixing accepts finite real floating one- or\ntwo-dimensional audio, preserves the source dtype, returns independent\ncontiguous storage, and does not clip or normalize. Fo…",
+          "lower": "import numpy as np\nfrom audiosig import downmix_to_mono, generate_silence\n\nsilence = generate_silence(0.5, 24_000)\nassert silence.shape == (12_000,)\n\nleft = np.ones(8, dtype=np.float32)\nright = np.zeros(8, dtype=np.float32)\nframes_first = np.column_stack([left, right])\nmono_frames = downmix_to_mono(frames_first)\n\nchannels_first = np.stack([left, right])\nmono_channels = downmix_to_mono(channels_first, channel_axis=0)\nnp.testing.assert_array_equal(mono_frames, 0.5)\nnp.testing.assert_array_equal(mono_channels, 0.5)\n\n\n\n\nsilence length uses int(duration * sample_rate) truncation. silence accepts\nreal floating numpy dtypes; downmixing accepts finite real floating one- or\ntwo-dimensional audio, preserves the source dtype, returns independent\ncontiguous storage, and does not clip or normalize. fo…"
+        },
+        {
+          "anchor": "",
           "heading": "Time Stretching Examples",
           "text": "from audiosig import time_stretch\n\n# Create a 1-second tone\naudio = create_sine_wave(440, duration=1.0)\n\n# Speed up by 50% (shorter duration)\nfaster = time_stretch(audio, rate=1.5)\nprint(f\"Original: {len(audio)} samples\")\nprint(f\"Faster: {len(faster)} samples\")  # ~16000 samples\n\n# Slow down by 50% (longer duration)\nslower = time_stretch(audio, rate=0.5)\nprint(f\"Slower: {len(slower)} samples\")  # ~48000 samples\n\n# Music tempo adjustment\ndef adjust_tempo(audio, tempo_factor):\n    \"\"\"Adjust audio tempo by a factor.\"\"\"\n    return time_stretch(audio, rate=tempo_factor)\n\n# Speech rate adjustment\ndef slow_speech(audio, factor=0.8):\n    \"\"\"Make speech slower and clearer.\"\"\"\n    return time_stretch(audio, rate=factor)",
           "lower": "from audiosig import time_stretch\n\n# create a 1-second tone\naudio = create_sine_wave(440, duration=1.0)\n\n# speed up by 50% (shorter duration)\nfaster = time_stretch(audio, rate=1.5)\nprint(f\"original: {len(audio)} samples\")\nprint(f\"faster: {len(faster)} samples\")  # ~16000 samples\n\n# slow down by 50% (longer duration)\nslower = time_stretch(audio, rate=0.5)\nprint(f\"slower: {len(slower)} samples\")  # ~48000 samples\n\n# music tempo adjustment\ndef adjust_tempo(audio, tempo_factor):\n    \"\"\"adjust audio tempo by a factor.\"\"\"\n    return time_stretch(audio, rate=tempo_factor)\n\n# speech rate adjustment\ndef slow_speech(audio, factor=0.8):\n    \"\"\"make speech slower and clearer.\"\"\"\n    return time_stretch(audio, rate=factor)"
@@ -428,8 +483,8 @@
         {
           "anchor": "",
           "heading": "Pitch Shifting Examples",
-          "text": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# Lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# Musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"Transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# A4 (440 Hz) to C5 (523 Hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)",
-          "lower": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# a4 (440 hz) to c5 (523 hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)"
+          "text": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# Raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# Lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# Musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"Transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# A4 (440 Hz) to C5 (523 Hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)\n\n\n\n\nFor a speech-only experimental direct pitch path, keep changes moderate and\nopt in explicitly:\n\nfrom audiosig import apply_speech_effects\n\nspeech_up = apply_speech_effects(\n    audio,\n    sample_rate=24_000,\n    se…",
+          "lower": "from audiosig import pitch_shift\n\naudio = create_sine_wave(440, duration=1.0, sample_rate=24000)\n\n# raise pitch by 1 octave (12 semitones)\noctave_up = pitch_shift(audio, sample_rate=24000, semitones=12.0)\n\n# lower pitch by 1 octave\noctave_down = pitch_shift(audio, sample_rate=24000, semitones=-12.0)\n\n# musical transposition\ndef transpose(audio, semitones, sample_rate=24000):\n    \"\"\"transpose audio by semitones.\"\"\"\n    return pitch_shift(audio, sample_rate=sample_rate, semitones=semitones)\n\n# a4 (440 hz) to c5 (523 hz) - about 3 semitones\nc5 = transpose(audio, semitones=3.0)\n\n\n\n\nfor a speech-only experimental direct pitch path, keep changes moderate and\nopt in explicitly:\n\nfrom audiosig import apply_speech_effects\n\nspeech_up = apply_speech_effects(\n    audio,\n    sample_rate=24_000,\n    se…"
         },
         {
           "anchor": "",
@@ -548,6 +603,12 @@
         },
         {
           "anchor": "",
+          "heading": "Constructing Silence and Downmixing Channels",
+          "text": "Use generate_silence for deterministic mono silence. Its sample count uses\nthe existing TTS/PyKokoro-compatible floor rule,\nint(duration * sample_rate), and output is float32 unless float64 is\nrequested:\n\nfrom audiosig import generate_silence\n\npause = generate_silence(0.5, 24_000)\nprecise_pause = generate_silence(0.5, 24_000, dtype=np.float64)\n\n\n\n\nUse downmix_to_mono when the decoder has already produced a NumPy array.\nThe basic API accepts finite real floating arrays shaped (frames,),\n(frames, channels), or (channels, frames) and returns contiguous,\ncaller-owned results. SoundFile-style (frames, channels) data uses the\ndefault channel_axis=-1, while channels-first data uses channel_axis=0.\n\nfrom audiosig import downmix_to_mono\n\nmono = downmix_to_mono(frames_first)\nmono = downmix_to_mono(…",
+          "lower": "use generate_silence for deterministic mono silence. its sample count uses\nthe existing tts/pykokoro-compatible floor rule,\nint(duration * sample_rate), and output is float32 unless float64 is\nrequested:\n\nfrom audiosig import generate_silence\n\npause = generate_silence(0.5, 24_000)\nprecise_pause = generate_silence(0.5, 24_000, dtype=np.float64)\n\n\n\n\nuse downmix_to_mono when the decoder has already produced a numpy array.\nthe basic api accepts finite real floating arrays shaped (frames,),\n(frames, channels), or (channels, frames) and returns contiguous,\ncaller-owned results. soundfile-style (frames, channels) data uses the\ndefault channel_axis=-1, while channels-first data uses channel_axis=0.\n\nfrom audiosig import downmix_to_mono\n\nmono = downmix_to_mono(frames_first)\nmono = downmix_to_mono(…"
+        },
+        {
+          "anchor": "",
           "heading": "Silence Detection and Trimming",
           "text": "from audiosig import trim, split, normalized_energy_vad\n\n# Trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# Split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# Voice Activity Detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)",
           "lower": "from audiosig import trim, split, normalized_energy_vad\n\n# trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# voice activity detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)"
@@ -579,8 +640,8 @@
         {
           "anchor": "",
           "heading": "Pitch Shifting",
-          "text": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: Higher pitch\n\n\nsemitones < 0: Lower pitch\n\n\nsemitones = 0: No change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# Raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# Lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)",
-          "lower": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: higher pitch\n\n\nsemitones < 0: lower pitch\n\n\nsemitones = 0: no change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)"
+          "text": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: Higher pitch\n\n\nsemitones < 0: Lower pitch\n\n\nsemitones = 0: No change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# Raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# Lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)\n\n\n\n\nFor experimental speech-only direct pitch/prosody processing, opt in with\nmethod=\"td_psola\". Moderate changes only are supported; unvoiced regions are\nduration-scaled without pitch synthesis and formant preservation is not\nguaranteed:\n\nfrom audiosig import apply_speech_effects, pitch_shift\n\nvoice_up = pitch_shift(audio, sample_rate=24_000, semitones=4.0, method=\"td_psola\")\nslower_voice =…",
+          "lower": "pitch_shift(audio, sample_rate, semitones) changes pitch while preserving duration:\n\n\nsemitones > 0: higher pitch\n\n\nsemitones < 0: lower pitch\n\n\nsemitones = 0: no change (returns copy)\n\n\n\nfrom audiosig import pitch_shift\n\n# raise pitch by 3 semitones\nhigher = pitch_shift(audio, sample_rate=24000, semitones=3.0)\n\n# lower pitch by 5 semitones\nlower = pitch_shift(audio, sample_rate=24000, semitones=-5.0)\n\n\n\n\nfor experimental speech-only direct pitch/prosody processing, opt in with\nmethod=\"td_psola\". moderate changes only are supported; unvoiced regions are\nduration-scaled without pitch synthesis and formant preservation is not\nguaranteed:\n\nfrom audiosig import apply_speech_effects, pitch_shift\n\nvoice_up = pitch_shift(audio, sample_rate=24_000, semitones=4.0, method=\"td_psola\")\nslower_voice =…"
         },
         {
           "anchor": "",
@@ -658,14 +719,39 @@
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nUnderstanding the Phase Vocoder\n\nResampling Internals\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDebugging and Profiling",
-          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nunderstanding the phase vocoder\n\nresampling internals\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\ndebugging and profiling"
+          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nResampling Internals\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDebugging and Profiling",
+          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\nresampling internals\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\ndebugging and profiling"
         },
         {
           "anchor": "",
           "heading": "Indices and tables",
           "text": "Index\n\n\nModule Index\n\n\nSearch Page",
           "lower": "index\n\n\nmodule index\n\n\nsearch page"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/quality-evaluation/",
+      "title": "audiosig Speech effects quality evaluation",
+      "snippet": "AudioSig’s automated quality tests use a deterministic source-filter-style\nfixture. It combines changing-F0 harmonics, broad formant emphasi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Speech effects quality evaluation",
+          "text": "AudioSig’s automated quality tests use a deterministic source-filter-style\nfixture. It combines changing-F0 harmonics, broad formant emphasis, amplitude\nmodulation, breath noise, plosive bursts, and a partial tail. This provides\nrepeatable regression coverage; it is not a substitute for listening to real\nspeech.",
+          "lower": "audiosig’s automated quality tests use a deterministic source-filter-style\nfixture. it combines changing-f0 harmonics, broad formant emphasis, amplitude\nmodulation, breath noise, plosive bursts, and a partial tail. this provides\nrepeatable regression coverage; it is not a substitute for listening to real\nspeech."
+        },
+        {
+          "anchor": "",
+          "heading": "Local comparison harness",
+          "text": "The no-network harness reads PCM WAV with the Python standard library and\nwrites deterministic 16-bit WAV renders plus CSV and JSON diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nIt renders the basic phase-vocoder, WSOLA, and ESOLA rate paths, then supported\ncombined WSOLA, ESOLA, and TD-PSOLA pitch/rate cases. CSV/JSON records include\nruntime, real-time factor, peak, RMS, exact-length error, and continuity\ndiagnostics. Use --rates and --semitones to narrow a run. The harness does not install,\ninvoke, or require Rubber Band, SoundTouch, WORLD, or another external backend.\n\nThe required performance and robustness matrix is reproducible with:\n\npython scripts/benchmark_td_psola.py --output td-psola-benchmark.json\n\n\n\n\nThe TD-PSOLA benchmark covers deter…",
+          "lower": "the no-network harness reads pcm wav with the python standard library and\nwrites deterministic 16-bit wav renders plus csv and json diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nit renders the basic phase-vocoder, wsola, and esola rate paths, then supported\ncombined wsola, esola, and td-psola pitch/rate cases. csv/json records include\nruntime, real-time factor, peak, rms, exact-length error, and continuity\ndiagnostics. use --rates and --semitones to narrow a run. the harness does not install,\ninvoke, or require rubber band, soundtouch, world, or another external backend.\n\nthe required performance and robustness matrix is reproducible with:\n\npython scripts/benchmark_td_psola.py --output td-psola-benchmark.json\n\n\n\n\nthe td-psola benchmark covers deter…"
+        },
+        {
+          "anchor": "",
+          "heading": "Listening protocol",
+          "text": "For the TD-PSOLA release check, use the corpus categories, randomized A/B or\nABX matrix, listener fields, and promotion gates in\ndocs/td-psola-listening-evaluation-2026-07-31.md.\nNo default change is justified by synthetic metrics alone.\n\nNative pitch shifting changes the spectral envelope along with F0 and therefore\ndoes not currently preserve vocal formants. Larger shifts are expected to be\nmore artifact-prone; this harness records metrics but does not turn them into a\nclaim of studio-grade perceptual quality.",
+          "lower": "for the td-psola release check, use the corpus categories, randomized a/b or\nabx matrix, listener fields, and promotion gates in\ndocs/td-psola-listening-evaluation-2026-07-31.md.\nno default change is justified by synthetic metrics alone.\n\nnative pitch shifting changes the spectral envelope along with f0 and therefore\ndoes not currently preserve vocal formants. larger shifts are expected to be\nmore artifact-prone; this harness records metrics but does not turn them into a\nclaim of studio-grade perceptual quality."
         }
       ]
     },
@@ -679,6 +765,37 @@
           "heading": "",
           "text": "sphinx>=7.0.0\nsphinx-rtd-theme>=2.0.0\nsphinx-autobuild>=2024.0.0\nmyst-parser>=2.0.0\npillow",
           "lower": "sphinx>=7.0.0\nsphinx-rtd-theme>=2.0.0\nsphinx-autobuild>=2024.0.0\nmyst-parser>=2.0.0\npillow"
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/td-psola-listening-evaluation-2026-07-31/",
+      "title": "audiosig TD-PSOLA listening evaluation — 2026-07-31",
+      "snippet": "This is the milestone-5 evaluation record and reproducible protocol for the\nexperimental direct TD-PSOLA speech path. No default method is c …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Status",
+          "text": "This is the milestone-5 evaluation record and reproducible protocol for the\nexperimental direct TD-PSOLA speech path. No default method is changed by this\nwork. Listener results remain pending until a licensed corpus and at least\ntwo development listeners are available; this file deliberately does not invent\nratings.\n\nThe implementation now uses approximately-two-period centered grains, local-F0\npitch-mark propagation, tracker voiced intervals for synthesis masking, and an\nexplicit insufficient-mark fallback. Synthetic leakage, normalization, sample-\nrate, noise, and reverberation checks are automated; they do not constitute the\nreal-speech listening gate below.",
+          "lower": "this is the milestone-5 evaluation record and reproducible protocol for the\nexperimental direct td-psola speech path. no default method is changed by this\nwork. listener results remain pending until a licensed corpus and at least\ntwo development listeners are available; this file deliberately does not invent\nratings.\n\nthe implementation now uses approximately-two-period centered grains, local-f0\npitch-mark propagation, tracker voiced intervals for synthesis masking, and an\nexplicit insufficient-mark fallback. synthetic leakage, normalization, sample-\nrate, noise, and reverberation checks are automated; they do not constitute the\nreal-speech listening gate below."
+        },
+        {
+          "anchor": "",
+          "heading": "Corpus and reproducibility",
+          "text": "Use licensed or consented 16/24/48 kHz mono or stereo WAV material and record,\nfor every source: corpus/license, attribution, sample rate, filename or stable\nidentifier, channel count, and whether the segment is clean, noisy, breathy,\ncreaky, reverberant, or TTS-generated. Do not commit private speech recordings.\n\nRender with:\n\npython scripts/compare_speech_effects.py INPUT.wav OUTPUT_DIR \\\n  --rates 0.8 1.0 1.25 --semitones -6 -4 -2 2 4 6\n\n\n\n\nThe comparison output records exact-length error, finite output, RMS/peak,\ncontinuity jumps, runtime, and generated WAVs. Keep metrics.json and the\ncommand line with the evaluation notes.",
+          "lower": "use licensed or consented 16/24/48 khz mono or stereo wav material and record,\nfor every source: corpus/license, attribution, sample rate, filename or stable\nidentifier, channel count, and whether the segment is clean, noisy, breathy,\ncreaky, reverberant, or tts-generated. do not commit private speech recordings.\n\nrender with:\n\npython scripts/compare_speech_effects.py input.wav output_dir \\\n  --rates 0.8 1.0 1.25 --semitones -6 -4 -2 2 4 6\n\n\n\n\nthe comparison output records exact-length error, finite output, rms/peak,\ncontinuity jumps, runtime, and generated wavs. keep metrics.json and the\ncommand line with the evaluation notes."
+        },
+        {
+          "anchor": "",
+          "heading": "Listening matrix",
+          "text": "Include lower- and higher-pitched voices, breathy voice, rapid F0 motion,\nplosive-rich and fricative-rich text, mixed voiced/unvoiced speech, a short TTS\nfragment, silence boundaries, mild noise, creaky/fry speech, and intelligible\nreverberant speech.\n\nCompare the unmodified reference, current WSOLA plus resampling, current ESOLA\nplus resampling where its rate is supported, phase-vocoder diagnostics, and\ndirect TD-PSOLA. Randomize A/B or ABX order and do not reveal method names.\n\nFor each trial, collect 1–5 ratings for naturalness, intelligibility, speaker\nor timbre preservation, pitch correctness, buzziness, flutter, echo/reverb,\ntransient duplication, unvoiced tonalization, clicks, and overall preference.\nRecord severe-artifact flags and free-text comments.",
+          "lower": "include lower- and higher-pitched voices, breathy voice, rapid f0 motion,\nplosive-rich and fricative-rich text, mixed voiced/unvoiced speech, a short tts\nfragment, silence boundaries, mild noise, creaky/fry speech, and intelligible\nreverberant speech.\n\ncompare the unmodified reference, current wsola plus resampling, current esola\nplus resampling where its rate is supported, phase-vocoder diagnostics, and\ndirect td-psola. randomize a/b or abx order and do not reveal method names.\n\nfor each trial, collect 1–5 ratings for naturalness, intelligibility, speaker\nor timbre preservation, pitch correctness, buzziness, flutter, echo/reverb,\ntransient duplication, unvoiced tonalization, clicks, and overall preference.\nrecord severe-artifact flags and free-text comments."
+        },
+        {
+          "anchor": "",
+          "heading": "Promotion gates",
+          "text": "At least two listeners for development screening and at least ten before any\ndefault-method consideration.\n\n\nTD-PSOLA preferred over current WSOLA pitch shifting in at least 65% of\nmoderate ±2/±4 semitone trials.\n\n\nSevere artifacts below 5% of trials, with no intelligibility regression.\n\n\nObjective synthetic and runtime gates pass alongside the listening result.\n\n\n\nUntil these fields are populated and reviewed, TD-PSOLA remains experimental and\nthe existing defaults remain phase vocoder for generic time_stretch and WSOLA\nfor apply_speech_effects.",
+          "lower": "at least two listeners for development screening and at least ten before any\ndefault-method consideration.\n\n\ntd-psola preferred over current wsola pitch shifting in at least 65% of\nmoderate ±2/±4 semitone trials.\n\n\nsevere artifacts below 5% of trials, with no intelligibility regression.\n\n\nobjective synthetic and runtime gates pass alongside the listening result.\n\n\n\nuntil these fields are populated and reviewed, td-psola remains experimental and\nthe existing defaults remain phase vocoder for generic time_stretch and wsola\nfor apply_speech_effects."
         }
       ]
     }

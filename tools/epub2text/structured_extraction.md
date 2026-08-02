@@ -5,8 +5,8 @@ permalink: /tools/epub2text/structured_extraction/
 nav_tool: epub2text
 docs_project: "epub2text"
 docs_variant: "release"
-docs_ref: "v0.2.7"
-docs_commit: "2d6e4d9639e1589234fad094d0de09c393c53ce3"
+docs_ref: "v0.2.8"
+docs_commit: "fbe58dd9381d44582ce7525956c090fd207df398"
 search_enabled: true
 ---
 
@@ -632,6 +632,24 @@ epub2text<span class="w"> </span>extract-structure<span class="w"> </span>book.e
 epub2text<span class="w"> </span>extract-structure<span class="w"> </span>book.epub<span class="w"> </span>--segments<span class="w"> </span>sentence<span class="w"> </span>--xhtml-fragments<span class="w"> </span>--markdown-fragments<span class="w"> </span>-o<span class="w"> </span>structure.json
 </pre></div>
 </div>
+</section>
+<section id="assembled-chapter-documents">
+<h2>Assembled chapter documents</h2>
+<p>Use EPUBParser.get_chapter_documents() or extract_epub_chapters() for the supported
+chapter-level Markdown contract. This is distinct from MarkdownFragment: fragments
+translate inline runs, while ChapterDocument adds block Markdown, navigation grouping,
+title de-duplication, heading normalization, scene breaks, and synthetic prefix/spine
+fallbacks.</p>
+<p>The document id comes from NavigationEntry.id. Each document retains href, nested
+parent_id/level, visible text, markdown_body, source block IDs, and chapter-local
+diagnostics. The navigation title is not repeated in markdown_body. Stable diagnostics
+include chapter_source_title_omitted, chapter_heading_level_normalized,
+chapter_unknown_block, css_missing_stylesheet, css_malformed, css_size_limit, and
+markdown_css_style_cancellation.</p>
+<p>CSS handling is limited to local stylesheet discovery, supported font-style and
+font-weight declarations, cascade specificity, inheritance, and !important. Remote
+imports and remote stylesheets are never fetched. This remains a loss-aware reading
+representation rather than a lossless EPUB rewrite.</p>
 </section>
 <section id="diagnostics-and-strict-mode">
 <h2>Diagnostics and strict mode</h2>

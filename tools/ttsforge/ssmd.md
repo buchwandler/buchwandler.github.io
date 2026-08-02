@@ -6,7 +6,7 @@ nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
 docs_ref: "v0.2.0"
-docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
+docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
 search_enabled: true
 ---
 
@@ -559,7 +559,7 @@ valid synthesis and its sidecars succeed.</p>
 </section>
 <section id="portable-document-example">
 <h2>Portable document example</h2>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>---
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
 title: Review podcast
 voice_bindings:
   kokoro:
@@ -588,7 +588,7 @@ as a marker event and exported to marker sidecars.</p>
 <section id="syntax">
 <h2>Syntax</h2>
 <p>Canonical inline annotations use <code class="docutils literal notranslate"><span class="pre">[text]{key=&quot;value&quot;}</span></code>:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;}
 [Bonjour]{lang=&quot;fr-FR&quot;}
 [100]{as=&quot;cardinal&quot;}
 [XML]{sub=&quot;extensible markup language&quot;}

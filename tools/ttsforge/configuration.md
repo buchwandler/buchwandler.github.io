@@ -6,7 +6,7 @@ nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
 docs_ref: "v0.2.0"
-docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
+docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
 search_enabled: true
 ---
 
@@ -1077,6 +1077,15 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <p>TTSForge configuration has no separate environment-variable file format. The PyKokoro
 runtime may still honor its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override after
 TTSForge resolves the configured provider.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">TTSFORGE_MEMORY_DEBUG=1</span></code> to enable dependency-free process-memory diagnostics
+during conversion. Logs include RSS, peak RSS, available memory, and the effective ONNX
+provider around runner initialization, chapter synthesis, WAV writing, result release,
+state saves, final merging, and converter cleanup. RSS may remain elevated because
+native allocators retain high-water pages; that alone is not evidence of a provider
+leak.</p>
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>, uses compact segment results, and releases
+completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
+remains buffered and streaming is future work.</p>
 </section>
 <section id="model-source-status">
 <h2>Model source status</h2>

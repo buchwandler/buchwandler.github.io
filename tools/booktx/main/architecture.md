@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -577,13 +577,15 @@ uses the marker-bound profile and brokers access to shared source data.</p>
 </section>
 <section id="store-and-provenance">
 <h2>Store and provenance</h2>
-<p>New profiles currently default to the v2 canonical store. The shard-based v3
-store under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code> remains an explicit
-opt-in migration target until its stabilization gate is completed. When v3 is
-active it stores a manifest plus per-chunk current, translation-candidate, and
-review-candidate shards. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains the compatibility
-materialization model returned by the Python loader surface. Effective output
-still chooses a valid review candidate before the current translation version.
+<p>New profiles default to the v3 canonical store. Existing profiles remain on
+their detected backend and are never auto-migrated. V2 is the compatibility
+<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>; v3 stores a manifest plus per-chunk current,
+translation-candidate, and review-candidate shards. Each changed chunk shares
+one advancing revision across its three files, and normal readers retry around
+publication and validate cross-shard invariants. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains
+the compatibility materialization model returned by the Python loader surface.
+Effective output still chooses a valid review candidate before the current
+translation version.
 Task context views and revision metadata preserve the source, baseline, and
 policy evidence needed to validate provenance.</p>
 <p>Generated compatibility exports, indexes, reports, and output are derived from

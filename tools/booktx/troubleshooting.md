@@ -5,8 +5,8 @@ permalink: /tools/booktx/troubleshooting/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -616,8 +616,11 @@ configuration rather than renaming generated files by hand.</p>
 <section id="context-and-series-preparation">
 <h2>Context and series preparation</h2>
 <p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">prepare</span></code> is a project-root workflow. Provide exactly one policy
-source, either <code class="docutils literal notranslate"><span class="pre">--from-book</span></code> or <code class="docutils literal notranslate"><span class="pre">--pack</span></code>, then review the generated questionnaire
-before <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>. Do not run series preparation from a profile root.</p>
+source, either <code class="docutils literal notranslate"><span class="pre">--from-book</span></code> or <code class="docutils literal notranslate"><span class="pre">--pack</span></code>, then review the generated interview
+report and decision manifest. Apply reviewed decisions with
+<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">interview-apply</span></code>, then use <code class="docutils literal notranslate"><span class="pre">series</span> <span class="pre">finalize</span></code>. For an existing book,
+<code class="docutils literal notranslate"><span class="pre">series</span> <span class="pre">review</span></code> is idempotent. Do not run series preparation from a profile root
+or inspect parent paths from isolated mode.</p>
 </section>
 <section id="epub-output-policy">
 <h2>EPUB output policy</h2>

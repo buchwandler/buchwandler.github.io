@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5fd32efff959c1f4260a840722f3d9d98161ac4b"
+docs_commit: "58aa0b86d0c807a991b7e9beacada1303c71771a"
 search_enabled: true
 ---
 
@@ -552,6 +552,7 @@ ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#dependencies">Dependencies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#installing-ttsforge">Installing ttsforge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#onnx-runtime-providers">ONNX Runtime Providers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#memory-diagnostics">Memory diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#mixed-language-support-optional">Mixed-Language Support (Optional)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#downloading-models">Downloading Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
@@ -637,10 +638,11 @@ ONNX TTS (Text-to-Speech).</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="testing/">Testing and Coverage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.3.0] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.0] - 2026-07-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.2] - 2026-02-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.1] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.1.0] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.1.2] - 2026-02-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.1] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.1.0] - 2026-02-01</a></li>
 </ul>
 </li>
 </ul>

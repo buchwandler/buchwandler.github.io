@@ -52,8 +52,8 @@
         {
           "anchor": "",
           "heading": "TextBlock",
-          "text": "class epub2text.TextBlock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | None', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | None', outer_byte_end: 'int | None', inner_byte_start: 'int | None', inner_byte_end: 'int | None', text: 'str', text_sha256: 'str', runs: 'list[ContentRun]', chapter_id: 'str | None', chapter_title: 'str | None', page_number: 'str | None', extraction_policy: 'str', diagnostics: 'list[Diagnostic]', xhtml_fragment: 'XhtmlFragment | None' = None, markdown_fragment: 'MarkdownFragment | None' = None)[source]\nBases: object\n\n\n\nid: str\n\n\n\n\ndocument_id: str\n\n\n\n\ndocument_href: s…",
-          "lower": "class epub2text.textblock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | none', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | none', outer_byte_end: 'int | none', inner_byte_start: 'int | none', inner_byte_end: 'int | none', text: 'str', text_sha256: 'str', runs: 'list[contentrun]', chapter_id: 'str | none', chapter_title: 'str | none', page_number: 'str | none', extraction_policy: 'str', diagnostics: 'list[diagnostic]', xhtml_fragment: 'xhtmlfragment | none' = none, markdown_fragment: 'markdownfragment | none' = none)[source]\nbases: object\n\n\n\nid: str\n\n\n\n\ndocument_id: str\n\n\n\n\ndocument_href: s…"
+          "text": "class epub2text.TextBlock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | None', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | None', outer_byte_end: 'int | None', inner_byte_start: 'int | None', inner_byte_end: 'int | None', text: 'str', text_sha256: 'str', runs: 'list[ContentRun]', chapter_id: 'str | None', chapter_title: 'str | None', page_number: 'str | None', extraction_policy: 'str', diagnostics: 'list[Diagnostic]', xhtml_fragment: 'XhtmlFragment | None' = None, markdown_fragment: 'MarkdownFragment | None' = None, computed_style: 'tuple[bool, bool]' = (False, False), computed_styles: 'tuple…",
+          "lower": "class epub2text.textblock(id: 'str', document_id: 'str', document_href: 'str', spine_index: 'int | none', block_index: 'int', tag_name: 'str', element_path: 'str', attrs: 'tuple[tuple[str, str], ...]', outer_char_start: 'int', outer_char_end: 'int', inner_char_start: 'int', inner_char_end: 'int', outer_byte_start: 'int | none', outer_byte_end: 'int | none', inner_byte_start: 'int | none', inner_byte_end: 'int | none', text: 'str', text_sha256: 'str', runs: 'list[contentrun]', chapter_id: 'str | none', chapter_title: 'str | none', page_number: 'str | none', extraction_policy: 'str', diagnostics: 'list[diagnostic]', xhtml_fragment: 'xhtmlfragment | none' = none, markdown_fragment: 'markdownfragment | none' = none, computed_style: 'tuple[bool, bool]' = (false, false), computed_styles: 'tuple…"
         },
         {
           "anchor": "",
@@ -70,8 +70,8 @@
         {
           "anchor": "",
           "heading": "ExtractionPolicy",
-          "text": "class epub2text.ExtractionPolicy(block_tags: 'frozenset[str]' = frozenset({'p', 'th', 'h2', 'h5', 'li', 'h1', 'dd', 'h3', 'caption', 'blockquote', 'td', 'h4', 'figcaption', 'h6', 'dt'}), skip_tags: 'frozenset[str]' = frozenset({'title', 'head', 'script', 'style', 'noscript'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'code', 'kbd', 'tt', 'var', 'samp'}), include_footnotes: 'bool' = True, include_sup_sub: 'bool' = True, normalize_whitespace: 'bool' = False, remove_duplicate_titles: 'bool' = False, include_nav_documents: 'bool' = False, include_non_linear_spine: 'bool' = False, strict_offsets: 'bool' = False, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'var', 'u', 'em', 'sub', 's', 'a', 'time', 'samp', 'kbd', 'sup', 'rp', 'rt', 'data', 'wbr', 'abbr', 'br', 'q', 'i',…",
-          "lower": "class epub2text.extractionpolicy(block_tags: 'frozenset[str]' = frozenset({'p', 'th', 'h2', 'h5', 'li', 'h1', 'dd', 'h3', 'caption', 'blockquote', 'td', 'h4', 'figcaption', 'h6', 'dt'}), skip_tags: 'frozenset[str]' = frozenset({'title', 'head', 'script', 'style', 'noscript'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'code', 'kbd', 'tt', 'var', 'samp'}), include_footnotes: 'bool' = true, include_sup_sub: 'bool' = true, normalize_whitespace: 'bool' = false, remove_duplicate_titles: 'bool' = false, include_nav_documents: 'bool' = false, include_non_linear_spine: 'bool' = false, strict_offsets: 'bool' = false, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'var', 'u', 'em', 'sub', 's', 'a', 'time', 'samp', 'kbd', 'sup', 'rp', 'rt', 'data', 'wbr', 'abbr', 'br', 'q', 'i',…"
+          "text": "class epub2text.ExtractionPolicy(block_tags: 'frozenset[str]' = frozenset({'dt', 'h6', 'hr', 'p', 'dd', 'h5', 'h3', 'td', 'blockquote', 'h4', 'li', 'th', 'figcaption', 'h1', 'h2', 'caption'}), skip_tags: 'frozenset[str]' = frozenset({'noscript', 'style', 'title', 'head', 'script'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'tt', 'kbd', 'var', 'code', 'samp'}), include_footnotes: 'bool' = True, include_sup_sub: 'bool' = True, normalize_whitespace: 'bool' = False, remove_duplicate_titles: 'bool' = False, include_nav_documents: 'bool' = False, include_non_linear_spine: 'bool' = False, strict_offsets: 'bool' = False, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'q', 'mark', 'br', 'strong', 'samp', 's', 'abbr', 'dfn', 'span', 'a', 'var', 'em', 'kbd', 'sup', 'rp', 'data'…",
+          "lower": "class epub2text.extractionpolicy(block_tags: 'frozenset[str]' = frozenset({'dt', 'h6', 'hr', 'p', 'dd', 'h5', 'h3', 'td', 'blockquote', 'h4', 'li', 'th', 'figcaption', 'h1', 'h2', 'caption'}), skip_tags: 'frozenset[str]' = frozenset({'noscript', 'style', 'title', 'head', 'script'}), opaque_inline_tags: 'frozenset[str]' = frozenset({'tt', 'kbd', 'var', 'code', 'samp'}), include_footnotes: 'bool' = true, include_sup_sub: 'bool' = true, normalize_whitespace: 'bool' = false, remove_duplicate_titles: 'bool' = false, include_nav_documents: 'bool' = false, include_non_linear_spine: 'bool' = false, strict_offsets: 'bool' = false, allowed_inline_fragment_tags: 'frozenset[str]' = frozenset({'q', 'mark', 'br', 'strong', 'samp', 's', 'abbr', 'dfn', 'span', 'a', 'var', 'em', 'kbd', 'sup', 'rp', 'data'…"
         },
         {
           "anchor": "",
@@ -219,9 +219,21 @@
         },
         {
           "anchor": "",
+          "heading": "Chapter Markdown API",
+          "text": "The public ChapterMarkdownOptions, ChapterDocument, and extract_epub_chapters symbols\nprovide assembled chapter-level Markdown. EPUBParser.get_chapter_documents returns\nimmutable documents with visible text, Markdown body, navigation metadata, source block\nIDs, and stable diagnostics. markdown_body excludes the navigation title;\nto_markdown(include_title=True) synthesizes one escaped heading.",
+          "lower": "the public chaptermarkdownoptions, chapterdocument, and extract_epub_chapters symbols\nprovide assembled chapter-level markdown. epubparser.get_chapter_documents returns\nimmutable documents with visible text, markdown body, navigation metadata, source block\nids, and stable diagnostics. markdown_body excludes the navigation title;\nto_markdown(include_title=true) synthesizes one escaped heading."
+        },
+        {
+          "anchor": "",
           "heading": "epub2text",
           "text": "Main package exports:\n\n\nEPUBParser - Main parser class\n\n\nChapter - Chapter data model\n\n\nPage - Page data model\n\n\nPageSource - Page source enumeration\n\n\nMetadata - Metadata data model\n\n\nTextCleaner - Text cleaning class\n\n\nclean_text - Convenience function for text cleaning\n\n\nepub2txt - Compatibility function\n\n\nBookmark - Bookmark data model\n\n\nBookmarkManager - Bookmark management class\n\n\nEpubReader - Interactive terminal reader\n\n\nReaderState - Reader state data model",
           "lower": "main package exports:\n\n\nepubparser - main parser class\n\n\nchapter - chapter data model\n\n\npage - page data model\n\n\npagesource - page source enumeration\n\n\nmetadata - metadata data model\n\n\ntextcleaner - text cleaning class\n\n\nclean_text - convenience function for text cleaning\n\n\nepub2txt - compatibility function\n\n\nbookmark - bookmark data model\n\n\nbookmarkmanager - bookmark management class\n\n\nepubreader - interactive terminal reader\n\n\nreaderstate - reader state data model"
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter Markdown API",
+          "text": "from epub2text import EPUBParser, ChapterMarkdownOptions\n\nparser = EPUBParser(\"book.epub\")\nchapters = parser.get_chapter_documents(\n    options=ChapterMarkdownOptions(\n        flavor=\"commonmark\",\n        resolve_css_emphasis=True,\n        preserve_scene_breaks=True,\n    )\n)\nfor chapter in chapters:\n    print(chapter.id, chapter.parent_id, chapter.level)\n    print(chapter.markdown_body)\n    print(chapter.to_markdown(include_title=True))\n\n\n\n\nChapterDocument.text is the visible block body and char_count is exactly len(text).\nmarkdown_body excludes the navigation title, while to_markdown(include_title=True)\nsynthesizes one escaped heading. Source block IDs remain joinable to structured\nextraction, and diagnostics are stable and local to the assembled chapter.",
+          "lower": "from epub2text import epubparser, chaptermarkdownoptions\n\nparser = epubparser(\"book.epub\")\nchapters = parser.get_chapter_documents(\n    options=chaptermarkdownoptions(\n        flavor=\"commonmark\",\n        resolve_css_emphasis=true,\n        preserve_scene_breaks=true,\n    )\n)\nfor chapter in chapters:\n    print(chapter.id, chapter.parent_id, chapter.level)\n    print(chapter.markdown_body)\n    print(chapter.to_markdown(include_title=true))\n\n\n\n\nchapterdocument.text is the visible block body and char_count is exactly len(text).\nmarkdown_body excludes the navigation title, while to_markdown(include_title=true)\nsynthesizes one escaped heading. source block ids remain joinable to structured\nextraction, and diagnostics are stable and local to the assembled chapter."
         },
         {
           "anchor": "",
@@ -234,18 +246,6 @@
           "heading": "epub2text.cleaner",
           "text": "Text cleaning utilities:\n\n\nTextCleaner - Configurable text cleaner class\n\n\nclean_text - Convenience function\n\n\ncalculate_text_length - Calculate text length excluding markers",
           "lower": "text cleaning utilities:\n\n\ntextcleaner - configurable text cleaner class\n\n\nclean_text - convenience function\n\n\ncalculate_text_length - calculate text length excluding markers"
-        },
-        {
-          "anchor": "",
-          "heading": "epub2text.bookmarks",
-          "text": "Bookmark management:\n\n\nBookmark - Bookmark data class\n\n\nBookmarkManager - Bookmark persistence manager",
-          "lower": "bookmark management:\n\n\nbookmark - bookmark data class\n\n\nbookmarkmanager - bookmark persistence manager"
-        },
-        {
-          "anchor": "",
-          "heading": "epub2text.reader",
-          "text": "Interactive terminal reader:\n\n\nEpubReader - Main reader class\n\n\nReaderState - State information when reader exits",
-          "lower": "interactive terminal reader:\n\n\nepubreader - main reader class\n\n\nreaderstate - state information when reader exits"
         }
       ]
     },
@@ -421,6 +421,12 @@
         },
         {
           "anchor": "",
+          "heading": "Assembled chapter documents",
+          "text": "Use EPUBParser.get_chapter_documents() or extract_epub_chapters() for the supported\nchapter-level Markdown contract. This is distinct from MarkdownFragment: fragments\ntranslate inline runs, while ChapterDocument adds block Markdown, navigation grouping,\ntitle de-duplication, heading normalization, scene breaks, and synthetic prefix/spine\nfallbacks.\n\nThe document id comes from NavigationEntry.id. Each document retains href, nested\nparent_id/level, visible text, markdown_body, source block IDs, and chapter-local\ndiagnostics. The navigation title is not repeated in markdown_body. Stable diagnostics\ninclude chapter_source_title_omitted, chapter_heading_level_normalized,\nchapter_unknown_block, css_missing_stylesheet, css_malformed, css_size_limit, and\nmarkdown_css_style_cancellation.\n\nCSS hand…",
+          "lower": "use epubparser.get_chapter_documents() or extract_epub_chapters() for the supported\nchapter-level markdown contract. this is distinct from markdownfragment: fragments\ntranslate inline runs, while chapterdocument adds block markdown, navigation grouping,\ntitle de-duplication, heading normalization, scene breaks, and synthetic prefix/spine\nfallbacks.\n\nthe document id comes from navigationentry.id. each document retains href, nested\nparent_id/level, visible text, markdown_body, source block ids, and chapter-local\ndiagnostics. the navigation title is not repeated in markdown_body. stable diagnostics\ninclude chapter_source_title_omitted, chapter_heading_level_normalized,\nchapter_unknown_block, css_missing_stylesheet, css_malformed, css_size_limit, and\nmarkdown_css_style_cancellation.\n\ncss hand…"
+        },
+        {
+          "anchor": "",
           "heading": "Diagnostics and strict mode",
           "text": "Diagnostics use severities info, warning, and error with stable codes such as\nmissing_nav, unresolved_href, unresolved_fragment, encoding_fallback, and\noffset_unavailable. ExtractionPolicy includes strict_offsets for callers that want\nwarning and error diagnostics to fail closed.",
           "lower": "diagnostics use severities info, warning, and error with stable codes such as\nmissing_nav, unresolved_href, unresolved_fragment, encoding_fallback, and\noffset_unavailable. extractionpolicy includes strict_offsets for callers that want\nwarning and error diagnostics to fail closed."
@@ -527,6 +533,12 @@
           "heading": "Chapter Markers",
           "text": "Extracted text includes chapter titles with clear visual separation:\n\nChapter Title\n\nChapter text content here...\n\n\nNext Chapter\n\nMore content...\n\n\n\n\nThe first chapter appears as {title}\\n\\n{content}, while subsequent chapters are\nseparated by four linebreaks before the title, then two linebreaks after the title.\n\nUse --no-markers to hide chapter titles from the output.",
           "lower": "extracted text includes chapter titles with clear visual separation:\n\nchapter title\n\nchapter text content here...\n\n\nnext chapter\n\nmore content...\n\n\n\n\nthe first chapter appears as {title}\\n\\n{content}, while subsequent chapters are\nseparated by four linebreaks before the title, then two linebreaks after the title.\n\nuse --no-markers to hide chapter titles from the output."
+        },
+        {
+          "anchor": "",
+          "heading": "Chapter Markdown",
+          "text": "extract –output-format markdown writes UTF-8 assembled chapter Markdown with a final\nnewline. Chapter titles are included as level-one headings unless –no-markers is\nsupplied:\n\nepub2text extract book.epub --output-format markdown -o book.md\nepub2text extract book.epub --output-format markdown --chapters 6-10\nepub2text extract book.epub --output-format markdown --no-markers\n\n\n\n\nMarkdown preserves block structure, normalized headings, semantic and local CSS-derived\nemphasis, safe inline links/code, nested navigation metadata, and semantic hr scene\nbreaks. Text cleaning, wrapping, sentence formatting, clause formatting, and paragraph\nformatting are not applied; incompatible formatting flags produce an error.",
+          "lower": "extract –output-format markdown writes utf-8 assembled chapter markdown with a final\nnewline. chapter titles are included as level-one headings unless –no-markers is\nsupplied:\n\nepub2text extract book.epub --output-format markdown -o book.md\nepub2text extract book.epub --output-format markdown --chapters 6-10\nepub2text extract book.epub --output-format markdown --no-markers\n\n\n\n\nmarkdown preserves block structure, normalized headings, semantic and local css-derived\nemphasis, safe inline links/code, nested navigation metadata, and semantic hr scene\nbreaks. text cleaning, wrapping, sentence formatting, clause formatting, and paragraph\nformatting are not applied; incompatible formatting flags produce an error."
         },
         {
           "anchor": "",

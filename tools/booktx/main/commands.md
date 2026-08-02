@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -552,6 +552,7 @@ profile marker to resolve that profile.</p>
 booktx<span class="w"> </span>extract<span class="w"> </span>./book
 booktx<span class="w"> </span>chapters<span class="w"> </span>./book<span class="w"> </span>--audit
 booktx<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>./book<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span>de<span class="w"> </span>--target-locale<span class="w"> </span>de-DE<span class="w"> </span>--model<span class="w"> </span>MODEL
+booktx<span class="w"> </span>translate<span class="w"> </span>store-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>guide<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
@@ -565,10 +566,20 @@ surface.</p>
 </section>
 <section id="human-decisions">
 <h2>Human decisions</h2>
+<p>Series preparation commands:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>series<span class="w"> </span>review<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span>series<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>series<span class="w"> </span>finalize<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+</pre></div>
+</div>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>init<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--non-interactive
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>analyze<span class="w"> </span>./book<span class="w"> </span>--write<span class="w"> </span>--sync-profiles
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-plan<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
 booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>markdown
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-report<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--format<span class="w"> </span>both<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-template<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--write
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-apply<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>.booktx/reports/source-interview-decisions.json<span class="w"> </span>--write
 booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--stdout
 booktx<span class="w"> </span>context<span class="w"> </span>approve<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>Q001<span class="w"> </span>--text<span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="w"> </span>--approved-by<span class="w"> </span><span class="s2">&quot;user:NAME&quot;</span>
 booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
@@ -649,6 +660,7 @@ booktx<span class="w"> </span>translate<span class="w"> </span>revise-block<span
 booktx<span class="w"> </span>translate<span class="w"> </span>search<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Wespen&quot;</span><span class="w"> </span>--before<span class="w"> </span><span class="m">1</span><span class="w"> </span>--after<span class="w"> </span><span class="m">1</span>
 booktx<span class="w"> </span>translate<span class="w"> </span>concordance<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span>--auto<span class="w"> </span>--json
 booktx<span class="w"> </span>translate<span class="w"> </span>todo-doctor<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--overlaps
+booktx<span class="w"> </span>translate<span class="w"> </span>store-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--json
 </pre></div>
 </div>
 <p>The agent workflow requires approved context, bounded tasks, unchanged record

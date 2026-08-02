@@ -5,8 +5,8 @@ permalink: /tools/booktx/concepts/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -569,10 +569,11 @@ resolution.</p>
 </section>
 <section id="state-of-truth">
 <h2>State of truth</h2>
-<p>New profiles currently use <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> as the canonical record store.
-When a profile opts into v3, <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code>
-becomes the canonical shard-based backend. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains the
-compatibility materialization model used by the loader surface.
+<p>New profiles use v3 as the canonical record store. Existing profiles remain on
+the backend detected on disk; v2 is a single <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> and v3 is
+the manifest plus per-chunk shard backend under
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code>. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains the
+compatibility materialization model used at API and migration boundaries.
 <code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code> records version history. Generated
 <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, editor indexes, reports, and output files are derived artifacts
 and can be rebuilt.</p>

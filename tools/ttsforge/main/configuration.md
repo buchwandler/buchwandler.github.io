@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5fd32efff959c1f4260a840722f3d9d98161ac4b"
+docs_commit: "58aa0b86d0c807a991b7e9beacada1303c71771a"
 search_enabled: true
 ---
 
@@ -599,6 +599,40 @@ remains active. Approximation can also be selected per conversion with
 <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssmd_voice_bindings</span></code> : Mapping such as <code class="docutils literal notranslate"><span class="pre">{&quot;narrator&quot;:</span> <span class="pre">&quot;af_sarah&quot;}</span></code>; CLI/API bindings are
 supplied with repeated <code class="docutils literal notranslate"><span class="pre">--ssmd-voice</span> <span class="pre">ROLE=VOICE</span></code>.</p>
+</section>
+<section id="epub-markdown-extraction-emphasis-and-audiosig-prosody">
+<h3>EPUB Markdown extraction, emphasis, and AudioSig prosody</h3>
+<p>These settings form three related but distinct layers:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">epub_content_mode</span></code> (<code class="docutils literal notranslate"><span class="pre">markdown</span></code>, default <code class="docutils literal notranslate"><span class="pre">markdown</span></code>) selects epub2text’s structured
+chapter Markdown API. <code class="docutils literal notranslate"><span class="pre">plain</span></code> is an explicit compatibility/debug path; TTSForge does
+not silently fall back to it when the Markdown API is unavailable.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> (boolean, default <code class="docutils literal notranslate"><span class="pre">true</span></code>) preserves or unwraps EPUB italic and bold
+semantics while leaving headings, paragraphs, and scene breaks independent. CSS
+emphasis is resolved by epub2text in Markdown mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> controls how preserved SSMD emphasis is rendered audibly.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">plain</span></code> preserves normal synthesis, <code class="docutils literal notranslate"><span class="pre">approximate</span></code> enables the current deterministic
+gain-only approximation, and <code class="docutils literal notranslate"><span class="pre">warn</span></code>/<code class="docutils literal notranslate"><span class="pre">error</span></code> report or reject emphasis metadata. The
+approximation does not provide configurable strength profiles.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prosody_method</span></code> (default <code class="docutils literal notranslate"><span class="pre">wsola</span></code>) selects the AudioSig algorithm for explicit SSMD rate
+and pitch annotations. Supported methods are <code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>, <code class="docutils literal notranslate"><span class="pre">psola</span></code> (an
+alias for <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>), and <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code>.</p>
+<p>Additional persistent prosody settings are <code class="docutils literal notranslate"><span class="pre">prosody_fallback_methods</span></code> (JSON list,
+default <code class="docutils literal notranslate"><span class="pre">[&quot;wsola&quot;,</span> <span class="pre">&quot;phase_vocoder&quot;]</span></code>), <code class="docutils literal notranslate"><span class="pre">prosody_strict</span></code>, <code class="docutils literal notranslate"><span class="pre">prosody_clip</span></code>,
+<code class="docutils literal notranslate"><span class="pre">prosody_n_fft</span></code>, nullable <code class="docutils literal notranslate"><span class="pre">prosody_hop_length</span></code>, <code class="docutils literal notranslate"><span class="pre">prosody_filter_width</span></code>,
+<code class="docutils literal notranslate"><span class="pre">prosody_rolloff</span></code>, and <code class="docutils literal notranslate"><span class="pre">prosody_boundary_blend_ms</span></code>. The default WSOLA path is the
+general audiobook choice; ESOLA and PSOLA are speech-oriented alternatives, while phase
+vocoder is primarily a reference or fallback path.</p>
+<p>Examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>detect_emphasis<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--set<span class="w"> </span>ssmd_emphasis_mode<span class="w"> </span>approximate
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>epub_content_mode<span class="w"> </span>markdown
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>epub_content_mode<span class="w"> </span>plain
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>prosody_method<span class="w"> </span>esola<span class="w"> </span>--set<span class="w"> </span>prosody_fallback_methods<span class="w"> </span><span class="s1">&#39;[&quot;wsola&quot;,&quot;phase_vocoder&quot;]&#39;</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>prosody_method<span class="w"> </span>psola
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>prosody_strict<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--set<span class="w"> </span>prosody_fallback_methods<span class="w"> </span><span class="s1">&#39;[]&#39;</span>
+</pre></div>
+</div>
 <p><code class="docutils literal notranslate"><span class="pre">ssmd_audio_allow_remote</span></code> (default <code class="docutils literal notranslate"><span class="pre">false</span></code>), <code class="docutils literal notranslate"><span class="pre">ssmd_audio_root</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd_audio_max_bytes</span></code>
 (default <code class="docutils literal notranslate"><span class="pre">20000000</span></code>), and <code class="docutils literal notranslate"><span class="pre">ssmd_audio_max_duration_s</span></code> (default <code class="docutils literal notranslate"><span class="pre">120</span></code>) : Bound
 local/HTTPS audio annotation resolution. Remote audio is opt-in.</p>
@@ -1077,6 +1111,15 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <p>TTSForge configuration has no separate environment-variable file format. The PyKokoro
 runtime may still honor its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override after
 TTSForge resolves the configured provider.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">TTSFORGE_MEMORY_DEBUG=1</span></code> to enable dependency-free process-memory diagnostics
+during conversion. Logs include RSS, peak RSS, available memory, and the effective ONNX
+provider around runner initialization, chapter synthesis, WAV writing, result release,
+state saves, final merging, and converter cleanup. RSS may remain elevated because
+native allocators retain high-water pages; that alone is not evidence of a provider
+leak.</p>
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>, uses compact segment results, and releases
+completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
+remains buffered and streaming is future work.</p>
 </section>
 <section id="model-source-status">
 <h2>Model source status</h2>

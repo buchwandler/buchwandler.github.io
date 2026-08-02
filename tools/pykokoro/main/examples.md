@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "60617739f1b07f0a222584952f6a19bc9f737ad4"
+docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
 search_enabled: true
 ---
 
@@ -712,6 +712,35 @@ snippets in older examples, update them to the pipeline style shown below.</p>
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;long_text.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="prosody-backend-comparison">
+<h2>Prosody Backend Comparison</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">examples/prosody_algorithm_selection.py</span></code> for a small, validated diagnostic
+comparison. It synthesizes once, or accepts a known-good WAV, and applies WSOLA, ESOLA,
+TD-PSOLA, and phase vocoder to the exact same reference. On Termux/Android, use the
+input-WAV path so source synthesis is isolated from the AudioSig comparison:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/prosody_algorithm_selection.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input-wav<span class="w"> </span>reference.wav<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output-dir<span class="w"> </span>build/prosody-selection
+</pre></div>
+</div>
+<p>The tool writes a neutral <code class="docutils literal notranslate"><span class="pre">reference.wav</span></code>, explicit mono <code class="docutils literal notranslate"><span class="pre">PCM_16</span></code> outputs, and
+<code class="docutils literal notranslate"><span class="pre">metrics.json</span></code>. It validates shape, finite values, peaks, RMS, adjacent-sample jumps,
+WAV headers, and decoded frame counts. Positive gain is not part of the default
+comparison because it can exceed full scale and cause common PCM clipping; over-range
+audio is rejected instead of being silently clipped.</p>
+<p>For a reproducible blind set, run the full comparison harness:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/compare_prosody_algorithms.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--input-wav<span class="w"> </span>input.wav<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output-dir<span class="w"> </span>build/prosody-comparison
+</pre></div>
+</div>
+<p>The full comparison script renders rate-only, pitch-only, emphasis, and combined presets
+from identical source audio, then writes WAV files, CSV/JSON diagnostic metrics,
+randomized blind copies, a private key, and a manifest. Objective metrics do not measure
+naturalness. WSOLA is the production default; ESOLA and TD-PSOLA remain experimental. No
+backend guarantees formant preservation, and isolated segment processing cannot restore
+sentence-level coarticulation.</p>
 </section>
 <section id="batch-processing">
 <h2>Batch Processing</h2>

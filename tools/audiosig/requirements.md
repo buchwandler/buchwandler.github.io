@@ -5,8 +5,8 @@ permalink: /tools/audiosig/requirements/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_ref: "v0.1.2"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 

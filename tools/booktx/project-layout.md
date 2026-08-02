@@ -5,8 +5,8 @@ permalink: /tools/booktx/project-layout/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -610,8 +610,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="profile-local-state">
 <h2>Profile-local state</h2>
 <p>Each <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code> directory is an isolation boundary. The
-canonical store is v2 by default. When a profile opts into v3, the
-<code class="docutils literal notranslate"><span class="pre">translation-store/</span></code> directory becomes the canonical shard backend; <code class="docutils literal notranslate"><span class="pre">context.json</span></code>
+new profiles use v3 by default. Existing profiles keep their detected backend;
+the v2 <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> remains supported and the
+<code class="docutils literal notranslate"><span class="pre">translation-store/</span></code> directory is the canonical v3 shard backend. <code class="docutils literal notranslate"><span class="pre">context.json</span></code>
 and the version ledger are also durable state. Tasks, todos, submission files,
 reviews, judge artifacts, and reports remain profile-local.</p>
 <p><code class="docutils literal notranslate"><span class="pre">translated/</span></code>, editor indexes, and <code class="docutils literal notranslate"><span class="pre">output/</span></code> are generated artifacts. They are

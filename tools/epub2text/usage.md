@@ -5,8 +5,8 @@ permalink: /tools/epub2text/usage/
 nav_tool: epub2text
 docs_project: "epub2text"
 docs_variant: "release"
-docs_ref: "v0.2.7"
-docs_commit: "2d6e4d9639e1589234fad094d0de09c393c53ce3"
+docs_ref: "v0.2.8"
+docs_commit: "fbe58dd9381d44582ce7525956c090fd207df398"
 search_enabled: true
 ---
 
@@ -850,6 +850,21 @@ More content...
 <p>The first chapter appears as <code class="docutils literal notranslate"><span class="pre">{title}\n\n{content}</span></code>, while subsequent chapters are
 separated by four linebreaks before the title, then two linebreaks after the title.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--no-markers</span></code> to hide chapter titles from the output.</p>
+</section>
+<section id="chapter-markdown">
+<h3>Chapter Markdown</h3>
+<p>extract –output-format markdown writes UTF-8 assembled chapter Markdown with a final
+newline. Chapter titles are included as level-one headings unless –no-markers is
+supplied:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>epub2text extract book.epub --output-format markdown -o book.md
+epub2text extract book.epub --output-format markdown --chapters 6-10
+epub2text extract book.epub --output-format markdown --no-markers
+</pre></div>
+</div>
+<p>Markdown preserves block structure, normalized headings, semantic and local CSS-derived
+emphasis, safe inline links/code, nested navigation metadata, and semantic hr scene
+breaks. Text cleaning, wrapping, sentence formatting, clause formatting, and paragraph
+formatting are not applied; incompatible formatting flags produce an error.</p>
 </section>
 <section id="page-markers">
 <h3>Page Markers</h3>

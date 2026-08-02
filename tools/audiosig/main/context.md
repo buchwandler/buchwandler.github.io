@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 

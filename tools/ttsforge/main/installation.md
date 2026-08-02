@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "5fd32efff959c1f4260a840722f3d9d98161ac4b"
+docs_commit: "58aa0b86d0c807a991b7e9beacada1303c71771a"
 search_enabled: true
 ---
 
@@ -554,6 +554,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="dependencies">
 <h2>Dependencies</h2>
 <p>ttsforge requires the following external tools:</p>
+<section id="audiosig-waveform-primitives">
+<h3>AudioSig waveform primitives</h3>
+<p>TTSForge depends directly on AudioSig <code class="docutils literal notranslate"><span class="pre">&gt;=0.1.1,&lt;0.2</span></code> for reusable NumPy waveform
+operations: duration-based silence generation and arithmetic-mean channel downmixing.
+NumPy remains a direct dependency for TTSForge arrays, composition, playback buffers,
+and bounded I/O buffers. SoundFile remains required for audio decoding and encoding;
+AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration layers.</p>
+</section>
+<section id="pykokoro-memory-api">
+<h3>PyKokoro memory API</h3>
+<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>. This release provides the public
+memory-ownership API used by TTSForge to disable retained segment audio and release
+completed chapter results. Whole chapters are still synthesized into a buffered WAV;
+streaming is not part of this integration.</p>
+</section>
 <section id="ffmpeg-required-for-mp3-flac-opus-m4b">
 <h3>ffmpeg (Required for MP3/FLAC/OPUS/M4B)</h3>
 <p>ffmpeg is required for MP3/FLAC/OPUS/M4B output and chapter merging.</p>
@@ -670,7 +685,7 @@ distributions are not installed together:</p>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
 </pre></div>
 </div>
-<p>For Termux/Android with PyKokoro v0.7.1 and an ONNX Runtime build exposing NNAPI or
+<p>For Termux/Android with PyKokoro v0.7.5 and an ONNX Runtime build exposing NNAPI or
 XNNPACK:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
@@ -680,6 +695,14 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <p>Use <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> as a compatibility shortcut for <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> for
 <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">cpu</span></code>. Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment
 override are handled by PyKokoro.</p>
+</section>
+<section id="memory-diagnostics">
+<h2>Memory diagnostics</h2>
+<p>Set <code class="docutils literal notranslate"><span class="pre">TTSFORGE_MEMORY_DEBUG=1</span></code> to log RSS, peak RSS, available memory, and the effective
+ONNX provider before and after runner initialization, chapter synthesis, WAV writing,
+result release, state saves, final merging, and converter cleanup. Native allocators may
+retain pages at a high-water mark after audio release; this diagnostic does not claim a
+provider-native leak from RSS alone.</p>
 </section>
 <section id="mixed-language-support-optional">
 <h2>Mixed-Language Support (Optional)</h2>

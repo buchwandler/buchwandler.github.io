@@ -6,7 +6,7 @@ nav_tool: epub2text-main
 docs_project: "epub2text"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "831e6ffc831fceefc80cf72d519d862e82d03859"
+docs_commit: "fbe58dd9381d44582ce7525956c090fd207df398"
 search_enabled: true
 ---
 

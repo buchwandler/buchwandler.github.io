@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.5"
-docs_commit: "60617739f1b07f0a222584952f6a19bc9f737ad4"
+docs_ref: "v0.8.0"
+docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
 search_enabled: true
 ---
 
@@ -678,17 +678,6 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Using scipy:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">scipy.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">wavfile</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
-<span class="n">audio_int16</span> <span class="o">=</span> <span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span> <span class="o">*</span> <span class="mi">32767</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s2">&quot;int16&quot;</span><span class="p">)</span>
-<span class="n">wavfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">audio_int16</span><span class="p">)</span>
-</pre></div>
-</div>
 </section>
 </section>
 <section id="voice-selection">
@@ -763,6 +752,37 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 </pre></div>
 </div>
 <p>Recommended range: 0.5 to 2.0</p>
+</section>
+<section id="prosody-backend-selection">
+<h2>Prosody Backend Selection</h2>
+<p>SSMD rate, pitch, and volume metadata is composed in one AudioSig speech-effects pass.
+The default backend is WSOLA:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">ProsodyConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
+    <span class="n">prosody</span><span class="o">=</span><span class="n">ProsodyConfig</span><span class="p">(</span><span class="n">method</span><span class="o">=</span><span class="s2">&quot;wsola&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> (or its <code class="docutils literal notranslate"><span class="pre">psola</span></code> alias) and <code class="docutils literal notranslate"><span class="pre">esola</span></code> only as experimental choices. Current
+TD-PSOLA limits are rate <code class="docutils literal notranslate"><span class="pre">0.75..1.5</span></code> and pitch <code class="docutils literal notranslate"><span class="pre">-6..+6</span> <span class="pre">st</span></code>; ESOLA requires its computed
+backend rate to remain in <code class="docutils literal notranslate"><span class="pre">0.5..2.0</span></code>. <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code> remains available as a reference
+path. Strict comparison mode disables fallback:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">prosody</span><span class="o">=</span><span class="n">ProsodyConfig</span><span class="p">(</span>
+        <span class="n">method</span><span class="o">=</span><span class="s2">&quot;esola&quot;</span><span class="p">,</span>
+        <span class="n">fallback_methods</span><span class="o">=</span><span class="p">(),</span>
+        <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>No backend guarantees formant preservation. Results vary by voice and utterance, and
+segment-level processing cannot restore sentence-level coarticulation. Use
+<code class="docutils literal notranslate"><span class="pre">examples/compare_prosody_algorithms.py</span></code> to compare identical source audio before
+changing the default; its objective metrics are diagnostic rather than naturalness
+scores.</p>
 </section>
 <section id="pause-control">
 <h2>Pause Control</h2>

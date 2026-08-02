@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 5fd32efff959c1f4260a840722f3d9d98161ac4b
+source_commit: 58aa0b86d0c807a991b7e9beacada1303c71771a
 source_url: https://github.com/buchwandler/ttsforge/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ttsforge

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/pipeline_stages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.7.5"
-docs_commit: "60617739f1b07f0a222584952f6a19bc9f737ad4"
+docs_ref: "v0.8.0"
+docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
 search_enabled: true
 ---
 
@@ -604,6 +604,8 @@ wires the missing adapters automatically.</p>
 overrides the voice per segment.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">generation</span></code>: <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> instance with speed, language, pause handling, and
 phoneme controls.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prosody</span></code>: <code class="docutils literal notranslate"><span class="pre">ProsodyConfig</span></code> selecting the AudioSig speech-effects backend. WSOLA is the
+default; <code class="docutils literal notranslate"><span class="pre">esola</span></code> and <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> are experimental, and <code class="docutils literal notranslate"><span class="pre">psola</span></code> aliases <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>.</p></li>
 </ul>
 </section>
 <section id="model-and-provider">
@@ -762,9 +764,15 @@ segments, and apply short-sentence handling.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">generation.pause_mode&quot;</span></code> set to <code class="docutils literal notranslate"><span class="pre">&quot;manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> enables silence trimming before
 inserting explicit pauses.</p></li>
-<li><p>SSMD prosody metadata (rate/pitch/volume) is applied to each segment.</p></li>
+<li><p>SSMD prosody metadata (rate/pitch/volume) is applied to each segment through one
+AudioSig compositor pass. Configured fallbacks are used only in non-strict mode.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pause_before</span></code>/<code class="docutils literal notranslate"><span class="pre">pause_after</span></code> values from G2P are inserted between segments.</p></li>
 </ul>
+<p>WSOLA is the production default. ESOLA’s computed backend rate must be <code class="docutils literal notranslate"><span class="pre">0.5..2.0</span></code>, and
+current TD-PSOLA limits are rate <code class="docutils literal notranslate"><span class="pre">0.75..1.5</span></code> and pitch <code class="docutils literal notranslate"><span class="pre">-6..+6</span> <span class="pre">st</span></code>. No backend
+guarantees formant preservation; quality depends on the voice and utterance. Because
+segments are processed independently, this stage cannot restore sentence-level
+coarticulation or pitch continuity.</p>
 </section>
 </section>
 <section id="customizing-the-pipeline">

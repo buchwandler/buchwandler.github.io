@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -570,17 +570,22 @@ translated series” path.</p>
 <li><p>Imports the previous book’s reusable context policy.</p></li>
 <li><p>Runs source analysis and refreshes profile snapshots.</p></li>
 <li><p>Prefills context review work and renders <code class="docutils literal notranslate"><span class="pre">context.md</span></code>.</p></li>
+<li><p>Builds the profile-local source-interview ledger, Markdown/JSON report, and
+hash-bound decision template.</p></li>
 <li><p>Writes <code class="docutils literal notranslate"><span class="pre">.booktx/reports/series-prepare.json</span></code> and <code class="docutils literal notranslate"><span class="pre">.md</span></code>.</p></li>
-<li><p>Stops before translation and before automatic <code class="docutils literal notranslate"><span class="pre">context</span> <span class="pre">mark-ready</span></code>.</p></li>
+<li><p>Stops before translation and before automatic readiness mutation.</p></li>
 </ol>
-<p>Review handoff:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>questionnaire<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--stdout
-booktx<span class="w"> </span>context<span class="w"> </span>status<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>context<span class="w"> </span>render<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--write
-booktx<span class="w"> </span>context<span class="w"> </span>mark-ready<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
-booktx<span class="w"> </span>agents<span class="w"> </span>write<span class="w"> </span>./book5<span class="w"> </span>--mode<span class="w"> </span>isolated<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2
+<p>Review and finalize handoff:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-report<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--write
+<span class="c1"># Review/edit .booktx/reports/source-interview-decisions.json.</span>
+booktx<span class="w"> </span><span class="nb">source</span><span class="w"> </span>interview-apply<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>.booktx/reports/source-interview-decisions.json<span class="w"> </span>--write
+booktx<span class="w"> </span>series<span class="w"> </span>finalize<span class="w"> </span>./book5<span class="w"> </span>--profile<span class="w"> </span>de_glm_5_2<span class="w"> </span>--write
 </pre></div>
 </div>
+<p>For an existing or partially prepared book, use the idempotent project-root
+workflow <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">review</span> <span class="pre">./book5</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--write</span></code> and inspect
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">series</span> <span class="pre">status</span> <span class="pre">./book5</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span></code>.</p>
 </section>
 <section id="pack-mode">
 <h2>Pack mode</h2>

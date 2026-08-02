@@ -5,8 +5,8 @@ permalink: /tools/booktx/maintenance/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.0"
-docs_commit: "fc8afbf14d54f5c9f7a039604dd363efd213c130"
+docs_ref: "v0.5.1"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -562,8 +562,10 @@ booktx<span class="w"> </span>translate<span class="w"> </span>migrate-store<spa
 booktx<span class="w"> </span>translate<span class="w"> </span>migrate-inline-xhtml<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
-<p>Use migration commands only for legacy projects. Current projects use
-<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> by default. The shard-based v3 store is opt-in through
+<p>Use migration commands only for legacy projects. New profiles use v3 by
+default; existing profiles retain their detected backend. Inspect first with
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">store-status</span> <span class="pre">./book</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span></code>, then use the
+dry-run-first migration command when changing an existing profile:
 <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">translate</span> <span class="pre">migrate-store</span> <span class="pre">./book</span> <span class="pre">--profile</span> <span class="pre">PROFILE</span> <span class="pre">--to</span> <span class="pre">v3</span> <span class="pre">--write</span></code>.</p>
 </section>
 <section id="generated-exports-and-storage">

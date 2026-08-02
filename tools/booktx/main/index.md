@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4206b1730d8007a87db3dfa3abcc9f837e2d90c7"
+docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
 search_enabled: true
 ---
 
@@ -563,6 +563,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li><p><a class="reference internal" href="agent-workflow/"><span class="std std-doc">Agent workflow</span></a></p></li>
 <li><p><a class="reference internal" href="series/"><span class="std std-doc">Series workflows</span></a></p></li>
 <li><p><a class="reference internal" href="translation-contract/"><span class="std std-doc">Translation contract</span></a></p></li>
+<li><p><a class="reference internal" href="translation-store/"><span class="std std-doc">Translation store</span></a></p></li>
 </ul>
 </section>
 <section id="formats-and-maintenance">
@@ -574,6 +575,7 @@ translate through profile-local tasks, validate, and build output.</p>
 <li><p><a class="reference internal" href="maintenance/"><span class="std std-doc">Maintenance</span></a></p></li>
 <li><p><a class="reference internal" href="development/"><span class="std std-doc">Development</span></a></p></li>
 <li><p><a class="reference internal" href="releasing/"><span class="std std-doc">Releasing</span></a></p></li>
+<li><p><a class="reference internal" href="changelog/"><span class="std std-doc">Changelog</span></a></p></li>
 </ul>
 </section>
 <section id="reference">
@@ -687,6 +689,13 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="translation-contract/#epub-inline-xhtml">EPUB inline XHTML</a></li>
 <li class="toctree-l2"><a class="reference internal" href="translation-contract/#context-and-provenance">Context and provenance</a></li>
 <li class="toctree-l2"><a class="reference internal" href="translation-contract/#glossary-phrase-collisions">Glossary phrase collisions</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="translation-store/">Translation store policy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="translation-store/#backends-and-detection">Backends and detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="translation-store/#consistency-and-recovery">Consistency and recovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="translation-store/#migration-and-rollback">Migration and rollback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="translation-store/#compatibility-and-promotion-gate">Compatibility and promotion gate</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="markdown/">Markdown handling</a><ul>
@@ -1083,6 +1092,14 @@ translate through profile-local tasks, validate, and build output.</p>
 <li class="toctree-l2"><a class="reference internal" href="troubleshooting/#source-directive-in-target">source_directive_in_target</a></li>
 <li class="toctree-l2"><a class="reference internal" href="troubleshooting/#glossary-and-termbase">Glossary and termbase</a></li>
 <li class="toctree-l2"><a class="reference internal" href="troubleshooting/#judge-ingest">Judge ingest</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-5-1-2026-08-02">[v0.5.1] - 2026-08-02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-5-0-2026-07-15">[v0.5.0] - 2026-07-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-1-2026-06-30">[v0.3.1] - 2026-06-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-0-2026-06-26">[v0.3.0] - 2026-06-26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-06-24">[v0.2.0] - 2026-06-24</a></li>
 </ul>
 </li>
 </ul>

@@ -5,8 +5,8 @@ permalink: /tools/audiosig/examples/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_ref: "v0.1.2"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 
@@ -562,6 +562,33 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 </section>
+<section id="silence-and-channel-layouts">
+<h3>Silence and Channel Layouts</h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">downmix_to_mono</span><span class="p">,</span> <span class="n">generate_silence</span>
+
+<span class="n">silence</span> <span class="o">=</span> <span class="n">generate_silence</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">24_000</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">silence</span><span class="o">.</span><span class="n">shape</span> <span class="o">==</span> <span class="p">(</span><span class="mi">12_000</span><span class="p">,)</span>
+
+<span class="n">left</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+<span class="n">frames_first</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
+<span class="n">mono_frames</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">frames_first</span><span class="p">)</span>
+
+<span class="n">channels_first</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">])</span>
+<span class="n">mono_channels</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">channels_first</span><span class="p">,</span> <span class="n">channel_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">mono_frames</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="n">np</span><span class="o">.</span><span class="n">testing</span><span class="o">.</span><span class="n">assert_array_equal</span><span class="p">(</span><span class="n">mono_channels</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Silence length uses <code class="docutils literal notranslate"><span class="pre">int(duration</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code> truncation. Silence accepts
+real floating NumPy dtypes; downmixing accepts finite real floating one- or
+two-dimensional audio, preserves the source dtype, returns independent
+contiguous storage, and does not clip or normalize. For a long file, produce
+bounded silence chunks in the application rather than requesting one
+unbounded array; AudioSig deliberately does not provide file I/O or streaming
+wrappers.</p>
+</section>
 <section id="time-stretching-examples">
 <h3>Time Stretching Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_stretch</span>
@@ -611,6 +638,20 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">c5</span> <span class="o">=</span> <span class="n">transpose</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">semitones</span><span class="o">=</span><span class="mf">3.0</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>For a speech-only experimental direct pitch path, keep changes moderate and
+opt in explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_speech_effects</span>
+
+<span class="n">speech_up</span> <span class="o">=</span> <span class="n">apply_speech_effects</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">semitones</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;td_psola&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>TD-PSOLA does not guarantee formant preservation, does not pitch unvoiced
+regions, and is not intended for music or polyphonic material.</p>
 </section>
 <section id="resampling-examples">
 <h3>Resampling Examples</h3>

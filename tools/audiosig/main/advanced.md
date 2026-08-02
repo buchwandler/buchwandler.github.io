@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 
@@ -542,35 +542,80 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="advanced-topics">
 <h1>Advanced Topics</h1>
-<section id="understanding-the-phase-vocoder">
-<h2>Understanding the Phase Vocoder</h2>
-<p>AudioSig’s time stretching uses a phase vocoder algorithm:</p>
-<ol class="arabic simple">
-<li><p><strong>STFT</strong>: Convert audio to frequency domain using Short-Time Fourier Transform</p></li>
-<li><p><strong>Phase Modification</strong>: Adjust phase to change timing while preserving pitch</p></li>
-<li><p><strong>ISTFT</strong>: Convert back to time domain</p></li>
-</ol>
-<section id="parameters">
-<h3>Parameters</h3>
+<section id="choosing-a-time-stretch-backend">
+<h2>Choosing a time-stretch backend</h2>
+<p>AudioSig has three explicit time-stretch backends. The basic phase vocoder is a
+generic numerical reference path; it uses STFT/ISTFT phase propagation and can
+sound phasey around transients. WSOLA is the speech-oriented default for
+<code class="docutils literal notranslate"><span class="pre">apply_speech_effects</span></code> and searches for waveform-similar splice points in the
+time domain. ESOLA is an experimental speech backend that aligns fixed
+waveform frames using detected epochs; it supports <code class="docutils literal notranslate"><span class="pre">0.5</span> <span class="pre">&lt;=</span> <span class="pre">rate</span> <span class="pre">&lt;=</span> <span class="pre">2.0</span></code> and
+requires <code class="docutils literal notranslate"><span class="pre">sample_rate</span></code>. WSOLA, ESOLA, and TD-PSOLA process every non-sample
+dimension as an independent lane, so they do not guarantee a stereo image or
+shared pitch/epoch decisions. For stereo speech where image coherence matters,
+provide a shared analysis signal and apply its decisions in an application-level
+channel wrapper; ordinary batch and arbitrary-axis processing remains supported.</p>
+<p>Use WSOLA when processing speech:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_speech_effects</span><span class="p">,</span> <span class="n">time_stretch</span>
+
+<span class="n">stretched</span> <span class="o">=</span> <span class="n">time_stretch</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">rate</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;wsola&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">speech</span> <span class="o">=</span> <span class="n">apply_speech_effects</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span> <span class="n">rate</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Use ESOLA for an experimental moderate-range speech comparison:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">stretched</span> <span class="o">=</span> <span class="n">time_stretch</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">rate</span><span class="o">=</span><span class="mf">1.25</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;esola&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Use the basic phase vocoder for generic array processing or controlled
+comparisons:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_stretch</span>
 
 <span class="c1"># Control FFT resolution</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">time_stretch</span><span class="p">(</span>
     <span class="n">audio</span><span class="p">,</span>
     <span class="n">rate</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span>
+    <span class="n">method</span><span class="o">=</span><span class="s2">&quot;phase_vocoder&quot;</span><span class="p">,</span>
     <span class="n">n_fft</span><span class="o">=</span><span class="mi">4096</span><span class="p">,</span>        <span class="c1"># Higher = better frequency resolution, worse time resolution</span>
     <span class="n">hop_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>   <span class="c1"># Controls overlap between frames</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="trade-offs">
-<h3>Trade-offs</h3>
+<section id="backend-trade-offs">
+<h3>Backend trade-offs</h3>
 <ul class="simple">
-<li><p><strong>Larger n_fft</strong>: Better frequency separation, worse time precision</p></li>
-<li><p><strong>Smaller n_fft</strong>: Better time precision, worse frequency separation</p></li>
-<li><p><strong>hop_length</strong>: Typically n_fft // 4 for good quality</p></li>
+<li><p><strong>WSOLA frame/overlap/search</strong>: Defaults are 30/10/10 ms and are sample-rate aware; larger searches cost more and can select less stable matches.</p></li>
+<li><p><strong>Phase-vocoder n_fft</strong>: Larger values improve frequency separation but worsen time precision.</p></li>
+<li><p><strong>Phase-vocoder hop_length</strong>: Typically n_fft // 4 for the basic backend.</p></li>
+<li><p><strong>ESOLA frame/epoch alignment</strong>: Uses a fixed 20 ms frame, 50% synthesis
+overlap, NumPy epoch extraction, and a raised-cosine pairwise crossfade.
+It is speech-specific and remains experimental until real-speech listening
+results establish a stable benefit over WSOLA.</p></li>
 </ul>
+<p>The standard compositor plans pitch and rate together using
+<code class="docutils literal notranslate"><span class="pre">tsm_rate</span> <span class="pre">=</span> <span class="pre">rate</span> <span class="pre">/</span> <span class="pre">pitch_ratio</span></code>, then resamples once when necessary. Selecting
+<code class="docutils literal notranslate"><span class="pre">method=&quot;td_psola&quot;</span></code> uses a separate direct pitch/prosody path instead: it tracks
+voicing and pulses, changes synthesis-pulse spacing for voiced speech, and uses
+WSOLA for unvoiced duration fallback. Its conservative limits are
+<code class="docutils literal notranslate"><span class="pre">-6..+6</span></code> semitones and <code class="docutils literal notranslate"><span class="pre">0.75..1.5</span></code> rate. If too few pitch marks are available,
+the direct path explicitly falls back. Pure pitch requests use WSOLA plus
+resampling for the requested ratio; duration-modification requests preserve
+unvoiced material with duration-only WSOLA rather than globally tonalizing it.
+The backend does not silently return unchanged audio.
+All paths preserve exact output-length and dtype contracts, but TD-PSOLA does
+not guarantee formant preservation and should not be treated as a general music
+or polyphonic pitch-shifting backend.</p>
+<p>TD-PSOLA remains experimental until objective, runtime, and real-speech
+listening gates pass. See the <a class="reference internal" href="../td-psola-listening-evaluation-2026-07-31/"><span class="std std-doc">evaluation protocol</span></a>.</p>
 </section>
 </section>
 <section id="resampling-internals">

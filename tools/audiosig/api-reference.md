@@ -5,8 +5,8 @@ permalink: /tools/audiosig/api-reference/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "86082542a2f1f9ecd583ebde9c1c234d93ed922e"
+docs_ref: "v0.1.2"
+docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
 search_enabled: true
 ---
 
@@ -544,15 +544,48 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>AudioSig API Reference</h1>
 <section id="core-functions">
 <h2>Core Functions</h2>
+<section id="waveform-construction-and-channels">
+<h3>Waveform Construction and Channels</h3>
+<section id="generate-silence-duration-sample-rate-dtype-np-float32">
+<h4><code class="docutils literal notranslate"><span class="pre">generate_silence(duration,</span> <span class="pre">sample_rate,</span> <span class="pre">*,</span> <span class="pre">dtype=np.float32)</span></code></h4>
+<p>Return a newly allocated one-dimensional mono NumPy buffer filled with zeros.
+Duration is in seconds, sample rate is in samples per second, and the sample
+count is exactly <code class="docutils literal notranslate"><span class="pre">int(duration</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code>, so fractional sample counts
+are truncated. <code class="docutils literal notranslate"><span class="pre">dtype</span></code> must be a real NumPy floating dtype; the default is
+float32. Invalid duration, sample rate, and dtype values raise
+<code class="docutils literal notranslate"><span class="pre">InvalidParameterError</span></code>. Long silence creation should use bounded
+application-level chunks rather than one arbitrarily large array.</p>
+</section>
+<section id="downmix-to-mono-audio-channel-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">downmix_to_mono(audio,</span> <span class="pre">*,</span> <span class="pre">channel_axis=-1)</span></code></h4>
+<p>Return a caller-owned mono array by taking the arithmetic mean over the
+explicit channel axis. Input must be a finite real floating one- or
+two-dimensional NumPy array; the source dtype and frame order are preserved.
+One-dimensional input is already mono and is copied. The operation does not
+clip or normalize amplitude. Invalid shape, axis, dtype, or sample values
+raise <code class="docutils literal notranslate"><span class="pre">AudioShapeError</span></code>; the result is contiguous.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">downmix_to_mono</span><span class="p">,</span> <span class="n">generate_silence</span>
+
+<span class="n">silence</span> <span class="o">=</span> <span class="n">generate_silence</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">24_000</span><span class="p">)</span>
+<span class="n">mono_soundfile</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">frames_first</span><span class="p">,</span> <span class="n">channel_axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">mono_audiosig</span> <span class="o">=</span> <span class="n">downmix_to_mono</span><span class="p">(</span><span class="n">channels_first</span><span class="p">,</span> <span class="n">channel_axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>These functions do not perform file decoding/encoding, URL handling, playback,
+streaming, or audiobook composition.</p>
+</section>
+</section>
 <section id="time-and-pitch-effects">
 <h3>Time and Pitch Effects</h3>
-<section id="time-stretch-audio-rate-axis-1-n-fft-2048-hop-length-none">
-<h4><code class="docutils literal notranslate"><span class="pre">time_stretch(audio,</span> <span class="pre">rate,</span> <span class="pre">*,</span> <span class="pre">axis=-1,</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None)</span></code></h4>
+<section id="time-stretch-audio-rate-sample-rate-none-method-phase-vocoder-axis-1-n-fft-2048-hop-length-none">
+<h4><code class="docutils literal notranslate"><span class="pre">time_stretch(audio,</span> <span class="pre">rate,</span> <span class="pre">*,</span> <span class="pre">sample_rate=None,</span> <span class="pre">method='phase_vocoder',</span> <span class="pre">axis=-1,</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None)</span></code></h4>
 <p>Change audio duration while approximately preserving pitch.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">audio</span></code> (np.ndarray): Input audio array</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">rate</span></code> (float): Stretch factor. Values &gt; 1.0 make audio faster/shorter, &lt; 1.0 slower/longer</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_rate</span></code> (int, optional): Required when <code class="docutils literal notranslate"><span class="pre">method='wsola'</span></code> or <code class="docutils literal notranslate"><span class="pre">method='esola'</span></code>; used for speech-time geometry</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> (<code class="docutils literal notranslate"><span class="pre">'phase_vocoder'</span></code>, <code class="docutils literal notranslate"><span class="pre">'wsola'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'esola'</span></code>): Select the generic or speech-oriented backend. <code class="docutils literal notranslate"><span class="pre">'td_psola'</span></code> is intentionally not a <code class="docutils literal notranslate"><span class="pre">time_stretch</span></code> method.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">axis</span></code> (int): Sample axis (default: -1)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">n_fft</span></code> (int): FFT window size (default: 2048)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">hop_length</span></code> (int, optional): Hop size. Defaults to n_fft // 4</p></li>
@@ -563,6 +596,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p><code class="docutils literal notranslate"><span class="pre">InvalidParameterError</span></code>: If rate is not positive or parameters are invalid</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">AudioShapeError</span></code>: If audio array is invalid</p></li>
 </ul>
+<p>ESOLA is an experimental speech backend with exact output length
+<code class="docutils literal notranslate"><span class="pre">round(input_samples</span> <span class="pre">/</span> <span class="pre">rate)</span></code> and supported rates from 0.5 through 2.0. It
+does not make a general music-quality or formant-preservation claim.</p>
 <p><strong>Example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">time_stretch</span>
@@ -574,8 +610,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 </section>
 <hr class="docutils" />
-<section id="pitch-shift-audio-sample-rate-semitones-bins-per-octave-12-axis-1-n-fft-2048-hop-length-none-filter-width-32">
-<h4><code class="docutils literal notranslate"><span class="pre">pitch_shift(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">semitones,</span> <span class="pre">bins_per_octave=12,</span> <span class="pre">axis=-1,</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None,</span> <span class="pre">filter_width=32)</span></code></h4>
+<section id="pitch-shift-audio-sample-rate-semitones-bins-per-octave-12-method-phase-vocoder-axis-1-n-fft-2048-hop-length-none-filter-width-32-rolloff-0-945">
+<h4><code class="docutils literal notranslate"><span class="pre">pitch_shift(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">semitones,</span> <span class="pre">bins_per_octave=12,</span> <span class="pre">method='phase_vocoder',</span> <span class="pre">axis=-1,</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None,</span> <span class="pre">filter_width=32,</span> <span class="pre">rolloff=0.945)</span></code></h4>
 <p>Shift pitch by semitones while preserving exact input duration.</p>
 <p><strong>Parameters:</strong></p>
 <ul class="simple">
@@ -587,6 +623,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p><code class="docutils literal notranslate"><span class="pre">n_fft</span></code> (int): FFT window size (default: 2048)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">hop_length</span></code> (int, optional): Hop size</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">filter_width</span></code> (int): Resampling filter width (default: 32)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> (<code class="docutils literal notranslate"><span class="pre">'phase_vocoder'</span></code>, <code class="docutils literal notranslate"><span class="pre">'wsola'</span></code>, <code class="docutils literal notranslate"><span class="pre">'esola'</span></code>, or <code class="docutils literal notranslate"><span class="pre">'td_psola'</span></code>): Pitch method. <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> directly synthesizes voiced speech and does not resample the complete waveform.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rolloff</span></code> (float): Pitch-resampler rolloff (default: 0.945)</p></li>
 </ul>
 <p><strong>Returns:</strong> np.ndarray - Pitch-shifted audio with exact same length as input</p>
 <p><strong>Example:</strong></p>
@@ -600,11 +638,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 </section>
-<section id="apply-speech-effects-audio-sample-rate-rate-1-0-semitones-0-0-gain-db-0-0-axis-1-clip-false-n-fft-2048-hop-length-none-filter-width-32-rolloff-0-945">
-<h4><code class="docutils literal notranslate"><span class="pre">apply_speech_effects(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">rate=1.0,</span> <span class="pre">semitones=0.0,</span> <span class="pre">gain_db=0.0,</span> <span class="pre">axis=-1,</span> <span class="pre">clip=False,</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None,</span> <span class="pre">filter_width=32,</span> <span class="pre">rolloff=0.945)</span></code></h4>
-<p>Apply numeric speech effects in the order pitch shift, pitch-preserving time
-stretch, and gain. This compositor does not parse SSMD strings and raises
-typed AudioSig exceptions for invalid input or parameters.</p>
+<section id="apply-speech-effects-audio-sample-rate-rate-1-0-semitones-0-0-gain-db-0-0-axis-1-clip-false-method-wsola-n-fft-2048-hop-length-none-filter-width-32-rolloff-0-945">
+<h4><code class="docutils literal notranslate"><span class="pre">apply_speech_effects(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">rate=1.0,</span> <span class="pre">semitones=0.0,</span> <span class="pre">gain_db=0.0,</span> <span class="pre">axis=-1,</span> <span class="pre">clip=False,</span> <span class="pre">method='wsola',</span> <span class="pre">n_fft=2048,</span> <span class="pre">hop_length=None,</span> <span class="pre">filter_width=32,</span> <span class="pre">rolloff=0.945)</span></code></h4>
+<p>Apply numeric speech effects using one planned pitch/rate time-scale pass,
+optional resampling, and gain. WSOLA is the default speech backend;
+<code class="docutils literal notranslate"><span class="pre">method='phase_vocoder'</span></code> selects the generic reference path,
+<code class="docutils literal notranslate"><span class="pre">method='esola'</span></code> selects the experimental epoch-synchronous path, and
+<code class="docutils literal notranslate"><span class="pre">method='td_psola'</span></code> selects the experimental direct speech pitch/prosody path.
+The output length is exactly <code class="docutils literal notranslate"><span class="pre">round(input_samples</span> <span class="pre">/</span> <span class="pre">rate)</span></code> for non-empty input.
+TD-PSOLA supports <code class="docutils literal notranslate"><span class="pre">0.75</span> <span class="pre">&lt;=</span> <span class="pre">rate</span> <span class="pre">&lt;=</span> <span class="pre">1.5</span></code> and <code class="docutils literal notranslate"><span class="pre">-6</span> <span class="pre">&lt;=</span> <span class="pre">semitones</span> <span class="pre">&lt;=</span> <span class="pre">6</span></code>; it does not
+guarantee vocal-formant preservation. This compositor does not parse SSMD strings and raises typed
+AudioSig exceptions for invalid input or parameters.</p>
 </section>
 </section>
 <hr class="docutils" />

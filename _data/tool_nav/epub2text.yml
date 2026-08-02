@@ -4,17 +4,17 @@ nav_key: epub2text
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.2.7
-source_commit: 2d6e4d9639e1589234fad094d0de09c393c53ce3
-source_url: https://github.com/buchwandler/epub2text/releases/tag/v0.2.7
+source_ref: v0.2.8
+source_commit: fbe58dd9381d44582ce7525956c090fd207df398
+source_url: https://github.com/buchwandler/epub2text/releases/tag/v0.2.8
 is_default: true
 repo_url: https://github.com/buchwandler/epub2text
-release_tag: v0.2.7
-release_url: https://github.com/buchwandler/epub2text/releases/tag/v0.2.7
+release_tag: v0.2.8
+release_url: https://github.com/buchwandler/epub2text/releases/tag/v0.2.8
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.7
+  ref: v0.2.8
   url: /tools/epub2text/
   current: true
 - name: main

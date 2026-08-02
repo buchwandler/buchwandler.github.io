@@ -6,7 +6,7 @@ nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
 docs_ref: "v0.2.0"
-docs_commit: "266056286c4efa39be4ae54caa8d36a8f9c68776"
+docs_commit: "3b1290eafe2c3a454283d6aa1d3e8ea06ec81d0b"
 search_enabled: true
 ---
 
@@ -782,7 +782,7 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
 </pre></div>
 </div>
 <p><strong>Common SSMD syntax</strong>:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>...p                               # Paragraph break
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...p                               # Paragraph break
 ...s                               # Sentence break
 *text*                             # Moderate emphasis
 **text**                           # Strong emphasis
@@ -801,7 +801,7 @@ resulting SSMD emphasis plain, use:</p>
 <p>The persistent policy can be set with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">ssmd_emphasis_mode</span> <span class="pre">plain</span></code>.
 Explicit SSMD prosody remains supported in plain emphasis mode.</p>
 <p><strong>Example SSMD file</strong>:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
 
 [Harry]{ph=&quot;hæɹi&quot;} Potter was a *highly unusual* boy. ...s
 He **hated** the summer holidays. ...p
