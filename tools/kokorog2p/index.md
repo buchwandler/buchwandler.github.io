@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.0"
-docs_commit: "6659893724f2018343f51b8b0976b4093f6e1109"
+docs_ref: "v0.7.1"
+docs_commit: "22d00e84016cb2a8501004ae1550e7933e69a4f9"
 search_enabled: true
 ---
 

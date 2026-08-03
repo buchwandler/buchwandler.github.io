@@ -995,13 +995,25 @@
     {
       "url": "/tools/kokorog2p/changelog/",
       "title": "kokorog2p Changelog",
-      "snippet": "All notable changes to kokorog2p will be documented in this file.\nAdd Spanish language grapheme-to-phoneme support\n\n\nAdded Italian language …",
+      "snippet": "All notable changes to kokorog2p will be documented in this file.\nFixed French fallback voice resolution to prefer locale-specific fr-fr ove …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "All notable changes to kokorog2p will be documented in this file.",
           "lower": "all notable changes to kokorog2p will be documented in this file."
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed French fallback voice resolution to prefer locale-specific fr-fr over bare fr,\navoiding unavailable MBROLA voices\n\n\nCorrected French gold lexicon nasal IPA mappings for dem̃ander, restaurant, and\nexcellent word families\n\n\nFixed French fallback to reject empty, whitespace-only, or placeholder phoneme results\ninstead of silently dropping OOV words",
+          "lower": "fixed french fallback voice resolution to prefer locale-specific fr-fr over bare fr,\navoiding unavailable mbrola voices\n\n\ncorrected french gold lexicon nasal ipa mappings for dem̃ander, restaurant, and\nexcellent word families\n\n\nfixed french fallback to reject empty, whitespace-only, or placeholder phoneme results\ninstead of silently dropping oov words"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added French fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests",
+          "lower": "added french fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests"
         },
         {
           "anchor": "",
