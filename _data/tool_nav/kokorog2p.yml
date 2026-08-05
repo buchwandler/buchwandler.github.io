@@ -4,17 +4,17 @@ nav_key: kokorog2p
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.7.1
-source_commit: 22d00e84016cb2a8501004ae1550e7933e69a4f9
-source_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.1
+source_ref: v0.7.2
+source_commit: aef17979f3930b332620e35a4d2cfd5c9ea374ef
+source_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2
 is_default: true
 repo_url: https://github.com/buchwandler/kokorog2p
-release_tag: v0.7.1
-release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.1
+release_tag: v0.7.2
+release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2
 versions:
 - name: release
   label: Latest release
-  ref: v0.7.1
+  ref: v0.7.2
   url: /tools/kokorog2p/
   current: true
 - name: main
@@ -41,6 +41,9 @@ entries:
 - slug: abbreviation_customization
   title: kokorog2p Abbreviation Customization Guide
   url: /tools/kokorog2p/abbreviation_customization/
+- slug: spans
+  title: kokorog2p Span-Based Phonemization Guide
+  url: /tools/kokorog2p/spans/
 - slug: phonemes
   title: kokorog2p Phoneme Inventory
   url: /tools/kokorog2p/phonemes/

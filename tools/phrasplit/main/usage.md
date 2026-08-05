@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "06ddcfe548be7813d1f442416f3455b4a91eed5f"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -572,17 +572,19 @@ splitting (lightweight, no dependencies):</p>
 </div>
 <section id="choosing-processing-mode">
 <h3>Choosing Processing Mode</h3>
-<p>phrasplit automatically detects if spaCy is available and uses the appropriate mode. You
-can explicitly control this with the <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> parameter:</p>
+<p>phrasplit resolves the highest installed and loadable model for the requested language
+(<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>). If spaCy or a compatible model is unavailable, automatic mode
+falls back to regex. It never downloads models. You can explicitly control this with the
+<code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> parameter:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Automatic detection (default)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="c1"># Uses spaCy if available, otherwise falls back to regex</span>
+<span class="c1"># Uses the best installed compatible model, otherwise falls back to regex</span>
 
 <span class="c1"># Force simple mode (no spaCy required)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Uses regex-based splitting, faster and lightweight</span>
 
-<span class="c1"># Force spaCy mode (will error if spaCy not installed)</span>
+<span class="c1"># Force spaCy mode (will error if spaCy or a compatible model is unavailable)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Uses spaCy NLP for higher accuracy</span>
 </pre></div>
@@ -735,19 +737,26 @@ sentences, and clauses.</p>
 <li><p>If still too long, split at word boundaries</p></li>
 </ol>
 </section>
-<section id="using-different-language-models">
-<h2>Using Different Language Models</h2>
-<p>All functions that use spaCy accept a <code class="docutils literal notranslate"><span class="pre">language_model</span></code> parameter:</p>
+<section id="language-and-model-selection">
+<h2>Language and Model Selection</h2>
+<p>All splitting APIs accept an independent <code class="docutils literal notranslate"><span class="pre">language</span></code> hint and optional exact controls:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span>
 
-<span class="c1"># Use a larger, more accurate model</span>
-<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_lg&quot;</span><span class="p">)</span>
+<span class="c1"># Highest installed English model</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+
+<span class="c1"># Highest installed German model</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">german_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exact package and exact tier</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">model_size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)</span>
 
 <span class="c1"># Use a model for another language</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">german_text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Make sure to download the model first:</p>
+<p>Make sure the exact model is installed locally first:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>de_core_news_sm
 </pre></div>
 </div>

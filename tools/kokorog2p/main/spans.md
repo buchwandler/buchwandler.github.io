@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d42a041f135f841542f2df73e91997b88ac91387"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -646,6 +646,88 @@ allowing the phonemizer to speak the expanded form.</p>
 <span class="c1"># result.extended_text == &quot;Meet Mister Smith&quot;</span>
 </pre></div>
 </div>
+</section>
+<section id="ssmd-and-phrasplit-compatibility">
+<h2>SSMD and phrasplit compatibility</h2>
+<p>SSMD <code class="docutils literal notranslate"><span class="pre">AnnotationSpan</span></code> objects and phrasplit <code class="docutils literal notranslate"><span class="pre">SplitSegment</span></code> objects use the same
+coordinate contract as kokorog2p: zero-based, half-open offsets relative to the cleaned
+text. kokorog2p accepts compatible objects by structure; they do not need to inherit
+from or implement kokorog2p classes.</p>
+<section id="normalize-ssmd-annotations">
+<h3>Normalize SSMD annotations</h3>
+<p>Use the public adapter before applying annotations:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">overrides_from_ssmd</span>
+
+<span class="n">overrides</span> <span class="o">=</span> <span class="n">overrides_from_ssmd</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The normalization rules are:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Input attribute</p></th>
+<th class="head"><p>kokorog2p attribute</p></th>
+<th class="head"><p>Behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ph</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ph</span></code></p></td>
+<td><p>Used as a direct phoneme override</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipa</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ph</span></code></p></td>
+<td><p>Mapped to a direct phoneme override</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lang</span></code> or <code class="docutils literal notranslate"><span class="pre">language</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lang</span></code></p></td>
+<td><p>Used as a per-span language override</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">node</span></code>, <code class="docutils literal notranslate"><span class="pre">node_id</span></code>, <code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
+<td><p>omitted</p></td>
+<td><p>SSMD dispatch metadata is not copied</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sampa</span></code> or X-SAMPA alphabet</p></td>
+<td><p>—</p></td>
+<td><p>Rejected explicitly; never treated as IPA</p></td>
+</tr>
+</tbody>
+</table>
+<p>The adapter copies attribute dictionaries and validates integer offsets. Pass
+<code class="docutils literal notranslate"><span class="pre">text_length=</span></code> when document bounds should also be checked.</p>
+</section>
+<section id="rebase-document-spans-to-sentence-segments">
+<h3>Rebase document spans to sentence segments</h3>
+<p>SSMD annotations are usually relative to the complete <code class="docutils literal notranslate"><span class="pre">ParseSpansResult.clean_text</span></code>,
+while <code class="docutils literal notranslate"><span class="pre">phonemize(segment.text)</span></code> requires segment-local offsets. Intersect and rebase by
+coordinates:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.integrations</span><span class="w"> </span><span class="kn">import</span> <span class="n">overrides_for_segment</span><span class="p">,</span> <span class="n">overrides_from_ssmd</span>
+
+<span class="n">parsed</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_spans</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">overrides</span> <span class="o">=</span> <span class="n">overrides_from_ssmd</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+<span class="n">segments</span> <span class="o">=</span> <span class="n">phrasplit</span><span class="o">.</span><span class="n">split_with_offsets</span><span class="p">(</span>
+    <span class="n">parsed</span><span class="o">.</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span>
+<span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">parsed</span><span class="o">.</span><span class="n">clean_text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span> <span class="o">==</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span>
+    <span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+        <span class="n">phonemize</span><span class="p">(</span>
+            <span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+            <span class="n">overrides</span><span class="o">=</span><span class="n">overrides_for_segment</span><span class="p">(</span>
+                <span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">,</span> <span class="n">overrides</span>
+            <span class="p">),</span>
+            <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">overrides_for_segment()</span></code> preserves partial intersections and returns new <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code>
+objects. It handles duplicate sentences, punctuation, and whitespace gaps without
+searching for segment text. <code class="docutils literal notranslate"><span class="pre">phonemize_segments()</span></code> provides the same dependency-free
+orchestration when a caller already has a phonemize callable.</p>
+</section>
 </section>
 <section id="character-offset-coordinate-system">
 <h2>Character Offset Coordinate System</h2>

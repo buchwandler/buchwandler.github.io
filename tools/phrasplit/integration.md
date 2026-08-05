@@ -1,11 +1,11 @@
 ---
 layout: tool-doc
 title: "phrasplit Integration Contract for Pipelines"
-permalink: /tools/phrasplit/main/integration/
-nav_tool: phrasplit-main
+permalink: /tools/phrasplit/integration/
+nav_tool: phrasplit
 docs_project: "phrasplit"
-docs_variant: "main"
-docs_ref: "main"
+docs_variant: "release"
+docs_ref: "v0.3.4"
 docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---

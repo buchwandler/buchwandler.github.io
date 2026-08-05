@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -556,18 +556,30 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>ttsforge requires the following external tools:</p>
 <section id="audiosig-waveform-primitives">
 <h3>AudioSig waveform primitives</h3>
-<p>TTSForge depends directly on AudioSig <code class="docutils literal notranslate"><span class="pre">&gt;=0.1.1,&lt;0.2</span></code> for reusable NumPy waveform
+<p>TTSForge depends directly on AudioSig <code class="docutils literal notranslate"><span class="pre">&gt;=0.1.2,&lt;0.2</span></code> for reusable NumPy waveform
 operations: duration-based silence generation and arithmetic-mean channel downmixing.
 NumPy remains a direct dependency for TTSForge arrays, composition, playback buffers,
 and bounded I/O buffers. SoundFile remains required for audio decoding and encoding;
 AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration layers.</p>
 </section>
-<section id="pykokoro-memory-api">
-<h3>PyKokoro memory API</h3>
-<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>. This release provides the public
-memory-ownership API used by TTSForge to disable retained segment audio and release
-completed chapter results. Whole chapters are still synthesized into a buffered WAV;
-streaming is not part of this integration.</p>
+<section id="pykokoro-and-spacy-model-policy">
+<h3>PyKokoro and spaCy model policy</h3>
+<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, SSMD <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, and
+phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. These releases provide the public spaCy request/resolution and
+memory-ownership APIs used by TTSForge. TTSForge selects only already installed spaCy
+packages and never downloads them automatically. The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy
+selects the highest compatible local model and falls back to non-spaCy splitting when no
+compatible model is installed. <code class="docutils literal notranslate"><span class="pre">use_spacy=true</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, an exact package, or an
+exact tier is strict; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-spacy</span></code> disable spaCy.</p>
+<p>Install one or more compatible local spaCy packages when strict behavior or higher
+quality automatic selection is wanted:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg
+</pre></div>
+</div>
+<p>With multiple tiers installed, automatic conversion may use a different model after an
+environment change. The concrete model is recorded in state; an incompatible old run is
+rejected rather than mixing model identities. Use an explicit <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> or
+<code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> to make a workflow reproducible.</p>
 </section>
 <section id="ffmpeg-required-for-mp3-flac-opus-m4b">
 <h3>ffmpeg (Required for MP3/FLAC/OPUS/M4B)</h3>
@@ -622,7 +634,7 @@ streaming is not part of this integration.</p>
 <section id="spacy-models-optional">
 <h3>spaCy Models (Optional)</h3>
 <p>spaCy is used for sentence splitting, name extraction, and spaCy-aware phonemization
-workflows:</p>
+workflows. The base conversion does not require a local model in automatic mode:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
@@ -685,8 +697,8 @@ distributions are not installed together:</p>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
 </pre></div>
 </div>
-<p>For Termux/Android with PyKokoro v0.7.5 and an ONNX Runtime build exposing NNAPI or
-XNNPACK:</p>
+<p>For Termux/Android with the declared PyKokoro release and an ONNX Runtime build exposing
+NNAPI or XNNPACK:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi

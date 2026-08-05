@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/quickstart/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.1"
-docs_commit: "22d00e84016cb2a8501004ae1550e7933e69a4f9"
+docs_ref: "v0.7.2"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -652,14 +652,15 @@ dog             → dˈɔɡ
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
     <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># default; better POS disambiguation</span>
+    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># explicit; auto selection is the default when enabled</span>
 <span class="p">)</span>
 
 <span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;I can&#39;t believe it!&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2"> (tag: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
 
-<span class="c1"># Optional: choose smaller or larger spaCy English model</span>
+<span class="c1"># Optional: choose an exact model; omitted model selects the highest installed loadable tier</span>
+<span class="n">g2p_auto</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">g2p_small</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
 <span class="n">g2p_large</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_lg&quot;</span><span class="p">)</span>
 </pre></div>

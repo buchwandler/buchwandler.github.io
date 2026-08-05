@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -654,7 +654,18 @@ ttsforge<span class="w"> </span>ssmd<span class="w"> </span>inspect<span class="
 <p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output during conversion.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode. Choices: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">line</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>,
 <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--conversion-unit</span> <span class="pre">UNIT</span></code> : Output and resume granularity: <code class="docutils literal notranslate"><span class="pre">chapter</span></code> (default) or
+<code class="docutils literal notranslate"><span class="pre">paragraph</span></code>. Paragraph mode retains fixed-width-sequence WAVs in
+<code class="docutils literal notranslate"><span class="pre">&lt;output-stem&gt;_paragraphs/</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--resume</span> <span class="pre">/</span> <span class="pre">--no-resume</span></code> : Enable or disable resume capability. Default: enabled.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--use-spacy</span> <span class="pre">/</span> <span class="pre">--no-spacy</span></code> : Require or disable spaCy in sentence/G2P processing. When
+neither switch is supplied, automatic mode selects the highest compatible installed
+local model and falls back without one. <code class="docutils literal notranslate"><span class="pre">--use-spacy</span></code> is strict.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--spacy-model</span> <span class="pre">PACKAGE</span></code> : Require one exact local spaCy package. This is strict and
+overrides <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span> <span class="pre">sm|md|lg|trf</span></code> : Require one exact local spaCy tier. If neither this
+nor <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code> is set, TTSForge selects the highest installed compatible model.
+Selection never downloads packages. Exact package and tier requests are strict.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> : Discard any previous progress and start conversion from scratch.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> : Generate only SSMD files without creating audio (for manual
 editing).</p>
@@ -677,6 +688,10 @@ detection (e.g., <code class="docutils literal notranslate"><span class="pre">de
 <p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> : Detection confidence threshold for mixed-language
 mode (0.0-1.0). Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>. Higher values require more confidence for language
 switches.</p>
+<p>Phoneme export exposes the same spaCy request options and stores the concrete sentence
+model in export metadata. Name extraction exposes <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">--language</span></code>; it validates that the selected package supports PERSON NER (and POS
+tagging when <code class="docutils literal notranslate"><span class="pre">--include-all</span></code> is used).</p>
 </section>
 <section id="examples">
 <h3>Examples</h3>
@@ -713,6 +728,22 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 <span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
 </pre></div>
 </div>
+</section>
+<section id="paragraph-conversion-and-resume">
+<h3>Paragraph conversion and resume</h3>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph<span class="w"> </span>--yes
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--fresh<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
+</pre></div>
+</div>
+<p>The unit choice is fixed in the workspace. Resume without the option restores the saved
+choice; a conflicting choice requires <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>. Paragraph mode retains one WAV per
+render unit, including an optional title unit, plus marker sidecars, a manifest, and a
+playlist. <code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> cannot be combined with paragraph conversion. Paragraph WAVs
+are always retained, so <code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> is redundant in that mode. A complete
+paragraph workspace can rebuild a missing final audiobook without initializing
+inference. The maintained inspection workflow is
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_manifest.py</span> <span class="pre">book_paragraphs/manifest.json</span></code>.</p>
 </section>
 </section>
 <section id="list">

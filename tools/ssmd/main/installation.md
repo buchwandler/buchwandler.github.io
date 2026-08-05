@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
+docs_commit: "2def7060bc3513f8f82f0eed36f9fbccd353f9e3"
 search_enabled: true
 ---
 
@@ -619,8 +619,8 @@ pre-commit<span class="w"> </span>install
 <h2>Dependencies</h2>
 <p>SSMD has minimal runtime dependencies:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.3</span></code> - sentence detection and splitting; the 0.2.x line does not satisfy
-SSMD’s paragraph and markup round-trip contract</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.4</span></code> - sentence detection, model resolution, and splitting; the 0.2.x
+line does not satisfy SSMD’s paragraph and markup round-trip contract</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pyyaml</span></code> - YAML front matter parsing</p></li>
 </ul>
 <p>Optional dependencies for development:</p>
@@ -631,6 +631,14 @@ SSMD’s paragraph and markup round-trip contract</p></li>
 <li><p><strong>Documentation</strong>: Sphinx, sphinx-rtd-theme</p></li>
 <li><p><strong>Build</strong>: setuptools-scm, build</p></li>
 </ul>
+</section>
+<section id="building-release-artifacts">
+<h2>Building Release Artifacts</h2>
+<p>Release versions are derived by <code class="docutils literal notranslate"><span class="pre">setuptools-scm</span></code> from Git tag context. A source snapshot
+without <code class="docutils literal notranslate"><span class="pre">.git</span></code> metadata, or a build that cannot install the configured build
+requirements, may produce a fallback version such as <code class="docutils literal notranslate"><span class="pre">0.0.0</span></code>; that output is not a
+release artifact. Release builds must run from the exact <code class="docutils literal notranslate"><span class="pre">v&lt;version&gt;</span></code> tag and pass the
+repository’s artifact filename and metadata check before publication.</p>
 </section>
 <section id="upgrading">
 <h2>Upgrading</h2>

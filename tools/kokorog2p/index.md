@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.1"
-docs_commit: "22d00e84016cb2a8501004ae1550e7933e69a4f9"
+docs_ref: "v0.7.2"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -670,6 +670,22 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#persistence">Persistence</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="spans/">Span-Based Phonemization Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spans/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#core-types">Core Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#extended-text-layer">Extended Text Layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#ssmd-and-phrasplit-compatibility">SSMD and phrasplit compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#character-offset-coordinate-system">Character Offset Coordinate System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#alignment-modes">Alignment Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#overlap-handling">Overlap Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#language-switching">Language Switching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#phoneme-overrides">Phoneme Overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#custom-attributes">Custom Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#common-pitfalls">Common Pitfalls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#see-also">See Also</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="phonemes/">Phoneme Inventory</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#kokoro-phoneme-set">Kokoro Phoneme Set</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#british-english-differences">British English Differences</a></li>
@@ -688,6 +704,7 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/core/">Core API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#main-functions">Main Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/core/#pipeline-integration-adapters">Pipeline integration adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#phoneme-utilities">Phoneme Utilities</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#kokoro-vocabulary">Kokoro Vocabulary</a></li>

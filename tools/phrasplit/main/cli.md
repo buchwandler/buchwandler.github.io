@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "06ddcfe548be7813d1f442416f3455b4a91eed5f"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -543,9 +543,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="command-line-interface">
 <h1>Command Line Interface</h1>
 <p>phrasplit provides a command-line interface for processing text files.</p>
-<p>By default, the CLI automatically detects if spaCy is installed and uses it for best
-accuracy. You can use the <code class="docutils literal notranslate"><span class="pre">--simple</span></code> flag to force fast regex-based splitting that
-doesn’t require spaCy.</p>
+<p>By default, the CLI selects the highest installed and loadable model for <code class="docutils literal notranslate"><span class="pre">--language</span></code>
+(<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>). If no compatible model is available it falls back to regex.
+Automatic selection never downloads models. Use <code class="docutils literal notranslate"><span class="pre">--simple</span></code> to force regex mode.</p>
 <section id="basic-usage">
 <h2>Basic Usage</h2>
 <p>The CLI has four main commands:</p>
@@ -569,8 +569,11 @@ phrasplit<span class="w"> </span>sentences<span class="w"> </span>--help
 <section id="splitting-sentences">
 <h2>Splitting Sentences</h2>
 <p>Split a text file into sentences:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-detect mode (uses spaCy if available)</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Automatic best local model for English</span>
 phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt
+
+<span class="c1"># Automatic best local model for German</span>
+phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>--language<span class="w"> </span>de
 
 <span class="c1"># Output to file</span>
 phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>-o<span class="w"> </span>output.txt
@@ -578,8 +581,12 @@ phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span
 <span class="c1"># Force simple mode (60x faster, no spaCy required)</span>
 phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>--simple
 
-<span class="c1"># Use a different spaCy model (only when using spaCy mode)</span>
+<span class="c1"># Use an exact package or exact tier</span>
 phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>--model<span class="w"> </span>en_core_web_lg
+phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>--language<span class="w"> </span>en<span class="w"> </span>--model-size<span class="w"> </span>lg
+
+<span class="c1"># Print the selected concrete package</span>
+phrasplit<span class="w"> </span>sentences<span class="w"> </span>input.txt<span class="w"> </span>--verbose
 </pre></div>
 </div>
 </section>
@@ -644,13 +651,16 @@ cat<span class="w"> </span>input.txt<span class="w"> </span><span class="p">|</s
 
 Split text into sentences.
 
-By default, uses spaCy if available for best accuracy. Use --simple for
-faster regex-based splitting that doesn&#39;t require spaCy.
+By default, uses the best installed compatible model. Use --simple for regex splitting.
 
 Options:
   -o, --output PATH   Output file (default: stdout)
-  -m, --model TEXT    spaCy language model (default: en_core_web_sm)
+  -m, --model TEXT    Exact spaCy package (default: automatic local selection)
+  --language TEXT     Language hint (default: en)
+  --model-size [sm|md|lg|trf]
+                      Exact automatic model tier
   --simple            Use simple regex-based splitting (faster, no spaCy required)
+  --verbose           Print backend and selected-model diagnostics
   --help              Show this message and exit.
 </pre></div>
 </div>
@@ -661,13 +671,16 @@ Options:
 
 Split text into clauses (at commas).
 
-By default, uses spaCy if available for best accuracy. Use --simple for
-faster regex-based splitting that doesn&#39;t require spaCy.
+By default, uses the best installed compatible model. Use --simple for regex splitting.
 
 Options:
   -o, --output PATH   Output file (default: stdout)
-  -m, --model TEXT    spaCy language model (default: en_core_web_sm)
+  -m, --model TEXT    Exact spaCy package (default: automatic local selection)
+  --language TEXT     Language hint (default: en)
+  --model-size [sm|md|lg|trf]
+                      Exact automatic model tier
   --simple            Use simple regex-based splitting (faster, no spaCy required)
+  --verbose           Print backend and selected-model diagnostics
   --help              Show this message and exit.
 </pre></div>
 </div>
@@ -690,14 +703,17 @@ Options:
 
 Split long lines at sentence/clause boundaries.
 
-By default, uses spaCy if available for best accuracy. Use --simple for
-faster regex-based splitting that doesn&#39;t require spaCy.
+By default, uses the best installed compatible model. Use --simple for regex splitting.
 
 Options:
   -o, --output PATH        Output file (default: stdout)
   -l, --max-length INTEGER Maximum line length (default: 80, must be &gt;= 1)
-  -m, --model TEXT         spaCy language model (default: en_core_web_sm)
+  -m, --model TEXT         Exact spaCy package (default: automatic local selection)
+  --language TEXT          Language hint (default: en)
+  --model-size [sm|md|lg|trf]
+                           Exact automatic model tier
   --simple                 Use simple regex-based splitting (faster, no spaCy required)
+  --verbose                Print backend and selected-model diagnostics
   --help                   Show this message and exit.
 </pre></div>
 </div>

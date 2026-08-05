@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "06ddcfe548be7813d1f442416f3455b4a91eed5f"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -650,7 +650,7 @@ segments may be excluded. Compare offsets using direct equality:</p>
 </section>
 <section id="backend-selection">
 <h3>Backend Selection</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-detect (uses spaCy if available)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Auto-select a compatible installed/loadable model, otherwise use regex</span>
 <span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 
 <span class="c1"># Force spaCy (more accurate)</span>
@@ -660,6 +660,24 @@ segments may be excluded. Compare offsets using direct equality:</p>
 <span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="optional-inline-xhtml-markup">
+<h3>Optional inline XHTML markup</h3>
+<p>The regex backend can preserve balanced inline XHTML tags with <code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code>. The
+option is opt-in, keeps exact source slices, and rejects an explicit spaCy backend.
+Plain-text behavior is unchanged when it is omitted.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_with_offsets</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;One. &lt;em&gt;Two.&lt;/em&gt; Three.&quot;</span>
+<span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">inline_markup</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">assert</span> <span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span>
+    <span class="s2">&quot;One.&quot;</span><span class="p">,</span> <span class="s2">&quot;&lt;em&gt;Two.&lt;/em&gt;&quot;</span><span class="p">,</span> <span class="s2">&quot;Three.&quot;</span>
+<span class="p">]</span>
+<span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Passing <code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code> with <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> because this mode
+depends on regex tag balancing.</p>
 </section>
 <section id="max-length-splitting">
 <h3>Max Length Splitting</h3>
@@ -881,7 +899,7 @@ etc.), you need to ensure segmentation doesn’t break markup tags or placeholde
 <section id="see-also">
 <h2>See Also</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../streaming/"><span class="doc">Streaming API</span></a> - Streaming iterator API</p></li>
+<li><p><a class="reference internal" href="../streaming/"><span class="doc">Iterator API</span></a> - Iterator API and current materialization limits</p></li>
 <li><p><a class="reference internal" href="../api/"><span class="doc">API Reference</span></a> - Complete API reference</p></li>
 <li><p><a class="reference internal" href="../examples/"><span class="doc">Examples</span></a> - More examples</p></li>
 </ul>

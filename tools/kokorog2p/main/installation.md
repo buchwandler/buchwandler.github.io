@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d42a041f135f841542f2df73e91997b88ac91387"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -567,13 +567,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 <p>This includes:</p>
 <ul class="simple">
-<li><p>spaCy with English model</p></li>
+<li><p>spaCy runtime support (models are installed separately and never downloaded by
+kokorog2p)</p></li>
 <li><p>US and GB dictionaries (gold/silver tiers)</p></li>
 <li><p>Context-dependent pronunciation</p></li>
 <li><p>Number and currency expansion</p></li>
 </ul>
-<p>By default, English G2P uses <code class="docutils literal notranslate"><span class="pre">en_core_web_md</span></code> for POS tagging (downloaded on first use
-if missing). You can override this with <code class="docutils literal notranslate"><span class="pre">spacy_model=...</span></code>.</p>
+<p>With <code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code>, English and French try the highest installed and loadable local
+model in <code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code> order, then fall back to native tokenization when no model
+is available. <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>, <code class="docutils literal notranslate"><span class="pre">spacy_model=...</span></code>, and <code class="docutils literal notranslate"><span class="pre">spacy_model_size=&quot;md&quot;</span></code> are
+strict requests and raise if the requested model is unavailable. No mode downloads
+models.</p>
 </section>
 <section id="french">
 <h3>French</h3>
@@ -628,6 +632,14 @@ if missing). You can override this with <code class="docutils literal notranslat
 <li><p>Support for 17+ languages</p></li>
 <li><p>Caching for performance</p></li>
 </ul>
+</section>
+<section id="ssmd-and-phrasplit-integration">
+<h3>SSMD and phrasplit integration</h3>
+<p>The integration adapters are dependency-free. Install the upstream packages only when
+your application needs them, and use <code class="docutils literal notranslate"><span class="pre">overrides_from_ssmd()</span></code> plus
+<code class="docutils literal notranslate"><span class="pre">overrides_for_segment()</span></code> to keep document-level clean-text offsets aligned with each
+sentence. The compatibility test targets are phrasplit 0.3.4 and SSMD 0.8.0; they are
+not runtime dependencies of the core package.</p>
 </section>
 </section>
 <section id="with-backend-support">
@@ -732,14 +744,21 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <p>If spaCy models are missing:</p>
 <p>kokorog2p never downloads models during import or inference. Install the requested model
 explicitly in the environment that runs the application:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default English model used by kokorog2p</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install one or more candidates; automatic selection uses the best installed one</span>
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
 
 <span class="c1"># Optional alternatives</span>
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg
+
+<span class="c1"># Transformer tier (highest quality when installed and loadable)</span>
+python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_trf
 </pre></div>
 </div>
+<p>For French, German, Spanish, Italian, or Portuguese, install the matching
+<code class="docutils literal notranslate"><span class="pre">*_core_news_{trf,lg,md,sm}</span></code> package. Automatic errors list every compatible candidate
+checked and any load errors. An explicit package or size request is strict and reports
+only that requested package; it does not substitute another tier.</p>
 </section>
 <section id="performance-issues">
 <h3>Performance Issues</h3>

@@ -53,7 +53,7 @@ permalink: /tools/
       <p>Split text into sentences, clauses, or paragraphs.</p>
       <div class="card-links">
         <a href="/tools/phrasplit/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/phrasplit/releases/tag/v0.3.3" rel="external noopener">Latest release: v0.3.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/phrasplit/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/phrasplit" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -83,7 +83,7 @@ permalink: /tools/
       <p>A unified multi-language G2P library for Kokoro TTS.</p>
       <div class="card-links">
         <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.1" rel="external noopener">Latest release: v0.7.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2" rel="external noopener">Latest release: v0.7.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -93,7 +93,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.0" rel="external noopener">Latest release: v0.8.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.1" rel="external noopener">Latest release: v0.8.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -113,7 +113,7 @@ permalink: /tools/
       <p>A Python-based TTS automation framework with multi-engine support.</p>
       <div class="card-links">
         <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.0" rel="external noopener">Latest release: v0.3.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.1" rel="external noopener">Latest release: v0.3.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

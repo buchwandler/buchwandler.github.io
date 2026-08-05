@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/voices/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_ref: "v0.3.1"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 

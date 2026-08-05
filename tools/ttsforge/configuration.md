@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/configuration/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_ref: "v0.3.1"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -582,6 +582,46 @@ deprecated compatibility alias.</p>
 </section>
 <section id="configuration-options">
 <h2>Configuration Options</h2>
+<section id="spacy-model-policy">
+<h3>spaCy model policy</h3>
+<p>The global spaCy settings apply to audiobook conversion and phoneme export:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> (nullable boolean, default <code class="docutils literal notranslate"><span class="pre">null</span></code>) selects automatic local-model selection
+with fallback; <code class="docutils literal notranslate"><span class="pre">true</span></code> is strict and <code class="docutils literal notranslate"><span class="pre">false</span></code> disables spaCy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> (nullable string, default <code class="docutils literal notranslate"><span class="pre">null</span></code>) requests one exact local package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> (nullable <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, or <code class="docutils literal notranslate"><span class="pre">trf</span></code>, default <code class="docutils literal notranslate"><span class="pre">null</span></code>) requests one
+exact tier.</p></li>
+</ul>
+<p>When both model and tier are unset, TTSForge selects the highest installed compatible
+model for each effective language and falls back without a local model. This is
+local-only and never downloads a package. An exact model or tier is strict even when
+<code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> is null; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> disables model discovery and makes both model
+fields inactive. The requested tri-state value and concrete sentence/G2P selections are
+persisted as resume identity. The conversion summary shows the request; preflight and
+persisted state show concrete sentence/G2P selections. Those selections are part of
+resume identity.</p>
+<p>Examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># New quality-first default</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>spacy_model<span class="w"> </span>null<span class="w"> </span>--set<span class="w"> </span>spacy_model_size<span class="w"> </span>null
+
+<span class="c1"># Preserve a previous medium or small workflow</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>spacy_model_size<span class="w"> </span>md
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>spacy_model<span class="w"> </span>en_core_web_sm
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_spacy<span class="w"> </span><span class="nb">true</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_spacy<span class="w"> </span><span class="nb">false</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_spacy<span class="w"> </span>auto
+</pre></div>
+</div>
+<p>Paragraph conversion retains one WAV per render unit: an optional chapter-title unit and
+the spoken paragraph units that follow it. The workspace fixes the conversion unit,
+generation fingerprint, and selected chapters; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to change them. Valid units
+are skipped on resume, and a complete paragraph workspace can rebuild a missing final
+audiobook without ONNX initialization. See <code class="docutils literal notranslate"><span class="pre">examples/paragraph_manifest.py</span></code> for
+inspection-only validation.</p>
+<p>Name extraction additionally accepts <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">--language</span></code>; its output metadata records the concrete NER-capable package. Existing
+configurations without these keys migrate to automatic selection.</p>
+</section>
 <section id="ssmd-0-8-policies">
 <h3>SSMD 0.8 policies</h3>
 <p>The following keys configure SSMD rendering. Persistent configuration is lower
@@ -722,6 +762,10 @@ availability.</p>
 <li><p>Choices: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">line</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code></p></li>
 <li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_split_mode</span> <span class="pre">sentence</span></code></p></li>
 </ul>
+<p><code class="docutils literal notranslate"><span class="pre">--conversion-unit</span></code> is intentionally separate from <code class="docutils literal notranslate"><span class="pre">default_split_mode</span></code>. It is a
+per-workspace CLI choice: <code class="docutils literal notranslate"><span class="pre">chapter</span></code> (default) keeps existing chapter output, while
+<code class="docutils literal notranslate"><span class="pre">paragraph</span></code> retains one WAV per spoken paragraph and resumes at unit boundaries. The
+saved choice is restored on resume and cannot be changed without <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>.</p>
 </section>
 <section id="read-settings">
 <h3>Read Settings</h3>
@@ -1117,7 +1161,7 @@ provider around runner initialization, chapter synthesis, WAV writing, result re
 state saves, final merging, and converter cleanup. RSS may remain elevated because
 native allocators retain high-water pages; that alone is not evidence of a provider
 leak.</p>
-<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.7.5,&lt;0.8</span></code>, uses compact segment results, and releases
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, uses compact segment results, and releases
 completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
 remains buffered and streaming is future work.</p>
 </section>

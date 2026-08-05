@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d42a041f135f841542f2df73e91997b88ac91387"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -664,7 +664,7 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
     <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># default</span>
+    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># explicit; unset selects the highest installed model</span>
 <span class="p">)</span>
 
 <span class="c1"># British English</span>
@@ -672,10 +672,11 @@ html[data-theme="dark"] .sphinxpress-doc {
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">,</span>
     <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># default</span>
+    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># explicit; unset selects the highest installed model</span>
 <span class="p">)</span>
 
-<span class="c1"># Optional: select a different spaCy English model</span>
+<span class="c1"># Optional: automatic selection or an exact model</span>
+<span class="n">g2p_auto</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">g2p_sm</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
 </pre></div>
 </div>

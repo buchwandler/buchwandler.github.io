@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/usage/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "769bf35f3d6ecf0afec81b7dc4159c111ffaf52e"
+docs_ref: "v0.3.4"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -572,17 +572,19 @@ splitting (lightweight, no dependencies):</p>
 </div>
 <section id="choosing-processing-mode">
 <h3>Choosing Processing Mode</h3>
-<p>phrasplit automatically detects if spaCy is available and uses the appropriate mode.
-You can explicitly control this with the <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> parameter:</p>
+<p>phrasplit resolves the highest installed and loadable model for the requested language
+(<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>). If spaCy or a compatible model is unavailable, automatic mode
+falls back to regex. It never downloads models. You can explicitly control this with the
+<code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> parameter:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Automatic detection (default)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="c1"># Uses spaCy if available, otherwise falls back to regex</span>
+<span class="c1"># Uses the best installed compatible model, otherwise falls back to regex</span>
 
 <span class="c1"># Force simple mode (no spaCy required)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Uses regex-based splitting, faster and lightweight</span>
 
-<span class="c1"># Force spaCy mode (will error if spaCy not installed)</span>
+<span class="c1"># Force spaCy mode (will error if spaCy or a compatible model is unavailable)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="c1"># Uses spaCy NLP for higher accuracy</span>
 </pre></div>
@@ -604,17 +606,16 @@ You can explicitly control this with the <code class="docutils literal notransla
 </section>
 <section id="colon-splitting-deprecated">
 <h3>Colon Splitting (Deprecated)</h3>
-<p>The <code class="docutils literal notranslate"><span class="pre">split_on_colon</span></code> parameter is deprecated and no longer affects output. It
-is accepted for API compatibility and raises a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> when set
-to <code class="docutils literal notranslate"><span class="pre">False</span></code>. Colon handling is delegated to the active backend (spaCy or the
-regex fallback).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">split_on_colon</span></code> parameter is deprecated and no longer affects output. It is
+accepted for API compatibility and raises a <code class="docutils literal notranslate"><span class="pre">DeprecationWarning</span></code> when set to <code class="docutils literal notranslate"><span class="pre">False</span></code>.
+Colon handling is delegated to the active backend (spaCy or the regex fallback).</p>
 </section>
 </section>
 <section id="splitting-clauses">
 <h2>Splitting Clauses</h2>
-<p>The <a class="reference internal" href="../api/#phrasplit.split_clauses" title="phrasplit.split_clauses"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_clauses()</span></code></a> function splits text at commas, creating
-natural pause points ideal for audiobook and text-to-speech applications.
-Like <a class="reference internal" href="../api/#phrasplit.split_sentences" title="phrasplit.split_sentences"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_sentences()</span></code></a>, it supports both spaCy and simple modes:</p>
+<p>The <a class="reference internal" href="../api/#phrasplit.split_clauses" title="phrasplit.split_clauses"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_clauses()</span></code></a> function splits text at commas, creating natural
+pause points ideal for audiobook and text-to-speech applications. Like
+<a class="reference internal" href="../api/#phrasplit.split_sentences" title="phrasplit.split_sentences"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_sentences()</span></code></a>, it supports both spaCy and simple modes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_clauses</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I like coffee, and I like tea.&quot;</span>
@@ -663,10 +664,10 @@ Like <a class="reference internal" href="../api/#phrasplit.split_sentences" titl
 </section>
 <section id="hierarchical-splitting-with-split-text">
 <h2>Hierarchical Splitting with split_text</h2>
-<p>The <a class="reference internal" href="../api/#phrasplit.split_text" title="phrasplit.split_text"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_text()</span></code></a> function provides a unified interface for
-splitting text while preserving paragraph and sentence structure. This is
-particularly useful for audiobook generation where you need different pause
-lengths between paragraphs, sentences, and clauses.</p>
+<p>The <a class="reference internal" href="../api/#phrasplit.split_text" title="phrasplit.split_text"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_text()</span></code></a> function provides a unified interface for splitting
+text while preserving paragraph and sentence structure. This is particularly useful for
+audiobook generation where you need different pause lengths between paragraphs,
+sentences, and clauses.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_text</span><span class="p">,</span> <span class="n">Segment</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;First sentence. Second sentence.</span><span class="se">\n\n</span><span class="s2">New paragraph here.&quot;</span>
@@ -720,8 +721,8 @@ lengths between paragraphs, sentences, and clauses.</p>
 </section>
 <section id="splitting-long-lines">
 <h2>Splitting Long Lines</h2>
-<p>The <a class="reference internal" href="../api/#phrasplit.split_long_lines" title="phrasplit.split_long_lines"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_long_lines()</span></code></a> function breaks long lines at natural
-boundaries (sentences and clauses) to fit within a maximum length:</p>
+<p>The <a class="reference internal" href="../api/#phrasplit.split_long_lines" title="phrasplit.split_long_lines"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_long_lines()</span></code></a> function breaks long lines at natural boundaries
+(sentences and clauses) to fit within a maximum length:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_long_lines</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;This is a very long sentence. This is another sentence that makes it even longer.&quot;</span>
@@ -736,19 +737,26 @@ boundaries (sentences and clauses) to fit within a maximum length:</p>
 <li><p>If still too long, split at word boundaries</p></li>
 </ol>
 </section>
-<section id="using-different-language-models">
-<h2>Using Different Language Models</h2>
-<p>All functions that use spaCy accept a <code class="docutils literal notranslate"><span class="pre">language_model</span></code> parameter:</p>
+<section id="language-and-model-selection">
+<h2>Language and Model Selection</h2>
+<p>All splitting APIs accept an independent <code class="docutils literal notranslate"><span class="pre">language</span></code> hint and optional exact controls:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_sentences</span>
 
-<span class="c1"># Use a larger, more accurate model</span>
-<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_lg&quot;</span><span class="p">)</span>
+<span class="c1"># Highest installed English model</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+
+<span class="c1"># Highest installed German model</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">german_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+
+<span class="c1"># Exact package and exact tier</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">model_size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)</span>
 
 <span class="c1"># Use a model for another language</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">german_text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;de_core_news_sm&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Make sure to download the model first:</p>
+<p>Make sure the exact model is installed locally first:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>de_core_news_sm
 </pre></div>
 </div>

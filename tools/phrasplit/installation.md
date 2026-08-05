@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/installation/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "769bf35f3d6ecf0afec81b7dc4159c111ffaf52e"
+docs_ref: "v0.3.4"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -545,7 +545,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="requirements">
 <h2>Requirements</h2>
 <ul class="simple">
-<li><p>Python 3.9 or higher</p></li>
+<li><p>Python 3.10 or higher</p></li>
 <li><p>click 8.0 or higher</p></li>
 <li><p>rich 13.0 or higher</p></li>
 <li><p>spaCy 3.5 or higher (optional, for high-accuracy mode)</p></li>
@@ -594,8 +594,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </section>
 <section id="installing-spacy-language-models">
 <h2>Installing spaCy Language Models</h2>
-<p>If you installed with spaCy support, you’ll need a language model. The default
-model is <code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> (English). Install it with:</p>
+<p>If you installed with spaCy support, install any local models you want available for
+automatic selection. Automatic mode chooses the highest installed and loadable tier
+(<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>) and never downloads models itself.</p>
+<p>For example:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
 </pre></div>
 </div>
@@ -637,7 +639,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li><p>Good for straightforward text</p></li>
 <li><p>Uses regex-based splitting</p></li>
 </ul>
-<p><strong>spaCy Mode (use_spacy=True, default if available)</strong></p>
+<p><strong>spaCy Mode (use_spacy=True)</strong></p>
 <ul class="simple">
 <li><p>Requires spaCy and language models</p></li>
 <li><p>Higher accuracy</p></li>

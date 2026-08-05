@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
+docs_commit: "2def7060bc3513f8f82f0eed36f9fbccd353f9e3"
 search_enabled: true
 ---
 

@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -627,19 +627,21 @@ default; <code class="docutils literal notranslate"><span class="pre">esola</spa
 <h4>Tokenizer and phoneme handling</h4>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config</span></code>: <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code> used by SSMD parsing and <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model</span></code>: spaCy package name or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model_size</span></code>: package tier for auto mode (<code class="docutils literal notranslate"><span class="pre">&quot;sm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;md&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;lg&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;trf&quot;</span></code>). Default: <code class="docutils literal notranslate"><span class="pre">&quot;md&quot;</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model</span></code>: explicit spaCy package name, or unset. <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> is
+accepted as a compatibility alias for unset.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model_size</span></code>: exact package tier (<code class="docutils literal notranslate"><span class="pre">&quot;sm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;md&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;lg&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;trf&quot;</span></code>), or unset. With both values unset, each backend selects its highest installed
+compatible model (<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>) without downloading.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">espeak_config</span></code>: Deprecated espeak configuration. Prefer <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">short_sentence_config</span></code>: <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> for short-sentence handling.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">overlap_mode</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;snap&quot;</span></code> clips overlapping SSMD spans to segment bounds, <code class="docutils literal notranslate"><span class="pre">&quot;strict&quot;</span></code>
 drops partial spans and emits trace warnings.</p></li>
 </ul>
-<p>Helper for auto spaCy model tier:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">with_spacy_model_size</span>
+<p>Helper for an exact spaCy model request:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">with_spacy_model</span>
 
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model_size</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)(</span><span class="n">cfg</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -735,7 +737,8 @@ segment offsets.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">generation.is_phonemes</span></code> treats input as phonemes and skips text G2P.</p></li>
 <li><p>SSMD <code class="docutils literal notranslate"><span class="pre">ph</span></code>/<code class="docutils literal notranslate"><span class="pre">phonemes</span></code> spans override phonemes for that segment.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config</span></code> is forwarded to <code class="docutils literal notranslate"><span class="pre">kokorog2p.get_g2p</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spacy_model=&quot;auto&quot;</span></code> resolves per language (default size <code class="docutils literal notranslate"><span class="pre">md</span></code>).</p></li>
+<li><p>Unset <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> and <code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> resolve independently per effective
+language; the selected concrete packages are exposed in result metadata.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> enables on-disk caching of phonemes/tokens.</p></li>
 <li><p>Long phoneme token sequences are split into batches of <code class="docutils literal notranslate"><span class="pre">MAX_PHONEME_LENGTH</span></code>.</p></li>
 </ul>
@@ -781,27 +784,24 @@ coarticulation or pitch continuity.</p>
 script demonstrates multiple wiring styles:</p>
 <p><code class="docutils literal notranslate"><span class="pre">examples/pipeline_stage_showcase.py</span></code></p>
 <p>Example with explicit stage wiring:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.onnx_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_generation.onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnnxAudioGenerationAdapter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_postprocessing.onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnnxAudioPostprocessingAdapter</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">build_pipeline</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_generation.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopAudioGenerationAdapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_postprocessing.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopAudioPostprocessingAdapter</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.doc_parsers.ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">SsmdDocumentParser</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.g2p.kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroG2PAdapter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.phoneme_processing.onnx</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnnxPhonemeProcessorAdapter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.phoneme_processing.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopPhonemeProcessorAdapter</span>
 
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="n">cfg</span><span class="o">.</span><span class="n">model_quality</span><span class="p">)</span>
-
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">cfg</span><span class="p">,</span>
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">build_pipeline</span><span class="p">(</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
     <span class="n">doc_parser</span><span class="o">=</span><span class="n">SsmdDocumentParser</span><span class="p">(),</span>
     <span class="n">g2p</span><span class="o">=</span><span class="n">KokoroG2PAdapter</span><span class="p">(),</span>
-    <span class="n">phoneme_processing</span><span class="o">=</span><span class="n">OnnxPhonemeProcessorAdapter</span><span class="p">(</span><span class="n">kokoro</span><span class="p">),</span>
-    <span class="n">audio_generation</span><span class="o">=</span><span class="n">OnnxAudioGenerationAdapter</span><span class="p">(</span><span class="n">kokoro</span><span class="p">),</span>
-    <span class="n">audio_postprocessing</span><span class="o">=</span><span class="n">OnnxAudioPostprocessingAdapter</span><span class="p">(</span><span class="n">kokoro</span><span class="p">),</span>
+    <span class="n">phoneme_processing</span><span class="o">=</span><span class="n">NoopPhonemeProcessorAdapter</span><span class="p">(),</span>
+    <span class="n">audio_generation</span><span class="o">=</span><span class="n">NoopAudioGenerationAdapter</span><span class="p">(),</span>
+    <span class="n">audio_postprocessing</span><span class="o">=</span><span class="n">NoopAudioPostprocessingAdapter</span><span class="p">(),</span>
 <span class="p">)</span>
 </pre></div>
 </div>

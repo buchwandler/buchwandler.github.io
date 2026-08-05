@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.1"
-docs_commit: "22d00e84016cb2a8501004ae1550e7933e69a4f9"
+docs_ref: "v0.7.2"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -545,6 +545,24 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>This guide covers advanced features and usage patterns for kokorog2p.</p>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>
+<section id="tri-state-spacy-model-resolution">
+<h3>Tri-state spaCy model resolution</h3>
+<p>The factory distinguishes optional model discovery from required model selection:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> attempts the highest installed and loadable local model for the
+English and French defaults, then falls back to native tokenization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> requires a loadable local model and raises
+<code class="docutils literal notranslate"><span class="pre">SpacyModelResolutionError</span></code> when resolution fails.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> forces native tokenization. Model arguments are ignored with a
+warning.</p></li>
+<li><p>A concrete <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> or exact <code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> is always strict when spaCy is
+enabled.</p></li>
+</ul>
+<p>No path downloads a model. The selected Boolean and concrete package are included in the
+G2P cache identity, so changing local model availability cannot reuse an instance with
+stale tokenization behavior. Per-span <code class="docutils literal notranslate"><span class="pre">lang</span></code> overrides create language-specific G2P
+instances using the same resolution rules.</p>
+</section>
 <section id="memory-efficient-loading">
 <h3>Memory-Efficient Loading</h3>
 <p>Control dictionary loading to optimize memory and initialization time:</p>

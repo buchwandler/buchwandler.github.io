@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "06ddcfe548be7813d1f442416f3455b4a91eed5f"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -663,7 +663,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="usage/#splitting-paragraphs">Splitting Paragraphs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#hierarchical-splitting-with-split-text">Hierarchical Splitting with split_text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#splitting-long-lines">Splitting Long Lines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/#using-different-language-models">Using Different Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#language-and-model-selection">Language and Model Selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#processing-pipeline-example">Processing Pipeline Example</a></li>
 </ul>
 </li>
@@ -680,6 +680,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/#spacy-model-resolver">spaCy Model Resolver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-phrasplit">Main Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#data-types">Data Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-contents">Module Contents</a></li>
@@ -722,7 +723,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="offsets/#see-also">See Also</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="streaming/">Streaming API</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="streaming/">Iterator API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="streaming/#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="streaming/#iterator-function">Iterator Function</a></li>
 <li class="toctree-l2"><a class="reference internal" href="streaming/#guarantees">Guarantees</a></li>

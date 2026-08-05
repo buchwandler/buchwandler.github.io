@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "phrasplit Streaming API"
+title: "phrasplit Iterator API"
 permalink: /tools/phrasplit/main/streaming/
 nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "06ddcfe548be7813d1f442416f3455b4a91eed5f"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -540,20 +540,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="streaming-api">
-<h1>Streaming API</h1>
+<section id="iterator-api">
+<h1>Iterator API</h1>
 <section id="overview">
 <h2>Overview</h2>
-<p>The streaming API provides memory-efficient, incremental processing of text segments.
-Instead of loading all segments into memory at once, the iterator yields segments one by
-one in document order.</p>
+<p>The iterator API provides a generator-shaped facade over offset-preserving segmentation.
+The current implementation computes the complete result of <code class="docutils literal notranslate"><span class="pre">split_with_offsets()</span></code> before
+yielding, so it does not yet provide incremental parsing or bounded memory.</p>
 <p>This is particularly useful for:</p>
 <ul class="simple">
-<li><p><strong>Large documents</strong>: Process multi-gigabyte texts without loading all segments into
-memory</p></li>
-<li><p><strong>Real-time synthesis</strong>: Start TTS processing before all segmentation is complete</p></li>
-<li><p><strong>Pipeline integration</strong>: Stream segments through processing stages</p></li>
-<li><p><strong>Low-latency applications</strong>: Begin output as soon as first segment is ready</p></li>
+<li><p><strong>Pipeline integration</strong>: Feed a list-backed result into iterator-oriented stages</p></li>
+<li><p><strong>Document order</strong>: Consume segments through a standard iterator interface</p></li>
+<li><p><strong>Future compatibility</strong>: Adopt incremental behavior later without changing callers</p></li>
 </ul>
 </section>
 <section id="iterator-function">
@@ -590,14 +588,15 @@ memory</p></li>
 </pre></div>
 </div>
 </section>
-<section id="no-global-state">
-<h3>No Global State</h3>
-<p>Each iterator is independent with no shared state:</p>
+<section id="backend-state">
+<h3>Backend state</h3>
+<p>Each iterator has its own result sequence, but model loading and CLI diagnostics use the
+module-level state documented by the implementation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Safe to run multiple iterators</span>
 <span class="n">iter1</span> <span class="o">=</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text1</span><span class="p">)</span>
 <span class="n">iter2</span> <span class="o">=</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text2</span><span class="p">)</span>
 
-<span class="c1"># No interference between iterations</span>
+<span class="c1"># Results remain independent even though model caches may be reused</span>
 <span class="n">seg1</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter1</span><span class="p">)</span>
 <span class="n">seg2</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter2</span><span class="p">)</span>
 </pre></div>
@@ -767,14 +766,8 @@ memory</p></li>
 <h2>Comparison with List Version</h2>
 <section id="when-to-use-iterator">
 <h3>When to Use Iterator</h3>
-<p>✅ Use <code class="docutils literal notranslate"><span class="pre">iter_split_with_offsets()</span></code> when:</p>
-<ul class="simple">
-<li><p>Processing very large texts (&gt; 1 MB)</p></li>
-<li><p>Need to start output before all segmentation is done</p></li>
-<li><p>Building real-time pipelines</p></li>
-<li><p>Memory is constrained</p></li>
-<li><p>Can process segments independently</p></li>
-</ul>
+<p>✅ Use <code class="docutils literal notranslate"><span class="pre">iter_split_with_offsets()</span></code> when an iterator interface fits the integration and
+the input is small enough for list-backed segmentation.</p>
 </section>
 <section id="when-to-use-list">
 <h3>When to Use List</h3>
@@ -795,17 +788,17 @@ memory</p></li>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># List version - loads all segments into memory</span>
 <span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">huge_text</span><span class="p">)</span>  <span class="c1"># Uses O(n) memory</span>
 
-<span class="c1"># Iterator version - one segment at a time</span>
-<span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">huge_text</span><span class="p">):</span>  <span class="c1"># Uses O(1) memory</span>
+<span class="c1"># Iterator facade - the underlying list is materialized before yielding</span>
+<span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="n">process</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 <section id="time-to-first-segment">
 <h3>Time to First Segment</h3>
-<p>The iterator has the same time-to-first-segment as the list version since the current
-implementation processes all segments upfront. A future optimization could make this
-truly streaming.</p>
+<p>The iterator has the same time-to-first-segment and memory characteristics as the list
+version since the current implementation processes all segments upfront. A future
+optimization could make this truly incremental.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>Current implementation note: The iterator currently uses <code class="docutils literal notranslate"><span class="pre">split_with_offsets()</span></code> internally and yields from the result. A future version may implement true streaming for faster time-to-first-segment.</p>
@@ -826,13 +819,13 @@ truly streaming.</p>
 <section id="best-practices">
 <h2>Best Practices</h2>
 <ol class="arabic">
-<li><p><strong>Process Immediately</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good - process each segment as it arrives</span>
+<li><p><strong>Process Through the Iterator Interface</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good - process each yielded segment</span>
 <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">):</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">process</span><span class="p">(</span><span class="n">seg</span><span class="p">)</span>
     <span class="n">save</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
 
-<span class="c1"># Bad - defeats purpose of streaming</span>
+<span class="c1"># This is equivalent to the current implementation&#39;s internal materialization</span>
 <span class="n">all_segments</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
 </pre></div>
 </div>

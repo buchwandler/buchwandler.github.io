@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_ref: "v0.8.1"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -556,6 +556,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 </section>
+<section id="paragraph-unit-streaming">
+<h3>Paragraph unit streaming</h3>
+<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline.prepare_units(text,</span> <span class="pre">unit=&quot;paragraph&quot;)</span></code> parses, phonemizes, and
+preprocesses the complete document once, then exposes deterministic paragraph
+descriptors before any audio is generated. Rendered results own one final unit waveform
+and should be released after consumption:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pipe</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">script</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prepared</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">skip_indices</span><span class="o">=</span><span class="n">completed_indices</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">consume</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
+</pre></div>
+</div>
+</section>
 <section id="pipelineconfig">
 <h3>PipelineConfig</h3>
 </section>
@@ -811,7 +826,12 @@ separately before releasing it if they need that array afterward.</p>
 <p>Set <code class="docutils literal notranslate"><span class="pre">PipelineConfig(retain_segment_audio=False)</span></code> for compact results when segment
 waveforms are not needed. This reduces retained memory after generation, but
 whole-result concatenation still occurs and peak memory remains dependent on input
-duration. A future streaming API is required for bounded peak memory.</p>
+duration. <code class="docutils literal notranslate"><span class="pre">run()</span></code> retains whole-result concatenation semantics; use <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> when peak waveform memory should remain bounded to one paragraph.</p>
+<p>Prepared unit descriptor hashes use the <code class="docutils literal notranslate"><span class="pre">pykokoro-audio-unit-v1</span></code> schema. Store the
+schema alongside each hash for resumable exporters. Indices are zero-based source order,
+hashes include audio-semantic configuration, and advancing a render iterator releases
+the previous result’s waveform unless the caller copied or persisted it first.</p>
 </section>
 <section id="segment">
 <h3>Segment</h3>

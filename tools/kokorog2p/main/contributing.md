@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d42a041f135f841542f2df73e91997b88ac91387"
+docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
 search_enabled: true
 ---
 
@@ -584,6 +584,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/<span class="w"> </span>--cov<span class="o">=</span>kokorog2p<span class="w"> </span>--cov-report<span class="o">=</span>html
 </pre></div>
 </div>
+<section id="running-on-memory-constrained-machines">
+<h3>Running on memory-constrained machines</h3>
+<p>The English and German dictionaries are large, and optional spaCy models add substantial
+native memory. Prefer sequential pytest processes for independent language groups
+instead of <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code>; each xdist worker loads another interpreter and may load
+another dictionary or model.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_attr_parser.py<span class="w"> </span>tests/test_base.py<span class="w"> </span>tests/test_pipeline_api.py
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_en_*.py<span class="w"> </span>tests/test_quote_*.py
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_de_g2p.py
+</pre></div>
+</div>
+<p>Peak RSS can be observed with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/run_pytest_with_memory.py</span> <span class="pre">-q</span></code>. For a clean
+collection comparison, set <code class="docutils literal notranslate"><span class="pre">PYTEST_DISABLE_PLUGIN_AUTOLOAD=1</span></code>. A bare <code class="docutils literal notranslate"><span class="pre">Killed</span></code> message
+or exit status 137 can indicate an operating-system OOM kill; on Linux, inspect <code class="docutils literal notranslate"><span class="pre">dmesg</span></code>
+or <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">-k</span></code> after the run and check any container or cgroup memory limit.</p>
+</section>
 </section>
 <section id="code-quality">
 <h2>Code Quality</h2>

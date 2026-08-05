@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -555,6 +555,10 @@ provider-independent; implementation modules are imported lazily.</p>
 <p><strong>ttsforge.paths</strong> : Provider-independent user configuration and advanced short-sentence
 path calculations.</p>
 <p><strong>ttsforge.conversion</strong> : Main conversion logic for EPUB to audiobook conversion.</p>
+<p><strong>ttsforge.render_units</strong> : Dependency-light paragraph descriptors, persistent unit
+identity, renderer contracts, and resume reconciliation.</p>
+<p><strong>ttsforge.paragraph_output</strong> : Owned paragraph workspace files, manifests, playlists,
+marker sidecars, and atomic WAV output.</p>
 <p><strong>ttsforge.phoneme_conversion</strong> : Conversion logic for pre-tokenized phoneme files.</p>
 </section>
 <section id="tts-backend">
@@ -598,22 +602,21 @@ resolution.</p>
     <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
     <span class="n">pause_variance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
+    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">runner</span> <span class="o">=</span> <span class="n">KokoroRunner</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span>
-<span class="n">runner</span><span class="o">.</span><span class="n">ensure_ready</span><span class="p">()</span>
-
-<span class="c1"># Generate audio</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-    <span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span>
-    <span class="n">lang_code</span><span class="o">=</span><span class="n">get_onnx_lang_code</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-    <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;tts&quot;</span><span class="p">,</span>
-    <span class="n">is_phonemes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># Save to file</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">markers</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroRunner</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span> <span class="k">as</span> <span class="n">runner</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
+        <span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span>
+        <span class="n">lang_code</span><span class="o">=</span><span class="n">get_onnx_lang_code</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
+        <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;tts&quot;</span><span class="p">,</span>
+        <span class="n">is_phonemes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+        <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">markers</span><span class="p">)</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -630,16 +633,15 @@ resolution.</p>
     <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;m4b&quot;</span><span class="p">,</span>
     <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
     <span class="n">onnx_provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">,</span>
+    <span class="n">conversion_unit</span><span class="o">=</span><span class="s2">&quot;paragraph&quot;</span><span class="p">,</span>
+    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="c1"># Create converter</span>
-<span class="n">converter</span> <span class="o">=</span> <span class="n">TTSConverter</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span>
-
-<span class="c1"># Convert EPUB</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_epub</span><span class="p">(</span>
-    <span class="n">epub_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.epub&quot;</span><span class="p">),</span>
-    <span class="n">output_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.m4b&quot;</span><span class="p">),</span>
-<span class="p">)</span>
+<span class="k">with</span> <span class="n">TTSConverter</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span> <span class="k">as</span> <span class="n">converter</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_epub</span><span class="p">(</span>
+        <span class="n">epub_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.epub&quot;</span><span class="p">),</span>
+        <span class="n">output_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.m4b&quot;</span><span class="p">),</span>
+    <span class="p">)</span>
 
 <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -647,6 +649,16 @@ resolution.</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="paragraph-units-and-ownership">
+<h3>Paragraph units and ownership</h3>
+<p>Paragraph conversion prepares a chapter once and renders each public PyKokoro unit
+sequentially. Persist or copy the current result before asking for the next one;
+iteration may release the previous result. TTSForge writes each WAV and marker sidecar
+before advancing, rebuilds the manifest and playlist atomically, and records source
+paragraph identity separately from chapter output-unit order. See
+<code class="docutils literal notranslate"><span class="pre">examples/paragraph_conversion.py</span></code>, <code class="docutils literal notranslate"><span class="pre">examples/paragraph_resume.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">examples/paragraph_manifest.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">examples/pykokoro_paragraph_units.py</span></code>.</p>
 </section>
 <section id="working-with-phonemes">
 <h3>Working with Phonemes</h3>

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_ref: "v0.8.1"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -674,24 +674,27 @@ ones:</p>
 </section>
 <section id="choosing-spacy-model-size-auto">
 <h3>Choosing spaCy Model Size (Auto)</h3>
-<p>If you use spaCy-based tokenization/splitting, you can keep language-aware auto
-selection and choose only the model size:</p>
+<p>If you use spaCy-based tokenization/splitting, unset settings select the highest
+installed compatible model per language. You can request an exact tier:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GenerationConfig</span><span class="p">,</span>
     <span class="n">KokoroPipeline</span><span class="p">,</span>
     <span class="n">PipelineConfig</span><span class="p">,</span>
-    <span class="n">with_spacy_model_size</span><span class="p">,</span>
+    <span class="n">with_spacy_model</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">base</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;fr-fr&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model_size</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)(</span><span class="n">base</span><span class="p">)</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>No spaCy model is downloaded automatically. The concrete sentence and G2P selections are
+available in <code class="docutils literal notranslate"><span class="pre">result.document_metadata[&quot;spacy_models&quot;]</span></code>. Larger <code class="docutils literal notranslate"><span class="pre">lg</span></code>/<code class="docutils literal notranslate"><span class="pre">trf</span></code> models can
+improve linguistic quality at higher memory and startup cost.</p>
 </section>
 <section id="processing-long-text">
 <h3>Processing Long Text</h3>

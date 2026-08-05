@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_ref: "v0.8.1"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -711,23 +711,26 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 </section>
 <section id="language-aware-spacy-models">
 <h2>Language-Aware spaCy Models</h2>
-<p>PyKokoro resolves spaCy model package names automatically by language when
-<code class="docutils literal notranslate"><span class="pre">TokenizerConfig.spacy_model=&quot;auto&quot;</span></code> (default).</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">with_spacy_model_size</span></code> to set the auto-resolved model tier explicitly:</p>
+<p>When both spaCy settings are unset (the default), PyKokoro asks each backend to select
+the highest installed compatible model for the effective language
+(<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>). No model is downloaded automatically; <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> remains an
+accepted alias for unset.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">with_spacy_model</span></code> to request an exact tier or package consistently across sentence
+segmentation and G2P:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GenerationConfig</span><span class="p">,</span>
     <span class="n">KokoroPipeline</span><span class="p">,</span>
     <span class="n">PipelineConfig</span><span class="p">,</span>
-    <span class="n">with_spacy_model_size</span><span class="p">,</span>
+    <span class="n">with_spacy_model</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="n">base</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model_size</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">size</span><span class="o">=</span><span class="s2">&quot;md&quot;</span><span class="p">)</span>
+<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)(</span><span class="n">base</span><span class="p">)</span>
 
-<span class="c1"># For lang=&quot;de&quot;, G2P uses de_core_news_md</span>
+<span class="c1"># For lang=&quot;de&quot;, both components request de_core_news_lg</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">)</span>
 </pre></div>
@@ -740,6 +743,9 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">tokenizer_config</span><span class="o">=</span><span class="n">tokenizer_config</span><span class="p">))</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">result.document_metadata[&quot;spacy_models&quot;]</span></code> reports the concrete sentence and G2P
+packages selected. <code class="docutils literal notranslate"><span class="pre">lg</span></code> and <code class="docutils literal notranslate"><span class="pre">trf</span></code> generally improve linguistic quality but use more
+memory and take longer to initialize than <code class="docutils literal notranslate"><span class="pre">sm</span></code> and <code class="docutils literal notranslate"><span class="pre">md</span></code>.</p>
 </section>
 <section id="speech-speed-control">
 <h2>Speech Speed Control</h2>

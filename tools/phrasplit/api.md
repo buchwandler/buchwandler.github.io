@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/api/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "769bf35f3d6ecf0afec81b7dc4159c111ffaf52e"
+docs_ref: "v0.3.4"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -543,58 +543,100 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="api-reference">
 <h1>API Reference</h1>
 <p>This page contains the complete API reference for phrasplit.</p>
+<section id="spacy-model-resolver">
+<h2>spaCy Model Resolver</h2>
+<p>The stable resolver API is available directly from <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">SpacyModelResolution</span><span class="p">,</span>
+    <span class="n">SpacyModelSize</span><span class="p">,</span>
+    <span class="n">SpacyModelAttempt</span><span class="p">,</span>
+    <span class="n">SpacyModelResolutionError</span><span class="p">,</span>
+    <span class="n">SpacyNotInstalledError</span><span class="p">,</span>
+    <span class="n">NoCompatibleSpacyModelError</span><span class="p">,</span>
+    <span class="n">ExplicitSpacyModelError</span><span class="p">,</span>
+    <span class="n">normalize_spacy_language</span><span class="p">,</span>
+    <span class="n">resolve_spacy_model</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">resolution</span> <span class="o">=</span> <span class="n">resolve_spacy_model</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">require</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolution</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>       <span class="c1"># concrete selected package or None</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolution</span><span class="o">.</span><span class="n">model_size</span><span class="p">)</span>  <span class="c1"># sm, md, lg, or trf</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolution</span><span class="o">.</span><span class="n">attempts</span><span class="p">)</span>    <span class="c1"># local loadability diagnostics</span>
+</pre></div>
+</div>
+<p>Resolution is local-only and never downloads a model. <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> skips resolution
+entirely; <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> requires a loadable result; <code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> uses spaCy only
+when a compatible result exists and otherwise uses regex splitting. Downstream consumers
+can use <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">language_model</span></code>, and <code class="docutils literal notranslate"><span class="pre">model_size</span></code> with the same semantics as the
+splitting APIs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">SpacyModelResolutionError</span></code> is the base class for resolver failures. Forced resolution
+raises <code class="docutils literal notranslate"><span class="pre">SpacyNotInstalledError</span></code> when spaCy is absent or <code class="docutils literal notranslate"><span class="pre">NoCompatibleSpacyModelError</span></code>
+when no compatible installed model loads. An explicit package failure raises
+<code class="docutils literal notranslate"><span class="pre">ExplicitSpacyModelError</span></code>; its <code class="docutils literal notranslate"><span class="pre">resolution</span></code> field contains attempts and accurate
+<code class="docutils literal notranslate"><span class="pre">available</span></code>/<code class="docutils literal notranslate"><span class="pre">loadable</span></code> flags. <code class="docutils literal notranslate"><span class="pre">SpacyModelAttempt</span></code> records each candidate load outcome.</p>
+</section>
 <section id="module-phrasplit">
 <span id="main-functions"></span><h2>Main Functions</h2>
 <section id="split-sentences">
 <h3>split_sentences</h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.split_sentences">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_sentences"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_sentences"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into sentences.</p>
-<p>By default, uses spaCy if available for best accuracy, otherwise falls back
-to regex-based splitting. You can force a specific implementation with use_spacy.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-language_model: Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)</p>
-<blockquote>
-<div><p>For spaCy mode: Name of the spaCy model to use
-For simple mode: Used to determine language for abbreviation handling</p>
-</div></blockquote>
-<dl class="simple">
-<dt>apply_corrections: Whether to apply post-processing corrections for</dt><dd><p>common spaCy errors (URL splitting, abbreviation handling).
-Default is True. Only applies to spaCy mode.</p>
+<p>By default, selects the highest-quality compatible installed and loadable spaCy
+model for the requested language, otherwise falls back to regex-based splitting.
+You can force a specific implementation with <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)
+For spaCy mode: Name of the spaCy model to use
+For simple mode: Used to determine language for abbreviation handling</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling).
+Default is True. The regex fallback applies the same corrections.</p></li>
+<li><p><strong>split_on_colon</strong> – Deprecated. Kept for API compatibility (currently unused).
+spaCy’s default colon behavior is used. Default is True.</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting without spaCy.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier (<code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, or <code class="docutils literal notranslate"><span class="pre">trf</span></code>).</p></li>
+</ul>
 </dd>
-<dt>split_on_colon: Deprecated. Kept for API compatibility (currently unused).</dt><dd><p>spaCy’s default colon behavior is used. Default is True.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of sentences</p>
 </dd>
-<dt>use_spacy: Choose implementation:</dt><dd><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting (no spaCy)</p></li>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
 </ul>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>List of sentences</p>
-</dd>
-<dt>Raises:</dt><dd><p>ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Auto-detect (uses spaCy if available)</span>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Auto-select a compatible local model, otherwise use regex</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force simple mode (even if spaCy is installed)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force spaCy mode (error if not installed)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force spaCy mode (requires a compatible local model)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-<dt>Note:</dt><dd><p>The simple mode (regex-based) is faster and has no ML dependencies,
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The simple mode (regex-based) is faster and has no ML dependencies,
 but is less accurate (~85-90% vs ~95%+ for spaCy) on complex text.
-For best results with complex text, install spaCy:
-pip install phrasplit[nlp]</p>
-</dd>
-</dl>
+For best results with complex text, install spaCy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">phrasplit</span><span class="p">[</span><span class="n">nlp</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 <p><strong>Example:</strong></p>
@@ -607,6 +649,12 @@ pip install phrasplit[nlp]</p>
 <span class="c1"># Use simple mode (no spaCy required)</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 
+<span class="c1"># Automatic highest-available selection, exact overrides, and regex forcing</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">model_size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)</span>
+
 <span class="c1"># split_on_colon is deprecated (kept for compatibility only)</span>
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Note: This is important.&quot;</span>
 <span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">split_on_colon</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
@@ -617,31 +665,40 @@ pip install phrasplit[nlp]</p>
 <h3>split_clauses</h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.split_clauses">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_clauses"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_clauses"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into comma-separated parts for audiobook creation.</p>
 <p>Uses sentence detection, then splits each sentence at commas.
 The comma stays at the end of each part, creating natural pause points
 for text-to-speech processing.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-language_model: Language model name (e.g., “en_core_web_sm”)
-use_spacy: Choose implementation:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
-</div></blockquote>
 </dd>
-<dt>Returns:</dt><dd><p>List of comma-separated parts</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of comma-separated parts</p>
 </dd>
-<dt>Raises:</dt><dd><p>ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><p>Input: “I do like coffee, and I like wine.”
-Output: [“I do like coffee,”, “and I like wine.”]</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span><span class="p">:</span> <span class="s2">&quot;I do like coffee, and I like wine.&quot;</span>
+<span class="n">Output</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;I do like coffee,&quot;</span><span class="p">,</span> <span class="s2">&quot;and I like wine.&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <p><strong>Example:</strong></p>
@@ -663,10 +720,12 @@ Output: [“I do like coffee,”, “and I like wine.”]</p>
 <span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_paragraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_paragraphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into paragraphs (separated by double newlines).</p>
 <p>Applies preprocessing to fix hyphenated line breaks and normalize whitespace.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> – Input text</p>
 </dd>
-<dt>Returns:</dt><dd><p>List of paragraphs (non-empty, stripped)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of paragraphs (non-empty, stripped)</p>
 </dd>
 </dl>
 </dd></dl>
@@ -684,70 +743,68 @@ Output: [“I do like coffee,”, “and I like wine.”]</p>
 <h3>split_text</h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.split_text">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#phrasplit.splitter.Segment" title="phrasplit.splitter.Segment"><span class="pre">Segment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#phrasplit.splitter.Segment" title="phrasplit.splitter.Segment"><span class="pre">Segment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into segments with hierarchical position information.</p>
 <p>This function provides a unified interface for text splitting with different
 granularity levels, while preserving paragraph and sentence structure information.
 Useful for audiobook generation where different pause lengths are needed
 between paragraphs vs. sentences vs. clauses.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text to split
-mode: Splitting mode - one of:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>“paragraph”: Split into paragraphs only</p></li>
-<li><p>“sentence”: Split into sentences, grouped by paragraph</p></li>
-<li><p>“clause”: Split into clauses (comma-separated), with paragraph
-and sentence info</p></li>
-</ul>
-</div></blockquote>
-<p>language_model: Language model name (e.g., “en_core_web_sm”)
-apply_corrections: Whether to apply post-processing corrections for</p>
-<blockquote>
-<div><p>common spaCy errors (URL splitting, abbreviation handling).
-Default is True. Only applies to spaCy mode and sentence/clause modes.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>split_on_colon: Deprecated. Kept for API compatibility (currently unused).</dt><dd><p>spaCy’s default colon behavior is used. Default is True.</p>
-</dd>
-<dt>use_spacy: Choose implementation:</dt><dd><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting mode. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">&quot;clause&quot;</span></code>.</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling).
+Default is True. Applies to sentence/clause modes for both backends.</p></li>
+<li><p><strong>split_on_colon</strong> – Deprecated. Kept for API compatibility (currently unused).
+spaCy’s default colon behavior is used. Default is True.</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible installed/loadable model or regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
 </dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>List of Segment namedtuples, each containing:</dt><dd><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p>text: The segment text</p></li>
 <li><p>paragraph: Paragraph index (0-based)</p></li>
 <li><p>sentence: Sentence index within paragraph (0-based).
 None for paragraph mode.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Segment namedtuples, each containing</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If mode is not one of “paragraph”, “sentence”, “clause”</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
-</dd>
-<dt>Raises:</dt><dd><p>ValueError: If mode is not one of “paragraph”, “sentence”, “clause”
-ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span><span class="p">)</span>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span><span class="si">}</span><span class="s2"> S</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">sentence</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="go">P0 S0: Hello world.</span>
 <span class="go">P0 S1: How are you?</span>
 <span class="go">P1 S0: New paragraph.</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Detect paragraph changes for longer pauses</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Detect paragraph changes for longer pauses</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span> <span class="o">!=</span> <span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">paragraph</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- paragraph break ---&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 </dd></dl>
 
 <p><strong>Example:</strong></p>
@@ -776,29 +833,36 @@ ImportError: If use_spacy=True but spaCy is not installed</p>
 <h3>split_long_lines</h3>
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.split_long_lines">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_long_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_long_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_long_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_long_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split lines exceeding max_length at clause/sentence boundaries.</p>
 <p>Strategy:
 1. First try to split at sentence boundaries
 2. If still too long, split at clause boundaries (commas, semicolons, etc.)
 3. If still too long, split at word boundaries</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-max_length: Maximum line length in characters (must be positive)
-language_model: Language model name (e.g., “en_core_web_sm”)
-use_spacy: Choose implementation:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>max_length</strong> – Maximum line length in characters (must be positive)</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
-</div></blockquote>
 </dd>
-<dt>Returns:</dt><dd><p>List of lines, each within max_length (except single words exceeding limit)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of lines, each within max_length (except single words exceeding limit)</p>
 </dd>
-<dt>Raises:</dt><dd><p>ValueError: If max_length is less than 1
-ImportError: If use_spacy=True but spaCy is not installed</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If max_length is less than 1</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
@@ -814,6 +878,169 @@ ImportError: If use_spacy=True but spaCy is not installed</p>
 </pre></div>
 </div>
 </section>
+<section id="offset-apis">
+<h3>Offset APIs</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="phrasplit.split_with_offsets">
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Split text into segments with character offsets and stable IDs.</p>
+<p>This is the main API for offset-preserving segmentation, designed for
+downstream processing where exact character positions are critical.</p>
+<p><strong>Exact-Slice Policy</strong></p>
+<p>This function implements the exact-slice policy. For every returned segment,
+the following invariant ALWAYS holds:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This guarantee means:</p>
+<ul class="simple">
+<li><p>Offsets map precisely to the original input text</p></li>
+<li><p>No whitespace normalization or stripping breaks the mapping</p></li>
+<li><p>Downstream code can reliably use offsets for span slicing</p></li>
+<li><p>Integration with token alignment and markup slicing is safe</p></li>
+</ul>
+<p>Key features:</p>
+<ul class="simple">
+<li><p>Returns segments with precise character offsets (char_start, char_end)</p></li>
+<li><p>Generates stable, hierarchical IDs (e.g., “p0s1”, “p0s2c3”)</p></li>
+<li><p>Maintains exact-slice invariant in all modes</p></li>
+<li><p>Supports both spaCy (accurate) and regex (fast) backends</p></li>
+<li><p>Optional max_chars safety splitting with deterministic boundaries</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting granularity. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;clause&quot;</span></code>.</p></li>
+<li><p><strong>use_spacy</strong> – Backend selection. <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible
+installed/loadable local model or falls back to regex; <code class="docutils literal notranslate"><span class="pre">True</span></code> forces
+spaCy; <code class="docutils literal notranslate"><span class="pre">False</span></code> forces regex-based splitting.</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)
+Used for both spaCy model selection and abbreviation handling</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling, ellipsis).
+Default is True. Only applies to spaCy mode.</p></li>
+<li><p><strong>max_chars</strong> – Optional maximum segment length. Segments exceeding this
+will be split further at whitespace/punctuation boundaries while
+maintaining the exact-slice invariant. Split segments get IDs
+like “p0s1:m0”, “p0s1:m1”, etc.</p></li>
+<li><p><strong>inline_markup</strong> – Opt-in inline XHTML markup handling (default False). When
+True, the regex backend keeps inline tags balanced across sentence
+boundaries: closing tags after punctuation stay in the previous
+segment and opening tags after whitespace start the next segment.
+Requires the regex backend; passing <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> with
+<code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code> raises ValueError. Default behavior (plain
+text) is unchanged when False.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
+<li><p>id: Stable identifier (e.g., “p0s1c2” or “p0s1:m0”)</p></li>
+<li><p>text: Segment text content (exact slice of input)</p></li>
+<li><p>char_start, char_end: Character offsets in original text</p></li>
+<li><p>paragraph_idx, sentence_idx, clause_idx: Hierarchical indices</p></li>
+<li><p>meta: Additional metadata (method, mode, etc.)</p></li>
+</ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of SplitSegment objects, each containing</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If mode is invalid or max_chars &lt; 1</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="c1"># Verify exact-slice invariant</span>
+<span class="gp">... </span>    <span class="k">assert</span> <span class="n">text</span><span class="p">[</span><span class="n">seg</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">seg</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span> <span class="o">==</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">p0s0: &#39;Hello world.&#39;</span>
+<span class="go">p0s1: &#39;How are you?&#39;</span>
+<span class="go">p1s0: &#39;New paragraph.&#39;</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># With max_chars safety splitting</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;word &quot;</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">long_text</span><span class="p">,</span> <span class="n">max_chars</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">)</span>
+<span class="go">True</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Exact-slice invariant still holds</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="n">long_text</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">)</span>
+<span class="go">True</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Segments may include leading/trailing whitespace from the original text</p></li>
+<li><p>IDs are stable and deterministic across runs with same input and settings</p></li>
+<li><p>For SSMD/markup integration, offsets are in the coordinate space of the
+input text (before or after escaping, depending on your workflow)</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="phrasplit.iter_split_with_offsets">
+<span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">iter_split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#iter_split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Iterator facade over <a class="reference internal" href="#phrasplit.split_with_offsets" title="phrasplit.split_with_offsets"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_with_offsets()</span></code></a>.</p>
+<p>The current implementation computes the complete segment list before yielding.
+It is useful for iterator-oriented integrations, but it does not yet provide
+incremental parsing, bounded memory, or earlier time-to-first-segment behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting granularity (“paragraph”, “sentence”, or “clause”)</p></li>
+<li><p><strong>use_spacy</strong> – Backend selection (None=auto, True=spaCy, False=regex)</p></li>
+<li><p><strong>language_model</strong> – Language model name for NLP/abbreviations</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier.</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling, ellipsis).
+Default is True. Only applies to spaCy mode.</p></li>
+<li><p><strong>max_chars</strong> – Optional maximum segment length</p></li>
+</ul>
+</dd>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p>SplitSegment objects in document order</p>
+</dd>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;First sentence. Second sentence.</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="go">p0s0: First sentence.</span>
+<span class="go">p0s1: Second sentence.</span>
+<span class="go">p1s0: New paragraph.</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
+<li><p>Segments are yielded in document order</p></li>
+<li><p>Same offset guarantees as split_with_offsets()</p></li>
+<li><p>The underlying splitter may use its documented model cache/global diagnostic
+state; callers must not interpret this facade as a thread-isolated stream.</p></li>
+</ul>
+</div>
+</dd></dl>
+
+<p>Both APIs preserve <code class="docutils literal notranslate"><span class="pre">segment.text</span> <span class="pre">==</span> <span class="pre">text[segment.char_start:segment.char_end]</span></code>.
+<code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code> is available only with the regex backend and raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
+when explicitly combined with spaCy. The iterator is currently a facade over the list
+API and does not claim incremental or bounded-memory processing.</p>
+</section>
 </section>
 <section id="data-types">
 <h2>Data Types</h2>
@@ -824,15 +1051,25 @@ ImportError: If use_spacy=True but spaCy is not installed</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">phrasplit.</span></span><span class="sig-name descname"><span class="pre">Segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">paragraph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phrasplit/splitter/#Segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
 <p>A text segment with position information.</p>
-<dl>
-<dt>Attributes:</dt><dd><p>text: The text content of the segment
-paragraph: Paragraph index (0-based) within the document
-sentence: Sentence index (0-based) within the paragraph.</p>
-<blockquote>
-<div><p>None for paragraph mode.</p>
-</div></blockquote>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``text``</span></span></dt>
+<dd><p>The text content of the segment.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``paragraph``</span></span></dt>
+<dd><p>Paragraph index (0-based) within the document.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``sentence``</span></span></dt>
+<dd><p>Sentence index (0-based) within the paragraph.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> for paragraph mode.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="phrasplit.Segment.text">
 <span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></dt>
@@ -858,8 +1095,8 @@ sentence: Sentence index (0-based) within the paragraph.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">text</span></code> (str): The text content of the segment</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">paragraph</span></code> (int): Paragraph index (0-based) within the document</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sentence</span></code> (int | None): Sentence index (0-based) within the paragraph.
-None for paragraph mode.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sentence</span></code> (int | None): Sentence index (0-based) within the paragraph. None for
+paragraph mode.</p></li>
 </ul>
 <p><strong>Example:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_text</span><span class="p">,</span> <span class="n">Segment</span>
@@ -898,15 +1135,25 @@ or can be controlled via the use_spacy parameter.</p>
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">Segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">paragraph</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/phrasplit/splitter/#Segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NamedTuple" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></a></p>
 <p>A text segment with position information.</p>
-<dl>
-<dt>Attributes:</dt><dd><p>text: The text content of the segment
-paragraph: Paragraph index (0-based) within the document
-sentence: Sentence index (0-based) within the paragraph.</p>
-<blockquote>
-<div><p>None for paragraph mode.</p>
-</div></blockquote>
-</dd>
-</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``text``</span></span></dt>
+<dd><p>The text content of the segment.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``paragraph``</span></span></dt>
+<dd><p>Paragraph index (0-based) within the document.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">-</span> <span class="pre">``sentence``</span></span></dt>
+<dd><p>Sentence index (0-based) within the paragraph.
+<code class="docutils literal notranslate"><span class="pre">None</span></code> for paragraph mode.</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="phrasplit.splitter.Segment.text">
 <span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></dt>
@@ -932,263 +1179,296 @@ sentence: Sentence index (0-based) within the paragraph.</p>
 <span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_paragraphs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_paragraphs"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into paragraphs (separated by double newlines).</p>
 <p>Applies preprocessing to fix hyphenated line breaks and normalize whitespace.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> – Input text</p>
 </dd>
-<dt>Returns:</dt><dd><p>List of paragraphs (non-empty, stripped)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of paragraphs (non-empty, stripped)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.split_sentences">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_sentences"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_sentences</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_sentences"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into sentences.</p>
-<p>By default, uses spaCy if available for best accuracy, otherwise falls back
-to regex-based splitting. You can force a specific implementation with use_spacy.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-language_model: Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)</p>
-<blockquote>
-<div><p>For spaCy mode: Name of the spaCy model to use
-For simple mode: Used to determine language for abbreviation handling</p>
-</div></blockquote>
-<dl class="simple">
-<dt>apply_corrections: Whether to apply post-processing corrections for</dt><dd><p>common spaCy errors (URL splitting, abbreviation handling).
-Default is True. Only applies to spaCy mode.</p>
+<p>By default, selects the highest-quality compatible installed and loadable spaCy
+model for the requested language, otherwise falls back to regex-based splitting.
+You can force a specific implementation with <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)
+For spaCy mode: Name of the spaCy model to use
+For simple mode: Used to determine language for abbreviation handling</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling).
+Default is True. The regex fallback applies the same corrections.</p></li>
+<li><p><strong>split_on_colon</strong> – Deprecated. Kept for API compatibility (currently unused).
+spaCy’s default colon behavior is used. Default is True.</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting without spaCy.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier (<code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, or <code class="docutils literal notranslate"><span class="pre">trf</span></code>).</p></li>
+</ul>
 </dd>
-<dt>split_on_colon: Deprecated. Kept for API compatibility (currently unused).</dt><dd><p>spaCy’s default colon behavior is used. Default is True.</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of sentences</p>
 </dd>
-<dt>use_spacy: Choose implementation:</dt><dd><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting (no spaCy)</p></li>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
 </ul>
 </dd>
 </dl>
-</dd>
-<dt>Returns:</dt><dd><p>List of sentences</p>
-</dd>
-<dt>Raises:</dt><dd><p>ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Auto-detect (uses spaCy if available)</span>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Auto-select a compatible local model, otherwise use regex</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force simple mode (even if spaCy is installed)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt;</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force spaCy mode (error if not installed)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Force spaCy mode (requires a compatible local model)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">sentences</span> <span class="o">=</span> <span class="n">split_sentences</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-<dt>Note:</dt><dd><p>The simple mode (regex-based) is faster and has no ML dependencies,
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The simple mode (regex-based) is faster and has no ML dependencies,
 but is less accurate (~85-90% vs ~95%+ for spaCy) on complex text.
-For best results with complex text, install spaCy:
-pip install phrasplit[nlp]</p>
-</dd>
-</dl>
+For best results with complex text, install spaCy:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">phrasplit</span><span class="p">[</span><span class="n">nlp</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.split_clauses">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_clauses"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_clauses</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_clauses"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into comma-separated parts for audiobook creation.</p>
 <p>Uses sentence detection, then splits each sentence at commas.
 The comma stays at the end of each part, creating natural pause points
 for text-to-speech processing.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-language_model: Language model name (e.g., “en_core_web_sm”)
-use_spacy: Choose implementation:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
-</div></blockquote>
 </dd>
-<dt>Returns:</dt><dd><p>List of comma-separated parts</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of comma-separated parts</p>
 </dd>
-<dt>Raises:</dt><dd><p>ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><p>Input: “I do like coffee, and I like wine.”
-Output: [“I do like coffee,”, “and I like wine.”]</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Input</span><span class="p">:</span> <span class="s2">&quot;I do like coffee, and I like wine.&quot;</span>
+<span class="n">Output</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;I do like coffee,&quot;</span><span class="p">,</span> <span class="s2">&quot;and I like wine.&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.split_long_lines">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_long_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_long_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_long_lines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_long_lines"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split lines exceeding max_length at clause/sentence boundaries.</p>
 <p>Strategy:
 1. First try to split at sentence boundaries
 2. If still too long, split at clause boundaries (commas, semicolons, etc.)
 3. If still too long, split at word boundaries</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text
-max_length: Maximum line length in characters (must be positive)
-language_model: Language model name (e.g., “en_core_web_sm”)
-use_spacy: Choose implementation:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text</p></li>
+<li><p><strong>max_length</strong> – Maximum line length in characters (must be positive)</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible local model or uses regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
-</div></blockquote>
 </dd>
-<dt>Returns:</dt><dd><p>List of lines, each within max_length (except single words exceeding limit)</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of lines, each within max_length (except single words exceeding limit)</p>
 </dd>
-<dt>Raises:</dt><dd><p>ValueError: If max_length is less than 1
-ImportError: If use_spacy=True but spaCy is not installed</p>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If max_length is less than 1</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.split_text">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#phrasplit.splitter.Segment" title="phrasplit.splitter.Segment"><span class="pre">Segment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">split_on_colon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#phrasplit.splitter.Segment" title="phrasplit.splitter.Segment"><span class="pre">Segment</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_text"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into segments with hierarchical position information.</p>
 <p>This function provides a unified interface for text splitting with different
 granularity levels, while preserving paragraph and sentence structure information.
 Useful for audiobook generation where different pause lengths are needed
 between paragraphs vs. sentences vs. clauses.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text to split
-mode: Splitting mode - one of:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>“paragraph”: Split into paragraphs only</p></li>
-<li><p>“sentence”: Split into sentences, grouped by paragraph</p></li>
-<li><p>“clause”: Split into clauses (comma-separated), with paragraph
-and sentence info</p></li>
-</ul>
-</div></blockquote>
-<p>language_model: Language model name (e.g., “en_core_web_sm”)
-apply_corrections: Whether to apply post-processing corrections for</p>
-<blockquote>
-<div><p>common spaCy errors (URL splitting, abbreviation handling).
-Default is True. Only applies to spaCy mode and sentence/clause modes.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>split_on_colon: Deprecated. Kept for API compatibility (currently unused).</dt><dd><p>spaCy’s default colon behavior is used. Default is True.</p>
-</dd>
-<dt>use_spacy: Choose implementation:</dt><dd><ul class="simple">
-<li><p>None (default): Auto-detect spaCy and use if available</p></li>
-<li><p>True: Force spaCy (raise ImportError if not installed)</p></li>
-<li><p>False: Force simple regex-based splitting</p></li>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting mode. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">&quot;clause&quot;</span></code>.</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”)</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling).
+Default is True. Applies to sentence/clause modes for both backends.</p></li>
+<li><p><strong>split_on_colon</strong> – Deprecated. Kept for API compatibility (currently unused).
+spaCy’s default colon behavior is used. Default is True.</p></li>
+<li><p><strong>use_spacy</strong> – Choose implementation:
+<code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible installed/loadable model or regex.
+<code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a compatible loadable model.
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces simple regex-based splitting.</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
 </ul>
 </dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>List of Segment namedtuples, each containing:</dt><dd><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p>text: The segment text</p></li>
 <li><p>paragraph: Paragraph index (0-based)</p></li>
 <li><p>sentence: Sentence index within paragraph (0-based).
 None for paragraph mode.</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of Segment namedtuples, each containing</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If mode is not one of “paragraph”, “sentence”, “clause”</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
-</dd>
-<dt>Raises:</dt><dd><p>ValueError: If mode is not one of “paragraph”, “sentence”, “clause”
-ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span><span class="p">)</span>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_text</span><span class="p">(</span><span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;P</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span><span class="si">}</span><span class="s2"> S</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">sentence</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="go">P0 S0: Hello world.</span>
 <span class="go">P0 S1: How are you?</span>
 <span class="go">P1 S0: New paragraph.</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># Detect paragraph changes for longer pauses</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Detect paragraph changes for longer pauses</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">seg</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">segments</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="n">seg</span><span class="o">.</span><span class="n">paragraph</span> <span class="o">!=</span> <span class="n">segments</span><span class="p">[</span><span class="n">i</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">paragraph</span><span class="p">:</span>
 <span class="gp">... </span>        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;--- paragraph break ---&quot;</span><span class="p">)</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
-</dd>
-</dl>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.split_with_offsets">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Split text into segments with character offsets and stable IDs.</p>
 <p>This is the main API for offset-preserving segmentation, designed for
 downstream processing where exact character positions are critical.</p>
 <p><strong>Exact-Slice Policy</strong></p>
-<p>This function implements the exact-slice policy: for every returned segment,
+<p>This function implements the exact-slice policy. For every returned segment,
 the following invariant ALWAYS holds:</p>
-<blockquote>
-<div><p>segment.text == text[segment.char_start:segment.char_end]</p>
-</div></blockquote>
-<p>This guarantee means:
-- Offsets map precisely to the original input text
-- No whitespace normalization or stripping breaks the mapping
-- Downstream code can reliably use offsets for span slicing
-- Integration with token alignment and markup slicing is safe</p>
-<p>Key features:
-- Returns segments with precise character offsets (char_start, char_end)
-- Generates stable, hierarchical IDs (e.g., “p0s1”, “p0s2c3”)
-- Maintains exact-slice invariant in all modes
-- Supports both spaCy (accurate) and regex (fast) backends
-- Optional max_chars safety splitting with deterministic boundaries</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text to split
-mode: Splitting granularity:</p>
-<blockquote>
-<div><ul class="simple">
-<li><p>“paragraph”: Split into paragraphs only</p></li>
-<li><p>“sentence”: Split into sentences (default)</p></li>
-<li><p>“clause”: Split into comma-separated clauses</p></li>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>This guarantee means:</p>
+<ul class="simple">
+<li><p>Offsets map precisely to the original input text</p></li>
+<li><p>No whitespace normalization or stripping breaks the mapping</p></li>
+<li><p>Downstream code can reliably use offsets for span slicing</p></li>
+<li><p>Integration with token alignment and markup slicing is safe</p></li>
 </ul>
-</div></blockquote>
-<dl class="simple">
-<dt>use_spacy: Backend selection:</dt><dd><ul class="simple">
-<li><p>None (default): Auto-detect, use spaCy if available</p></li>
-<li><p>True: Force spaCy (raises ImportError if unavailable)</p></li>
-<li><p>False: Force regex-based splitting</p></li>
+<p>Key features:</p>
+<ul class="simple">
+<li><p>Returns segments with precise character offsets (char_start, char_end)</p></li>
+<li><p>Generates stable, hierarchical IDs (e.g., “p0s1”, “p0s2c3”)</p></li>
+<li><p>Maintains exact-slice invariant in all modes</p></li>
+<li><p>Supports both spaCy (accurate) and regex (fast) backends</p></li>
+<li><p>Optional max_chars safety splitting with deterministic boundaries</p></li>
 </ul>
-</dd>
-<dt>language_model: Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)</dt><dd><p>Used for both spaCy model selection and abbreviation handling</p>
-</dd>
-<dt>apply_corrections: Whether to apply post-processing corrections for</dt><dd><p>common spaCy errors (URL splitting, abbreviation handling, ellipsis).
-Default is True. Only applies to spaCy mode.</p>
-</dd>
-<dt>max_chars: Optional maximum segment length. Segments exceeding this</dt><dd><p>will be split further at whitespace/punctuation boundaries while
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting granularity. Valid values are <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>, and <code class="docutils literal notranslate"><span class="pre">&quot;clause&quot;</span></code>.</p></li>
+<li><p><strong>use_spacy</strong> – Backend selection. <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) selects a compatible
+installed/loadable local model or falls back to regex; <code class="docutils literal notranslate"><span class="pre">True</span></code> forces
+spaCy; <code class="docutils literal notranslate"><span class="pre">False</span></code> forces regex-based splitting.</p></li>
+<li><p><strong>language_model</strong> – Language model name (e.g., “en_core_web_sm”, “de_core_news_sm”)
+Used for both spaCy model selection and abbreviation handling</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier; it never falls back to another tier.</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling, ellipsis).
+Default is True. Only applies to spaCy mode.</p></li>
+<li><p><strong>max_chars</strong> – Optional maximum segment length. Segments exceeding this
+will be split further at whitespace/punctuation boundaries while
 maintaining the exact-slice invariant. Split segments get IDs
-like “p0s1:m0”, “p0s1:m1”, etc.</p>
-</dd>
-<dt>inline_markup: Opt-in inline XHTML markup handling (default False). When</dt><dd><p>True, the regex backend keeps inline tags balanced across sentence
+like “p0s1:m0”, “p0s1:m1”, etc.</p></li>
+<li><p><strong>inline_markup</strong> – Opt-in inline XHTML markup handling (default False). When
+True, the regex backend keeps inline tags balanced across sentence
 boundaries: closing tags after punctuation stay in the previous
 segment and opening tags after whitespace start the next segment.
 Requires the regex backend; passing <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> with
 <code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code> raises ValueError. Default behavior (plain
-text) is unchanged when False.</p>
+text) is unchanged when False.</p></li>
+</ul>
 </dd>
-</dl>
-</dd>
-<dt>Returns:</dt><dd><dl class="simple">
-<dt>List of SplitSegment objects, each containing:</dt><dd><ul class="simple">
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><ul class="simple">
 <li><p>id: Stable identifier (e.g., “p0s1c2” or “p0s1:m0”)</p></li>
 <li><p>text: Segment text content (exact slice of input)</p></li>
 <li><p>char_start, char_end: Character offsets in original text</p></li>
 <li><p>paragraph_idx, sentence_idx, clause_idx: Hierarchical indices</p></li>
 <li><p>meta: Additional metadata (method, mode, etc.)</p></li>
 </ul>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>List of SplitSegment objects, each containing</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If mode is invalid or max_chars &lt; 1</p></li>
+<li><p><strong>SpacyNotInstalledError</strong> – If <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> and spaCy is not installed.</p></li>
+<li><p><strong>NoCompatibleSpacyModelError</strong> – If forced spaCy has no compatible loadable model.</p></li>
+<li><p><strong>ExplicitSpacyModelError</strong> – If an explicit model cannot be loaded.</p></li>
+</ul>
 </dd>
 </dl>
-</dd>
-<dt>Raises:</dt><dd><p>ValueError: If mode is invalid or max_chars &lt; 1
-ImportError: If use_spacy=True but spaCy is not installed</p>
-</dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello world. How are you?</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
 <span class="gp">... </span>    <span class="c1"># Verify exact-slice invariant</span>
@@ -1197,9 +1477,8 @@ ImportError: If use_spacy=True but spaCy is not installed</p>
 <span class="go">p0s0: &#39;Hello world.&#39;</span>
 <span class="go">p0s1: &#39;How are you?&#39;</span>
 <span class="go">p1s0: &#39;New paragraph.&#39;</span>
-</pre></div>
-</div>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># With max_chars safety splitting</span>
+
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># With max_chars safety splitting</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;word &quot;</span> <span class="o">*</span> <span class="mi">100</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">long_text</span><span class="p">,</span> <span class="n">max_chars</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mi">50</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">)</span>
@@ -1209,38 +1488,45 @@ ImportError: If use_spacy=True but spaCy is not installed</p>
 <span class="go">True</span>
 </pre></div>
 </div>
-</dd>
-<dt>Note:</dt><dd><ul class="simple">
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
 <li><p>Segments may include leading/trailing whitespace from the original text</p></li>
 <li><p>IDs are stable and deterministic across runs with same input and settings</p></li>
 <li><p>For SSMD/markup integration, offsets are in the coordinate space of the
 input text (before or after escaping, depending on your workflow)</p></li>
 </ul>
-</dd>
-</dl>
+</div>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="phrasplit.splitter.iter_split_with_offsets">
-<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">iter_split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en_core_web_sm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#iter_split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Streaming iterator variant of split_with_offsets().</p>
-<p>Yields segments one by one in document order, enabling memory-efficient
-processing of large texts and streaming TTS synthesis.</p>
-<dl>
-<dt>Args:</dt><dd><p>text: Input text to split
-mode: Splitting granularity (“paragraph”, “sentence”, or “clause”)
-use_spacy: Backend selection (None=auto, True=spaCy, False=regex)
-language_model: Language model name for NLP/abbreviations
-apply_corrections: Whether to apply post-processing corrections for</p>
-<blockquote>
-<div><p>common spaCy errors (URL splitting, abbreviation handling, ellipsis).
-Default is True. Only applies to spaCy mode.</p>
-</div></blockquote>
-<p>max_chars: Optional maximum segment length</p>
+<span class="sig-prename descclassname"><span class="pre">phrasplit.splitter.</span></span><span class="sig-name descname"><span class="pre">iter_split_with_offsets</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sentence'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'sm'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'md'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'lg'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'trf'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">apply_corrections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_chars</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inline_markup</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterator" title="(in Python v3.14)"><span class="pre">Iterator</span></a><span class="p"><span class="pre">[</span></span><span class="pre">SplitSegment</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/phrasplit/splitter/#iter_split_with_offsets"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Iterator facade over <a class="reference internal" href="#phrasplit.splitter.split_with_offsets" title="phrasplit.splitter.split_with_offsets"><code class="xref py py-func docutils literal notranslate"><span class="pre">split_with_offsets()</span></code></a>.</p>
+<p>The current implementation computes the complete segment list before yielding.
+It is useful for iterator-oriented integrations, but it does not yet provide
+incremental parsing, bounded memory, or earlier time-to-first-segment behavior.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> – Input text to split</p></li>
+<li><p><strong>mode</strong> – Splitting granularity (“paragraph”, “sentence”, or “clause”)</p></li>
+<li><p><strong>use_spacy</strong> – Backend selection (None=auto, True=spaCy, False=regex)</p></li>
+<li><p><strong>language_model</strong> – Language model name for NLP/abbreviations</p></li>
+<li><p><strong>language</strong> – Language or locale hint used for model selection and abbreviations.</p></li>
+<li><p><strong>model_size</strong> – Optional exact model tier.</p></li>
+<li><p><strong>apply_corrections</strong> – Whether to apply post-processing corrections for
+common spaCy errors (URL splitting, abbreviation handling, ellipsis).
+Default is True. Only applies to spaCy mode.</p></li>
+<li><p><strong>max_chars</strong> – Optional maximum segment length</p></li>
+</ul>
 </dd>
-<dt>Yields:</dt><dd><p>SplitSegment objects in document order</p>
+<dt class="field-even">Yields<span class="colon">:</span></dt>
+<dd class="field-even"><p>SplitSegment objects in document order</p>
 </dd>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;First sentence. Second sentence.</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
+</dl>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;First sentence. Second sentence.</span><span class="se">\n\n</span><span class="s2">New paragraph.&quot;</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">iter_split_with_offsets</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">):</span>
 <span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 <span class="go">p0s0: First sentence.</span>
@@ -1248,22 +1534,23 @@ Default is True. Only applies to spaCy mode.</p>
 <span class="go">p1s0: New paragraph.</span>
 </pre></div>
 </div>
-</dd>
-<dt>Note:</dt><dd><ul class="simple">
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<ul class="simple">
 <li><p>Segments are yielded in document order</p></li>
-<li><p>No global state or caching</p></li>
 <li><p>Same offset guarantees as split_with_offsets()</p></li>
+<li><p>The underlying splitter may use its documented model cache/global diagnostic
+state; callers must not interpret this facade as a thread-isolated stream.</p></li>
 </ul>
-</dd>
-</dl>
+</div>
 </dd></dl>
 
 </section>
 </section>
 <section id="type-information">
 <h2>Type Information</h2>
-<p>phrasplit is fully typed and includes a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> marker file for PEP 561
-compliance. You can use it with mypy and other type checkers.</p>
+<p>phrasplit is fully typed and includes a <code class="docutils literal notranslate"><span class="pre">py.typed</span></code> marker file for PEP 561 compliance.
+You can use it with mypy and other type checkers.</p>
 <p>Function signatures:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">NamedTuple</span>
 
@@ -1274,16 +1561,22 @@ compliance. You can use it with mypy and other type checkers.</p>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_sentences</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">,</span>
+    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">apply_corrections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">split_on_colon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">model_size</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_clauses</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">,</span>
+    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">model_size</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_paragraphs</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
@@ -1291,17 +1584,23 @@ compliance. You can use it with mypy and other type checkers.</p>
 <span class="k">def</span><span class="w"> </span><span class="nf">split_text</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sentence&quot;</span><span class="p">,</span>
-    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">,</span>
+    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">apply_corrections</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">split_on_colon</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">model_size</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Segment</span><span class="p">]:</span> <span class="o">...</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">split_long_lines</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">max_length</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">,</span>
+    <span class="n">language_model</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">use_spacy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="o">*</span><span class="p">,</span>
+    <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">model_size</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span> <span class="o">...</span>
 </pre></div>
 </div>

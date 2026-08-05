@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/quickstart/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_ref: "v0.3.1"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -648,13 +648,31 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simply re-run the same command</span>
 ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub
 
-<span class="c1"># Progress is resumed from the last completed chapter</span>
+<span class="c1"># Progress is resumed from the last completed compatible unit</span>
 </pre></div>
 </div>
 <p>To start fresh, discarding previous progress:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--fresh
 </pre></div>
 </div>
+<section id="paragraph-output-and-resume">
+<h3>Paragraph output and resume</h3>
+<p>Use paragraph conversion for visible, independently resumable render-unit WAV artifacts:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph<span class="w"> </span>--yes
+</pre></div>
+</div>
+<p>This creates <code class="docutils literal notranslate"><span class="pre">mybook_paragraphs/</span></code> with fixed-width globally sequenced WAV names, marker
+sidecars, <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">playlist.m3u8</span></code>. A render unit is an optional announced
+chapter title followed by a spoken paragraph. The files sort in playback order and
+remain after the merged audiobook succeeds. <code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">paragraph</span></code> is a separate
+internal batching setting. The saved conversion unit, selected chapters, and generation
+fingerprint cannot be changed during resume; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to start a new workspace. A
+complete workspace supports merge-only recovery without ONNX.</p>
+<p>Inspect the retained output without loading TTS models:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/paragraph_manifest.py<span class="w"> </span>mybook_paragraphs/manifest.json
+</pre></div>
+</div>
+</section>
 </section>
 <section id="phoneme-pre-tokenization">
 <h2>Phoneme Pre-tokenization</h2>

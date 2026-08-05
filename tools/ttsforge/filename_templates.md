@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/filename_templates/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_ref: "v0.3.1"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -752,6 +752,20 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 </section>
 <section id="work-directory">
 <h2>Work Directory</h2>
+<section id="paragraph-filenames">
+<h3>Paragraph filenames</h3>
+<p>Paragraph conversion writes user-visible files beside the final output:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Book_paragraphs/
+├── 00000001__c000007__p000000__title__SEVEN.wav
+├── 00000002__c000007__p000001__paragraph__SEVEN.wav
+├── manifest.json
+└── playlist.m3u8
+</pre></div>
+</div>
+<p>The fixed-width global sequence prefix is authoritative, so lexical sorting is playback
+order even with sparse selections or duplicate titles. The chapter and paragraph fields
+are identity metadata; the sanitized slug does not affect ordering. Temporary files
+never use a <code class="docutils literal notranslate"><span class="pre">.wav</span></code> suffix.</p>
 <p>During conversion, ttsforge creates a hidden work directory to store chapter files and
 state information:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
@@ -763,6 +777,7 @@ state information:</p>
 </div>
 <p>The work directory is named after the book title and is cleaned up after successful
 conversion (unless <code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> is used).</p>
+</section>
 </section>
 <section id="troubleshooting">
 <h2>Troubleshooting</h2>

@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/testing/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "8cbee3b53691ed2265e618231d5e405e39688be8"
+docs_ref: "v0.3.1"
+docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
 search_enabled: true
 ---
 
@@ -546,6 +546,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
 </pre></div>
 </div>
+<p>Paragraph conversion has focused contract coverage:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_pykokoro_unit_contract.py<span class="w"> </span>tests/test_conversion_unit_cli.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/test_paragraph_filenames.py<span class="w"> </span>tests/test_paragraph_state.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/test_paragraph_rendering.py<span class="w"> </span>tests/test_paragraph_audio_parity.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/test_paragraph_merge.py<span class="w"> </span>tests/test_paragraph_manifest.py
+</pre></div>
+</div>
+<p>These tests cover public PyKokoro streaming, schema-5 migration, atomic output and
+ownership, unit resume boundaries, filename ordering, timing parity, no-gap merging, and
+merge-only recovery.</p>
 <p>The maintained coverage policy is staged so high-risk code has explicit gates while the
 repository-wide target can be raised as the large CLI modules are decomposed:</p>
 <ul class="simple">

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/advanced_features/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_ref: "v0.8.1"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -542,698 +542,128 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="advanced-features">
 <h1>Advanced Features</h1>
-<p>This guide covers advanced features of PyKokoro for power users.</p>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code> as the supported interface. Legacy <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> snippets
-can be updated by replacing <code class="docutils literal notranslate"><span class="pre">kokoro.create</span></code> with <code class="docutils literal notranslate"><span class="pre">pipe.run</span></code>.</p>
+<p>This guide covers the supported pipeline-first API for controlled generation and
+long-form rendering.</p>
+<section id="paragraph-wise-rendering">
+<h2>Paragraph-wise rendering</h2>
+<p><code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> prepares the complete document once, then renders selected paragraphs
+one at a time. This preserves document-global SSMD offsets, voice bindings, pauses, and
+marker ownership while bounding live generated waveform memory:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;paragraph&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prepared</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">skip_indices</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">}):</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span>
+                    <span class="n">Path</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;paragraph-</span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">descriptor</span><span class="o">.</span><span class="n">index</span><span class="si">:</span><span class="s2">04d</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">),</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span>
+                    <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span>
+                <span class="p">)</span>
+            <span class="k">finally</span><span class="p">:</span>
+                <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
+</pre></div>
 </div>
+<p>Descriptors are available before inference and contain source-order indices, clean-text
+offsets, segment ownership, marker names, and a <code class="docutils literal notranslate"><span class="pre">text_hash</span></code>. Store the
+<code class="docutils literal notranslate"><span class="pre">pykokoro-audio-unit-v1</span></code> schema beside hashes in a resume manifest. Hashes include
+audio-semantic settings, not tracing, retention, cache directories, or machine-local
+runtime toggles. Set <code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_identity=&quot;model-v1&quot;)</span></code> to give a local model a
+stable resume identity.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AudioUnitResult.release_audio()</span></code> is destructive and idempotent. The iterator releases
+the previous result before yielding the next one, so callers must persist or copy its
+array inside the loop. Closing prepared units releases prepared segment arrays but does
+not close the reusable pipeline backend.</p>
+<p>Preparation is global rather than text-streaming: parsing, segmentation, G2P, and
+phoneme preprocessing still operate on the full document. The bounded part is unit audio
+generation and postprocessing.</p>
+</section>
+<section id="ssmd-0-8-metadata">
+<h2>SSMD 0.8 metadata</h2>
+<p>Portable YAML headers can define logical voices, pause defaults, title metadata, and
+markers. Bind logical roles to provider voices through <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig</span></code> and render
+paragraph units with the same lifecycle shown above. See
+<code class="docutils literal notranslate"><span class="pre">examples/paragraph_ssmd_voices.py</span></code> for a complete script and marker offsets.</p>
+</section>
+<section id="generation-and-pauses">
+<h2>Generation and pauses</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">generation</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span>
+    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+    <span class="n">speed</span><span class="o">=</span><span class="mf">1.05</span><span class="p">,</span>
+    <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span>
+    <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">generation</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;A short sentence ...s followed by another.&quot;</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="s2">&quot;pauses.wav&quot;</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Automatic pauses use local SSMD/header defaults when present and otherwise the
+configured <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> values. Explicit break events take precedence; explicit
+zero durations remain zero.</p>
+</section>
 <section id="voice-blending">
-<h2>Voice Blending</h2>
-<p>Create custom voices by blending multiple voices together.</p>
-<section id="basic-voice-blending">
-<h3>Basic Voice Blending</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span><span class="p">,</span> <span class="n">VoiceBlend</span>
+<h2>Voice blending</h2>
+<p>Voice blending is represented by <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> from the concrete voice-manager module and
+passed through <code class="docutils literal notranslate"><span class="pre">PipelineConfig</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
 
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># Blend two voices equally</span>
-    <span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella + af_sarah&quot;</span><span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.voice_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceBlend</span>
 
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;This is a blended voice&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">)</span>
+<span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella:50,af_sarah:50&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;This is a blended voice.&quot;</span><span class="p">)</span>
+    <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;blended.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
-<section id="weighted-blending">
-<h3>Weighted Blending</h3>
-<p>Control the contribution of each voice:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span><span class="p">,</span> <span class="n">VoiceBlend</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># 70% bella, 30% sarah</span>
-    <span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella*0.7 + af_sarah*0.3&quot;</span><span class="p">)</span>
-
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Weighted blend&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">)</span>
-
-    <span class="c1"># Percentage notation (normalized automatically)</span>
-    <span class="n">blend2</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella*70</span><span class="si">% + a</span><span class="s2">f_sarah*30%&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<section id="composable-stages">
+<h2>Composable stages</h2>
+<p>The pipeline stages follow this order:</p>
+<p><code class="docutils literal notranslate"><span class="pre">doc_parser</span> <span class="pre">-&gt;</span> <span class="pre">g2p</span> <span class="pre">-&gt;</span> <span class="pre">phoneme_processing</span> <span class="pre">-&gt;</span> <span class="pre">audio_generation</span> <span class="pre">-&gt;</span> <span class="pre">audio_postprocessing</span></code></p>
+<p>Custom stages can be injected into <code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code> for tests, experiments, and
+dependency-light processing. Importing the pipeline and running fully custom stages does
+not require ONNX Runtime. Default audio stages require one of the provider extras.</p>
 </section>
-<section id="multiple-voice-blending">
-<h3>Multiple Voice Blending</h3>
-<p>Blend more than two voices:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span><span class="p">,</span> <span class="n">VoiceBlend</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># Three-way blend</span>
-    <span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella*0.5 + af_sarah*0.3 + af_nicole*0.2&quot;</span><span class="p">)</span>
-
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Complex blend&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="creating-blended-voice-programmatically">
-<h3>Creating Blended Voice Programmatically</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span><span class="p">,</span> <span class="n">VoiceBlend</span>
-
-<span class="c1"># Create blend object directly</span>
-<span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="p">(</span><span class="n">voices</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="s2">&quot;am_adam&quot;</span><span class="p">],</span> <span class="n">weights</span><span class="o">=</span><span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">])</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Custom blend&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phoneme-based-generation">
-<h2>Phoneme-Based Generation</h2>
-<p>For precise control, generate speech directly from phonemes.</p>
-<section id="using-create-from-phonemes">
-<h3>Using create_from_phonemes()</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># Get phonemes for text</span>
-    <span class="n">phonemes</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Generate from phonemes</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create_from_phonemes</span><span class="p">(</span><span class="n">phonemes</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="text-to-phonemes">
-<h3>Text to Phonemes</h3>
-<p>Convert text to phonemes:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># Get phonemes</span>
-    <span class="n">phonemes</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phonemes: </span><span class="si">{</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Get detailed phoneme info</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">tokenizer</span><span class="o">.</span><span class="n">text_to_phonemes</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">with_words</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="phonemesegment-processing">
-<h3>PhonemeSegment Processing</h3>
-<p>Work with phoneme segments for batch processing:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_text_list</span><span class="p">,</span> <span class="n">create_tokenizer</span>
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">()</span>
-
-<span class="n">texts</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;World&quot;</span><span class="p">,</span> <span class="s2">&quot;How are you?&quot;</span><span class="p">]</span>
-<span class="n">segments</span> <span class="o">=</span> <span class="n">phonemize_text_list</span><span class="p">(</span><span class="n">texts</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phonemes: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokens: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">tokens</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="advanced-text-splitting">
-<h2>Advanced Text Splitting</h2>
-<section id="split-and-phonemize-in-one-step-legacy-api">
-<h3>Split and Phonemize in One Step (Legacy API)</h3>
-<p>For advanced text processing with automatic splitting and phoneme generation.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">split_and_phonemize_text</span></code> function intelligently handles long text by:</p>
-<ol class="arabic simple">
-<li><p>Splitting text using your chosen mode (paragraph, sentence, or clause)</p></li>
-<li><p>Phonemizing each segment</p></li>
-<li><p><strong>Automatically cascading to finer split modes</strong> if segments exceed the phoneme limit</p></li>
-<li><p>Only truncating as last resort (when even individual words are too long)</p></li>
-</ol>
-<p><strong>Cascade behavior:</strong></p>
+<section id="spacy-policy">
+<h2>spaCy policy</h2>
+<p><code class="docutils literal notranslate"><span class="pre">TokenizerConfig(use_spacy=...)</span></code> is tri-state and local-only:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">paragraph</span></code> mode → <code class="docutils literal notranslate"><span class="pre">sentence</span></code> → <code class="docutils literal notranslate"><span class="pre">clause</span></code> → <code class="docutils literal notranslate"><span class="pre">word</span></code> → truncate</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">sentence</span></code> mode → <code class="docutils literal notranslate"><span class="pre">clause</span></code> → <code class="docutils literal notranslate"><span class="pre">word</span></code> → truncate</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">clause</span></code> mode → <code class="docutils literal notranslate"><span class="pre">word</span></code> → truncate</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">word</span></code> mode → truncate (with warning)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">False</span></code>: never use spaCy;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">None</span></code>: choose the best compatible installed model or fall back;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">True</span></code>: require a compatible local model;</p></li>
+<li><p>explicit model or size: require that exact local request.</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_and_phonemize_text</span><span class="p">,</span> <span class="n">create_tokenizer</span>
+<p>No path downloads a spaCy model automatically. Selection metadata is retained in the
+prepared document metadata for both sentence splitting and G2P.</p>
+</section>
+<section id="migration-from-the-removed-api">
+<h2>Migration from the removed API</h2>
+<p>The old single-object API is not part of the current package. Use the pipeline
+lifecycle:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">()</span>
-
-<span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This is the first sentence. This is the second.</span>
-
-<span class="s2">This is a new paragraph.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="c1"># The function automatically ensures all segments stay within limit</span>
-<span class="n">segments</span> <span class="o">=</span> <span class="n">split_and_phonemize_text</span><span class="p">(</span>
-    <span class="n">long_text</span><span class="p">,</span>
-    <span class="n">tokenizer</span><span class="p">,</span>
-    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span>  <span class="c1"># Will cascade to clause/word if needed</span>
-    <span class="n">max_phoneme_length</span><span class="o">=</span><span class="mi">510</span><span class="p">,</span>  <span class="c1"># Kokoro&#39;s maximum</span>
-<span class="p">)</span>
-
-<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Paragraph </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">paragraph</span><span class="si">}</span><span class="s2">, Sentence </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">sentence</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phonemes: </span><span class="si">{</span><span class="n">segment</span><span class="o">.</span><span class="n">phonemes</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-    <span class="c1"># segment.phonemes is guaranteed to be &lt;= 510</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+    <span class="n">audio</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">sample_rate</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
 </pre></div>
 </div>
-</section>
-<section id="split-modes-in-detail-legacy-api">
-<h3>Split Modes in Detail (Legacy API)</h3>
-<p><strong>Paragraph Mode:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_and_phonemize_text</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">tokenizer</span><span class="p">,</span>
-    <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;paragraph&quot;</span><span class="p">,</span>  <span class="c1"># Splits on double newlines</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Sentence Mode:</strong></p>
-<p>Requires spaCy for sentence boundary detection:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_and_phonemize_text</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">tokenizer</span><span class="p">,</span>
-    <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span>  <span class="c1"># Splits on sentence boundaries</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Clause Mode:</strong></p>
-<p>Splits on both sentences and commas for finer control:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">segments</span> <span class="o">=</span> <span class="n">split_and_phonemize_text</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">tokenizer</span><span class="p">,</span>
-    <span class="n">split_mode</span><span class="o">=</span><span class="s2">&quot;clause&quot;</span><span class="p">,</span>  <span class="c1"># Splits on sentences and commas</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="pause-mode">
-<h3>Pause Mode</h3>
-<p>The modern <code class="docutils literal notranslate"><span class="pre">Kokoro.create()</span></code> API uses <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code> for controlling pause behavior:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="c1"># Default: TTS controls pauses naturally</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">long_text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">)</span>
-
-    <span class="c1"># Auto mode: PyKokoro inserts boundary pauses</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">long_text</span><span class="p">,</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
-        <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-        <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>  <span class="c1"># Clause boundaries</span>
-        <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Sentence boundaries</span>
-        <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># Paragraph boundaries</span>
-        <span class="n">pause_variance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Natural variance (Gaussian)</span>
-        <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>  <span class="c1"># For reproducible results</span>
-    <span class="p">)</span>
-
-    <span class="c1"># Manual mode: PyKokoro trims and preserves explicit pauses</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-        <span class="n">long_text</span><span class="p">,</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
-        <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span>  <span class="c1"># Preserve explicit pauses</span>
-        <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.25</span><span class="p">,</span>  <span class="c1"># Clause boundaries</span>
-        <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>  <span class="c1"># Sentence boundaries</span>
-        <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>  <span class="c1"># Paragraph boundaries</span>
-        <span class="n">pause_variance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>  <span class="c1"># Natural variance (Gaussian)</span>
-        <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>  <span class="c1"># For reproducible results</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Pause Variance Details:</strong></p>
-<p>The <code class="docutils literal notranslate"><span class="pre">pause_variance</span></code> parameter adds Gaussian (normal distribution) variance to pause
-durations, making speech sound more natural:</p>
-<ul class="simple">
-<li><p><strong>0.0</strong> - No variance, exact pause durations</p></li>
-<li><p><strong>0.05</strong> - Default, ±100ms at 95% confidence interval</p></li>
-<li><p><strong>0.1</strong> - Higher variance, ±200ms at 95% confidence</p></li>
-</ul>
-<p>The variance ensures that pauses are never exactly the same length, mimicking natural
-human speech rhythm.</p>
-<p><strong>Reproducibility:</strong></p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">random_seed</span></code> for consistent output across runs:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Same output every time</span>
-<span class="n">audio1</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="n">audio2</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
-
-<span class="c1"># audio1 and audio2 are identical</span>
-
-<span class="c1"># Different output each time</span>
-<span class="n">audio3</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">random_seed</span><span class="o">=</span><span class="kc">None</span>
-<span class="p">)</span>  <span class="c1"># or omit parameter</span>
-</pre></div>
-</div>
-</section>
-<section id="custom-warning-callbacks">
-<h3>Custom Warning Callbacks</h3>
-<p>Handle warnings during phoneme generation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_and_phonemize_text</span><span class="p">,</span> <span class="n">create_tokenizer</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">my_warning_handler</span><span class="p">(</span><span class="n">message</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;WARNING: </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">()</span>
-<span class="n">segments</span> <span class="o">=</span> <span class="n">split_and_phonemize_text</span><span class="p">(</span><span class="n">very_long_text</span><span class="p">,</span> <span class="n">tokenizer</span><span class="p">,</span> <span class="n">warn_callback</span><span class="o">=</span><span class="n">my_warning_handler</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="gpu-acceleration">
-<h2>GPU Acceleration</h2>
-<section id="automatic-gpu-detection">
-<h3>Automatic GPU Detection</h3>
-<p>PyKokoro automatically uses GPU if available:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span><span class="p">,</span> <span class="n">get_device</span>
-
-<span class="c1"># Check available device</span>
-<span class="n">device</span> <span class="o">=</span> <span class="n">get_device</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Using device: </span><span class="si">{</span><span class="n">device</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Kokoro will use GPU automatically</span>
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="forcing-specific-device">
-<h3>Forcing Specific Device</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># Force CPU</span>
-<span class="n">kokoro_cpu</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-
-<span class="c1"># Force CUDA (NVIDIA)</span>
-<span class="n">kokoro_gpu</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">)</span>
-
-<span class="c1"># Force ROCm (AMD)</span>
-<span class="n">kokoro_rocm</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;rocm&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="gpu-information">
-<h3>GPU Information</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_gpu_info</span>
-
-<span class="n">info</span> <span class="o">=</span> <span class="n">get_gpu_info</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Device: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;device&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Providers: </span><span class="si">{</span><span class="n">info</span><span class="p">[</span><span class="s1">&#39;providers&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="custom-model-paths">
-<h2>Custom Model Paths</h2>
-<section id="model-sources">
-<h3>Model Sources</h3>
-<p>PyKokoro supports multiple model sources:</p>
-<p><strong>HuggingFace (Default):</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># Default: HuggingFace with 54 voices</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">,</span> <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>HuggingFace v1.0 (Default - 54 voices, 8 quality options):</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default: HuggingFace v1.0</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">)</span>  <span class="c1"># Recommended default</span>
-</pre></div>
-</div>
-<p><strong>HuggingFace v1.1-zh (103 voices, 8 quality options):</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># HuggingFace v1.1-zh with English + Chinese voices</span>
-<span class="c1"># Supports all quantization levels: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># All qualities available</span>
-<span class="p">)</span>
-
-<span class="c1"># Use English voices</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_maple&quot;</span><span class="p">,</span>  <span class="c1"># v1.1-zh English voice</span>
-    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>GitHub v1.0 (54 voices, 4 quality options):</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># GitHub v1.0 with GPU-optimized fp16</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Options: fp32, fp16, fp16-gpu, q8</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>GitHub v1.1-zh (103 voices, fp32 only):</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># GitHub v1.1-zh with English + Chinese voices</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Only fp32 available</span>
-<span class="p">)</span>
-
-<span class="c1"># Use English voices</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span>
-    <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_maple&quot;</span><span class="p">,</span>  <span class="c1"># v1.1-zh English voice</span>
-    <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>Note:</strong> Chinese text generation is currently in development. Use English voices from
-v1.1-zh with English text for now.</p>
-</section>
-<section id="use-custom-model-files">
-<h3>Use Custom Model Files</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;/path/to/custom/model.onnx&quot;</span><span class="p">,</span> <span class="n">voices_path</span><span class="o">=</span><span class="s2">&quot;/path/to/voices.bin&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="download-models-manually">
-<h3>Download Models Manually</h3>
-<p><strong>HuggingFace Models:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_model</span><span class="p">,</span> <span class="n">download_voice</span><span class="p">,</span> <span class="n">download_all_models</span>
-
-<span class="c1"># Download specific model quality (v1.0 by default)</span>
-<span class="n">download_model</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">)</span>
-
-<span class="c1"># Download specific voice</span>
-<span class="n">download_voice</span><span class="p">(</span><span class="n">voice_name</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">)</span>
-
-<span class="c1"># Download all models</span>
-<span class="n">download_all_models</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>GitHub Models:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.onnx_backend</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">download_model_github</span><span class="p">,</span>
-    <span class="n">download_voices_github</span><span class="p">,</span>
-    <span class="n">download_all_models_github</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># Download GitHub v1.0 model</span>
-<span class="n">download_model_github</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">)</span>
-
-<span class="c1"># Download GitHub v1.0 voices</span>
-<span class="n">download_voices_github</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">)</span>
-
-<span class="c1"># Download all GitHub v1.1-zh files</span>
-<span class="n">download_all_models_github</span><span class="p">(</span>
-    <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><strong>HuggingFace v1.1-zh Models:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">download_model</span><span class="p">,</span> <span class="n">download_all_voices</span><span class="p">,</span> <span class="n">download_all_models</span><span class="p">,</span> <span class="n">download_config</span>
-
-<span class="c1"># Download HuggingFace v1.1-zh model (with quantization)</span>
-<span class="n">download_model</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># Download all 103 voices for v1.1-zh</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">progress</span><span class="p">(</span><span class="n">voice_name</span><span class="p">,</span> <span class="n">current</span><span class="p">,</span> <span class="n">total</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Downloading </span><span class="si">{</span><span class="n">current</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">total</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">voice_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-
-<span class="n">download_all_voices</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="n">progress</span><span class="p">)</span>
-
-<span class="c1"># Download configuration for v1.1-zh</span>
-<span class="n">download_config</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">)</span>
-
-<span class="c1"># Download everything (model + config + all voices)</span>
-<span class="n">download_all_models</span><span class="p">(</span><span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">print</span><span class="p">(</span><span class="n">msg</span><span class="p">))</span>
-</pre></div>
-</div>
-<p><strong>Available Quality Options by Source:</strong></p>
-<ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16</p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: fp32, fp16, q8, q8f16, q4, q4f16, uint8, uint8f16</p></li>
-<li><p><strong>GitHub v1.0</strong>: fp32, fp16, fp16-gpu, q8</p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: fp32 only</p></li>
-</ul>
-</section>
-<section id="get-model-paths">
-<h3>Get Model Paths</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_path</span><span class="p">,</span> <span class="n">get_voice_path</span>
-
-<span class="c1"># HuggingFace model paths</span>
-<span class="n">model_path</span> <span class="o">=</span> <span class="n">get_model_path</span><span class="p">(</span><span class="n">quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">)</span>
-<span class="n">voice_path</span> <span class="o">=</span> <span class="n">get_voice_path</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model: </span><span class="si">{</span><span class="n">model_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Voices: </span><span class="si">{</span><span class="n">voice_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># GitHub model paths are stored in variant-specific subdirectories:</span>
-<span class="c1"># ~/.cache/pykokoro/models/onnx/v1.0/kokoro-v1.0.onnx</span>
-<span class="c1"># ~/.cache/pykokoro/models/onnx/v1.1-zh/kokoro-v1.1-zh.onnx</span>
-<span class="c1"># ~/.cache/pykokoro/voices/v1.0/voices-v1.0.bin</span>
-<span class="c1"># ~/.cache/pykokoro/voices/v1.1-zh/voices-v1.1-zh.bin</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="advanced-tokenizer-configuration">
-<h2>Advanced Tokenizer Configuration</h2>
-<section id="custom-tokenizer-settings">
-<h3>Custom Tokenizer Settings</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_tokenizer</span><span class="p">,</span> <span class="n">TokenizerConfig</span>
-
-<span class="c1"># Custom tokenizer config</span>
-<span class="n">tokenizer_config</span> <span class="o">=</span> <span class="n">TokenizerConfig</span><span class="p">(</span><span class="n">vocab_path</span><span class="o">=</span><span class="s2">&quot;/path/to/vocab.txt&quot;</span><span class="p">,</span> <span class="n">espeak_config</span><span class="o">=</span><span class="n">espeak_config</span><span class="p">)</span>
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">tokenizer_config</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="mixed-language-support">
-<h3>Mixed Language Support</h3>
-<p>For text with multiple languages:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_tokenizer</span><span class="p">,</span> <span class="n">TokenizerConfig</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">TokenizerConfig</span><span class="p">(</span>
-    <span class="n">enable_mixed_language</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">primary_language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;es&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">],</span>
-    <span class="n">language_confidence_threshold</span><span class="o">=</span><span class="mf">0.7</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="audio-trimming">
-<h2>Audio Trimming</h2>
-<section id="trim-silence-from-audio">
-<h3>Trim Silence from Audio</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">trim</span>
-
-<span class="c1"># Generate audio with silence</span>
-<span class="k">with</span> <span class="n">Kokoro</span><span class="p">()</span> <span class="k">as</span> <span class="n">kokoro</span><span class="p">:</span>
-    <span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-
-<span class="c1"># Trim silence</span>
-<span class="n">trimmed_audio</span><span class="p">,</span> <span class="n">trim_info</span> <span class="o">=</span> <span class="n">trim</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Original: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trimmed: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">trimmed_audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Trim info: </span><span class="si">{</span><span class="n">trim_info</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="short-sentence-handling">
-<h2>Short Sentence Handling</h2>
-<p>PyKokoro improves short sentences by adding context before synthesis. You can tune
-settings via <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.short_sentence_handler</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShortSentenceConfig</span>
-
-<span class="n">short_config</span> <span class="o">=</span> <span class="n">ShortSentenceConfig</span><span class="p">(</span>
-    <span class="n">min_phoneme_length</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
-    <span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;randomized-phrase&quot;</span><span class="p">,</span>
-    <span class="n">phrase_fallback_tries</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span>
-    <span class="n">phoneme_pretext</span><span class="o">=</span><span class="s2">&quot;…&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Phrase-based modes use the <code class="docutils literal notranslate"><span class="pre">energy-valley</span></code> cutter, which may fail to find confident
-boundaries. In that case, phrase modes try up to <code class="docutils literal notranslate"><span class="pre">phrase_fallback_tries</span></code> alternate
-phrase templates before falling back to wrap mode.</p>
-<p>Phrase-based short-sentence handling can slow down processing because of these retries,
-but it usually improves the audio for very short segments much more than simple
-wrapping.</p>
-<p>For phrase-based short-sentence handling, prefer these voices in order: <code class="docutils literal notranslate"><span class="pre">am_santa</span></code>,
-<code class="docutils literal notranslate"><span class="pre">af_nicole</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_lewis</span></code>, <code class="docutils literal notranslate"><span class="pre">bm_george</span></code>, <code class="docutils literal notranslate"><span class="pre">af_bella</span></code>, <code class="docutils literal notranslate"><span class="pre">am_echo</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sky</span></code>, <code class="docutils literal notranslate"><span class="pre">af_sarah</span></code>,
-<code class="docutils literal notranslate"><span class="pre">bm_fable</span></code>, <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">am_michael</span></code>, <code class="docutils literal notranslate"><span class="pre">af_alloy</span></code>, <code class="docutils literal notranslate"><span class="pre">af_nova</span></code>, <code class="docutils literal notranslate"><span class="pre">bf_isabella</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">am_adam</span></code>.</p>
-</section>
-<section id="configuration-management">
-<h2>Configuration Management</h2>
-<section id="save-and-load-configuration">
-<h3>Save and Load Configuration</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">save_config</span><span class="p">,</span> <span class="n">load_config</span>
-
-<span class="c1"># Save configuration</span>
-<span class="n">config</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;default_voice&quot;</span><span class="p">:</span> <span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="s2">&quot;default_speed&quot;</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">,</span> <span class="s2">&quot;model_quality&quot;</span><span class="p">:</span> <span class="s2">&quot;q8&quot;</span><span class="p">}</span>
-<span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="s2">&quot;my_config.json&quot;</span><span class="p">)</span>
-
-<span class="c1"># Load configuration</span>
-<span class="n">loaded_config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;my_config.json&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="get-cache-paths">
-<h3>Get Cache Paths</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_user_cache_path</span><span class="p">,</span> <span class="n">get_user_config_path</span>
-
-<span class="n">cache_path</span> <span class="o">=</span> <span class="n">get_user_cache_path</span><span class="p">()</span>
-<span class="n">config_path</span> <span class="o">=</span> <span class="n">get_user_config_path</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Cache: </span><span class="si">{</span><span class="n">cache_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Config: </span><span class="si">{</span><span class="n">config_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="performance-tips">
-<h2>Performance Tips</h2>
-<ol class="arabic">
-<li><p><strong>Reuse Kokoro Instance</strong></p>
-<p>Don’t create a new <code class="docutils literal notranslate"><span class="pre">Kokoro()</span></code> for each request - initialize once and reuse.</p>
-</li>
-<li><p><strong>Use GPU When Available</strong></p>
-<p>GPU acceleration provides 3-10x speedup.</p>
-</li>
-<li><p><strong>Batch Processing</strong></p>
-<p>Process multiple texts in one session to avoid initialization overhead.</p>
-</li>
-<li><p><strong>Choose Appropriate Model Quality</strong></p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">q6</span></code> or <code class="docutils literal notranslate"><span class="pre">q8</span></code> for production; <code class="docutils literal notranslate"><span class="pre">fp16</span></code> only when quality is critical.</p>
-</li>
-<li><p><strong>Use pause_mode for Long Text</strong></p>
-<p>Using <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> with appropriate pause settings improves quality for long
-text.</p>
-</li>
-</ol>
-</section>
-<section id="internal-architecture">
-<h2>Internal Architecture</h2>
-<section id="understanding-pykokoro-s-internal-structure">
-<h3>Understanding PyKokoro’s Internal Structure</h3>
-<p>PyKokoro uses a modular architecture with specialized manager classes for different
-responsibilities:</p>
-<p><strong>OnnxSessionManager</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/onnx_session.py</span></code>)</p>
-<p>Manages ONNX Runtime session creation and configuration:</p>
-<ul class="simple">
-<li><p>Automatic provider selection (CUDA → ROCm → CPU)</p></li>
-<li><p>Session options and execution providers</p></li>
-<li><p>Fallback handling when GPU is unavailable</p></li>
-</ul>
-<p><strong>VoiceManager</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/voice_manager.py</span></code>)</p>
-<p>Handles voice loading and blending:</p>
-<ul class="simple">
-<li><p>Loads voice embeddings from binary files</p></li>
-<li><p>Implements voice blending with weighted combinations</p></li>
-<li><p>Validates voice availability across model variants</p></li>
-</ul>
-<p><strong>AudioGenerator</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/audio_generator.py</span></code>)</p>
-<p>Manages the audio generation pipeline:</p>
-<ul class="simple">
-<li><p>Converts phonemes to tokens</p></li>
-<li><p>Runs ONNX inference for audio generation</p></li>
-<li><p>Handles speed adjustment and audio post-processing</p></li>
-</ul>
-<p><strong>MixedLanguageHandler</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/mixed_language_handler.py</span></code>)</p>
-<p>Automatic language detection for multilingual text:</p>
-<ul class="simple">
-<li><p>Detects language boundaries in mixed-language text</p></li>
-<li><p>Routes text segments to appropriate language models</p></li>
-<li><p>Configurable confidence thresholds</p></li>
-</ul>
-<p><strong>PhonemeDictionary</strong> (<code class="docutils literal notranslate"><span class="pre">pykokoro/phoneme_dictionary.py</span></code>)</p>
-<p>Custom word-to-phoneme mappings:</p>
-<ul class="simple">
-<li><p>Override default pronunciation for specific words</p></li>
-<li><p>Support for context-aware phoneme substitution</p></li>
-<li><p>JSON-based dictionary format</p></li>
-</ul>
-</section>
-<section id="using-manager-classes-directly">
-<h3>Using Manager Classes Directly</h3>
-<p>While most users interact with the high-level <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> API, advanced users can work with
-manager classes directly:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.onnx_session</span><span class="w"> </span><span class="kn">import</span> <span class="n">OnnxSessionManager</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.voice_manager</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceManager</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.audio_generator</span><span class="w"> </span><span class="kn">import</span> <span class="n">AudioGenerator</span>
-
-<span class="c1"># Create ONNX session with custom options</span>
-<span class="n">session_manager</span> <span class="o">=</span> <span class="n">OnnxSessionManager</span><span class="p">(</span>
-    <span class="n">device</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
-    <span class="n">providers</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;CUDAExecutionProvider&quot;</span><span class="p">],</span>
-    <span class="n">user_session_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;intra_op_num_threads&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">},</span>
-<span class="p">)</span>
-
-<span class="n">session</span> <span class="o">=</span> <span class="n">session_manager</span><span class="o">.</span><span class="n">create_session</span><span class="p">(</span><span class="n">model_path</span><span class="o">=</span><span class="s2">&quot;/path/to/model.onnx&quot;</span><span class="p">)</span>
-
-<span class="c1"># Load voices with custom blend</span>
-<span class="n">voice_manager</span> <span class="o">=</span> <span class="n">VoiceManager</span><span class="p">(</span><span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">)</span>
-<span class="n">voice_manager</span><span class="o">.</span><span class="n">load_voices</span><span class="p">(</span><span class="s2">&quot;/path/to/voices.bin&quot;</span><span class="p">)</span>
-<span class="n">voice_data</span> <span class="o">=</span> <span class="n">voice_manager</span><span class="o">.</span><span class="n">get_blended_voice</span><span class="p">(</span><span class="s2">&quot;af_bella*0.7 + af_sarah*0.3&quot;</span><span class="p">)</span>
-
-<span class="c1"># Generate audio</span>
-<span class="n">audio_gen</span> <span class="o">=</span> <span class="n">AudioGenerator</span><span class="p">(</span><span class="n">session</span><span class="o">=</span><span class="n">session</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24000</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="n">audio</span> <span class="o">=</span> <span class="n">audio_gen</span><span class="o">.</span><span class="n">generate_audio_from_phonemes</span><span class="p">(</span>
-    <span class="n">phonemes</span><span class="o">=</span><span class="s2">&quot;həˈloʊ wɝld&quot;</span><span class="p">,</span> <span class="n">voice_data</span><span class="o">=</span><span class="n">voice_data</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="custom-phoneme-dictionaries">
-<h3>Custom Phoneme Dictionaries</h3>
-<p>Create custom pronunciation mappings:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.phoneme_dictionary</span><span class="w"> </span><span class="kn">import</span> <span class="n">PhonemeDictionary</span>
-
-<span class="c1"># Create dictionary</span>
-<span class="n">dictionary</span> <span class="o">=</span> <span class="n">PhonemeDictionary</span><span class="p">()</span>
-
-<span class="c1"># Add custom pronunciations</span>
-<span class="n">dictionary</span><span class="o">.</span><span class="n">add_word</span><span class="p">(</span><span class="s2">&quot;PyKokoro&quot;</span><span class="p">,</span> <span class="s2">&quot;paɪ kəˈkɔɹoʊ&quot;</span><span class="p">)</span>
-<span class="n">dictionary</span><span class="o">.</span><span class="n">add_word</span><span class="p">(</span><span class="s2">&quot;ONNX&quot;</span><span class="p">,</span> <span class="s2">&quot;ɑnɪks&quot;</span><span class="p">)</span>
-
-<span class="c1"># Save to file</span>
-<span class="n">dictionary</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;custom_pronunciations.json&quot;</span><span class="p">)</span>
-
-<span class="c1"># Load and use</span>
-<span class="n">loaded_dict</span> <span class="o">=</span> <span class="n">PhonemeDictionary</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;custom_pronunciations.json&quot;</span><span class="p">)</span>
-
-<span class="c1"># Apply to tokenizer</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">create_tokenizer</span>
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">create_tokenizer</span><span class="p">()</span>
-<span class="n">tokenizer</span><span class="o">.</span><span class="n">phoneme_dictionary</span> <span class="o">=</span> <span class="n">loaded_dict</span>
-
-<span class="c1"># Now &quot;PyKokoro&quot; will use custom pronunciation</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Welcome to PyKokoro!&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="next-steps">
-<h2>Next Steps</h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../examples/"><span class="doc">Examples</span></a> - Real-world usage examples</p></li>
-<li><p><a class="reference internal" href="../api_reference/"><span class="doc">API Reference</span></a> - Complete API documentation</p></li>
-</ul>
+<p>Historical scripts are retained under <code class="docutils literal notranslate"><span class="pre">examples/legacy/</span></code> for reference only and are not
+indexed or tested as maintained usage examples.</p>
 </section>
 </section>
 </div>

@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "769bf35f3d6ecf0afec81b7dc4159c111ffaf52e"
+docs_ref: "v0.3.4"
+docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
 search_enabled: true
 ---
 
@@ -542,8 +542,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="phrasplit-documentation">
 <h1>phrasplit Documentation</h1>
-<p>A Python library for splitting text into sentences, clauses, or paragraphs.
-Designed for audiobook creation and text-to-speech processing.</p>
+<p>A Python library for splitting text into sentences, clauses, or paragraphs. Designed for
+audiobook creation and text-to-speech processing.</p>
 <p>phrasplit supports two processing modes:</p>
 <ul class="simple">
 <li><p><strong>spaCy mode</strong> (optional): High-accuracy NLP-based splitting using spaCy</p></li>
@@ -663,7 +663,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="usage/#splitting-paragraphs">Splitting Paragraphs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#hierarchical-splitting-with-split-text">Hierarchical Splitting with split_text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#splitting-long-lines">Splitting Long Lines</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/#using-different-language-models">Using Different Language Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#language-and-model-selection">Language and Model Selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#processing-pipeline-example">Processing Pipeline Example</a></li>
 </ul>
 </li>
@@ -680,6 +680,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/#spacy-model-resolver">spaCy Model Resolver</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-phrasplit">Main Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#data-types">Data Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-contents">Module Contents</a></li>
@@ -694,6 +695,43 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="examples/#batch-processing">Batch Processing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#working-with-different-languages">Working with Different Languages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#integration-with-pandas">Integration with pandas</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="integration/">Integration Contract for Pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="integration/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#core-guarantee-exact-slice-policy">Core Guarantee: Exact-Slice Policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#coordinate-space">Coordinate Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#determinism-and-stability">Determinism and Stability</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#max-chars-safety-splitting">Max-Chars Safety Splitting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#integration-examples">Integration Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#performance-considerations">Performance Considerations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#versioning-and-compatibility">Versioning and Compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#summary">Summary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="offsets/">Offset-Preserving Segmentation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#key-features">Key Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#coordinate-system">Coordinate System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#offset-guarantees">Offset Guarantees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#working-with-offsets">Working with Offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#edge-cases">Edge Cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#boundary-whitespace">Boundary Whitespace</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#integration-with-markup-languages">Integration with Markup Languages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="streaming/">Iterator API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#iterator-function">Iterator Function</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#guarantees">Guarantees</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#comparison-with-list-version">Comparison with List Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#performance-characteristics">Performance Characteristics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="streaming/#see-also">See Also</a></li>
 </ul>
 </li>
 </ul>

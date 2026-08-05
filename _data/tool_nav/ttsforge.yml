@@ -4,17 +4,17 @@ nav_key: ttsforge
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.3.0
-source_commit: 8cbee3b53691ed2265e618231d5e405e39688be8
-source_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.0
+source_ref: v0.3.1
+source_commit: fa280e704cbc76554ca3e25439bfe8d9687e8cd3
+source_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.1
 is_default: true
 repo_url: https://github.com/buchwandler/ttsforge
-release_tag: v0.3.0
-release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.0
+release_tag: v0.3.1
+release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.0
+  ref: v0.3.1
   url: /tools/ttsforge/
   current: true
 - name: main

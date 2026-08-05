@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "4003f609fb03f7ce7b57e3aa455690f39eaa31c5"
+docs_ref: "v0.8.1"
+docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
 search_enabled: true
 ---
 
@@ -542,241 +542,109 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation-guide">
 <h1>Installation Guide</h1>
-<p>PyKokoro can be installed using pip and requires Python 3.10 or higher.</p>
-<section id="basic-installation">
-<h2>Basic Installation</h2>
-<p>Install the latest stable version from PyPI:</p>
+<p>PyKokoro requires Python 3.10 or newer. Install the CPU provider extra for the standard
+ONNX Runtime setup:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
-distributions. Install exactly one provider extra per environment.</p>
+distributions; install exactly one provider extra per environment. Importing the
+pipeline and using fully custom stages does not require ONNX Runtime, but the default
+audio stages do.</p>
 <section id="android-termux-providers">
-<h3>Android/Termux Providers</h3>
-<p>PyKokoro accepts any provider spelling reported by the installed ONNX Runtime. For the
-Android/Termux runtime, both aliases and runtime names are valid:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
+<h2>Android/Termux providers</h2>
+<p>Use a provider name exposed by the installed ONNX Runtime build:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;xnnpack&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello from Android.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> to select the highest-priority available provider by capability.
-PyKokoro does not infer availability from platform names and does not suppress ONNX
-Runtime warnings.</p>
+<p><code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> selects the highest-priority available provider. PyKokoro does not
+infer provider availability from platform names.</p>
 </section>
-</section>
-<section id="gpu-support">
-<h2>GPU Support</h2>
-<p>For GPU acceleration, install with the GPU extras:</p>
-<section id="nvidia-cuda">
-<h3>NVIDIA CUDA</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span>
+<section id="other-providers">
+<h2>Other providers</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span><span class="w">       </span><span class="c1"># NVIDIA CUDA</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[openvino]&quot;</span><span class="w">  </span><span class="c1"># OpenVINO Runtime</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[directml]&quot;</span><span class="w">  </span><span class="c1"># DirectML</span>
 </pre></div>
 </div>
-<p>This installs <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> for NVIDIA CUDA support.</p>
-</section>
-<section id="amd-rocm">
-<h3>AMD ROCm</h3>
-<p>For AMD GPUs with ROCm:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-rocm
-</pre></div>
-</div>
-</section>
-<section id="custom-onnx-runtime">
-<h3>Custom ONNX Runtime</h3>
-<p>You can also install a specific ONNX Runtime version separately:</p>
+<p>For a custom ONNX Runtime distribution, install the base package and the provider
+package separately:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2<span class="w">  </span><span class="c1"># or your preferred version</span>
+pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2
 </pre></div>
 </div>
 </section>
-</section>
-<section id="system-requirements">
-<h2>System Requirements</h2>
-<section id="python-version">
-<h3>Python Version</h3>
+<section id="dependencies-and-optional-spacy">
+<h2>Dependencies and optional spaCy</h2>
+<p>The package installs kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the
+other runtime support libraries it needs. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are
+optional. The default tokenizer policy is safe on a clean install:</p>
 <ul class="simple">
-<li><p>Python 3.10 or higher</p></li>
-<li><p>Tested on Python 3.10, 3.11, 3.12, and 3.13</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back
+without downloading when none is available;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>, an explicit model, or an exact model size is strict and remains
+offline.</p></li>
 </ul>
-</section>
-<section id="dependencies">
-<h3>Dependencies</h3>
-<p>Core dependencies (automatically installed):</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> - Text-to-phoneme conversion</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> - Intelligent text splitting</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">numpy</span></code> - Model tensors, voice vectors, and array operations</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">audiosig</span></code> - Audio signal processing for trim, VAD, resampling, gain, and speech
-prosody</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">soundfile</span></code> - Audio file I/O</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">platformdirs</span></code>, <code class="docutils literal notranslate"><span class="pre">chardet</span></code>, <code class="docutils literal notranslate"><span class="pre">charset-normalizer</span></code>, <code class="docutils literal notranslate"><span class="pre">huggingface-hub</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd</span></code>,
-<code class="docutils literal notranslate"><span class="pre">num2words</span></code>, <code class="docutils literal notranslate"><span class="pre">babel</span></code>, and <code class="docutils literal notranslate"><span class="pre">typing_extensions</span></code> - runtime support</p></li>
-</ul>
-<p>Optional dependencies:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> - For GPU acceleration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">spacy</span></code> - For sentence/clause splitting and spaCy-aware G2P tokenization</p></li>
-</ul>
-<p>SSMD volume, pitch, and rate processing is provided by core AudioSig. No librosa, SciPy,
-audiomentations, signalsmith-stretch, or Python-stretch package is required. PyKokoro
-uses WSOLA as its default speech prosody backend and exposes experimental ESOLA and
-TD-PSOLA choices through <code class="docutils literal notranslate"><span class="pre">ProsodyConfig</span></code>. Before publishing a version that uses
-<code class="docutils literal notranslate"><span class="pre">apply_speech_effects</span></code>, verify the installed AudioSig minimum is the first published
-release containing that API and the <code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, and <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> methods; do not use
-an unverified development build or guessed release number in package metadata.</p>
-</section>
-<section id="installing-espeak-ng">
-<h3>Installing espeak-ng</h3>
-<p>PyKokoro requires <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> to be installed on your system.</p>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download and install from: <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
-<p>Or use Chocolatey:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>choco<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-</section>
-<section id="installing-spacy-optional">
-<h3>Installing spaCy (Optional)</h3>
-<p>For advanced text splitting with <code class="docutils literal notranslate"><span class="pre">pause_mode=&quot;auto&quot;</span></code> and language-aware spaCy
-tokenization in G2P:</p>
+<p>Install a model only when you want spaCy-aware splitting or G2P:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
 python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
 </pre></div>
 </div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">TokenizerConfig.spacy_model</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> and resolves package
-names from language + size (default size: <code class="docutils literal notranslate"><span class="pre">md</span></code>). For example:
-<code class="docutils literal notranslate"><span class="pre">en-us</span> <span class="pre">-&gt;</span> <span class="pre">en_core_web_md</span></code> and <code class="docutils literal notranslate"><span class="pre">de</span> <span class="pre">-&gt;</span> <span class="pre">de_core_news_md</span></code>.</p>
-</div>
+<p>No spaCy model is downloaded automatically. The native kokorog2p backend supports the
+languages declared by <code class="docutils literal notranslate"><span class="pre">pykokoro.constants.SUPPORTED_LANGUAGES</span></code>; languages in
+<code class="docutils literal notranslate"><span class="pre">ESPEAK_ONLY_LANGUAGES</span></code> require an explicit fallback backend.</p>
 </section>
+<section id="system-requirements">
+<h2>System requirements</h2>
+<p>Install <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> when using the espeak fallback or backend.</p>
+<p><strong>Ubuntu/Debian:</strong> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code></p>
+<p><strong>macOS:</strong> <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code></p>
+<p><strong>Windows:</strong> install a release from <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a> or
+use <code class="docutils literal notranslate"><span class="pre">choco</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code>.</p>
+</section>
+<section id="verify-installation">
+<h2>Verify installation</h2>
+<p>The public API is pipeline-first:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples at </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
+    <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>For long-form output, use <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> or <code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> so only one paragraph
+waveform is rendered at a time. Preparation still parses and phonemizes the complete
+document globally. See <code class="docutils literal notranslate"><span class="pre">examples/paragraph_wave_export.py</span></code> for a resumable manifest.</p>
 </section>
 <section id="development-installation">
-<h2>Development Installation</h2>
-<p>To install from source for development:</p>
+<h2>Development installation</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/remixer-dec/pykokoro.git
 <span class="nb">cd</span><span class="w"> </span>pykokoro
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-<p>This installs PyKokoro in editable mode with development dependencies.</p>
-</section>
-<section id="verifying-installation">
-<h2>Verifying Installation</h2>
-<p>Test your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-
-<span class="c1"># Quick test</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">Kokoro</span><span class="p">()</span>
-<span class="n">audio</span><span class="p">,</span> <span class="n">sr</span> <span class="o">=</span> <span class="n">kokoro</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> audio samples at </span><span class="si">{</span><span class="n">sr</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-<span class="n">kokoro</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-</pre></div>
-</div>
 </section>
 <section id="troubleshooting">
 <h2>Troubleshooting</h2>
-<section id="import-errors">
-<h3>Import Errors</h3>
-<p>If you get import errors, ensure all dependencies are installed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pykokoro
-</pre></div>
-</div>
-</section>
-<section id="espeak-ng-not-found">
-<h3>espeak-ng Not Found</h3>
-<p>If you get errors about espeak-ng not being found:</p>
-<ol class="arabic simple">
-<li><p>Verify espeak-ng is installed: <code class="docutils literal notranslate"><span class="pre">espeak-ng</span> <span class="pre">--version</span></code></p></li>
-<li><p>Ensure it’s in your system PATH</p></li>
-<li><p>On Windows, you may need to restart your terminal after installation</p></li>
-</ol>
-</section>
-<section id="gpu-not-detected">
-<h3>GPU Not Detected</h3>
-<p>If GPU acceleration isn’t working:</p>
-<ol class="arabic simple">
-<li><p>Verify CUDA/ROCm is installed: <code class="docutils literal notranslate"><span class="pre">nvidia-smi</span></code> (NVIDIA) or <code class="docutils literal notranslate"><span class="pre">rocm-smi</span></code> (AMD)</p></li>
-<li><p>Check ONNX Runtime GPU:
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-c</span> <span class="pre">&quot;import</span> <span class="pre">onnxruntime;</span> <span class="pre">print(onnxruntime.get_available_providers())&quot;</span></code></p></li>
-<li><p>Ensure you have the correct ONNX Runtime version for your CUDA version</p></li>
-</ol>
-</section>
-<section id="model-download-issues">
-<h3>Model Download Issues</h3>
-<p>If model downloads fail:</p>
-<ol class="arabic simple">
-<li><p>Check your internet connection</p></li>
-<li><p>Verify you have write permissions to the cache directory</p></li>
-<li><p>Try downloading manually and placing in <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/</span></code></p></li>
-<li><p>For GitHub models, ensure the release URLs are accessible</p></li>
-</ol>
-<p><strong>Manual Model Download:</strong></p>
-<p>PyKokoro automatically downloads models on first use, but you can trigger downloads
-manually:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">Kokoro</span>
-
-<span class="c1"># HuggingFace v1.0 (default - 54 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span><span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16&quot;</span><span class="p">)</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-
-<span class="c1"># HuggingFace v1.1-zh (103 voices, 8 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from HuggingFace</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.0 (54 voices, 4 quality options)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp16-gpu&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-
-<span class="c1"># GitHub v1.1-zh (103 voices, fp32 only)</span>
-<span class="n">kokoro</span> <span class="o">=</span> <span class="n">Kokoro</span><span class="p">(</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-zh&quot;</span><span class="p">,</span>
-    <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>  <span class="c1"># Auto-downloads from GitHub</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Models are cached in:</p>
-<ul class="simple">
-<li><p><strong>HuggingFace v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.0/</span></code></p></li>
-<li><p><strong>HuggingFace v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/huggingface/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/huggingface/v1.1-zh/</span></code></p></li>
-<li><p><strong>GitHub v1.0</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.0/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.0/</span></code></p></li>
-<li><p><strong>GitHub v1.1-zh</strong>: <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/models/github/v1.1-zh/</span></code> and
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/voices/github/v1.1-zh/</span></code></p></li>
-</ul>
-<p>The config is stored under <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/config/{variant}/config.json</span></code>. A
-source/variant/quality asset set is complete only when its config, model, and exact
-voice archive are all nonempty regular files. Downstream integrations can inspect the
-same paths without importing ONNX Runtime:</p>
+<p>If the default pipeline reports that ONNX Runtime is missing, install one provider
+extra, for example <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pykokoro[cpu]&quot;</span></code>. If model loading fails, verify that
+the provider is available and that the model/voice assets can be downloaded or supplied
+through <code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_path=...,</span> <span class="pre">voices_path=...)</span></code>.</p>
+<p>For dependency-light diagnostics:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
 
-<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-<span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Missing:&quot;</span><span class="p">,</span> <span class="n">assets</span><span class="o">.</span><span class="n">missing</span><span class="p">)</span>
+<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">assets</span><span class="o">.</span><span class="n">missing</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span> <span class="k">else</span> <span class="s2">&quot;model assets are ready&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
 </section>
 </section>
 </div>

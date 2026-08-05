@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "88dbf2f37a79732aea250a05ec70542121cff184"
+docs_commit: "2def7060bc3513f8f82f0eed36f9fbccd353f9e3"
 search_enabled: true
 ---
 
@@ -600,6 +600,7 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#dependencies">Dependencies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#building-release-artifacts">Building Release Artifacts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#upgrading">Upgrading</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#uninstalling">Uninstalling</a></li>
 </ul>
@@ -662,7 +663,8 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-8-0-unreleased">[v0.8.0] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.8.1] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>
