@@ -42,3 +42,8 @@
   docs_url: /tools/audiosig/
   repo_url: https://github.com/buchwandler/audiosig
   pypi_url: https://pypi.org/project/audiosig/
+- name: abbr2words
+  description: Multilingual, context-aware abbreviation expansion for text normalization and speech.
+  docs_url: /tools/abbr2words/
+  repo_url: https://github.com/buchwandler/abbr2words
+  pypi_url: https://pypi.org/project/abbr2words/

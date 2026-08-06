@@ -1,0 +1,201 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "abbr2words-main",
+  "entries": [
+    {
+      "url": "/tools/abbr2words/main/api/",
+      "title": "abbr2words API reference",
+      "snippet": ".. py:function:: abbr2words(text, *, lang=’en’, context=True)\n:module: abbr2words\n\nExpand known abbreviations in text.\n\nThe function expands …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Convenience functions",
+          "text": ".. py:function:: abbr2words(text, *, lang=’en’, context=True)\n:module: abbr2words\n\nExpand known abbreviations in text.\n\nThe function expands abbreviations only. It intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation.\n\n.. py:function:: expand(text, *, lang=’en’, context=True)\n:module: abbr2words\n\nExpand known abbreviations in text.\n\nThe function expands abbreviations only. It intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation.\n\n.. py:function:: normalize_language(lang)\n:module: abbr2words\n\nNormalize an ISO-style language or locale code to a bundled language.\n\n.. py:function:: supported_languages()\n:module: abbr2words\n\nReturn the bundled base language codes.\n\n.. py:function:: get_expander(lang=’en’, *, context=Tr…",
+          "lower": ".. py:function:: abbr2words(text, *, lang=’en’, context=true)\n:module: abbr2words\n\nexpand known abbreviations in text.\n\nthe function expands abbreviations only. it intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation.\n\n.. py:function:: expand(text, *, lang=’en’, context=true)\n:module: abbr2words\n\nexpand known abbreviations in text.\n\nthe function expands abbreviations only. it intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation.\n\n.. py:function:: normalize_language(lang)\n:module: abbr2words\n\nnormalize an iso-style language or locale code to a bundled language.\n\n.. py:function:: supported_languages()\n:module: abbr2words\n\nreturn the bundled base language codes.\n\n.. py:function:: get_expander(lang=’en’, *, context=tr…"
+        },
+        {
+          "anchor": "",
+          "heading": "Mutable facade",
+          "text": ".. py:class:: Expander(lang=’en’, *, context=True)\n:module: abbr2words\n:canonical: abbr2words.api.Expander\n\nSmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: Expander.call(text)\n:module: abbr2words\n\n  Expand abbreviations using this instance's registry.\n\n\n\n\n.. py:method:: Expander.abbreviations()\n:module: abbr2words\n\n  Return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None)\n:module: abbr2words\n\n  Add or replace an abbreviation in this instance.\n\n\n\n\n.. py:method:: Expander.expand(text)\n:module: abbr2words\n\n  Expand abbreviations using this instance's registry.\n\n\n\n\n.. py:method:: Expander.has(a…",
+          "lower": ".. py:class:: expander(lang=’en’, *, context=true)\n:module: abbr2words\n:canonical: abbr2words.api.expander\n\nsmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: expander.call(text)\n:module: abbr2words\n\n  expand abbreviations using this instance's registry.\n\n\n\n\n.. py:method:: expander.abbreviations()\n:module: abbr2words\n\n  return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: expander.add(abbreviation, expansion, *, context_expansions=none, case_sensitive=false, description=’’, only_if_preceded_by=none, only_if_followed_by=none)\n:module: abbr2words\n\n  add or replace an abbreviation in this instance.\n\n\n\n\n.. py:method:: expander.expand(text)\n:module: abbr2words\n\n  expand abbreviations using this instance's registry.\n\n\n\n\n.. py:method:: expander.has(a…"
+        },
+        {
+          "anchor": "",
+          "heading": "Guarded unit symbols",
+          "text": "The stable API expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. Numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. This is symbol expansion, not number spelling, unit\nconversion, or universal UCUM parsing.\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"",
+          "lower": "the stable api expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. this is symbol expansion, not number spelling, unit\nconversion, or universal ucum parsing.\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\""
+        },
+        {
+          "anchor": "",
+          "heading": "Core types",
+          "text": ".. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None)\n:module: abbr2words\n:canonical: abbr2words.core.AbbreviationEntry\n\nA single abbreviation with its expansion(s).\n\n.. attribute:: abbreviation\n\n  The abbreviated form (e.g., \"Prof.\")\n\n  :type: str\n\n\n\n\n.. attribute:: expansion\n\n  Default expansion (e.g., \"Professor\")\n\n  :type: str\n\n\n\n\n.. attribute:: context_expansions\n\n  Optional dict of context-specific expansions\n\n  :type: dict[abbr2words.core.AbbreviationContext, str] | None\n\n\n\n\n.. attribute:: case_sensitive\n\n  Whether matching should be case-sensitive\n\n  :type: bool\n\n\n\n\n.. attribute:: description\n\n  Human-readable description of the abbreviation\n\n  :type: str\n\n\n\n\n.. at…",
+          "lower": ".. py:class:: abbreviationentry(abbreviation, expansion, context_expansions=none, case_sensitive=false, description=’’, only_if_preceded_by=none, only_if_followed_by=none)\n:module: abbr2words\n:canonical: abbr2words.core.abbreviationentry\n\na single abbreviation with its expansion(s).\n\n.. attribute:: abbreviation\n\n  the abbreviated form (e.g., \"prof.\")\n\n  :type: str\n\n\n\n\n.. attribute:: expansion\n\n  default expansion (e.g., \"professor\")\n\n  :type: str\n\n\n\n\n.. attribute:: context_expansions\n\n  optional dict of context-specific expansions\n\n  :type: dict[abbr2words.core.abbreviationcontext, str] | none\n\n\n\n\n.. attribute:: case_sensitive\n\n  whether matching should be case-sensitive\n\n  :type: bool\n\n\n\n\n.. attribute:: description\n\n  human-readable description of the abbreviation\n\n  :type: str\n\n\n\n\n.. at…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/changelog/",
+      "title": "abbr2words Changelog",
+      "snippet": "Added example scripts for abbreviation expansion and multi-language demos\n\n\nAdded numeric-aware unit expansion across 7 languages\nImproved E …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added example scripts for abbreviation expansion and multi-language demos\n\n\nAdded numeric-aware unit expansion across 7 languages",
+          "lower": "added example scripts for abbreviation expansion and multi-language demos\n\n\nadded numeric-aware unit expansion across 7 languages"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved English abbreviations with direction guards and embedded-initialism fix",
+          "lower": "improved english abbreviations with direction guards and embedded-initialism fix"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/cli/",
+      "title": "abbr2words Command line interface",
+      "snippet": "The package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\nPass text as the optional positional argument:\n\nabbr2w …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Command line interface",
+          "text": "The package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\nPass text as the optional positional argument:\n\nabbr2words --lang de \"Prof. Klein kommt ggf.\"\n\n\n\n\nIf positional text is omitted, the command reads all input from standard input:\n\nprintf 'Prof. Klein kommt ggf.' | abbr2words --lang de\n\n\n\n\nOptions:\n\n\n--lang CODE selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints the supported base language codes and exits.\n\n\n\nInvalid language or input values are reported as parser errors and return a\nnonzero exit status. Successful expansion prints one line to standard output.",
+          "lower": "the package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\npass text as the optional positional argument:\n\nabbr2words --lang de \"prof. klein kommt ggf.\"\n\n\n\n\nif positional text is omitted, the command reads all input from standard input:\n\nprintf 'prof. klein kommt ggf.' | abbr2words --lang de\n\n\n\n\noptions:\n\n\n--lang code selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints the supported base language codes and exits.\n\n\n\ninvalid language or input values are reported as parser errors and return a\nnonzero exit status. successful expansion prints one line to standard output."
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/customization/",
+      "title": "abbr2words Customization",
+      "snippet": "There are three ways to work with an expander registry.\nExpander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2 …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Customization",
+          "text": "There are three ways to work with an expander registry.",
+          "lower": "there are three ways to work with an expander registry."
+        },
+        {
+          "anchor": "",
+          "heading": "Isolated registries",
+          "text": "Expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import Expander\n\nexpander = Expander(\"en\")\nexpander.add(\"Tech.\", \"Technology\")\nassert expander(\"Tech. works\") == \"Technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. Changes\nto either form do not affect the shared convenience API.\n\nEntries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"KI\", \"Künstliche Intelligenz\", case_sensitive=True)",
+          "lower": "expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import expander\n\nexpander = expander(\"en\")\nexpander.add(\"tech.\", \"technology\")\nassert expander(\"tech. works\") == \"technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. changes\nto either form do not affect the shared convenience api.\n\nentries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"ki\", \"künstliche intelligenz\", case_sensitive=true)"
+        },
+        {
+          "anchor": "",
+          "heading": "Shared registries",
+          "text": "get_shared_expander(...) returns the process-wide registry used by\nabbr2words(...). Shared custom entries therefore affect later calls in the same\nprocess. Shared registries are scoped by both normalized language and context\nmode, so context=True and context=False are separate mutable registries.\n\nfrom abbr2words import get_shared_expander, reset_expanders\n\nshared = get_shared_expander(\"de\", context=True)\nshared.add_custom_abbreviation(\"KI\", \"Künstliche Intelligenz\")\n\n# Remove shared customizations during test teardown or application reset.\nreset_expanders(\"de\")\n\n\n\n\nreset_expanders() removes all shared language registries, while\nreset_expanders(\"de\") limits cleanup to one language. Shared state is local to\nthe current process and is not a synchronization mechanism between threads or\nproce…",
+          "lower": "get_shared_expander(...) returns the process-wide registry used by\nabbr2words(...). shared custom entries therefore affect later calls in the same\nprocess. shared registries are scoped by both normalized language and context\nmode, so context=true and context=false are separate mutable registries.\n\nfrom abbr2words import get_shared_expander, reset_expanders\n\nshared = get_shared_expander(\"de\", context=true)\nshared.add_custom_abbreviation(\"ki\", \"künstliche intelligenz\")\n\n# remove shared customizations during test teardown or application reset.\nreset_expanders(\"de\")\n\n\n\n\nreset_expanders() removes all shared language registries, while\nreset_expanders(\"de\") limits cleanup to one language. shared state is local to\nthe current process and is not a synchronization mechanism between threads or\nproce…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/examples/",
+      "title": "abbr2words Examples",
+      "snippet": "The examples make two responsibilities visible:\n\n\nabbr2words(text, lang=...) expands abbreviations and reviewed unit symbols\nafter numeric q …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "The examples make two responsibilities visible:\n\n\nabbr2words(text, lang=...) expands abbreviations and reviewed unit symbols\nafter numeric quantities, while leaving ordinary numbers, dates, times,\ncurrencies, and unit conversion alone.\n\n\nexamples/speech_numbers.py is optional demonstration glue that composes\nabbreviation expansion with num2words for the supplied speech-text cases.",
+          "lower": "the examples make two responsibilities visible:\n\n\nabbr2words(text, lang=...) expands abbreviations and reviewed unit symbols\nafter numeric quantities, while leaving ordinary numbers, dates, times,\ncurrencies, and unit conversion alone.\n\n\nexamples/speech_numbers.py is optional demonstration glue that composes\nabbreviation expansion with num2words for the supplied speech-text cases."
+        },
+        {
+          "anchor": "",
+          "heading": "Install and run",
+          "text": "The abbreviation-only English and German examples need only the package:\n\npython -m pip install abbr2words\npython examples/abbreviations.py\npython examples/german.py\n\n\n\n\nInstall the optional dependency for full speech text:\n\npython -m pip install \"abbr2words[examples]\"\npython examples/german.py --full\npython examples/full_text_demo.py --sample english\npython examples/full_text_demo.py --sample german\npython examples/full_text_demo.py --all\n\n\n\n\nUse custom text with an explicit language and select a stage:\n\npython examples/full_text_demo.py --lang de --text \"Prof. Klein zahlt 42 EUR.\"\npython examples/full_text_demo.py --sample english --stage abbr --compact\npython examples/full_text_demo.py --sample german --stage full --compact\n\n\n\n\nThe unified demo supports german, english, czech, spanish,…",
+          "lower": "the abbreviation-only english and german examples need only the package:\n\npython -m pip install abbr2words\npython examples/abbreviations.py\npython examples/german.py\n\n\n\n\ninstall the optional dependency for full speech text:\n\npython -m pip install \"abbr2words[examples]\"\npython examples/german.py --full\npython examples/full_text_demo.py --sample english\npython examples/full_text_demo.py --sample german\npython examples/full_text_demo.py --all\n\n\n\n\nuse custom text with an explicit language and select a stage:\n\npython examples/full_text_demo.py --lang de --text \"prof. klein zahlt 42 eur.\"\npython examples/full_text_demo.py --sample english --stage abbr --compact\npython examples/full_text_demo.py --sample german --stage full --compact\n\n\n\n\nthe unified demo supports german, english, czech, spanish,…"
+        },
+        {
+          "anchor": "",
+          "heading": "Output and processing",
+          "text": "The normal output shows:\n\n=== Source ===\n<original text>\n\n=== Abbreviations only ===\n<abbr2words output>\n\n=== Full speech text ===\n<example-local numeric normalization>\n\n\n\n\nFull normalization protects email addresses, URLs, semantic versions, apartment\nidentifiers such as 4B, and existing protected-looking tokens. It then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. It uses Decimal for numeric input so currency\ncents are not lost.\n\nThe stable API keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\n\n\n\nThe unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary\nscientific-expression parsing…",
+          "lower": "the normal output shows:\n\n=== source ===\n<original text>\n\n=== abbreviations only ===\n<abbr2words output>\n\n=== full speech text ===\n<example-local numeric normalization>\n\n\n\n\nfull normalization protects email addresses, urls, semantic versions, apartment\nidentifiers such as 4b, and existing protected-looking tokens. it then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. it uses decimal for numeric input so currency\ncents are not lost.\n\nthe stable api keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\n\n\n\nthe unit inventory is explicit and reviewed; it is not complete ucum or arbitrary\nscientific-expression parsing…"
+        },
+        {
+          "anchor": "",
+          "heading": "Third-party dependency",
+          "text": "num2words is an optional third-party dependency with its own LGPL license. It is\nnot installed by a plain abbr2words installation and is not a core runtime\ndependency. The example layer imports it only when full speech-text normalization\nis requested.",
+          "lower": "num2words is an optional third-party dependency with its own lgpl license. it is\nnot installed by a plain abbr2words installation and is not a core runtime\ndependency. the example layer imports it only when full speech-text normalization\nis requested."
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/",
+      "title": "abbr2words",
+      "snippet": "Multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nUser guide\n\n\nInstallation\nUsers\n\nDevelopment\n\nExampl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "abbr2words",
+          "text": "Multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nUser guide\n\n\nInstallation\nUsers\n\nDevelopment\n\nExamples\n\nDocumentation\n\n\n\n\nQuickstart\n\nCustomization\nIsolated registries\n\nShared registries\n\n\n\n\nCommand line interface\n\nLanguages\nKnown ambiguity\n\n\n\n\nAPI reference\nConvenience functions\n\nMutable facade\n\nGuarded unit symbols\n\nCore types\n\n\n\n\nExamples\nInstall and run\n\nOutput and processing\n\nThird-party dependency\n\n\n\n\nChangelog\n[v0.1.1] - Unreleased",
+          "lower": "multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nuser guide\n\n\ninstallation\nusers\n\ndevelopment\n\nexamples\n\ndocumentation\n\n\n\n\nquickstart\n\ncustomization\nisolated registries\n\nshared registries\n\n\n\n\ncommand line interface\n\nlanguages\nknown ambiguity\n\n\n\n\napi reference\nconvenience functions\n\nmutable facade\n\nguarded unit symbols\n\ncore types\n\n\n\n\nexamples\ninstall and run\n\noutput and processing\n\nthird-party dependency\n\n\n\n\nchangelog\n[v0.1.1] - unreleased"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/installation/",
+      "title": "abbr2words Installation",
+      "snippet": "Install the package from PyPI:\n\npython -m pip install abbr2words\n\n\n\n\nabbr2words has no runtime dependencies. It supports Python 3.10 through …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Users",
+          "text": "Install the package from PyPI:\n\npython -m pip install abbr2words\n\n\n\n\nabbr2words has no runtime dependencies. It supports Python 3.10 through Python\n3.14, subject to the release matrix maintained by the project.",
+          "lower": "install the package from pypi:\n\npython -m pip install abbr2words\n\n\n\n\nabbr2words has no runtime dependencies. it supports python 3.10 through python\n3.14, subject to the release matrix maintained by the project."
+        },
+        {
+          "anchor": "",
+          "heading": "Development",
+          "text": "From a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npytest\n\n\n\n\nThe development extra includes the test, build, lint, and type-checking tools.",
+          "lower": "from a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npytest\n\n\n\n\nthe development extra includes the test, build, lint, and type-checking tools."
+        },
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "Install the optional full-text demonstration dependency from a checkout or\nalongside the package:\n\npython -m pip install \"abbr2words[examples]\"\n\n\n\n\nThis keeps num2words out of the core runtime installation. The abbreviation-only\nexamples work without it; full speech-text normalization uses it for numbers and\nthe example-local date, time, currency, temperature, and unit rules.",
+          "lower": "install the optional full-text demonstration dependency from a checkout or\nalongside the package:\n\npython -m pip install \"abbr2words[examples]\"\n\n\n\n\nthis keeps num2words out of the core runtime installation. the abbreviation-only\nexamples work without it; full speech-text normalization uses it for numbers and\nthe example-local date, time, currency, temperature, and unit rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documentation dependencies are separate from the runtime package:\n\npython -m pip install -r docs/requirements.txt\nsphinx-build -W --keep-going -b html docs docs/_build/html",
+          "lower": "documentation dependencies are separate from the runtime package:\n\npython -m pip install -r docs/requirements.txt\nsphinx-build -w --keep-going -b html docs docs/_build/html"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/languages/",
+      "title": "abbr2words Languages",
+      "snippet": "The bundled base-language registries are:\n\n\n\nCode\n\nLanguage\n\n\n\n\n\ncs\n\nCzech\n\n\n\nde\n\nGerman\n\n\n\nen\n\nEnglish\n\n\n\nes\n\nSpanish\n\n\n\nfr\n\nFrench\n\n\n\nit …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Languages",
+          "text": "The bundled base-language registries are:\n\n\n\nCode\n\nLanguage\n\n\n\n\n\ncs\n\nCzech\n\n\n\nde\n\nGerman\n\n\n\nen\n\nEnglish\n\n\n\nes\n\nSpanish\n\n\n\nfr\n\nFrench\n\n\n\nit\n\nItalian\n\n\n\npt\n\nPortuguese\n\n\n\n\n\nLanguage input is normalized by trimming whitespace, lowercasing, accepting both\nhyphens and underscores, and taking the base part of a locale. For example,\nde-DE, en_GB, and pt-BR select de, en, and pt. Common three-letter\naliases and cz for Czech are also accepted.",
+          "lower": "the bundled base-language registries are:\n\n\n\ncode\n\nlanguage\n\n\n\n\n\ncs\n\nczech\n\n\n\nde\n\ngerman\n\n\n\nen\n\nenglish\n\n\n\nes\n\nspanish\n\n\n\nfr\n\nfrench\n\n\n\nit\n\nitalian\n\n\n\npt\n\nportuguese\n\n\n\n\n\nlanguage input is normalized by trimming whitespace, lowercasing, accepting both\nhyphens and underscores, and taking the base part of a locale. for example,\nde-de, en_gb, and pt-br select de, en, and pt. common three-letter\naliases and cz for czech are also accepted."
+        },
+        {
+          "anchor": "",
+          "heading": "Known ambiguity",
+          "text": "Some inventories contain collisions whose effective winner follows the source\nregistry order rather than a complete contextual model. Current documented\nexamples include str. in Czech, mar. in Spanish and Italian, n° in French,\nand seg. in Portuguese. German Fr. has an explicit title-context override,\nbut its default expansion remains Freitag.\n\nThe context detector is shared across languages and is currently mostly oriented\naround English address, name, saint, and time signals. The package is therefore\ncontext-aware for supported entries, not a comprehensive multilingual semantic\ndisambiguator. Applications should review ambiguous domain-specific entries\nbefore relying on an expansion as authoritative.",
+          "lower": "some inventories contain collisions whose effective winner follows the source\nregistry order rather than a complete contextual model. current documented\nexamples include str. in czech, mar. in spanish and italian, n° in french,\nand seg. in portuguese. german fr. has an explicit title-context override,\nbut its default expansion remains freitag.\n\nthe context detector is shared across languages and is currently mostly oriented\naround english address, name, saint, and time signals. the package is therefore\ncontext-aware for supported entries, not a comprehensive multilingual semantic\ndisambiguator. applications should review ambiguous domain-specific entries\nbefore relying on an expansion as authoritative."
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/quickstart/",
+      "title": "abbr2words Quickstart",
+      "snippet": "The main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quickstart",
+          "text": "The main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"Prof. Klein kommt ggf. am Fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# Professor Klein kommt gegebenenfalls am Freitag\n\n\n\n\nLocale forms and common aliases are normalized to the bundled base language:\n\nabbr2words(\"Prof. Klein\", lang=\"de-DE\")\nabbr2words(\"Prof. Klein\", lang=\"ger\")\n\n\n\n\nContext detection is enabled by default. For German Fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"Fr. Klein\", lang=\"de\")       # Frau Klein\nabbr2words(\"Fr. Klein\", lang=\"de\", context=False)  # Freitag Klein\n\n\n\n\nThe context choice applies to each call and is independent of earlier calls.\n\nThe package expands abbreviations only. It does not n…",
+          "lower": "the main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"prof. klein kommt ggf. am fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# professor klein kommt gegebenenfalls am freitag\n\n\n\n\nlocale forms and common aliases are normalized to the bundled base language:\n\nabbr2words(\"prof. klein\", lang=\"de-de\")\nabbr2words(\"prof. klein\", lang=\"ger\")\n\n\n\n\ncontext detection is enabled by default. for german fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"fr. klein\", lang=\"de\")       # frau klein\nabbr2words(\"fr. klein\", lang=\"de\", context=false)  # freitag klein\n\n\n\n\nthe context choice applies to each call and is independent of earlier calls.\n\nthe package expands abbreviations only. it does not n…"
+        }
+      ]
+    }
+  ]
+}

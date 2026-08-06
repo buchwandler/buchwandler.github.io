@@ -54,13 +54,14 @@ packages = [
   "booktx==0.4.1",
   "sphinxpress>=0.1.1",
   "ssmd>=0.7.2",
+  "abbr2words>=0.1.0",
 ]
 
 [book]
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words"]
 
 [pdf]
 builder = "weasyprint"
@@ -195,6 +196,18 @@ conf_dir = "../audiosig/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/audiosig"
 description = "Portable, dependency-light audio signal processing for NumPy arrays."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "abbr2words"
+title = "abbr2words"
+docs_root = "../abbr2words/docs"
+conf_dir = "../abbr2words/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/abbr2words"
+description = "Multilingual, context-aware abbreviation expansion for text normalization and speech."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
