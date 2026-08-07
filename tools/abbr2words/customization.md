@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/customization/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "9b7c03f84970dbe40da6c8186d5c50e4cb5ade9b"
+docs_ref: "v0.2.2"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 
@@ -560,6 +560,37 @@ to either form do not affect the shared convenience API.</p>
 <span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;KI&quot;</span><span class="p">,</span> <span class="s2">&quot;Künstliche Intelligenz&quot;</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Followed-by guards are evaluated against the suffix immediately after the
+candidate abbreviation. In <code class="docutils literal notranslate"><span class="pre">only_if_followed_by=r&quot;^\s*\d&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code> therefore
+means “immediately after this abbreviation,” even when the candidate occurs
+after other source text. Preceded-by guards continue to use their bounded
+prefix window.</p>
+<p>Registration is validated immediately. Abbreviations and expansions must be
+non-empty strings; context keys and values, POS labels, booleans, and guard
+patterns have stable type/value checks. Guard regexes are compiled once and
+are trusted application configuration; do not pass arbitrary untrusted regex
+text because the standard-library engine has no portable timeout.</p>
+<p>Boundaries use <code class="docutils literal notranslate"><span class="pre">(?&lt;!\w)</span></code> and <code class="docutils literal notranslate"><span class="pre">(?!\w)</span></code>. Exact case-sensitive custom entries
+outrank bundled exact entries and case-insensitive fallbacks, so conflicts do
+not depend on registration order. A preceding guard must end immediately before
+the abbreviation after horizontal whitespace is removed.</p>
+<p>POS guards are optional and are evaluated only when source-aligned annotations
+are supplied:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">Expander</span><span class="p">,</span> <span class="n">TokenAnnotation</span>
+
+<span class="n">expander</span> <span class="o">=</span> <span class="n">Expander</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Ref.&quot;</span><span class="p">,</span> <span class="s2">&quot;Reference&quot;</span><span class="p">,</span> <span class="n">only_if_pos</span><span class="o">=</span><span class="s2">&quot;NOUN&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">expander</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="s2">&quot;Ref.&quot;</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="p">[</span><span class="n">TokenAnnotation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;NOUN&quot;</span><span class="p">)])</span> <span class="o">==</span> <span class="s2">&quot;Reference&quot;</span>
+</pre></div>
+</div>
+<p>Pass a collection when several labels are accepted. A deny constraint wins if
+both sets match:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Code.&quot;</span><span class="p">,</span> <span class="s2">&quot;Code&quot;</span><span class="p">,</span> <span class="n">only_if_pos</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;NOUN&quot;</span><span class="p">,</span> <span class="s2">&quot;PROPN&quot;</span><span class="p">},</span> <span class="n">not_if_pos</span><span class="o">=</span><span class="s2">&quot;PROPN&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Structural guards and reviewed numeric unit matching run before POS guards. POS
+output is treated as an optional signal; missing labels do not veto an entry,
+and a general tagger cannot disable a valid numeric unit expression.</p>
 </section>
 <section id="shared-registries">
 <h2>Shared registries</h2>
@@ -580,6 +611,46 @@ mode, so <code class="docutils literal notranslate"><span class="pre">context=Tr
 <code class="docutils literal notranslate"><span class="pre">reset_expanders(&quot;de&quot;)</span></code> limits cleanup to one language. Shared state is local to
 the current process and is not a synchronization mechanism between threads or
 processes; applications should coordinate concurrent mutation themselves.</p>
+<p>Shared lookup and reset are atomic, while expansion observes a complete
+registry snapshot. Applications should still avoid mutating a shared registry
+while a long expansion is running.</p>
+</section>
+<section id="unit-customization">
+<h2>Unit customization</h2>
+<p>Units are a separate reviewed inventory, not ordinary abbreviation entries.
+Use the instance-local unit methods when an application needs an override:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">expander</span><span class="o">.</span><span class="n">set_unit</span><span class="p">(</span><span class="s2">&quot;kg&quot;</span><span class="p">,</span> <span class="s2">&quot;custom kilogram&quot;</span><span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">remove_unit</span><span class="p">(</span><span class="s2">&quot;kg&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">add(&quot;kg&quot;,</span> <span class="pre">...)</span></code> or abbreviation removal for a known unit raises a
+clear error rather than silently changing a registry that expansion ignores.
+Unit overrides do not leak between isolated expanders.</p>
+<p><code class="docutils literal notranslate"><span class="pre">set_unit()</span></code> retains the reviewed canonical ID when replacing a bundled symbol.
+Pass <code class="docutils literal notranslate"><span class="pre">canonical_id=&quot;...&quot;</span></code> to explicitly assign a different identity, or omit it
+for a new user-defined symbol. The optional <code class="docutils literal notranslate"><span class="pre">category</span></code> distinguishes custom
+units from currencies or magnitudes. <code class="docutils literal notranslate"><span class="pre">remove_unit()</span></code> accepts either a symbol or
+a canonical ID; removing an ID suppresses all bundled aliases for that identity.
+The same rules are available through <code class="docutils literal notranslate"><span class="pre">Expander.iter_unit_matches()</span></code>.</p>
+<p>For semantic consumers, prefer the structured matcher over parsing replacement
+strings. Numeric quantity matching has priority over lexical abbreviation
+matching, so numeric <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Mio.</span></code> produces one structured magnitude claim while
+standalone <code class="docutils literal notranslate"><span class="pre">Mio.</span></code> retains its ordinary German abbreviation behavior.</p>
+</section>
+<section id="finite-aliases-and-exact-replacements">
+<h2>Finite aliases and exact replacements</h2>
+<p>Bundled entries can have finite aliases for reviewed formatting variants. For
+example, the German registry accepts <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>, <code class="docutils literal notranslate"><span class="pre">z.</span> <span class="pre">B.</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">.</span> <span class="pre">b</span> <span class="pre">.</span></code>, and <code class="docutils literal notranslate"><span class="pre">zB</span></code> with
+the same boundary policy and replacement metadata. Aliases are registry data,
+not global regular-expression substitutions, so attached strings such as
+<code class="docutils literal notranslate"><span class="pre">pizzaB</span></code>, <code class="docutils literal notranslate"><span class="pre">ModellzB12</span></code>, and <code class="docutils literal notranslate"><span class="pre">du.a.test</span></code> remain unchanged.</p>
+<p>Use the replacement result when a caller needs semantic provenance instead of
+reconstructing edits with a text diff:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">expander</span><span class="o">.</span><span class="n">expand_with_replacements</span><span class="p">(</span><span class="s2">&quot;Prof. Klein, S. 12&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">replacements</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">replacement</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 </section>
 </div>

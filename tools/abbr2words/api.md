@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/api/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "9b7c03f84970dbe40da6c8186d5c50e4cb5ade9b"
+docs_ref: "v0.2.2"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 
@@ -544,16 +544,57 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="convenience-functions">
 <h2>Convenience functions</h2>
-<p>.. py:function:: abbr2words(text, *, lang=’en’, context=True)
+<p>.. py:function:: abbr2words(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <p>Expand known abbreviations in <em>text</em>.</p>
 <p>The function expands abbreviations only. It intentionally does not normalize
-dates, times, numbers, currencies, or general punctuation.</p>
-<p>.. py:function:: expand(text, *, lang=’en’, context=True)
+dates, times, numbers, currencies, or general punctuation. Optional
+annotations must use character offsets in the original source; POS guards
+fail open when usable lexical evidence is missing, and numeric units remain
+authoritative over generic POS predictions.</p>
+<p>.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
+:module: abbr2words</p>
+<p>Expand <em>text</em> and return exact source-aligned replacement metadata.</p>
+<p>.. py:function:: iter_unit_matches(text, language, *, overrides=None, suppressed=None, protected_spans=())
+:module: abbr2words</p>
+<p>Yield structured source-aligned matches for numeric quantity symbols.</p>
+<p><code class="docutils literal notranslate"><span class="pre">abbr2words(...,</span> <span class="pre">annotations=...)</span></code> accepts an iterable of source-aligned
+<code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> objects. Their offsets refer to the original input text;
+labels are normalized and overlapping or invalid spans raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.
+Missing lexical POS evidence fails open, and numeric unit guards remain
+authoritative.</p>
+<p>Abbreviation boundaries use symmetric Unicode word-character lookarounds:
+registered spellings may start or end with punctuation, but cannot attach to a
+surrounding <code class="docutils literal notranslate"><span class="pre">\w</span></code> character. Optional <code class="docutils literal notranslate"><span class="pre">protected_spans=[(start,</span> <span class="pre">end),</span> <span class="pre">...]</span></code>
+prevents replacements in caller-owned ranges such as URLs, markup, or code.</p>
+<p>For source-aligned diagnostics or downstream text alignment, use
+<code class="docutils literal notranslate"><span class="pre">abbr2words_with_replacements(...)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">Expander.expand_with_replacements(...)</span></code>. The immutable <code class="docutils literal notranslate"><span class="pre">ExpansionResult</span></code>
+contains the original <code class="docutils literal notranslate"><span class="pre">source_text</span></code>, expanded <code class="docutils literal notranslate"><span class="pre">text</span></code>, and deterministic,
+non-overlapping <code class="docutils literal notranslate"><span class="pre">ExpansionReplacement</span></code> records. Replacement offsets refer to
+the original input, and applying the records from right to left reproduces the
+result exactly. <code class="docutils literal notranslate"><span class="pre">expand_with_trace(...)</span></code> remains as a compatibility view of the
+same result. Existing convenience calls continue to return strings.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">abbr2words_with_replacements</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">abbr2words_with_replacements</span><span class="p">(</span><span class="s2">&quot;Prof. Klein, S. 12&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">replacements</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The bundled language registry includes <code class="docutils literal notranslate"><span class="pre">cs</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">nl</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">sv</span></code>, and <code class="docutils literal notranslate"><span class="pre">tr</span></code>. Turkish unit symbols followed by straight or
+curly apostrophe suffixes are intentionally not expanded until suffix
+realization is implemented.</p>
+<p>.. py:function:: expand(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <p>Expand known abbreviations in <em>text</em>.</p>
 <p>The function expands abbreviations only. It intentionally does not normalize
-dates, times, numbers, currencies, or general punctuation.</p>
+dates, times, numbers, currencies, or general punctuation. Optional
+annotations must use character offsets in the original source; POS guards
+fail open when usable lexical evidence is missing, and numeric units remain
+authoritative over generic POS predictions.</p>
 <p>.. py:function:: normalize_language(lang)
 :module: abbr2words</p>
 <p>Normalize an ISO-style language or locale code to a bundled language.</p>
@@ -576,9 +617,13 @@ dates, times, numbers, currencies, or general punctuation.</p>
 :module: abbr2words
 :canonical: abbr2words.api.Expander</p>
 <p>Small facade for a mutable, language-specific abbreviation registry.</p>
-<p>.. py:method:: Expander.<strong>call</strong>(text)
+<p>.. py:method:: Expander.<strong>call</strong>(text, *, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand abbreviations using this instance&#39;s registry.
+
+  ``annotations`` are source-aligned to the original text. Only coarse
+  ``pos`` labels participate in guards; fine-grained ``tag`` values are
+  retained as metadata.
 </pre></div>
 </div>
 <p>.. py:method:: Expander.abbreviations()
@@ -586,14 +631,36 @@ dates, times, numbers, currencies, or general punctuation.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the configured abbreviation spellings.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None)
+<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation in this instance.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation, optionally constrained by POS.
+
+  A string is one POS label; collections support multiple labels. Deny
+  constraints take precedence over allow constraints.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.expand(text)
+<p>.. py:method:: Expander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Register an entry using string-named context expansions.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.expand(text, *, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand abbreviations using this instance&#39;s registry.
+
+  ``annotations`` are source-aligned to the original text. Only coarse
+  ``pos`` labels participate in guards; fine-grained ``tag`` values are
+  retained as metadata.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.expand_with_replacements(text, *, annotations=None, protected_spans=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand abbreviations and return exact replacement metadata.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.expand_with_trace(text, *, annotations=None, protected_spans=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Compatibility alias for :meth:`expand_with_replacements`.
 </pre></div>
 </div>
 <p>.. py:method:: Expander.has(abbreviation, *, case_sensitive=False)
@@ -601,15 +668,86 @@ dates, times, numbers, currencies, or general punctuation.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return whether this instance contains an abbreviation.
 </pre></div>
 </div>
+<p>.. py:method:: Expander.iter_unit_matches(text, *, protected_spans=())
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Yield structured matches using this expander&#39;s unit customization.
+</pre></div>
+</div>
 <p>.. py:method:: Expander.remove(abbreviation, *, case_sensitive=False)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Remove an abbreviation from this instance.
 </pre></div>
 </div>
+<p>.. py:method:: Expander.remove_unit(symbol)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Suppress a reviewed unit for this isolated expander.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.set_unit(symbol, expansion, *, case_sensitive=True, description=’Custom unit’, canonical_id=None, category=’unit’)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Override a reviewed unit for this isolated expander.
+</pre></div>
+</div>
+</section>
+<section id="guarded-unit-symbols">
+<h2>Guarded unit symbols</h2>
+<p>The stable API expands a reviewed set of unit symbols only when a numeric value
+precedes the complete unit expression. Numeric forms such as <code class="docutils literal notranslate"><span class="pre">500</span> <span class="pre">g</span></code>, <code class="docutils literal notranslate"><span class="pre">500g</span></code>,
+<code class="docutils literal notranslate"><span class="pre">1.5</span> <span class="pre">kg</span></code>, <code class="docutils literal notranslate"><span class="pre">1,5</span> <span class="pre">kg</span></code>, and <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">km/h</span></code> are supported; standalone symbols and attached
+words remain unchanged. This is symbol expansion, not number spelling, unit
+conversion, or universal UCUM parsing.</p>
+<p>The matcher is maximal and fail-closed: larger unsupported expressions such as
+<code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">km</span> <span class="pre">/</span> <span class="pre">h</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">m^2</span></code>, and <code class="docutils literal notranslate"><span class="pre">2kg-rated</span></code> remain unchanged instead of being
+partially rewritten. Reviewed aliases include both <code class="docutils literal notranslate"><span class="pre">µg</span></code> and <code class="docutils literal notranslate"><span class="pre">μg</span></code>; unrelated
+source characters are not Unicode-normalized. Unit metadata controls case
+sensitivity and whether a numeric value is required.</p>
+<p>Unit replacements have <code class="docutils literal notranslate"><span class="pre">kind=&quot;unit&quot;</span></code> in the exact replacement result. This
+layer expands unit symbols/abbreviations lexically; it does not verbalize the
+numeric quantity or choose grammatical singular/plural forms. Callers that
+need a phrase such as <code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Minuten</span></code> should consume the complete numeric
+quantity in a structured quantity stage before calling abbreviation expansion.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;500 g&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>  <span class="c1"># &quot;500 gram&quot;</span>
+<span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;section g&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>  <span class="c1"># &quot;section g&quot;</span>
+</pre></div>
+</div>
+</section>
+<section id="structured-quantity-matches">
+<h2>Structured quantity matches</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">iter_unit_matches()</span></code> when a downstream semantic stage needs the recognized
+quantity before it performs number or grammar realization:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">iter_unit_matches</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Für 1,5 kg Mehl&quot;</span>
+<span class="n">match</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="n">iter_unit_matches</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">))</span>
+<span class="k">assert</span> <span class="n">source</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1,5 kg&quot;</span>
+<span class="k">assert</span> <span class="n">source</span><span class="p">[</span><span class="n">match</span><span class="o">.</span><span class="n">value_start</span> <span class="p">:</span> <span class="n">match</span><span class="o">.</span><span class="n">value_end</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;1,5&quot;</span>
+<span class="k">assert</span> <span class="n">match</span><span class="o">.</span><span class="n">value</span> <span class="o">==</span> <span class="s2">&quot;1,5&quot;</span>
+<span class="k">assert</span> <span class="n">match</span><span class="o">.</span><span class="n">symbol</span> <span class="o">==</span> <span class="s2">&quot;kg&quot;</span>
+<span class="k">assert</span> <span class="n">match</span><span class="o">.</span><span class="n">canonical_id</span> <span class="o">==</span> <span class="s2">&quot;mass-kilogram&quot;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">UnitMatch</span></code> is immutable and source-aligned. Its <code class="docutils literal notranslate"><span class="pre">start:end</span></code> range covers the
+complete numeric expression and symbol; <code class="docutils literal notranslate"><span class="pre">value_start:value_end</span></code> identifies the
+original numeric lexeme exactly. Matches are deterministic, maximal, and
+non-overlapping. <code class="docutils literal notranslate"><span class="pre">protected_spans=[(start,</span> <span class="pre">end),</span> <span class="pre">...]</span></code> suppresses caller-owned
+ranges such as markup, URLs, or code. <code class="docutils literal notranslate"><span class="pre">overrides</span></code> and <code class="docutils literal notranslate"><span class="pre">suppressed</span></code> accept unit
+symbols; suppression also accepts a canonical ID.</p>
+<p>The matcher recognizes and identifies quantity symbols. It does not decide how
+the complete quantity is spoken: number-to-words conversion, singular/plural
+grammar, currency decomposition, and locale-specific decimal policy belong to
+the consuming semantic normalizer. Currency and magnitude matches expose their
+<code class="docutils literal notranslate"><span class="pre">category</span></code> without turning this package into a structured-number parser.</p>
 </section>
 <section id="core-types">
 <h2>Core types</h2>
-<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None)
+<p>.. py:class:: TokenAnnotation(start, end, pos=None, tag=None)
+:module: abbr2words
+:canonical: abbr2words.annotations.TokenAnnotation</p>
+<p>A provider-neutral token annotation aligned to the source text.</p>
+<p>Offsets use Python string indices: <code class="docutils literal notranslate"><span class="pre">text[start:end]</span></code>. <code class="docutils literal notranslate"><span class="pre">pos</span></code> is
+normally an uppercase coarse Universal POS label; <code class="docutils literal notranslate"><span class="pre">tag</span></code> may contain a
+provider-specific fine-grained tag.</p>
+<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, origin=’bundled’, aliases=())
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationEntry</p>
 <p>A single abbreviation with its expansion(s).</p>
@@ -651,11 +789,27 @@ dates, times, numbers, currencies, or general punctuation.</p>
 </pre></div>
 </div>
 <p>.. attribute:: only_if_followed_by</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Optional regex that must match the text immediately
-  after the abbreviation match (typically anchored with ^ or using
-  match()).
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Optional regex that must match the suffix immediately
+  after the abbreviation match. The pattern is matched against
+  ``text[end:]``; therefore ``^`` means immediately after this
+  candidate, not the beginning of the complete source string.
 
   :type: str | re.Pattern[str] | None
+</pre></div>
+</div>
+<p>.. attribute:: only_if_pos</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Optional coarse POS label or labels. POS evidence is
+  evaluated only when usable source-aligned annotations are present.
+
+  :type: str | collections.abc.Collection[str] | None
+</pre></div>
+</div>
+<p>.. attribute:: not_if_pos</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Optional coarse POS label or labels that veto a match when
+  they overlap the abbreviation. This guard takes precedence over
+  ``only_if_pos``.
+
+  :type: str | collections.abc.Collection[str] | None
 </pre></div>
 </div>
 <p>.. py:method:: AbbreviationEntry.get_expansion(context=None)
@@ -667,6 +821,10 @@ dates, times, numbers, currencies, or general punctuation.</p>
   :returns: The expanded form
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.only_if_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> accept coarse POS labels such
+as <code class="docutils literal notranslate"><span class="pre">NOUN</span></code>, <code class="docutils literal notranslate"><span class="pre">PROPN</span></code>, and <code class="docutils literal notranslate"><span class="pre">ADP</span></code>. They are evaluated only when annotations are
+provided. <code class="docutils literal notranslate"><span class="pre">Expander.add()</span></code> exposes the same optional <code class="docutils literal notranslate"><span class="pre">only_if_pos</span></code> and
+<code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> keyword arguments.</p>
 <p>.. py:class:: AbbreviationContext(*values)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationContext</p>
@@ -682,18 +840,35 @@ dates, times, numbers, currencies, or general punctuation.</p>
   :param entry: The abbreviation entry to add
 </pre></div>
 </div>
-<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False)
+<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string context names.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string context names and POS guards.
+
+  A single POS string is treated as one label, while a collection can
+  express several accepted or denied labels. Labels are normalized by
+  :class:`AbbreviationEntry`.
 </pre></div>
 </div>
-<p>.. py:method:: AbbreviationExpander.expand(text)
+<p>.. py:method:: AbbreviationExpander.expand(text, *, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand all abbreviations in the text.
 
   :param text: Input text containing abbreviations
+  :param annotations: Optional provider-neutral annotations aligned to the
+                      original source offsets. Incomplete lexical POS evidence does
+                      not suppress a structurally valid match.
 
   :returns: Text with abbreviations expanded
+</pre></div>
+</div>
+<p>.. py:method:: AbbreviationExpander.expand_with_replacements(text, *, annotations=None, protected_spans=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand text and return exact immutable replacement metadata.
+</pre></div>
+</div>
+<p>.. py:method:: AbbreviationExpander.expand_with_trace(text, *, annotations=None, protected_spans=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Compatibility alias for :meth:`expand_with_replacements`.
 </pre></div>
 </div>
 <p>.. py:method:: AbbreviationExpander.get_abbreviation(abbreviation, case_sensitive=False)
@@ -723,6 +898,11 @@ dates, times, numbers, currencies, or general punctuation.</p>
   :returns: True if the abbreviation exists, False otherwise
 </pre></div>
 </div>
+<p>.. py:method:: AbbreviationExpander.iter_unit_matches(text, *, protected_spans=())
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Yield structured matches using this expander&#39;s unit customization.
+</pre></div>
+</div>
 <p>.. py:method:: AbbreviationExpander.remove_abbreviation(abbreviation, case_sensitive=False)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Remove an abbreviation entry.
@@ -733,6 +913,50 @@ dates, times, numbers, currencies, or general punctuation.</p>
   :returns: True if the abbreviation was found and removed, False otherwise
 </pre></div>
 </div>
+<p>.. py:method:: AbbreviationExpander.remove_unit(symbol)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Suppress a bundled unit or remove an instance-local unit override.
+</pre></div>
+</div>
+<p>.. py:method:: AbbreviationExpander.set_unit(symbol, expansion, *, case_sensitive=True, description=’Custom unit’, canonical_id=None, category=’unit’)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Override one reviewed unit for this expander instance.
+</pre></div>
+</div>
+<p>.. py:class:: ExpansionReplacement(start, end, text, source, kind, language, abbreviation=None, rule=None, priority=0, context=None)
+:module: abbr2words
+:canonical: abbr2words.core.ExpansionReplacement</p>
+<p>One accepted replacement against the original source text.</p>
+<p>.. py:property:: ExpansionReplacement.entry_id
+:module: abbr2words
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Compatibility alias for the stable rule/source identifier.
+</pre></div>
+</div>
+<p>.. py:property:: ExpansionReplacement.replacement
+:module: abbr2words
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Compatibility alias for the replacement text.
+</pre></div>
+</div>
+<p>.. py:class:: ExpansionResult(source_text, text, replacements)
+:module: abbr2words
+:canonical: abbr2words.core.ExpansionResult</p>
+<p>Expanded text together with accepted source replacements.</p>
+<p>.. py:property:: ExpansionResult.matches
+:module: abbr2words
+:type: tuple[~abbr2words.core.ExpansionMatch, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the legacy trace view of :attr:`replacements`.
+</pre></div>
+</div>
+<p>.. py:class:: UnitMatch(start, end, value_start, value_end, value, symbol, canonical_id, canonical_symbol, expansion, language, category=’unit’)
+:module: abbr2words
+:canonical: abbr2words.units.UnitMatch</p>
+<p>One immutable, source-aligned recognized numeric quantity symbol.</p>
+<p>The public <code class="docutils literal notranslate"><span class="pre">abbr2words.core.abbreviation_guards_match()</span></code> helper accepts either
+an <code class="docutils literal notranslate"><span class="pre">AnnotationIndex</span></code> or an annotation iterable. Iterable input is normalized
+and validated the same way as expansion. It evaluates coarse <code class="docutils literal notranslate"><span class="pre">pos</span></code> only;
+provider-specific <code class="docutils literal notranslate"><span class="pre">tag</span></code> values are retained but not matched.</p>
 </section>
 </section>
 </div>

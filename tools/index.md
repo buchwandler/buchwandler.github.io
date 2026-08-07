@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">11<span>focused tools</span></div>
+    <div class="hero-stat">12<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -33,6 +33,7 @@ permalink: /tools/
       <p>Profile-first translation toolchain for ebooks.</p>
       <div class="card-links">
         <a href="/tools/booktx/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/booktx/releases/tag/v0.5.1" rel="external noopener">Latest release: v0.5.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/booktx" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -42,6 +43,7 @@ permalink: /tools/
       <p>Extract text from EPUB files with smart cleaning and navigation.</p>
       <div class="card-links">
         <a href="/tools/epub2text/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/epub2text/releases/tag/v0.2.8" rel="external noopener">Latest release: v0.2.8 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/epub2text" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -51,6 +53,7 @@ permalink: /tools/
       <p>Split text into sentences, clauses, or paragraphs.</p>
       <div class="card-links">
         <a href="/tools/phrasplit/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/phrasplit/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/phrasplit" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -60,6 +63,7 @@ permalink: /tools/
       <p>Build EPUB ebooks from Markdown and text sources.</p>
       <div class="card-links">
         <a href="/tools/text2epub/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/text2epub/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/text2epub" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -69,6 +73,7 @@ permalink: /tools/
       <p>Publish multiple Sphinx documentation projects as one site and book.</p>
       <div class="card-links">
         <a href="/tools/sphinxpress/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/sphinxpress/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/sphinxpress" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -78,6 +83,7 @@ permalink: /tools/
       <p>A unified multi-language G2P library for Kokoro TTS.</p>
       <div class="card-links">
         <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2" rel="external noopener">Latest release: v0.7.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -87,6 +93,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.1" rel="external noopener">Latest release: v0.8.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -96,6 +103,7 @@ permalink: /tools/
       <p>A lightweight alternative syntax for SSML (Speech Synthesis Markdown).</p>
       <div class="card-links">
         <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.8.1" rel="external noopener">Latest release: v0.8.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -105,6 +113,7 @@ permalink: /tools/
       <p>A Python-based TTS automation framework with multi-engine support.</p>
       <div class="card-links">
         <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.3" rel="external noopener">Latest release: v0.3.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -114,6 +123,7 @@ permalink: /tools/
       <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
       <div class="card-links">
         <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.2" rel="external noopener">Latest release: v0.1.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -123,8 +133,18 @@ permalink: /tools/
       <p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
       <div class="card-links">
         <a href="/tools/abbr2words/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.1.0" rel="external noopener">Latest release: v0.1.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.2" rel="external noopener">Latest release: v0.2.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/abbr2words" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>spokenform</h3>
+      <p>Single-language written-to-spoken text normalization for speech applications.</p>
+      <div class="card-links">
+        <a href="/tools/spokenform/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.1.0" rel="external noopener">Latest release: v0.1.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>

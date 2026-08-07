@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_commit: "aed7fce71f7effddca2c8822b39a04f3a33a30c7"
 search_enabled: true
 ---
 
@@ -597,6 +597,24 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <p>No spaCy model is downloaded automatically. The native kokorog2p backend supports the
 languages declared by <code class="docutils literal notranslate"><span class="pre">pykokoro.constants.SUPPORTED_LANGUAGES</span></code>; languages in
 <code class="docutils literal notranslate"><span class="pre">ESPEAK_ONLY_LANGUAGES</span></code> require an explicit fallback backend.</p>
+</section>
+<section id="german-martin-assets">
+<h2>German Martin assets</h2>
+<p>German runs automatically select the single-speaker GitHub <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code> profile when
+no model or voice is supplied. It provides only <code class="docutils literal notranslate"><span class="pre">fp32</span></code> and downloads approximately 311
+MB for the ONNX model plus a 522,506-byte <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice archive on first use. Both
+artifacts are checked against their published SHA-256 digests before being cached under
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro</span></code>.</p>
+<p>The previous <code class="docutils literal notranslate"><span class="pre">v1.1-de</span></code> Eva/Bernd model remains an explicit compatibility choice. Use
+<code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_source=&quot;github&quot;,</span> <span class="pre">model_variant=&quot;v1.1-de&quot;,</span> <span class="pre">voice=&quot;df_eva&quot;)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">dm_bernd</span></code> when that legacy profile is required. Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>
+are never replaced by automatic selection; missing custom files fail directly rather
+than triggering a download to the shared cache. Managed cache hits are checksum and
+structure checked before use. The public GitHub download helpers also accept
+<code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a valid managed cache is required. Interrupted GitHub transfers
+retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code> file and resume with HTTP Range requests when the release
+host supports them; completed files are still checked for exact size, SHA-256, and
+structure before replacement.</p>
 </section>
 <section id="system-requirements">
 <h2>System requirements</h2>

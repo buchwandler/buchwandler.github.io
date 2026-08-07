@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "51249108285df8900fb2b01e1abd004436b5d8ec"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 
@@ -556,6 +556,7 @@ abbreviation expansion with <code class="docutils literal notranslate"><span cla
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install abbr2words</span>
 <span class="go">python examples/abbreviations.py</span>
 <span class="go">python examples/german.py</span>
+<span class="go">python examples/replacements.py</span>
 </pre></div>
 </div>
 <p>Install the optional dependency for full speech text:</p>
@@ -572,10 +573,24 @@ abbreviation expansion with <code class="docutils literal notranslate"><span cla
 <span class="go">python examples/full_text_demo.py --sample german --stage full --compact</span>
 </pre></div>
 </div>
-<p>The unified demo supports <code class="docutils literal notranslate"><span class="pre">german</span></code>, <code class="docutils literal notranslate"><span class="pre">english</span></code>, <code class="docutils literal notranslate"><span class="pre">czech</span></code>, <code class="docutils literal notranslate"><span class="pre">spanish</span></code>, <code class="docutils literal notranslate"><span class="pre">french</span></code>,
-<code class="docutils literal notranslate"><span class="pre">italian</span></code>, and <code class="docutils literal notranslate"><span class="pre">portuguese</span></code>. <code class="docutils literal notranslate"><span class="pre">--sample</span></code>, <code class="docutils literal notranslate"><span class="pre">--all</span></code>, and <code class="docutils literal notranslate"><span class="pre">--text</span></code> are mutually
+<p>The unified demo presents the original full-text scenario in seven languages and
+also provides abbreviation-only samples for Dutch, Polish, Russian, Swedish, and
+Turkish. The standalone <code class="docutils literal notranslate"><span class="pre">abbreviations.py</span></code> script retains the separate
+supplied English abbreviation sample. It supports <code class="docutils literal notranslate"><span class="pre">german</span></code>, <code class="docutils literal notranslate"><span class="pre">english</span></code>, <code class="docutils literal notranslate"><span class="pre">czech</span></code>,
+<code class="docutils literal notranslate"><span class="pre">spanish</span></code>, <code class="docutils literal notranslate"><span class="pre">french</span></code>, <code class="docutils literal notranslate"><span class="pre">italian</span></code>, and <code class="docutils literal notranslate"><span class="pre">portuguese</span></code>. <code class="docutils literal notranslate"><span class="pre">--sample</span></code>, <code class="docutils literal notranslate"><span class="pre">--all</span></code>, and <code class="docutils literal notranslate"><span class="pre">--text</span></code> are mutually
 exclusive; <code class="docutils literal notranslate"><span class="pre">--lang</span></code> is required for custom text. The default sample is English
 and the default stage is <code class="docutils literal notranslate"><span class="pre">both</span></code>.</p>
+<p>Run the added registries with <code class="docutils literal notranslate"><span class="pre">--stage</span> <span class="pre">abbr</span></code>, for example:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python examples/full_text_demo.py --sample dutch --stage abbr</span>
+<span class="go">python examples/full_text_demo.py --sample russian --stage abbr</span>
+<span class="go">python examples/full_text_demo.py --all --stage abbr</span>
+</pre></div>
+</div>
+<p>Their full speech-number stage is intentionally deferred; the CLI reports this
+explicitly rather than applying the wrong locale morphology.</p>
+<p>All translated source texts include dates, times, units, a title, durations, and
+a currency amount. The wording is localized to exercise each language’s actual
+registry rather than mechanically copying German abbreviations.</p>
 </section>
 <section id="output-and-processing">
 <h2>Output and processing</h2>
@@ -603,6 +618,10 @@ cents are not lost.</p>
 <p>The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
 scientific-expression parsing. The optional speech example may use <code class="docutils literal notranslate"><span class="pre">num2words</span></code>
 to render a phrase such as <code class="docutils literal notranslate"><span class="pre">500</span> <span class="pre">g</span></code> as <code class="docutils literal notranslate"><span class="pre">five</span> <span class="pre">hundred</span> <span class="pre">grams</span></code>.</p>
+<p>For downstream consumers that need exact edits, <code class="docutils literal notranslate"><span class="pre">examples/replacements.py</span></code>
+shows the source-aligned planner result. Its replacement offsets refer to the
+original source text, and each replacement has stable <code class="docutils literal notranslate"><span class="pre">kind</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, and
+rule metadata.</p>
 <p>The rules are intentionally limited demonstration code. They do not promise
 perfect grammatical inflection for every locale, arbitrary mathematical or phone
 number normalization, every currency convention, or safe rewriting of every
@@ -614,6 +633,20 @@ identifier. <code class="docutils literal notranslate"><span class="pre">abbr2wo
 not installed by a plain <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> installation and is not a core runtime
 dependency. The example layer imports it only when full speech-text normalization
 is requested.</p>
+</section>
+<section id="external-pos-annotations">
+<h2>External POS annotations</h2>
+<p>The spaCy integration example is intentionally separate from the package
+dependencies:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install spacy</span>
+<span class="go">python -m spacy download en_core_web_sm</span>
+<span class="go">python examples/spacy_pos.py</span>
+</pre></div>
+</div>
+<p>The example converts <code class="docutils literal notranslate"><span class="pre">token.idx</span></code>, token length, <code class="docutils literal notranslate"><span class="pre">token.pos_</span></code>, and <code class="docutils literal notranslate"><span class="pre">token.tag_</span></code>
+to <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code>. A trained spaCy pipeline is required for POS labels;
+tokenization alone does not produce them. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> itself never imports
+spaCy.</p>
 </section>
 </section>
 </div>

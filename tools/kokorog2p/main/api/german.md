@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
 search_enabled: true
 ---
 
@@ -544,6 +544,20 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>German API</h1>
 <p>German G2P provides phoneme conversion using a large 738k+ entry dictionary with
 rule-based fallback.</p>
+<p>German normalization is deterministic and runs before tokenization. In the public
+default span pipeline, structured replacements are matched against the original
+source offsets and then merged into semantic token spans before token-local expansion.
+This keeps numeric context intact for grouped numbers (<code class="docutils literal notranslate"><span class="pre">1.000</span></code>), decimals (<code class="docutils literal notranslate"><span class="pre">3,14</span></code>),
+EUR amounts, dates, times, temperatures, ordinals, and numbered units with
+singular/plural agreement, including when the backend has no language-owned
+normalizer. Unit symbols are context bound: <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">kg</span></code> becomes <code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Kilogramm</span></code>, while a
+standalone <code class="docutils literal notranslate"><span class="pre">kg</span></code> is preserved. Dotted numeric aliases such as <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">ltr.</span></code> and <code class="docutils literal notranslate"><span class="pre">45</span> <span class="pre">Min.</span></code>
+are consumed as part of the semantic span, so their periods are not treated as
+independent sentence punctuation. <code class="docutils literal notranslate"><span class="pre">Min.</span></code> is intentionally numeric-only: standalone
+<code class="docutils literal notranslate"><span class="pre">Min.</span> <span class="pre">Beispiel</span></code> remains unchanged, while <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Min.</span></code> becomes <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Minute</span></code>.
+Invalid dates/times and ambiguous punctuation are left unchanged. Flexible <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>,
+<code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> spellings are supported; <code class="docutils literal notranslate"><span class="pre">ca.</span></code> is normalized to <code class="docutils literal notranslate"><span class="pre">zirka</span></code>, <code class="docutils literal notranslate"><span class="pre">etc.</span></code> to
+<code class="docutils literal notranslate"><span class="pre">ezetera</span></code>, and <code class="docutils literal notranslate"><span class="pre">GmbH</span></code>/<code class="docutils literal notranslate"><span class="pre">AG</span></code> to German letter-name spellings.</p>
 <section id="main-class">
 <h2>Main Class</h2>
 <dl class="py class">
@@ -765,144 +779,61 @@ tag: Optional POS tag.</p>
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">GermanNumberConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Convert numbers to their German word representations.</p>
-<p>This class handles various number formats including:
-- Cardinal numbers (1, 2, 3 -&gt; eins, zwei, drei)
-- Ordinal numbers (1., 2. -&gt; erste, zweite)
-- Years (1984 -&gt; neunzehnhundertvierundachtzig)
-- Decimals (3,14 -&gt; drei Komma eins vier)
-- Currency (12,50€ -&gt; zwölf Euro fünfzig)</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize the German number converter.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>lookup_fn: Optional function to look up words in the lexicon.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<p>Convert German numeric forms without optional runtime dependencies.</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.num2words">
 <span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num2words</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a></span></dt>
-<dd><p>Lazily import num2words with German language.</p>
+<dd><p>Compatibility callable retained for callers of the old API.</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_cardinal">
 <span class="sig-name descname"><span class="pre">convert_cardinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_cardinal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert cardinal number to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Number string (e.g., “42”, “1.000”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_ordinal">
 <span class="sig-name descname"><span class="pre">convert_ordinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_ordinal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert ordinal number to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Number string (e.g., “1”, “42”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German ordinal word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_year">
 <span class="sig-name descname"><span class="pre">convert_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_year"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert year to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Year string (e.g., “1984”, “2024”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German year word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_decimal">
 <span class="sig-name descname"><span class="pre">convert_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_decimal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert decimal number to German words.</p>
-<p>German uses comma as decimal separator.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Decimal string (e.g., “3,14” or “3.14”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_currency">
 <span class="sig-name descname"><span class="pre">convert_currency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_currency"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert currency amount to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Amount string (e.g., “12,50”).
-currency: Currency symbol (e.g., “€”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German currency word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert">
 <span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_ordinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert a number to its German word representation.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The number string to convert.
-currency: Optional currency symbol (e.g., ‘€’).
-is_ordinal: Whether to convert as ordinal.
-is_year: Whether to convert as year.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
+<dd></dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.expand_number">
 <span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">expand_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#expand_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Expand numbers in text to German words.</p>
-<p>This is a convenience function for simple number expansion.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Text potentially containing numbers.</p>
-</dd>
-<dt>Returns:</dt><dd><p>Text with numbers expanded to German words.</p>
-</dd>
-</dl>
+<dd><p>Expand numbers and structured numeric expressions in <em>text</em>.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.number_to_german">
 <span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">number_to_german</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#number_to_german"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert an integer to German words.</p>
-<p>This is a fallback when num2words is not available.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>n: Integer to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
+<dd><p>Convert an integer to deterministic German cardinal words.</p>
 </dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="kokorog2p.de.numbers.ordinal_to_german">
 <span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">ordinal_to_german</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#ordinal_to_german"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert an integer to German ordinal words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>n: Integer to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German ordinal word representation.</p>
-</dd>
-</dl>
+<dd><p>Convert an integer to a basic German ordinal form.</p>
 </dd></dl>
 
 </section>

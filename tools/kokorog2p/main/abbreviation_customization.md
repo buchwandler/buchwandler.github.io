@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
 search_enabled: true
 ---
 
@@ -554,6 +554,10 @@ when:</p>
 instead of “Doctor”)</p></li>
 <li><p>You need context-aware expansions (e.g., “St.” → “Street” vs “Saint”)</p></li>
 </ul>
+<p>The abbreviation registry is provided by the required <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> dependency. The
+legacy <code class="docutils literal notranslate"><span class="pre">kokorog2p.*.abbreviations</span></code> import paths remain as deprecated, warning-free
+compatibility shims for this transition release; new integrations should import
+registry types and shared registries from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
 </section>
 <section id="quick-start">
 <h2>Quick Start</h2>

@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
+docs_ref: "v0.3.3"
+docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
 search_enabled: true
 ---
 
@@ -667,6 +667,10 @@ overrides <code class="docutils literal notranslate"><span class="pre">--spacy-m
 nor <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code> is set, TTSForge selects the highest installed compatible model.
 Selection never downloads packages. Exact package and tier requests are strict.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> : Discard any previous progress and start conversion from scratch.</p>
+<p>When a discovered resume candidate fails strong compatibility validation, the CLI exits
+with the reason and an instruction to use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>; it does not announce a resume and
+then silently create a replacement state. Paragraph summaries use completed/total unit
+counts and show the next chapter and paragraph.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> : Generate only SSMD files without creating audio (for manual
 editing).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep individual chapter audio files after conversion.</p>
@@ -744,6 +748,10 @@ are always retained, so <code class="docutils literal notranslate"><span class="
 paragraph workspace can rebuild a missing final audiobook without initializing
 inference. The maintained inspection workflow is
 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_manifest.py</span> <span class="pre">book_paragraphs/manifest.json</span></code>.</p>
+<p>Paragraph mode persists an effective preparation seed per chapter before stochastic
+short-sentence handling. Omit <code class="docutils literal notranslate"><span class="pre">--seed</span></code> to receive a hidden durable seed for each fresh
+chapter, or pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> to use an explicit seed. State schema 5 paragraph
+workspaces cannot safely reconstruct this identity and require <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>.</p>
 </section>
 </section>
 <section id="list">

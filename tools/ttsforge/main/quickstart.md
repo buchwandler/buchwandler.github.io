@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
+docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
 search_enabled: true
 ---
 
@@ -668,6 +668,23 @@ remain after the merged audiobook succeeds. <code class="docutils literal notran
 internal batching setting. The saved conversion unit, selected chapters, and generation
 fingerprint cannot be changed during resume; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to start a new workspace. A
 complete workspace supports merge-only recovery without ONNX.</p>
+<p>The canonical interrupted paragraph workflow is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.epub&quot;</span><span class="w"> </span>--fresh<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
+<span class="c1"># Interrupt, then resume without repeating options:</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.epub&quot;</span>
+</pre></div>
+</div>
+<p>Resume restores the saved chapter selection, paragraph mode, output path, and omitted
+audio-affecting settings. An explicit changed setting is rejected with its field name;
+use the saved value or choose <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> for a new workspace.</p>
+<p>Paragraph resume persists a per-chapter preparation seed before randomized processing,
+so a second process skips already finalized units even when the default short-sentence
+handling is enabled. Pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> for an explicit reproducible seed. If saved state
+is incompatible, TTSForge reports the changed fields and stops; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to
+deliberately discard progress and begin again. Verifiable schema-6 state is migrated to
+schema 7, while unverifiable state and existing paragraph WAVs are preserved. See
+<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_resume.py</span> <span class="pre">--help</span></code> for an example that cancels after a
+configurable number of units before restarting.</p>
 <p>Inspect the retained output without loading TTS models:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/paragraph_manifest.py<span class="w"> </span>mybook_paragraphs/manifest.json
 </pre></div>

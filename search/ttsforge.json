@@ -78,8 +78,26 @@
     {
       "url": "/tools/ttsforge/changelog/",
       "title": "ttsforge Changelog",
-      "snippet": "Added configurable SSMD prosody method selection with CLI overrides and persistent\nconfiguration\n\n\nAdded EPUB chapter structure and emphasis …",
+      "snippet": "Fixed safe paragraph conversion resume from saved generation settings with field-level\nmismatch diagnostics\nRecovery after a paragraph outpu …",
       "sections": [
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed safe paragraph conversion resume from saved generation settings with field-level\nmismatch diagnostics",
+          "lower": "fixed safe paragraph conversion resume from saved generation settings with field-level\nmismatch diagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Recovery after a paragraph output directory is created before the first unit is\nfinalized by establishing ownership metadata immediately\n\n\nResume orchestration so incompatible state reports an actionable reason instead of\nsilently starting a fresh conversion\n\n\nParagraph-mode resume across processes by persisting an effective preparation seed per\nchapter before randomized short-sentence processing",
+          "lower": "recovery after a paragraph output directory is created before the first unit is\nfinalized by establishing ownership metadata immediately\n\n\nresume orchestration so incompatible state reports an actionable reason instead of\nsilently starting a fresh conversion\n\n\nparagraph-mode resume across processes by persisting an effective preparation seed per\nchapter before randomized short-sentence processing"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Paragraph unit progress, automatic and explicit seeds, –fresh restart behavior,\nschema 5 limitations, and an interruption-based resume example",
+          "lower": "paragraph unit progress, automatic and explicit seeds, –fresh restart behavior,\nschema 5 limitations, and an interruption-based resume example"
+        },
         {
           "anchor": "",
           "heading": "Added",
@@ -971,8 +989,8 @@
         {
           "anchor": "",
           "heading": "Paragraph output and resume",
-          "text": "Use paragraph conversion for visible, independently resumable render-unit WAV artifacts:\n\nttsforge convert mybook.epub --conversion-unit paragraph --yes\n\n\n\n\nThis creates mybook_paragraphs/ with fixed-width globally sequenced WAV names, marker\nsidecars, manifest.json, and playlist.m3u8. A render unit is an optional announced\nchapter title followed by a spoken paragraph. The files sort in playback order and\nremain after the merged audiobook succeeds. --split-mode paragraph is a separate\ninternal batching setting. The saved conversion unit, selected chapters, and generation\nfingerprint cannot be changed during resume; use --fresh to start a new workspace. A\ncomplete workspace supports merge-only recovery without ONNX.\n\nInspect the retained output without loading TTS models:\n\npython examples/…",
-          "lower": "use paragraph conversion for visible, independently resumable render-unit wav artifacts:\n\nttsforge convert mybook.epub --conversion-unit paragraph --yes\n\n\n\n\nthis creates mybook_paragraphs/ with fixed-width globally sequenced wav names, marker\nsidecars, manifest.json, and playlist.m3u8. a render unit is an optional announced\nchapter title followed by a spoken paragraph. the files sort in playback order and\nremain after the merged audiobook succeeds. --split-mode paragraph is a separate\ninternal batching setting. the saved conversion unit, selected chapters, and generation\nfingerprint cannot be changed during resume; use --fresh to start a new workspace. a\ncomplete workspace supports merge-only recovery without onnx.\n\ninspect the retained output without loading tts models:\n\npython examples/…"
+          "text": "Use paragraph conversion for visible, independently resumable render-unit WAV artifacts:\n\nttsforge convert mybook.epub --conversion-unit paragraph --yes\n\n\n\n\nThis creates mybook_paragraphs/ with fixed-width globally sequenced WAV names, marker\nsidecars, manifest.json, and playlist.m3u8. A render unit is an optional announced\nchapter title followed by a spoken paragraph. The files sort in playback order and\nremain after the merged audiobook succeeds. --split-mode paragraph is a separate\ninternal batching setting. The saved conversion unit, selected chapters, and generation\nfingerprint cannot be changed during resume; use --fresh to start a new workspace. A\ncomplete workspace supports merge-only recovery without ONNX.\n\nThe canonical interrupted paragraph workflow is:\n\nttsforge convert \"Platf…",
+          "lower": "use paragraph conversion for visible, independently resumable render-unit wav artifacts:\n\nttsforge convert mybook.epub --conversion-unit paragraph --yes\n\n\n\n\nthis creates mybook_paragraphs/ with fixed-width globally sequenced wav names, marker\nsidecars, manifest.json, and playlist.m3u8. a render unit is an optional announced\nchapter title followed by a spoken paragraph. the files sort in playback order and\nremain after the merged audiobook succeeds. --split-mode paragraph is a separate\ninternal batching setting. the saved conversion unit, selected chapters, and generation\nfingerprint cannot be changed during resume; use --fresh to start a new workspace. a\ncomplete workspace supports merge-only recovery without onnx.\n\nthe canonical interrupted paragraph workflow is:\n\nttsforge convert \"platf…"
         },
         {
           "anchor": "",
@@ -1099,8 +1117,8 @@
         {
           "anchor": "",
           "heading": "Testing and Coverage",
-          "text": "Run the normal test suite with:\n\npytest\n\n\n\n\nParagraph conversion has focused contract coverage:\n\npytest -q tests/test_pykokoro_unit_contract.py tests/test_conversion_unit_cli.py \\\n  tests/test_paragraph_filenames.py tests/test_paragraph_state.py \\\n  tests/test_paragraph_rendering.py tests/test_paragraph_audio_parity.py \\\n  tests/test_paragraph_merge.py tests/test_paragraph_manifest.py\n\n\n\n\nThese tests cover public PyKokoro streaming, schema-5 migration, atomic output and\nownership, unit resume boundaries, filename ordering, timing parity, no-gap merging, and\nmerge-only recovery.\n\nThe maintained coverage policy is staged so high-risk code has explicit gates while the\nrepository-wide target can be raised as the large CLI modules are decomposed:\n\n\nrepository branch coverage: 55% minimum;\n\n\ntt…",
-          "lower": "run the normal test suite with:\n\npytest\n\n\n\n\nparagraph conversion has focused contract coverage:\n\npytest -q tests/test_pykokoro_unit_contract.py tests/test_conversion_unit_cli.py \\\n  tests/test_paragraph_filenames.py tests/test_paragraph_state.py \\\n  tests/test_paragraph_rendering.py tests/test_paragraph_audio_parity.py \\\n  tests/test_paragraph_merge.py tests/test_paragraph_manifest.py\n\n\n\n\nthese tests cover public pykokoro streaming, schema-5 migration, atomic output and\nownership, unit resume boundaries, filename ordering, timing parity, no-gap merging, and\nmerge-only recovery.\n\nthe maintained coverage policy is staged so high-risk code has explicit gates while the\nrepository-wide target can be raised as the large cli modules are decomposed:\n\n\nrepository branch coverage: 55% minimum;\n\n\ntt…"
+          "text": "Run the normal test suite with:\n\npytest\n\n\n\n\nParagraph conversion has focused contract coverage:\n\npytest -q tests/test_pykokoro_unit_contract.py tests/test_conversion_unit_cli.py \\\n  tests/test_paragraph_filenames.py tests/test_paragraph_state.py \\\n  tests/test_paragraph_rendering.py tests/test_paragraph_audio_parity.py \\\n  tests/test_paragraph_merge.py tests/test_paragraph_manifest.py\n\n\n\n\nThese tests cover public PyKokoro streaming, schema-6 seed persistence and explicit\nschema-5 paragraph rejection, atomic output and ownership, unit resume boundaries,\nfilename ordering, timing parity, no-gap merging, strict CLI mismatch handling, and\nmerge-only recovery. The main regression test models a changed stochastic descriptor\nhash and verifies that a saved prefix is not rendered again.\n\nThe maint…",
+          "lower": "run the normal test suite with:\n\npytest\n\n\n\n\nparagraph conversion has focused contract coverage:\n\npytest -q tests/test_pykokoro_unit_contract.py tests/test_conversion_unit_cli.py \\\n  tests/test_paragraph_filenames.py tests/test_paragraph_state.py \\\n  tests/test_paragraph_rendering.py tests/test_paragraph_audio_parity.py \\\n  tests/test_paragraph_merge.py tests/test_paragraph_manifest.py\n\n\n\n\nthese tests cover public pykokoro streaming, schema-6 seed persistence and explicit\nschema-5 paragraph rejection, atomic output and ownership, unit resume boundaries,\nfilename ordering, timing parity, no-gap merging, strict cli mismatch handling, and\nmerge-only recovery. the main regression test models a changed stochastic descriptor\nhash and verifies that a saved prefix is not rendered again.\n\nthe maint…"
         }
       ]
     },

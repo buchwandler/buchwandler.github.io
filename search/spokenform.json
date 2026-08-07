@@ -1,0 +1,246 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "spokenform",
+  "entries": [
+    {
+      "url": "/tools/spokenform/api/",
+      "title": "spokenform API reference",
+      "snippet": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model= …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Preparation",
+          "text": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, context=True, strict=False)\n:module: spokenform\n\nConvert one-language written text into a readable form intended for speech.\n\nThe caller selects the processing language. Language detection, mixed-language\nsegmentation, and markup parsing belong outside spokenform.\n\nAbbreviation and unit expansion runs before number verbalization so numeric\ncontext remains available to :mod:abbr2words guards.\n\n.. py:function:: normalize_spacing(text, *, normalize_unicode=True)\n:module: spokenform\n\nApply conservative Unicode and whitespace normalization.\n\n.. py:class…",
+          "lower": ".. py:function:: prepare(text, *, language=’en’, config=none, annotations=none, nlp=none, protected_spans=none, use_spacy=none, spacy_model=none, expand_abbreviations=true, expand_numbers=true, normalize_whitespace=true, normalize_unicode=true, context=true, strict=false)\n:module: spokenform\n\nconvert one-language written text into a readable form intended for speech.\n\nthe caller selects the processing language. language detection, mixed-language\nsegmentation, and markup parsing belong outside spokenform.\n\nabbreviation and unit expansion runs before number verbalization so numeric\ncontext remains available to :mod:abbr2words guards.\n\n.. py:function:: normalize_spacing(text, *, normalize_unicode=true)\n:module: spokenform\n\napply conservative unicode and whitespace normalization.\n\n.. py:class…"
+        },
+        {
+          "anchor": "",
+          "heading": "Result models",
+          "text": ".. py:class:: PreparedText(source_text, clean_text, spoken_text, language, stages=(), mapped_edits=(), offset_map=None, warnings=())\n:module: spokenform\n:canonical: spokenform.models.PreparedText\n\nReadable spoken text with normalization provenance.\n\n.. py:property:: PreparedText.changed\n:module: spokenform\n:type: bool\n\n  Return whether preparation changed the source text.\n\n\n\n\n.. py:property:: PreparedText.edits\n:module: spokenform\n:type: tuple[~spokenform.models.TextEdit, …]\n\n  Return the ordered edits from every stage.\n\n\n\n\n.. py:method:: PreparedText.render_changes()\n:module: spokenform\n\n  Render a compact, human-readable stage report.\n\n\n\n\n.. py:property:: PreparedText.text\n:module: spokenform\n:type: str\n\n  Alias for :attr:`spoken_text`.\n\n\n\n\n.. py:method:: PreparedText.to_dict()\n:module:…",
+          "lower": ".. py:class:: preparedtext(source_text, clean_text, spoken_text, language, stages=(), mapped_edits=(), offset_map=none, warnings=())\n:module: spokenform\n:canonical: spokenform.models.preparedtext\n\nreadable spoken text with normalization provenance.\n\n.. py:property:: preparedtext.changed\n:module: spokenform\n:type: bool\n\n  return whether preparation changed the source text.\n\n\n\n\n.. py:property:: preparedtext.edits\n:module: spokenform\n:type: tuple[~spokenform.models.textedit, …]\n\n  return the ordered edits from every stage.\n\n\n\n\n.. py:method:: preparedtext.render_changes()\n:module: spokenform\n\n  render a compact, human-readable stage report.\n\n\n\n\n.. py:property:: preparedtext.text\n:module: spokenform\n:type: str\n\n  alias for :attr:`spoken_text`.\n\n\n\n\n.. py:method:: preparedtext.to_dict()\n:module:…"
+        },
+        {
+          "anchor": "",
+          "heading": "Annotation adapters",
+          "text": ".. py:class:: TokenAnnotation(start, end, text=None, pos=None, tag=None, lemma=None, language=None)\n:module: spokenform\n:canonical: spokenform.models.TokenAnnotation\n\nProvider-neutral lexical annotation aligned to one input text.\n\n.. py:function:: annotations_from_spacy(doc)\n:module: spokenform\n\nConvert a spaCy-like Doc into source-aligned annotations.\n\nThe adapter imports no spaCy modules and can therefore be used with compatible\nproviders or simple test doubles.\n\n.. py:function:: spacy_annotations(text, nlp)\n:module: spokenform\n\nRun an existing spaCy-compatible pipeline and convert its tokens.\n\n.. py:function:: validate_annotations(text, annotations)\n:module: spokenform\n\nValidate and materialize source-aligned annotations.\n\nAnnotation spans must be ordered, non-overlapping, inside text,…",
+          "lower": ".. py:class:: tokenannotation(start, end, text=none, pos=none, tag=none, lemma=none, language=none)\n:module: spokenform\n:canonical: spokenform.models.tokenannotation\n\nprovider-neutral lexical annotation aligned to one input text.\n\n.. py:function:: annotations_from_spacy(doc)\n:module: spokenform\n\nconvert a spacy-like doc into source-aligned annotations.\n\nthe adapter imports no spacy modules and can therefore be used with compatible\nproviders or simple test doubles.\n\n.. py:function:: spacy_annotations(text, nlp)\n:module: spokenform\n\nrun an existing spacy-compatible pipeline and convert its tokens.\n\n.. py:function:: validate_annotations(text, annotations)\n:module: spokenform\n\nvalidate and materialize source-aligned annotations.\n\nannotation spans must be ordered, non-overlapping, inside text,…"
+        },
+        {
+          "anchor": "",
+          "heading": "Number normalization",
+          "text": ".. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nVerbalize common dates, times, currencies, ordinals, and numbers.\n\nURLs, email addresses, and semantic-version-like values are protected. The\nimplementation is intentionally conservative and is an MVP, not a complete\nlocale grammar.",
+          "lower": ".. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nverbalize common dates, times, currencies, ordinals, and numbers.\n\nurls, email addresses, and semantic-version-like values are protected. the\nimplementation is intentionally conservative and is an mvp, not a complete\nlocale grammar."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/architecture/",
+      "title": "spokenform Architecture",
+      "snippet": "spokenform.prepare() applies explicit stages in this order:\n\n\nvalidate the selected language and protected ranges;\n\n\ndiscover literal ranges …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Architecture",
+          "text": "spokenform.prepare() applies explicit stages in this order:\n\n\nvalidate the selected language and protected ranges;\n\n\ndiscover literal ranges such as URLs, email addresses, and semantic versions;\n\n\nobtain or validate optional lexical annotations;\n\n\nreplace protected ranges with internal sentinels and remap annotation offsets;\n\n\nexpand abbreviations and numeric units with abbr2words;\n\n\nverbalize supported numeric forms with num2words;\n\n\nnormalize Unicode and whitespace;\n\n\nrestore protected text and compose stage offset maps.\n\n\n\nEach stage records its input, output, edits, and mapped edits. The final\nPreparedText.offset_map composes all stage maps from clean_text coordinates to\nspoken_text coordinates.",
+          "lower": "spokenform.prepare() applies explicit stages in this order:\n\n\nvalidate the selected language and protected ranges;\n\n\ndiscover literal ranges such as urls, email addresses, and semantic versions;\n\n\nobtain or validate optional lexical annotations;\n\n\nreplace protected ranges with internal sentinels and remap annotation offsets;\n\n\nexpand abbreviations and numeric units with abbr2words;\n\n\nverbalize supported numeric forms with num2words;\n\n\nnormalize unicode and whitespace;\n\n\nrestore protected text and compose stage offset maps.\n\n\n\neach stage records its input, output, edits, and mapped edits. the final\npreparedtext.offset_map composes all stage maps from clean_text coordinates to\nspoken_text coordinates."
+        },
+        {
+          "anchor": "",
+          "heading": "Ownership boundary",
+          "text": "spokenform owns plain-text normalization, protection, provenance, and coordinate\nmapping. Callers own language selection, markup parsing, and mixed-language\nsegmentation. Downstream G2P systems own tokenization for phoneme generation,\nlexicons, pronunciations, and vocabulary IDs.",
+          "lower": "spokenform owns plain-text normalization, protection, provenance, and coordinate\nmapping. callers own language selection, markup parsing, and mixed-language\nsegmentation. downstream g2p systems own tokenization for phoneme generation,\nlexicons, pronunciations, and vocabulary ids."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/cli/",
+      "title": "spokenform Command-line interface",
+      "snippet": "Pass text as arguments or through standard input:\n\nspokenform --lang de \"Prof. Klein hat 2 kg.\"\necho \"There are 2 tests.\" | spokenform --lan …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Command-line interface",
+          "text": "Pass text as arguments or through standard input:\n\nspokenform --lang de \"Prof. Klein hat 2 kg.\"\necho \"There are 2 tests.\" | spokenform --lang en\n\n\n\n\nUse --changes for stage provenance and --json for a structured result:\n\nspokenform --lang de --changes \"Prof. Klein hat 2 kg.\"\nspokenform --lang de --json \"Prof. Klein hat 2 kg.\"\n\n\n\n\nSelect an installed spaCy model with --spacy-model. --strict turns an unavailable\nmodel or invalid protected range into an error. Without strict mode, recoverable\nwarnings are printed to standard error for plain-text output and included in\nstructured output.\n\nspokenform --lang en --spacy-model en_core_web_sm --strict \"The board is 2 in. wide.\"\n\n\n\n\nPipeline stages can be disabled with --no-abbreviations, --no-numbers, and\n--keep-whitespace.",
+          "lower": "pass text as arguments or through standard input:\n\nspokenform --lang de \"prof. klein hat 2 kg.\"\necho \"there are 2 tests.\" | spokenform --lang en\n\n\n\n\nuse --changes for stage provenance and --json for a structured result:\n\nspokenform --lang de --changes \"prof. klein hat 2 kg.\"\nspokenform --lang de --json \"prof. klein hat 2 kg.\"\n\n\n\n\nselect an installed spacy model with --spacy-model. --strict turns an unavailable\nmodel or invalid protected range into an error. without strict mode, recoverable\nwarnings are printed to standard error for plain-text output and included in\nstructured output.\n\nspokenform --lang en --spacy-model en_core_web_sm --strict \"the board is 2 in. wide.\"\n\n\n\n\npipeline stages can be disabled with --no-abbreviations, --no-numbers, and\n--keep-whitespace."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/examples/",
+      "title": "spokenform Examples",
+      "snippet": "The repository contains executable examples in examples/:\n\n\nbasic.py: minimal German normalization;\n\n\ngerman.py: German CLI with changes, JS …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Examples",
+          "text": "The repository contains executable examples in examples/:\n\n\nbasic.py: minimal German normalization;\n\n\ngerman.py: German CLI with changes, JSON, and optional spaCy model;\n\n\nenglish_spacy.py: model-by-name English integration;\n\n\ninjected_pipeline.py: application-owned spaCy pipeline;\n\n\nprotected_text.py: caller and automatic protection;\n\n\noffset_mapping.py: map a source span into spoken output.\n\n\n\nRun them from the repository root so the editable installation is found:\n\npython examples/german.py\npython examples/german.py --spacy-model de_core_news_sm\npython examples/protected_text.py",
+          "lower": "the repository contains executable examples in examples/:\n\n\nbasic.py: minimal german normalization;\n\n\ngerman.py: german cli with changes, json, and optional spacy model;\n\n\nenglish_spacy.py: model-by-name english integration;\n\n\ninjected_pipeline.py: application-owned spacy pipeline;\n\n\nprotected_text.py: caller and automatic protection;\n\n\noffset_mapping.py: map a source span into spoken output.\n\n\n\nrun them from the repository root so the editable installation is found:\n\npython examples/german.py\npython examples/german.py --spacy-model de_core_news_sm\npython examples/protected_text.py"
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/",
+      "title": "spokenform",
+      "snippet": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes st …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "spokenform",
+          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\n\n\n\nQuickstart\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\n\n\n\nAPI reference\nPreparation\n\nResult models\n\nAnnotation adapters\n\nNumber normalization\n\n\n\n\nCommand-line interface\n\nspaCy integration\nCurrent effect with abbr2words 0.2.0\n\nLoad an installed model by name\n\nInject an application-owned pipeline\n\nSupply annotations directly\n\nRequired token contract\n\nError behavior\n\n\n\n\nProtected text\n\nOffset mapping and provenance\n\nExamples\n\nLimitations\n\nRelease checklist",
+          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\n\n\n\nquickstart\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\n\n\n\napi reference\npreparation\n\nresult models\n\nannotation adapters\n\nnumber normalization\n\n\n\n\ncommand-line interface\n\nspacy integration\ncurrent effect with abbr2words 0.2.0\n\nload an installed model by name\n\ninject an application-owned pipeline\n\nsupply annotations directly\n\nrequired token contract\n\nerror behavior\n\n\n\n\nprotected text\n\noffset mapping and provenance\n\nexamples\n\nlimitations\n\nrelease checklist"
+        },
+        {
+          "anchor": "",
+          "heading": "Scope",
+          "text": "The package accepts plain text and one selected processing language. Language\ndetection, mixed-language segmentation, SSMD or other markup parsing, and phoneme\ngeneration are intentionally outside the package.",
+          "lower": "the package accepts plain text and one selected processing language. language\ndetection, mixed-language segmentation, ssmd or other markup parsing, and phoneme\ngeneration are intentionally outside the package."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/installation/",
+      "title": "spokenform Installation",
+      "snippet": "python -m pip install spokenform\n\n\n\n\nFor development from a checkout:\n\npython -m venv .venv\n. .venv/bin/activate\npython -m pip install --upg …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Runtime",
+          "text": "python -m pip install spokenform\n\n\n\n\nFor development from a checkout:\n\npython -m venv .venv\n. .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -e \".[dev]\"\n\n\n\n\nOn Windows, activate with .venv\\Scripts\\activate.",
+          "lower": "python -m pip install spokenform\n\n\n\n\nfor development from a checkout:\n\npython -m venv .venv\n. .venv/bin/activate\npython -m pip install --upgrade pip\npython -m pip install -e \".[dev]\"\n\n\n\n\non windows, activate with .venv\\scripts\\activate."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional spaCy support",
+          "text": "python -m pip install \"spokenform[spacy]\"\npython -m spacy download de_core_news_sm\n\n\n\n\nThe spaCy library and trained pipeline are separate packages. Installing the\nspacy extra does not install or download a language pipeline.",
+          "lower": "python -m pip install \"spokenform[spacy]\"\npython -m spacy download de_core_news_sm\n\n\n\n\nthe spacy library and trained pipeline are separate packages. installing the\nspacy extra does not install or download a language pipeline."
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "The documentation source uses MyST Markdown. Install the supplied requirements\nfile together with the project:\n\npython -m pip install -e .\npython -m pip install -r docs/requirements.txt\nsphinx-build -W -b html docs docs/_build/html",
+          "lower": "the documentation source uses myst markdown. install the supplied requirements\nfile together with the project:\n\npython -m pip install -e .\npython -m pip install -r docs/requirements.txt\nsphinx-build -w -b html docs docs/_build/html"
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/limitations/",
+      "title": "spokenform Limitations",
+      "snippet": "Each prepare() call processes one selected language.\n\n\nLanguage detection and mixed-language segmentation are external.\n\n\nSSMD and other mar …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Limitations",
+          "text": "Each prepare() call processes one selected language.\n\n\nLanguage detection and mixed-language segmentation are external.\n\n\nSSMD and other markup must be parsed before calling spokenform.\n\n\nDate, time, currency, ordinal, and locale grammar is intentionally conservative.\n\n\nInvalid calendar dates may match the current numeric date pattern; callers that\nrequire calendar validation should validate dates before normalization.\n\n\nProtected spans use internal private-use sentinels. Inputs containing the same\nprivate-use characters are an uncommon edge case that should be covered before a\nstability release.\n\n\nabbr2words 0.2.0 accepts POS annotations, but its bundled registries do not yet\nrequire POS labels. spaCy therefore does not necessarily alter default output.\n\n\nStage edits are reconstructed fr…",
+          "lower": "each prepare() call processes one selected language.\n\n\nlanguage detection and mixed-language segmentation are external.\n\n\nssmd and other markup must be parsed before calling spokenform.\n\n\ndate, time, currency, ordinal, and locale grammar is intentionally conservative.\n\n\ninvalid calendar dates may match the current numeric date pattern; callers that\nrequire calendar validation should validate dates before normalization.\n\n\nprotected spans use internal private-use sentinels. inputs containing the same\nprivate-use characters are an uncommon edge case that should be covered before a\nstability release.\n\n\nabbr2words 0.2.0 accepts pos annotations, but its bundled registries do not yet\nrequire pos labels. spacy therefore does not necessarily alter default output.\n\n\nstage edits are reconstructed fr…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/mapping/",
+      "title": "spokenform Offset mapping and provenance",
+      "snippet": "Every enabled stage records its input, output, and deterministic edits. The final\nOffsetMap composes those stage maps.\n\nfrom spokenform impo …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Offset mapping and provenance",
+          "text": "Every enabled stage records its input, output, and deterministic edits. The final\nOffsetMap composes those stage maps.\n\nfrom spokenform import prepare\n\nsource = \"Prof. Klein has 2 kg.\"\nresult = prepare(source, language=\"de\")\n\nstart = source.index(\"Prof.\")\nend = start + len(\"Prof.\")\nspoken_start, spoken_end = result.offset_map.map_source_span(start, end)\nprint(result.spoken_text[spoken_start:spoken_end])\n\n\n\n\nBoundary mappings support bias=\"left\" and bias=\"right\" because one source\nboundary may correspond to both sides of an expanded replacement.\n\nmap_source_span() uses left bias for the start and right bias for the end.\nmap_output_span() performs the inverse operation.",
+          "lower": "every enabled stage records its input, output, and deterministic edits. the final\noffsetmap composes those stage maps.\n\nfrom spokenform import prepare\n\nsource = \"prof. klein has 2 kg.\"\nresult = prepare(source, language=\"de\")\n\nstart = source.index(\"prof.\")\nend = start + len(\"prof.\")\nspoken_start, spoken_end = result.offset_map.map_source_span(start, end)\nprint(result.spoken_text[spoken_start:spoken_end])\n\n\n\n\nboundary mappings support bias=\"left\" and bias=\"right\" because one source\nboundary may correspond to both sides of an expanded replacement.\n\nmap_source_span() uses left bias for the start and right bias for the end.\nmap_output_span() performs the inverse operation."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/protection/",
+      "title": "spokenform Protected text",
+      "snippet": "Automatic protection covers URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect additional source ran …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Protected text",
+          "text": "Automatic protection covers URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect additional source ranges.\n\nfrom spokenform import ProtectedSpan, prepare\n\ntext = \"Keep Dr. literal, but verbalize 12.\"\nstart = text.index(\"Dr.\")\nresult = prepare(\n    text,\n    language=\"en\",\n    protected_spans=[ProtectedSpan(start, start + 3)],\n)\n\n\n\n\nTuple pairs such as (start, end) are also accepted. Ranges use Python string\noffsets and are half-open: the start is included and the end is excluded.\n\nInvalid or overlapping caller ranges are skipped with warnings by default.\nstrict=True turns them into ProtectionError.",
+          "lower": "automatic protection covers urls, email addresses, and semantic-version-like\nstrings. caller-defined spans can protect additional source ranges.\n\nfrom spokenform import protectedspan, prepare\n\ntext = \"keep dr. literal, but verbalize 12.\"\nstart = text.index(\"dr.\")\nresult = prepare(\n    text,\n    language=\"en\",\n    protected_spans=[protectedspan(start, start + 3)],\n)\n\n\n\n\ntuple pairs such as (start, end) are also accepted. ranges use python string\noffsets and are half-open: the start is included and the end is excluded.\n\ninvalid or overlapping caller ranges are skipped with warnings by default.\nstrict=true turns them into protectionerror."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/quickstart/",
+      "title": "spokenform Quickstart",
+      "snippet": "from spokenform import prepare\n\nresult = prepare(\n    \"Prof. Klein bringt am 14.05.2026 um 18:20 Uhr 2 kg mit.\",\n    language=\"de\",\n)\n\nprint …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quickstart",
+          "text": "from spokenform import prepare\n\nresult = prepare(\n    \"Prof. Klein bringt am 14.05.2026 um 18:20 Uhr 2 kg mit.\",\n    language=\"de\",\n)\n\nprint(result.spoken_text)\nprint(result.render_changes())\n\n\n\n\nThe output is a PreparedText object. Its main fields are:\n\n\nsource_text: input exactly as supplied;\n\n\nclean_text: plain text entering the pipeline;\n\n\nspoken_text: normalized text intended for a speech system;\n\n\nstages: ordered before/after records;\n\n\nmapped_edits: edits with source and output coordinates;\n\n\noffset_map: composed source/output boundary map;\n\n\nwarnings: recoverable protection or spaCy issues.",
+          "lower": "from spokenform import prepare\n\nresult = prepare(\n    \"prof. klein bringt am 14.05.2026 um 18:20 uhr 2 kg mit.\",\n    language=\"de\",\n)\n\nprint(result.spoken_text)\nprint(result.render_changes())\n\n\n\n\nthe output is a preparedtext object. its main fields are:\n\n\nsource_text: input exactly as supplied;\n\n\nclean_text: plain text entering the pipeline;\n\n\nspoken_text: normalized text intended for a speech system;\n\n\nstages: ordered before/after records;\n\n\nmapped_edits: edits with source and output coordinates;\n\n\noffset_map: composed source/output boundary map;\n\n\nwarnings: recoverable protection or spacy issues."
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration object",
+          "text": "from spokenform import PreparationConfig, prepare\n\nconfig = PreparationConfig(\n    language=\"en\",\n    expand_abbreviations=True,\n    expand_numbers=True,\n    normalize_whitespace=True,\n    context=True,\n)\n\nresult = prepare(\"The board is 2 in. wide.\", config=config)\n\n\n\n\nWhen config is supplied, it is authoritative for pipeline options.",
+          "lower": "from spokenform import preparationconfig, prepare\n\nconfig = preparationconfig(\n    language=\"en\",\n    expand_abbreviations=true,\n    expand_numbers=true,\n    normalize_whitespace=true,\n    context=true,\n)\n\nresult = prepare(\"the board is 2 in. wide.\", config=config)\n\n\n\n\nwhen config is supplied, it is authoritative for pipeline options."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/release-checklist/",
+      "title": "spokenform Release checklist",
+      "snippet": "Ensure the required abbr2words release is available from the target package index.\n\n\nCreate an annotated Git tag such as v0.1.0.\n\n\nInstall a …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Release checklist",
+          "text": "Ensure the required abbr2words release is available from the target package index.\n\n\nCreate an annotated Git tag such as v0.1.0.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\".\n\n\nRun python -m pytest.\n\n\nRun python -m ruff check . and python -m ruff format --check ..\n\n\nRun python -m mypy spokenform examples.\n\n\nBuild with python -m build.\n\n\nValidate distributions with python -m twine check dist/*.\n\n\nBuild docs with sphinx-build -W -b html docs docs/_build/html.\n\n\nTest wheel installation and the spokenform console command in a fresh environment.\n\n\nConfirm the release workflow uses a PyPI trusted publisher or a valid token.\n\n\nPublish the GitHub release only after all required checks pass.",
+          "lower": "ensure the required abbr2words release is available from the target package index.\n\n\ncreate an annotated git tag such as v0.1.0.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\".\n\n\nrun python -m pytest.\n\n\nrun python -m ruff check . and python -m ruff format --check ..\n\n\nrun python -m mypy spokenform examples.\n\n\nbuild with python -m build.\n\n\nvalidate distributions with python -m twine check dist/*.\n\n\nbuild docs with sphinx-build -w -b html docs docs/_build/html.\n\n\ntest wheel installation and the spokenform console command in a fresh environment.\n\n\nconfirm the release workflow uses a pypi trusted publisher or a valid token.\n\n\npublish the github release only after all required checks pass."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/spacy/",
+      "title": "spokenform spaCy integration",
+      "snippet": "spaCy is optional. spokenform uses it only to obtain source-aligned lexical annotations for POS-aware abbreviation rules.\nabbr2words 0.2.0 a …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "spaCy integration",
+          "text": "spaCy is optional. spokenform uses it only to obtain source-aligned lexical annotations for POS-aware abbreviation rules.",
+          "lower": "spacy is optional. spokenform uses it only to obtain source-aligned lexical annotations for pos-aware abbreviation rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Current effect with abbr2words 0.2.0",
+          "text": "abbr2words 0.2.0 accepts POS annotations, but its bundled language registries do not currently require POS labels. A trained model may therefore produce the same default output as the non-spaCy path. The integration is useful for custom entries with POS guards and keeps spokenform ready for future bundled POS-aware rules.",
+          "lower": "abbr2words 0.2.0 accepts pos annotations, but its bundled language registries do not currently require pos labels. a trained model may therefore produce the same default output as the non-spacy path. the integration is useful for custom entries with pos guards and keeps spokenform ready for future bundled pos-aware rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Load an installed model by name",
+          "text": "from spokenform import prepare\n\nresult = prepare(\n    \"The board is 2 in. wide.\",\n    language=\"en\",\n    spacy_model=\"en_core_web_sm\",\n    strict=True,\n)\n\n\n\n\nThe model name or path is passed to spacy.load(). Models are never downloaded\nautomatically.",
+          "lower": "from spokenform import prepare\n\nresult = prepare(\n    \"the board is 2 in. wide.\",\n    language=\"en\",\n    spacy_model=\"en_core_web_sm\",\n    strict=true,\n)\n\n\n\n\nthe model name or path is passed to spacy.load(). models are never downloaded\nautomatically."
+        },
+        {
+          "anchor": "",
+          "heading": "Inject an application-owned pipeline",
+          "text": "import spacy\nfrom spokenform import prepare\n\nnlp = spacy.load(\"de_core_news_sm\")\nresult = prepare(\n    \"Prof. Klein liefert 2 kg.\",\n    language=\"de\",\n    nlp=nlp,\n)\n\n\n\n\nInjection is preferred in services that already manage model lifecycle, device\nselection, disabled components, and process-level caching.",
+          "lower": "import spacy\nfrom spokenform import prepare\n\nnlp = spacy.load(\"de_core_news_sm\")\nresult = prepare(\n    \"prof. klein liefert 2 kg.\",\n    language=\"de\",\n    nlp=nlp,\n)\n\n\n\n\ninjection is preferred in services that already manage model lifecycle, device\nselection, disabled components, and process-level caching."
+        },
+        {
+          "anchor": "",
+          "heading": "Supply annotations directly",
+          "text": "from spokenform import TokenAnnotation, prepare\n\nannotations = (\n    TokenAnnotation(start=0, end=2, text=\"in\", pos=\"ADP\", tag=\"IN\"),\n)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nExplicit annotations take precedence over nlp and spacy_model.",
+          "lower": "from spokenform import tokenannotation, prepare\n\nannotations = (\n    tokenannotation(start=0, end=2, text=\"in\", pos=\"adp\", tag=\"in\"),\n)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nexplicit annotations take precedence over nlp and spacy_model."
+        },
+        {
+          "anchor": "",
+          "heading": "Required token contract",
+          "text": "A spaCy-compatible pipeline must return iterable tokens exposing:\n\n\ntext;\n\n\nidx, the character offset in the original text;\n\n\noptional pos_, tag_, lemma_, and lang_ strings.\n\n\n\nlang_ is retained as metadata only; spokenform does not perform token-level language detection.\n\nA blank tokenizer such as spacy.blank(\"en\") provides token boundaries but no\nstatistical POS tags. Use a trained pipeline containing an appropriate tagging or\nmorphological component when POS-aware rules are required. Annotations are remapped around protected spans so their offsets remain aligned with the internal text sent to abbr2words.",
+          "lower": "a spacy-compatible pipeline must return iterable tokens exposing:\n\n\ntext;\n\n\nidx, the character offset in the original text;\n\n\noptional pos_, tag_, lemma_, and lang_ strings.\n\n\n\nlang_ is retained as metadata only; spokenform does not perform token-level language detection.\n\na blank tokenizer such as spacy.blank(\"en\") provides token boundaries but no\nstatistical pos tags. use a trained pipeline containing an appropriate tagging or\nmorphological component when pos-aware rules are required. annotations are remapped around protected spans so their offsets remain aligned with the internal text sent to abbr2words."
+        },
+        {
+          "anchor": "",
+          "heading": "Error behavior",
+          "text": "With strict=False, a requested but unavailable model produces a warning in\nPreparedText.warnings and normalization continues without spaCy. With\nstrict=True, SpacyModelError is raised.",
+          "lower": "with strict=false, a requested but unavailable model produces a warning in\npreparedtext.warnings and normalization continues without spacy. with\nstrict=true, spacymodelerror is raised."
+        }
+      ]
+    }
+  ]
+}

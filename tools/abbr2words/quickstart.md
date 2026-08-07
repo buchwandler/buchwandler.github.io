@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/quickstart/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "9b7c03f84970dbe40da6c8186d5c50e4cb5ade9b"
+docs_ref: "v0.2.2"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 

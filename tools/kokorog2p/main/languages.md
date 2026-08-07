@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
 search_enabled: true
 ---
 
@@ -715,7 +715,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p>Schwa in unstressed syllables</p></li>
 </ul>
 </li>
-<li><p><strong>Number handling</strong>: Cardinals, ordinals, years, currency</p></li>
+<li><p><strong>Deterministic normalization</strong>: German cardinals, decimals, thousands groups, years,
+conservative ordinals, dates, times, EUR amounts, temperatures, and numbered units are
+classified before lexical abbreviation expansion.</p></li>
+<li><p><strong>Abbreviations and units</strong>: Flexible <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>, <code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> forms, common lexical
+abbreviations, and grammatical unit forms such as <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Std.</span></code> → <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Stunde</span></code> and <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">kg</span></code>
+→ <code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Kilogramm</span></code>.</p></li>
+<li><p><strong>Ambiguity policy</strong>: Bare sentence-final numbers stay cardinals, invalid dates and
+times remain unchanged, and unit symbols only expand when preceded by a number. <code class="docutils literal notranslate"><span class="pre">ca.</span></code>
+is spoken as <code class="docutils literal notranslate"><span class="pre">zirka</span></code>, <code class="docutils literal notranslate"><span class="pre">etc.</span></code> as <code class="docutils literal notranslate"><span class="pre">ezetera</span></code>, and <code class="docutils literal notranslate"><span class="pre">GmbH</span></code>/<code class="docutils literal notranslate"><span class="pre">AG</span></code> use German letter-name
+spellings.</p></li>
 <li><p><strong>Regional variants</strong>: de-de, de-at, de-ch</p></li>
 </ul>
 </section>

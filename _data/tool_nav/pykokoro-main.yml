@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 787c4603af7f8e79f4cd2410ee1c079d42ed99c1
+source_commit: aed7fce71f7effddca2c8822b39a04f3a33a30c7
 source_url: https://github.com/buchwandler/pykokoro/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/pykokoro

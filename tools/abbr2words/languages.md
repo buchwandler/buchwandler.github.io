@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/languages/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "9b7c03f84970dbe40da6c8186d5c50e4cb5ade9b"
+docs_ref: "v0.2.2"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 
@@ -568,15 +568,43 @@ html[data-theme="dark"] .sphinxpress-doc {
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
 <td><p>Italian</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
+<td><p>Dutch</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
+<td><p>Polish</p></td>
+</tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
 <td><p>Portuguese</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
+<td><p>Russian</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
+<td><p>Swedish</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
+<td><p>Turkish</p></td>
 </tr>
 </tbody>
 </table>
 <p>Language input is normalized by trimming whitespace, lowercasing, accepting both
 hyphens and underscores, and taking the base part of a locale. For example,
 <code class="docutils literal notranslate"><span class="pre">de-DE</span></code>, <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, and <code class="docutils literal notranslate"><span class="pre">pt-BR</span></code> select <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, and <code class="docutils literal notranslate"><span class="pre">pt</span></code>. Common three-letter
-aliases and <code class="docutils literal notranslate"><span class="pre">cz</span></code> for Czech are also accepted.</p>
+aliases and <code class="docutils literal notranslate"><span class="pre">cz</span></code> for Czech are also accepted, including <code class="docutils literal notranslate"><span class="pre">dut</span></code>/<code class="docutils literal notranslate"><span class="pre">nld</span></code>, <code class="docutils literal notranslate"><span class="pre">pol</span></code>,
+<code class="docutils literal notranslate"><span class="pre">rus</span></code>, <code class="docutils literal notranslate"><span class="pre">swe</span></code>, and <code class="docutils literal notranslate"><span class="pre">tur</span></code> for the added registries.</p>
+<p>The added registries are intentionally conservative. Ambiguous short forms are
+guarded by numeric/name context or omitted, Russian multiword abbreviations
+accept ordinary, non-breaking, and narrow non-breaking spaces, and Turkish
+lexical entries are case-sensitive. Unit output is a canonical singular lemma;
+the stable API does not realize plural, case, numeral-government, or suffix
+morphology.</p>
+<p>German quantity symbols include the reviewed electrical and frequency forms
+<code class="docutils literal notranslate"><span class="pre">kWh</span></code>, <code class="docutils literal notranslate"><span class="pre">Wh</span></code>, <code class="docutils literal notranslate"><span class="pre">mAh</span></code>, <code class="docutils literal notranslate"><span class="pre">mA</span></code>, <code class="docutils literal notranslate"><span class="pre">GHz</span></code>, <code class="docutils literal notranslate"><span class="pre">MHz</span></code>, <code class="docutils literal notranslate"><span class="pre">kHz</span></code>, <code class="docutils literal notranslate"><span class="pre">Hz</span></code>, <code class="docutils literal notranslate"><span class="pre">W</span></code>, and <code class="docutils literal notranslate"><span class="pre">V</span></code>, plus <code class="docutils literal notranslate"><span class="pre">Stck.</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ltr.</span></code>, <code class="docutils literal notranslate"><span class="pre">Tsd.</span></code>, <code class="docutils literal notranslate"><span class="pre">Mio.</span></code>, <code class="docutils literal notranslate"><span class="pre">Mrd.</span></code>, and <code class="docutils literal notranslate"><span class="pre">EUR</span></code>. Case-sensitive metadata is preserved:
+for example, <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">mA</span></code> matches but <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">ma</span></code> does not. Dotted German aliases and
+their base symbols share canonical IDs, so <code class="docutils literal notranslate"><span class="pre">h</span></code>/<code class="docutils literal notranslate"><span class="pre">Std.</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>/<code class="docutils literal notranslate"><span class="pre">Min.</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">l</span></code>/<code class="docutils literal notranslate"><span class="pre">Ltr.</span></code> cannot acquire separate semantic identities.</p>
 <section id="known-ambiguity">
 <h2>Known ambiguity</h2>
 <p>Some inventories contain collisions whose effective winner follows the source
@@ -584,11 +612,17 @@ registry order rather than a complete contextual model. Current documented
 examples include <code class="docutils literal notranslate"><span class="pre">str.</span></code> in Czech, <code class="docutils literal notranslate"><span class="pre">mar.</span></code> in Spanish and Italian, <code class="docutils literal notranslate"><span class="pre">n°</span></code> in French,
 and <code class="docutils literal notranslate"><span class="pre">seg.</span></code> in Portuguese. German <code class="docutils literal notranslate"><span class="pre">Fr.</span></code> has an explicit title-context override,
 but its default expansion remains <code class="docutils literal notranslate"><span class="pre">Freitag</span></code>.</p>
-<p>The context detector is shared across languages and is currently mostly oriented
-around English address, name, saint, and time signals. The package is therefore
-context-aware for supported entries, not a comprehensive multilingual semantic
-disambiguator. Applications should review ambiguous domain-specific entries
-before relying on an expansion as authoritative.</p>
+<p>Context policy is language-specific and uses bounded local windows. English
+profiles distinguish street suffixes, saints, titles, and addresses; the German
+profile distinguishes <code class="docutils literal notranslate"><span class="pre">Fr.</span> <span class="pre">Müller</span></code> (<code class="docutils literal notranslate"><span class="pre">Frau</span></code>) from <code class="docutils literal notranslate"><span class="pre">Am</span> <span class="pre">Fr.</span></code> (<code class="docutils literal notranslate"><span class="pre">Freitag</span></code>). Name
+evidence uses Unicode cased characters and supports accents, apostrophes,
+hyphens, and quoted names. Uncased scripts remain conservative without an
+annotation signal. Context-aware output is still not a comprehensive semantic
+disambiguator, so applications should review domain-specific entries.</p>
+<p>Uppercase undotted initialisms such as English time zones, <code class="docutils literal notranslate"><span class="pre">BCE</span></code>, <code class="docutils literal notranslate"><span class="pre">CE</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">MIT</span></code> are case-sensitive. This prevents ordinary lowercase words from being
+rewritten; reviewed title-case and lexical abbreviations retain their own
+registry policy.</p>
 </section>
 </section>
 </div>

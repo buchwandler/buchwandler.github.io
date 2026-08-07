@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: aef17979f3930b332620e35a4d2cfd5c9ea374ef
+source_commit: 70cdce20b1f55355c4ce4c001c3061222245497f
 source_url: https://github.com/buchwandler/kokorog2p/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/kokorog2p

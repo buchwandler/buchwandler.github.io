@@ -55,13 +55,14 @@ packages = [
   "sphinxpress>=0.1.1",
   "ssmd>=0.7.2",
   "abbr2words>=0.1.0",
+  "spokenform>=0.1.0",
 ]
 
 [book]
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform"]
 
 [pdf]
 builder = "weasyprint"
@@ -208,6 +209,18 @@ conf_dir = "../abbr2words/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/abbr2words"
 description = "Multilingual, context-aware abbreviation expansion for text normalization and speech."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "spokenform"
+title = "spokenform"
+docs_root = "../spokenform/docs"
+conf_dir = "../spokenform/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/spokenform"
+description = "Single-language written-to-spoken text normalization for speech applications."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

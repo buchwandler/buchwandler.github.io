@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
+docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
 search_enabled: true
 ---
 
@@ -553,9 +553,11 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="w">  </span>tests/test_paragraph_merge.py<span class="w"> </span>tests/test_paragraph_manifest.py
 </pre></div>
 </div>
-<p>These tests cover public PyKokoro streaming, schema-5 migration, atomic output and
-ownership, unit resume boundaries, filename ordering, timing parity, no-gap merging, and
-merge-only recovery.</p>
+<p>These tests cover public PyKokoro streaming, schema-6 seed persistence and explicit
+schema-5 paragraph rejection, atomic output and ownership, unit resume boundaries,
+filename ordering, timing parity, no-gap merging, strict CLI mismatch handling, and
+merge-only recovery. The main regression test models a changed stochastic descriptor
+hash and verifies that a saved prefix is not rendered again.</p>
 <p>The maintained coverage policy is staged so high-risk code has explicit gates while the
 repository-wide target can be raised as the large CLI modules are decomposed:</p>
 <ul class="simple">

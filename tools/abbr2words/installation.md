@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/installation/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "9b7c03f84970dbe40da6c8186d5c50e4cb5ade9b"
+docs_ref: "v0.2.2"
+docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
 search_enabled: true
 ---
 
@@ -559,6 +559,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 <p>The development extra includes the test, build, lint, and type-checking tools.</p>
+</section>
+<section id="examples">
+<h2>Examples</h2>
+<p>Install the optional full-text demonstration dependency from a checkout or
+alongside the package:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install &quot;abbr2words[examples]&quot;</span>
+</pre></div>
+</div>
+<p>This keeps <code class="docutils literal notranslate"><span class="pre">num2words</span></code> out of the core runtime installation. The abbreviation-only
+examples work without it; full speech-text normalization uses it for numbers and
+the example-local date, time, currency, temperature, and unit rules.</p>
 </section>
 <section id="documentation">
 <h2>Documentation</h2>

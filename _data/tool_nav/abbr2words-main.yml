@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 51249108285df8900fb2b01e1abd004436b5d8ec
+source_commit: b59ec254e6e77fb42ebb32333e9a739fcb1e143a
 source_url: https://github.com/buchwandler/abbr2words/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/abbr2words
-release_tag: v0.1.0
-release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.1.0
+release_tag: v0.2.2
+release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.2
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.0
+  ref: v0.2.2
   url: /tools/abbr2words/
   current: false
 - name: main
@@ -35,6 +35,9 @@ entries:
 - slug: customization
   title: abbr2words Customization
   url: /tools/abbr2words/main/customization/
+- slug: pos-annotations
+  title: abbr2words External POS annotations
+  url: /tools/abbr2words/main/pos-annotations/
 - slug: cli
   title: abbr2words Command line interface
   url: /tools/abbr2words/main/cli/

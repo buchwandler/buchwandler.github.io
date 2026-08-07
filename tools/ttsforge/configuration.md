@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/configuration/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "fa280e704cbc76554ca3e25439bfe8d9687e8cd3"
+docs_ref: "v0.3.3"
+docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
 search_enabled: true
 ---
 
@@ -614,10 +614,21 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 </div>
 <p>Paragraph conversion retains one WAV per render unit: an optional chapter-title unit and
 the spoken paragraph units that follow it. The workspace fixes the conversion unit,
-generation fingerprint, and selected chapters; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to change them. Valid units
-are skipped on resume, and a complete paragraph workspace can rebuild a missing final
-audiobook without ONNX initialization. See <code class="docutils literal notranslate"><span class="pre">examples/paragraph_manifest.py</span></code> for
-inspection-only validation.</p>
+selected chapters, and a schema-2 canonical generation identity; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to change
+them. <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> controls workspace lifecycle and is not part of generation identity.
+Valid units are skipped on resume, and a complete paragraph workspace can rebuild a
+missing final audiobook without ONNX initialization. See
+<code class="docutils literal notranslate"><span class="pre">examples/paragraph_manifest.py</span></code> for inspection-only validation.</p>
+<p>Progress is saved after every finalized WAV unit. Randomized paragraph preparation uses
+a hidden persisted seed per chapter when no <code class="docutils literal notranslate"><span class="pre">--seed</span></code> value is supplied, making the
+prepared descriptor identity stable across process restarts while keeping fresh
+conversions independently randomized. <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> records and reuses the explicit seed
+for every chapter. On resume, omitted audio-affecting settings come from the saved
+identity rather than current configuration defaults; an explicit changed setting is
+reported by field and rejected. A strong resume mismatch is an actionable error; use
+<code class="docutils literal notranslate"><span class="pre">--fresh</span></code> for an intentional restart. Verifiable schema-6 state is migrated to schema 7
+on its next atomic save. Unverifiable legacy state and its completed artifacts are
+preserved rather than silently replaced.</p>
 <p>Name extraction additionally accepts <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">--language</span></code>; its output metadata records the concrete NER-capable package. Existing
 configurations without these keys migrate to automatic selection.</p>
