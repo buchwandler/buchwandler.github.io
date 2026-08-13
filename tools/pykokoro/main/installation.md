@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aed7fce71f7effddca2c8822b39a04f3a33a30c7"
+docs_commit: "be712cdada539083bfeb08fb2e026ddc0213ed2a"
 search_enabled: true
 ---
 
@@ -562,6 +562,29 @@ audio stages do.</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> selects the highest-priority available provider. PyKokoro does not
 infer provider availability from platform names.</p>
+<section id="termux-android-model-assets">
+<h3>Termux/Android model assets</h3>
+<p>HuggingFace remains the default model source. If HuggingFace downloads are unavailable
+in Termux, select the self-contained GitHub v1.0 profile explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
+    <span class="n">PipelineConfig</span><span class="p">(</span>
+        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
+        <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
+        <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+        <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>GitHub v1.0 uses the embedded standard v1.0 vocabulary and does not download HuggingFace
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code>. PyKokoro never silently changes the configured source. If <code class="docutils literal notranslate"><span class="pre">model_path</span></code>
+and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are supplied, each file is validated and used in place; missing custom
+files do not trigger a managed-cache download. The <code class="docutils literal notranslate"><span class="pre">Unsupported</span> <span class="pre">platform</span> <span class="pre">(android)</span></code>
+warning printed by some ONNX Runtime packages is independent of this model-source and
+asset fix.</p>
+</section>
 </section>
 <section id="other-providers">
 <h2>Other providers</h2>

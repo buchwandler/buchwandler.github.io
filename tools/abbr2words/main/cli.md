@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -556,7 +556,7 @@ command.</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">CODE</span></code> selects a language or locale; the default is <code class="docutils literal notranslate"><span class="pre">en</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--no-context</span></code> disables contextual disambiguation.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--languages</span></code> prints the supported base language codes and exits.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--languages</span></code> prints every supported canonical base and explicit locale key and exits.</p></li>
 </ul>
 <p>Invalid language or input values are reported as parser errors and return a
 nonzero exit status. Successful expansion prints one line to standard output.</p>

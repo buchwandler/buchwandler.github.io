@@ -4,17 +4,17 @@ nav_key: abbr2words
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.2.2
-source_commit: b59ec254e6e77fb42ebb32333e9a739fcb1e143a
-source_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.2
+source_ref: v0.2.7
+source_commit: fb644a7bef5f70043c12b80443fd19868f4055bf
+source_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.7
 is_default: true
 repo_url: https://github.com/buchwandler/abbr2words
-release_tag: v0.2.2
-release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.2
+release_tag: v0.2.7
+release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.7
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.2
+  ref: v0.2.7
   url: /tools/abbr2words/
   current: true
 - name: main
@@ -44,6 +44,9 @@ entries:
 - slug: languages
   title: abbr2words Languages
   url: /tools/abbr2words/languages/
+- slug: language-sources
+  title: abbr2words Language sources and review policy
+  url: /tools/abbr2words/language-sources/
 - slug: api
   title: abbr2words API reference
   url: /tools/abbr2words/api/
@@ -53,3 +56,6 @@ entries:
 - slug: changelog
   title: abbr2words Changelog
   url: /tools/abbr2words/changelog/
+- slug: release-notes
+  title: abbr2words Release notes
+  url: /tools/abbr2words/release-notes/

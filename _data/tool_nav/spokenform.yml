@@ -4,17 +4,17 @@ nav_key: spokenform
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.0
-source_commit: 847a0635798274488069a248e3c4b83efd5a9d6d
-source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.1.0
+source_ref: v0.2.5
+source_commit: 859153dd9687c67093b175dee4500bb7d2e20016
+source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.5
 is_default: true
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.1.0
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.1.0
+release_tag: v0.2.5
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.5
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.0
+  ref: v0.2.5
   url: /tools/spokenform/
   current: true
 - name: main
@@ -38,6 +38,9 @@ entries:
 - slug: api
   title: spokenform API reference
   url: /tools/spokenform/api/
+- slug: migration-kokorog2p
+  title: spokenform kokorog2p migration boundary
+  url: /tools/spokenform/migration-kokorog2p/
 - slug: cli
   title: spokenform Command-line interface
   url: /tools/spokenform/cli/
@@ -59,3 +62,6 @@ entries:
 - slug: release-checklist
   title: spokenform Release checklist
   url: /tools/spokenform/release-checklist/
+- slug: changelog
+  title: spokenform Changelog
+  url: /tools/spokenform/changelog/

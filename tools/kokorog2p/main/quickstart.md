@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 

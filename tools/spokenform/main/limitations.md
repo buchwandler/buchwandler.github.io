@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -547,29 +547,61 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p>Language detection and mixed-language segmentation are external.</p></li>
 <li><p>SSMD and other markup must be parsed before calling <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>.</p></li>
 <li><p>Date, time, currency, ordinal, and locale grammar is intentionally conservative.</p></li>
-<li><p>Invalid calendar dates and times are recognized as protected structured
-candidates and remain literal; ambiguous two-digit years remain unchanged.</p></li>
-<li><p>Protected spans use internal private-use sentinels. Inputs containing the same
-private-use characters are an uncommon edge case that should be covered before a
-stability release.</p></li>
+<li><p>Invalid calendar dates and times remain literal; ambiguous standalone versions,
+phone-like strings without context, and generic serials remain protected or
+downstream-owned rather than being partially rewritten.</p></li>
+<li><p>Protected spans use allocated private-use sentinels that are checked against the
+current input, so existing private-use characters are preserved literally.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> accepts POS annotations, but its bundled registries do not
 necessarily require POS labels. spaCy therefore does not necessarily alter
 default output.</p></li>
 <li><p>German quantity recognition depends on the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured
 match API. spokenform owns the semantic grammar, not the symbol inventory.</p></li>
-<li><p>German is the only migration-ready numeric language. Other languages remain
-caller-managed until their own downstream parity corpora are accepted.</p></li>
+<li><p>English, German, French, Spanish, Italian, Portuguese, and Czech have parity-gated
+structured ownership. Spanish and Italian colon-time expressions are owned by
+locale policies; Portuguese and Czech time expressions remain caller-managed.
+Spanish explicit AM/PM forms use a 12-hour conversational branch, while
+unqualified 24-hour forms retain their written hour/minute values in speech.
+English owns a conservative contextual single-dot release-label
+rule (<code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">2.0</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">two</span> <span class="pre">point</span> <span class="pre">oh</span></code>) in addition to ordinary decimals. It
+does not apply <code class="docutils literal notranslate"><span class="pre">oh</span></code> globally: ordinary decimal zeros remain digit-wise,
+quantities take precedence, and years, suffix ordinals, Roman numerals,
+phone/ID sequences, arbitrary multi-dot versions, numeric suffixes, and
+phoneme-sensitive helpers remain reserved for kokorog2p.</p></li>
+<li><p>French decimal money is decomposed deterministically into major and minor
+units; reviewed fixtures define spelling and preserve written fractional
+precision rather than delegating to a third-party currency string.</p></li>
+<li><p>Spanish decimal quantities and money are decomposed deterministically from
+written fractional digits; reviewed fixtures define major/minor wording and
+Spanish one-ending agreement rather than delegating grammar to <code class="docutils literal notranslate"><span class="pre">num2words</span></code>.</p></li>
 </ul>
+<p>High-confidence structured sequences include slash and Unicode fractions,
+coordinates, ISBNs, UUIDs, IPv4, MAC addresses, IBANs, locale-grouped phones,
+versions, hashtags, mentions, conservative chemical formulas, explicit acronym
+policies, labeled serial/VIN/product codes, legal references, sports scores,
+address components, operator-shaped math, music-context tokens, and controlled
+genus/species names. URL, e-mail, version, and contextual Roman promotion is
+opt-in through <code class="docutils literal notranslate"><span class="pre">normalize_literals</span></code>; caller protection remains absolute. Broad
+natural-language address, legal, mathematical, musical, and biological parsing
+remains outside the core contract. Unlabeled ambiguous alphanumeric strings
+remain unchanged rather than being memorized as product codes.</p>
 </section>
 <section id="limitations-and-readiness-gates">
 <h1>Limitations and readiness gates</h1>
 <p>spokenform is a one-language written-to-spoken layer. Callers own language
 selection, mixed-language segmentation, markup/SSML, tokenization, lexicons,
 phonemization, and model-specific punctuation.</p>
-<p>German is the first kokorog2p parity target and has text, source mapping, and
-downstream-style token/phoneme fixtures. Czech, Spanish, French, Italian,
-Portuguese, and English number categories remain caller-managed until their own
-parity corpora are approved. Unsupported language categories use an explicit
+<p>German was the first kokorog2p parity target. English has a direct spokenform API
+parity contract; French, Spanish, Italian, and Portuguese now
+have text, source mapping, downstream token/phoneme, protection, and
+released-stack fixtures. Portuguese and Czech time remain caller-managed.
+Czech and English semantic number categories are owned by
+spokenform, and English is active on the kokorog2p spokenform adapter for
+reviewed structured semantics, contextual single-dot release labels, and safe
+ordinary-number categories. English phoneme-sensitive years, suffix ordinals,
+Roman numerals, phone/ID and arbitrary multi-dot sequences, numeric suffixes, and
+G2P decisions remain downstream-owned. Unsupported
+language categories use an explicit
 <code class="docutils literal notranslate"><span class="pre">NumberPolicy.NONE</span></code> warning rather than a generic <code class="docutils literal notranslate"><span class="pre">num2words</span></code> fallback.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p(language)</span></code> for a profile that keeps all run
 boundary whitespace caller-owned, enables exact protection/mapping, and makes

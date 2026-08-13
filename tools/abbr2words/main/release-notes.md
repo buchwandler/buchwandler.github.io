@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -542,43 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="release-notes">
 <h1>Release notes</h1>
-<section id="unreleased">
-<h2>Unreleased</h2>
-<ul class="simple">
-<li><p>Added a public immutable structured quantity-match API with exact source spans,
-numeric lexeme preservation, protected ranges, categories, and stable canonical IDs.</p></li>
-<li><p>Added the German kokorog2p-compatible quantity inventory for electrical,
-frequency, magnitude, count, litre, and EUR symbols with reviewed case policy.</p></li>
-<li><p>Preserved lexical abbreviation compatibility while giving numeric magnitude
-matches priority over standalone <code class="docutils literal notranslate"><span class="pre">Tsd.</span></code>, <code class="docutils literal notranslate"><span class="pre">Mio.</span></code>, and <code class="docutils literal notranslate"><span class="pre">Mrd.</span></code> entries.</p></li>
-<li><p>Documented that quantity-symbol recognition is lexical and semantic; complete
-number, grammar, and currency realization remains a downstream responsibility.</p></li>
-<li><p>Added conservative Dutch, Polish, Russian, Swedish, and Turkish abbreviation
-and numeric-unit registries with ISO aliases.</p></li>
-<li><p>Refactored localized unit data around canonical unit IDs and added flexible
-horizontal whitespace matching for Russian multiword abbreviations.</p></li>
-<li><p>Documented Turkish case-sensitive matching, restricted apostrophe-suffix unit
-policy, and lemma-only morphology limits.</p></li>
-<li><p>Added provider-neutral source-aligned <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> support.</p></li>
-<li><p>Added optional entry-level POS allow/deny guards.</p></li>
-<li><p>Planned unit and abbreviation replacements against original offsets and
-apply them right-to-left for stable external annotation alignment.</p></li>
-<li><p>Exposed those planned replacements through immutable public result models,
-including distinct metadata for unit matches.</p></li>
-<li><p>Added finite German formatting aliases for common compound abbreviations and
-corrected relative anchored followed-by guards.</p></li>
-<li><p>Clarified that quantity verbalization and grammatical number remain the
-caller’s structured-stage responsibility.</p></li>
-<li><p>Preserved the sentence-final <code class="docutils literal notranslate"><span class="pre">in.</span></code> regression while retaining numeric inch
-expansion.</p></li>
-<li><p>Added no runtime dependency; spaCy remains separately installed and used only
-by the integration example.</p></li>
-<li><p>Added a tested spaCy token adapter example without adding spaCy to runtime or
-example dependencies.</p></li>
-<li><p>Clarified that POS guards currently apply to configured custom entries;
-bundled registries remain structurally guarded.</p></li>
-</ul>
-</section>
+<p>The generated <a class="reference internal" href="../changelog/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">changelog.md</span></code></span></a> is the canonical release history.
+Use that page for versioned changes and release dates; this page is kept as a
+stable navigation entry so the documentation tree has one source of truth.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

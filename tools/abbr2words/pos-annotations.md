@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/pos-annotations/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 

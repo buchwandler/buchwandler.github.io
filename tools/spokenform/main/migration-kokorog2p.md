@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -548,18 +548,20 @@ caller override spans with <code class="docutils literal notranslate"><span clas
 the public span helpers to remap boundaries, and inspect <code class="docutils literal notranslate"><span class="pre">warnings</span></code> before passing
 the result to a G2P tokenizer. The adapter projection is available through
 <code class="docutils literal notranslate"><span class="pre">PreparedText.to_adapter_dict()</span></code>.</p>
-<p>The German integration contract is tested at three boundaries: spoken text,
+<p>The English, German, French, Spanish, Italian, Portuguese, and Czech downstream
+migration contracts are tested at three boundaries: spoken text,
 source replacement/offset provenance, and a downstream-style token/phoneme
 fixture. spokenform does not own tokenization, lexicon lookup, phonemization,
 quote/dash typography, or model punctuation. A downstream adapter should run a
 dual comparison before removing its legacy normalizer.</p>
-<p>The first parity target is German. Lexical abbreviations and numeric symbol
-recognition come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; spokenform supplies the German semantic
-realization and exact source replacements. Do not delete a downstream normalizer
+<p>Lexical abbreviations and numeric symbol recognition come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; spokenform
+supplies locale-owned semantic realization and exact source replacements. Do not
+delete a downstream normalizer
 until both paths have been compared for prepared text, source replacements,
 extended token positions, phonemes, warnings, and protected overrides. A real
 downstream gate is provided in <code class="docutils literal notranslate"><span class="pre">tests/test_real_kokorog2p_integration.py</span></code> and is
-run in CI with the released <code class="docutils literal notranslate"><span class="pre">kokorog2p[de]</span></code> stack.</p>
+run in CI with released <code class="docutils literal notranslate"><span class="pre">kokorog2p[de,fr]</span></code> packages; SpanishG2P and ItalianG2P
+are part of the base package and are exercised by the same gate.</p>
 <section id="ownership-audit">
 <h2>Ownership audit</h2>
 <table class="docutils align-default">
@@ -572,41 +574,69 @@ run in CI with the released <code class="docutils literal notranslate"><span cla
 </thead>
 <tbody>
 <tr class="row-even"><td><p>cs</p></td>
-<td><p>dates, numbers, currencies, locale decimal/grouping semantics</p></td>
-<td><p>G2P and lexicon behavior</p></td>
-<td><p>caller-managed; parity corpus pending</p></td>
+<td><p>reviewed dates, ordinary numbers, quantities, temperatures, currencies, canonical units</p></td>
+<td><p>G2P/lexicon behavior; colon times</p></td>
+<td><p>parity-gated; <code class="docutils literal notranslate"><span class="pre">STRUCTURED_AND_PLAIN</span></code>; time caller-managed</p></td>
 </tr>
 <tr class="row-odd"><td><p>en</p></td>
-<td><p>dates, currencies, ordinary written numbers</p></td>
-<td><p>phoneme-sensitive years, digit-by-digit and suffix heuristics</p></td>
-<td><p>ownership documented; parity corpus pending</p></td>
+<td><p>dates, validated clock times, currencies, reviewed quantities, safe ordinary written numbers, contextual single-dot release labels</p></td>
+<td><p>phoneme-sensitive years, suffix ordinals, Roman numerals, phone/ID and arbitrary multi-dot sequences, numeric suffixes, G2P decisions</p></td>
+<td><p>active adapter / parity-gated; downstream-only categories remain explicit</p></td>
 </tr>
 <tr class="row-even"><td><p>es</p></td>
-<td><p>dates, numbers, currencies, units</p></td>
-<td><p>G2P/tokenizer typography</p></td>
-<td><p>parser hardening covered; parity corpus pending</p></td>
+<td><p>reviewed dates, ordinary numbers, currencies, units, temperatures</p></td>
+<td><p>G2P/tokenizer typography; time expressions</p></td>
+<td><p>parity-gated; <code class="docutils literal notranslate"><span class="pre">STRUCTURED_AND_PLAIN</span></code>; time caller-managed</p></td>
 </tr>
 <tr class="row-odd"><td><p>fr</p></td>
-<td><p>dates, numbers, currencies, units</p></td>
-<td><p>G2P/tokenizer typography</p></td>
-<td><p>parser hardening covered; parity corpus pending</p></td>
+<td><p>dates, times, numbers, ordinals, currencies, temperatures, units, exact maps</p></td>
+<td><p>G2P/tokenizer typography, lexicon, phonemes</p></td>
+<td><p>parity-gated; <code class="docutils literal notranslate"><span class="pre">STRUCTURED_AND_PLAIN</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>it</p></td>
-<td><p>dates, numbers, currencies, units</p></td>
-<td><p>G2P/tokenizer typography</p></td>
-<td><p>parser hardening covered; parity corpus pending</p></td>
+<td><p>reviewed dates, ordinary numbers, currencies, units, temperatures</p></td>
+<td><p>G2P/tokenizer typography; colon-time ownership</p></td>
+<td><p>parity-gated; <code class="docutils literal notranslate"><span class="pre">STRUCTURED_AND_PLAIN</span></code>; colon times caller-managed</p></td>
 </tr>
 <tr class="row-odd"><td><p>pt</p></td>
-<td><p>dates, numbers, currencies, units</p></td>
-<td><p>G2P/tokenizer typography</p></td>
-<td><p>parser hardening covered; parity corpus pending</p></td>
+<td><p>reviewed dates, ordinary numbers, currencies, units, temperatures</p></td>
+<td><p>G2P/tokenizer typography; colon-time expressions</p></td>
+<td><p>parity-gated; <code class="docutils literal notranslate"><span class="pre">STRUCTURED_AND_PLAIN</span></code>; time caller-managed</p></td>
 </tr>
 </tbody>
 </table>
+<p>English’s safe plain-number pass intentionally handles only ordinary short or
+grouped cardinals and exact decimal digits. A separate reviewed structured rule
+handles contextual single-dot release labels such as <code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">2.0</span></code> and renders the
+fractional zero as <code class="docutils literal notranslate"><span class="pre">oh</span></code>; it does not change ordinary decimal wording. Quantity
+matches take precedence over that contextual rule. Four-digit and longer ungrouped
+digit strings remain raw so years, identifiers, and sequence-like values reach
+kokorog2p’s <code class="docutils literal notranslate"><span class="pre">NumberConverter</span></code> and related heuristics. A structured candidate
+with unsupported fractional currency precision also remains unchanged.</p>
+<p>English is active on the kokorog2p spokenform adapter for reviewed structured
+semantics, contextual single-dot release labels, and safe ordinary-number
+categories. Phoneme-sensitive years, suffix ordinals, Roman numerals, phone/ID
+and arbitrary multi-dot sequences, numeric suffixes, and G2P decisions remain
+downstream in kokorog2p; the adapter does not claim those categories.</p>
 <p>This audit intentionally does not port language detection, markup parsing, mixed
 language orchestration, lexicon lookup, phoneme suffix rules, token IDs, or model
-specific quote/dash behavior into spokenform. The non-German number policies remain
-caller-managed until each language has its own accepted downstream corpus.</p>
+specific quote/dash behavior into spokenform. French, Spanish, Italian, and
+Portuguese are
+ready for downstream handoff only with the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.4</span></code>
+prerequisite and their real parity gates; package publication remains the release
+workflow boundary. Spanish, Italian, Portuguese, and Czech time ownership is
+intentionally deferred until reviewed time corpora exist. English semantic
+number categories are available in the direct spokenform API, while years,
+ordinals, Roman numerals, phone/ID and dotted sequences, numeric suffixes, and
+G2P decisions remain downstream-owned.</p>
+</section>
+<section id="preferred-adapter-surface">
+<h2>Preferred adapter surface</h2>
+<p>Downstream integrations should depend on the stable high-level surface:
+<code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p(language)</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>. Low-level mapping and stage helpers remain exported for advanced
+use but are not required for a normal kokorog2p adapter.</p>
 </section>
 </section>
 </div>

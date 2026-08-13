@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/quickstart/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -551,9 +551,11 @@ rest of the input:</p>
 <span class="c1"># Professor Klein kommt gegebenenfalls am Freitag</span>
 </pre></div>
 </div>
-<p>Locale forms and common aliases are normalized to the bundled base language:</p>
+<p>Locale forms and common aliases use exact-locale-first resolution with base fallback:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;Prof. Klein&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de-DE&quot;</span><span class="p">)</span>
 <span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;Prof. Klein&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ger&quot;</span><span class="p">)</span>
+<span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;pt-BR&quot;</span><span class="p">)</span>  <span class="c1"># &quot;pt_BR&quot;</span>
+<span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;en_GB&quot;</span><span class="p">)</span>  <span class="c1"># &quot;en&quot;</span>
 </pre></div>
 </div>
 <p>Context detection is enabled by default. For German <code class="docutils literal notranslate"><span class="pre">Fr.</span></code>, the surrounding text
@@ -563,10 +565,15 @@ can distinguish a title from the weekday:</p>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">context</span></code> choice applies to each call and is independent of earlier calls.</p>
-<p>The package expands abbreviations only. It does not normalize ordinary numbers,
-dates, times, currencies, measurements, or general punctuation. The input must
-be a string; a non-string raises <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>, and an unknown language raises
-<code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p>
+<p>The generic <code class="docutils literal notranslate"><span class="pre">DATE</span></code> context is bounded: a custom date-sensitive rule can use
+numeric evidence such as <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">X.</span> <span class="pre">2026</span></code>, but the package does not parse or
+normalize complete dates.</p>
+<p>The package expands abbreviations and reviewed unit symbols after numeric
+quantities. Ordinary numeric values are preserved, while unit symbols such as
+<code class="docutils literal notranslate"><span class="pre">500</span> <span class="pre">g</span></code> can become <code class="docutils literal notranslate"><span class="pre">500</span> <span class="pre">gram</span></code>. Complete number wording, dates, times, currency
+realization, measurement conversion, and grammatical agreement remain outside
+this package. The input must be a string; a non-string raises <code class="docutils literal notranslate"><span class="pre">TypeError</span></code>, and
+an unknown language raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>. <code class="docutils literal notranslate"><span class="pre">base_language(&quot;pt-BR&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">&quot;pt&quot;</span></code>.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

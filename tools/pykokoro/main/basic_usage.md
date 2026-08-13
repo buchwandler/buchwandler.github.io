@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aed7fce71f7effddca2c8822b39a04f3a33a30c7"
+docs_commit: "be712cdada539083bfeb08fb2e026ddc0213ed2a"
 search_enabled: true
 ---
 
@@ -574,11 +574,18 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
     <span class="p">)</span>
 <span class="p">)</span>
 
+<span class="c1"># GitHub v1.0 is the explicit Termux-friendly source when HuggingFace is unavailable.</span>
+<span class="c1"># It uses the embedded v1.0 vocabulary and does not need config.json from HuggingFace.</span>
+
 <span class="c1"># Custom generation settings</span>
 <span class="n">generation</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">generation</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>HuggingFace is the default source, and source selection is deterministic: PyKokoro does
+not silently fall back to another source. Explicit <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> files
+continue to be validated and used in place. ONNX Runtime Android/provider warnings are
+separate from model downloads.</p>
 <section id="reusing-the-pipeline">
 <h3>Reusing the Pipeline</h3>
 <p>Create a pipeline once and reuse it across runs:</p>

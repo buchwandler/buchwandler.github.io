@@ -113,8 +113,8 @@
         {
           "anchor": "",
           "heading": "Model and Voice Utilities",
-          "text": "These utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.",
-          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement."
+          "text": "These utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.\n\nHuggingFace is the default model source. For Termux/Android installations where\nHuggingFace downloads are unavailable, select GitHub v1.0 explicitly:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\nGitHub v1.0 uses the embedded standard v1.0 vocabulary and does not require a\nHuggingFace config.json. Model sources are never silently switched. Explicit\nmodel_path and voices_path files remain validated in place, and Android ONNX Runtime\nwarnings are independent of model asset selection.",
+          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.\n\nhuggingface is the default model source. for termux/android installations where\nhuggingface downloads are unavailable, select github v1.0 explicitly:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\ngithub v1.0 uses the embedded standard v1.0 vocabulary and does not require a\nhuggingface config.json. model sources are never silently switched. explicit\nmodel_path and voices_path files remain validated in place, and android onnx runtime\nwarnings are independent of model asset selection."
         },
         {
           "anchor": "",
@@ -144,8 +144,8 @@
         {
           "anchor": "",
           "heading": "Initializing the Pipeline",
-          "text": "The main entry point is the KokoroPipeline class:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# Initialize with defaults (HuggingFace v1.0)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\n\n# Specify model source and variant\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub source\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# Custom generation settings\ngeneration = GenerationConfig(lang=\"en-us\", speed=1.1)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\", generation=generation))",
-          "lower": "the main entry point is the kokoropipeline class:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# initialize with defaults (huggingface v1.0)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\n\n# specify model source and variant\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github source\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# custom generation settings\ngeneration = generationconfig(lang=\"en-us\", speed=1.1)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\", generation=generation))"
+          "text": "The main entry point is the KokoroPipeline class:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# Initialize with defaults (HuggingFace v1.0)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\n\n# Specify model source and variant\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub source\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub v1.0 is the explicit Termux-friendly source when HuggingFace is unavailable.\n# It uses the embedded v1.0 vocabulary and does not need config.json from HuggingFace.\n\n# Custom generation settings\ngeneration = GenerationConfig(lang=\"e…",
+          "lower": "the main entry point is the kokoropipeline class:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# initialize with defaults (huggingface v1.0)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\n\n# specify model source and variant\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github source\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github v1.0 is the explicit termux-friendly source when huggingface is unavailable.\n# it uses the embedded v1.0 vocabulary and does not need config.json from huggingface.\n\n# custom generation settings\ngeneration = generationconfig(lang=\"e…"
         },
         {
           "anchor": "",
@@ -271,8 +271,14 @@
         {
           "anchor": "",
           "heading": "Changed",
-          "text": "German synthesis defaults to the verified Martin v1.2 fp32 profile with explicit\nlegacy model compatibility",
-          "lower": "german synthesis defaults to the verified martin v1.2 fp32 profile with explicit\nlegacy model compatibility"
+          "text": "German synthesis defaults to the verified Martin v1.2 fp32 profile with automatic\nlanguage-aware model and voice resolution\n\n\nGitHub v1.0 model assets use the embedded vocabulary and no longer require a\nHuggingFace config download",
+          "lower": "german synthesis defaults to the verified martin v1.2 fp32 profile with automatic\nlanguage-aware model and voice resolution\n\n\ngithub v1.0 model assets use the embedded vocabulary and no longer require a\nhuggingface config download"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed managed HuggingFace voice loading to retain the canonical archive file path\ninstead of the containing directory",
+          "lower": "fixed managed huggingface voice loading to retain the canonical archive file path\ninstead of the containing directory"
         },
         {
           "anchor": "",
@@ -465,12 +471,6 @@
           "heading": "Changed",
           "text": "Changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nChanged all examples to use new pipeline format",
           "lower": "changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nchanged all examples to use new pipeline format"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed phrasplit splitter and kokorog2p issues",
-          "lower": "fixed phrasplit splitter and kokorog2p issues"
         }
       ]
     },
@@ -642,6 +642,12 @@
           "heading": "Android/Termux providers",
           "text": "Use a provider name exposed by the installed ONNX Runtime build:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\nwith KokoroPipeline(PipelineConfig(provider=\"nnapi\")) as pipeline:\n    result = pipeline.run(\"Hello from Android.\")\n\n\n\n\nprovider=\"auto\" selects the highest-priority available provider. PyKokoro does not\ninfer provider availability from platform names.",
           "lower": "use a provider name exposed by the installed onnx runtime build:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\nwith kokoropipeline(pipelineconfig(provider=\"nnapi\")) as pipeline:\n    result = pipeline.run(\"hello from android.\")\n\n\n\n\nprovider=\"auto\" selects the highest-priority available provider. pykokoro does not\ninfer provider availability from platform names."
+        },
+        {
+          "anchor": "",
+          "heading": "Termux/Android model assets",
+          "text": "HuggingFace remains the default model source. If HuggingFace downloads are unavailable\nin Termux, select the self-contained GitHub v1.0 profile explicitly:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipeline = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\nGitHub v1.0 uses the embedded standard v1.0 vocabulary and does not download HuggingFace\nconfig.json. PyKokoro never silently changes the configured source. If model_path\nand voices_path are supplied, each file is validated and used in place; missing custom\nfiles do not trigger a managed-cache download. The Unsupported platform (android)\nwarning printed by some ONNX Runtime packages is independent of this mode…",
+          "lower": "huggingface remains the default model source. if huggingface downloads are unavailable\nin termux, select the self-contained github v1.0 profile explicitly:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipeline = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\ngithub v1.0 uses the embedded standard v1.0 vocabulary and does not download huggingface\nconfig.json. pykokoro never silently changes the configured source. if model_path\nand voices_path are supplied, each file is validated and used in place; missing custom\nfiles do not trigger a managed-cache download. the unsupported platform (android)\nwarning printed by some onnx runtime packages is independent of this mode…"
         },
         {
           "anchor": "",

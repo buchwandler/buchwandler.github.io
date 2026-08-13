@@ -5,8 +5,8 @@ permalink: /tools/spokenform/installation/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 

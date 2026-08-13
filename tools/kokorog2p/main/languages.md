@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 
@@ -543,7 +543,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="language-support">
 <h1>Language Support</h1>
 <p>kokorog2p supports multiple languages with varying levels of functionality.</p>
-<table class="docutils align-default" id="id34">
+<table class="docutils align-default" id="id35">
 <caption><span class="caption-text">Language Support Overview</span></caption>
 <colgroup>
 <col style="width: 15.0%" />
@@ -655,6 +655,15 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p><strong>Contraction support</strong>: Proper handling of “can’t”, “won’t”, etc.</p></li>
 </ul>
 </section>
+<section id="semantic-ownership">
+<h3>Semantic ownership</h3>
+<p>English reviewed written-to-spoken preparation runs once per homogeneous language run
+through <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> and <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, covering shared abbreviations, dates, quantities,
+temperatures, currencies, and ordinary number forms. <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> retains English
+typography, tokenization, alignment, and G2P behavior. Phoneme- sensitive number
+categories, including forms whose pronunciation depends on the English G2P context,
+remain downstream-owned by the local <code class="docutils literal notranslate"><span class="pre">NumberConverter</span></code> path.</p>
+</section>
 <section id="usage">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
@@ -722,11 +731,19 @@ classified before lexical abbreviation expansion.</p></li>
 abbreviations, and grammatical unit forms such as <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Std.</span></code> → <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Stunde</span></code> and <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">kg</span></code>
 → <code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Kilogramm</span></code>.</p></li>
 <li><p><strong>Ambiguity policy</strong>: Bare sentence-final numbers stay cardinals, invalid dates and
-times remain unchanged, and unit symbols only expand when preceded by a number. <code class="docutils literal notranslate"><span class="pre">ca.</span></code>
-is spoken as <code class="docutils literal notranslate"><span class="pre">zirka</span></code>, <code class="docutils literal notranslate"><span class="pre">etc.</span></code> as <code class="docutils literal notranslate"><span class="pre">ezetera</span></code>, and <code class="docutils literal notranslate"><span class="pre">GmbH</span></code>/<code class="docutils literal notranslate"><span class="pre">AG</span></code> use German letter-name
-spellings.</p></li>
+times remain unchanged, and unit symbols only expand when preceded by a number. The
+exact written-to-spoken result, including abbreviation and initialism choices, is
+supplied by the pinned Spokenform profile rather than a second kokorog2p rule set.</p></li>
 <li><p><strong>Regional variants</strong>: de-de, de-at, de-ch</p></li>
 </ul>
+<p>German was the first language migrated to the shared semantic-preparation architecture,
+followed by French, Spanish, Italian, Portuguese, Czech, and English. These seven
+languages use the same per-homogeneous-run <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> path. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> remains the
+shared source of truth for lexical abbreviation and symbol recognition, while
+<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns accepted written-to-spoken behavior through its <code class="docutils literal notranslate"><span class="pre">for_kokorog2p</span></code>
+profile. The examples in this guide are illustrative; the pinned Spokenform release/API
+is authoritative. Kokorog2p retains only typography and phoneme-sensitive handling for
+spans Spokenform leaves protected or unsupported.</p>
 </section>
 <section id="id2">
 <h3>Usage</h3>
@@ -767,9 +784,14 @@ spellings.</p></li>
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Gold dictionary</strong>: High-quality French pronunciations</p></li>
-<li><p><strong>Number handling</strong>: Cardinals, ordinals, currency</p></li>
+<li><p><strong>Semantic ownership</strong>: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> recognizes French abbreviations and symbols;
+<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> prepares dates, times, numbers, ordinals, currencies, quantities, units,
+and temperatures</p></li>
 <li><p><strong>espeak-ng fallback</strong>: For out-of-vocabulary words</p></li>
 </ul>
+<p>French was the second migrated language. kokorog2p retains French typography,
+tokenization, lexicon lookup, fallback, and phoneme conversion. The legacy helpers in
+<code class="docutils literal notranslate"><span class="pre">kokorog2p.fr.numbers</span></code> remain as deprecated compatibility wrappers.</p>
 </section>
 <section id="id5">
 <h3>Usage</h3>
@@ -812,7 +834,14 @@ spellings.</p></li>
 </ul>
 </li>
 <li><p><strong>No dictionary required</strong>: Works with any Czech text</p></li>
+<li><p><strong>Semantic ownership</strong>: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns Czech abbreviation and canonical
+quantity/currency recognition; <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns reusable numbers, dates, quantities,
+temperatures, and currencies; kokorog2p retains Czech typography, tokenization,
+alignment, phonology, lexicon, and fallbacks.</p></li>
 </ul>
+<p>Czech semantic preparation runs once per homogeneous language run. The Czech normalizer
+is a downstream typography adapter, so direct <code class="docutils literal notranslate"><span class="pre">CzechG2P</span></code> use and the public pipeline
+share the same spokenform preparation. Czech times remain caller-managed.</p>
 </section>
 <section id="id8">
 <h3>Usage</h3>
@@ -862,7 +891,13 @@ Latin American dialects.</p>
 </li>
 <li><p><strong>Dialect support</strong>: es (European), la (Latin American)</p></li>
 <li><p><strong>Number handling</strong>: Cardinals, ordinals, currency</p></li>
+<li><p><strong>Semantic ownership</strong>: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> recognizes Spanish abbreviations and symbols;
+<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> prepares written numbers, quantities, temperatures, currencies, and
+reviewed dates; kokorog2p retains typography, tokenization, alignment, and G2P</p></li>
 </ul>
+<p>Spanish semantic preparation is applied once per homogeneous language run. Dialect
+selection remains a phoneme-layer concern: <code class="docutils literal notranslate"><span class="pre">es</span></code> provides European theta behavior and
+<code class="docutils literal notranslate"><span class="pre">la</span></code> provides Latin-American seseo behavior over the same prepared text.</p>
 </section>
 <section id="id11">
 <h3>Usage</h3>
@@ -894,6 +929,20 @@ Latin American dialects.</p>
 <h2>Italian (it)</h2>
 <p>Italian G2P uses rule-based phonology with predictable stress and gemination handling.</p>
 <section id="id13">
+<h3>Semantic ownership</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns Italian lexical abbreviations, units, currency symbols, canonical
+structured IDs, and source-span matching.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns reviewed dates, quantities, temperatures, currencies, and ordinary
+written numbers for each homogeneous Italian run.</p></li>
+<li><p>kokorog2p retains Italian typography, apostrophe/contraction handling, tokenization,
+spaCy integration, and G2P stress, gemination, phoneme, and vocabulary behavior.</p></li>
+</ul>
+<p>Italian colon times remain caller-managed in this migration. <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> does not
+perform language detection, mixed-language segmentation, markup parsing, or phoneme
+generation.</p>
+</section>
+<section id="id14">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Rule-based phonology</strong>:</p>
@@ -910,7 +959,7 @@ Latin American dialects.</p>
 <li><p><strong>Number handling</strong>: Cardinals, ordinals</p></li>
 </ul>
 </section>
-<section id="id14">
+<section id="id15">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.it</span><span class="w"> </span><span class="kn">import</span> <span class="n">ItalianG2P</span>
 
@@ -922,7 +971,7 @@ Latin American dialects.</p>
 </pre></div>
 </div>
 </section>
-<section id="id15">
+<section id="id16">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -942,8 +991,15 @@ Latin American dialects.</p>
 </section>
 <section id="portuguese-pt">
 <h2>Portuguese (pt)</h2>
+<p>Portuguese semantic preparation is applied once per homogeneous language run. Bare <code class="docutils literal notranslate"><span class="pre">pt</span></code>
+and <code class="docutils literal notranslate"><span class="pre">pt-br</span></code> select Brazilian Portuguese wording; <code class="docutils literal notranslate"><span class="pre">pt-pt</span></code> preserves European Portuguese
+wording. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns Portuguese lexical abbreviation and canonical unit/currency
+symbol recognition, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns Portuguese written-to-spoken semantics for dates,
+numbers, quantities, temperatures, currencies, and reviewed structured forms, and
+kokorog2p retains Portuguese typography, tokenization, and G2P. Colon times remain
+caller-managed in this migration.</p>
 <p>Portuguese G2P supports Brazilian Portuguese with comprehensive phonological rules.</p>
-<section id="id16">
+<section id="id17">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Rule-based phonology</strong>:</p>
@@ -957,11 +1013,12 @@ Latin American dialects.</p>
 <li><p>Liquids: r [ʁ/x/h], rr [ʁ/x], single r [ɾ]</p></li>
 </ul>
 </li>
-<li><p><strong>Dialect</strong>: Brazilian Portuguese (pt-br)</p></li>
+<li><p><strong>Dialect</strong>: Brazilian Portuguese (pt-br) by default; semantic preparation also
+supports European Portuguese wording (pt-pt)</p></li>
 <li><p><strong>Stress marking</strong>: Automatic stress assignment</p></li>
 </ul>
 </section>
-<section id="id17">
+<section id="id18">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.pt</span><span class="w"> </span><span class="kn">import</span> <span class="n">PortugueseG2P</span>
 
@@ -973,7 +1030,7 @@ Latin American dialects.</p>
 </pre></div>
 </div>
 </section>
-<section id="id18">
+<section id="id19">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -994,7 +1051,7 @@ Latin American dialects.</p>
 <section id="chinese-zh">
 <h2>Chinese (zh)</h2>
 <p>Chinese G2P uses jieba for tokenization and pypinyin for phoneme conversion.</p>
-<section id="id19">
+<section id="id20">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Jieba tokenization</strong>: Chinese word segmentation</p></li>
@@ -1004,7 +1061,7 @@ Latin American dialects.</p>
 <li><p><strong>Punctuation mapping</strong>: Chinese to Western punctuation</p></li>
 </ul>
 </section>
-<section id="id20">
+<section id="id21">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.zh</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChineseG2P</span>
 
@@ -1015,7 +1072,7 @@ Latin American dialects.</p>
 </pre></div>
 </div>
 </section>
-<section id="id21">
+<section id="id22">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -1028,7 +1085,7 @@ Latin American dialects.</p>
 <section id="japanese-ja">
 <h2>Japanese (ja)</h2>
 <p>Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.</p>
-<section id="id22">
+<section id="id23">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>pyopenjtalk</strong>: Full Japanese text analysis</p></li>
@@ -1037,7 +1094,7 @@ Latin American dialects.</p>
 <li><p><strong>Number handling</strong>: Japanese numerals</p></li>
 </ul>
 </section>
-<section id="id23">
+<section id="id24">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ja</span><span class="w"> </span><span class="kn">import</span> <span class="n">JapaneseG2P</span>
 
@@ -1048,7 +1105,7 @@ Latin American dialects.</p>
 </pre></div>
 </div>
 </section>
-<section id="id24">
+<section id="id25">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -1065,7 +1122,7 @@ Latin American dialects.</p>
 <h2>Korean (ko)</h2>
 <p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological
 rules.</p>
-<section id="id25">
+<section id="id26">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>MeCab integration</strong>: Korean morphological analysis</p></li>
@@ -1083,7 +1140,7 @@ rules.</p>
 <li><p><strong>Number handling</strong>: Korean numerals</p></li>
 </ul>
 </section>
-<section id="id26">
+<section id="id27">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ko</span><span class="w"> </span><span class="kn">import</span> <span class="n">KoreanG2P</span>
 
@@ -1094,7 +1151,7 @@ rules.</p>
 </pre></div>
 </div>
 </section>
-<section id="id27">
+<section id="id28">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -1111,7 +1168,7 @@ rules.</p>
 <section id="hebrew-he">
 <h2>Hebrew (he)</h2>
 <p>Hebrew G2P uses phonikud for nikud-based phonemization.</p>
-<section id="id28">
+<section id="id29">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>phonikud integration</strong>: Hebrew nikud to IPA conversion</p></li>
@@ -1120,7 +1177,7 @@ rules.</p>
 <li><p><strong>Modern Hebrew</strong>: Optimized for contemporary pronunciation</p></li>
 </ul>
 </section>
-<section id="id29">
+<section id="id30">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.he</span><span class="w"> </span><span class="kn">import</span> <span class="n">HebrewG2P</span>
 
@@ -1132,7 +1189,7 @@ rules.</p>
 </pre></div>
 </div>
 </section>
-<section id="id30">
+<section id="id31">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -1150,7 +1207,7 @@ rules.</p>
 <h2>Mixed-Language Support</h2>
 <p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing
 each word to the appropriate G2P engine.</p>
-<section id="id31">
+<section id="id32">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Automatic detection</strong>: Word-level language detection using lingua-py</p></li>
@@ -1183,7 +1240,7 @@ each word to the appropriate G2P engine.</p>
 <li><p>Turkish (tr)</p></li>
 </ul>
 </section>
-<section id="id32">
+<section id="id33">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
@@ -1199,7 +1256,7 @@ each word to the appropriate G2P engine.</p>
 </pre></div>
 </div>
 </section>
-<section id="id33">
+<section id="id34">
 <h3>Examples</h3>
 <p><strong>German with English:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>

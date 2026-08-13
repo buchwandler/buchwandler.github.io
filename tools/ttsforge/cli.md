@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
+docs_ref: "v0.3.4"
+docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
 search_enabled: true
 ---
 

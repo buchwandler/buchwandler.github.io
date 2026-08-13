@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/installation/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -555,6 +555,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h2>Development</h2>
 <p>From a checkout, install the package and development tools in editable mode:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install -e &quot;.[dev]&quot;</span>
+<span class="go">python -m build</span>
 <span class="go">pytest</span>
 </pre></div>
 </div>

@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -579,6 +579,15 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 <p>When <code class="docutils literal notranslate"><span class="pre">config</span></code> is supplied, it is authoritative for pipeline options.</p>
+<p>For Czech downstream preparation, use the same adapter with an explicit language:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_kokorog2p</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">prepare_for_kokorog2p</span><span class="p">(</span><span class="s2">&quot;1°C, 12,80 Kč, 18:20&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="s2">&quot;jeden stupeň Celsia, dvanáct korun a osmdesát haléřů, 18:20&quot;</span>
+</pre></div>
+</div>
+<p>Czech semantic numbers and quantities are owned by spokenform; colon times stay
+caller-managed.</p>
 </section>
 </section>
 </div>

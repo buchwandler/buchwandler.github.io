@@ -5,8 +5,8 @@ permalink: /tools/spokenform/mapping/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 
@@ -559,6 +559,27 @@ html[data-theme="dark"] .sphinxpress-doc {
 boundary may correspond to both sides of an expanded replacement.</p>
 <p><code class="docutils literal notranslate"><span class="pre">map_source_span()</span></code> uses left bias for the start and right bias for the end.
 <code class="docutils literal notranslate"><span class="pre">map_output_span()</span></code> performs the inverse operation.</p>
+<p>Structured edits are available on the structured stage and expose the complete
+source expression, spoken replacement, <code class="docutils literal notranslate"><span class="pre">kind</span></code>, language, and locale <code class="docutils literal notranslate"><span class="pre">rule</span></code>.
+For downstream adapters, prefer <code class="docutils literal notranslate"><span class="pre">PreparedText.source_edits</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PreparedText.map_source_span()</span></code>, and <code class="docutils literal notranslate"><span class="pre">PreparedText.map_output_span()</span></code> rather
+than importing mapping internals.</p>
+</section>
+<section id="mapping-and-provenance">
+<h1>Mapping and provenance</h1>
+<p><code class="docutils literal notranslate"><span class="pre">PreparationStage.edits</span></code> and <code class="docutils literal notranslate"><span class="pre">PreparationStage.mapped_edits</span></code> are local to the
+stage input. <code class="docutils literal notranslate"><span class="pre">PreparedText.source_edits</span></code> is the composed source-global surface:
+each <code class="docutils literal notranslate"><span class="pre">SourceReplacement</span></code> points into the original source and the final spoken
+output, and records all stages contributing to that output span.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">PreparedText.map_source_span()</span></code> and <code class="docutils literal notranslate"><span class="pre">map_output_span()</span></code> for boundary-aware
+conversion. The default span mapping uses left bias at the start and right bias
+at the end, so a source span containing generated text maps over the complete
+generated output. Use <code class="docutils literal notranslate"><span class="pre">to_adapter_dict()</span></code> when a JSON-ready kokorog2p result is
+required.</p>
+<p>Structured semantic expressions are represented by one source-aligned replacement
+for their complete span, for example <code class="docutils literal notranslate"><span class="pre">12,50</span> <span class="pre">EUR</span></code> becomes one currency replacement.
+<code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code> are ordered, non-overlapping, deterministic,
+and use original-source coordinates even when later stages modify generated text.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 
@@ -645,6 +645,7 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#semantic-preparation-boundary">Semantic preparation boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#custom-g2p-configuration">Custom G2P Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#token-inspection">Token Inspection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#dictionary-lookup">Dictionary Lookup</a></li>
@@ -713,6 +714,7 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/english/">English API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/english/#semantic-preparation">Semantic Preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/english/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/english/#lexicon">Lexicon</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/english/#number-conversion">Number Conversion</a></li>
@@ -740,12 +742,14 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/spanish/">Spanish API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/spanish/#text-preparation-ownership">Text preparation ownership</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/spanish/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/spanish/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/spanish/#phonology-features">Phonology Features</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/italian/">Italian API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/italian/#semantic-preparation">Semantic preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/italian/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/italian/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/italian/#phonology-features">Phonology Features</a></li>

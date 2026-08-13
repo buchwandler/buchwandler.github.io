@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/api/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -544,7 +544,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="convenience-functions">
 <h2>Convenience functions</h2>
-<p>.. py:function:: abbr2words(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
+<p>.. py:function:: abbr2words(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <p>Expand known abbreviations in <em>text</em>.</p>
 <p>The function expands abbreviations only. It intentionally does not normalize
@@ -552,17 +552,32 @@ dates, times, numbers, currencies, or general punctuation. Optional
 annotations must use character offsets in the original source; POS guards
 fail open when usable lexical evidence is missing, and numeric units remain
 authoritative over generic POS predictions.</p>
-<p>.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
+<p>.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <p>Expand <em>text</em> and return exact source-aligned replacement metadata.</p>
 <p>.. py:function:: iter_unit_matches(text, language, *, overrides=None, suppressed=None, protected_spans=())
 :module: abbr2words</p>
 <p>Yield structured source-aligned matches for numeric quantity symbols.</p>
+<p>.. py:function:: iter_unit_diagnostics(text, language, *, overrides=None, suppressed=None, protected_spans=())
+:module: abbr2words</p>
+<p>Yield accepted unit matches and policy rejections for compact candidates.</p>
 <p><code class="docutils literal notranslate"><span class="pre">abbr2words(...,</span> <span class="pre">annotations=...)</span></code> accepts an iterable of source-aligned
 <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.
 Missing lexical POS evidence fails open, and numeric unit guards remain
 authoritative.</p>
+<p>The context enum includes <code class="docutils literal notranslate"><span class="pre">DEFAULT</span></code>, <code class="docutils literal notranslate"><span class="pre">TITLE</span></code>, <code class="docutils literal notranslate"><span class="pre">PLACE</span></code>, <code class="docutils literal notranslate"><span class="pre">TIME</span></code>, <code class="docutils literal notranslate"><span class="pre">DATE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ACADEMIC</span></code>, and <code class="docutils literal notranslate"><span class="pre">RELIGIOUS</span></code>. <code class="docutils literal notranslate"><span class="pre">DATE</span></code> is selected only by bounded numeric or
+date-punctuation evidence in the local source window; it does not parse dates.
+Language profiles may add stricter policies, and uncased scripts do not use the
+cased-letter title heuristic.</p>
+<p>English context profiles use positive place evidence for ambiguous dotted
+spellings. Address/street evidence can expand a single compass letter, and
+explicit Washington/place evidence can expand <code class="docutils literal notranslate"><span class="pre">D.C.</span></code>; personal and
+bibliographic initials remain letter-spelled. Standalone uppercase dotted
+initialisms of two through eight letters use a low-priority source-grapheme
+fallback, so registered semantic rules such as <code class="docutils literal notranslate"><span class="pre">e.g.</span></code> and <code class="docutils literal notranslate"><span class="pre">U.S.</span></code> retain
+precedence while <code class="docutils literal notranslate"><span class="pre">E.G.</span></code> can become <code class="docutils literal notranslate"><span class="pre">E</span> <span class="pre">G</span></code>.</p>
 <p>Abbreviation boundaries use symmetric Unicode word-character lookarounds:
 registered spellings may start or end with punctuation, but cannot attach to a
 surrounding <code class="docutils literal notranslate"><span class="pre">\w</span></code> character. Optional <code class="docutils literal notranslate"><span class="pre">protected_spans=[(start,</span> <span class="pre">end),</span> <span class="pre">...]</span></code>
@@ -583,11 +598,44 @@ same result. Existing convenience calls continue to return strings.</p>
     <span class="nb">print</span><span class="p">(</span><span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The bundled language registry includes <code class="docutils literal notranslate"><span class="pre">cs</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">nl</span></code>,
-<code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">sv</span></code>, and <code class="docutils literal notranslate"><span class="pre">tr</span></code>. Turkish unit symbols followed by straight or
+</section>
+<section id="initialism-policies">
+<h2>Initialism policies</h2>
+<p>The public expansion functions and <code class="docutils literal notranslate"><span class="pre">get_expander()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_shared_expander()</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">Expander</span></code> accept these optional policy arguments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span>
+    <span class="s2">&quot;BBC PDF&quot;</span><span class="p">,</span>
+    <span class="n">initialism_mode</span><span class="o">=</span><span class="s2">&quot;spell_undotted&quot;</span><span class="p">,</span>   <span class="c1"># default: &quot;dotted_only&quot;</span>
+    <span class="n">initialism_case</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>             <span class="c1"># &quot;source&quot;, &quot;upper&quot;, or &quot;lower&quot;</span>
+    <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span> <span class="c1"># or explicit &quot;spell&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The default preserves existing behavior. <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> recognizes only
+standalone ASCII uppercase tokens from two through eight letters and renders
+source-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,
+versions, product codes, phone numbers, stock tickers, or Roman numerals.
+Callers should reserve typed structured spans first, then use this policy for
+remaining uppercase tokens. <code class="docutils literal notranslate"><span class="pre">registered_initialism_mode=&quot;spell&quot;</span></code> affects only
+reviewed registry entries carrying the explicit <code class="docutils literal notranslate"><span class="pre">speech_strategy=&quot;spell_source&quot;</span></code>
+metadata; semantic registry expansions remain the default.</p>
+<p>The shared-expander cache includes all policy values, so expanders with
+different initialism behavior are independent instances. Fallback replacement
+records use <code class="docutils literal notranslate"><span class="pre">abbr:initialism</span></code> for dotted matches and
+<code class="docutils literal notranslate"><span class="pre">abbr:initialism-undotted</span></code> for the opt-in undotted matcher.</p>
+<p>The bundled language registry follows a 66-key current-master parity snapshot:
+49 base keys plus the explicit locale overlays <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>,
+<code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code>. <code class="docutils literal notranslate"><span class="pre">normalize_language()</span></code> returns an exact locale
+key when registered and otherwise its base key. Turkish unit symbols followed by straight or
 curly apostrophe suffixes are intentionally not expanded until suffix
 realization is implemented.</p>
-<p>.. py:function:: expand(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)
+<p>Bundled identity lexical rules are rejected. Locale currencies and similar
+structured identities are recognized only in numeric quantity context, while
+<code class="docutils literal notranslate"><span class="pre">iter_unit_matches()</span></code> remains the semantic API for canonical IDs and exact
+source offsets. Non-English baseline unit replacement text is a localized
+neutral label, not a complete quantity grammar.</p>
+<p>.. py:function:: expand(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spans=None)
 :module: abbr2words</p>
 <p>Expand known abbreviations in <em>text</em>.</p>
 <p>The function expands abbreviations only. It intentionally does not normalize
@@ -597,23 +645,26 @@ fail open when usable lexical evidence is missing, and numeric units remain
 authoritative over generic POS predictions.</p>
 <p>.. py:function:: normalize_language(lang)
 :module: abbr2words</p>
-<p>Normalize an ISO-style language or locale code to a bundled language.</p>
-<p>.. py:function:: supported_languages()
+<p>Normalize and resolve an ISO-style language or locale code.</p>
+<p>.. py:function:: base_language(lang)
 :module: abbr2words</p>
-<p>Return the bundled base language codes.</p>
-<p>.. py:function:: get_expander(lang=’en’, *, context=True)
+<p>Return the resolved base language for a language or locale input.</p>
+<p>.. py:function:: supported_languages(*, include_locales=True)
+:module: abbr2words</p>
+<p>Return sorted bundled language and, optionally, locale keys.</p>
+<p>.. py:function:: get_expander(lang=’en’, *, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)
 :module: abbr2words</p>
 <p>Return a new, independently mutable language expander.</p>
-<p>.. py:function:: get_shared_expander(lang=’en’, *, context=True)
+<p>.. py:function:: get_shared_expander(lang=’en’, *, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)
 :module: abbr2words</p>
-<p>Return the shared registry for a language and context mode.</p>
+<p>Return the shared registry for a language, context, and policy.</p>
 <p>.. py:function:: reset_expanders(lang=None)
 :module: abbr2words</p>
 <p>Reset one or all shared language registries.</p>
 </section>
 <section id="mutable-facade">
 <h2>Mutable facade</h2>
-<p>.. py:class:: Expander(lang=’en’, *, context=True)
+<p>.. py:class:: Expander(lang=’en’, *, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)
 :module: abbr2words
 :canonical: abbr2words.api.Expander</p>
 <p>Small facade for a mutable, language-specific abbreviation registry.</p>
@@ -631,7 +682,7 @@ authoritative over generic POS predictions.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the configured abbreviation spellings.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
+<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation, optionally constrained by POS.
 
@@ -639,7 +690,7 @@ authoritative over generic POS predictions.</p>
   constraints take precedence over allow constraints.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
+<p>.. py:method:: Expander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Register an entry using string-named context expansions.
 </pre></div>
@@ -700,7 +751,11 @@ conversion, or universal UCUM parsing.</p>
 <code class="docutils literal notranslate"><span class="pre">5</span> <span class="pre">km</span> <span class="pre">/</span> <span class="pre">h</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">m^2</span></code>, and <code class="docutils literal notranslate"><span class="pre">2kg-rated</span></code> remain unchanged instead of being
 partially rewritten. Reviewed aliases include both <code class="docutils literal notranslate"><span class="pre">µg</span></code> and <code class="docutils literal notranslate"><span class="pre">μg</span></code>; unrelated
 source characters are not Unicode-normalized. Unit metadata controls case
-sensitivity and whether a numeric value is required.</p>
+sensitivity, whether a numeric value is required, and whether a separator is
+required between a numeric value and an ambiguous one-letter symbol. The
+separator requirement defaults to false for compatibility; reviewed <code class="docutils literal notranslate"><span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">A</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">K</span></code> candidates require spacing so compact identifier-like forms are not
+claimed as units.</p>
 <p>Unit replacements have <code class="docutils literal notranslate"><span class="pre">kind=&quot;unit&quot;</span></code> in the exact replacement result. This
 layer expands unit symbols/abbreviations lexically; it does not verbalize the
 numeric quantity or choose grammatical singular/plural forms. Callers that
@@ -732,11 +787,21 @@ original numeric lexeme exactly. Matches are deterministic, maximal, and
 non-overlapping. <code class="docutils literal notranslate"><span class="pre">protected_spans=[(start,</span> <span class="pre">end),</span> <span class="pre">...]</span></code> suppresses caller-owned
 ranges such as markup, URLs, or code. <code class="docutils literal notranslate"><span class="pre">overrides</span></code> and <code class="docutils literal notranslate"><span class="pre">suppressed</span></code> accept unit
 symbols; suppression also accepts a canonical ID.</p>
+<p><code class="docutils literal notranslate"><span class="pre">iter_unit_diagnostics()</span></code> returns the same accepted decisions plus compact
+separator-policy rejections with <code class="docutils literal notranslate"><span class="pre">status=&quot;rejected&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">reason=&quot;requires_separator&quot;</span></code>. Each record retains the symbol, locale, and
+canonical identity so downstream ownership diagnostics do not need to infer
+decisions from replacement text.</p>
 <p>The matcher recognizes and identifies quantity symbols. It does not decide how
 the complete quantity is spoken: number-to-words conversion, singular/plural
 grammar, currency decomposition, and locale-specific decimal policy belong to
 the consuming semantic normalizer. Currency and magnitude matches expose their
 <code class="docutils literal notranslate"><span class="pre">category</span></code> without turning this package into a structured-number parser.</p>
+<p>Reviewed semantic identities include speed, pressure, data, fuel-consumption,
+and flow units plus JPY, CHF, INR, KRW, and MXN currencies. The <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>
+overlay gives unqualified <code class="docutils literal notranslate"><span class="pre">$</span></code> the Mexican-peso identity while <code class="docutils literal notranslate"><span class="pre">US$</span></code> and <code class="docutils literal notranslate"><span class="pre">USD</span></code>
+remain US dollar. These are recognition contracts for a downstream consumer,
+not amount or number grammar.</p>
 </section>
 <section id="core-types">
 <h2>Core types</h2>
@@ -747,7 +812,7 @@ the consuming semantic normalizer. Currency and magnitude matches expose their
 <p>Offsets use Python string indices: <code class="docutils literal notranslate"><span class="pre">text[start:end]</span></code>. <code class="docutils literal notranslate"><span class="pre">pos</span></code> is
 normally an uppercase coarse Universal POS label; <code class="docutils literal notranslate"><span class="pre">tag</span></code> may contain a
 provider-specific fine-grained tag.</p>
-<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, origin=’bundled’, aliases=())
+<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationEntry</p>
 <p>A single abbreviation with its expansion(s).</p>
@@ -821,15 +886,40 @@ provider-specific fine-grained tag.</p>
   :returns: The expanded form
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.variants</span></code> is an ordered tuple of immutable,
+declarative <code class="docutils literal notranslate"><span class="pre">ExpansionVariant</span></code> values. The first variant whose guards match
+the original source wins, followed by existing context and default expansion
+fallback. Variants do not accept callbacks.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.case_policy</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;fixed&quot;</span></code> by default. Set it to
+<code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code> only for reviewed lexical expansions whose canonical stored form
+is appropriate in mid-sentence text. The matcher applies it after selecting a
+variant or context expansion, and aliases share the entry policy. Dotted
+abbreviations retain one final period when their consumed dot is also
+sentence-final.</p>
+<p>.. py:class:: ExpansionVariant(expansion, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
+:module: abbr2words
+:canonical: abbr2words.core.ExpansionVariant</p>
+<p>One ordered, declarative conditional expansion for an abbreviation.</p>
+<p>Variants deliberately reuse the entry guard vocabulary instead of accepting
+callbacks.  This keeps registry data serializable and makes selection
+deterministic and safe to evaluate against the original source text.</p>
 <p><code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.only_if_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> accept coarse POS labels such
 as <code class="docutils literal notranslate"><span class="pre">NOUN</span></code>, <code class="docutils literal notranslate"><span class="pre">PROPN</span></code>, and <code class="docutils literal notranslate"><span class="pre">ADP</span></code>. They are evaluated only when annotations are
 provided. <code class="docutils literal notranslate"><span class="pre">Expander.add()</span></code> exposes the same optional <code class="docutils literal notranslate"><span class="pre">only_if_pos</span></code> and
 <code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> keyword arguments.</p>
+<p>The abbreviation stage returns lexical replacements with source-aligned spans;
+it does not interpret following numbers, dates, decimals, structured
+identifiers, article elision, surrounding grammar, or speech rendering. Those
+concerns remain with the consuming normalizer, including <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>.</p>
 <p>.. py:class:: AbbreviationContext(*values)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationContext</p>
 <p>Context types for disambiguating abbreviations.</p>
-<p>.. py:class:: AbbreviationExpander(enable_context_detection=True)
+<p>.. py:class:: ExpansionMatch(start, end, source_text, replacement, language, entry_id, kind, context, priority)
+:module: abbr2words
+:canonical: abbr2words.core.ExpansionMatch</p>
+<p>One accepted source-aligned expansion from :meth:<code class="docutils literal notranslate"><span class="pre">expand_with_trace</span></code>.</p>
+<p>.. py:class:: AbbreviationExpander(enable_context_detection=True, *, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationExpander</p>
 <p>Abstract base class for language-specific abbreviation expanders.</p>
@@ -840,7 +930,7 @@ provided. <code class="docutils literal notranslate"><span class="pre">Expander.
   :param entry: The abbreviation entry to add
 </pre></div>
 </div>
-<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None)
+<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string context names and POS guards.
 
@@ -953,6 +1043,14 @@ provided. <code class="docutils literal notranslate"><span class="pre">Expander.
 :module: abbr2words
 :canonical: abbr2words.units.UnitMatch</p>
 <p>One immutable, source-aligned recognized numeric quantity symbol.</p>
+<p>.. py:class:: ProtectedSpan(start, end, kind=None)
+:module: abbr2words
+:canonical: abbr2words.core.ProtectedSpan</p>
+<p>A source range that must not be changed by expansion.</p>
+<p>.. py:class:: UnitEntry(symbols, expansion, case_sensitive=True, description=’’, canonical_symbol=None, requires_numeric_value=True, canonical_id=None, reject_following_apostrophe=False, category=’unit’, quantity_position=’suffix’, allow_lexical_overlap=False, preserve_sentence_final_period=False, reject_following_period=False, requires_separator=False)
+:module: abbr2words
+:canonical: abbr2words.units.UnitEntry</p>
+<p>A localized unit spelling recognized only after a numeric quantity.</p>
 <p>The public <code class="docutils literal notranslate"><span class="pre">abbr2words.core.abbreviation_guards_match()</span></code> helper accepts either
 an <code class="docutils literal notranslate"><span class="pre">AnnotationIndex</span></code> or an annotation iterable. Iterable input is normalized
 and validated the same way as expansion. It evaluates coarse <code class="docutils literal notranslate"><span class="pre">pos</span></code> only;

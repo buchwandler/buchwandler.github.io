@@ -5,8 +5,8 @@ permalink: /tools/spokenform/spacy/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 
@@ -543,9 +543,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="spacy-integration">
 <h1>spaCy integration</h1>
 <p>spaCy is optional. <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> uses it only to obtain source-aligned lexical annotations for POS-aware abbreviation rules.</p>
-<section id="current-effect-with-abbr2words-0-2-0">
-<h2>Current effect with <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> 0.2.0</h2>
-<p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> 0.2.0 accepts POS annotations, but its bundled language registries do not currently require POS labels. A trained model may therefore produce the same default output as the non-spaCy path. The integration is useful for custom entries with POS guards and keeps <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> ready for future bundled POS-aware rules.</p>
+<section id="current-effect-with-the-released-abbr2words-structured-api">
+<h2>Current effect with the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured API</h2>
+<p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> accepts POS annotations, but its bundled language registries do not
+necessarily require POS labels. A trained model may therefore produce the same
+default output as the non-spaCy path. The integration is useful for custom entries
+with POS guards. Structured German quantity recognition remains source-aligned
+through the same released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> API; spaCy does not perform language
+detection or replace the explicit adapter contract.</p>
 </section>
 <section id="load-an-installed-model-by-name">
 <h2>Load an installed model by name</h2>

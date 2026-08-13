@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 
@@ -549,6 +549,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
 </pre></div>
 </div>
+<p>The core install includes bounded <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.7,&lt;0.3.0</span></code> and
+<code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.2.5,&lt;0.3.0</span></code> runtime dependencies. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns abbreviation
+recognition and customization, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns reusable written-to-spoken semantic
+preparation and is authoritative after accepting a source span, while kokorog2p remains
+the G2P and phoneme layer. These floors refer to published releases; unreleased upstream
+behavior is not claimed by kokorog2p.</p>
 <p>This gives you:</p>
 <ul class="simple">
 <li><p>Core G2P functionality</p></li>

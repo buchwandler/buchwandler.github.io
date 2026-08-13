@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -562,6 +562,16 @@ structured output.</p>
 <p>Pipeline stages can be disabled independently with <code class="docutils literal notranslate"><span class="pre">--no-structured</span></code>,
 <code class="docutils literal notranslate"><span class="pre">--no-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-numbers</span></code>, and <code class="docutils literal notranslate"><span class="pre">--keep-whitespace</span></code>. Structured values
 remain available when lexical abbreviation expansion is disabled.</p>
+<p>Residual symbol behavior is explicit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>none<span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>remove<span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>keep<span class="w"> </span>--keep-symbols<span class="w"> </span><span class="s1">&#39;:;,()-,.&#39;</span><span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--generic-acronym-case<span class="w"> </span>lower<span class="w"> </span><span class="s1">&#39;ABC AAPL&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--keep-symbols</span></code> is an exact-codepoint allowlist and is meaningful only with
+<code class="docutils literal notranslate"><span class="pre">--symbol-mode</span> <span class="pre">keep</span></code>; quote it in shells because characters such as <code class="docutils literal notranslate"><span class="pre">;</span></code> have
+special syntax.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

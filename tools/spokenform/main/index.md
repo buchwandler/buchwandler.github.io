@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -561,13 +561,20 @@ maps.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#ownership-boundary">Ownership boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#structured-precedence">Structured precedence</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#preparation">Preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#result-models">Result models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#export-classification">Export classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#annotation-adapters">Annotation adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#number-normalization">Number normalization</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="migration-kokorog2p/">kokorog2p migration boundary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="migration-kokorog2p/#ownership-audit">Ownership audit</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-kokorog2p/#preferred-adapter-surface">Preferred adapter surface</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command-line interface</a></li>
@@ -583,12 +590,22 @@ maps.</p>
 <li class="toctree-l1"><a class="reference internal" href="protection/">Protected text</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mapping/">Offset mapping and provenance</a></li>
 <li class="toctree-l1"><a class="reference internal" href="mapping/#mapping-and-provenance">Mapping and provenance</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/#interactive-jupyter-notebook">Interactive Jupyter notebook</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="limitations/#limitations-and-readiness-gates">Limitations and readiness gates</a></li>
 <li class="toctree-l1"><a class="reference internal" href="release-checklist/">Release checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.0] - 2025-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.5] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.4] - 2026-08-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.2.3] - 2026-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.2.2] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.1] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.2.0] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.0] - 2026-08-06</a></li>
 </ul>
 </li>
 </ul>

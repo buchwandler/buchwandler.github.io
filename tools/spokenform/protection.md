@@ -5,8 +5,8 @@ permalink: /tools/spokenform/protection/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 
@@ -543,7 +543,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="protected-text">
 <h1>Protected text</h1>
 <p>Automatic protection covers URLs, email addresses, and semantic-version-like
-strings. Caller-defined spans can protect additional source ranges.</p>
+strings. Caller-defined spans can protect additional source ranges. High-
+confidence literal promotion is opt-in:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;See https://example.org/a2 and v1.2.3&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">normalize_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, structured URL, e-mail, version, and contextual
+Roman candidates are rendered before generic stages. Caller-defined spans are
+still absolute and always win over promotion.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedSpan</span><span class="p">,</span> <span class="n">prepare</span>
 
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Keep Dr. literal, but verbalize 12.&quot;</span>
@@ -559,6 +566,11 @@ strings. Caller-defined spans can protect additional source ranges.</p>
 offsets and are half-open: the start is included and the end is excluded.</p>
 <p>Invalid or overlapping caller ranges are skipped with warnings by default.
 <code class="docutils literal notranslate"><span class="pre">strict=True</span></code> turns them into <code class="docutils literal notranslate"><span class="pre">ProtectionError</span></code>.</p>
+<p>Protection is fail-closed for structured expressions: if a caller span partially
+intersects a recognized numeric quantity, the complete candidate is protected so
+later generic-number or abbreviation stages cannot create a hybrid rewrite. URLs,
+e-mail addresses, versions, numbers, units, abbreviations, and adjacent
+unprotected expressions are covered by the adapter tests.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

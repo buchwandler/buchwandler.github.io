@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -556,6 +556,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="quickstart/">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="customization/">Customization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="customization/#isolated-registries">Isolated registries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization/#ambiguous-english-dotted-forms">Ambiguous English dotted forms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#shared-registries">Shared registries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#unit-customization">Unit customization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#finite-aliases-and-exact-replacements">Finite aliases and exact replacements</a></li>
@@ -571,10 +572,19 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="languages/">Languages</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="languages/#known-ambiguity">Known ambiguity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#coverage-tiers-and-generated-inventory">Coverage tiers and generated inventory</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="language-sources/">Language sources and review policy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#registry-scope">Registry scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#source-authority">Source authority</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#per-language-ledger">Per-language ledger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#known-limitations">Known limitations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#convenience-functions">Convenience functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#initialism-policies">Initialism policies</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#mutable-facade">Mutable facade</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#guarded-unit-symbols">Guarded unit symbols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#structured-quantity-matches">Structured quantity matches</a></li>
@@ -584,17 +594,23 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/#install-and-run">Install and run</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#output-and-processing">Output and processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#third-party-dependency">Third-party dependency</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#external-pos-annotations">External POS annotations</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.2] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-unreleased">[v0.2.7] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.2.4] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.2.3] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.2.2] - 2026-08-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-06">[v0.2.1] - 2026-08-06</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-05">[v0.1.1] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.1.0] - 2026-08-05</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>
 </ul>
 </div>
 </section>

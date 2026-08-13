@@ -5,8 +5,8 @@ permalink: /tools/spokenform/cli/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 
@@ -559,8 +559,19 @@ structured output.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--spacy-model<span class="w"> </span>en_core_web_sm<span class="w"> </span>--strict<span class="w"> </span><span class="s2">&quot;The board is 2 in. wide.&quot;</span>
 </pre></div>
 </div>
-<p>Pipeline stages can be disabled with <code class="docutils literal notranslate"><span class="pre">--no-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-numbers</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">--keep-whitespace</span></code>.</p>
+<p>Pipeline stages can be disabled independently with <code class="docutils literal notranslate"><span class="pre">--no-structured</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--no-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">--no-numbers</span></code>, and <code class="docutils literal notranslate"><span class="pre">--keep-whitespace</span></code>. Structured values
+remain available when lexical abbreviation expansion is disabled.</p>
+<p>Residual symbol behavior is explicit:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>none<span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>remove<span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--symbol-mode<span class="w"> </span>keep<span class="w"> </span>--keep-symbols<span class="w"> </span><span class="s1">&#39;:;,()-,.&#39;</span><span class="w"> </span><span class="s1">&#39;ABC, test!&#39;</span>
+spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w"> </span>--generic-acronym-case<span class="w"> </span>lower<span class="w"> </span><span class="s1">&#39;ABC AAPL&#39;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--keep-symbols</span></code> is an exact-codepoint allowlist and is meaningful only with
+<code class="docutils literal notranslate"><span class="pre">--symbol-mode</span> <span class="pre">keep</span></code>; quote it in shells because characters such as <code class="docutils literal notranslate"><span class="pre">;</span></code> have
+special syntax.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

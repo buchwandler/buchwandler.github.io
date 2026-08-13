@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
+docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
 search_enabled: true
 ---
 
@@ -564,7 +564,7 @@ AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration 
 </section>
 <section id="pykokoro-and-spacy-model-policy">
 <h3>PyKokoro and spaCy model policy</h3>
-<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, SSMD <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, and
+<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.2,&lt;0.9</span></code>, SSMD <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, and
 phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. These releases provide the public spaCy request/resolution and
 memory-ownership APIs used by TTSForge. TTSForge selects only already installed spaCy
 packages and never downloads them automatically. The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy
@@ -697,16 +697,24 @@ distributions are not installed together:</p>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
 </pre></div>
 </div>
-<p>For Termux/Android with the declared PyKokoro release and an ONNX Runtime build exposing
-NNAPI or XNNPACK:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
+<p>For Termux/Android, use the declared PyKokoro release with an ONNX Runtime build
+exposing NNAPI or XNNPACK:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>model_variant<span class="w"> </span>v1.0<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>model_quality<span class="w"> </span>fp32<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+ttsforge<span class="w"> </span>download
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> as a compatibility shortcut for <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> for
 <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">cpu</span></code>. Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment
-override are handled by PyKokoro.</p>
+override are handled by PyKokoro. With the required patched PyKokoro release, GitHub
+<code class="docutils literal notranslate"><span class="pre">v1.0</span></code> uses the embedded standard vocabulary and does not download Hugging Face
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code>. NNAPI is not guaranteed; use a provider exposed by the installed Android
+ONNX Runtime build.</p>
 </section>
 <section id="memory-diagnostics">
 <h2>Memory diagnostics</h2>

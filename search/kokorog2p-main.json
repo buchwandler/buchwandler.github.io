@@ -89,8 +89,8 @@
         {
           "anchor": "",
           "heading": "Overview",
-          "text": "The kokorog2p library provides a flexible abbreviation expansion system that allows\nyou to customize which abbreviations are expanded and how. This is particularly useful\nwhen:\n\n\nYou want to disable specific abbreviations\n\n\nYou need to add custom abbreviations for domain-specific terms\n\n\nYou want to change how an abbreviation expands (e.g., always expand “Dr.” to “Drive”\ninstead of “Doctor”)\n\n\nYou need context-aware expansions (e.g., “St.” → “Street” vs “Saint”)\n\n\n\nThe abbreviation registry is provided by the required abbr2words dependency. The\nlegacy kokorog2p.*.abbreviations import paths remain as deprecated, warning-free\ncompatibility shims for this transition release; new integrations should import\nregistry types and shared registries from abbr2words.",
-          "lower": "the kokorog2p library provides a flexible abbreviation expansion system that allows\nyou to customize which abbreviations are expanded and how. this is particularly useful\nwhen:\n\n\nyou want to disable specific abbreviations\n\n\nyou need to add custom abbreviations for domain-specific terms\n\n\nyou want to change how an abbreviation expands (e.g., always expand “dr.” to “drive”\ninstead of “doctor”)\n\n\nyou need context-aware expansions (e.g., “st.” → “street” vs “saint”)\n\n\n\nthe abbreviation registry is provided by the required abbr2words dependency. the\nlegacy kokorog2p.*.abbreviations import paths remain as deprecated, warning-free\ncompatibility shims for this transition release; new integrations should import\nregistry types and shared registries from abbr2words."
+          "text": "The kokorog2p library provides a flexible abbreviation expansion system that allows\nyou to customize which abbreviations are expanded and how. This is particularly useful\nwhen:\n\n\nYou want to disable specific abbreviations\n\n\nYou need to add custom abbreviations for domain-specific terms\n\n\nYou want to change how an abbreviation expands (e.g., always expand “Dr.” to “Drive”\ninstead of “Doctor”)\n\n\nYou need context-aware expansions (e.g., “St.” → “Street” vs “Saint”)\n\n\n\nThe abbreviation registry is provided by the required abbr2words dependency. The\nlegacy kokorog2p.*.abbreviations import paths remain as deprecated, warning-free\ncompatibility shims for this transition release; new integrations should import registry\ntypes and shared registries from abbr2words.\n\nThe German Phase 1 migration use…",
+          "lower": "the kokorog2p library provides a flexible abbreviation expansion system that allows\nyou to customize which abbreviations are expanded and how. this is particularly useful\nwhen:\n\n\nyou want to disable specific abbreviations\n\n\nyou need to add custom abbreviations for domain-specific terms\n\n\nyou want to change how an abbreviation expands (e.g., always expand “dr.” to “drive”\ninstead of “doctor”)\n\n\nyou need context-aware expansions (e.g., “st.” → “street” vs “saint”)\n\n\n\nthe abbreviation registry is provided by the required abbr2words dependency. the\nlegacy kokorog2p.*.abbreviations import paths remain as deprecated, warning-free\ncompatibility shims for this transition release; new integrations should import registry\ntypes and shared registries from abbr2words.\n\nthe german phase 1 migration use…"
         },
         {
           "anchor": "",
@@ -163,13 +163,19 @@
     {
       "url": "/tools/kokorog2p/main/advanced/",
       "title": "kokorog2p Advanced Usage",
-      "snippet": "This guide covers advanced features and usage patterns for kokorog2p.\nThe factory distinguishes optional model discovery from required model …",
+      "snippet": "This guide covers advanced features and usage patterns for kokorog2p.\nFor migrated English, German, French, Spanish, Italian, Portuguese, an …",
       "sections": [
         {
           "anchor": "",
           "heading": "Advanced Usage",
           "text": "This guide covers advanced features and usage patterns for kokorog2p.",
           "lower": "this guide covers advanced features and usage patterns for kokorog2p."
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic preparation boundary",
+          "text": "For migrated English, German, French, Spanish, Italian, Portuguese, and Czech text,\nabbr2words supplies lexical abbreviation and symbol recognition, spokenform owns\nsemantic written-to-spoken preparation, and kokorog2p owns routing, spans, overrides,\ntokenization, model punctuation, G2P, phonemes, and vocabulary IDs. The ordering is\nexplicit:\n\noriginal source spans → Spokenform semantic preparation → model punctuation cleanup → G2P\n\n\n\n\nPreparation runs separately for each homogeneous language run, with caller-protected\nranges passed to Spokenform first. The supported Spokenform profile is authoritative;\nthe examples covered by downstream tests are representative, not an exhaustive semantic\ncategory list. English phoneme-sensitive number conversion, Spanish dialect behavior,\nand other docu…",
+          "lower": "for migrated english, german, french, spanish, italian, portuguese, and czech text,\nabbr2words supplies lexical abbreviation and symbol recognition, spokenform owns\nsemantic written-to-spoken preparation, and kokorog2p owns routing, spans, overrides,\ntokenization, model punctuation, g2p, phonemes, and vocabulary ids. the ordering is\nexplicit:\n\noriginal source spans → spokenform semantic preparation → model punctuation cleanup → g2p\n\n\n\n\npreparation runs separately for each homogeneous language run, with caller-protected\nranges passed to spokenform first. the supported spokenform profile is authoritative;\nthe examples covered by downstream tests are representative, not an exhaustive semantic\ncategory list. english phoneme-sensitive number conversion, spanish dialect behavior,\nand other docu…"
         },
         {
           "anchor": "",
@@ -392,25 +398,13 @@
     {
       "url": "/tools/kokorog2p/main/api/backends/",
       "title": "kokorog2p Backends API",
-      "snippet": "kokorog2p supports multiple phonemization backends.\nclass kokorog2p.backends.espeak.EspeakBackend(language: str = 'en-us', with_stress: bool …",
+      "snippet": "kokorog2p supports multiple phonemization backends.\nfrom kokorog2p.backends.espeak import EspeakBackend\n\nbackend = EspeakBackend(language=\"e …",
       "sections": [
         {
           "anchor": "",
           "heading": "Backends API",
           "text": "kokorog2p supports multiple phonemization backends.",
           "lower": "kokorog2p supports multiple phonemization backends."
-        },
-        {
-          "anchor": "",
-          "heading": "espeak-ng Backend",
-          "text": "class kokorog2p.backends.espeak.EspeakBackend(language: str = 'en-us', with_stress: bool = True, tie: str = '^', use_cli: bool = False)[source]\nBases: object\n\nHigh-level espeak backend for Kokoro TTS phonemization.\n\nThis class provides a simple interface for converting text to phonemes\nusing espeak-ng. It automatically converts espeak’s IPA output to\nKokoro’s phoneme format.\n\n\nExample:>>> backend = EspeakBackend(\"en-us\")\n>>> backend.phonemize(\"hello world\")\n'hˈɛlO wˈɜɹld'\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', with_stress: bool = True, tie: str = '^', use_cli: bool = False) → None[source]\nInitialize the espeak backend.\n\n\nArgs:language: Language code (e.g., “en-us”, “en-gb”, “fr-fr”).\nwith_stress: Whether to include stress markers in output.\ntie: Tie character mode. “^” uses tie chara…",
-          "lower": "class kokorog2p.backends.espeak.espeakbackend(language: str = 'en-us', with_stress: bool = true, tie: str = '^', use_cli: bool = false)[source]\nbases: object\n\nhigh-level espeak backend for kokoro tts phonemization.\n\nthis class provides a simple interface for converting text to phonemes\nusing espeak-ng. it automatically converts espeak’s ipa output to\nkokoro’s phoneme format.\n\n\nexample:>>> backend = espeakbackend(\"en-us\")\n>>> backend.phonemize(\"hello world\")\n'hˈɛlo wˈɜɹld'\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', with_stress: bool = true, tie: str = '^', use_cli: bool = false) → none[source]\ninitialize the espeak backend.\n\n\nargs:language: language code (e.g., “en-us”, “en-gb”, “fr-fr”).\nwith_stress: whether to include stress markers in output.\ntie: tie character mode. “^” uses tie chara…"
-        },
-        {
-          "anchor": "",
-          "heading": "goruut Backend",
-          "text": "class kokorog2p.goruut_g2p.GoruutOnlyG2P(language: str = 'en-us', use_espeak_fallback: bool = False, use_goruut_fallback: bool = True, strict: bool = True, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nG2P implementation using only pygoruut/goruut.\n\nThis is used as an alternative to espeak for languages that\npygoruut supports well. It provides phonemization via the\ngoruut engine.\n\n\nExample:>>> g2p = GoruutOnlyG2P(\"fr\")\n>>> tokens = g2p(\"Bonjour le monde\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = False, use_goruut_fallback: bool = True, strict: bool = True, version: str = '1.0', **kwargs) → None[source]\nInitialize the goruut-only G2P.\n\n\nArgs:language: Language code (e.g., ‘fr’, ‘de’, ‘en-us’).\nuse_espeak_fallback: Ignored (always uses goruut).\nuse_g…",
-          "lower": "class kokorog2p.goruut_g2p.goruutonlyg2p(language: str = 'en-us', use_espeak_fallback: bool = false, use_goruut_fallback: bool = true, strict: bool = true, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\ng2p implementation using only pygoruut/goruut.\n\nthis is used as an alternative to espeak for languages that\npygoruut supports well. it provides phonemization via the\ngoruut engine.\n\n\nexample:>>> g2p = goruutonlyg2p(\"fr\")\n>>> tokens = g2p(\"bonjour le monde\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = false, use_goruut_fallback: bool = true, strict: bool = true, version: str = '1.0', **kwargs) → none[source]\ninitialize the goruut-only g2p.\n\n\nargs:language: language code (e.g., ‘fr’, ‘de’, ‘en-us’).\nuse_espeak_fallback: ignored (always uses goruut).\nuse_g…"
         },
         {
           "anchor": "",
@@ -435,19 +429,13 @@
     {
       "url": "/tools/kokorog2p/main/api/chinese/",
       "title": "kokorog2p Chinese API",
-      "snippet": "Chinese G2P uses jieba for tokenization and supports two phoneme output formats.\nclass kokorog2p.zh.ChineseG2P(language: str = 'zh', use_esp …",
+      "snippet": "Chinese G2P uses jieba for tokenization and supports two phoneme output formats.\nfrom kokorog2p.zh import ChineseG2P\n\ng2p = ChineseG2P(langu …",
       "sections": [
         {
           "anchor": "",
           "heading": "Chinese API",
           "text": "Chinese G2P uses jieba for tokenization and supports two phoneme output formats.",
           "lower": "chinese g2p uses jieba for tokenization and supports two phoneme output formats."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.zh.ChineseG2P(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, load_silver: bool = True, load_gold: bool = True, **kwargs)[source]\nBases: G2PBase\n\nChinese G2P using pypinyin and IPA transcription.\n\nThis class converts Chinese text to IPA phonemes using:\n1. Jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. Custom pinyin-to-IPA mapping\n\n\nExample:>>> g2p = ChineseG2P()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, load_silver: bool = True, load_gold: bool = True, **kwargs) → None[so…",
-          "lower": "class kokorog2p.zh.chineseg2p(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, load_silver: bool = true, load_gold: bool = true, **kwargs)[source]\nbases: g2pbase\n\nchinese g2p using pypinyin and ipa transcription.\n\nthis class converts chinese text to ipa phonemes using:\n1. jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. custom pinyin-to-ipa mapping\n\n\nexample:>>> g2p = chineseg2p()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, load_silver: bool = true, load_gold: bool = true, **kwargs) → none[so…"
         },
         {
           "anchor": "",
@@ -490,7 +478,7 @@
     {
       "url": "/tools/kokorog2p/main/api/core/",
       "title": "kokorog2p Core API",
-      "snippet": "This module contains the core functionality of kokorog2p.\nkokorog2p.phonemize(text: str, language: str = 'en-us', *, overrides: Sequence[Ove …",
+      "snippet": "This module contains the core functionality of kokorog2p.\nThese adapters accept SSMD- and phrasplit-shaped objects structurally, without mak …",
       "sections": [
         {
           "anchor": "",
@@ -500,88 +488,22 @@
         },
         {
           "anchor": "",
-          "heading": "Main Functions",
-          "text": "kokorog2p.phonemize(text: str, language: str = 'en-us', *, overrides: Sequence[OverrideSpanLike] | None = None, return_ids: bool = True, return_phonemes: bool = True, alignment: Literal['span', 'legacy'] = 'span', overlap: Literal['snap', 'strict'] = 'snap', use_normalizer_rules: bool = True, use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, use_spacy: bool | None = None, spacy_model: str | None = None, spacy_model_size: SpacyModelSize | None = None, load_silver: bool = True, load_gold: bool = True, backend: Literal['kokorog2p', 'espeak', 'goruut'] = 'kokorog2p', g2p: G2PBase | None = None) → PhonemizeResult[source]\nPhonemize text using the unified kokorog2p pipeline.\n\nThis is the primary public entry point for turning text into phonemes (and\nopt…",
-          "lower": "kokorog2p.phonemize(text: str, language: str = 'en-us', *, overrides: sequence[overridespanlike] | none = none, return_ids: bool = true, return_phonemes: bool = true, alignment: literal['span', 'legacy'] = 'span', overlap: literal['snap', 'strict'] = 'snap', use_normalizer_rules: bool = true, use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, use_spacy: bool | none = none, spacy_model: str | none = none, spacy_model_size: spacymodelsize | none = none, load_silver: bool = true, load_gold: bool = true, backend: literal['kokorog2p', 'espeak', 'goruut'] = 'kokorog2p', g2p: g2pbase | none = none) → phonemizeresult[source]\nphonemize text using the unified kokorog2p pipeline.\n\nthis is the primary public entry point for turning text into phonemes (and\nopt…"
-        },
-        {
-          "anchor": "",
           "heading": "Pipeline integration adapters",
-          "text": "These adapters accept SSMD- and phrasplit-shaped objects structurally, without making\neither package a runtime dependency:\n\n\n\nkokorog2p.coerce_override_spans(spans: Iterable[object]) → list[OverrideSpan][source]\nCopy and validate structurally compatible override spans.\n\nThe returned dataclasses own their attribute dictionaries, so adapting\nforeign spans never mutates caller-owned mappings.\n\n\n\n\n\nkokorog2p.overrides_from_ssmd(spans: Iterable[object], *, xsampa: Literal['reject', 'convert'] = 'reject', text_length: int | None = None) → list[OverrideSpan][source]\nNormalize SSMD-style annotation spans into kokorog2p overrides.\n\nph and IPA-valued ipa attributes become ph.  lang and\nlanguage become lang.  X-SAMPA is rejected unless a converter is\nexplicitly supplied by a future implementation;…",
-          "lower": "these adapters accept ssmd- and phrasplit-shaped objects structurally, without making\neither package a runtime dependency:\n\n\n\nkokorog2p.coerce_override_spans(spans: iterable[object]) → list[overridespan][source]\ncopy and validate structurally compatible override spans.\n\nthe returned dataclasses own their attribute dictionaries, so adapting\nforeign spans never mutates caller-owned mappings.\n\n\n\n\n\nkokorog2p.overrides_from_ssmd(spans: iterable[object], *, xsampa: literal['reject', 'convert'] = 'reject', text_length: int | none = none) → list[overridespan][source]\nnormalize ssmd-style annotation spans into kokorog2p overrides.\n\nph and ipa-valued ipa attributes become ph.  lang and\nlanguage become lang.  x-sampa is rejected unless a converter is\nexplicitly supplied by a future implementation;…"
-        },
-        {
-          "anchor": "",
-          "heading": "G2PBase",
-          "text": "class kokorog2p.G2PBase(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True)[source]\nBases: ABC\n\nAbstract base class for grapheme-to-phoneme converters.\n\nSubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True) → None[source]\nInitialize the G2P converter.\n\n\nArgs:language: Language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: Whether to use espeak for OOV words.\nuse_goruut_fallback: Whether to use goruut for OOV words.\nuse_cli: If True, use CLI phonemizer instead of library bindings.\nstrict: If True, raise exceptions on errors. If F…",
-          "lower": "class kokorog2p.g2pbase(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true)[source]\nbases: abc\n\nabstract base class for grapheme-to-phoneme converters.\n\nsubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true) → none[source]\ninitialize the g2p converter.\n\n\nargs:language: language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: whether to use espeak for oov words.\nuse_goruut_fallback: whether to use goruut for oov words.\nuse_cli: if true, use cli phonemizer instead of library bindings.\nstrict: if true, raise exceptions on errors. if f…"
-        },
-        {
-          "anchor": "",
-          "heading": "GToken",
-          "text": "class kokorog2p.GToken(text: str, tag: str = '', whitespace: str = ' ', phonemes: str | None = None, start_ts: float | None = None, end_ts: float | None = None, rating: str | None = None, _: dict[str, ~typing.Any]=<factory>)[source]\nBases: object\n\nA token representing a word or text unit with optional phoneme information.\n\n\nAttributes:text: The original text of the token.\ntag: Part-of-speech tag (e.g., ‘NN’, ‘VB’, ‘JJ’).\nwhitespace: Trailing whitespace after this token.\nphonemes: The phonemic transcription of the token.\nstart_ts: Start timestamp for audio alignment.\nend_ts: End timestamp for audio alignment.\nrating: Quality rating of the phoneme transcription.\n_: Extension dictionary for custom attributes.\n\n\n\n\n\ntext\nThe original text of this token.\n\n\n\n\n\nphonemes\nThe IPA phoneme string…",
-          "lower": "class kokorog2p.gtoken(text: str, tag: str = '', whitespace: str = ' ', phonemes: str | none = none, start_ts: float | none = none, end_ts: float | none = none, rating: str | none = none, _: dict[str, ~typing.any]=<factory>)[source]\nbases: object\n\na token representing a word or text unit with optional phoneme information.\n\n\nattributes:text: the original text of the token.\ntag: part-of-speech tag (e.g., ‘nn’, ‘vb’, ‘jj’).\nwhitespace: trailing whitespace after this token.\nphonemes: the phonemic transcription of the token.\nstart_ts: start timestamp for audio alignment.\nend_ts: end timestamp for audio alignment.\nrating: quality rating of the phoneme transcription.\n_: extension dictionary for custom attributes.\n\n\n\n\n\ntext\nthe original text of this token.\n\n\n\n\n\nphonemes\nthe ipa phoneme string…"
-        },
-        {
-          "anchor": "",
-          "heading": "Vocabulary",
-          "text": "kokorog2p.get_vocab(british: bool = False) → frozenset[str][source]\nGet the phoneme vocabulary for a dialect.\n\n\nArgs:british: Whether to get British or US vocabulary.\n\n\nReturns:Frozen set of valid phonemes.\n\n\n\n\n\n\n\nkokorog2p.validate_phonemes(phonemes: str, british: bool = False) → bool[source]\nCheck if all phonemes in a string are valid Kokoro phonemes.\n\n\nArgs:phonemes: Phoneme string to validate.\nbritish: Whether to validate against British or US vocabulary.\n\n\nReturns:True if all phonemes are valid.\n\n\n\n\n\n\n\nkokorog2p.US_VOCAB\nBuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.GB_VOCAB\nBuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.VOWELS\nBuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.CONSONANTS\nBuild an…",
-          "lower": "kokorog2p.get_vocab(british: bool = false) → frozenset[str][source]\nget the phoneme vocabulary for a dialect.\n\n\nargs:british: whether to get british or us vocabulary.\n\n\nreturns:frozen set of valid phonemes.\n\n\n\n\n\n\n\nkokorog2p.validate_phonemes(phonemes: str, british: bool = false) → bool[source]\ncheck if all phonemes in a string are valid kokoro phonemes.\n\n\nargs:phonemes: phoneme string to validate.\nbritish: whether to validate against british or us vocabulary.\n\n\nreturns:true if all phonemes are valid.\n\n\n\n\n\n\n\nkokorog2p.us_vocab\nbuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.gb_vocab\nbuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.vowels\nbuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.consonants\nbuild an…"
-        },
-        {
-          "anchor": "",
-          "heading": "Conversion",
-          "text": "kokorog2p.from_espeak(phonemes: str, british: bool = False) → str[source]\nConvert espeak IPA output to Kokoro phonemes.\n\n\nArgs:phonemes: The espeak phoneme string (with tie character ^ or ͡).\nbritish: Whether to use British English mappings.\n\n\nReturns:Kokoro-compatible phoneme string.\n\n\nExample:>>> from_espeak(\"mˈɜːt͡ʃənt͡ʃˌɪp\", british=False)\n'mˈɜɹʧəntʃˌɪp'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.from_goruut(phonemes: str, british: bool = False) → str[source]\nConvert goruut/pygoruut IPA output to Kokoro phonemes.\n\nGoruut outputs standard IPA without tie characters for diphthongs\nand affricates, which requires different handling than espeak.\n\n\nArgs:phonemes: The goruut phoneme string (standard IPA).\nbritish: Whether to use British English mappings.\n\n\nReturns:Kokoro-compatible phoneme string.\n\n\nExample:>>>…",
-          "lower": "kokorog2p.from_espeak(phonemes: str, british: bool = false) → str[source]\nconvert espeak ipa output to kokoro phonemes.\n\n\nargs:phonemes: the espeak phoneme string (with tie character ^ or ͡).\nbritish: whether to use british english mappings.\n\n\nreturns:kokoro-compatible phoneme string.\n\n\nexample:>>> from_espeak(\"mˈɜːt͡ʃənt͡ʃˌɪp\", british=false)\n'mˈɜɹʧəntʃˌɪp'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.from_goruut(phonemes: str, british: bool = false) → str[source]\nconvert goruut/pygoruut ipa output to kokoro phonemes.\n\ngoruut outputs standard ipa without tie characters for diphthongs\nand affricates, which requires different handling than espeak.\n\n\nargs:phonemes: the goruut phoneme string (standard ipa).\nbritish: whether to use british english mappings.\n\n\nreturns:kokoro-compatible phoneme string.\n\n\nexample:>>>…"
-        },
-        {
-          "anchor": "",
-          "heading": "Encoding/Decoding",
-          "text": "kokorog2p.encode(text: str, add_spaces: bool = True, model: str = '1.0') → list[int][source]\nConvert a phoneme string to token indices.\n\n\nArgs:text: Phoneme string to encode.\nadd_spaces: Whether to include space tokens (default True).\nmodel: Model variant to encode for (default: “1.0”).\n\n\nReturns:List of token indices.\n\n\nExample:>>> encode(\"hˈɛlO\")\n[50, 156, 86, 54, 31]\n\n\n\n\n\n\n\n\n\n\nkokorog2p.decode(indices: list[int], skip_special: bool = True, model: str = '1.0') → str[source]\nConvert token indices back to a phoneme string.\n\n\nArgs:indices: List of token indices.\nskip_special: Whether to skip padding/unknown tokens.\nmodel: Model variant to decode from (default: “1.0”).\n\n\nReturns:Phoneme string.\n\n\nExample:>>> decode([50, 156, 86, 54, 31])\n'hˈɛlO'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.phonemes_to_ids(phoneme…",
-          "lower": "kokorog2p.encode(text: str, add_spaces: bool = true, model: str = '1.0') → list[int][source]\nconvert a phoneme string to token indices.\n\n\nargs:text: phoneme string to encode.\nadd_spaces: whether to include space tokens (default true).\nmodel: model variant to encode for (default: “1.0”).\n\n\nreturns:list of token indices.\n\n\nexample:>>> encode(\"hˈɛlo\")\n[50, 156, 86, 54, 31]\n\n\n\n\n\n\n\n\n\n\nkokorog2p.decode(indices: list[int], skip_special: bool = true, model: str = '1.0') → str[source]\nconvert token indices back to a phoneme string.\n\n\nargs:indices: list of token indices.\nskip_special: whether to skip padding/unknown tokens.\nmodel: model variant to decode from (default: “1.0”).\n\n\nreturns:phoneme string.\n\n\nexample:>>> decode([50, 156, 86, 54, 31])\n'hˈɛlo'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.phonemes_to_ids(phoneme…"
-        },
-        {
-          "anchor": "",
-          "heading": "Validation",
-          "text": "kokorog2p.validate_for_kokoro(text: str, model: str = '1.0') → tuple[bool, list[str]][source]\nValidate that all characters in text are in Kokoro vocabulary.\n\n\nArgs:text: Phoneme string to validate.\nmodel: Model variant to validate against:\n\n\n\n“1.0”: Base multilingual model (default)\n\n\n“1.1”: Chinese-specific model with Zhuyin\n\n\n\n\n\n\nReturns:Tuple of (is_valid, list_of_invalid_chars).\n\n\nExample:>>> validate_for_kokoro(\"hˈɛlO\")\n(True, [])\n>>> validate_for_kokoro(\"hˈɛlO§\")\n(False, ['§'])\n>>> validate_for_kokoro(\"ㄋㄧ2ㄏㄠ3\", model=\"1.1\")\n(True, [])\n\n\n\n\n\n\n\n\n\n\nkokorog2p.filter_for_kokoro(text: str, replacement: str = '', model: str = '1.0') → str[source]\nRemove characters not in Kokoro vocabulary.\n\n\nArgs:text: Phoneme string to filter.\nreplacement: String to replace invalid characters with.\nmodel…",
-          "lower": "kokorog2p.validate_for_kokoro(text: str, model: str = '1.0') → tuple[bool, list[str]][source]\nvalidate that all characters in text are in kokoro vocabulary.\n\n\nargs:text: phoneme string to validate.\nmodel: model variant to validate against:\n\n\n\n“1.0”: base multilingual model (default)\n\n\n“1.1”: chinese-specific model with zhuyin\n\n\n\n\n\n\nreturns:tuple of (is_valid, list_of_invalid_chars).\n\n\nexample:>>> validate_for_kokoro(\"hˈɛlo\")\n(true, [])\n>>> validate_for_kokoro(\"hˈɛlo§\")\n(false, ['§'])\n>>> validate_for_kokoro(\"ㄋㄧ2ㄏㄠ3\", model=\"1.1\")\n(true, [])\n\n\n\n\n\n\n\n\n\n\nkokorog2p.filter_for_kokoro(text: str, replacement: str = '', model: str = '1.0') → str[source]\nremove characters not in kokoro vocabulary.\n\n\nargs:text: phoneme string to filter.\nreplacement: string to replace invalid characters with.\nmodel…"
-        },
-        {
-          "anchor": "",
-          "heading": "Configuration",
-          "text": "kokorog2p.get_kokoro_vocab(model: str = '1.0') → dict[str, int]\nGet the Kokoro vocabulary mapping (token -> index).\n\n\nArgs:\nmodel: Model variant to load vocab for:\n“1.0”: Base multilingual Kokoro model (default)\n\n\n“1.1”: Chinese-specific Kokoro v1.1 model with Zhuyin\n\n\n\n\n\n\nReturns:Dictionary mapping tokens to their indices.\n\n\n\n\n\n\n\nkokorog2p.get_kokoro_config() → dict\nGet the full Kokoro model configuration.\n\n\nReturns:Dictionary containing the full model config.\n\n\n\n\n\n\n\nkokorog2p.N_TOKENS\nint([x]) -> integer\nint(x, base=10) -> integer\n\nConvert a number or string to an integer, or return 0 if no arguments\nare given.  If x is a number, return x.__int__().  For floating-point\nnumbers, this truncates towards zero.\n\nIf x is not a number or if base is given, then x must be a string,\nbytes, or…",
-          "lower": "kokorog2p.get_kokoro_vocab(model: str = '1.0') → dict[str, int]\nget the kokoro vocabulary mapping (token -> index).\n\n\nargs:\nmodel: model variant to load vocab for:\n“1.0”: base multilingual kokoro model (default)\n\n\n“1.1”: chinese-specific kokoro v1.1 model with zhuyin\n\n\n\n\n\n\nreturns:dictionary mapping tokens to their indices.\n\n\n\n\n\n\n\nkokorog2p.get_kokoro_config() → dict\nget the full kokoro model configuration.\n\n\nreturns:dictionary containing the full model config.\n\n\n\n\n\n\n\nkokorog2p.n_tokens\nint([x]) -> integer\nint(x, base=10) -> integer\n\nconvert a number or string to an integer, or return 0 if no arguments\nare given.  if x is a number, return x.__int__().  for floating-point\nnumbers, this truncates towards zero.\n\nif x is not a number or if base is given, then x must be a string,\nbytes, or…"
-        },
-        {
-          "anchor": "",
-          "heading": "Punctuation",
-          "text": "class kokorog2p.Punctuation(marks: str | Pattern = ';:,.!?—…\"()“”')[source]\nBases: object\n\nPreserve, remove, or normalize punctuation during phonemization.\n\nThis class provides methods to:\n1. Normalize Unicode punctuation to Kokoro-compatible marks\n2. remove configured marks\n3. Preserve punctuation positions for later restoration\n\n\nExamples:>>> punct = Punctuation()\n\n\n\n\n# Normalize Unicode punctuation\n>>> punct.normalize(“Hello… world！”)\n‘Hello… world!’\n\n# Remove all punctuation\n>>> punct.remove(“Hello, world!”)\n‘Hello world’\n\n# Preserve and restore\n>>> text, marks = punct.preserve(“Hello, world!”)\n>>> text\n[‘Hello’, ‘world’]\n>>> # After phonemization…\n>>> punct.restore([‘həˈloʊ’, ‘wˈɜːld’], marks)\n[‘həˈloʊ, wˈɜːld!’]\n\n\n\n\n\n__init__(marks: str | Pattern = ';:,.!?—…\"()“”')[source]\nInitial…",
-          "lower": "class kokorog2p.punctuation(marks: str | pattern = ';:,.!?—…\"()“”')[source]\nbases: object\n\npreserve, remove, or normalize punctuation during phonemization.\n\nthis class provides methods to:\n1. normalize unicode punctuation to kokoro-compatible marks\n2. remove configured marks\n3. preserve punctuation positions for later restoration\n\n\nexamples:>>> punct = punctuation()\n\n\n\n\n# normalize unicode punctuation\n>>> punct.normalize(“hello… world！”)\n‘hello… world!’\n\n# remove all punctuation\n>>> punct.remove(“hello, world!”)\n‘hello world’\n\n# preserve and restore\n>>> text, marks = punct.preserve(“hello, world!”)\n>>> text\n[‘hello’, ‘world’]\n>>> # after phonemization…\n>>> punct.restore([‘həˈloʊ’, ‘wˈɜːld’], marks)\n[‘həˈloʊ, wˈɜːld!’]\n\n\n\n\n\n__init__(marks: str | pattern = ';:,.!?—…\"()“”')[source]\ninitial…"
-        },
-        {
-          "anchor": "",
-          "heading": "Word Mismatch Detection",
-          "text": "class kokorog2p.MismatchMode(*values)[source]\nBases: Enum\n\nHow to handle word count mismatches.\n\n\n\nIGNORE = 'ignore'\n\n\n\n\nWARN = 'warn'\n\n\n\n\nREMOVE = 'remove'\n\n\n\n\n\n\nclass kokorog2p.MismatchInfo(line_num: int, expected: int, actual: int, input_text: str = '', output_text: str = '')[source]\nBases: object\n\nInformation about a word count mismatch.\n\n\n\nline_num: int\n\n\n\n\nexpected: int\n\n\n\n\nactual: int\n\n\n\n\ninput_text: str = ''\n\n\n\n\noutput_text: str = ''\n\n\n\n\n\n\nclass kokorog2p.MismatchStats(total_lines: int, mismatched_lines: int, mismatches: list[MismatchInfo])[source]\nBases: object\n\nStatistics about word count mismatches.\n\n\n\ntotal_lines: int\n\n\n\n\nmismatched_lines: int\n\n\n\n\nmismatches: list[MismatchInfo]\n\n\n\n\nproperty mismatch_rate: float\nPercentage of lines with mismatches.\n\n\n\n\n\n\n\nkokorog…",
-          "lower": "class kokorog2p.mismatchmode(*values)[source]\nbases: enum\n\nhow to handle word count mismatches.\n\n\n\nignore = 'ignore'\n\n\n\n\nwarn = 'warn'\n\n\n\n\nremove = 'remove'\n\n\n\n\n\n\nclass kokorog2p.mismatchinfo(line_num: int, expected: int, actual: int, input_text: str = '', output_text: str = '')[source]\nbases: object\n\ninformation about a word count mismatch.\n\n\n\nline_num: int\n\n\n\n\nexpected: int\n\n\n\n\nactual: int\n\n\n\n\ninput_text: str = ''\n\n\n\n\noutput_text: str = ''\n\n\n\n\n\n\nclass kokorog2p.mismatchstats(total_lines: int, mismatched_lines: int, mismatches: list[mismatchinfo])[source]\nbases: object\n\nstatistics about word count mismatches.\n\n\n\ntotal_lines: int\n\n\n\n\nmismatched_lines: int\n\n\n\n\nmismatches: list[mismatchinfo]\n\n\n\n\nproperty mismatch_rate: float\npercentage of lines with mismatches.\n\n\n\n\n\n\n\nkokorog…"
+          "text": "These adapters accept SSMD- and phrasplit-shaped objects structurally, without making\neither package a runtime dependency:",
+          "lower": "these adapters accept ssmd- and phrasplit-shaped objects structurally, without making\neither package a runtime dependency:"
         }
       ]
     },
     {
       "url": "/tools/kokorog2p/main/api/czech/",
       "title": "kokorog2p Czech API",
-      "snippet": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.\nclass kokorog2p.cs.CzechG2P(language: str = 'cs-cz', …",
+      "snippet": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.\nfrom kokorog2p.cs import CzechG2P\n\ng2p = CzechG2P(la …",
       "sections": [
         {
           "anchor": "",
           "heading": "Czech API",
           "text": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.",
           "lower": "czech g2p provides rule-based phoneme conversion with comprehensive phonological rules."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.cs.CzechG2P(language: str = 'cs-cz', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, unk: str = '?', load_silver: bool = True, load_gold: bool = True, version: str = '1.0', expand_abbreviations: bool = True, enable_context_detection: bool = True, **kwargs: Any)[source]\nBases: G2PBase\n\nCzech G2P converter using rule-based phoneme conversion with fallback options.\n\nThis class provides grapheme-to-phoneme conversion for Czech text\nusing phonological rules for voicing assimilation, palatalization,\nand other Czech-specific features, with optional fallback to espeak or goruut.\n\n\nExample:>>> g2p = CzechG2P()\n>>> tokens = g2p(\"Dobrý den\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'cs-cz', use…",
-          "lower": "class kokorog2p.cs.czechg2p(language: str = 'cs-cz', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, unk: str = '?', load_silver: bool = true, load_gold: bool = true, version: str = '1.0', expand_abbreviations: bool = true, enable_context_detection: bool = true, **kwargs: any)[source]\nbases: g2pbase\n\nczech g2p converter using rule-based phoneme conversion with fallback options.\n\nthis class provides grapheme-to-phoneme conversion for czech text\nusing phonological rules for voicing assimilation, palatalization,\nand other czech-specific features, with optional fallback to espeak or goruut.\n\n\nexample:>>> g2p = czechg2p()\n>>> tokens = g2p(\"dobrý den\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'cs-cz', use…"
         },
         {
           "anchor": "",
@@ -600,7 +522,7 @@
     {
       "url": "/tools/kokorog2p/main/api/english/",
       "title": "kokorog2p English API",
-      "snippet": "English G2P provides high-quality phoneme conversion for US and British English.\nclass kokorog2p.en.EnglishG2P(language: str = 'en-us', use_ …",
+      "snippet": "English G2P provides high-quality phoneme conversion for US and British English.\nEnglish written-to-spoken preparation is owned by the share …",
       "sections": [
         {
           "anchor": "",
@@ -610,33 +532,9 @@
         },
         {
           "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.en.EnglishG2P(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, use_spacy: bool = True, spacy_model: str | None = None, expand_abbreviations: bool = True, enable_context_detection: bool = True, phoneme_quotes: str = 'curly', unk: str = '❓', load_silver: bool = True, load_gold: bool = True, strict: bool = True, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nEnglish G2P converter using dictionary lookup with fallback options.\n\nThis class provides grapheme-to-phoneme conversion for English text,\nusing a tiered dictionary system (gold/silver) with espeak-ng or goruut\nas fallback for out-of-vocabulary words.\n\n\nExample:>>> g2p = EnglishG2P(language=\"en-us\")\n>>> tokens = g2p(\"Hello world!\")\n>>> for token…",
-          "lower": "class kokorog2p.en.englishg2p(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, use_spacy: bool = true, spacy_model: str | none = none, expand_abbreviations: bool = true, enable_context_detection: bool = true, phoneme_quotes: str = 'curly', unk: str = '❓', load_silver: bool = true, load_gold: bool = true, strict: bool = true, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\nenglish g2p converter using dictionary lookup with fallback options.\n\nthis class provides grapheme-to-phoneme conversion for english text,\nusing a tiered dictionary system (gold/silver) with espeak-ng or goruut\nas fallback for out-of-vocabulary words.\n\n\nexample:>>> g2p = englishg2p(language=\"en-us\")\n>>> tokens = g2p(\"hello world!\")\n>>> for token…"
-        },
-        {
-          "anchor": "",
-          "heading": "Lexicon",
-          "text": "kokorog2p.en.EnglishLexicon\nalias of Lexicon",
-          "lower": "kokorog2p.en.englishlexicon\nalias of lexicon"
-        },
-        {
-          "anchor": "",
-          "heading": "Converter Class",
-          "text": "class kokorog2p.en.numbers.NumberConverter(lookup_fn: Callable[[str, str | None, float | None, object | None], tuple[str | None, int | None]], stem_s_fn: Callable[[str, str | None, float | None, object | None], tuple[str | None, int | None]])[source]\nBases: object\n\nConvert numbers to their word representations.\n\nThis class handles various number formats including:\n- Cardinal numbers (1, 2, 3 -> one, two, three)\n- Ordinal numbers (1st, 2nd -> first, second)\n- Years (1984 -> nineteen eighty-four)\n- Decimals (3.14 -> three point one four)\n- Currency ($12.50 -> twelve dollars and fifty cents)\n\n\n\n__init__(lookup_fn: Callable[[str, str | None, float | None, object | None], tuple[str | None, int | None]], stem_s_fn: Callable[[str, str | None, float | None, object | None], tuple[str | None, int…",
-          "lower": "class kokorog2p.en.numbers.numberconverter(lookup_fn: callable[[str, str | none, float | none, object | none], tuple[str | none, int | none]], stem_s_fn: callable[[str, str | none, float | none, object | none], tuple[str | none, int | none]])[source]\nbases: object\n\nconvert numbers to their word representations.\n\nthis class handles various number formats including:\n- cardinal numbers (1, 2, 3 -> one, two, three)\n- ordinal numbers (1st, 2nd -> first, second)\n- years (1984 -> nineteen eighty-four)\n- decimals (3.14 -> three point one four)\n- currency ($12.50 -> twelve dollars and fifty cents)\n\n\n\n__init__(lookup_fn: callable[[str, str | none, float | none, object | none], tuple[str | none, int | none]], stem_s_fn: callable[[str, str | none, float | none, object | none], tuple[str | none, int…"
-        },
-        {
-          "anchor": "",
-          "heading": "Helper Functions",
-          "text": "kokorog2p.en.numbers.is_digit(text: str) → bool[source]\nCheck if text consists only of digits.\n\n\n\n\n\nkokorog2p.en.numbers.is_currency_amount(word: str) → bool[source]\nCheck if word looks like a currency amount (e.g., ‘12.99’, ‘30,000.10’).\n\nRules:\n- Optional thousands separators, but only valid grouping (1,234,567)\n- Optional decimal part (.<digits>)\n- Reject invalid grouping like ‘12,34’ or ‘1,23,456’\n- Allow leading-decimal amounts like ‘.50’",
-          "lower": "kokorog2p.en.numbers.is_digit(text: str) → bool[source]\ncheck if text consists only of digits.\n\n\n\n\n\nkokorog2p.en.numbers.is_currency_amount(word: str) → bool[source]\ncheck if word looks like a currency amount (e.g., ‘12.99’, ‘30,000.10’).\n\nrules:\n- optional thousands separators, but only valid grouping (1,234,567)\n- optional decimal part (.<digits>)\n- reject invalid grouping like ‘12,34’ or ‘1,23,456’\n- allow leading-decimal amounts like ‘.50’"
-        },
-        {
-          "anchor": "",
-          "heading": "Constants",
-          "text": "kokorog2p.en.numbers.ORDINALS\nBuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.en.numbers.CURRENCIES\ndict() -> new empty dictionary\ndict(mapping) -> new dictionary initialized from a mapping object’s\n\n\n(key, value) pairs\n\n\n\n\ndict(iterable) -> new dictionary initialized as if via:d = {}\nfor k, v in iterable:\n\n\nd[k] = v\n\n\n\n\ndict(**kwargs) -> new dictionary initialized with the name=value pairsin the keyword argument list.  For example:  dict(one=1, two=2)",
-          "lower": "kokorog2p.en.numbers.ordinals\nbuild an immutable unordered collection of unique elements.\n\n\n\n\n\nkokorog2p.en.numbers.currencies\ndict() -> new empty dictionary\ndict(mapping) -> new dictionary initialized from a mapping object’s\n\n\n(key, value) pairs\n\n\n\n\ndict(iterable) -> new dictionary initialized as if via:d = {}\nfor k, v in iterable:\n\n\nd[k] = v\n\n\n\n\ndict(**kwargs) -> new dictionary initialized with the name=value pairsin the keyword argument list.  for example:  dict(one=1, two=2)"
+          "heading": "Semantic Preparation",
+          "text": "English written-to-spoken preparation is owned by the shared source-aligned spokenform\npath, with lexical abbreviation recognition and customization owned by the shared\nabbr2words registry. Once Spokenform accepts a source span, kokorog2p preserves its\nsemantic replacement and provenance. Dates, times, currencies, quantities, temperatures,\nsafe ordinary numbers, and exact decimal digit reading are prepared once per homogeneous\nlanguage run, with protected source spans preserved.\n\nKokorog2p retains English typography normalization, tokenization, lexicon, G2P and\nfallback behavior. The English NumberConverter remains downstream for reserved and\nphoneme-sensitive forms such as years, ordinals, Roman numerals, phone/version-like\nsequences, and suffix transformations. Token normalization is ty…",
+          "lower": "english written-to-spoken preparation is owned by the shared source-aligned spokenform\npath, with lexical abbreviation recognition and customization owned by the shared\nabbr2words registry. once spokenform accepts a source span, kokorog2p preserves its\nsemantic replacement and provenance. dates, times, currencies, quantities, temperatures,\nsafe ordinary numbers, and exact decimal digit reading are prepared once per homogeneous\nlanguage run, with protected source spans preserved.\n\nkokorog2p retains english typography normalization, tokenization, lexicon, g2p and\nfallback behavior. the english numberconverter remains downstream for reserved and\nphoneme-sensitive forms such as years, ordinals, roman numerals, phone/version-like\nsequences, and suffix transformations. token normalization is ty…"
         },
         {
           "anchor": "",
@@ -673,31 +571,19 @@
     {
       "url": "/tools/kokorog2p/main/api/french/",
       "title": "kokorog2p French API",
-      "snippet": "French G2P provides phoneme conversion using a gold dictionary with espeak-ng fallback.\nclass kokorog2p.fr.FrenchG2P(language: str = 'fr-fr' …",
+      "snippet": "French G2P provides phoneme conversion using a gold dictionary with espeak-ng fallback.\n\nFrench semantic preparation runs through the releas …",
       "sections": [
         {
           "anchor": "",
           "heading": "French API",
-          "text": "French G2P provides phoneme conversion using a gold dictionary with espeak-ng fallback.",
-          "lower": "french g2p provides phoneme conversion using a gold dictionary with espeak-ng fallback."
+          "text": "French G2P provides phoneme conversion using a gold dictionary with espeak-ng fallback.\n\nFrench semantic preparation runs through the released shared stack:\n\nabbr2words -> French abbreviation/symbol recognition\nspokenform -> French semantic written-to-spoken preparation\nkokorog2p  -> French G2P, tokenization, and phonemes\n\n\n\n\nThe span pipeline prepares each homogeneous French run once and rebases the exact source\nreplacements to document offsets. French typography, tokenization, lexicon lookup,\nfallback, and phoneme conversion remain local to kokorog2p. The number helper functions\nbelow are retained for compatibility and are deprecated; new code should call\nspokenform directly.",
+          "lower": "french g2p provides phoneme conversion using a gold dictionary with espeak-ng fallback.\n\nfrench semantic preparation runs through the released shared stack:\n\nabbr2words -> french abbreviation/symbol recognition\nspokenform -> french semantic written-to-spoken preparation\nkokorog2p  -> french g2p, tokenization, and phonemes\n\n\n\n\nthe span pipeline prepares each homogeneous french run once and rebases the exact source\nreplacements to document offsets. french typography, tokenization, lexicon lookup,\nfallback, and phoneme conversion remain local to kokorog2p. the number helper functions\nbelow are retained for compatibility and are deprecated; new code should call\nspokenform directly."
         },
         {
           "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.fr.FrenchG2P(language: str = 'fr-fr', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, use_spacy: bool = True, spacy_model: str | None = None, expand_nums: bool = True, expand_abbreviations: bool = True, enable_context_detection: bool = True, unk: str = '?', load_silver: bool = True, load_gold: bool = True, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nFrench G2P converter using dictionary lookup with fallback options.\n\nThis class provides grapheme-to-phoneme conversion for French text,\nusing a gold dictionary with espeak-ng or goruut as fallback for OOV words.\n\n\nExample:>>> g2p = FrenchG2P()\n>>> tokens = g2p(\"Bonjour, comment allez-vous?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")…",
-          "lower": "class kokorog2p.fr.frenchg2p(language: str = 'fr-fr', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, use_spacy: bool = true, spacy_model: str | none = none, expand_nums: bool = true, expand_abbreviations: bool = true, enable_context_detection: bool = true, unk: str = '?', load_silver: bool = true, load_gold: bool = true, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\nfrench g2p converter using dictionary lookup with fallback options.\n\nthis class provides grapheme-to-phoneme conversion for french text,\nusing a gold dictionary with espeak-ng or goruut as fallback for oov words.\n\n\nexample:>>> g2p = frenchg2p()\n>>> tokens = g2p(\"bonjour, comment allez-vous?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")…"
-        },
-        {
-          "anchor": "",
-          "heading": "Lexicon",
-          "text": "class kokorog2p.fr.FrenchLexicon(load_silver: bool = True, load_gold: bool = True)[source]\nBases: object\n\nDictionary-based G2P lookup for French with gold dictionary.\n\n\n\n__init__(load_silver: bool = True, load_gold: bool = True) → None[source]\nInitialize the French lexicon.\n\n\nArgs:\nload_silver: If True, load silver tier dictionary if available.Currently French only has gold dictionary, so this parameter\nis reserved for future use and consistency with English.\nDefaults to True for consistency.\n\n\nload_gold: If True, load gold tier dictionary.Defaults to True for maximum quality and coverage.\nSet to False when ultra-fast initialization is needed.\n\n\n\n\n\n\n\n\n\nis_known(word: str, tag: str | None = None) → bool[source]\nCheck if a word is in the lexicon.\n\n\n\n\n\nlookup(word: str, tag: str | None =…",
-          "lower": "class kokorog2p.fr.frenchlexicon(load_silver: bool = true, load_gold: bool = true)[source]\nbases: object\n\ndictionary-based g2p lookup for french with gold dictionary.\n\n\n\n__init__(load_silver: bool = true, load_gold: bool = true) → none[source]\ninitialize the french lexicon.\n\n\nargs:\nload_silver: if true, load silver tier dictionary if available.currently french only has gold dictionary, so this parameter\nis reserved for future use and consistency with english.\ndefaults to true for consistency.\n\n\nload_gold: if true, load gold tier dictionary.defaults to true for maximum quality and coverage.\nset to false when ultra-fast initialization is needed.\n\n\n\n\n\n\n\n\n\nis_known(word: str, tag: str | none = none) → bool[source]\ncheck if a word is in the lexicon.\n\n\n\n\n\nlookup(word: str, tag: str | none =…"
-        },
-        {
-          "anchor": "",
-          "heading": "Helper Functions",
-          "text": "kokorog2p.fr.numbers.number_to_french(n: int, ordinal: bool = False) → str[source]\nConvert a number to French words using num2words.\n\n\nArgs:n: Integer to convert.\nordinal: If True, return ordinal form (premier, deuxième, etc.)\n\n\nReturns:French word representation.\n\n\nRaises:ImportError: If num2words is not installed.\n\n\nExample:>>> number_to_french(42)\n'quarante-deux'\n>>> number_to_french(1, ordinal=True)\n'premier'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.fr.numbers.expand_numbers(text: str, max_value: int = 1000000) → str[source]\nExpand numbers in text to French words.\n\n\nArgs:text: Text containing numbers.\nmax_value: Maximum value to expand (larger numbers kept as-is).\n\n\nReturns:Text with numbers expanded.\n\n\nExample:>>> expand_numbers(\"J'ai 3 pommes et 42 oranges.\")\n\"J'ai trois pommes et quarante-deux orange…",
-          "lower": "kokorog2p.fr.numbers.number_to_french(n: int, ordinal: bool = false) → str[source]\nconvert a number to french words using num2words.\n\n\nargs:n: integer to convert.\nordinal: if true, return ordinal form (premier, deuxième, etc.)\n\n\nreturns:french word representation.\n\n\nraises:importerror: if num2words is not installed.\n\n\nexample:>>> number_to_french(42)\n'quarante-deux'\n>>> number_to_french(1, ordinal=true)\n'premier'\n\n\n\n\n\n\n\n\n\n\nkokorog2p.fr.numbers.expand_numbers(text: str, max_value: int = 1000000) → str[source]\nexpand numbers in text to french words.\n\n\nargs:text: text containing numbers.\nmax_value: maximum value to expand (larger numbers kept as-is).\n\n\nreturns:text with numbers expanded.\n\n\nexample:>>> expand_numbers(\"j'ai 3 pommes et 42 oranges.\")\n\"j'ai trois pommes et quarante-deux orange…"
+          "heading": "Number Conversion",
+          "text": "The public helper functions are deprecated compatibility wrappers around the released\nspokenform implementation. FrenchG2P(expand_nums=False) selects the upstream\nno-number-expansion policy, so ordinary written numbers and structured expressions\nremain written rather than being silently expanded.",
+          "lower": "the public helper functions are deprecated compatibility wrappers around the released\nspokenform implementation. frenchg2p(expand_nums=false) selects the upstream\nno-number-expansion policy, so ordinary written numbers and structured expressions\nremain written rather than being silently expanded."
         },
         {
           "anchor": "",
@@ -710,31 +596,13 @@
     {
       "url": "/tools/kokorog2p/main/api/german/",
       "title": "kokorog2p German API",
-      "snippet": "German G2P provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\nGerman normalization is deterministic …",
+      "snippet": "German G2P provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\nGerman semantic normalization is prov …",
       "sections": [
         {
           "anchor": "",
           "heading": "German API",
-          "text": "German G2P provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\nGerman normalization is deterministic and runs before tokenization. In the public\ndefault span pipeline, structured replacements are matched against the original\nsource offsets and then merged into semantic token spans before token-local expansion.\nThis keeps numeric context intact for grouped numbers (1.000), decimals (3,14),\nEUR amounts, dates, times, temperatures, ordinals, and numbered units with\nsingular/plural agreement, including when the backend has no language-owned\nnormalizer. Unit symbols are context bound: 2 kg becomes zwei Kilogramm, while a\nstandalone kg is preserved. Dotted numeric aliases such as 1 ltr. and 45 Min.\nare consumed as part of the semantic span, so their perio…",
-          "lower": "german g2p provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\ngerman normalization is deterministic and runs before tokenization. in the public\ndefault span pipeline, structured replacements are matched against the original\nsource offsets and then merged into semantic token spans before token-local expansion.\nthis keeps numeric context intact for grouped numbers (1.000), decimals (3,14),\neur amounts, dates, times, temperatures, ordinals, and numbered units with\nsingular/plural agreement, including when the backend has no language-owned\nnormalizer. unit symbols are context bound: 2 kg becomes zwei kilogramm, while a\nstandalone kg is preserved. dotted numeric aliases such as 1 ltr. and 45 min.\nare consumed as part of the semantic span, so their perio…"
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.de.GermanG2P(language: str = 'de-de', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_spacy: bool = False, spacy_model: str | None = None, use_lexicon: bool = True, strip_stress: bool = True, load_silver: bool = True, load_gold: bool = True, version: str = '1.0', expand_abbreviations: bool = True, enable_context_detection: bool = True, **kwargs: Any)[source]\nBases: G2PBase\n\nGerman G2P converter using dictionary lookup with fallback options.\n\nThis class provides grapheme-to-phoneme conversion for German text\nusing a large dictionary (738k+ entries) with fallback to espeak-ng\nor goruut for out-of-vocabulary words and phonological rules.\n\n\nExample:>>> g2p = GermanG2P()\n>>> tokens = g2p(\"Guten Tag\")\n>>> for token in tokens:\n...     print(f\"{token.text…",
-          "lower": "class kokorog2p.de.germang2p(language: str = 'de-de', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_spacy: bool = false, spacy_model: str | none = none, use_lexicon: bool = true, strip_stress: bool = true, load_silver: bool = true, load_gold: bool = true, version: str = '1.0', expand_abbreviations: bool = true, enable_context_detection: bool = true, **kwargs: any)[source]\nbases: g2pbase\n\ngerman g2p converter using dictionary lookup with fallback options.\n\nthis class provides grapheme-to-phoneme conversion for german text\nusing a large dictionary (738k+ entries) with fallback to espeak-ng\nor goruut for out-of-vocabulary words and phonological rules.\n\n\nexample:>>> g2p = germang2p()\n>>> tokens = g2p(\"guten tag\")\n>>> for token in tokens:\n...     print(f\"{token.text…"
-        },
-        {
-          "anchor": "",
-          "heading": "Lexicon",
-          "text": "class kokorog2p.de.GermanLexicon(strip_stress: bool = False, load_silver: bool = True, load_gold: bool = True)[source]\nBases: object\n\nGerman pronunciation lexicon.\n\nUses a gold dictionary for lookup with optional fallback.\n\n\nExample:>>> lexicon = GermanLexicon()\n>>> lexicon.lookup(\"Haus\")\n'haʊ̯s'\n\n\n\n\n\n\n\n\n__init__(strip_stress: bool = False, load_silver: bool = True, load_gold: bool = True) → None[source]\nInitialize the German lexicon.\n\n\nArgs:strip_stress: If True, remove stress markers from phonemes.\nload_silver: If True, load silver tier dictionary if available.\n\n\nCurrently German only has gold dictionary, so this parameter\nis reserved for future use and consistency with English.\nDefaults to True for consistency.\n\n\n\n\nload_gold: If True, load gold tier dictionary.Defaults to True for ma…",
-          "lower": "class kokorog2p.de.germanlexicon(strip_stress: bool = false, load_silver: bool = true, load_gold: bool = true)[source]\nbases: object\n\ngerman pronunciation lexicon.\n\nuses a gold dictionary for lookup with optional fallback.\n\n\nexample:>>> lexicon = germanlexicon()\n>>> lexicon.lookup(\"haus\")\n'haʊ̯s'\n\n\n\n\n\n\n\n\n__init__(strip_stress: bool = false, load_silver: bool = true, load_gold: bool = true) → none[source]\ninitialize the german lexicon.\n\n\nargs:strip_stress: if true, remove stress markers from phonemes.\nload_silver: if true, load silver tier dictionary if available.\n\n\ncurrently german only has gold dictionary, so this parameter\nis reserved for future use and consistency with english.\ndefaults to true for consistency.\n\n\n\n\nload_gold: if true, load gold tier dictionary.defaults to true for ma…"
-        },
-        {
-          "anchor": "",
-          "heading": "Number Conversion",
-          "text": "class kokorog2p.de.numbers.GermanNumberConverter(lookup_fn: Callable[[str, str | None], str | None] | None = None)[source]\nBases: object\n\nConvert German numeric forms without optional runtime dependencies.\n\n\n\nproperty num2words: Callable\nCompatibility callable retained for callers of the old API.\n\n\n\n\n\nconvert_cardinal(word: str) → str[source]\n\n\n\n\nconvert_ordinal(word: str) → str[source]\n\n\n\n\nconvert_year(word: str) → str[source]\n\n\n\n\nconvert_decimal(word: str) → str[source]\n\n\n\n\nconvert_currency(word: str, currency: str) → str[source]\n\n\n\n\nconvert(word: str, currency: str | None = None, is_ordinal: bool = False, is_year: bool = False) → str[source]\n\n\n\n\n\n\nkokorog2p.de.numbers.expand_number(text: str) → str[source]\nExpand numbers and structured numeric expressions in text.\n\n\n\n\n\nkokorog…",
-          "lower": "class kokorog2p.de.numbers.germannumberconverter(lookup_fn: callable[[str, str | none], str | none] | none = none)[source]\nbases: object\n\nconvert german numeric forms without optional runtime dependencies.\n\n\n\nproperty num2words: callable\ncompatibility callable retained for callers of the old api.\n\n\n\n\n\nconvert_cardinal(word: str) → str[source]\n\n\n\n\nconvert_ordinal(word: str) → str[source]\n\n\n\n\nconvert_year(word: str) → str[source]\n\n\n\n\nconvert_decimal(word: str) → str[source]\n\n\n\n\nconvert_currency(word: str, currency: str) → str[source]\n\n\n\n\nconvert(word: str, currency: str | none = none, is_ordinal: bool = false, is_year: bool = false) → str[source]\n\n\n\n\n\n\nkokorog2p.de.numbers.expand_number(text: str) → str[source]\nexpand numbers and structured numeric expressions in text.\n\n\n\n\n\nkokorog…"
+          "text": "German G2P provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\nGerman semantic normalization is provided by spokenform and runs once per homogeneous\nlanguage run before token-local G2P processing. In the public default span pipeline,\nspokenform source replacements are rebased to original document offsets and merged into\nsemantic token spans before token-local expansion. This keeps numeric context intact for\ngrouped numbers (1.000), decimals (3,14), EUR amounts, dates, times, temperatures,\nordinals, and numbered units with singular/plural agreement, including when the backend\nhas no language-owned normalizer. Unit symbols are context bound: 2 kg becomes\nzwei Kilogramm, while a standalone kg is preserved. Dotted numeric aliases such as\n1 ltr. and 45 M…",
+          "lower": "german g2p provides phoneme conversion using a large 738k+ entry dictionary with\nrule-based fallback.\n\ngerman semantic normalization is provided by spokenform and runs once per homogeneous\nlanguage run before token-local g2p processing. in the public default span pipeline,\nspokenform source replacements are rebased to original document offsets and merged into\nsemantic token spans before token-local expansion. this keeps numeric context intact for\ngrouped numbers (1.000), decimals (3,14), eur amounts, dates, times, temperatures,\nordinals, and numbered units with singular/plural agreement, including when the backend\nhas no language-owned normalizer. unit symbols are context bound: 2 kg becomes\nzwei kilogramm, while a standalone kg is preserved. dotted numeric aliases such as\n1 ltr. and 45 m…"
         },
         {
           "anchor": "",
@@ -747,19 +615,13 @@
     {
       "url": "/tools/kokorog2p/main/api/hebrew/",
       "title": "kokorog2p Hebrew API",
-      "snippet": "Hebrew G2P provides phoneme conversion using the phonikud package for handling Hebrew\ntext with diacritics (nikud).\nclass kokorog2p.he.Hebre …",
+      "snippet": "Hebrew G2P provides phoneme conversion using the phonikud package for handling Hebrew\ntext with diacritics (nikud).\nfrom kokorog2p.he import …",
       "sections": [
         {
           "anchor": "",
           "heading": "Hebrew API",
           "text": "Hebrew G2P provides phoneme conversion using the phonikud package for handling Hebrew\ntext with diacritics (nikud).",
           "lower": "hebrew g2p provides phoneme conversion using the phonikud package for handling hebrew\ntext with diacritics (nikud)."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.he.HebrewG2P(language: str = 'he', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, load_silver: bool = True, load_gold: bool = True, preserve_punctuation: bool = True, preserve_stress: bool = True, version: str = '1.0', **kwargs: Any)[source]\nBases: G2PBase\n\nHebrew G2P using phonikud for phonemization.\n\nThis class converts Hebrew text to phonemes using the phonikud package.\nHebrew text is expected to be with enhanced diacritics (nikud) for accurate\nphonemization.\n\n\nExample:>>> g2p = HebrewG2P()\n>>> tokens = g2p(\"שָׁלוֹם\")  # \"shalom\" with nikud\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'he', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, load_silver: bool = True…",
-          "lower": "class kokorog2p.he.hebrewg2p(language: str = 'he', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, load_silver: bool = true, load_gold: bool = true, preserve_punctuation: bool = true, preserve_stress: bool = true, version: str = '1.0', **kwargs: any)[source]\nbases: g2pbase\n\nhebrew g2p using phonikud for phonemization.\n\nthis class converts hebrew text to phonemes using the phonikud package.\nhebrew text is expected to be with enhanced diacritics (nikud) for accurate\nphonemization.\n\n\nexample:>>> g2p = hebrewg2p()\n>>> tokens = g2p(\"שָׁלוֹם\")  # \"shalom\" with nikud\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'he', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, load_silver: bool = true…"
         },
         {
           "anchor": "",
@@ -778,7 +640,7 @@
     {
       "url": "/tools/kokorog2p/main/api/italian/",
       "title": "kokorog2p Italian API",
-      "snippet": "Italian G2P provides rule-based phoneme conversion for Italian, designed for Kokoro TTS\nmodels.\nclass kokorog2p.it.ItalianG2P(language: str …",
+      "snippet": "Italian G2P provides rule-based phoneme conversion for Italian, designed for Kokoro TTS\nmodels.\nItalian uses the shared per-language-run sem …",
       "sections": [
         {
           "anchor": "",
@@ -788,9 +650,9 @@
         },
         {
           "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.it.ItalianG2P(language: str = 'it-it', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, use_spacy: bool = False, spacy_model: str | None = None, mark_stress: bool = True, mark_gemination: bool = True, expand_abbreviations: bool = True, enable_context_detection: bool = True, version: str = '1.0', **kwargs: Any)[source]\nBases: G2PBase\n\nItalian G2P converter using rule-based phonemization.\n\nThis class provides grapheme-to-phoneme conversion for Italian text\nusing Italian orthographic rules. Italian has fairly regular spelling,\nmaking rule-based conversion quite accurate.\n\n\nExample:>>> g2p = ItalianG2P()\n>>> tokens = g2p(\"Ciao, come stai?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'it-it'…",
-          "lower": "class kokorog2p.it.italiang2p(language: str = 'it-it', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, use_spacy: bool = false, spacy_model: str | none = none, mark_stress: bool = true, mark_gemination: bool = true, expand_abbreviations: bool = true, enable_context_detection: bool = true, version: str = '1.0', **kwargs: any)[source]\nbases: g2pbase\n\nitalian g2p converter using rule-based phonemization.\n\nthis class provides grapheme-to-phoneme conversion for italian text\nusing italian orthographic rules. italian has fairly regular spelling,\nmaking rule-based conversion quite accurate.\n\n\nexample:>>> g2p = italiang2p()\n>>> tokens = g2p(\"ciao, come stai?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'it-it'…"
+          "heading": "Semantic preparation",
+          "text": "Italian uses the shared per-language-run semantic-preparation path. abbr2words\nrecognizes Italian abbreviations, units, and currency symbols; spokenform verbalizes\nreviewed dates, quantities, temperatures, currencies, and ordinary numbers. kokorog2p\nkeeps Italian typography, tokenization, contractions, stress, gemination, and phoneme\ngeneration downstream. Italian colon times remain caller-managed in this migration.\n\nThis boundary does not make spokenform responsible for language detection,\nmixed-language segmentation, markup parsing, or phoneme generation.",
+          "lower": "italian uses the shared per-language-run semantic-preparation path. abbr2words\nrecognizes italian abbreviations, units, and currency symbols; spokenform verbalizes\nreviewed dates, quantities, temperatures, currencies, and ordinary numbers. kokorog2p\nkeeps italian typography, tokenization, contractions, stress, gemination, and phoneme\ngeneration downstream. italian colon times remain caller-managed in this migration.\n\nthis boundary does not make spokenform responsible for language detection,\nmixed-language segmentation, markup parsing, or phoneme generation."
         },
         {
           "anchor": "",
@@ -809,19 +671,13 @@
     {
       "url": "/tools/kokorog2p/main/api/japanese/",
       "title": "kokorog2p Japanese API",
-      "snippet": "Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.\nclass kokorog2p.ja.JapaneseG2P(language: str = 'ja', use_ …",
+      "snippet": "Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.\nfrom kokorog2p.ja import JapaneseG2P\n\ng2p = JapaneseG2P(l …",
       "sections": [
         {
           "anchor": "",
           "heading": "Japanese API",
           "text": "Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.",
           "lower": "japanese g2p uses pyopenjtalk for text analysis and mora-based phoneme generation."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.ja.JapaneseG2P(language: str = 'ja', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, backend: str = 'pyopenjtalk', unk: str = '', load_silver: bool = True, load_gold: bool = True, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nJapanese G2P using pyopenjtalk or cutlet.\n\n\nExample:>>> g2p = JapaneseG2P()\n>>> tokens = g2p(\"こんにちは\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'ja', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, backend: str = 'pyopenjtalk', unk: str = '', load_silver: bool = True, load_gold: bool = True, version: str = '1.0', **kwargs) → None[source]\nInitialize the Japanese G2P.\n\n\nArgs:language: Language code (e.g., ‘ja’, ‘ja-jp’).\nuse_espeak_fallback: Whether to use espeak fo…",
-          "lower": "class kokorog2p.ja.japaneseg2p(language: str = 'ja', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, backend: str = 'pyopenjtalk', unk: str = '', load_silver: bool = true, load_gold: bool = true, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\njapanese g2p using pyopenjtalk or cutlet.\n\n\nexample:>>> g2p = japaneseg2p()\n>>> tokens = g2p(\"こんにちは\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'ja', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, backend: str = 'pyopenjtalk', unk: str = '', load_silver: bool = true, load_gold: bool = true, version: str = '1.0', **kwargs) → none[source]\ninitialize the japanese g2p.\n\n\nargs:language: language code (e.g., ‘ja’, ‘ja-jp’).\nuse_espeak_fallback: whether to use espeak fo…"
         },
         {
           "anchor": "",
@@ -847,12 +703,6 @@
           "heading": "Korean API",
           "text": "Korean G2P provides phoneme conversion using MeCab for morphological analysis and custom\nphonological rules based on Korean Standard Pronunciation.",
           "lower": "korean g2p provides phoneme conversion using mecab for morphological analysis and custom\nphonological rules based on korean standard pronunciation."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.ko.KoreanG2P(language: str = 'ko', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, use_spacy: bool = False, spacy_model: str = 'ko_core_news_sm', load_silver: bool = True, load_gold: bool = True, use_dict: bool = True, group_vowels: bool = False, to_syl: bool = False, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nKorean G2P using MeCab and Korean phonological rules.\n\nThis class converts Korean text to phonemes using:\n1. Idiom/abbreviation replacement\n2. English to Hangul conversion\n3. MeCab POS tagging\n4. Number spelling\n5. Hangul decomposition\n6. Phonological rules application\n7. Jamo composition\n\n\nExample:>>> g2p = KoreanG2P()\n>>> tokens = g2p(\"안녕하세요\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'ko', use_espeak_fallback: bool = False, use_goruut_fa…",
-          "lower": "class kokorog2p.ko.koreang2p(language: str = 'ko', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, use_spacy: bool = false, spacy_model: str = 'ko_core_news_sm', load_silver: bool = true, load_gold: bool = true, use_dict: bool = true, group_vowels: bool = false, to_syl: bool = false, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\nkorean g2p using mecab and korean phonological rules.\n\nthis class converts korean text to phonemes using:\n1. idiom/abbreviation replacement\n2. english to hangul conversion\n3. mecab pos tagging\n4. number spelling\n5. hangul decomposition\n6. phonological rules application\n7. jamo composition\n\n\nexample:>>> g2p = koreang2p()\n>>> tokens = g2p(\"안녕하세요\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'ko', use_espeak_fallback: bool = false, use_goruut_fa…"
         },
         {
           "anchor": "",
@@ -902,19 +752,13 @@
     {
       "url": "/tools/kokorog2p/main/api/portuguese/",
       "title": "kokorog2p Portuguese API",
-      "snippet": "Portuguese G2P provides rule-based phoneme conversion for Brazilian Portuguese, designed\nfor Kokoro TTS models.\nclass kokorog2p.pt.Portugues …",
+      "snippet": "Portuguese G2P provides rule-based phoneme conversion for Brazilian Portuguese, designed\nfor Kokoro TTS models.\nfrom kokorog2p.pt import Por …",
       "sections": [
         {
           "anchor": "",
           "heading": "Portuguese API",
           "text": "Portuguese G2P provides rule-based phoneme conversion for Brazilian Portuguese, designed\nfor Kokoro TTS models.",
           "lower": "portuguese g2p provides rule-based phoneme conversion for brazilian portuguese, designed\nfor kokoro tts models."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.pt.PortugueseG2P(language: str = 'pt-br', use_espeak_fallback: bool = False, use_spacy: bool = False, spacy_model: str | None = None, mark_stress: bool = True, affricate_ti_di: bool = True, expand_abbreviations: bool = True, enable_context_detection: bool = True, dialect: str = 'br', version: str = '1.0', **kwargs: Any)[source]\nBases: G2PBase\n\nBrazilian Portuguese G2P converter using rule-based phonemization.\n\nThis class provides grapheme-to-phoneme conversion for Brazilian Portuguese text\nusing Portuguese orthographic rules.\n\n\nExample:>>> g2p = PortugueseG2P()\n>>> tokens = g2p(\"Olá, como está?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'pt-br', use_espeak_fallback: bool = False, use_spacy: bool = False,…",
-          "lower": "class kokorog2p.pt.portugueseg2p(language: str = 'pt-br', use_espeak_fallback: bool = false, use_spacy: bool = false, spacy_model: str | none = none, mark_stress: bool = true, affricate_ti_di: bool = true, expand_abbreviations: bool = true, enable_context_detection: bool = true, dialect: str = 'br', version: str = '1.0', **kwargs: any)[source]\nbases: g2pbase\n\nbrazilian portuguese g2p converter using rule-based phonemization.\n\nthis class provides grapheme-to-phoneme conversion for brazilian portuguese text\nusing portuguese orthographic rules.\n\n\nexample:>>> g2p = portugueseg2p()\n>>> tokens = g2p(\"olá, como está?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'pt-br', use_espeak_fallback: bool = false, use_spacy: bool = false,…"
         },
         {
           "anchor": "",
@@ -933,7 +777,7 @@
     {
       "url": "/tools/kokorog2p/main/api/spanish/",
       "title": "kokorog2p Spanish API",
-      "snippet": "Spanish G2P provides rule-based phoneme conversion for Spanish, designed for Kokoro TTS\nmodels.\nclass kokorog2p.es.SpanishG2P(language: str …",
+      "snippet": "Spanish G2P provides rule-based phoneme conversion for Spanish, designed for Kokoro TTS\nmodels.\nabbr2words owns Spanish abbreviation and sym …",
       "sections": [
         {
           "anchor": "",
@@ -943,9 +787,9 @@
         },
         {
           "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.es.SpanishG2P(language: str = 'es', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, use_spacy: bool = False, spacy_model: str | None = None, mark_stress: bool = True, dialect: str = 'es', expand_abbreviations: bool = True, enable_context_detection: bool = True, version: str = '1.0', **kwargs: Any)[source]\nBases: G2PBase\n\nSpanish G2P converter using rule-based phonemization.\n\nThis class provides grapheme-to-phoneme conversion for Spanish text\nusing Spanish orthographic rules. Spanish has fairly regular spelling,\nmaking rule-based conversion quite accurate.\n\n\nExample:>>> g2p = SpanishG2P()\n>>> tokens = g2p(\"Hola, ¿cómo estás?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'es', use_espeak_…",
-          "lower": "class kokorog2p.es.spanishg2p(language: str = 'es', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, use_spacy: bool = false, spacy_model: str | none = none, mark_stress: bool = true, dialect: str = 'es', expand_abbreviations: bool = true, enable_context_detection: bool = true, version: str = '1.0', **kwargs: any)[source]\nbases: g2pbase\n\nspanish g2p converter using rule-based phonemization.\n\nthis class provides grapheme-to-phoneme conversion for spanish text\nusing spanish orthographic rules. spanish has fairly regular spelling,\nmaking rule-based conversion quite accurate.\n\n\nexample:>>> g2p = spanishg2p()\n>>> tokens = g2p(\"hola, ¿cómo estás?\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'es', use_espeak_…"
+          "heading": "Text preparation ownership",
+          "text": "abbr2words owns Spanish abbreviation and symbol recognition, spokenform owns\nsemantic written-to-spoken preparation for numbers, quantities, temperatures,\ncurrencies, and reviewed dates, and kokorog2p owns downstream typography, tokenization,\noverrides, alignment, and G2P. European (dialect=\"es\") and Latin-American\n(dialect=\"la\") phoneme behavior remains local to SpanishG2P.",
+          "lower": "abbr2words owns spanish abbreviation and symbol recognition, spokenform owns\nsemantic written-to-spoken preparation for numbers, quantities, temperatures,\ncurrencies, and reviewed dates, and kokorog2p owns downstream typography, tokenization,\noverrides, alignment, and g2p. european (dialect=\"es\") and latin-american\n(dialect=\"la\") phoneme behavior remains local to spanishg2p."
         },
         {
           "anchor": "",
@@ -964,7 +808,7 @@
     {
       "url": "/tools/kokorog2p/main/api/utils/",
       "title": "kokorog2p Utilities API",
-      "snippet": "This page documents utility modules and helper functions.\nclass kokorog2p.en.lexicon.TokenContext(future_vowel: bool | None = None, future_t …",
+      "snippet": "This page documents utility modules and helper functions.\nThe fallback module provides functionality for handling out-of-vocabulary words:\nT …",
       "sections": [
         {
           "anchor": "",
@@ -974,15 +818,9 @@
         },
         {
           "anchor": "",
-          "heading": "Token Context",
-          "text": "class kokorog2p.en.lexicon.TokenContext(future_vowel: bool | None = None, future_to: bool = False)[source]\nBases: object\n\nContext information for token processing.\n\n\n\nfuture_vowel: bool | None = None\n\n\n\n\nfuture_to: bool = False",
-          "lower": "class kokorog2p.en.lexicon.tokencontext(future_vowel: bool | none = none, future_to: bool = false)[source]\nbases: object\n\ncontext information for token processing.\n\n\n\nfuture_vowel: bool | none = none\n\n\n\n\nfuture_to: bool = false"
-        },
-        {
-          "anchor": "",
           "heading": "Fallback Handling",
-          "text": "The fallback module provides functionality for handling out-of-vocabulary words:\n\nFallback options for OOV words with IPA to Kokoro conversion.\n\n\n\nclass kokorog2p.en.fallback.EspeakFallback(british: bool = False, use_cli: bool = False)[source]\nBases: FallbackBase[EspeakBackend]\n\nFallback G2P using espeak-ng with Kokoro phoneme conversion.\n\n\n\ninstall_hint: str = 'Check that espeak-ng is properly installed.'\nExtra hint appended to backend-init error logs (RuntimeError).\n\n\n\n\n\nbackend_word_kokoro: bool = False\nIf True, pass convert_to_kokoro=True into backend.word_phonemes().\n\n\n\n\n\nbackend_text_kokoro: bool = True\nIf True, pass convert_to_kokoro=True into backend.phonemize().\n\n\n\n\n\n__init__(british: bool = False, use_cli: bool = False) → None[source]\nInitialize the espeak fallback.\n\n\nArgs:…",
-          "lower": "the fallback module provides functionality for handling out-of-vocabulary words:\n\nfallback options for oov words with ipa to kokoro conversion.\n\n\n\nclass kokorog2p.en.fallback.espeakfallback(british: bool = false, use_cli: bool = false)[source]\nbases: fallbackbase[espeakbackend]\n\nfallback g2p using espeak-ng with kokoro phoneme conversion.\n\n\n\ninstall_hint: str = 'check that espeak-ng is properly installed.'\nextra hint appended to backend-init error logs (runtimeerror).\n\n\n\n\n\nbackend_word_kokoro: bool = false\nif true, pass convert_to_kokoro=true into backend.word_phonemes().\n\n\n\n\n\nbackend_text_kokoro: bool = true\nif true, pass convert_to_kokoro=true into backend.phonemize().\n\n\n\n\n\n__init__(british: bool = false, use_cli: bool = false) → none[source]\ninitialize the espeak fallback.\n\n\nargs:…"
+          "text": "The fallback module provides functionality for handling out-of-vocabulary words:",
+          "lower": "the fallback module provides functionality for handling out-of-vocabulary words:"
         },
         {
           "anchor": "",
@@ -1007,13 +845,43 @@
     {
       "url": "/tools/kokorog2p/main/changelog/",
       "title": "kokorog2p Changelog",
-      "snippet": "All notable changes to kokorog2p will be documented in this file.\nAdded dependency-free adapters for SSMD annotation spans and phrasplit-com …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nReordered migrated- …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
-          "text": "All notable changes to kokorog2p will be documented in this file.",
-          "lower": "all notable changes to kokorog2p will be documented in this file."
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Reordered migrated-language processing so Spokenform receives original source syntax\nbefore kokorog2p model-punctuation cleanup; removed the semantic-symbol allowlist.\n\n\nPreserved exact Spokenform source replacements, propagated upstream warnings, and\nretained replacement rule/language/stage provenance in token metadata.\n\n\nRaised the released dependency floors to abbr2words>=0.2.7,<0.3.0 and\nspokenform>=0.2.5,<0.3.0, with compact structured handoff regressions.\n\n\nFixed English contextual N.0 release-label pronunciation through the spokenform\npreparation layer, preserving source alignment and reading bot 2.0 as\nbot two point oh once the upstream release is consumed.\n\n\nDelegated German written-to-spoken semantic preparation to spokenform per\nsource-aligned language run while preserving koko…",
+          "lower": "reordered migrated-language processing so spokenform receives original source syntax\nbefore kokorog2p model-punctuation cleanup; removed the semantic-symbol allowlist.\n\n\npreserved exact spokenform source replacements, propagated upstream warnings, and\nretained replacement rule/language/stage provenance in token metadata.\n\n\nraised the released dependency floors to abbr2words>=0.2.7,<0.3.0 and\nspokenform>=0.2.5,<0.3.0, with compact structured handoff regressions.\n\n\nfixed english contextual n.0 release-label pronunciation through the spokenform\npreparation layer, preserving source alignment and reading bot 2.0 as\nbot two point oh once the upstream release is consumed.\n\n\ndelegated german written-to-spoken semantic preparation to spokenform per\nsource-aligned language run while preserving koko…"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the abbr2words → spokenform → kokorog2p ownership boundary and the\nexact seven-language migration scope, including English’s reserved downstream number\nbehavior and typography-only token normalization.",
+          "lower": "documented the abbr2words → spokenform → kokorog2p ownership boundary and the\nexact seven-language migration scope, including english’s reserved downstream number\nbehavior and typography-only token normalization."
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed German area, volume, hectare, and speed quantities to use the shared\nspokenform grammar\n\n\nChanged the reviewed seven-language pipeline to use shared written-to-spoken\npreparation\n\n\nChanged migrated-language written-to-spoken semantics to use Spokenform 0.2.5 and\nraised the abbr2words floor to 0.2.7",
+          "lower": "changed german area, volume, hectare, and speed quantities to use the shared\nspokenform grammar\n\n\nchanged the reviewed seven-language pipeline to use shared written-to-spoken\npreparation\n\n\nchanged migrated-language written-to-spoken semantics to use spokenform 0.2.5 and\nraised the abbr2words floor to 0.2.7"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented English semantic ownership and the Portuguese migration boundary",
+          "lower": "documented english semantic ownership and the portuguese migration boundary"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added runtime and parity fixture assets to portable Codecrate packs",
+          "lower": "added runtime and parity fixture assets to portable codecrate packs"
         },
         {
           "anchor": "",
@@ -1080,60 +948,6 @@
           "heading": "Quality",
           "text": "Added espeak phonemizer base tests for improved backend coverage",
           "lower": "added espeak phonemizer base tests for improved backend coverage"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "New ``strict`` parameter for error handling control in all G2P backends\n\n\nstrict=True (default): Raises detailed RuntimeError when backends fail\n\n\nstrict=False (lenient mode): Logs errors and returns empty strings (backward\ncompatible)\n\n\nAvailable in: get_g2p(), EspeakG2P, GoruutG2P, EnglishG2P, and base G2P\nclass\n\n\nIncludes in cache key to ensure correct behavior for different strict modes\n\n\n\n\n\nEarly backend validation in EspeakG2P._validate_backend() to catch initialization\nerrors immediately\n\n\nComprehensive logging throughout error handling paths\n\n\n15 new tests in tests/test_ci_bug_fix.py covering strict/lenient modes and error\nscenarios\n\n\nDetailed error handling documentation in README.md and docs/advanced.md\n\n\nCI/CD best practices guide for proper espeak-ng installation",
-          "lower": "new ``strict`` parameter for error handling control in all g2p backends\n\n\nstrict=true (default): raises detailed runtimeerror when backends fail\n\n\nstrict=false (lenient mode): logs errors and returns empty strings (backward\ncompatible)\n\n\navailable in: get_g2p(), espeakg2p, goruutg2p, englishg2p, and base g2p\nclass\n\n\nincludes in cache key to ensure correct behavior for different strict modes\n\n\n\n\n\nearly backend validation in espeakg2p._validate_backend() to catch initialization\nerrors immediately\n\n\ncomprehensive logging throughout error handling paths\n\n\n15 new tests in tests/test_ci_bug_fix.py covering strict/lenient modes and error\nscenarios\n\n\ndetailed error handling documentation in readme.md and docs/advanced.md\n\n\nci/cd best practices guide for proper espeak-ng installation"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "BREAKING CHANGE: Silent exception handling removed - errors now raise by default\n\n\nPrevious behavior: Exceptions were caught and empty strings returned silently\n\n\nNew behavior: Exceptions raise RuntimeError with detailed context (use\nstrict=False for old behavior)\n\n\nAffected methods: phonemize(), __call__(), lookup() in all backends\n\n\n\n\n\nImproved error messages with actionable debugging information\n\n\nEnhanced fallback logging in EspeakFallback and GoruutFallback classes\n\n\nUpdated documentation with comprehensive error handling examples",
-          "lower": "breaking change: silent exception handling removed - errors now raise by default\n\n\nprevious behavior: exceptions were caught and empty strings returned silently\n\n\nnew behavior: exceptions raise runtimeerror with detailed context (use\nstrict=false for old behavior)\n\n\naffected methods: phonemize(), __call__(), lookup() in all backends\n\n\n\n\n\nimproved error messages with actionable debugging information\n\n\nenhanced fallback logging in espeakfallback and goruutfallback classes\n\n\nupdated documentation with comprehensive error handling examples"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Critical bug fix: Fixed silent failures in CI environments that returned empty\nstrings instead of raising errors\n\n\nRoot cause: 8 locations with bare except Exception blocks that silently returned\nempty strings\n\n\nImpact: Tests passed in CI even when backends failed completely\n\n\nSolution: Proper error propagation with detailed error messages in strict mode\n\n\nFiles fixed: espeak_g2p.py (4 locations), goruut_g2p.py (3 locations),\nen/fallback.py (2 locations)\n\n\n\n\n\nFixed missing error context in backend initialization failures\n\n\nImproved error handling for voice not found scenarios in espeak\n\n\nEnhanced subprocess error reporting in espeak backend",
-          "lower": "critical bug fix: fixed silent failures in ci environments that returned empty\nstrings instead of raising errors\n\n\nroot cause: 8 locations with bare except exception blocks that silently returned\nempty strings\n\n\nimpact: tests passed in ci even when backends failed completely\n\n\nsolution: proper error propagation with detailed error messages in strict mode\n\n\nfiles fixed: espeak_g2p.py (4 locations), goruut_g2p.py (3 locations),\nen/fallback.py (2 locations)\n\n\n\n\n\nfixed missing error context in backend initialization failures\n\n\nimproved error handling for voice not found scenarios in espeak\n\n\nenhanced subprocess error reporting in espeak backend"
-        },
-        {
-          "anchor": "",
-          "heading": "Migration Guide",
-          "text": "For users upgrading from v0.3.x or earlier:\n\nIf your code relied on silent failures (empty strings on errors), you have two options:\n\n\nRecommended: Fix the underlying issues causing errors (e.g., install espeak-ng\nproperly)\n\n\nQuick fix: Use strict=False to maintain backward compatibility:\n\n# Old behavior (silent failures)\ng2p = get_g2p(\"en-us\", backend=\"espeak\", strict=False)\n\n\n\n\n\n\n\nFor CI/CD environments:\n\n\nEnsure espeak-ng is properly installed before running tests\n\n\nUse strict mode (default) to catch configuration issues early\n\n\nSee docs/advanced.md for CI best practices",
-          "lower": "for users upgrading from v0.3.x or earlier:\n\nif your code relied on silent failures (empty strings on errors), you have two options:\n\n\nrecommended: fix the underlying issues causing errors (e.g., install espeak-ng\nproperly)\n\n\nquick fix: use strict=false to maintain backward compatibility:\n\n# old behavior (silent failures)\ng2p = get_g2p(\"en-us\", backend=\"espeak\", strict=false)\n\n\n\n\n\n\n\nfor ci/cd environments:\n\n\nensure espeak-ng is properly installed before running tests\n\n\nuse strict mode (default) to catch configuration issues early\n\n\nsee docs/advanced.md for ci best practices"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "German G2P module with 738k+ entry dictionary\n\n\nCzech G2P module with rule-based phonology\n\n\nFrench G2P module with gold dictionary\n\n\nComprehensive test suite (469 tests including 37 new contraction tests)\n\n\nBenchmarking framework for performance testing\n\n\nContraction merging for spaCy tokenizer in English G2P\n\n\nTest coverage for single and double contractions (don’t, could’ve, I’d’ve, etc.)",
-          "lower": "german g2p module with 738k+ entry dictionary\n\n\nczech g2p module with rule-based phonology\n\n\nfrench g2p module with gold dictionary\n\n\ncomprehensive test suite (469 tests including 37 new contraction tests)\n\n\nbenchmarking framework for performance testing\n\n\ncontraction merging for spacy tokenizer in english g2p\n\n\ntest coverage for single and double contractions (don’t, could’ve, i’d’ve, etc.)"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Improved English contraction handling with intelligent token merging\n\n\nEnhanced number conversion for all languages\n\n\nBetter error handling for missing dependencies\n\n\nUpdated documentation with multi-language support examples\n\n\nImproved type annotations and mypy configuration",
-          "lower": "improved english contraction handling with intelligent token merging\n\n\nenhanced number conversion for all languages\n\n\nbetter error handling for missing dependencies\n\n\nupdated documentation with multi-language support examples\n\n\nimproved type annotations and mypy configuration"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed contraction tokenization in English (don’t was incorrectly split as “Do” +\n“n’t”)\n\n\nFixed Chinese tone_sandhi import type annotation\n\n\nFixed GToken __post_init__ to handle None values for extension dict\n\n\nFixed stress marker handling in German\n\n\nImproved phonological rules for Czech\n\n\nFixed documentation API references for English and French modules",
-          "lower": "fixed contraction tokenization in english (don’t was incorrectly split as “do” +\n“n’t”)\n\n\nfixed chinese tone_sandhi import type annotation\n\n\nfixed gtoken __post_init__ to handle none values for extension dict\n\n\nfixed stress marker handling in german\n\n\nimproved phonological rules for czech\n\n\nfixed documentation api references for english and french modules"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Core G2P framework\n\n\nEnglish G2P (US and GB variants)\n\n\nChinese G2P with jieba and pypinyin\n\n\nJapanese G2P with pyopenjtalk\n\n\nespeak-ng backend support\n\n\ngoruut backend support (experimental)\n\n\nNumber and currency handling\n\n\nPhoneme vocabulary encoding/decoding\n\n\nPunctuation normalization\n\n\nWord mismatch detection\n\n\nComprehensive API documentation\n\n\nTest suite with 300+ tests",
-          "lower": "core g2p framework\n\n\nenglish g2p (us and gb variants)\n\n\nchinese g2p with jieba and pypinyin\n\n\njapanese g2p with pyopenjtalk\n\n\nespeak-ng backend support\n\n\ngoruut backend support (experimental)\n\n\nnumber and currency handling\n\n\nphoneme vocabulary encoding/decoding\n\n\npunctuation normalization\n\n\nword mismatch detection\n\n\ncomprehensive api documentation\n\n\ntest suite with 300+ tests"
-        },
-        {
-          "anchor": "",
-          "heading": "Features",
-          "text": "Dictionary-based lookup with gold/silver tiers\n\n\nPOS-aware pronunciation for English\n\n\nAutomatic stress assignment\n\n\nMulti-backend support\n\n\nCaching for performance\n\n\nType hints throughout\n\n\nFull IPA support",
-          "lower": "dictionary-based lookup with gold/silver tiers\n\n\npos-aware pronunciation for english\n\n\nautomatic stress assignment\n\n\nmulti-backend support\n\n\ncaching for performance\n\n\ntype hints throughout\n\n\nfull ipa support"
         }
       ]
     },
@@ -1261,8 +1075,8 @@
         {
           "anchor": "",
           "heading": "Basic Installation",
-          "text": "The core package has minimal dependencies:\n\npip install kokorog2p\n\n\n\n\nThis gives you:\n\n\nCore G2P functionality\n\n\nBasic phoneme conversion\n\n\nGerman, Czech support (rule-based)\n\n\nNumber handling",
-          "lower": "the core package has minimal dependencies:\n\npip install kokorog2p\n\n\n\n\nthis gives you:\n\n\ncore g2p functionality\n\n\nbasic phoneme conversion\n\n\ngerman, czech support (rule-based)\n\n\nnumber handling"
+          "text": "The core package has minimal dependencies:\n\npip install kokorog2p\n\n\n\n\nThe core install includes bounded abbr2words>=0.2.7,<0.3.0 and\nspokenform>=0.2.5,<0.3.0 runtime dependencies. abbr2words owns abbreviation\nrecognition and customization, spokenform owns reusable written-to-spoken semantic\npreparation and is authoritative after accepting a source span, while kokorog2p remains\nthe G2P and phoneme layer. These floors refer to published releases; unreleased upstream\nbehavior is not claimed by kokorog2p.\n\nThis gives you:\n\n\nCore G2P functionality\n\n\nBasic phoneme conversion\n\n\nGerman, Czech support (rule-based)\n\n\nNumber handling",
+          "lower": "the core package has minimal dependencies:\n\npip install kokorog2p\n\n\n\n\nthe core install includes bounded abbr2words>=0.2.7,<0.3.0 and\nspokenform>=0.2.5,<0.3.0 runtime dependencies. abbr2words owns abbreviation\nrecognition and customization, spokenform owns reusable written-to-spoken semantic\npreparation and is authoritative after accepting a source span, while kokorog2p remains\nthe g2p and phoneme layer. these floors refer to published releases; unreleased upstream\nbehavior is not claimed by kokorog2p.\n\nthis gives you:\n\n\ncore g2p functionality\n\n\nbasic phoneme conversion\n\n\ngerman, czech support (rule-based)\n\n\nnumber handling"
         },
         {
           "anchor": "",
@@ -1381,6 +1195,12 @@
         },
         {
           "anchor": "",
+          "heading": "Semantic ownership",
+          "text": "English reviewed written-to-spoken preparation runs once per homogeneous language run\nthrough abbr2words and spokenform, covering shared abbreviations, dates, quantities,\ntemperatures, currencies, and ordinary number forms. kokorog2p retains English\ntypography, tokenization, alignment, and G2P behavior. Phoneme- sensitive number\ncategories, including forms whose pronunciation depends on the English G2P context,\nremain downstream-owned by the local NumberConverter path.",
+          "lower": "english reviewed written-to-spoken preparation runs once per homogeneous language run\nthrough abbr2words and spokenform, covering shared abbreviations, dates, quantities,\ntemperatures, currencies, and ordinary number forms. kokorog2p retains english\ntypography, tokenization, alignment, and g2p behavior. phoneme- sensitive number\ncategories, including forms whose pronunciation depends on the english g2p context,\nremain downstream-owned by the local numberconverter path."
+        },
+        {
+          "anchor": "",
           "heading": "Usage",
           "text": "from kokorog2p.en import EnglishG2P\n\n# US English\ng2p_us = EnglishG2P(\n    language=\"en-us\",\n    use_espeak_fallback=True,\n    use_spacy=True,\n    spacy_model=\"en_core_web_md\",  # explicit; unset selects the highest installed model\n)\n\n# British English\ng2p_gb = EnglishG2P(\n    language=\"en-gb\",\n    use_espeak_fallback=True,\n    use_spacy=True,\n    spacy_model=\"en_core_web_md\",  # explicit; unset selects the highest installed model\n)\n\n# Optional: automatic selection or an exact model\ng2p_auto = EnglishG2P(language=\"en-us\", use_spacy=True)\ng2p_sm = EnglishG2P(language=\"en-us\", use_spacy=True, spacy_model=\"en_core_web_sm\")",
           "lower": "from kokorog2p.en import englishg2p\n\n# us english\ng2p_us = englishg2p(\n    language=\"en-us\",\n    use_espeak_fallback=true,\n    use_spacy=true,\n    spacy_model=\"en_core_web_md\",  # explicit; unset selects the highest installed model\n)\n\n# british english\ng2p_gb = englishg2p(\n    language=\"en-gb\",\n    use_espeak_fallback=true,\n    use_spacy=true,\n    spacy_model=\"en_core_web_md\",  # explicit; unset selects the highest installed model\n)\n\n# optional: automatic selection or an exact model\ng2p_auto = englishg2p(language=\"en-us\", use_spacy=true)\ng2p_sm = englishg2p(language=\"en-us\", use_spacy=true, spacy_model=\"en_core_web_sm\")"
@@ -1424,8 +1244,8 @@
         {
           "anchor": "",
           "heading": "Features",
-          "text": "Gold dictionary: High-quality French pronunciations\n\n\nNumber handling: Cardinals, ordinals, currency\n\n\nespeak-ng fallback: For out-of-vocabulary words",
-          "lower": "gold dictionary: high-quality french pronunciations\n\n\nnumber handling: cardinals, ordinals, currency\n\n\nespeak-ng fallback: for out-of-vocabulary words"
+          "text": "Gold dictionary: High-quality French pronunciations\n\n\nSemantic ownership: abbr2words recognizes French abbreviations and symbols;\nspokenform prepares dates, times, numbers, ordinals, currencies, quantities, units,\nand temperatures\n\n\nespeak-ng fallback: For out-of-vocabulary words\n\n\n\nFrench was the second migrated language. kokorog2p retains French typography,\ntokenization, lexicon lookup, fallback, and phoneme conversion. The legacy helpers in\nkokorog2p.fr.numbers remain as deprecated compatibility wrappers.",
+          "lower": "gold dictionary: high-quality french pronunciations\n\n\nsemantic ownership: abbr2words recognizes french abbreviations and symbols;\nspokenform prepares dates, times, numbers, ordinals, currencies, quantities, units,\nand temperatures\n\n\nespeak-ng fallback: for out-of-vocabulary words\n\n\n\nfrench was the second migrated language. kokorog2p retains french typography,\ntokenization, lexicon lookup, fallback, and phoneme conversion. the legacy helpers in\nkokorog2p.fr.numbers remain as deprecated compatibility wrappers."
         },
         {
           "anchor": "",
@@ -1448,8 +1268,8 @@
         {
           "anchor": "",
           "heading": "Features",
-          "text": "Rule-based phonology:\n\n\nPalatalization (d+i → ɟ, t+i → c, n+i → ɲ)\n\n\nLong vowels (á → aː, í → iː, etc.)\n\n\nř phoneme [r̝]\n\n\nch digraph → [x]\n\n\nFinal devoicing\n\n\nVoicing assimilation\n\n\n\n\n\nNo dictionary required: Works with any Czech text",
-          "lower": "rule-based phonology:\n\n\npalatalization (d+i → ɟ, t+i → c, n+i → ɲ)\n\n\nlong vowels (á → aː, í → iː, etc.)\n\n\nř phoneme [r̝]\n\n\nch digraph → [x]\n\n\nfinal devoicing\n\n\nvoicing assimilation\n\n\n\n\n\nno dictionary required: works with any czech text"
+          "text": "Rule-based phonology:\n\n\nPalatalization (d+i → ɟ, t+i → c, n+i → ɲ)\n\n\nLong vowels (á → aː, í → iː, etc.)\n\n\nř phoneme [r̝]\n\n\nch digraph → [x]\n\n\nFinal devoicing\n\n\nVoicing assimilation\n\n\n\n\n\nNo dictionary required: Works with any Czech text\n\n\nSemantic ownership: abbr2words owns Czech abbreviation and canonical\nquantity/currency recognition; spokenform owns reusable numbers, dates, quantities,\ntemperatures, and currencies; kokorog2p retains Czech typography, tokenization,\nalignment, phonology, lexicon, and fallbacks.\n\n\n\nCzech semantic preparation runs once per homogeneous language run. The Czech normalizer\nis a downstream typography adapter, so direct CzechG2P use and the public pipeline\nshare the same spokenform preparation. Czech times remain caller-managed.",
+          "lower": "rule-based phonology:\n\n\npalatalization (d+i → ɟ, t+i → c, n+i → ɲ)\n\n\nlong vowels (á → aː, í → iː, etc.)\n\n\nř phoneme [r̝]\n\n\nch digraph → [x]\n\n\nfinal devoicing\n\n\nvoicing assimilation\n\n\n\n\n\nno dictionary required: works with any czech text\n\n\nsemantic ownership: abbr2words owns czech abbreviation and canonical\nquantity/currency recognition; spokenform owns reusable numbers, dates, quantities,\ntemperatures, and currencies; kokorog2p retains czech typography, tokenization,\nalignment, phonology, lexicon, and fallbacks.\n\n\n\nczech semantic preparation runs once per homogeneous language run. the czech normalizer\nis a downstream typography adapter, so direct czechg2p use and the public pipeline\nshare the same spokenform preparation. czech times remain caller-managed."
         },
         {
           "anchor": "",
@@ -1472,8 +1292,8 @@
         {
           "anchor": "",
           "heading": "Features",
-          "text": "Rule-based phonology:\n\n\n5 pure vowels (a, e, i, o, u)\n\n\nStress prediction (penultimate for vowel-ending, final for consonant-ending)\n\n\nPalatal sounds: ñ [ɲ], ll [ʎ] or [j]\n\n\nJota: j/g+e/i [x]\n\n\nTheta: z/c+e/i [θ] (European) or [s] (Latin American)\n\n\nTap vs trill: r [ɾ] vs rr [r]\n\n\n\n\n\nDialect support: es (European), la (Latin American)\n\n\nNumber handling: Cardinals, ordinals, currency",
-          "lower": "rule-based phonology:\n\n\n5 pure vowels (a, e, i, o, u)\n\n\nstress prediction (penultimate for vowel-ending, final for consonant-ending)\n\n\npalatal sounds: ñ [ɲ], ll [ʎ] or [j]\n\n\njota: j/g+e/i [x]\n\n\ntheta: z/c+e/i [θ] (european) or [s] (latin american)\n\n\ntap vs trill: r [ɾ] vs rr [r]\n\n\n\n\n\ndialect support: es (european), la (latin american)\n\n\nnumber handling: cardinals, ordinals, currency"
+          "text": "Rule-based phonology:\n\n\n5 pure vowels (a, e, i, o, u)\n\n\nStress prediction (penultimate for vowel-ending, final for consonant-ending)\n\n\nPalatal sounds: ñ [ɲ], ll [ʎ] or [j]\n\n\nJota: j/g+e/i [x]\n\n\nTheta: z/c+e/i [θ] (European) or [s] (Latin American)\n\n\nTap vs trill: r [ɾ] vs rr [r]\n\n\n\n\n\nDialect support: es (European), la (Latin American)\n\n\nNumber handling: Cardinals, ordinals, currency\n\n\nSemantic ownership: abbr2words recognizes Spanish abbreviations and symbols;\nspokenform prepares written numbers, quantities, temperatures, currencies, and\nreviewed dates; kokorog2p retains typography, tokenization, alignment, and G2P\n\n\n\nSpanish semantic preparation is applied once per homogeneous language run. Dialect\nselection remains a phoneme-layer concern: es provides European theta behavior and\nla prov…",
+          "lower": "rule-based phonology:\n\n\n5 pure vowels (a, e, i, o, u)\n\n\nstress prediction (penultimate for vowel-ending, final for consonant-ending)\n\n\npalatal sounds: ñ [ɲ], ll [ʎ] or [j]\n\n\njota: j/g+e/i [x]\n\n\ntheta: z/c+e/i [θ] (european) or [s] (latin american)\n\n\ntap vs trill: r [ɾ] vs rr [r]\n\n\n\n\n\ndialect support: es (european), la (latin american)\n\n\nnumber handling: cardinals, ordinals, currency\n\n\nsemantic ownership: abbr2words recognizes spanish abbreviations and symbols;\nspokenform prepares written numbers, quantities, temperatures, currencies, and\nreviewed dates; kokorog2p retains typography, tokenization, alignment, and g2p\n\n\n\nspanish semantic preparation is applied once per homogeneous language run. dialect\nselection remains a phoneme-layer concern: es provides european theta behavior and\nla prov…"
         },
         {
           "anchor": "",
@@ -1492,6 +1312,12 @@
           "heading": "Italian (it)",
           "text": "Italian G2P uses rule-based phonology with predictable stress and gemination handling.",
           "lower": "italian g2p uses rule-based phonology with predictable stress and gemination handling."
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic ownership",
+          "text": "abbr2words owns Italian lexical abbreviations, units, currency symbols, canonical\nstructured IDs, and source-span matching.\n\n\nspokenform owns reviewed dates, quantities, temperatures, currencies, and ordinary\nwritten numbers for each homogeneous Italian run.\n\n\nkokorog2p retains Italian typography, apostrophe/contraction handling, tokenization,\nspaCy integration, and G2P stress, gemination, phoneme, and vocabulary behavior.\n\n\n\nItalian colon times remain caller-managed in this migration. spokenform does not\nperform language detection, mixed-language segmentation, markup parsing, or phoneme\ngeneration.",
+          "lower": "abbr2words owns italian lexical abbreviations, units, currency symbols, canonical\nstructured ids, and source-span matching.\n\n\nspokenform owns reviewed dates, quantities, temperatures, currencies, and ordinary\nwritten numbers for each homogeneous italian run.\n\n\nkokorog2p retains italian typography, apostrophe/contraction handling, tokenization,\nspacy integration, and g2p stress, gemination, phoneme, and vocabulary behavior.\n\n\n\nitalian colon times remain caller-managed in this migration. spokenform does not\nperform language detection, mixed-language segmentation, markup parsing, or phoneme\ngeneration."
         },
         {
           "anchor": "",
@@ -1514,14 +1340,14 @@
         {
           "anchor": "",
           "heading": "Portuguese (pt)",
-          "text": "Portuguese G2P supports Brazilian Portuguese with comprehensive phonological rules.",
-          "lower": "portuguese g2p supports brazilian portuguese with comprehensive phonological rules."
+          "text": "Portuguese semantic preparation is applied once per homogeneous language run. Bare pt\nand pt-br select Brazilian Portuguese wording; pt-pt preserves European Portuguese\nwording. abbr2words owns Portuguese lexical abbreviation and canonical unit/currency\nsymbol recognition, spokenform owns Portuguese written-to-spoken semantics for dates,\nnumbers, quantities, temperatures, currencies, and reviewed structured forms, and\nkokorog2p retains Portuguese typography, tokenization, and G2P. Colon times remain\ncaller-managed in this migration.\n\nPortuguese G2P supports Brazilian Portuguese with comprehensive phonological rules.",
+          "lower": "portuguese semantic preparation is applied once per homogeneous language run. bare pt\nand pt-br select brazilian portuguese wording; pt-pt preserves european portuguese\nwording. abbr2words owns portuguese lexical abbreviation and canonical unit/currency\nsymbol recognition, spokenform owns portuguese written-to-spoken semantics for dates,\nnumbers, quantities, temperatures, currencies, and reviewed structured forms, and\nkokorog2p retains portuguese typography, tokenization, and g2p. colon times remain\ncaller-managed in this migration.\n\nportuguese g2p supports brazilian portuguese with comprehensive phonological rules."
         },
         {
           "anchor": "",
           "heading": "Features",
-          "text": "Rule-based phonology:\n\n\n7 oral vowels (a, e, ɛ, i, o, ɔ, u)\n\n\n5 nasal vowels (ã, ẽ, ĩ, õ, ũ)\n\n\nNasal diphthongs\n\n\nPalatalization: lh [ʎ], nh [ɲ], x/ch [ʃ]\n\n\nAffrication: t+i [ʧ], d+i [ʤ] (Brazilian)\n\n\nSibilants: s [s/z], x [ʃ], z [z]\n\n\nLiquids: r [ʁ/x/h], rr [ʁ/x], single r [ɾ]\n\n\n\n\n\nDialect: Brazilian Portuguese (pt-br)\n\n\nStress marking: Automatic stress assignment",
-          "lower": "rule-based phonology:\n\n\n7 oral vowels (a, e, ɛ, i, o, ɔ, u)\n\n\n5 nasal vowels (ã, ẽ, ĩ, õ, ũ)\n\n\nnasal diphthongs\n\n\npalatalization: lh [ʎ], nh [ɲ], x/ch [ʃ]\n\n\naffrication: t+i [ʧ], d+i [ʤ] (brazilian)\n\n\nsibilants: s [s/z], x [ʃ], z [z]\n\n\nliquids: r [ʁ/x/h], rr [ʁ/x], single r [ɾ]\n\n\n\n\n\ndialect: brazilian portuguese (pt-br)\n\n\nstress marking: automatic stress assignment"
+          "text": "Rule-based phonology:\n\n\n7 oral vowels (a, e, ɛ, i, o, ɔ, u)\n\n\n5 nasal vowels (ã, ẽ, ĩ, õ, ũ)\n\n\nNasal diphthongs\n\n\nPalatalization: lh [ʎ], nh [ɲ], x/ch [ʃ]\n\n\nAffrication: t+i [ʧ], d+i [ʤ] (Brazilian)\n\n\nSibilants: s [s/z], x [ʃ], z [z]\n\n\nLiquids: r [ʁ/x/h], rr [ʁ/x], single r [ɾ]\n\n\n\n\n\nDialect: Brazilian Portuguese (pt-br) by default; semantic preparation also\nsupports European Portuguese wording (pt-pt)\n\n\nStress marking: Automatic stress assignment",
+          "lower": "rule-based phonology:\n\n\n7 oral vowels (a, e, ɛ, i, o, ɔ, u)\n\n\n5 nasal vowels (ã, ẽ, ĩ, õ, ũ)\n\n\nnasal diphthongs\n\n\npalatalization: lh [ʎ], nh [ɲ], x/ch [ʃ]\n\n\naffrication: t+i [ʧ], d+i [ʤ] (brazilian)\n\n\nsibilants: s [s/z], x [ʃ], z [z]\n\n\nliquids: r [ʁ/x/h], rr [ʁ/x], single r [ɾ]\n\n\n\n\n\ndialect: brazilian portuguese (pt-br) by default; semantic preparation also\nsupports european portuguese wording (pt-pt)\n\n\nstress marking: automatic stress assignment"
         },
         {
           "anchor": "",
@@ -1648,18 +1474,6 @@
           "heading": "Supported Languages",
           "text": "English (en-us, en-gb)\n\n\nGerman (de)\n\n\nFrench (fr)\n\n\nSpanish (es)\n\n\nItalian (it)\n\n\nPortuguese (pt)\n\n\nJapanese (ja)\n\n\nChinese (zh)\n\n\nKorean (ko)\n\n\nHebrew (he)\n\n\nCzech (cs)\n\n\nDutch (nl)\n\n\nPolish (pl)\n\n\nRussian (ru)\n\n\nArabic (ar)\n\n\nHindi (hi)\n\n\nTurkish (tr)",
           "lower": "english (en-us, en-gb)\n\n\ngerman (de)\n\n\nfrench (fr)\n\n\nspanish (es)\n\n\nitalian (it)\n\n\nportuguese (pt)\n\n\njapanese (ja)\n\n\nchinese (zh)\n\n\nkorean (ko)\n\n\nhebrew (he)\n\n\nczech (cs)\n\n\ndutch (nl)\n\n\npolish (pl)\n\n\nrussian (ru)\n\n\narabic (ar)\n\n\nhindi (hi)\n\n\nturkish (tr)"
-        },
-        {
-          "anchor": "",
-          "heading": "Usage",
-          "text": "from kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"Das Meeting war great!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\n\nresult = phonemize(text, language=\"de\", overrides=overrides)",
-          "lower": "from kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"das meeting war great!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\n\nresult = phonemize(text, language=\"de\", overrides=overrides)"
-        },
-        {
-          "anchor": "",
-          "heading": "Examples",
-          "text": "German with English:\n\nfrom kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"Ich gehe zum Meeting. Let's discuss the Roadmap!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\nresult = phonemize(text, language=\"de\", overrides=overrides)\nprint(result.phonemes)\n\n\n\n\nEnglish with German:\n\noverrides = preprocess_multilang(\n    \"Hello, mein Freund! This is wunderbar.\",\n    default_language=\"en-us\",\n    allowed_languages=[\"en-us\", \"de\"],\n)\nresult = phonemize(\n    \"Hello, mein Freund! This is wunderbar.\",\n    language=\"en-us\",\n    overrides=overrides,\n)\nprint(result.phonemes)\n\n\n\n\nMultiple languages:\n\noverrides = preprocess_multilang(\n    \"Bonjour! The Meeting ist wichtig.\",\n    default_language=\"…",
-          "lower": "german with english:\n\nfrom kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"ich gehe zum meeting. let's discuss the roadmap!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\nresult = phonemize(text, language=\"de\", overrides=overrides)\nprint(result.phonemes)\n\n\n\n\nenglish with german:\n\noverrides = preprocess_multilang(\n    \"hello, mein freund! this is wunderbar.\",\n    default_language=\"en-us\",\n    allowed_languages=[\"en-us\", \"de\"],\n)\nresult = phonemize(\n    \"hello, mein freund! this is wunderbar.\",\n    language=\"en-us\",\n    overrides=overrides,\n)\nprint(result.phonemes)\n\n\n\n\nmultiple languages:\n\noverrides = preprocess_multilang(\n    \"bonjour! the meeting ist wichtig.\",\n    default_language=\"…"
         }
       ]
     },

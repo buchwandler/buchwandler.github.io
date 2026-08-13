@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 
@@ -556,8 +556,12 @@ instead of “Doctor”)</p></li>
 </ul>
 <p>The abbreviation registry is provided by the required <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> dependency. The
 legacy <code class="docutils literal notranslate"><span class="pre">kokorog2p.*.abbreviations</span></code> import paths remain as deprecated, warning-free
-compatibility shims for this transition release; new integrations should import
-registry types and shared registries from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
+compatibility shims for this transition release; new integrations should import registry
+types and shared registries from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
+<p>The German Phase 1 migration uses this same shared registry through spokenform and
+kokorog2p. A customization made through the kokorog2p API remains visible to subsequent
+German semantic preparation; legacy normalizer import paths are compatibility facades,
+not independent registries.</p>
 </section>
 <section id="quick-start">
 <h2>Quick Start</h2>

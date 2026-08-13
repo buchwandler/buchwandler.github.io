@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "aed7fce71f7effddca2c8822b39a04f3a33a30c7"
+docs_commit: "be712cdada539083bfeb08fb2e026ddc0213ed2a"
 search_enabled: true
 ---
 
@@ -630,25 +630,25 @@ languages, voices, and advanced features like pause control and text splitting.<
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.9.0] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.8.0] - 2026-08-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.7.4] - 2026-07-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.7.2] - 2026-07-29</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.7.1] - 2026-07-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.7.0] - 2026-07-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.6.5] - 2026-02-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.6.4] - 2026-01-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id26">[0.6.3] - 2026-01-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.6.2] - 2026-01-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id31">[0.6.1] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.6.0] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id37">[0.5.1] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id40">[0.5.0] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id44">[0.4.0] - 2026-01-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id48">[0.3.0] - 2026-01-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id51">[0.2.0] - 2026-01-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id54">[0.1.0] - 2026-01-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.8.0] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.7.4] - 2026-07-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.7.2] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.7.1] - 2026-07-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.7.0] - 2026-07-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.6.5] - 2026-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.6.4] - 2026-01-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.6.3] - 2026-01-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.6.2] - 2026-01-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.6.1] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.6.0] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.5.1] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id42">[0.5.0] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id46">[0.4.0] - 2026-01-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id50">[0.3.0] - 2026-01-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id53">[0.2.0] - 2026-01-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id56">[0.1.0] - 2026-01-07</a></li>
 </ul>
 </li>
 </ul>

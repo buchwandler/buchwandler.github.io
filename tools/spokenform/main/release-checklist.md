@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -543,8 +543,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="release-checklist">
 <h1>Release checklist</h1>
 <ol class="arabic simple">
-<li><p>Ensure the required <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> release is available from the target package index.</p></li>
-<li><p>Create an annotated Git tag such as <code class="docutils literal notranslate"><span class="pre">v0.1.0</span></code>.</p></li>
+<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.4</span></code> prerequisite containing the structured currency identities is available from the target package index.</p></li>
+<li><p>Create an annotated Git tag such as <code class="docutils literal notranslate"><span class="pre">v0.2.2</span></code> only after all release gates pass.</p></li>
 <li><p>Install a clean environment with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">ruff</span> <span class="pre">format</span> <span class="pre">--check</span> <span class="pre">.</span></code>.</p></li>
@@ -553,9 +553,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p>Validate distributions with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">twine</span> <span class="pre">check</span> <span class="pre">dist/*</span></code>.</p></li>
 <li><p>Build docs with <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-W</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">docs</span> <span class="pre">docs/_build/html</span></code>.</p></li>
 <li><p>Test wheel installation and the <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> console command in a fresh environment.</p></li>
-<li><p>Confirm the release workflow uses a PyPI trusted publisher or a valid token.</p></li>
+<li><p>Confirm the release workflow uses a PyPI trusted publisher when repository OIDC is configured; otherwise verify the configured API token without changing authentication on release day.</p></li>
 <li><p>Publish the GitHub release only after all required checks pass.</p></li>
+<li><p>Before a downstream kokorog2p release raises its spokenform minimum, publish
+the spokenform release and verify the real <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, and <code class="docutils literal notranslate"><span class="pre">fr</span></code> integration
+gates against released packages.</p></li>
 </ol>
+<p>The publish workflow deliberately remains operator-triggered by a published
+GitHub release. PyPI Trusted Publishing/OIDC is the preferred future mechanism
+because it avoids long-lived API tokens, but migrating credentials is a separate
+operational change that must be tested before a release is cut.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -557,6 +557,23 @@ python<span class="w"> </span>examples/german.py<span class="w"> </span>--spacy-
 python<span class="w"> </span>examples/protected_text.py
 </pre></div>
 </div>
+<section id="interactive-jupyter-notebook">
+<h2>Interactive Jupyter notebook</h2>
+<p>The repository includes <a class="reference download internal" download="" href="../_downloads/8be2091ef5738aede2ddb8e64fc6f47d/spokenform_playground.ipynb"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">notebooks/spokenform_playground.ipynb</span></code></span></a>.</p>
+<p>It demonstrates:</p>
+<ul class="simple">
+<li><p>basic normalization;</p></li>
+<li><p>multilingual examples;</p></li>
+<li><p>structured quantities, dates, currencies, and specialist sequences;</p></li>
+<li><p>protected spans;</p></li>
+<li><p>literal normalization;</p></li>
+<li><p>symbol policy and generic acronym case policy;</p></li>
+<li><p>stage provenance;</p></li>
+<li><p>source/output mapping;</p></li>
+<li><p>an interactive <code class="docutils literal notranslate"><span class="pre">ipywidgets</span></code> playground.</p></li>
+</ul>
+<p>A Binder badge in the main README launches the notebook directly in JupyterLab.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -542,63 +542,81 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="languages">
 <h1>Languages</h1>
-<p>The bundled base-language registries are:</p>
+<p>The bundled base-language registries are the 49 base keys in the pinned
+num2words parity contract:</p>
 <table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>Code</p></th>
-<th class="head"><p>Language</p></th>
+<tr class="row-odd"><th class="head"><p>Codes</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
-<td><p>Czech</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span></code> <code class="docutils literal notranslate"><span class="pre">ar</span></code> <code class="docutils literal notranslate"><span class="pre">az</span></code> <code class="docutils literal notranslate"><span class="pre">be</span></code> <code class="docutils literal notranslate"><span class="pre">bn</span></code> <code class="docutils literal notranslate"><span class="pre">ca</span></code> <code class="docutils literal notranslate"><span class="pre">ce</span></code> <code class="docutils literal notranslate"><span class="pre">cs</span></code> <code class="docutils literal notranslate"><span class="pre">cy</span></code> <code class="docutils literal notranslate"><span class="pre">da</span></code> <code class="docutils literal notranslate"><span class="pre">de</span></code> <code class="docutils literal notranslate"><span class="pre">en</span></code> <code class="docutils literal notranslate"><span class="pre">eo</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
-<td><p>German</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> <code class="docutils literal notranslate"><span class="pre">fa</span></code> <code class="docutils literal notranslate"><span class="pre">fi</span></code> <code class="docutils literal notranslate"><span class="pre">fr</span></code> <code class="docutils literal notranslate"><span class="pre">he</span></code> <code class="docutils literal notranslate"><span class="pre">hi</span></code> <code class="docutils literal notranslate"><span class="pre">hu</span></code> <code class="docutils literal notranslate"><span class="pre">hy</span></code> <code class="docutils literal notranslate"><span class="pre">id</span></code> <code class="docutils literal notranslate"><span class="pre">is</span></code> <code class="docutils literal notranslate"><span class="pre">it</span></code> <code class="docutils literal notranslate"><span class="pre">ja</span></code> <code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
-<td><p>English</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code> <code class="docutils literal notranslate"><span class="pre">kz</span></code> <code class="docutils literal notranslate"><span class="pre">lt</span></code> <code class="docutils literal notranslate"><span class="pre">lv</span></code> <code class="docutils literal notranslate"><span class="pre">mn</span></code> <code class="docutils literal notranslate"><span class="pre">nl</span></code> <code class="docutils literal notranslate"><span class="pre">no</span></code> <code class="docutils literal notranslate"><span class="pre">pl</span></code> <code class="docutils literal notranslate"><span class="pre">pt</span></code> <code class="docutils literal notranslate"><span class="pre">ro</span></code> <code class="docutils literal notranslate"><span class="pre">ru</span></code> <code class="docutils literal notranslate"><span class="pre">sk</span></code> <code class="docutils literal notranslate"><span class="pre">sl</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
-<td><p>Spanish</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
-<td><p>French</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
-<td><p>Italian</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
-<td><p>Dutch</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
-<td><p>Polish</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
-<td><p>Portuguese</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
-<td><p>Russian</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
-<td><p>Swedish</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
-<td><p>Turkish</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code> <code class="docutils literal notranslate"><span class="pre">sv</span></code> <code class="docutils literal notranslate"><span class="pre">te</span></code> <code class="docutils literal notranslate"><span class="pre">tet</span></code> <code class="docutils literal notranslate"><span class="pre">tg</span></code> <code class="docutils literal notranslate"><span class="pre">th</span></code> <code class="docutils literal notranslate"><span class="pre">tr</span></code> <code class="docutils literal notranslate"><span class="pre">uk</span></code> <code class="docutils literal notranslate"><span class="pre">vi</span></code> <code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>Language input is normalized by trimming whitespace, lowercasing, accepting both
-hyphens and underscores, and taking the base part of a locale. For example,
-<code class="docutils literal notranslate"><span class="pre">de-DE</span></code>, <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, and <code class="docutils literal notranslate"><span class="pre">pt-BR</span></code> select <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, and <code class="docutils literal notranslate"><span class="pre">pt</span></code>. Common three-letter
-aliases and <code class="docutils literal notranslate"><span class="pre">cz</span></code> for Czech are also accepted, including <code class="docutils literal notranslate"><span class="pre">dut</span></code>/<code class="docutils literal notranslate"><span class="pre">nld</span></code>, <code class="docutils literal notranslate"><span class="pre">pol</span></code>,
-<code class="docutils literal notranslate"><span class="pre">rus</span></code>, <code class="docutils literal notranslate"><span class="pre">swe</span></code>, and <code class="docutils literal notranslate"><span class="pre">tur</span></code> for the added registries.</p>
+<p>Explicit locale overlays inherit a base registry and are independently keyed:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Base</p></th>
+<th class="head"><p>Locale overlays</p></th>
+<th class="head"><p>num2words parity</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code></p></td>
+<td><p>v0.5.14</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code></p></td>
+<td><p>v0.5.14</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code></p></td>
+<td><p>v0.5.14</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pt_BR</span></code></p></td>
+<td><p>v0.5.14</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code></p></td>
+<td><p>current master only</p></td>
+</tr>
+</tbody>
+</table>
+<p>Language input is normalized by trimming whitespace, accepting both hyphens and
+underscores, canonicalizing base/region casing, and trying the exact registered
+locale before falling back to its base. For example, <code class="docutils literal notranslate"><span class="pre">pt-BR</span></code> selects <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>,
+<code class="docutils literal notranslate"><span class="pre">fr_FR</span></code> selects <code class="docutils literal notranslate"><span class="pre">fr</span></code>, and <code class="docutils literal notranslate"><span class="pre">en_GB</span></code> selects <code class="docutils literal notranslate"><span class="pre">en</span></code>. Common verified three-letter
+aliases and <code class="docutils literal notranslate"><span class="pre">cz</span></code> for Czech remain accepted. <code class="docutils literal notranslate"><span class="pre">eo</span></code> and <code class="docutils literal notranslate"><span class="pre">es_NI</span></code> are explicit keys;
+<code class="docutils literal notranslate"><span class="pre">eu</span></code> is not supported.</p>
 <p>The added registries are intentionally conservative. Ambiguous short forms are
 guarded by numeric/name context or omitted, Russian multiword abbreviations
 accept ordinary, non-breaking, and narrow non-breaking spaces, and Turkish
 lexical entries are case-sensitive. Unit output is a canonical singular lemma;
 the stable API does not realize plural, case, numeral-government, or suffix
 morphology.</p>
+<p>English, French, Italian, Portuguese, and Spanish structured quantities recognize
+the reviewed shared currency identities <code class="docutils literal notranslate"><span class="pre">€</span></code>/<code class="docutils literal notranslate"><span class="pre">EUR</span></code>, <code class="docutils literal notranslate"><span class="pre">$</span></code>/<code class="docutils literal notranslate"><span class="pre">USD</span></code>, and <code class="docutils literal notranslate"><span class="pre">£</span></code>/<code class="docutils literal notranslate"><span class="pre">GBP</span></code> in
+either numeric-prefix or numeric-suffix position. Portuguese additionally
+recognizes <code class="docutils literal notranslate"><span class="pre">R$</span></code>/<code class="docutils literal notranslate"><span class="pre">BRL</span></code> as <code class="docutils literal notranslate"><span class="pre">currency-brazilian-real</span></code>, while Czech recognizes
+<code class="docutils literal notranslate"><span class="pre">Kč</span></code>/<code class="docutils literal notranslate"><span class="pre">CZK</span></code> as <code class="docutils literal notranslate"><span class="pre">currency-czech-koruna</span></code>. These matches preserve the written
+numeric lexeme, source offsets, written symbol, language, category, and stable
+canonical ID; they do not speak the amount or choose locale-specific currency
+grammar.
+Downstream consumers such as <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> own that semantic realization.</p>
+<p>French dotted duration forms <code class="docutils literal notranslate"><span class="pre">min.</span></code> and <code class="docutils literal notranslate"><span class="pre">sec.</span></code> are context-sensitive structured
+quantity aliases. A numeric match consumes the complete dotted symbol, while
+standalone lexical <code class="docutils literal notranslate"><span class="pre">min.</span></code> continues to expand as <code class="docutils literal notranslate"><span class="pre">minimum</span></code>; numeric context is
+what selects the duration identity. Sentence punctuation is rendered by the
+generic abbreviation layer, and French number grammar remains downstream.</p>
 <p>German quantity symbols include the reviewed electrical and frequency forms
 <code class="docutils literal notranslate"><span class="pre">kWh</span></code>, <code class="docutils literal notranslate"><span class="pre">Wh</span></code>, <code class="docutils literal notranslate"><span class="pre">mAh</span></code>, <code class="docutils literal notranslate"><span class="pre">mA</span></code>, <code class="docutils literal notranslate"><span class="pre">GHz</span></code>, <code class="docutils literal notranslate"><span class="pre">MHz</span></code>, <code class="docutils literal notranslate"><span class="pre">kHz</span></code>, <code class="docutils literal notranslate"><span class="pre">Hz</span></code>, <code class="docutils literal notranslate"><span class="pre">W</span></code>, and <code class="docutils literal notranslate"><span class="pre">V</span></code>, plus <code class="docutils literal notranslate"><span class="pre">Stck.</span></code>,
 <code class="docutils literal notranslate"><span class="pre">ltr.</span></code>, <code class="docutils literal notranslate"><span class="pre">Tsd.</span></code>, <code class="docutils literal notranslate"><span class="pre">Mio.</span></code>, <code class="docutils literal notranslate"><span class="pre">Mrd.</span></code>, and <code class="docutils literal notranslate"><span class="pre">EUR</span></code>. Case-sensitive metadata is preserved:
@@ -623,6 +641,42 @@ disambiguator, so applications should review domain-specific entries.</p>
 <code class="docutils literal notranslate"><span class="pre">MIT</span></code> are case-sensitive. This prevents ordinary lowercase words from being
 rewritten; reviewed title-case and lexical abbreviations retain their own
 registry policy.</p>
+</section>
+<section id="coverage-tiers-and-generated-inventory">
+<h2>Coverage tiers and generated inventory</h2>
+<p>Coverage metadata is checked in with the language bundles and registry shards.
+Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">scripts/generate_registry_snapshot.py</span></code> after an intentional data
+change and inspect the shard diff.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Tier</p></th>
+<th class="head"><p>Base keys</p></th>
+<th class="head"><p>Content contract</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Reviewed extended</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">cs</span> <span class="pre">de</span> <span class="pre">en</span> <span class="pre">es</span> <span class="pre">fr</span> <span class="pre">it</span> <span class="pre">nl</span> <span class="pre">pl</span> <span class="pre">pt</span> <span class="pre">ru</span> <span class="pre">sv</span> <span class="pre">tr</span></code></p></td>
+<td><p>Mature lexical inventories migrated through declarative bundles with parity snapshots</p></td>
+</tr>
+<tr class="row-odd"><td><p>Reviewed baseline</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">am</span> <span class="pre">ar</span> <span class="pre">az</span> <span class="pre">be</span> <span class="pre">bn</span> <span class="pre">ca</span> <span class="pre">ce</span> <span class="pre">cy</span> <span class="pre">da</span> <span class="pre">eo</span> <span class="pre">fa</span> <span class="pre">fi</span> <span class="pre">he</span> <span class="pre">hi</span> <span class="pre">hu</span> <span class="pre">hy</span> <span class="pre">id</span> <span class="pre">is</span> <span class="pre">ja</span> <span class="pre">kn</span> <span class="pre">ko</span> <span class="pre">kz</span> <span class="pre">lt</span> <span class="pre">lv</span> <span class="pre">mn</span> <span class="pre">no</span> <span class="pre">ro</span> <span class="pre">sk</span> <span class="pre">sl</span> <span class="pre">sr</span> <span class="pre">te</span> <span class="pre">tet</span> <span class="pre">tg</span> <span class="pre">th</span> <span class="pre">uk</span> <span class="pre">vi</span> <span class="pre">zh</span></code></p></td>
+<td><p>Source-tagged references/titles, bounded numeric guards, localized neutral unit labels, and script-safe boundaries</p></td>
+</tr>
+<tr class="row-even"><td><p>Locale overlay</p></td>
+<td><p>14 explicit locale keys</p></td>
+<td><p>Base inheritance plus structured numeric identities; no identity lexical currency rules</p></td>
+</tr>
+</tbody>
+</table>
+<p>The detailed generated count table is maintained in
+<a class="reference internal" href="../language-coverage/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">docs/language-coverage.md</span></code></span></a>.</p>
+<p>Baseline unit labels are neutral surface labels, not plural/case/gender or
+numeral-government realization. Consumers that need semantic quantities should
+use <code class="docutils literal notranslate"><span class="pre">iter_unit_matches()</span></code> and perform locale grammar downstream.</p>
+<p><code class="docutils literal notranslate"><span class="pre">DATE</span></code> requires nearby numeric date evidence and is deliberately not an
+unrestricted parser. Uncased scripts remain conservative without the cased
+letter title heuristic; CJK entries do not rely on Latin <code class="docutils literal notranslate"><span class="pre">\b</span></code> behavior.</p>
 </section>
 </section>
 </div>

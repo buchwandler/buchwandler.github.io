@@ -5,25 +5,31 @@
     {
       "url": "/tools/abbr2words/main/api/",
       "title": "abbr2words API reference",
-      "snippet": ".. py:function:: abbr2words(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)\n:module: abbr2words\n\nExpand known abbr …",
+      "snippet": ".. py:function:: abbr2words(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism …",
       "sections": [
         {
           "anchor": "",
           "heading": "Convenience functions",
-          "text": ".. py:function:: abbr2words(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)\n:module: abbr2words\n\nExpand known abbreviations in text.\n\nThe function expands abbreviations only. It intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation. Optional\nannotations must use character offsets in the original source; POS guards\nfail open when usable lexical evidence is missing, and numeric units remain\nauthoritative over generic POS predictions.\n\n.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, annotations=None, protected_spans=None)\n:module: abbr2words\n\nExpand text and return exact source-aligned replacement metadata.\n\n.. py:function:: iter_unit_matches(text, language, *, overrides=None, suppressed=None, prot…",
-          "lower": ".. py:function:: abbr2words(text, *, lang=’en’, context=true, annotations=none, protected_spans=none)\n:module: abbr2words\n\nexpand known abbreviations in text.\n\nthe function expands abbreviations only. it intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation. optional\nannotations must use character offsets in the original source; pos guards\nfail open when usable lexical evidence is missing, and numeric units remain\nauthoritative over generic pos predictions.\n\n.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=true, annotations=none, protected_spans=none)\n:module: abbr2words\n\nexpand text and return exact source-aligned replacement metadata.\n\n.. py:function:: iter_unit_matches(text, language, *, overrides=none, suppressed=none, prot…"
+          "text": ".. py:function:: abbr2words(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spans=None)\n:module: abbr2words\n\nExpand known abbreviations in text.\n\nThe function expands abbreviations only. It intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation. Optional\nannotations must use character offsets in the original source; POS guards\nfail open when usable lexical evidence is missing, and numeric units remain\nauthoritative over generic POS predictions.\n\n.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spa…",
+          "lower": ".. py:function:: abbr2words(text, *, lang=’en’, context=true, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=none, protected_spans=none)\n:module: abbr2words\n\nexpand known abbreviations in text.\n\nthe function expands abbreviations only. it intentionally does not normalize\ndates, times, numbers, currencies, or general punctuation. optional\nannotations must use character offsets in the original source; pos guards\nfail open when usable lexical evidence is missing, and numeric units remain\nauthoritative over generic pos predictions.\n\n.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=true, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=none, protected_spa…"
+        },
+        {
+          "anchor": "",
+          "heading": "Initialism policies",
+          "text": "The public expansion functions and get_expander(), get_shared_expander(),\nand Expander accept these optional policy arguments:\n\nabbr2words(\n    \"BBC PDF\",\n    initialism_mode=\"spell_undotted\",   # default: \"dotted_only\"\n    initialism_case=\"lower\",             # \"source\", \"upper\", or \"lower\"\n    registered_initialism_mode=\"expand\", # or explicit \"spell\"\n)\n\n\n\n\nThe default preserves existing behavior. spell_undotted recognizes only\nstandalone ASCII uppercase tokens from two through eight letters and renders\nsource-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,\nversions, product codes, phone numbers, stock tickers, or Roman numerals.\nCallers should reserve typed structured spans first, then use this policy for\nremaining uppercase tokens. registered_initialism_mode=\"spe…",
+          "lower": "the public expansion functions and get_expander(), get_shared_expander(),\nand expander accept these optional policy arguments:\n\nabbr2words(\n    \"bbc pdf\",\n    initialism_mode=\"spell_undotted\",   # default: \"dotted_only\"\n    initialism_case=\"lower\",             # \"source\", \"upper\", or \"lower\"\n    registered_initialism_mode=\"expand\", # or explicit \"spell\"\n)\n\n\n\n\nthe default preserves existing behavior. spell_undotted recognizes only\nstandalone ascii uppercase tokens from two through eight letters and renders\nsource-aligned graphemes. it does not parse numbers, urls, e-mail addresses,\nversions, product codes, phone numbers, stock tickers, or roman numerals.\ncallers should reserve typed structured spans first, then use this policy for\nremaining uppercase tokens. registered_initialism_mode=\"spe…"
         },
         {
           "anchor": "",
           "heading": "Mutable facade",
-          "text": ".. py:class:: Expander(lang=’en’, *, context=True)\n:module: abbr2words\n:canonical: abbr2words.api.Expander\n\nSmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: Expander.call(text, *, annotations=None, protected_spans=None)\n:module: abbr2words\n\n  Expand abbreviations using this instance's registry.\n\n  ``annotations`` are source-aligned to the original text. Only coarse\n  ``pos`` labels participate in guards; fine-grained ``tag`` values are\n  retained as metadata.\n\n\n\n\n.. py:method:: Expander.abbreviations()\n:module: abbr2words\n\n  Return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos…",
-          "lower": ".. py:class:: expander(lang=’en’, *, context=true)\n:module: abbr2words\n:canonical: abbr2words.api.expander\n\nsmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: expander.call(text, *, annotations=none, protected_spans=none)\n:module: abbr2words\n\n  expand abbreviations using this instance's registry.\n\n  ``annotations`` are source-aligned to the original text. only coarse\n  ``pos`` labels participate in guards; fine-grained ``tag`` values are\n  retained as metadata.\n\n\n\n\n.. py:method:: expander.abbreviations()\n:module: abbr2words\n\n  return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: expander.add(abbreviation, expansion, *, context_expansions=none, case_sensitive=false, description=’’, only_if_preceded_by=none, only_if_followed_by=none, only_if_pos…"
+          "text": ".. py:class:: Expander(lang=’en’, *, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)\n:module: abbr2words\n:canonical: abbr2words.api.Expander\n\nSmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: Expander.call(text, *, annotations=None, protected_spans=None)\n:module: abbr2words\n\n  Expand abbreviations using this instance's registry.\n\n  ``annotations`` are source-aligned to the original text. Only coarse\n  ``pos`` labels participate in guards; fine-grained ``tag`` values are\n  retained as metadata.\n\n\n\n\n.. py:method:: Expander.abbreviations()\n:module: abbr2words\n\n  Return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_se…",
+          "lower": ".. py:class:: expander(lang=’en’, *, context=true, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’)\n:module: abbr2words\n:canonical: abbr2words.api.expander\n\nsmall facade for a mutable, language-specific abbreviation registry.\n\n.. py:method:: expander.call(text, *, annotations=none, protected_spans=none)\n:module: abbr2words\n\n  expand abbreviations using this instance's registry.\n\n  ``annotations`` are source-aligned to the original text. only coarse\n  ``pos`` labels participate in guards; fine-grained ``tag`` values are\n  retained as metadata.\n\n\n\n\n.. py:method:: expander.abbreviations()\n:module: abbr2words\n\n  return the configured abbreviation spellings.\n\n\n\n\n.. py:method:: expander.add(abbreviation, expansion, *, context_expansions=none, case_se…"
         },
         {
           "anchor": "",
           "heading": "Guarded unit symbols",
-          "text": "The stable API expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. Numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. This is symbol expansion, not number spelling, unit\nconversion, or universal UCUM parsing.\n\nThe matcher is maximal and fail-closed: larger unsupported expressions such as\n5 km / h, 1 m^2, and 2kg-rated remain unchanged instead of being\npartially rewritten. Reviewed aliases include both µg and μg; unrelated\nsource characters are not Unicode-normalized. Unit metadata controls case\nsensitivity and whether a numeric value is required.\n\nUnit replacements have kind=\"unit\" in the exact replacement result. This\nlayer expands unit symbols/abbreviatio…",
-          "lower": "the stable api expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. this is symbol expansion, not number spelling, unit\nconversion, or universal ucum parsing.\n\nthe matcher is maximal and fail-closed: larger unsupported expressions such as\n5 km / h, 1 m^2, and 2kg-rated remain unchanged instead of being\npartially rewritten. reviewed aliases include both µg and μg; unrelated\nsource characters are not unicode-normalized. unit metadata controls case\nsensitivity and whether a numeric value is required.\n\nunit replacements have kind=\"unit\" in the exact replacement result. this\nlayer expands unit symbols/abbreviatio…"
+          "text": "The stable API expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. Numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. This is symbol expansion, not number spelling, unit\nconversion, or universal UCUM parsing.\n\nThe matcher is maximal and fail-closed: larger unsupported expressions such as\n5 km / h, 1 m^2, and 2kg-rated remain unchanged instead of being\npartially rewritten. Reviewed aliases include both µg and μg; unrelated\nsource characters are not Unicode-normalized. Unit metadata controls case\nsensitivity, whether a numeric value is required, and whether a separator is\nrequired between a numeric value and an ambiguous one-letter symbol. The\nseparator requi…",
+          "lower": "the stable api expands a reviewed set of unit symbols only when a numeric value\nprecedes the complete unit expression. numeric forms such as 500 g, 500g,\n1.5 kg, 1,5 kg, and 5 km/h are supported; standalone symbols and attached\nwords remain unchanged. this is symbol expansion, not number spelling, unit\nconversion, or universal ucum parsing.\n\nthe matcher is maximal and fail-closed: larger unsupported expressions such as\n5 km / h, 1 m^2, and 2kg-rated remain unchanged instead of being\npartially rewritten. reviewed aliases include both µg and μg; unrelated\nsource characters are not unicode-normalized. unit metadata controls case\nsensitivity, whether a numeric value is required, and whether a separator is\nrequired between a numeric value and an ambiguous one-letter symbol. the\nseparator requi…"
         },
         {
           "anchor": "",
@@ -34,16 +40,130 @@
         {
           "anchor": "",
           "heading": "Core types",
-          "text": ".. py:class:: TokenAnnotation(start, end, pos=None, tag=None)\n:module: abbr2words\n:canonical: abbr2words.annotations.TokenAnnotation\n\nA provider-neutral token annotation aligned to the source text.\n\nOffsets use Python string indices: text[start:end]. pos is\nnormally an uppercase coarse Universal POS label; tag may contain a\nprovider-specific fine-grained tag.\n\n.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, origin=’bundled’, aliases=())\n:module: abbr2words\n:canonical: abbr2words.core.AbbreviationEntry\n\nA single abbreviation with its expansion(s).\n\n.. attribute:: abbreviation\n\n  The abbreviated form (e.g., \"Prof.\")\n\n  :type: str…",
-          "lower": ".. py:class:: tokenannotation(start, end, pos=none, tag=none)\n:module: abbr2words\n:canonical: abbr2words.annotations.tokenannotation\n\na provider-neutral token annotation aligned to the source text.\n\noffsets use python string indices: text[start:end]. pos is\nnormally an uppercase coarse universal pos label; tag may contain a\nprovider-specific fine-grained tag.\n\n.. py:class:: abbreviationentry(abbreviation, expansion, context_expansions=none, case_sensitive=false, description=’’, only_if_preceded_by=none, only_if_followed_by=none, only_if_pos=none, not_if_pos=none, origin=’bundled’, aliases=())\n:module: abbr2words\n:canonical: abbr2words.core.abbreviationentry\n\na single abbreviation with its expansion(s).\n\n.. attribute:: abbreviation\n\n  the abbreviated form (e.g., \"prof.\")\n\n  :type: str…"
+          "text": ".. py:class:: TokenAnnotation(start, end, pos=None, tag=None)\n:module: abbr2words\n:canonical: abbr2words.annotations.TokenAnnotation\n\nA provider-neutral token annotation aligned to the source text.\n\nOffsets use Python string indices: text[start:end]. pos is\nnormally an uppercase coarse Universal POS label; tag may contain a\nprovider-specific fine-grained tag.\n\n.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’)\n:module: abbr2words\n:canonical: abbr2words.core.AbbreviationEntry\n\nA single abbre…",
+          "lower": ".. py:class:: tokenannotation(start, end, pos=none, tag=none)\n:module: abbr2words\n:canonical: abbr2words.annotations.tokenannotation\n\na provider-neutral token annotation aligned to the source text.\n\noffsets use python string indices: text[start:end]. pos is\nnormally an uppercase coarse universal pos label; tag may contain a\nprovider-specific fine-grained tag.\n\n.. py:class:: abbreviationentry(abbreviation, expansion, context_expansions=none, variants=(), case_sensitive=false, description=’’, only_if_preceded_by=none, only_if_followed_by=none, only_if_pos=none, not_if_pos=none, boundary=’word’, left_boundary=none, right_boundary=none, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’)\n:module: abbr2words\n:canonical: abbr2words.core.abbreviationentry\n\na single abbre…"
         }
       ]
     },
     {
       "url": "/tools/abbr2words/main/changelog/",
       "title": "abbr2words Changelog",
-      "snippet": "Added structured quantity matches with exact spans and stable canonical identities\n\n\nAdded German electrical, frequency, magnitude, count, l …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded opt-in policy …",
       "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added opt-in policy controls for spelling bounded undotted uppercase initialisms with source, upper, or lower casing",
+          "lower": "added opt-in policy controls for spelling bounded undotted uppercase initialisms with source, upper, or lower casing"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed ambiguous one-letter units to require separators for identifier-like compact forms\n\n\nChanged ambiguous English dotted forms to prefer letter readings without positive place evidence",
+          "lower": "changed ambiguous one-letter units to require separators for identifier-like compact forms\n\n\nchanged ambiguous english dotted forms to prefer letter readings without positive place evidence"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed reviewed German organization initialisms to render with source graphemes such as G m b H and A G\n\n\nFixed compass and geographic expansions that corrupted names and initials",
+          "lower": "fixed reviewed german organization initialisms to render with source graphemes such as g m b h and a g\n\n\nfixed compass and geographic expansions that corrupted names and initials"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented abbreviation-stage ownership and the minimum released dependency handoff for Spokenform\n\n\nDocumented opt-in initialism orchestration and structured-code ownership boundaries",
+          "lower": "documented abbreviation-stage ownership and the minimum released dependency handoff for spokenform\n\n\ndocumented opt-in initialism orchestration and structured-code ownership boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added unit decision diagnostics and PolyNorm regression coverage for compact-code precision\n\n\nAdded focused and benchmark-derived regression coverage for abbreviation ambiguity and source-aligned punctuation",
+          "lower": "added unit decision diagnostics and polynorm regression coverage for compact-code precision\n\n\nadded focused and benchmark-derived regression coverage for abbreviation ambiguity and source-aligned punctuation"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added conservative multilingual abbreviation coverage, punctuation aliases, and longest-match German compounds",
+          "lower": "added conservative multilingual abbreviation coverage, punctuation aliases, and longest-match german compounds"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Added bounded Italian and German context selection and protected English prepositional in from inch expansion",
+          "lower": "added bounded italian and german context selection and protected english prepositional in from inch expansion"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed English and German lexical expansions and protected dotted fragments in hyphenated initials",
+          "lower": "fixed english and german lexical expansions and protected dotted fragments in hyphenated initials"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the v0.2.6 release handoff and Spokenform dependency baseline",
+          "lower": "documented the v0.2.6 release handoff and spokenform dependency baseline"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved boundary, context, unit, mapping, registry, and regression coverage for conservative lexical normalization",
+          "lower": "improved boundary, context, unit, mapping, registry, and regression coverage for conservative lexical normalization"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Improved street address and temperature abbreviation expansion",
+          "lower": "improved street address and temperature abbreviation expansion"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed version fallback behavior",
+          "lower": "fixed version fallback behavior"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added Spanish language support with unit abbreviations and quantity matches\n\n\nAdded Italian language support with unit abbreviations and quantity matches\n\n\nAdded Portuguese language entries for unit abbreviations\n\n\nAdded Czech language support with unit abbreviations and quantity matches",
+          "lower": "added spanish language support with unit abbreviations and quantity matches\n\n\nadded italian language support with unit abbreviations and quantity matches\n\n\nadded portuguese language entries for unit abbreviations\n\n\nadded czech language support with unit abbreviations and quantity matches"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved English unit abbreviations with additional quantity matches",
+          "lower": "improved english unit abbreviations with additional quantity matches"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Updated language source documentation and API reference",
+          "lower": "updated language source documentation and api reference"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added French euro, US dollar, and pound sterling identities for prefix and suffix quantities\n\n\nAdded exact-span French dotted min. and sec. duration aliases while preserving standalone lexical min. behavior",
+          "lower": "added french euro, us dollar, and pound sterling identities for prefix and suffix quantities\n\n\nadded exact-span french dotted min. and sec. duration aliases while preserving standalone lexical min. behavior"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed dotted quantity expansion to preserve sentence-final punctuation",
+          "lower": "changed dotted quantity expansion to preserve sentence-final punctuation"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the boundary between identity recognition and downstream French numeric and currency grammar",
+          "lower": "documented the boundary between identity recognition and downstream french numeric and currency grammar"
+        },
         {
           "anchor": "",
           "heading": "Added",
@@ -132,27 +252,33 @@
         {
           "anchor": "",
           "heading": "Command line interface",
-          "text": "The package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\nPass text as the optional positional argument:\n\nabbr2words --lang de \"Prof. Klein kommt ggf.\"\n\n\n\n\nIf positional text is omitted, the command reads all input from standard input:\n\nprintf 'Prof. Klein kommt ggf.' | abbr2words --lang de\n\n\n\n\nOptions:\n\n\n--lang CODE selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints the supported base language codes and exits.\n\n\n\nInvalid language or input values are reported as parser errors and return a\nnonzero exit status. Successful expansion prints one line to standard output.",
-          "lower": "the package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\npass text as the optional positional argument:\n\nabbr2words --lang de \"prof. klein kommt ggf.\"\n\n\n\n\nif positional text is omitted, the command reads all input from standard input:\n\nprintf 'prof. klein kommt ggf.' | abbr2words --lang de\n\n\n\n\noptions:\n\n\n--lang code selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints the supported base language codes and exits.\n\n\n\ninvalid language or input values are reported as parser errors and return a\nnonzero exit status. successful expansion prints one line to standard output."
+          "text": "The package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\nPass text as the optional positional argument:\n\nabbr2words --lang de \"Prof. Klein kommt ggf.\"\n\n\n\n\nIf positional text is omitted, the command reads all input from standard input:\n\nprintf 'Prof. Klein kommt ggf.' | abbr2words --lang de\n\n\n\n\nOptions:\n\n\n--lang CODE selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints every supported canonical base and explicit locale key and exits.\n\n\n\nInvalid language or input values are reported as parser errors and return a\nnonzero exit status. Successful expansion prints one line to standard output.",
+          "lower": "the package provides both python -m abbr2words and the installed abbr2words\ncommand.\n\npass text as the optional positional argument:\n\nabbr2words --lang de \"prof. klein kommt ggf.\"\n\n\n\n\nif positional text is omitted, the command reads all input from standard input:\n\nprintf 'prof. klein kommt ggf.' | abbr2words --lang de\n\n\n\n\noptions:\n\n\n--lang code selects a language or locale; the default is en.\n\n\n--no-context disables contextual disambiguation.\n\n\n--languages prints every supported canonical base and explicit locale key and exits.\n\n\n\ninvalid language or input values are reported as parser errors and return a\nnonzero exit status. successful expansion prints one line to standard output."
         }
       ]
     },
     {
       "url": "/tools/abbr2words/main/customization/",
       "title": "abbr2words Customization",
-      "snippet": "There are three ways to work with an expander registry.\nExpander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2 …",
+      "snippet": "There are three ways to work with an expander registry.\n\nBundled entries come from checked-in LanguageBundle data with source IDs and\nreview …",
       "sections": [
         {
           "anchor": "",
           "heading": "Customization",
-          "text": "There are three ways to work with an expander registry.",
-          "lower": "there are three ways to work with an expander registry."
+          "text": "There are three ways to work with an expander registry.\n\nBundled entries come from checked-in LanguageBundle data with source IDs and\nreview notes. Custom entries are instance-local application policy and do not\nneed to follow the bundled source ledger. A custom context expansion may use\nDATE, but ambiguous spellings should still receive an explicit guard;\nbundled date detection remains bounded and provider-neutral.",
+          "lower": "there are three ways to work with an expander registry.\n\nbundled entries come from checked-in languagebundle data with source ids and\nreview notes. custom entries are instance-local application policy and do not\nneed to follow the bundled source ledger. a custom context expansion may use\ndate, but ambiguous spellings should still receive an explicit guard;\nbundled date detection remains bounded and provider-neutral."
         },
         {
           "anchor": "",
           "heading": "Isolated registries",
-          "text": "Expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import Expander\n\nexpander = Expander(\"en\")\nexpander.add(\"Tech.\", \"Technology\")\nassert expander(\"Tech. works\") == \"Technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. Changes\nto either form do not affect the shared convenience API.\n\nEntries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"KI\", \"Künstliche Intelligenz\", case_sensitive=True)\n\n\n\n\nFollowed-by guards are evaluated against the suffix immediately after the\ncandidate abbreviation. In only_if_followed_by=r\"^\\s*\\d\", ^ therefore\nmeans “immediately after this abbreviation,” even when the candidate occurs\nafter other sourc…",
-          "lower": "expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import expander\n\nexpander = expander(\"en\")\nexpander.add(\"tech.\", \"technology\")\nassert expander(\"tech. works\") == \"technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. changes\nto either form do not affect the shared convenience api.\n\nentries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"ki\", \"künstliche intelligenz\", case_sensitive=true)\n\n\n\n\nfollowed-by guards are evaluated against the suffix immediately after the\ncandidate abbreviation. in only_if_followed_by=r\"^\\s*\\d\", ^ therefore\nmeans “immediately after this abbreviation,” even when the candidate occurs\nafter other sourc…"
+          "text": "Expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import Expander\n\nexpander = Expander(\"en\")\nexpander.add(\"Tech.\", \"Technology\")\nassert expander(\"Tech. works\") == \"Technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. Changes\nto either form do not affect the shared convenience API.\n\nEntries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"KI\", \"Künstliche Intelligenz\", case_sensitive=True)\n\n\n\n\nEntries use fixed expansion text by default. For reviewed lexical phrases that\nshould compose with sentence position, opt into sentence casing:\n\nexpander.add(\"Pág.\", \"página\", case_policy=\"sentence\")\nassert expander(\"Pág. 12\") == \"Página…",
+          "lower": "expander(...) is a small mutable facade around a new, isolated registry:\n\nfrom abbr2words import expander\n\nexpander = expander(\"en\")\nexpander.add(\"tech.\", \"technology\")\nassert expander(\"tech. works\") == \"technology works\"\n\n\n\n\nget_expander(...) also returns a new isolated implementation registry. changes\nto either form do not affect the shared convenience api.\n\nentries can be case-sensitive and can use regular-expression guards:\n\nexpander.add(\"in.\", \"inch\", only_if_preceded_by=r\"\\d\\s*$\")\nexpander.add(\"ki\", \"künstliche intelligenz\", case_sensitive=true)\n\n\n\n\nentries use fixed expansion text by default. for reviewed lexical phrases that\nshould compose with sentence position, opt into sentence casing:\n\nexpander.add(\"pág.\", \"página\", case_policy=\"sentence\")\nassert expander(\"pág. 12\") == \"página…"
+        },
+        {
+          "anchor": "",
+          "heading": "Ambiguous English dotted forms",
+          "text": "The English registry prefers reversible letter readings when a dotted spelling\ncould be either a semantic abbreviation or a person’s initials. The structural\nfallback recognizes standalone uppercase forms with two through eight dotted\nletters, such as E.D. and F.C.S.C.J., after registered abbreviations and\nreviewed units have had priority. Thus lowercase e.g. expands to for example,\nwhile uppercase E.G. is rendered as E G; I.D. is rendered as I D.\n\nSingle-letter N., S., E., and W. use letter defaults and require bounded\naddress/street evidence before expanding to a direction. This protects personal\ninitials and biological names such as S. aureus. D.C. expands to District of Columbia only with explicit Washington/place evidence; L.A. remains L A\nin this layer so author initials are not rew…",
+          "lower": "the english registry prefers reversible letter readings when a dotted spelling\ncould be either a semantic abbreviation or a person’s initials. the structural\nfallback recognizes standalone uppercase forms with two through eight dotted\nletters, such as e.d. and f.c.s.c.j., after registered abbreviations and\nreviewed units have had priority. thus lowercase e.g. expands to for example,\nwhile uppercase e.g. is rendered as e g; i.d. is rendered as i d.\n\nsingle-letter n., s., e., and w. use letter defaults and require bounded\naddress/street evidence before expanding to a direction. this protects personal\ninitials and biological names such as s. aureus. d.c. expands to district of columbia only with explicit washington/place evidence; l.a. remains l a\nin this layer so author initials are not rew…"
         },
         {
           "anchor": "",
@@ -194,20 +320,8 @@
         {
           "anchor": "",
           "heading": "Output and processing",
-          "text": "The normal output shows:\n\n=== Source ===\n<original text>\n\n=== Abbreviations only ===\n<abbr2words output>\n\n=== Full speech text ===\n<example-local numeric normalization>\n\n\n\n\nFull normalization protects email addresses, URLs, semantic versions, apartment\nidentifiers such as 4B, and existing protected-looking tokens. It then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. It uses Decimal for numeric input so currency\ncents are not lost.\n\nThe stable API keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\n\n\n\nThe unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary\nscientific-expression parsing…",
-          "lower": "the normal output shows:\n\n=== source ===\n<original text>\n\n=== abbreviations only ===\n<abbr2words output>\n\n=== full speech text ===\n<example-local numeric normalization>\n\n\n\n\nfull normalization protects email addresses, urls, semantic versions, apartment\nidentifiers such as 4b, and existing protected-looking tokens. it then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. it uses decimal for numeric input so currency\ncents are not lost.\n\nthe stable api keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\n\n\n\nthe unit inventory is explicit and reviewed; it is not complete ucum or arbitrary\nscientific-expression parsing…"
-        },
-        {
-          "anchor": "",
-          "heading": "Third-party dependency",
-          "text": "num2words is an optional third-party dependency with its own LGPL license. It is\nnot installed by a plain abbr2words installation and is not a core runtime\ndependency. The example layer imports it only when full speech-text normalization\nis requested.",
-          "lower": "num2words is an optional third-party dependency with its own lgpl license. it is\nnot installed by a plain abbr2words installation and is not a core runtime\ndependency. the example layer imports it only when full speech-text normalization\nis requested."
-        },
-        {
-          "anchor": "",
-          "heading": "External POS annotations",
-          "text": "The spaCy integration example is intentionally separate from the package\ndependencies:\n\npython -m pip install spacy\npython -m spacy download en_core_web_sm\npython examples/spacy_pos.py\n\n\n\n\nThe example converts token.idx, token length, token.pos_, and token.tag_\nto TokenAnnotation. A trained spaCy pipeline is required for POS labels;\ntokenization alone does not produce them. abbr2words itself never imports\nspaCy.",
-          "lower": "the spacy integration example is intentionally separate from the package\ndependencies:\n\npython -m pip install spacy\npython -m spacy download en_core_web_sm\npython examples/spacy_pos.py\n\n\n\n\nthe example converts token.idx, token length, token.pos_, and token.tag_\nto tokenannotation. a trained spacy pipeline is required for pos labels;\ntokenization alone does not produce them. abbr2words itself never imports\nspacy."
+          "text": "The normal output shows:\n\n=== Source ===\n<original text>\n\n=== Abbreviations only ===\n<abbr2words output>\n\n=== Full speech text ===\n<example-local numeric normalization>\n\n\n\n\nFull normalization protects email addresses, URLs, semantic versions, apartment\nidentifiers such as 4B, and existing protected-looking tokens. It then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. It uses Decimal for numeric input so currency\ncents are not lost.\n\nThe stable API keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\nBaseline-language examples remain intentionally explicit:\n\n```python\nabbr2words(\"ص. 12\", lang=\"ar\")    # \"صفحة 12\"…",
+          "lower": "the normal output shows:\n\n=== source ===\n<original text>\n\n=== abbreviations only ===\n<abbr2words output>\n\n=== full speech text ===\n<example-local numeric normalization>\n\n\n\n\nfull normalization protects email addresses, urls, semantic versions, apartment\nidentifiers such as 4b, and existing protected-looking tokens. it then handles\ncurrencies, temperatures, dates, times, units, abbreviations, ordinals, and\nremaining numbers in that order. it uses decimal for numeric input so currency\ncents are not lost.\n\nthe stable api keeps the numeric value and expands only supported unit symbols:\n\nabbr2words(\"500 g\", lang=\"en\")  # \"500 gram\"\nabbr2words(\"section g\", lang=\"en\")  # \"section g\"\n\nbaseline-language examples remain intentionally explicit:\n\n```python\nabbr2words(\"ص. 12\", lang=\"ar\")    # \"صفحة 12\"…"
         }
       ]
     },
@@ -219,8 +333,8 @@
         {
           "anchor": "",
           "heading": "abbr2words",
-          "text": "Multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nUser guide\n\n\nInstallation\nUsers\n\nDevelopment\n\nExamples\n\nDocumentation\n\n\n\n\nQuickstart\n\nCustomization\nIsolated registries\n\nShared registries\n\nUnit customization\n\nFinite aliases and exact replacements\n\n\n\n\nExternal POS annotations\nTokenAnnotation\n\nWhat POS changes today\n\nspaCy adapter\n\nPOS guard precedence and limitations\n\n\n\n\nCommand line interface\n\nLanguages\nKnown ambiguity\n\n\n\n\nAPI reference\nConvenience functions\n\nMutable facade\n\nGuarded unit symbols\n\nStructured quantity matches\n\nCore types\n\n\n\n\nExamples\nInstall and run\n\nOutput and processing\n\nThird-party dependency\n\nExternal POS annotations\n\n\n\n\nChangelog\n[0.2.2] - 2026-08-07\n\n[v0.2.1] - 2026-08-06\n\n[v0.2.0] - 2026-08-06\n\n[v0.1.1] - 2026-08-05",
-          "lower": "multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nuser guide\n\n\ninstallation\nusers\n\ndevelopment\n\nexamples\n\ndocumentation\n\n\n\n\nquickstart\n\ncustomization\nisolated registries\n\nshared registries\n\nunit customization\n\nfinite aliases and exact replacements\n\n\n\n\nexternal pos annotations\ntokenannotation\n\nwhat pos changes today\n\nspacy adapter\n\npos guard precedence and limitations\n\n\n\n\ncommand line interface\n\nlanguages\nknown ambiguity\n\n\n\n\napi reference\nconvenience functions\n\nmutable facade\n\nguarded unit symbols\n\nstructured quantity matches\n\ncore types\n\n\n\n\nexamples\ninstall and run\n\noutput and processing\n\nthird-party dependency\n\nexternal pos annotations\n\n\n\n\nchangelog\n[0.2.2] - 2026-08-07\n\n[v0.2.1] - 2026-08-06\n\n[v0.2.0] - 2026-08-06\n\n[v0.1.1] - 2026-08-05"
+          "text": "Multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nUser guide\n\n\nInstallation\nUsers\n\nDevelopment\n\nExamples\n\nDocumentation\n\n\n\n\nQuickstart\n\nCustomization\nIsolated registries\n\nAmbiguous English dotted forms\n\nShared registries\n\nUnit customization\n\nFinite aliases and exact replacements\n\n\n\n\nExternal POS annotations\nTokenAnnotation\n\nWhat POS changes today\n\nspaCy adapter\n\nPOS guard precedence and limitations\n\n\n\n\nCommand line interface\n\nLanguages\nKnown ambiguity\n\nCoverage tiers and generated inventory\n\n\n\n\nLanguage sources and review policy\nRegistry scope\n\nSource authority\n\nPer-language ledger\n\nKnown limitations\n\n\n\n\nAPI reference\nConvenience functions\n\nInitialism policies\n\nMutable facade\n\nGuarded unit symbols\n\nStructured quantity matches\n\nCore types\n\n\n\n\nExamples…",
+          "lower": "multilingual, context-aware abbreviation expansion for text normalization and speech.\n\n\nuser guide\n\n\ninstallation\nusers\n\ndevelopment\n\nexamples\n\ndocumentation\n\n\n\n\nquickstart\n\ncustomization\nisolated registries\n\nambiguous english dotted forms\n\nshared registries\n\nunit customization\n\nfinite aliases and exact replacements\n\n\n\n\nexternal pos annotations\ntokenannotation\n\nwhat pos changes today\n\nspacy adapter\n\npos guard precedence and limitations\n\n\n\n\ncommand line interface\n\nlanguages\nknown ambiguity\n\ncoverage tiers and generated inventory\n\n\n\n\nlanguage sources and review policy\nregistry scope\n\nsource authority\n\nper-language ledger\n\nknown limitations\n\n\n\n\napi reference\nconvenience functions\n\ninitialism policies\n\nmutable facade\n\nguarded unit symbols\n\nstructured quantity matches\n\ncore types\n\n\n\n\nexamples…"
         }
       ]
     },
@@ -238,8 +352,8 @@
         {
           "anchor": "",
           "heading": "Development",
-          "text": "From a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npytest\n\n\n\n\nThe development extra includes the test, build, lint, and type-checking tools.",
-          "lower": "from a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npytest\n\n\n\n\nthe development extra includes the test, build, lint, and type-checking tools."
+          "text": "From a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npython -m build\npytest\n\n\n\n\nThe development extra includes the test, build, lint, and type-checking tools.",
+          "lower": "from a checkout, install the package and development tools in editable mode:\n\npython -m pip install -e \".[dev]\"\npython -m build\npytest\n\n\n\n\nthe development extra includes the test, build, lint, and type-checking tools."
         },
         {
           "anchor": "",
@@ -252,6 +366,19 @@
           "heading": "Documentation",
           "text": "Documentation dependencies are separate from the runtime package:\n\npython -m pip install -r docs/requirements.txt\nsphinx-build -W --keep-going -b html docs docs/_build/html",
           "lower": "documentation dependencies are separate from the runtime package:\n\npython -m pip install -r docs/requirements.txt\nsphinx-build -w --keep-going -b html docs docs/_build/html"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/language-coverage/",
+      "title": "abbr2words Generated language coverage",
+      "snippet": "Do not edit this table manually; run python scripts/generate_language_coverage.py.\n\n\n\nCode\n\nBase/locale\n\nLexical entries\n\nContextual entries …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Generated language coverage",
+          "text": "Do not edit this table manually; run python scripts/generate_language_coverage.py.\n\n\n\nCode\n\nBase/locale\n\nLexical entries\n\nContextual entries\n\nUnit identities\n\nSource status\n\nNotes\n\n\n\n\n\nam\n\nam / base\n\n2\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nar\n\nar / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\naz\n\naz / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nbe\n\nbe / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nbn\n\nbn / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nca\n\nca / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nce\n\nce / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\ncs\n\ncs / base\n\n65…",
+          "lower": "do not edit this table manually; run python scripts/generate_language_coverage.py.\n\n\n\ncode\n\nbase/locale\n\nlexical entries\n\ncontextual entries\n\nunit identities\n\nsource status\n\nnotes\n\n\n\n\n\nam\n\nam / base\n\n2\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nar\n\nar / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\naz\n\naz / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nbe\n\nbe / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nbn\n\nbn / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nca\n\nca / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\nce\n\nce / base\n\n3\n\n0\n\n28\n\nreviewed baseline\n\nneutral labels; source ledger applies\n\n\n\ncs\n\ncs / base\n\n65…"
         }
       ]
     },
@@ -269,14 +396,20 @@
         {
           "anchor": "",
           "heading": "Registry scope",
-          "text": "The current added registries are Dutch (nl), Polish (pl), Russian (ru),\nSwedish (sv), and Turkish (tr). Locale inputs continue to resolve to the\nbase registry. The inventories cover common abbreviations and the existing\nduration, length, area, volume, mass, temperature, and speed unit subset.\n\nUnit expansions are canonical lemmas. They intentionally do not realize plural,\ncase, numeral government, gender, vowel harmony, or apostrophe-attached suffixes.\nTurkish unit symbols followed by ' or ’ remain unchanged under the restricted\nfirst-release policy.",
-          "lower": "the current added registries are dutch (nl), polish (pl), russian (ru),\nswedish (sv), and turkish (tr). locale inputs continue to resolve to the\nbase registry. the inventories cover common abbreviations and the existing\nduration, length, area, volume, mass, temperature, and speed unit subset.\n\nunit expansions are canonical lemmas. they intentionally do not realize plural,\ncase, numeral government, gender, vowel harmony, or apostrophe-attached suffixes.\nturkish unit symbols followed by ' or ’ remain unchanged under the restricted\nfirst-release policy."
+          "text": "The registry contains the 49 base keys and 14 explicit locale overlays pinned in\ntests/data/num2words_language_registry.json. Each new base has a conservative\nseed inventory and the reviewed common duration, length, area, volume, mass,\ntemperature, and speed unit subset. Locale entries inherit their base and add\nstructured local currency identities in numeric context. Every seed carries a\nsource ID; scripts/audit_language_data.py verifies that IDs resolve and that\nduplicate, alias, custom-boundary, and identity-rule policies are respected.\n\nThe development importer is deterministic and offline:\n\npython scripts/import_cldr_language_data.py \\\n  --cldr-root ../cldr-json --cldr-version 48.2.1 \\\n  --languages am ar ... zh --check\npython scripts/audit_language_data.py\n\n\n\n\nIt reads only the pinn…",
+          "lower": "the registry contains the 49 base keys and 14 explicit locale overlays pinned in\ntests/data/num2words_language_registry.json. each new base has a conservative\nseed inventory and the reviewed common duration, length, area, volume, mass,\ntemperature, and speed unit subset. locale entries inherit their base and add\nstructured local currency identities in numeric context. every seed carries a\nsource id; scripts/audit_language_data.py verifies that ids resolve and that\nduplicate, alias, custom-boundary, and identity-rule policies are respected.\n\nthe development importer is deterministic and offline:\n\npython scripts/import_cldr_language_data.py \\\n  --cldr-root ../cldr-json --cldr-version 48.2.1 \\\n  --languages am ar ... zh --check\npython scripts/audit_language_data.py\n\n\n\n\nit reads only the pinn…"
         },
         {
           "anchor": "",
           "heading": "Source authority",
-          "text": "num2words v0.5.14 release registry: candidate-language compatibility baseline.\n\n\nBIPM SI Brochure: canonical SI symbols and capitalization.\n\n\nUnicode CLDR unit and date/time data: localized unit and calendar guidance.\n\n\nTaaladvies: Dutch abbreviation, date, title, and SI-symbol guidance.\n\n\nISOF: Swedish abbreviation and number/unit spacing guidance.\n\n\nRada Języka Polskiego: current Polish spelling, abbreviations, month names, and\nunit-spacing guidance, including the 2026 spelling change notice.\n\n\nGramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.\n\n\nTürk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation\nguidance.\n\n\n\nThe brief that introduced this registry was reviewed on 2026-08-06. The\nimplementation preserves a source description on each seed ca…",
-          "lower": "num2words v0.5.14 release registry: candidate-language compatibility baseline.\n\n\nbipm si brochure: canonical si symbols and capitalization.\n\n\nunicode cldr unit and date/time data: localized unit and calendar guidance.\n\n\ntaaladvies: dutch abbreviation, date, title, and si-symbol guidance.\n\n\nisof: swedish abbreviation and number/unit spacing guidance.\n\n\nrada języka polskiego: current polish spelling, abbreviations, month names, and\nunit-spacing guidance, including the 2026 spelling change notice.\n\n\ngramota and gost r 7.0.12-2011 guidance: russian graphical abbreviations.\n\n\ntürk dil kurumu: turkish abbreviation, abbreviation-index, and punctuation\nguidance.\n\n\n\nthe brief that introduced this registry was reviewed on 2026-08-06. the\nimplementation preserves a source description on each seed ca…"
+          "text": "num2words v0.5.14 release registry: candidate-language compatibility baseline.\n\n\nBIPM SI Brochure: canonical SI symbols and capitalization.\n\n\nUnicode CLDR unit and date/time data: localized unit and calendar guidance.\n\n\nTaaladvies: Dutch abbreviation, date, title, and SI-symbol guidance.\n\n\nISOF: Swedish abbreviation and number/unit spacing guidance.\n\n\nRada Języka Polskiego: current Polish spelling, abbreviations, month names, and\nunit-spacing guidance, including the 2026 spelling change notice.\n\n\nGramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.\n\n\nTürk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation\nguidance.\n\n\nISO 4217: currency codes and locale currency identities.\n\n\n\nThe checked-in source IDs are legacy-abbr2words for compatibility-preserve…",
+          "lower": "num2words v0.5.14 release registry: candidate-language compatibility baseline.\n\n\nbipm si brochure: canonical si symbols and capitalization.\n\n\nunicode cldr unit and date/time data: localized unit and calendar guidance.\n\n\ntaaladvies: dutch abbreviation, date, title, and si-symbol guidance.\n\n\nisof: swedish abbreviation and number/unit spacing guidance.\n\n\nrada języka polskiego: current polish spelling, abbreviations, month names, and\nunit-spacing guidance, including the 2026 spelling change notice.\n\n\ngramota and gost r 7.0.12-2011 guidance: russian graphical abbreviations.\n\n\ntürk dil kurumu: turkish abbreviation, abbreviation-index, and punctuation\nguidance.\n\n\niso 4217: currency codes and locale currency identities.\n\n\n\nthe checked-in source ids are legacy-abbr2words for compatibility-preserve…"
+        },
+        {
+          "anchor": "",
+          "heading": "Per-language ledger",
+          "text": "Codes\n\nSource ID\n\nCategories\n\nStatus\n\n\n\n\n\nam ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh\n\nlanguage-style-baseline, unicode-cldr-48.2.1\n\nguarded reference/title baseline and neutral units\n\nlinguistically-reviewed pending native review\n\n\n\ncs de en es fr it nl pl pt ru sv tr\n\nlegacy-<code> plus pinned common sources\n\npreserved mature lexical registry and structured quantities\n\nlegacy-preserved; parity tested\n\n\n\nen_IN en_NG es_CO es_CR es_GT es_NI es_VE fr_BE fr_CH fr_DZ pt_BR zh_CN zh_HK zh_TW\n\nlocale overlay modules plus ISO 4217/CLDR\n\nnumeric currency and locale-specific overlay data\n\ngenerated-reviewed\n\n\n\n\n\nThe brief that introduced this registry was reviewed on 2026-08-06. The\nimplementation preserves a source description o…",
+          "lower": "codes\n\nsource id\n\ncategories\n\nstatus\n\n\n\n\n\nam ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh\n\nlanguage-style-baseline, unicode-cldr-48.2.1\n\nguarded reference/title baseline and neutral units\n\nlinguistically-reviewed pending native review\n\n\n\ncs de en es fr it nl pl pt ru sv tr\n\nlegacy-<code> plus pinned common sources\n\npreserved mature lexical registry and structured quantities\n\nlegacy-preserved; parity tested\n\n\n\nen_in en_ng es_co es_cr es_gt es_ni es_ve fr_be fr_ch fr_dz pt_br zh_cn zh_hk zh_tw\n\nlocale overlay modules plus iso 4217/cldr\n\nnumeric currency and locale-specific overlay data\n\ngenerated-reviewed\n\n\n\n\n\nthe brief that introduced this registry was reviewed on 2026-08-06. the\nimplementation preserves a source description o…"
         },
         {
           "anchor": "",
@@ -289,19 +422,80 @@
     {
       "url": "/tools/abbr2words/main/languages/",
       "title": "abbr2words Languages",
-      "snippet": "The bundled base-language registries are:\n\n\n\nCode\n\nLanguage\n\n\n\n\n\ncs\n\nCzech\n\n\n\nde\n\nGerman\n\n\n\nen\n\nEnglish\n\n\n\nes\n\nSpanish\n\n\n\nfr\n\nFrench\n\n\n\nit …",
+      "snippet": "The bundled base-language registries are the 49 base keys in the pinned\nnum2words parity contract:\n\n\n\nCodes\n\n\n\n\n\nam ar az be bn ca ce cs cy …",
       "sections": [
         {
           "anchor": "",
           "heading": "Languages",
-          "text": "The bundled base-language registries are:\n\n\n\nCode\n\nLanguage\n\n\n\n\n\ncs\n\nCzech\n\n\n\nde\n\nGerman\n\n\n\nen\n\nEnglish\n\n\n\nes\n\nSpanish\n\n\n\nfr\n\nFrench\n\n\n\nit\n\nItalian\n\n\n\nnl\n\nDutch\n\n\n\npl\n\nPolish\n\n\n\npt\n\nPortuguese\n\n\n\nru\n\nRussian\n\n\n\nsv\n\nSwedish\n\n\n\ntr\n\nTurkish\n\n\n\n\n\nLanguage input is normalized by trimming whitespace, lowercasing, accepting both\nhyphens and underscores, and taking the base part of a locale. For example,\nde-DE, en_GB, and pt-BR select de, en, and pt. Common three-letter\naliases and cz for Czech are also accepted, including dut/nld, pol,\nrus, swe, and tur for the added registries.\n\nThe added registries are intentionally conservative. Ambiguous short forms are\nguarded by numeric/name context or omitted, Russian multiword abbreviations\naccept ordinary, non-breaking, and narrow non-breaking spaces, a…",
-          "lower": "the bundled base-language registries are:\n\n\n\ncode\n\nlanguage\n\n\n\n\n\ncs\n\nczech\n\n\n\nde\n\ngerman\n\n\n\nen\n\nenglish\n\n\n\nes\n\nspanish\n\n\n\nfr\n\nfrench\n\n\n\nit\n\nitalian\n\n\n\nnl\n\ndutch\n\n\n\npl\n\npolish\n\n\n\npt\n\nportuguese\n\n\n\nru\n\nrussian\n\n\n\nsv\n\nswedish\n\n\n\ntr\n\nturkish\n\n\n\n\n\nlanguage input is normalized by trimming whitespace, lowercasing, accepting both\nhyphens and underscores, and taking the base part of a locale. for example,\nde-de, en_gb, and pt-br select de, en, and pt. common three-letter\naliases and cz for czech are also accepted, including dut/nld, pol,\nrus, swe, and tur for the added registries.\n\nthe added registries are intentionally conservative. ambiguous short forms are\nguarded by numeric/name context or omitted, russian multiword abbreviations\naccept ordinary, non-breaking, and narrow non-breaking spaces, a…"
+          "text": "The bundled base-language registries are the 49 base keys in the pinned\nnum2words parity contract:\n\n\n\nCodes\n\n\n\n\n\nam ar az be bn ca ce cs cy da de en eo\n\n\n\nes fa fi fr he hi hu hy id is it ja kn\n\n\n\nko kz lt lv mn nl no pl pt ro ru sk sl\n\n\n\nsr sv te tet tg th tr uk vi zh\n\n\n\n\n\nExplicit locale overlays inherit a base registry and are independently keyed:\n\n\n\nBase\n\nLocale overlays\n\nnum2words parity\n\n\n\n\n\nen\n\nen_IN, en_NG\n\nv0.5.14\n\n\n\nes\n\nes_CO, es_CR, es_GT, es_NI, es_VE\n\nv0.5.14\n\n\n\nfr\n\nfr_BE, fr_CH, fr_DZ\n\nv0.5.14\n\n\n\npt\n\npt_BR\n\nv0.5.14\n\n\n\nzh\n\nzh_CN, zh_HK, zh_TW\n\ncurrent master only\n\n\n\n\n\nLanguage input is normalized by trimming whitespace, accepting both hyphens and\nunderscores, canonicalizing base/region casing, and trying the exact registered\nlocale before falling back to its base. For example…",
+          "lower": "the bundled base-language registries are the 49 base keys in the pinned\nnum2words parity contract:\n\n\n\ncodes\n\n\n\n\n\nam ar az be bn ca ce cs cy da de en eo\n\n\n\nes fa fi fr he hi hu hy id is it ja kn\n\n\n\nko kz lt lv mn nl no pl pt ro ru sk sl\n\n\n\nsr sv te tet tg th tr uk vi zh\n\n\n\n\n\nexplicit locale overlays inherit a base registry and are independently keyed:\n\n\n\nbase\n\nlocale overlays\n\nnum2words parity\n\n\n\n\n\nen\n\nen_in, en_ng\n\nv0.5.14\n\n\n\nes\n\nes_co, es_cr, es_gt, es_ni, es_ve\n\nv0.5.14\n\n\n\nfr\n\nfr_be, fr_ch, fr_dz\n\nv0.5.14\n\n\n\npt\n\npt_br\n\nv0.5.14\n\n\n\nzh\n\nzh_cn, zh_hk, zh_tw\n\ncurrent master only\n\n\n\n\n\nlanguage input is normalized by trimming whitespace, accepting both hyphens and\nunderscores, canonicalizing base/region casing, and trying the exact registered\nlocale before falling back to its base. for example…"
         },
         {
           "anchor": "",
           "heading": "Known ambiguity",
           "text": "Some inventories contain collisions whose effective winner follows the source\nregistry order rather than a complete contextual model. Current documented\nexamples include str. in Czech, mar. in Spanish and Italian, n° in French,\nand seg. in Portuguese. German Fr. has an explicit title-context override,\nbut its default expansion remains Freitag.\n\nContext policy is language-specific and uses bounded local windows. English\nprofiles distinguish street suffixes, saints, titles, and addresses; the German\nprofile distinguishes Fr. Müller (Frau) from Am Fr. (Freitag). Name\nevidence uses Unicode cased characters and supports accents, apostrophes,\nhyphens, and quoted names. Uncased scripts remain conservative without an\nannotation signal. Context-aware output is still not a comprehensive semantic\ndi…",
           "lower": "some inventories contain collisions whose effective winner follows the source\nregistry order rather than a complete contextual model. current documented\nexamples include str. in czech, mar. in spanish and italian, n° in french,\nand seg. in portuguese. german fr. has an explicit title-context override,\nbut its default expansion remains freitag.\n\ncontext policy is language-specific and uses bounded local windows. english\nprofiles distinguish street suffixes, saints, titles, and addresses; the german\nprofile distinguishes fr. müller (frau) from am fr. (freitag). name\nevidence uses unicode cased characters and supports accents, apostrophes,\nhyphens, and quoted names. uncased scripts remain conservative without an\nannotation signal. context-aware output is still not a comprehensive semantic\ndi…"
+        },
+        {
+          "anchor": "",
+          "heading": "Coverage tiers and generated inventory",
+          "text": "Coverage metadata is checked in with the language bundles and registry shards.\nRun python scripts/generate_registry_snapshot.py after an intentional data\nchange and inspect the shard diff.\n\n\n\nTier\n\nBase keys\n\nContent contract\n\n\n\n\n\nReviewed extended\n\ncs de en es fr it nl pl pt ru sv tr\n\nMature lexical inventories migrated through declarative bundles with parity snapshots\n\n\n\nReviewed baseline\n\nam ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh\n\nSource-tagged references/titles, bounded numeric guards, localized neutral unit labels, and script-safe boundaries\n\n\n\nLocale overlay\n\n14 explicit locale keys\n\nBase inheritance plus structured numeric identities; no identity lexical currency rules\n\n\n\n\n\nThe detailed generated count table is m…",
+          "lower": "coverage metadata is checked in with the language bundles and registry shards.\nrun python scripts/generate_registry_snapshot.py after an intentional data\nchange and inspect the shard diff.\n\n\n\ntier\n\nbase keys\n\ncontent contract\n\n\n\n\n\nreviewed extended\n\ncs de en es fr it nl pl pt ru sv tr\n\nmature lexical inventories migrated through declarative bundles with parity snapshots\n\n\n\nreviewed baseline\n\nam ar az be bn ca ce cy da eo fa fi he hi hu hy id is ja kn ko kz lt lv mn no ro sk sl sr te tet tg th uk vi zh\n\nsource-tagged references/titles, bounded numeric guards, localized neutral unit labels, and script-safe boundaries\n\n\n\nlocale overlay\n\n14 explicit locale keys\n\nbase inheritance plus structured numeric identities; no identity lexical currency rules\n\n\n\n\n\nthe detailed generated count table is m…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/abbr2words/main/polynorm-abbreviation-ownership/",
+      "title": "abbr2words PolyNorm abbreviation-stage ownership",
+      "snippet": "This document records which PolyNorm observations belong to abbr2words and\nwhich must remain in Spokenform or downstream layers. It is a rev …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "PolyNorm abbreviation-stage ownership",
+          "text": "This document records which PolyNorm observations belong to abbr2words and\nwhich must remain in Spokenform or downstream layers. It is a review aid, not a\nbenchmark ground-truth override.",
+          "lower": "this document records which polynorm observations belong to abbr2words and\nwhich must remain in spokenform or downstream layers. it is a review aid, not a\nbenchmark ground-truth override."
+        },
+        {
+          "anchor": "",
+          "heading": "Classification vocabulary",
+          "text": "owned-abbr: a reviewed lexical abbreviation or guarded expansion variant\nwhose source span is owned by abbr2words.\n\n\nowned-unit-identity: a reviewed numeric unit identity with a stable\ncanonical ID and locale label. Number verbalization and unit grammar remain\ndownstream.\n\n\nspokenform-number: the abbreviation expands correctly, but a remaining\nnumber, decimal, date, or quantity rendering problem belongs to Spokenform.\n\n\nspokenform-structured-collision: a structured recognizer claims a span that\nshould have been handled by the lexical stage, or otherwise changes stage\nownership. Fix the recognizer boundary rather than adding a benchmark-only\nabbreviation rule.\n\n\ngrammar-out-of-scope: article agreement, title grammar, or surrounding\nsentence repair is not an abbreviation expansion responsib…",
+          "lower": "owned-abbr: a reviewed lexical abbreviation or guarded expansion variant\nwhose source span is owned by abbr2words.\n\n\nowned-unit-identity: a reviewed numeric unit identity with a stable\ncanonical id and locale label. number verbalization and unit grammar remain\ndownstream.\n\n\nspokenform-number: the abbreviation expands correctly, but a remaining\nnumber, decimal, date, or quantity rendering problem belongs to spokenform.\n\n\nspokenform-structured-collision: a structured recognizer claims a span that\nshould have been handled by the lexical stage, or otherwise changes stage\nownership. fix the recognizer boundary rather than adding a benchmark-only\nabbreviation rule.\n\n\ngrammar-out-of-scope: article agreement, title grammar, or surrounding\nsentence repair is not an abbreviation expansion responsib…"
+        },
+        {
+          "anchor": "",
+          "heading": "Owned by abbr2words",
+          "text": "Ej. 5 resuelto. → Ejercicio 5 resuelto. through a narrow ordered Spanish\ncontext variant; ordinary ej. remains ejemplo.\n\n\nSentence-aware lexical casing for Spanish Av., vol., and cap. and\nItalian professional titles such as Avv. and Arch..\n\n\nFrench St/St. and Ste/Ste. as explicit proper-name Saint/Sainte\nexpansions.\n\n\nScientific unit identities such as 50 kW, 550 nm, 60 Hz, and 0.01 M\nwhen a numeric value and the reviewed symbol are present.\n\n\nGerman organization initialisms whose entries represent spelling, such as\nGmbH → G m b H and AG → A G; source case is preserved.\n\n\nExplicitly spaced ambiguous one-letter units such as 7 B, 3 A, and\n300 K. Compact 7B, 3A, and 5K are deliberately left for downstream\nstructured-code handling because their unit metadata requires a separator.",
+          "lower": "ej. 5 resuelto. → ejercicio 5 resuelto. through a narrow ordered spanish\ncontext variant; ordinary ej. remains ejemplo.\n\n\nsentence-aware lexical casing for spanish av., vol., and cap. and\nitalian professional titles such as avv. and arch..\n\n\nfrench st/st. and ste/ste. as explicit proper-name saint/sainte\nexpansions.\n\n\nscientific unit identities such as 50 kw, 550 nm, 60 hz, and 0.01 m\nwhen a numeric value and the reviewed symbol are present.\n\n\ngerman organization initialisms whose entries represent spelling, such as\ngmbh → g m b h and ag → a g; source case is preserved.\n\n\nexplicitly spaced ambiguous one-letter units such as 7 b, 3 a, and\n300 k. compact 7b, 3a, and 5k are deliberately left for downstream\nstructured-code handling because their unit metadata requires a separator."
+        },
+        {
+          "anchor": "",
+          "heading": "Spokenform or structured-stage ownership",
+          "text": "Abschn. 3.2.: Abschn. can expand to Abschnitt; date/number handling of\n3.2 is downstream.\n\n\nAbb. ... Tab. 2: both abbreviations can expand while rendering 2 remains\na number-stage responsibility.\n\n\nmax. ... 50: the abbreviation can expand while plain number rendering\nremains downstream.\n\n\nz.B. being claimed by a biological-classification recognizer is a\nstructured-stage collision, not a reason to weaken or duplicate lexical\nabbreviation data.\n\n\nn. 10, room-number grouping, and date-year rendering after a month\nabbreviation remain downstream number/date concerns once the lexical span is\ncorrect.",
+          "lower": "abschn. 3.2.: abschn. can expand to abschnitt; date/number handling of\n3.2 is downstream.\n\n\nabb. ... tab. 2: both abbreviations can expand while rendering 2 remains\na number-stage responsibility.\n\n\nmax. ... 50: the abbreviation can expand while plain number rendering\nremains downstream.\n\n\nz.b. being claimed by a biological-classification recognizer is a\nstructured-stage collision, not a reason to weaken or duplicate lexical\nabbreviation data.\n\n\nn. 10, room-number grouping, and date-year rendering after a month\nabbreviation remain downstream number/date concerns once the lexical span is\ncorrect."
+        },
+        {
+          "anchor": "",
+          "heading": "Out of scope or questionable",
+          "text": "Do not expand person initials such as J.-P. Sartre into full names.\n\n\nDo not change articles around titles (Die → Der) or repair sentence\ngrammar around an expansion.\n\n\nDo not delete explanatory parentheticals or unrelated words to satisfy a\nmalformed expected string.\n\n\nRows with unrelated e-mail text, instruction-like expected text, inconsistent\npunctuation/decimal conventions, or other malformed pairs are\nbenchmark-questionable and remain quarantined from package rules.",
+          "lower": "do not expand person initials such as j.-p. sartre into full names.\n\n\ndo not change articles around titles (die → der) or repair sentence\ngrammar around an expansion.\n\n\ndo not delete explanatory parentheticals or unrelated words to satisfy a\nmalformed expected string.\n\n\nrows with unrelated e-mail text, instruction-like expected text, inconsistent\npunctuation/decimal conventions, or other malformed pairs are\nbenchmark-questionable and remain quarantined from package rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Non-goals",
+          "text": "abbr2words does not implement generic cardinal, decimal, ordinal, date, clock,\nor currency-amount verbalization; phone, ISBN, VIN, license-plate, stock-ticker,\nor product-code rendering; mathematical-expression parsing; URL/e-mail\nnormalization; entity-name expansion; grammar repair; or deletion of text not\nrepresented by a reviewed abbreviation or unit span.\n\nCompound unit expressions may be recognized compositionally by downstream\nlogic. This package is not a general UCUM parser and should only add a complete\ncompound when it is specifically reviewed and represented by the unit registry.",
+          "lower": "abbr2words does not implement generic cardinal, decimal, ordinal, date, clock,\nor currency-amount verbalization; phone, isbn, vin, license-plate, stock-ticker,\nor product-code rendering; mathematical-expression parsing; url/e-mail\nnormalization; entity-name expansion; grammar repair; or deletion of text not\nrepresented by a reviewed abbreviation or unit span.\n\ncompound unit expressions may be recognized compositionally by downstream\nlogic. this package is not a general ucum parser and should only add a complete\ncompound when it is specifically reviewed and represented by the unit registry."
+        },
+        {
+          "anchor": "",
+          "heading": "Opt-in residual initialism policy",
+          "text": "Unknown undotted uppercase tokens are intentionally unchanged by the default\nAPI. A downstream speech normalizer may first claim typed structured spans and\nthen call initialism_mode=\"spell_undotted\" for residual standalone ASCII\nuppercase tokens. The bounded matcher covers two through eight letters and\nreports abbr:initialism-undotted provenance; it skips Roman-like strings,\nmixed/alphanumeric identifiers, and hyphenated code fragments. Protected spans\nremain untouched.\n\nThe output case is independent of recognition: initialism_case may be\nsource, upper, or lower. Registered entries retain their semantic\nexpansions unless the caller explicitly requests\nregistered_initialism_mode=\"spell\" and the reviewed entry carries\nspeech_strategy=\"spell_source\". This lets TTS profiles select surface\nsp…",
+          "lower": "unknown undotted uppercase tokens are intentionally unchanged by the default\napi. a downstream speech normalizer may first claim typed structured spans and\nthen call initialism_mode=\"spell_undotted\" for residual standalone ascii\nuppercase tokens. the bounded matcher covers two through eight letters and\nreports abbr:initialism-undotted provenance; it skips roman-like strings,\nmixed/alphanumeric identifiers, and hyphenated code fragments. protected spans\nremain untouched.\n\nthe output case is independent of recognition: initialism_case may be\nsource, upper, or lower. registered entries retain their semantic\nexpansions unless the caller explicitly requests\nregistered_initialism_mode=\"spell\" and the reviewed entry carries\nspeech_strategy=\"spell_source\". this lets tts profiles select surface\nsp…"
+        },
+        {
+          "anchor": "",
+          "heading": "Compact unit diagnostics",
+          "text": "The separator policy is metadata-driven and defaults to allowing compact forms,\nso it does not disable all compact units. For the reviewed collision symbols,\niter_unit_diagnostics() reports the source symbol, locale, canonical identity,\nand requires_separator rejection reason alongside accepted unit decisions.\nThis makes ownership triage inspectable without moving numeric or structured\nnormalization into abbr2words.",
+          "lower": "the separator policy is metadata-driven and defaults to allowing compact forms,\nso it does not disable all compact units. for the reviewed collision symbols,\niter_unit_diagnostics() reports the source symbol, locale, canonical identity,\nand requires_separator rejection reason alongside accepted unit decisions.\nthis makes ownership triage inspectable without moving numeric or structured\nnormalization into abbr2words."
         }
       ]
     },
@@ -350,21 +544,21 @@
         {
           "anchor": "",
           "heading": "Quickstart",
-          "text": "The main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"Prof. Klein kommt ggf. am Fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# Professor Klein kommt gegebenenfalls am Freitag\n\n\n\n\nLocale forms and common aliases are normalized to the bundled base language:\n\nabbr2words(\"Prof. Klein\", lang=\"de-DE\")\nabbr2words(\"Prof. Klein\", lang=\"ger\")\n\n\n\n\nContext detection is enabled by default. For German Fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"Fr. Klein\", lang=\"de\")       # Frau Klein\nabbr2words(\"Fr. Klein\", lang=\"de\", context=False)  # Freitag Klein\n\n\n\n\nThe context choice applies to each call and is independent of earlier calls.\n\nThe package expands abbreviations only. It does not n…",
-          "lower": "the main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"prof. klein kommt ggf. am fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# professor klein kommt gegebenenfalls am freitag\n\n\n\n\nlocale forms and common aliases are normalized to the bundled base language:\n\nabbr2words(\"prof. klein\", lang=\"de-de\")\nabbr2words(\"prof. klein\", lang=\"ger\")\n\n\n\n\ncontext detection is enabled by default. for german fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"fr. klein\", lang=\"de\")       # frau klein\nabbr2words(\"fr. klein\", lang=\"de\", context=false)  # freitag klein\n\n\n\n\nthe context choice applies to each call and is independent of earlier calls.\n\nthe package expands abbreviations only. it does not n…"
+          "text": "The main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"Prof. Klein kommt ggf. am Fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# Professor Klein kommt gegebenenfalls am Freitag\n\n\n\n\nLocale forms and common aliases use exact-locale-first resolution with base fallback:\n\nabbr2words(\"Prof. Klein\", lang=\"de-DE\")\nabbr2words(\"Prof. Klein\", lang=\"ger\")\nnormalize_language(\"pt-BR\")  # \"pt_BR\"\nnormalize_language(\"en_GB\")  # \"en\"\n\n\n\n\nContext detection is enabled by default. For German Fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"Fr. Klein\", lang=\"de\")       # Frau Klein\nabbr2words(\"Fr. Klein\", lang=\"de\", context=False)  # Freitag Klein\n\n\n\n\nThe context choice applies to each call and is…",
+          "lower": "the main convenience function expands known abbreviations while preserving the\nrest of the input:\n\nfrom abbr2words import abbr2words\n\ntext = \"prof. klein kommt ggf. am fr.\"\nprint(abbr2words(text, lang=\"de\"))\n# professor klein kommt gegebenenfalls am freitag\n\n\n\n\nlocale forms and common aliases use exact-locale-first resolution with base fallback:\n\nabbr2words(\"prof. klein\", lang=\"de-de\")\nabbr2words(\"prof. klein\", lang=\"ger\")\nnormalize_language(\"pt-br\")  # \"pt_br\"\nnormalize_language(\"en_gb\")  # \"en\"\n\n\n\n\ncontext detection is enabled by default. for german fr., the surrounding text\ncan distinguish a title from the weekday:\n\nabbr2words(\"fr. klein\", lang=\"de\")       # frau klein\nabbr2words(\"fr. klein\", lang=\"de\", context=false)  # freitag klein\n\n\n\n\nthe context choice applies to each call and is…"
         }
       ]
     },
     {
       "url": "/tools/abbr2words/main/release-notes/",
       "title": "abbr2words Release notes",
-      "snippet": "Added a public immutable structured quantity-match API with exact source spans,\nnumeric lexeme preservation, protected ranges, categories, a …",
+      "snippet": "The generated changelog.md is the canonical release history.\nUse that page for versioned changes and release dates; this page is kept as a\ns …",
       "sections": [
         {
           "anchor": "",
-          "heading": "Unreleased",
-          "text": "Added a public immutable structured quantity-match API with exact source spans,\nnumeric lexeme preservation, protected ranges, categories, and stable canonical IDs.\n\n\nAdded the German kokorog2p-compatible quantity inventory for electrical,\nfrequency, magnitude, count, litre, and EUR symbols with reviewed case policy.\n\n\nPreserved lexical abbreviation compatibility while giving numeric magnitude\nmatches priority over standalone Tsd., Mio., and Mrd. entries.\n\n\nDocumented that quantity-symbol recognition is lexical and semantic; complete\nnumber, grammar, and currency realization remains a downstream responsibility.\n\n\nAdded conservative Dutch, Polish, Russian, Swedish, and Turkish abbreviation\nand numeric-unit registries with ISO aliases.\n\n\nRefactored localized unit data around canonical unit…",
-          "lower": "added a public immutable structured quantity-match api with exact source spans,\nnumeric lexeme preservation, protected ranges, categories, and stable canonical ids.\n\n\nadded the german kokorog2p-compatible quantity inventory for electrical,\nfrequency, magnitude, count, litre, and eur symbols with reviewed case policy.\n\n\npreserved lexical abbreviation compatibility while giving numeric magnitude\nmatches priority over standalone tsd., mio., and mrd. entries.\n\n\ndocumented that quantity-symbol recognition is lexical and semantic; complete\nnumber, grammar, and currency realization remains a downstream responsibility.\n\n\nadded conservative dutch, polish, russian, swedish, and turkish abbreviation\nand numeric-unit registries with iso aliases.\n\n\nrefactored localized unit data around canonical unit…"
+          "heading": "Release notes",
+          "text": "The generated changelog.md is the canonical release history.\nUse that page for versioned changes and release dates; this page is kept as a\nstable navigation entry so the documentation tree has one source of truth.",
+          "lower": "the generated changelog.md is the canonical release history.\nuse that page for versioned changes and release dates; this page is kept as a\nstable navigation entry so the documentation tree has one source of truth."
         }
       ]
     }

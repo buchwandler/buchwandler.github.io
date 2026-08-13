@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/examples/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -613,34 +613,49 @@ cents are not lost.</p>
 <p>The stable API keeps the numeric value and expands only supported unit symbols:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;500 g&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>  <span class="c1"># &quot;500 gram&quot;</span>
 <span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;section g&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>  <span class="c1"># &quot;section g&quot;</span>
+
+<span class="n">Baseline</span><span class="o">-</span><span class="n">language</span> <span class="n">examples</span> <span class="n">remain</span> <span class="n">intentionally</span> <span class="n">explicit</span><span class="p">:</span>
+
+<span class="err">```</span><span class="n">python</span>
+<span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;ص. 12&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;ar&quot;</span><span class="p">)</span>    <span class="c1"># &quot;صفحة 12&quot;</span>
+<span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;стр. 12&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;sr&quot;</span><span class="p">)</span>  <span class="c1"># &quot;страна 12&quot;</span>
+<span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;עמ׳ 12&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;he&quot;</span><span class="p">)</span>  <span class="c1"># &quot;עמוד 12&quot;</span>
 </pre></div>
 </div>
-<p>The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
-scientific-expression parsing. The optional speech example may use <code class="docutils literal notranslate"><span class="pre">num2words</span></code>
-to render a phrase such as <code class="docutils literal notranslate"><span class="pre">500</span> <span class="pre">g</span></code> as <code class="docutils literal notranslate"><span class="pre">five</span> <span class="pre">hundred</span> <span class="pre">grams</span></code>.</p>
-<p>For downstream consumers that need exact edits, <code class="docutils literal notranslate"><span class="pre">examples/replacements.py</span></code>
+<p>These demonstrate guarded references, not full number morphology. For a
+semantic quantity use <code class="docutils literal notranslate"><span class="pre">iter_unit_matches()</span></code> rather than treating a neutral
+surface label as grammatically complete.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+The unit inventory is explicit and reviewed; it is not complete UCUM or arbitrary
+scientific-expression parsing. The optional speech example may use `num2words`
+to render a phrase such as `500 g` as `five hundred grams`.
+
+For downstream consumers that need exact edits, `examples/replacements.py`
 shows the source-aligned planner result. Its replacement offsets refer to the
-original source text, and each replacement has stable <code class="docutils literal notranslate"><span class="pre">kind</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, and
-rule metadata.</p>
-<p>The rules are intentionally limited demonstration code. They do not promise
+original source text, and each replacement has stable `kind`, `language`, and
+rule metadata.
+
+The rules are intentionally limited demonstration code. They do not promise
 perfect grammatical inflection for every locale, arbitrary mathematical or phone
 number normalization, every currency convention, or safe rewriting of every
-identifier. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> remains the reusable abbreviation-only API.</p>
-</section>
-<section id="third-party-dependency">
-<h2>Third-party dependency</h2>
-<p><code class="docutils literal notranslate"><span class="pre">num2words</span></code> is an optional third-party dependency with its own LGPL license. It is
-not installed by a plain <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> installation and is not a core runtime
+identifier. `abbr2words` remains the reusable abbreviation-only API.
+
+## Third-party dependency
+
+`num2words` is an optional third-party dependency with its own LGPL license. It is
+not installed by a plain `abbr2words` installation and is not a core runtime
 dependency. The example layer imports it only when full speech-text normalization
-is requested.</p>
-</section>
-<section id="external-pos-annotations">
-<h2>External POS annotations</h2>
-<p>The spaCy integration example is intentionally separate from the package
-dependencies:</p>
-<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install spacy</span>
-<span class="go">python -m spacy download en_core_web_sm</span>
-<span class="go">python examples/spacy_pos.py</span>
+is requested.
+
+## External POS annotations
+
+The spaCy integration example is intentionally separate from the package
+dependencies:
+
+```console
+python -m pip install spacy
+python -m spacy download en_core_web_sm
+python examples/spacy_pos.py
 </pre></div>
 </div>
 <p>The example converts <code class="docutils literal notranslate"><span class="pre">token.idx</span></code>, token length, <code class="docutils literal notranslate"><span class="pre">token.pos_</span></code>, and <code class="docutils literal notranslate"><span class="pre">token.tag_</span></code>

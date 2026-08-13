@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -555,6 +555,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h2>Development</h2>
 <p>From a checkout, install the package and development tools in editable mode:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install -e &quot;.[dev]&quot;</span>
+<span class="go">python -m build</span>
 <span class="go">pytest</span>
 </pre></div>
 </div>

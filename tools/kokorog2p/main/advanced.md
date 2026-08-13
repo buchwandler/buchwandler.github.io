@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "70cdce20b1f55355c4ce4c001c3061222245497f"
+docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
 search_enabled: true
 ---
 
@@ -543,6 +543,23 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="advanced-usage">
 <h1>Advanced Usage</h1>
 <p>This guide covers advanced features and usage patterns for kokorog2p.</p>
+<section id="semantic-preparation-boundary">
+<h2>Semantic preparation boundary</h2>
+<p>For migrated English, German, French, Spanish, Italian, Portuguese, and Czech text,
+<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> supplies lexical abbreviation and symbol recognition, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns
+semantic written-to-spoken preparation, and <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> owns routing, spans, overrides,
+tokenization, model punctuation, G2P, phonemes, and vocabulary IDs. The ordering is
+explicit:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>original source spans → Spokenform semantic preparation → model punctuation cleanup → G2P
+</pre></div>
+</div>
+<p>Preparation runs separately for each homogeneous language run, with caller-protected
+ranges passed to Spokenform first. The supported Spokenform profile is authoritative;
+the examples covered by downstream tests are representative, not an exhaustive semantic
+category list. English phoneme-sensitive number conversion, Spanish dialect behavior,
+and other documented G2P decisions remain downstream-owned. Use <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> directly
+for reusable spoken text or <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> directly for registry-only workflows.</p>
+</section>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>
 <section id="tri-state-spacy-model-resolution">

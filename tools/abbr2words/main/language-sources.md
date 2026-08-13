@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -547,10 +547,85 @@ registries. The pinned <code class="docutils literal notranslate"><span class="p
 spelling; it is not an abbreviation or morphology dependency.</p>
 <section id="registry-scope">
 <h2>Registry scope</h2>
-<p>The current added registries are Dutch (<code class="docutils literal notranslate"><span class="pre">nl</span></code>), Polish (<code class="docutils literal notranslate"><span class="pre">pl</span></code>), Russian (<code class="docutils literal notranslate"><span class="pre">ru</span></code>),
-Swedish (<code class="docutils literal notranslate"><span class="pre">sv</span></code>), and Turkish (<code class="docutils literal notranslate"><span class="pre">tr</span></code>). Locale inputs continue to resolve to the
-base registry. The inventories cover common abbreviations and the existing
-duration, length, area, volume, mass, temperature, and speed unit subset.</p>
+<p>The registry contains the 49 base keys and 14 explicit locale overlays pinned in
+<code class="docutils literal notranslate"><span class="pre">tests/data/num2words_language_registry.json</span></code>. Each new base has a conservative
+seed inventory and the reviewed common duration, length, area, volume, mass,
+temperature, and speed unit subset. Locale entries inherit their base and add
+structured local currency identities in numeric context. Every seed carries a
+source ID; <code class="docutils literal notranslate"><span class="pre">scripts/audit_language_data.py</span></code> verifies that IDs resolve and that
+duplicate, alias, custom-boundary, and identity-rule policies are respected.</p>
+<p>The development importer is deterministic and offline:</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python scripts/import_cldr_language_data.py \</span>
+<span class="go">  --cldr-root ../cldr-json --cldr-version 48.2.1 \</span>
+<span class="go">  --languages am ar ... zh --check</span>
+<span class="go">python scripts/audit_language_data.py</span>
+</pre></div>
+</div>
+<p>It reads only the pinned fields used by this package and never runs during
+import, build, or normal runtime.</p>
+<p>The source/review ledger for the newly added bases is intentionally explicit:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Group</p></th>
+<th class="head"><p>Codes</p></th>
+<th class="head"><p>Primary language/orthography source</p></th>
+<th class="head"><p>Unit source</p></th>
+<th class="head"><p>Review status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Latin</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code>, <code class="docutils literal notranslate"><span class="pre">cy</span></code>, <code class="docutils literal notranslate"><span class="pre">da</span></code>, <code class="docutils literal notranslate"><span class="pre">eo</span></code>, <code class="docutils literal notranslate"><span class="pre">fi</span></code>, <code class="docutils literal notranslate"><span class="pre">hu</span></code>, <code class="docutils literal notranslate"><span class="pre">id</span></code>, <code class="docutils literal notranslate"><span class="pre">is</span></code>, <code class="docutils literal notranslate"><span class="pre">lt</span></code>, <code class="docutils literal notranslate"><span class="pre">lv</span></code>, <code class="docutils literal notranslate"><span class="pre">no</span></code>, <code class="docutils literal notranslate"><span class="pre">ro</span></code>, <code class="docutils literal notranslate"><span class="pre">sk</span></code>, <code class="docutils literal notranslate"><span class="pre">sl</span></code>, <code class="docutils literal notranslate"><span class="pre">tet</span></code>, <code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+<td><p>national orthography/abbreviation guidance; CLDR locale data</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cyrillic</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">be</span></code>, <code class="docutils literal notranslate"><span class="pre">kz</span></code>, <code class="docutils literal notranslate"><span class="pre">mn</span></code>, <code class="docutils literal notranslate"><span class="pre">sr</span></code>, <code class="docutils literal notranslate"><span class="pre">tg</span></code>, <code class="docutils literal notranslate"><span class="pre">uk</span></code></p></td>
+<td><p>national orthography and abbreviation guidance</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-even"><td><p>RTL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>, <code class="docutils literal notranslate"><span class="pre">fa</span></code>, <code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
+<td><p>national orthography guidance</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-odd"><td><p>Indic</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code>, <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">kn</span></code>, <code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
+<td><p>national orthography guidance</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-even"><td><p>East/Southeast Asian</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">th</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<td><p>national orthography guidance</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-odd"><td><p>Specialist</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">am</span></code>, <code class="docutils literal notranslate"><span class="pre">az</span></code>, <code class="docutils literal notranslate"><span class="pre">ce</span></code>, <code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
+<td><p>national orthography guidance</p></td>
+<td><p>BIPM SI + CLDR</p></td>
+<td><p>conservative agent seed; native review pending</p></td>
+</tr>
+</tbody>
+</table>
+<p>Locale overlays are <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>,
+<code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code>.</p>
+<p>Czech, English, French, Italian, Portuguese, and Spanish expose reviewed
+structured currency identities. Czech recognizes <code class="docutils literal notranslate"><span class="pre">Kč</span></code>/<code class="docutils literal notranslate"><span class="pre">CZK</span></code> as
+<code class="docutils literal notranslate"><span class="pre">currency-czech-koruna</span></code>; Portuguese recognizes <code class="docutils literal notranslate"><span class="pre">R$</span></code>/<code class="docutils literal notranslate"><span class="pre">BRL</span></code> as
+<code class="docutils literal notranslate"><span class="pre">currency-brazilian-real</span></code>; English, French, Italian, and Spanish reuse the
+shared <code class="docutils literal notranslate"><span class="pre">€</span></code>/<code class="docutils literal notranslate"><span class="pre">EUR</span></code>, <code class="docutils literal notranslate"><span class="pre">$</span></code>/<code class="docutils literal notranslate"><span class="pre">USD</span></code>, and <code class="docutils literal notranslate"><span class="pre">£</span></code>/<code class="docutils literal notranslate"><span class="pre">GBP</span></code> identities. These are recognition
+metadata only: the API preserves source spans and numeric lexemes but does not
+perform currency arithmetic, plural/agreement selection, or number-to-word
+realization. French also exposes dotted numeric duration aliases <code class="docutils literal notranslate"><span class="pre">min.</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sec.</span></code>; a standalone French <code class="docutils literal notranslate"><span class="pre">min.</span></code> remains the lexical abbreviation for
+<code class="docutils literal notranslate"><span class="pre">minimum</span></code>, while numeric context selects the structured <code class="docutils literal notranslate"><span class="pre">duration-minute</span></code>
+identity. Downstream consumers such as <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> own semantic grammar and
+speech realization.</p>
 <p>Unit expansions are canonical lemmas. They intentionally do not realize plural,
 case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes.
 Turkish unit symbols followed by <code class="docutils literal notranslate"><span class="pre">'</span></code> or <code class="docutils literal notranslate"><span class="pre">’</span></code> remain unchanged under the restricted
@@ -569,7 +644,42 @@ unit-spacing guidance, including the 2026 spelling change notice.</p></li>
 <li><p>Gramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.</p></li>
 <li><p>Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
 guidance.</p></li>
+<li><p>ISO 4217: currency codes and locale currency identities.</p></li>
 </ul>
+<p>The checked-in source IDs are <code class="docutils literal notranslate"><span class="pre">legacy-abbr2words</span></code> for compatibility-preserved
+entries, <code class="docutils literal notranslate"><span class="pre">language-style-baseline</span></code> for baseline lexical rules, and
+<code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code> for the pinned locale-data baseline. Review status is
+<code class="docutils literal notranslate"><span class="pre">legacy-preserved</span></code>, <code class="docutils literal notranslate"><span class="pre">generated-reviewed</span></code>, or <code class="docutils literal notranslate"><span class="pre">linguistically-reviewed</span></code> as
+appropriate; this repository does not claim native-speaker sign-off.</p>
+</section>
+<section id="per-language-ledger">
+<h2>Per-language ledger</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Codes</p></th>
+<th class="head"><p>Source ID</p></th>
+<th class="head"><p>Categories</p></th>
+<th class="head"><p>Status</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span> <span class="pre">ar</span> <span class="pre">az</span> <span class="pre">be</span> <span class="pre">bn</span> <span class="pre">ca</span> <span class="pre">ce</span> <span class="pre">cy</span> <span class="pre">da</span> <span class="pre">eo</span> <span class="pre">fa</span> <span class="pre">fi</span> <span class="pre">he</span> <span class="pre">hi</span> <span class="pre">hu</span> <span class="pre">hy</span> <span class="pre">id</span> <span class="pre">is</span> <span class="pre">ja</span> <span class="pre">kn</span> <span class="pre">ko</span> <span class="pre">kz</span> <span class="pre">lt</span> <span class="pre">lv</span> <span class="pre">mn</span> <span class="pre">no</span> <span class="pre">ro</span> <span class="pre">sk</span> <span class="pre">sl</span> <span class="pre">sr</span> <span class="pre">te</span> <span class="pre">tet</span> <span class="pre">tg</span> <span class="pre">th</span> <span class="pre">uk</span> <span class="pre">vi</span> <span class="pre">zh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">language-style-baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>guarded reference/title baseline and neutral units</p></td>
+<td><p>linguistically-reviewed pending native review</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span> <span class="pre">de</span> <span class="pre">en</span> <span class="pre">es</span> <span class="pre">fr</span> <span class="pre">it</span> <span class="pre">nl</span> <span class="pre">pl</span> <span class="pre">pt</span> <span class="pre">ru</span> <span class="pre">sv</span> <span class="pre">tr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">legacy-&lt;code&gt;</span></code> plus pinned common sources</p></td>
+<td><p>preserved mature lexical registry and structured quantities</p></td>
+<td><p>legacy-preserved; parity tested</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span> <span class="pre">en_NG</span> <span class="pre">es_CO</span> <span class="pre">es_CR</span> <span class="pre">es_GT</span> <span class="pre">es_NI</span> <span class="pre">es_VE</span> <span class="pre">fr_BE</span> <span class="pre">fr_CH</span> <span class="pre">fr_DZ</span> <span class="pre">pt_BR</span> <span class="pre">zh_CN</span> <span class="pre">zh_HK</span> <span class="pre">zh_TW</span></code></p></td>
+<td><p>locale overlay modules plus ISO 4217/CLDR</p></td>
+<td><p>numeric currency and locale-specific overlay data</p></td>
+<td><p>generated-reviewed</p></td>
+</tr>
+</tbody>
+</table>
 <p>The brief that introduced this registry was reviewed on 2026-08-06. The
 implementation preserves a source description on each seed category and keeps
 ambiguous entries guarded or omitted. Native-speaker sign-off remains a human

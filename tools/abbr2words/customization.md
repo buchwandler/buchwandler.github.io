@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/customization/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.2"
-docs_commit: "b59ec254e6e77fb42ebb32333e9a739fcb1e143a"
+docs_ref: "v0.2.7"
+docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
 search_enabled: true
 ---
 
@@ -543,6 +543,11 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="customization">
 <h1>Customization</h1>
 <p>There are three ways to work with an expander registry.</p>
+<p>Bundled entries come from checked-in <code class="docutils literal notranslate"><span class="pre">LanguageBundle</span></code> data with source IDs and
+review notes. Custom entries are instance-local application policy and do not
+need to follow the bundled source ledger. A custom context expansion may use
+<code class="docutils literal notranslate"><span class="pre">DATE</span></code>, but ambiguous spellings should still receive an explicit guard;
+bundled date detection remains bounded and provider-neutral.</p>
 <section id="isolated-registries">
 <h2>Isolated registries</h2>
 <p><code class="docutils literal notranslate"><span class="pre">Expander(...)</span></code> is a small mutable facade around a new, isolated registry:</p>
@@ -560,6 +565,31 @@ to either form do not affect the shared convenience API.</p>
 <span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;KI&quot;</span><span class="p">,</span> <span class="s2">&quot;Künstliche Intelligenz&quot;</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Entries use fixed expansion text by default. For reviewed lexical phrases that
+should compose with sentence position, opt into sentence casing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;Pág.&quot;</span><span class="p">,</span> <span class="s2">&quot;página&quot;</span><span class="p">,</span> <span class="n">case_policy</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">expander</span><span class="p">(</span><span class="s2">&quot;Pág. 12&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;Página 12&quot;</span>
+<span class="k">assert</span> <span class="n">expander</span><span class="p">(</span><span class="s2">&quot;consulte la Pág. 12&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;consulte la página 12&quot;</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">sentence</span></code> policy uppercases the first cased character only at input or
+after sentence-ending punctuation, including an opening quote or bracket that
+follows that boundary. A colon is not a sentence boundary. Dotted abbreviation
+matches preserve one final period when their consumed dot is sentence-final;
+commas, semicolons, and internal dots are not added or moved.</p>
+</section>
+<section id="ambiguous-english-dotted-forms">
+<h2>Ambiguous English dotted forms</h2>
+<p>The English registry prefers reversible letter readings when a dotted spelling
+could be either a semantic abbreviation or a person’s initials. The structural
+fallback recognizes standalone uppercase forms with two through eight dotted
+letters, such as <code class="docutils literal notranslate"><span class="pre">E.D.</span></code> and <code class="docutils literal notranslate"><span class="pre">F.C.S.C.J.</span></code>, after registered abbreviations and
+reviewed units have had priority. Thus lowercase <code class="docutils literal notranslate"><span class="pre">e.g.</span></code> expands to <code class="docutils literal notranslate"><span class="pre">for</span> <span class="pre">example</span></code>,
+while uppercase <code class="docutils literal notranslate"><span class="pre">E.G.</span></code> is rendered as <code class="docutils literal notranslate"><span class="pre">E</span> <span class="pre">G</span></code>; <code class="docutils literal notranslate"><span class="pre">I.D.</span></code> is rendered as <code class="docutils literal notranslate"><span class="pre">I</span> <span class="pre">D</span></code>.</p>
+<p>Single-letter <code class="docutils literal notranslate"><span class="pre">N.</span></code>, <code class="docutils literal notranslate"><span class="pre">S.</span></code>, <code class="docutils literal notranslate"><span class="pre">E.</span></code>, and <code class="docutils literal notranslate"><span class="pre">W.</span></code> use letter defaults and require bounded
+address/street evidence before expanding to a direction. This protects personal
+initials and biological names such as <code class="docutils literal notranslate"><span class="pre">S.</span> <span class="pre">aureus</span></code>. <code class="docutils literal notranslate"><span class="pre">D.C.</span></code> expands to <code class="docutils literal notranslate"><span class="pre">District</span> <span class="pre">of</span> <span class="pre">Columbia</span></code> only with explicit Washington/place evidence; <code class="docutils literal notranslate"><span class="pre">L.A.</span></code> remains <code class="docutils literal notranslate"><span class="pre">L</span> <span class="pre">A</span></code>
+in this layer so author initials are not rewritten as a city name.</p>
 <p>Followed-by guards are evaluated against the suffix immediately after the
 candidate abbreviation. In <code class="docutils literal notranslate"><span class="pre">only_if_followed_by=r&quot;^\s*\d&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">^</span></code> therefore
 means “immediately after this abbreviation,” even when the candidate occurs
@@ -591,6 +621,9 @@ both sets match:</p>
 <p>Structural guards and reviewed numeric unit matching run before POS guards. POS
 output is treated as an optional signal; missing labels do not veto an entry,
 and a general tagger cannot disable a valid numeric unit expression.</p>
+<p>Abbreviation expansion remains lexical. Number/date/decimal/identifier parsing,
+article contraction, surrounding grammar, and TTS-oriented rendering belong to
+the downstream normalizer, such as <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>.</p>
 </section>
 <section id="shared-registries">
 <h2>Shared registries</h2>
@@ -611,9 +644,12 @@ mode, so <code class="docutils literal notranslate"><span class="pre">context=Tr
 <code class="docutils literal notranslate"><span class="pre">reset_expanders(&quot;de&quot;)</span></code> limits cleanup to one language. Shared state is local to
 the current process and is not a synchronization mechanism between threads or
 processes; applications should coordinate concurrent mutation themselves.</p>
-<p>Shared lookup and reset are atomic, while expansion observes a complete
-registry snapshot. Applications should still avoid mutating a shared registry
-while a long expansion is running.</p>
+<p>Shared lookup and reset are atomic. At the start of each expansion, the
+expander captures a complete snapshot of its abbreviation entries, unit
+overrides, and suppressed-unit set; later mutations affect the next expansion,
+not the one already in progress. Applications should still avoid mutating a
+shared registry while a long expansion is running because registry mutation is
+not itself coordinated with other application-level state.</p>
 </section>
 <section id="unit-customization">
 <h2>Unit customization</h2>

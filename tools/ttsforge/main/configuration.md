@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "df9f7492ff4593c798c5607334b0105c0a856bba"
+docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
 search_enabled: true
 ---
 
@@ -1172,7 +1172,7 @@ provider around runner initialization, chapter synthesis, WAV writing, result re
 state saves, final merging, and converter cleanup. RSS may remain elevated because
 native allocators retain high-water pages; that alone is not evidence of a provider
 leak.</p>
-<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, uses compact segment results, and releases
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.2,&lt;0.9</span></code>, uses compact segment results, and releases
 completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
 remains buffered and streaming is future work.</p>
 </section>
@@ -1187,8 +1187,14 @@ switching sources.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>model_variant<span class="w"> </span>v1.0<span class="w"> </span><span class="se">\</span>
 <span class="w">   </span>--set<span class="w"> </span>model_quality<span class="w"> </span>fp32<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+ttsforge<span class="w"> </span>download
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
 </pre></div>
 </div>
+<p>With the required patched PyKokoro release, GitHub <code class="docutils literal notranslate"><span class="pre">v1.0</span></code> uses the embedded standard
+vocabulary and does not download Hugging Face <code class="docutils literal notranslate"><span class="pre">config.json</span></code>. The configured source is
+never switched automatically. Provider availability depends on the installed Android
+ONNX Runtime build, so use another available provider if NNAPI is not exposed.</p>
 </section>
 </section>
 </div>

@@ -113,7 +113,7 @@ permalink: /tools/
       <p>A Python-based TTS automation framework with multi-engine support.</p>
       <div class="card-links">
         <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.3" rel="external noopener">Latest release: v0.3.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -133,7 +133,7 @@ permalink: /tools/
       <p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
       <div class="card-links">
         <a href="/tools/abbr2words/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.2" rel="external noopener">Latest release: v0.2.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.7" rel="external noopener">Latest release: v0.2.7 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/abbr2words" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -143,7 +143,7 @@ permalink: /tools/
       <p>Single-language written-to-spoken text normalization for speech applications.</p>
       <div class="card-links">
         <a href="/tools/spokenform/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.1.0" rel="external noopener">Latest release: v0.1.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.2.5" rel="external noopener">Latest release: v0.2.5 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/spokenform" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

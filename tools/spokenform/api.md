@@ -5,8 +5,8 @@ permalink: /tools/spokenform/api/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "847a0635798274488069a248e3c4b83efd5a9d6d"
+docs_ref: "v0.2.5"
+docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
 search_enabled: true
 ---
 
@@ -544,24 +544,53 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="preparation">
 <h2>Preparation</h2>
-<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, context=True, strict=False)
+<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=True, strict=False)
 :module: spokenform</p>
 <p>Convert one-language written text into a readable form intended for speech.</p>
 <p>The caller selects the processing language. Language detection, mixed-language
 segmentation, and markup parsing belong outside spokenform.</p>
-<p>Abbreviation and unit expansion runs before number verbalization so numeric
-context remains available to :mod:<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> guards.</p>
-<p>.. py:function:: normalize_spacing(text, *, normalize_unicode=True)
+<p>Structured values run before lexical abbreviation expansion and generic
+numbers so each complete expression receives one semantic replacement.</p>
+<p>.. py:function:: prepare_for_kokorog2p(text, language=’en’, *, config=None, **kwargs)
 :module: spokenform</p>
-<p>Apply conservative Unicode and whitespace normalization.</p>
-<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, context=True, strict=False)
+<p>Prepare one language with the kokorog2p-safe profile.</p>
+<p>.. py:function:: normalize_spacing(text, *, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None)
+:module: spokenform</p>
+<p>Apply independently configurable Unicode and whitespace policies.</p>
+<p><code class="docutils literal notranslate"><span class="pre">number_policy</span></code> remains accepted for 0.2.x compatibility. Numeric policy
+selection belongs to :func:<code class="docutils literal notranslate"><span class="pre">prepare</span></code>; spacing itself does not consume it.</p>
+<p><code class="docutils literal notranslate"><span class="pre">normalize_unicode</span></code>, <code class="docutils literal notranslate"><span class="pre">strip_outer_whitespace</span></code>, <code class="docutils literal notranslate"><span class="pre">collapse_horizontal_whitespace</span></code>,
+<code class="docutils literal notranslate"><span class="pre">normalize_line_whitespace</span></code>, and <code class="docutils literal notranslate"><span class="pre">collapse_blank_lines</span></code> are independent policy
+controls. <code class="docutils literal notranslate"><span class="pre">normalize_whitespace=False</span></code> remains the compatibility switch for
+skipping the whitespace stage entirely. <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code> opts into
+high-confidence URL, e-mail, semantic-version, and contextual Roman rendering;
+caller-protected spans always take precedence.</p>
+<p><code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;none&quot;</span></code> is the backward-compatible default and applies no general
+residual-symbol filter. <code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;remove&quot;</span></code> removes Unicode punctuation and
+symbol characters (<code class="docutils literal notranslate"><span class="pre">P*</span></code> and <code class="docutils literal notranslate"><span class="pre">S*</span></code>) left after semantic recognition. With
+<code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;keep&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">keep_symbols</span></code> is an exact-codepoint allowlist; it must
+not be empty. An allowlist is invalid in <code class="docutils literal notranslate"><span class="pre">none</span></code> or <code class="docutils literal notranslate"><span class="pre">remove</span></code> mode. The active
+filter is recorded as a <code class="docutils literal notranslate"><span class="pre">symbols</span></code> stage before whitespace normalization and
+never changes protected spans. Symbol deletions are included in stage and
+source/output mapping.</p>
+<p><code class="docutils literal notranslate"><span class="pre">generic_acronym_case=&quot;upper&quot;</span></code> is the default. Set it to <code class="docutils literal notranslate"><span class="pre">&quot;lower&quot;</span></code> to lowercase
+only generic grapheme-spaced uppercase acronyms; lexical acronyms, preserved
+terms, known initialisms, identifiers, and mixed-case tokens keep their normal
+policies.</p>
+<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=True, strict=False)
 :module: spokenform
 :canonical: spokenform.config.PreparationConfig</p>
 <p>Immutable options controlling single-language written-to-spoken preparation.</p>
+<p>.. py:method:: PreparationConfig.for_kokorog2p(language)
+:module: spokenform
+:classmethod:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a one-language profile safe for kokorog2p adapters.
+</pre></div>
+</div>
 </section>
 <section id="result-models">
 <h2>Result models</h2>
-<p>.. py:class:: PreparedText(source_text, clean_text, spoken_text, language, stages=(), mapped_edits=(), offset_map=None, warnings=())
+<p>.. py:class:: PreparedText(source_text, clean_text, spoken_text, language, stages=(), mapped_edits=(), source_replacements=(), protected_spans=(), reserved_spans=(), offset_map=None, warnings=())
 :module: spokenform
 :canonical: spokenform.models.PreparedText</p>
 <p>Readable spoken text with normalization provenance.</p>
@@ -577,9 +606,37 @@ context remains available to :mod:<code class="docutils literal notranslate"><sp
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the ordered edits from every stage.
 </pre></div>
 </div>
+<p>.. py:method:: PreparedText.map_output_span(start, end)
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Map a final spoken-text span back to original source coordinates.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.map_source_span(start, end)
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Map an original source span to final spoken-text coordinates.
+</pre></div>
+</div>
 <p>.. py:method:: PreparedText.render_changes()
 :module: spokenform</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Render a compact, human-readable stage report.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.replacements
+:module: spokenform
+:type: tuple[~spokenform.models.SourceReplacement, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Stable adapter alias for composed source replacements.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.source_edits
+:module: spokenform
+:type: tuple[~spokenform.models.SourceReplacement, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return edits in the documented source-to-final coordinate space.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.stage_report
+:module: spokenform
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the diagnostic stage report for adapter logging.
 </pre></div>
 </div>
 <p>.. py:property:: PreparedText.text
@@ -588,12 +645,43 @@ context remains available to :mod:<code class="docutils literal notranslate"><sp
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Alias for :attr:`spoken_text`.
 </pre></div>
 </div>
+<p>.. py:method:: PreparedText.to_adapter_dict()
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the stable kokorog2p-facing result projection.
+</pre></div>
+</div>
 <p>.. py:method:: PreparedText.to_dict()
 :module: spokenform</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a JSON-serializable representation.
 </pre></div>
 </div>
-<p>.. py:class:: PreparationStage(name, before, after, edits=(), mapped_edits=())
+<p>All public source offsets refer to the original string passed to <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>;
+final offsets refer to <code class="docutils literal notranslate"><span class="pre">PreparedText.spoken_text</span></code>; stage-local offsets remain
+available only under each <code class="docutils literal notranslate"><span class="pre">PreparationStage</span></code>. <code class="docutils literal notranslate"><span class="pre">PreparedText.to_adapter_dict()</span></code>
+is the stable JSON-ready projection for a kokorog2p adapter.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code> requires an explicit language and performs no language
+detection, tokenization, G2P, or model-punctuation rewriting. Its default profile
+preserves run boundary whitespace. Pass caller-owned <code class="docutils literal notranslate"><span class="pre">protected_spans</span></code> to prevent
+semantic replacements; partial overlap is handled fail-closed by protecting the
+complete recognized quantity expression. Use <code class="docutils literal notranslate"><span class="pre">source_replacements</span></code> and the offset
+helpers to rebase downstream token and override coordinates.</p>
+<p>The preferred downstream surface is <code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code>, and <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>. The lower-level mapping and stage
+helpers are advanced exports rather than requirements for a normal adapter.</p>
+</section>
+<section id="export-classification">
+<h2>Export classification</h2>
+<p>The stable application-facing surface is <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>,
+<code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare_text</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparationConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>,
+<code class="docutils literal notranslate"><span class="pre">PreparedText</span></code>, <code class="docutils literal notranslate"><span class="pre">ProtectedSpan</span></code>, <code class="docutils literal notranslate"><span class="pre">ProtectionError</span></code>, <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">__version__</span></code>. <code class="docutils literal notranslate"><span class="pre">number_policy_for_language()</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_numbers()</span></code> are
+stable locale-policy helpers. The annotation adapters, spaCy model helpers,
+structured-stage helpers, <code class="docutils literal notranslate"><span class="pre">StageResult</span></code>, and mapping/replacement classes and
+conversion functions are advanced public APIs: they remain exported for
+compatibility and diagnostics, but downstream integrations should prefer the
+high-level preparation surface. No exported symbol is removed in 0.2.2.</p>
+<p>.. py:class:: PreparationStage(name, before, after, edits=(), mapped_edits=(), reserved=())
 :module: spokenform
 :canonical: spokenform.models.PreparationStage</p>
 <p>The before/after text and edits produced by one stage.</p>
@@ -609,7 +697,7 @@ context remains available to :mod:<code class="docutils literal notranslate"><sp
 <p>One edit in a normalization stage.</p>
 <p>Offsets are relative to the input of that stage. This keeps every edit exact
 without pretending that all stages still share the original coordinate space.</p>
-<p>.. py:class:: MappedEdit(source_start, source_end, output_start, output_end, source, replacement, stage, language=None)
+<p>.. py:class:: MappedEdit(source_start, source_end, output_start, output_end, source, replacement, stage, language=None, kind=’replacement’, rule=None)
 :module: spokenform
 :canonical: spokenform.models.MappedEdit</p>
 <p>A replacement with source and output coordinates.</p>
@@ -636,12 +724,22 @@ providers or simple test doubles.</p>
 </section>
 <section id="number-normalization">
 <h2>Number normalization</h2>
+<p>The Czech <code class="docutils literal notranslate"><span class="pre">normalize_numbers(language=&quot;cs&quot;)</span></code> path delegates to the reviewed
+structured and structured-safe plain-number grammar. It verbalizes ordinary
+numbers, validated dates, quantities, temperatures, and canonical currencies;
+colon-time candidates remain unchanged for caller-managed handling.</p>
 <p>.. py:function:: normalize_numbers(text, *, language)
 :module: spokenform</p>
 <p>Verbalize common dates, times, currencies, ordinals, and numbers.</p>
 <p>URLs, email addresses, and semantic-version-like values are protected. The
 implementation is intentionally conservative and is an MVP, not a complete
 locale grammar.</p>
+<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)
+:module: spokenform</p>
+<p>Normalize structured values and return exact semantic provenance.</p>
+<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)
+:module: spokenform</p>
+<p>Return exact, non-overlapping semantic replacements for one language.</p>
 </section>
 </section>
 </div>

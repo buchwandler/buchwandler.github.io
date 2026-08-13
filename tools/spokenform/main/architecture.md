@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8e301c772c45aebdf4d00d0acbb77b53f440a156"
+docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
 search_enabled: true
 ---
 
@@ -545,14 +545,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p><code class="docutils literal notranslate"><span class="pre">spokenform.prepare()</span></code> applies explicit stages in this order:</p>
 <ol class="arabic simple">
 <li><p>validate the selected language and protected ranges;</p></li>
-<li><p>discover literal ranges such as URLs, email addresses, and semantic versions;</p></li>
+<li><p>discover caller-protected ranges and auto-detected literals such as URLs,
+email addresses, and (when not claimed semantically) semantic versions;
+<code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code> opts high-confidence URL, e-mail, version, and
+contextual Roman rendering into structured ownership while caller spans
+remain absolute;</p></li>
 <li><p>obtain or validate optional lexical annotations;</p></li>
 <li><p>replace protected ranges with internal sentinels and remap annotation offsets;</p></li>
 <li><p>normalize Unicode independently when enabled;</p></li>
-<li><p>ask <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> for source-aligned structured quantity identities and realize
-them with the selected locale’s semantic grammar;</p></li>
+<li><p>recognize complete high-confidence structured sequences, then ask <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>
+for source-aligned structured quantity identities and realize them with the
+selected locale’s semantic grammar;</p></li>
 <li><p>expand lexical abbreviations with exact <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> replacements;</p></li>
 <li><p>verbalize remaining generic numeric forms according to <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>;</p></li>
+<li><p>when requested, filter residual Unicode punctuation/symbol characters under
+the caller’s <code class="docutils literal notranslate"><span class="pre">symbol_mode</span></code>, while protected sentinels remain opaque;</p></li>
 <li><p>normalize whitespace according to independently configurable controls;</p></li>
 <li><p>restore protected text and compose stage offset maps.</p></li>
 </ol>
@@ -575,14 +582,76 @@ lexicons, pronunciations, and vocabulary IDs.</p>
 <p>spokenform owns semantic spacing and punctuation consumed by a structured or
 lexical expression. Downstream G2P owns quote style, dash canonicalization,
 apostrophe variants, and punctuation choices required only by a model tokenizer.</p>
-<p>The German structured boundary is deliberately split: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> recognizes
+<p>The optional <code class="docutils literal notranslate"><span class="pre">symbols</span></code> stage is a caller-requested final residual-output policy,
+not semantic recognition. It is disabled for <code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;none&quot;</span></code>; semantic
+punctuation is consumed first by structured recognizers, and model-specific
+punctuation remains downstream unless the caller explicitly requests filtering.</p>
+<p>The structured boundary is deliberately split by locale: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> recognizes
 numeric symbols and returns the exact span, numeric lexeme, category, and canonical
-identity; spokenform realizes that identity with German gender, number, currency,
-date, ordinal, and decimal policy. No German symbol or alias inventory is copied
-into spokenform.</p>
+identity; <code class="docutils literal notranslate"><span class="pre">spokenform.structured</span></code> dispatches to locale-owned English, German, French,
+Spanish, Italian, Portuguese, or Czech semantic grammar. No symbol or alias inventory is copied
+into spokenform. French owns its dates, h/colon times, ordinals, decimal digit
+reading, quantities, temperatures, and currency decomposition. Spanish owns
+reviewed dates, quantities, temperatures, currencies, and ordinary numbers;
+Spanish colon times remain caller-managed. Italian owns reviewed dates,
+quantities, temperatures, currencies, and ordinary numbers; Italian colon times
+remain caller-managed. Portuguese owns reviewed dates, quantities, temperatures,
+currencies, and ordinary numbers; Portuguese colon times remain caller-managed.
+Czech owns reviewed dates, quantities, temperatures, currencies, ordinary numbers,
+and canonical extended units; Czech colon times remain caller-managed. English
+owns reviewed dates, validated clock times, canonical quantities and currencies,
+a conservative ordinary-number pass, and reviewed contextual single-dot release
+labels such as <code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">2.0</span></code>. That label rule uses <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">oh</span></code> only in the reviewed
+version context; ordinary decimals retain digit-wise zero wording. English
+deliberately leaves years, suffix ordinals, Roman numerals, phone/ID sequences,
+arbitrary multi-dot versions/IDs, numeric suffixes, and phoneme-sensitive helpers
+downstream. G2P typography and phonemes stay downstream.</p>
+<p>French is promoted to <code class="docutils literal notranslate"><span class="pre">NumberPolicy.STRUCTURED_AND_PLAIN</span></code> only after its parity
+corpus and real downstream gate pass. Every locale replacement retains exact
+source spans and composed source/output mapping, and partial caller protection
+expands to a complete structured candidate before semantic matching.</p>
+<p>Spanish is promoted to the same policy only after its parity corpus and real
+<code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> <code class="docutils literal notranslate"><span class="pre">es</span></code>/<code class="docutils literal notranslate"><span class="pre">la</span></code> gate pass. Its plain-number stage protects reviewed dates,
+time candidates, URLs, e-mail addresses, and semantic versions so policy
+promotion cannot silently claim an unreviewed category.</p>
+<p>Italian is promoted to the same policy after its parity corpus and real
+<code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> Italian gate pass. Its plain-number stage protects valid and invalid
+date candidates, colon-time candidates, URLs, e-mail addresses, and semantic
+versions. Portuguese is promoted to the same policy after its parity corpus and
+real <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> Portuguese gate pass; its plain-number stage protects reviewed
+dates, time candidates, URLs, e-mail addresses, and semantic versions. Czech is
+promoted to the same policy with a structured-safe plain-number stage that
+protects date/time candidates, URLs, e-mail addresses, semantic versions, and
+canonical structured values; Czech colon times remain caller-managed. English is
+promoted to the same policy after its parity corpus and real <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> English
+gate pass; its plain-number stage protects reviewed date/time candidates, URLs,
+e-mail addresses, semantic versions, canonical unit candidates, and ambiguous
+long digit strings. Its structured single-dot release-label rule is contextual
+and yields to recognized quantity spans. All reviewed quantity and currency
+symbols continue to come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code> is a deterministic one-language adapter. Its profile
 preserves run boundaries, honors protected spans fail-closed, and does not perform
 language detection, tokenization, G2P, or model-punctuation rewriting.</p>
+<p>The downstream migration set currently includes <code class="docutils literal notranslate"><span class="pre">cs</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>,
+<code class="docutils literal notranslate"><span class="pre">pt</span></code>, and <code class="docutils literal notranslate"><span class="pre">en</span></code>. English is active on the kokorog2p spokenform adapter for
+reviewed structured semantics, contextual single-dot release labels, and safe
+ordinary-number categories. Years, suffix ordinals, Roman numerals, phone/ID and
+arbitrary multi-dot sequences, numeric suffixes, and G2P decisions remain
+downstream-owned.</p>
+</section>
+<section id="structured-precedence">
+<h2>Structured precedence</h2>
+<p>Caller protection is absolute. Auto-detected literals are a fallback reservation
+against partial generic rewrites; a complete semantic recognizer may claim an
+auto-literal before it is reserved. Candidate conflict resolution gives priority
+to canonical identifiers, then coordinates and formulas, contextual legal,
+sports, and address forms, dates and times, contextual sequences,
+quantities/currencies/temperatures, specialist music/math forms, and generic
+acronym/product candidates. Fractions and date/phone ambiguity are resolved by
+semantic candidate priority rather than regex iteration order.
+Unclaimed or ambiguous forms remain opaque. Every selected candidate is still an
+exact <code class="docutils literal notranslate"><span class="pre">Replacement</span></code>, so precedence does not weaken source/output mapping or
+protected-span behavior.</p>
 </section>
 </section>
 </div>
