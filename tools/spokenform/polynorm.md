@@ -5,8 +5,8 @@ permalink: /tools/spokenform/polynorm/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.5"
-docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
+docs_ref: "v0.2.6"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -626,7 +626,13 @@ grammars rather than corpus-specific branches.</p>
 are reported separately from owned semantic failures. Use
 <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">extended</span></code> (or <code class="docutils literal notranslate"><span class="pre">--normalize-literals</span></code>) to measure optional literal
 verbalization. Reports record the selected profile, ownership state, failure
-phase, primary rule, and render mode.</p>
+phase, primary rule, and render mode.
+The default profile is the safety baseline; extended is an opt-in speech
+experiment. Neither profile turns arbitrary long integers, unknown acronyms,
+formula-looking words, or unlabeled product codes into spoken output without
+the corresponding context and shape checks.</p>
+<p>See <span class="xref myst">the benchmark ownership table</span> for comparison
+compatibility, quarantine handling, and the residual non-goals.</p>
 </section>
 </section>
 </div>

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -881,6 +881,24 @@ the previous result’s waveform unless the caller copied or persisted it first.
 <h2>Model and Voice Utilities</h2>
 <p>These utilities live in <code class="docutils literal notranslate"><span class="pre">pykokoro.onnx_backend</span></code> and are used for model and voice
 management.</p>
+<p>HuggingFace is the default model source. For Termux/Android installations where
+HuggingFace downloads are unavailable, select GitHub v1.0 explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
+    <span class="n">PipelineConfig</span><span class="p">(</span>
+        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
+        <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
+        <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+        <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>GitHub v1.0 uses the embedded standard v1.0 vocabulary and does not require a
+HuggingFace <code class="docutils literal notranslate"><span class="pre">config.json</span></code>. Model sources are never silently switched. Explicit
+<code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> files remain validated in place, and Android ONNX Runtime
+warnings are independent of model asset selection.</p>
 </section>
 <section id="configuration-helpers">
 <h2>Configuration Helpers</h2>

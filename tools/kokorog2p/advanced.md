@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_ref: "v0.8.0"
+docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
 search_enabled: true
 ---
 
@@ -543,6 +543,23 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="advanced-usage">
 <h1>Advanced Usage</h1>
 <p>This guide covers advanced features and usage patterns for kokorog2p.</p>
+<section id="semantic-preparation-boundary">
+<h2>Semantic preparation boundary</h2>
+<p>For migrated English, German, French, Spanish, Italian, Portuguese, and Czech text,
+<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> supplies lexical abbreviation and symbol recognition, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns
+semantic written-to-spoken preparation, and <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> owns routing, spans, overrides,
+tokenization, model punctuation, G2P, phonemes, and vocabulary IDs. The ordering is
+explicit:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>original source spans → Spokenform semantic preparation → model punctuation cleanup → G2P
+</pre></div>
+</div>
+<p>Preparation runs separately for each homogeneous language run, with caller-protected
+ranges passed to Spokenform first. The supported Spokenform profile is authoritative;
+the examples covered by downstream tests are representative, not an exhaustive semantic
+category list. English phoneme-sensitive number conversion, Spanish dialect behavior,
+and other documented G2P decisions remain downstream-owned. Use <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> directly
+for reusable spoken text or <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> directly for registry-only workflows.</p>
+</section>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>
 <section id="tri-state-spacy-model-resolution">

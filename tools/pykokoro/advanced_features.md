@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/advanced_features/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 

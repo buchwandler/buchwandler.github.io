@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -574,11 +574,18 @@ stages (document parsing, splitting, G2P, and synthesis) behind one call.</p>
     <span class="p">)</span>
 <span class="p">)</span>
 
+<span class="c1"># GitHub v1.0 is the explicit Termux-friendly source when HuggingFace is unavailable.</span>
+<span class="c1"># It uses the embedded v1.0 vocabulary and does not need config.json from HuggingFace.</span>
+
 <span class="c1"># Custom generation settings</span>
 <span class="n">generation</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.1</span><span class="p">)</span>
 <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">generation</span><span class="p">))</span>
 </pre></div>
 </div>
+<p>HuggingFace is the default source, and source selection is deterministic: PyKokoro does
+not silently fall back to another source. Explicit <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> files
+continue to be validated and used in place. ONNX Runtime Android/provider warnings are
+separate from model downloads.</p>
 <section id="reusing-the-pipeline">
 <h3>Reusing the Pipeline</h3>
 <p>Create a pipeline once and reuse it across runs:</p>

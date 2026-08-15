@@ -113,8 +113,8 @@
         {
           "anchor": "",
           "heading": "Model and Voice Utilities",
-          "text": "These utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.",
-          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement."
+          "text": "These utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.\n\nHuggingFace is the default model source. For Termux/Android installations where\nHuggingFace downloads are unavailable, select GitHub v1.0 explicitly:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\nGitHub v1.0 uses the embedded standard v1.0 vocabulary and does not require a\nHuggingFace config.json. Model sources are never silently switched. Explicit\nmodel_path and voices_path files remain validated in place, and Android ONNX Runtime\nwarnings are independent of model asset selection.",
+          "lower": "these utilities live in pykokoro.onnx_backend and are used for model and voice\nmanagement.\n\nhuggingface is the default model source. for termux/android installations where\nhuggingface downloads are unavailable, select github v1.0 explicitly:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\ngithub v1.0 uses the embedded standard v1.0 vocabulary and does not require a\nhuggingface config.json. model sources are never silently switched. explicit\nmodel_path and voices_path files remain validated in place, and android onnx runtime\nwarnings are independent of model asset selection."
         },
         {
           "anchor": "",
@@ -144,8 +144,8 @@
         {
           "anchor": "",
           "heading": "Initializing the Pipeline",
-          "text": "The main entry point is the KokoroPipeline class:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# Initialize with defaults (HuggingFace v1.0)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\n\n# Specify model source and variant\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub source\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# Custom generation settings\ngeneration = GenerationConfig(lang=\"en-us\", speed=1.1)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\", generation=generation))",
-          "lower": "the main entry point is the kokoropipeline class:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# initialize with defaults (huggingface v1.0)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\n\n# specify model source and variant\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github source\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# custom generation settings\ngeneration = generationconfig(lang=\"en-us\", speed=1.1)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\", generation=generation))"
+          "text": "The main entry point is the KokoroPipeline class:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\n# Initialize with defaults (HuggingFace v1.0)\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\n\n# Specify model source and variant\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub source\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# GitHub v1.0 is the explicit Termux-friendly source when HuggingFace is unavailable.\n# It uses the embedded v1.0 vocabulary and does not need config.json from HuggingFace.\n\n# Custom generation settings\ngeneration = GenerationConfig(lang=\"e…",
+          "lower": "the main entry point is the kokoropipeline class:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\n# initialize with defaults (huggingface v1.0)\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\n\n# specify model source and variant\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"huggingface\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github source\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n    )\n)\n\n# github v1.0 is the explicit termux-friendly source when huggingface is unavailable.\n# it uses the embedded v1.0 vocabulary and does not need config.json from huggingface.\n\n# custom generation settings\ngeneration = generationconfig(lang=\"e…"
         },
         {
           "anchor": "",
@@ -260,13 +260,43 @@
     {
       "url": "/tools/pykokoro/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded paragraph-uni …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded a spoken-form …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added a spoken-form showcase for raw structured text through the PyKokoro pipeline",
+          "lower": "added a spoken-form showcase for raw structured text through the pykokoro pipeline"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed the kokorog2p minimum to 0.8.0 and enabled source-aware Spokenform preparation",
+          "lower": "changed the kokorog2p minimum to 0.8.0 and enabled source-aware spokenform preparation"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented automatic kokorog2p spoken-form preparation separately from explicit SSMD\nsay-as overrides",
+          "lower": "documented automatic kokorog2p spoken-form preparation separately from explicit ssmd\nsay-as overrides"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "German synthesis defaults to the verified Martin v1.2 fp32 profile with automatic\nlanguage-aware model and voice resolution\n\n\nGitHub v1.0 model assets use the embedded vocabulary and no longer require a\nHuggingFace config download",
+          "lower": "german synthesis defaults to the verified martin v1.2 fp32 profile with automatic\nlanguage-aware model and voice resolution\n\n\ngithub v1.0 model assets use the embedded vocabulary and no longer require a\nhuggingface config download"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed managed HuggingFace voice loading to retain the canonical archive file path\ninstead of the containing directory",
+          "lower": "fixed managed huggingface voice loading to retain the canonical archive file path\ninstead of the containing directory"
         },
         {
           "anchor": "",
@@ -441,36 +471,6 @@
           "heading": "Fixed",
           "text": "Fixed missing espeak and soundfile dependencies",
           "lower": "fixed missing espeak and soundfile dependencies"
-        },
-        {
-          "anchor": "",
-          "heading": "Removed",
-          "text": "Removed deprecated _phoneme_dictionary",
-          "lower": "removed deprecated _phoneme_dictionary"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added new pipeline architecture with improved phoneme handling\n\n\nAdded improved PhonemeSegment with better prosody support\n\n\nAdded improved pipeline architecture with multiple fixes",
-          "lower": "added new pipeline architecture with improved phoneme handling\n\n\nadded improved phonemesegment with better prosody support\n\n\nadded improved pipeline architecture with multiple fixes"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nChanged all examples to use new pipeline format",
-          "lower": "changed pipeline to drop legacy tokenizer in favor of new architecture\n\n\nchanged all examples to use new pipeline format"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed phrasplit splitter and kokorog2p issues",
-          "lower": "fixed phrasplit splitter and kokorog2p issues"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added audio transcript support for better unit testing and debugging",
-          "lower": "added audio transcript support for better unit testing and debugging"
         }
       ]
     },
@@ -490,6 +490,12 @@
           "heading": "Pipeline Stage Showcase",
           "text": "Use the stage showcase script to see how the new pipeline stages fit together:\n\nexamples/pipeline_stage_showcase.py",
           "lower": "use the stage showcase script to see how the new pipeline stages fit together:\n\nexamples/pipeline_stage_showcase.py"
+        },
+        {
+          "anchor": "",
+          "heading": "Spoken-Form Normalization",
+          "text": "Run:\n\npython examples/spokenform_showcase.py\n\nThe example feeds unannotated text containing abbreviations, dates, times, currency,\nmeasurements, and other structured expressions through kokorog2p 0.8+’s automatic\nspoken-form preparation. It prints the prepared text and phonemes, then synthesizes the\nsame raw source with PyKokoro. Use --inspect-only to inspect the front-end result\nwithout loading a synthesis model.",
+          "lower": "run:\n\npython examples/spokenform_showcase.py\n\nthe example feeds unannotated text containing abbreviations, dates, times, currency,\nmeasurements, and other structured expressions through kokorog2p 0.8+’s automatic\nspoken-form preparation. it prints the prepared text and phonemes, then synthesizes the\nsame raw source with pykokoro. use --inspect-only to inspect the front-end result\nwithout loading a synthesis model."
         },
         {
           "anchor": "",
@@ -579,8 +585,8 @@
         {
           "anchor": "",
           "heading": "PyKokoro Documentation",
-          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nPortable SSMD 0.8 headers\n\nNext Steps\n\n\n\n\nInstallation Guide\nAndroid/Termux providers\n\nOther providers\n\nDependencies and optional spaCy\n\nSystem requirements\n\nVerify installation\n\nDevelopment installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nProsody Backend Selection\n\nPause Control\n\nText Normalization (Say-As)\n\nError Handling\n\nBatch Process…",
-          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model. it\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nportable ssmd 0.8 headers\n\nnext steps\n\n\n\n\ninstallation guide\nandroid/termux providers\n\nother providers\n\ndependencies and optional spacy\n\nsystem requirements\n\nverify installation\n\ndevelopment installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\nprosody backend selection\n\npause control\n\ntext normalization (say-as)\n\nerror handling\n\nbatch process…"
+          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nPortable SSMD 0.8 headers\n\nNext Steps\n\n\n\n\nInstallation Guide\nAndroid/Termux providers\n\nOther providers\n\nDependencies and optional spaCy\n\nGerman Martin assets\n\nSystem requirements\n\nVerify installation\n\nDevelopment installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nProsody Backend Selection\n\nPause Control\n\nText Normalization (Say-As)\n\nError H…",
+          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model. it\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nportable ssmd 0.8 headers\n\nnext steps\n\n\n\n\ninstallation guide\nandroid/termux providers\n\nother providers\n\ndependencies and optional spacy\n\ngerman martin assets\n\nsystem requirements\n\nverify installation\n\ndevelopment installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\nprosody backend selection\n\npause control\n\ntext normalization (say-as)\n\nerror h…"
         },
         {
           "anchor": "",
@@ -645,6 +651,12 @@
         },
         {
           "anchor": "",
+          "heading": "Termux/Android model assets",
+          "text": "HuggingFace remains the default model source. If HuggingFace downloads are unavailable\nin Termux, select the self-contained GitHub v1.0 profile explicitly:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipeline = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\nGitHub v1.0 uses the embedded standard v1.0 vocabulary and does not download HuggingFace\nconfig.json. PyKokoro never silently changes the configured source. If model_path\nand voices_path are supplied, each file is validated and used in place; missing custom\nfiles do not trigger a managed-cache download. The Unsupported platform (android)\nwarning printed by some ONNX Runtime packages is independent of this mode…",
+          "lower": "huggingface remains the default model source. if huggingface downloads are unavailable\nin termux, select the self-contained github v1.0 profile explicitly:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipeline = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_heart\",\n        model_source=\"github\",\n        model_variant=\"v1.0\",\n        model_quality=\"fp32\",\n    )\n)\n\n\n\n\ngithub v1.0 uses the embedded standard v1.0 vocabulary and does not download huggingface\nconfig.json. pykokoro never silently changes the configured source. if model_path\nand voices_path are supplied, each file is validated and used in place; missing custom\nfiles do not trigger a managed-cache download. the unsupported platform (android)\nwarning printed by some onnx runtime packages is independent of this mode…"
+        },
+        {
+          "anchor": "",
           "heading": "Other providers",
           "text": "pip install \"pykokoro[gpu]\"       # NVIDIA CUDA\npip install \"pykokoro[openvino]\"  # OpenVINO Runtime\npip install \"pykokoro[directml]\"  # DirectML\n\n\n\n\nFor a custom ONNX Runtime distribution, install the base package and the provider\npackage separately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2",
           "lower": "pip install \"pykokoro[gpu]\"       # nvidia cuda\npip install \"pykokoro[openvino]\"  # openvino runtime\npip install \"pykokoro[directml]\"  # directml\n\n\n\n\nfor a custom onnx runtime distribution, install the base package and the provider\npackage separately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2"
@@ -652,8 +664,14 @@
         {
           "anchor": "",
           "heading": "Dependencies and optional spaCy",
-          "text": "The package installs kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the\nother runtime support libraries it needs. spacy itself and language models are\noptional. The default tokenizer policy is safe on a clean install:\n\n\nuse_spacy=False disables spaCy;\n\n\nuse_spacy=None selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=True, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\nInstall a model only when you want spaCy-aware splitting or G2P:\n\npip install spacy\npython -m spacy download en_core_web_sm\n\n\n\n\nNo spaCy model is downloaded automatically. The native kokorog2p backend supports the\nlanguages declared by pykokoro.constants.SUPPORTED_LANGUAGES; languages in\nESPEAK_ONLY_LANGUAGES req…",
-          "lower": "the package installs kokorog2p, phrasplit, ssmd, numpy, audiosig, soundfile, and the\nother runtime support libraries it needs. spacy itself and language models are\noptional. the default tokenizer policy is safe on a clean install:\n\n\nuse_spacy=false disables spacy;\n\n\nuse_spacy=none selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=true, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\ninstall a model only when you want spacy-aware splitting or g2p:\n\npip install spacy\npython -m spacy download en_core_web_sm\n\n\n\n\nno spacy model is downloaded automatically. the native kokorog2p backend supports the\nlanguages declared by pykokoro.constants.supported_languages; languages in\nespeak_only_languages req…"
+          "text": "PyKokoro 0.8.3 requires kokorog2p[espeak,en]>=0.8.0,<0.9. The package installs\nkokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support\nlibraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and\ninstalls its compatible Spokenform and abbr2words dependencies transitively; do not\ninstall spokenform separately. spacy itself and language models are optional. The\ndefault tokenizer policy is safe on a clean install:\n\n\nuse_spacy=False disables spaCy;\n\n\nuse_spacy=None selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=True, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\nInstall a model only when you want spaCy-aware splitting or G2P:\n\npip instal…",
+          "lower": "pykokoro 0.8.3 requires kokorog2p[espeak,en]>=0.8.0,<0.9. the package installs\nkokorog2p, phrasplit, ssmd, numpy, audiosig, soundfile, and the other runtime support\nlibraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and\ninstalls its compatible spokenform and abbr2words dependencies transitively; do not\ninstall spokenform separately. spacy itself and language models are optional. the\ndefault tokenizer policy is safe on a clean install:\n\n\nuse_spacy=false disables spacy;\n\n\nuse_spacy=none selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=true, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\ninstall a model only when you want spacy-aware splitting or g2p:\n\npip instal…"
+        },
+        {
+          "anchor": "",
+          "heading": "German Martin assets",
+          "text": "German runs automatically select the single-speaker GitHub v1.2-de-martin profile when\nno model or voice is supplied. It provides only fp32 and downloads approximately 311\nMB for the ONNX model plus a 522,506-byte martin voice archive on first use. Both\nartifacts are checked against their published SHA-256 digests before being cached under\n~/.cache/pykokoro.\n\nThe previous v1.1-de Eva/Bernd model remains an explicit compatibility choice. Use\nPipelineConfig(model_source=\"github\", model_variant=\"v1.1-de\", voice=\"df_eva\") or\ndm_bernd when that legacy profile is required. Custom model_path and voices_path\nare never replaced by automatic selection; missing custom files fail directly rather\nthan triggering a download to the shared cache. Managed cache hits are checksum and\nstructure checked befo…",
+          "lower": "german runs automatically select the single-speaker github v1.2-de-martin profile when\nno model or voice is supplied. it provides only fp32 and downloads approximately 311\nmb for the onnx model plus a 522,506-byte martin voice archive on first use. both\nartifacts are checked against their published sha-256 digests before being cached under\n~/.cache/pykokoro.\n\nthe previous v1.1-de eva/bernd model remains an explicit compatibility choice. use\npipelineconfig(model_source=\"github\", model_variant=\"v1.1-de\", voice=\"df_eva\") or\ndm_bernd when that legacy profile is required. custom model_path and voices_path\nare never replaced by automatic selection; missing custom files fail directly rather\nthan triggering a download to the shared cache. managed cache hits are checksum and\nstructure checked befo…"
         },
         {
           "anchor": "",
@@ -678,6 +696,25 @@
           "heading": "Troubleshooting",
           "text": "If the default pipeline reports that ONNX Runtime is missing, install one provider\nextra, for example pip install \"pykokoro[cpu]\". If model loading fails, verify that\nthe provider is available and that the model/voice assets can be downloaded or supplied\nthrough PipelineConfig(model_path=..., voices_path=...).\n\nFor dependency-light diagnostics:\n\nfrom pykokoro.model_assets import get_model_asset_paths\n\nassets = get_model_asset_paths(source=\"huggingface\", variant=\"v1.0\", quality=\"fp32\")\nprint(assets.missing if not assets.complete else \"model assets are ready\")",
           "lower": "if the default pipeline reports that onnx runtime is missing, install one provider\nextra, for example pip install \"pykokoro[cpu]\". if model loading fails, verify that\nthe provider is available and that the model/voice assets can be downloaded or supplied\nthrough pipelineconfig(model_path=..., voices_path=...).\n\nfor dependency-light diagnostics:\n\nfrom pykokoro.model_assets import get_model_asset_paths\n\nassets = get_model_asset_paths(source=\"huggingface\", variant=\"v1.0\", quality=\"fp32\")\nprint(assets.missing if not assets.complete else \"model assets are ready\")"
+        }
+      ]
+    },
+    {
+      "url": "/tools/pykokoro/languages/",
+      "title": "pykokoro Language and model profiles",
+      "snippet": "PyKokoro resolves omitted model settings from the requested language before creating the\nONNX backend or G2P cache. Non-German runs retain t …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Language and model profiles",
+          "text": "PyKokoro resolves omitted model settings from the requested language before creating the\nONNX backend or G2P cache. Non-German runs retain the existing Hugging Face v1.0\ndefault; Chinese automatic selection retains the GitHub v1.1-zh policy.",
+          "lower": "pykokoro resolves omitted model settings from the requested language before creating the\nonnx backend or g2p cache. non-german runs retain the existing hugging face v1.0\ndefault; chinese automatic selection retains the github v1.1-zh policy."
+        },
+        {
+          "anchor": "",
+          "heading": "German",
+          "text": "de, de-de, de-at, and de-ch automatically select:\n\n\nsource: GitHub\n\n\nvariant: v1.2-de-martin\n\n\nquality: fp32\n\n\nvoice: martin\n\n\nvocabulary: built-in Kokoro v1.0\n\n\n\nThe Martin profile is a single-speaker model. Its ONNX file is\nkokoro-german-martin-v1.2.onnx; its voice archive is voices-german-martin-v1.2.bin.\nBoth downloads are checked with SHA-256 and the voice archive must contain martin. No\nmodel-specific config file is downloaded.\n\nThe legacy Eva/Bernd profile remains explicit:\n\nPipelineConfig(\n    voice=\"df_eva\",\n    model_source=\"github\",\n    model_variant=\"v1.1-de\",\n    generation=GenerationConfig(lang=\"de\"),\n)\n\n\n\n\nAutomatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x\ndependency across the language pipelines where kokorog2p supports it. This includes\nstr…",
+          "lower": "de, de-de, de-at, and de-ch automatically select:\n\n\nsource: github\n\n\nvariant: v1.2-de-martin\n\n\nquality: fp32\n\n\nvoice: martin\n\n\nvocabulary: built-in kokoro v1.0\n\n\n\nthe martin profile is a single-speaker model. its onnx file is\nkokoro-german-martin-v1.2.onnx; its voice archive is voices-german-martin-v1.2.bin.\nboth downloads are checked with sha-256 and the voice archive must contain martin. no\nmodel-specific config file is downloaded.\n\nthe legacy eva/bernd profile remains explicit:\n\npipelineconfig(\n    voice=\"df_eva\",\n    model_source=\"github\",\n    model_variant=\"v1.1-de\",\n    generation=generationconfig(lang=\"de\"),\n)\n\n\n\n\nautomatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x\ndependency across the language pipelines where kokorog2p supports it. this includes\nstr…"
         }
       ]
     },
@@ -824,6 +861,12 @@
           "heading": "Generate Your First Audio",
           "text": "import soundfile as sf\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    voice=\"af_bella\",  # American Female voice\n    generation=GenerationConfig(lang=\"en-us\"),\n)\npipe = KokoroPipeline(config)\nresult = pipe.run(\"Hello! Welcome to PyKokoro text-to-speech.\")\n\n# Save to a WAV file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)\n\n\n\n\nThat’s it! You’ve generated your first audio file.",
           "lower": "import soundfile as sf\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    voice=\"af_bella\",  # american female voice\n    generation=generationconfig(lang=\"en-us\"),\n)\npipe = kokoropipeline(config)\nresult = pipe.run(\"hello! welcome to pykokoro text-to-speech.\")\n\n# save to a wav file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)\n\n\n\n\nthat’s it! you’ve generated your first audio file."
+        },
+        {
+          "anchor": "",
+          "heading": "German speech",
+          "text": "German selects the Martin v1.2 GitHub model automatically when model and voice fields\nare omitted:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(generation=GenerationConfig(lang=\"de\", speed=1.125))\nwith KokoroPipeline(config) as pipe:\n    result = pipe.run(\"Zum 14.05.2026 um 18:20 Uhr ist das Abendessen geplant.\")\n\n\n\n\nThe profile is fp32-only and uses the martin voice. For explicit reproducibility, set\nmodel_source=\"github\", model_variant=\"v1.2-de-martin\", model_quality=\"fp32\", and\nvoice=\"martin\". Downloads are SHA-256 verified and cached locally. The profile’s\nsuggested speed (1.125) is advisory and is not applied unless set in\nGenerationConfig. A standalone voice=\"martin\" also infers German; custom voice\narchives can provide additional n…",
+          "lower": "german selects the martin v1.2 github model automatically when model and voice fields\nare omitted:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(generation=generationconfig(lang=\"de\", speed=1.125))\nwith kokoropipeline(config) as pipe:\n    result = pipe.run(\"zum 14.05.2026 um 18:20 uhr ist das abendessen geplant.\")\n\n\n\n\nthe profile is fp32-only and uses the martin voice. for explicit reproducibility, set\nmodel_source=\"github\", model_variant=\"v1.2-de-martin\", model_quality=\"fp32\", and\nvoice=\"martin\". downloads are sha-256 verified and cached locally. the profile’s\nsuggested speed (1.125) is advisory and is not applied unless set in\ngenerationconfig. a standalone voice=\"martin\" also infers german; custom voice\narchives can provide additional n…"
         },
         {
           "anchor": "",

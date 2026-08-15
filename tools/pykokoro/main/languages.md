@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "be712cdada539083bfeb08fb2e026ddc0213ed2a"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -568,11 +568,13 @@ model-specific config file is downloaded.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>German structured normalization is owned by the kokorog2p dependency. The compatible
-kokorog2p release should expand dates, times, decimal commas, measurements, ordinals,
-durations, Euro amounts, and abbreviations such as <code class="docutils literal notranslate"><span class="pre">Prof.</span></code>, <code class="docutils literal notranslate"><span class="pre">ggf.</span></code>, <code class="docutils literal notranslate"><span class="pre">ca.</span></code>, and <code class="docutils literal notranslate"><span class="pre">zzgl.</span></code>
-before G2P. Sentence segmentation and source offsets continue to refer to the original
-document text.</p>
+<p>Automatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x
+dependency across the language pipelines where kokorog2p supports it. This includes
+structured forms such as dates, times, decimal commas, measurements, ordinals,
+durations, currency amounts, and abbreviations before G2P. Sentence segmentation and
+source offsets continue to refer to the original document text. PyKokoro’s supported
+language and model list remains authoritative; kokorog2p support alone does not add a
+new synthesizer language.</p>
 <p>Managed Martin cache hits are checked against the pinned SHA-256 digests before use;
 invalid files are removed and downloaded again. Explicit custom paths are validated in
 place and are never replaced by managed downloads. The profile’s <code class="docutils literal notranslate"><span class="pre">suggested_speed</span></code>

@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/installation/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
+docs_ref: "v0.3.5"
+docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
 search_enabled: true
 ---
 
@@ -562,15 +562,22 @@ NumPy remains a direct dependency for TTSForge arrays, composition, playback buf
 and bounded I/O buffers. SoundFile remains required for audio decoding and encoding;
 AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration layers.</p>
 </section>
-<section id="pykokoro-and-spacy-model-policy">
-<h3>PyKokoro and spaCy model policy</h3>
-<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.2,&lt;0.9</span></code>, SSMD <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, and
-phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. These releases provide the public spaCy request/resolution and
-memory-ownership APIs used by TTSForge. TTSForge selects only already installed spaCy
-packages and never downloads them automatically. The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy
-selects the highest compatible local model and falls back to non-spaCy splitting when no
-compatible model is installed. <code class="docutils literal notranslate"><span class="pre">use_spacy=true</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, an exact package, or an
-exact tier is strict; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-spacy</span></code> disable spaCy.</p>
+<section id="pykokoro-kokorog2p-and-spacy-model-policy">
+<h3>PyKokoro, kokorog2p, and spaCy model policy</h3>
+<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.3,&lt;0.9</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, SSMD
+<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. TTSForge directly owns the PyKokoro and
+kokorog2p runtime boundary; the ownership chain is
+<code class="docutils literal notranslate"><span class="pre">TTSForge</span> <span class="pre">-&gt;</span> <span class="pre">PyKokoro</span> <span class="pre">-&gt;</span> <span class="pre">kokorog2p</span> <span class="pre">-&gt;</span> <span class="pre">Spokenform/abbr2words</span></code>. These releases provide the
+public spaCy request/resolution and memory-ownership APIs used by TTSForge. TTSForge
+selects only already installed spaCy packages and never downloads them automatically.
+The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy selects the highest compatible local model and falls
+back to non-spaCy splitting when no compatible model is installed. <code class="docutils literal notranslate"><span class="pre">use_spacy=true</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, an exact package, or an exact tier is strict; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--no-spacy</span></code> disable spaCy.</p>
+<p>Users should not install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately for TTSForge. The compatible kokorog2p
+release owns its Spokenform and abbr2words constraints. The exact PyKokoro 0.8.3 and
+kokorog2p 0.8.0 releases must be available from the package index before installing the
+TTSForge 0.3.4 release.</p>
 <p>Install one or more compatible local spaCy packages when strict behavior or higher
 quality automatic selection is wanted:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg

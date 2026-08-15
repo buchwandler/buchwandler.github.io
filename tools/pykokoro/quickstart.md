@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -578,6 +578,24 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 <p>That’s it! You’ve generated your first audio file.</p>
+</section>
+<section id="german-speech">
+<h3>German speech</h3>
+<p>German selects the Martin v1.2 GitHub model automatically when model and voice fields
+are omitted:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.125</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">pipe</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Zum 14.05.2026 um 18:20 Uhr ist das Abendessen geplant.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The profile is fp32-only and uses the <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice. For explicit reproducibility, set
+<code class="docutils literal notranslate"><span class="pre">model_source=&quot;github&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">model_variant=&quot;v1.2-de-martin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">model_quality=&quot;fp32&quot;</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">voice=&quot;martin&quot;</span></code>. Downloads are SHA-256 verified and cached locally. The profile’s
+suggested speed (<code class="docutils literal notranslate"><span class="pre">1.125</span></code>) is advisory and is not applied unless set in
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code>. A standalone <code class="docutils literal notranslate"><span class="pre">voice=&quot;martin&quot;</span></code> also infers German; custom voice
+archives can provide additional names when <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> is supplied.</p>
 </section>
 <section id="choosing-a-voice">
 <h3>Choosing a Voice</h3>

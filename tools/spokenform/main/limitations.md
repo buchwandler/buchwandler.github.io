@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -585,6 +585,12 @@ opt-in through <code class="docutils literal notranslate"><span class="pre">norm
 natural-language address, legal, mathematical, musical, and biological parsing
 remains outside the core contract. Unlabeled ambiguous alphanumeric strings
 remain unchanged rather than being memorized as product codes.</p>
+<p>Benchmark profiles do not change that boundary: <code class="docutils literal notranslate"><span class="pre">default</span></code> is the release-safe
+contract, <code class="docutils literal notranslate"><span class="pre">extended</span></code> is an opt-in diagnostic profile, and an aggressive caller
+experiment is not a release gate. Compare only compatible report identities;
+questionable upstream targets remain quarantined and visible rather than being
+used to justify a normalization rule. See
+<span class="xref myst">benchmarks/OWNERSHIP.md</span>.</p>
 </section>
 <section id="limitations-and-readiness-gates">
 <h1>Limitations and readiness gates</h1>

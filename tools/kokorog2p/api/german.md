@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/german/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_ref: "v0.8.0"
+docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
 search_enabled: true
 ---
 
@@ -544,367 +544,32 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>German API</h1>
 <p>German G2P provides phoneme conversion using a large 738k+ entry dictionary with
 rule-based fallback.</p>
+<p>German semantic normalization is provided by <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> and runs once per homogeneous
+language run before token-local G2P processing. In the public default span pipeline,
+spokenform source replacements are rebased to original document offsets and merged into
+semantic token spans before token-local expansion. This keeps numeric context intact for
+grouped numbers (<code class="docutils literal notranslate"><span class="pre">1.000</span></code>), decimals (<code class="docutils literal notranslate"><span class="pre">3,14</span></code>), EUR amounts, dates, times, temperatures,
+ordinals, and numbered units with singular/plural agreement, including when the backend
+has no language-owned normalizer. Unit symbols are context bound: <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">kg</span></code> becomes
+<code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Kilogramm</span></code>, while a standalone <code class="docutils literal notranslate"><span class="pre">kg</span></code> is preserved. Dotted numeric aliases such as
+<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">ltr.</span></code> and <code class="docutils literal notranslate"><span class="pre">45</span> <span class="pre">Min.</span></code> are consumed as part of the semantic span, so their periods are
+not treated as independent sentence punctuation. <code class="docutils literal notranslate"><span class="pre">Min.</span></code> is intentionally numeric-only:
+standalone <code class="docutils literal notranslate"><span class="pre">Min.</span> <span class="pre">Beispiel</span></code> remains unchanged, while <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Min.</span></code> becomes <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Minute</span></code>.
+Invalid dates/times and ambiguous punctuation are left unchanged. Flexible <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>,
+<code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> spellings are supported through the bounded Spokenform 0.2.x and
+abbr2words profiles. Accepted semantic replacements are not rewritten by kokorog2p; only
+German G2P typography remains local.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GermanNormalizer</span></code> remains available as a compatibility facade for direct callers. Its
+semantic result is backed by spokenform, while G2P-specific German typography remains
+local. Abbreviation customization continues to use the shared <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> registry.</p>
 <section id="main-class">
 <h2>Main Class</h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.de.</span></span><span class="sig-name descname"><span class="pre">GermanG2P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'de-de'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_lexicon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_abbreviations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_context_detection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference internal" href="../core/#kokorog2p.G2PBase" title="kokorog2p.base.G2PBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">G2PBase</span></code></a></p>
-<p>German G2P converter using dictionary lookup with fallback options.</p>
-<p>This class provides grapheme-to-phoneme conversion for German text
-using a large dictionary (738k+ entries) with fallback to espeak-ng
-or goruut for out-of-vocabulary words and phonological rules.</p>
-<dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g2p</span> <span class="o">=</span> <span class="n">GermanG2P</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'de-de'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_lexicon</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">expand_abbreviations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_context_detection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize the German G2P converter.</p>
-<dl>
-<dt>Args:</dt><dd><p>language: Language code (default: ‘de-de’).
-use_espeak_fallback: Whether to use espeak for OOV words.
-use_goruut_fallback: Whether to use goruut for OOV words.
-use_spacy: Whether to use spaCy for tokenization and POS tagging.</p>
-<blockquote>
-<div><p>Defaults to False to preserve legacy behavior and avoid requiring
-spaCy model downloads unless explicitly requested.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>spacy_model: spaCy German model package to load when use_spacy=True</dt><dd><p>(e.g., “de_core_news_sm”, “de_core_news_md”, “de_core_news_lg”).</p>
-</dd>
-</dl>
-<p>use_lexicon: Whether to use dictionary lookup (default: True).
-strip_stress: Whether to remove stress markers from lexicon output.
-load_silver: If True, load silver tier dictionary if available.</p>
-<blockquote>
-<div><p>Currently German only has gold dictionary, so this parameter
-is reserved for future use and consistency with English.
-Defaults to True for consistency.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>load_gold: If True, load gold tier dictionary.</dt><dd><p>Defaults to True for maximum quality and coverage.
-Set to False when ultra-fast initialization is needed.</p>
-</dd>
-</dl>
-<p>expand_abbreviations: Whether to expand abbreviations (Prof. → Professor).
-enable_context_detection: Context-aware abbreviation expansion.</p>
-</dd>
-<dt>Raises:</dt><dd><p>ValueError: If both use_espeak_fallback and use_goruut_fallback are True.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.nlp">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">nlp</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a></span></dt>
-<dd><p>Lazily initialize spaCy.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.regex_tokenizer">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">regex_tokenizer</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">RegexTokenizer</span></span></dt>
-<dd><p>Lazily initialize the regex tokenizer.</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.spacy_tokenizer">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">spacy_tokenizer</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">SpacyTokenizer</span></span></dt>
-<dd><p>Lazily initialize the spaCy tokenizer.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/#kokorog2p.GToken" title="kokorog2p.token.GToken"><span class="pre">GToken</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert text to a list of tokens with phonemes.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>List of GToken objects with phonemes assigned.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.lookup">
-<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Look up a word in the dictionary.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The word to look up.
-tag: Optional POS tag (not used for German).</p>
-</dd>
-<dt>Returns:</dt><dd><p>Phoneme string if found, None otherwise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.phonemize">
-<span class="sig-name descname"><span class="pre">phonemize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P.phonemize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert text to a phoneme string.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>Phoneme string.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanG2P.get_target_model">
-<span class="sig-name descname"><span class="pre">get_target_model</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/g2p/#GermanG2P.get_target_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Get the target Kokoro model variant for this G2P instance.</p>
-<dl class="simple">
-<dt>Returns:</dt><dd><p>Model identifier: version string (“1.1” or “1.0”).</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="lexicon">
 <h2>Lexicon</h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.de.</span></span><span class="sig-name descname"><span class="pre">GermanLexicon</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strip_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>German pronunciation lexicon.</p>
-<p>Uses a gold dictionary for lookup with optional fallback.</p>
-<dl>
-<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">lexicon</span> <span class="o">=</span> <span class="n">GermanLexicon</span><span class="p">()</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;Haus&quot;</span><span class="p">)</span>
-<span class="go">&#39;haʊ̯s&#39;</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">strip_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize the German lexicon.</p>
-<dl>
-<dt>Args:</dt><dd><p>strip_stress: If True, remove stress markers from phonemes.
-load_silver: If True, load silver tier dictionary if available.</p>
-<blockquote>
-<div><p>Currently German only has gold dictionary, so this parameter
-is reserved for future use and consistency with English.
-Defaults to True for consistency.</p>
-</div></blockquote>
-<dl class="simple">
-<dt>load_gold: If True, load gold tier dictionary.</dt><dd><p>Defaults to True for maximum quality and coverage.
-Set to False when ultra-fast initialization is needed.</p>
-</dd>
-</dl>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.lookup">
-<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Look up a word in the lexicon.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The word to look up.
-tag: Optional POS tag (not used for German).</p>
-</dd>
-<dt>Returns:</dt><dd><p>IPA phoneme string if found, None otherwise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.__call__">
-<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Look up a word in the lexicon.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The word to look up.
-tag: Optional POS tag.</p>
-</dd>
-<dt>Returns:</dt><dd><p>IPA phoneme string if found, None otherwise.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.is_known">
-<span class="sig-name descname"><span class="pre">is_known</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.is_known"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Check if a word is in the lexicon.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The word to check.</p>
-</dd>
-<dt>Returns:</dt><dd><p>True if the word is in the lexicon.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.__len__">
-<span class="sig-name descname"><span class="pre">__len__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.__len__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return the number of entries in the lexicon.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.GermanLexicon.__repr__">
-<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/lexicon/#GermanLexicon.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Return string representation.</p>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 <section id="number-conversion">
 <h2>Number Conversion</h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">GermanNumberConverter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Convert numbers to their German word representations.</p>
-<p>This class handles various number formats including:
-- Cardinal numbers (1, 2, 3 -&gt; eins, zwei, drei)
-- Ordinal numbers (1., 2. -&gt; erste, zweite)
-- Years (1984 -&gt; neunzehnhundertvierundachtzig)
-- Decimals (3,14 -&gt; drei Komma eins vier)
-- Currency (12,50€ -&gt; zwölf Euro fünfzig)</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lookup_fn</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Initialize the German number converter.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>lookup_fn: Optional function to look up words in the lexicon.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.num2words">
-<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">num2words</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a></span></dt>
-<dd><p>Lazily import num2words with German language.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_cardinal">
-<span class="sig-name descname"><span class="pre">convert_cardinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_cardinal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert cardinal number to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Number string (e.g., “42”, “1.000”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_ordinal">
-<span class="sig-name descname"><span class="pre">convert_ordinal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_ordinal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert ordinal number to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Number string (e.g., “1”, “42”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German ordinal word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_year">
-<span class="sig-name descname"><span class="pre">convert_year</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_year"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert year to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Year string (e.g., “1984”, “2024”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German year word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_decimal">
-<span class="sig-name descname"><span class="pre">convert_decimal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_decimal"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert decimal number to German words.</p>
-<p>German uses comma as decimal separator.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Decimal string (e.g., “3,14” or “3.14”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert_currency">
-<span class="sig-name descname"><span class="pre">convert_currency</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert_currency"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert currency amount to German words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: Amount string (e.g., “12,50”).
-currency: Currency symbol (e.g., “€”).</p>
-</dd>
-<dt>Returns:</dt><dd><p>German currency word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.GermanNumberConverter.convert">
-<span class="sig-name descname"><span class="pre">convert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">currency</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_ordinal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">is_year</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#GermanNumberConverter.convert"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert a number to its German word representation.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>word: The number string to convert.
-currency: Optional currency symbol (e.g., ‘€’).
-is_ordinal: Whether to convert as ordinal.
-is_year: Whether to convert as year.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.expand_number">
-<span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">expand_number</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#expand_number"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Expand numbers in text to German words.</p>
-<p>This is a convenience function for simple number expansion.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Text potentially containing numbers.</p>
-</dd>
-<dt>Returns:</dt><dd><p>Text with numbers expanded to German words.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.number_to_german">
-<span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">number_to_german</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#number_to_german"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert an integer to German words.</p>
-<p>This is a fallback when num2words is not available.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>n: Integer to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="kokorog2p.de.numbers.ordinal_to_german">
-<span class="sig-prename descclassname"><span class="pre">kokorog2p.de.numbers.</span></span><span class="sig-name descname"><span class="pre">ordinal_to_german</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/de/numbers/#ordinal_to_german"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Convert an integer to German ordinal words.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>n: Integer to convert.</p>
-</dd>
-<dt>Returns:</dt><dd><p>German ordinal word representation.</p>
-</dd>
-</dl>
-</dd></dl>
-
 </section>
 <section id="examples">
 <h2>Examples</h2>

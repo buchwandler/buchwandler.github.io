@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
+docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
 search_enabled: true
 ---
 
@@ -583,6 +583,9 @@ expansions.</p></li>
 when a numeric value and the reviewed symbol are present.</p></li>
 <li><p>German organization initialisms whose entries represent spelling, such as
 <code class="docutils literal notranslate"><span class="pre">GmbH</span></code> → <code class="docutils literal notranslate"><span class="pre">G</span> <span class="pre">m</span> <span class="pre">b</span> <span class="pre">H</span></code> and <code class="docutils literal notranslate"><span class="pre">AG</span></code> → <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">G</span></code>; source case is preserved.</p></li>
+<li><p>Reviewed English initialisms such as <code class="docutils literal notranslate"><span class="pre">BBC</span></code>, <code class="docutils literal notranslate"><span class="pre">CBS</span></code>, <code class="docutils literal notranslate"><span class="pre">US</span></code>, <code class="docutils literal notranslate"><span class="pre">UK</span></code>, <code class="docutils literal notranslate"><span class="pre">USA</span></code>, <code class="docutils literal notranslate"><span class="pre">ISBN</span></code>,
+<code class="docutils literal notranslate"><span class="pre">HTML</span></code>, <code class="docutils literal notranslate"><span class="pre">ISO</span></code>, <code class="docutils literal notranslate"><span class="pre">IEC</span></code>, <code class="docutils literal notranslate"><span class="pre">TV</span></code>, <code class="docutils literal notranslate"><span class="pre">NFL</span></code>, <code class="docutils literal notranslate"><span class="pre">NHL</span></code>, and <code class="docutils literal notranslate"><span class="pre">MLB</span></code>; these are ordinary
+registry entries and report <code class="docutils literal notranslate"><span class="pre">abbr:&lt;canonical&gt;</span></code> provenance.</p></li>
 <li><p>Explicitly spaced ambiguous one-letter units such as <code class="docutils literal notranslate"><span class="pre">7</span> <span class="pre">B</span></code>, <code class="docutils literal notranslate"><span class="pre">3</span> <span class="pre">A</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">300</span> <span class="pre">K</span></code>. Compact <code class="docutils literal notranslate"><span class="pre">7B</span></code>, <code class="docutils literal notranslate"><span class="pre">3A</span></code>, and <code class="docutils literal notranslate"><span class="pre">5K</span></code> are deliberately left for downstream
 structured-code handling because their unit metadata requires a separator.</p></li>
@@ -633,12 +636,24 @@ compound when it is specifically reviewed and represented by the unit registry.<
 <section id="opt-in-residual-initialism-policy">
 <h2>Opt-in residual initialism policy</h2>
 <p>Unknown undotted uppercase tokens are intentionally unchanged by the default
-API. A downstream speech normalizer may first claim typed structured spans and
-then call <code class="docutils literal notranslate"><span class="pre">initialism_mode=&quot;spell_undotted&quot;</span></code> for residual standalone ASCII
-uppercase tokens. The bounded matcher covers two through eight letters and
-reports <code class="docutils literal notranslate"><span class="pre">abbr:initialism-undotted</span></code> provenance; it skips Roman-like strings,
-mixed/alphanumeric identifiers, and hyphenated code fragments. Protected spans
+API. A downstream speech normalizer should first claim typed structured spans
+and then normally call <code class="docutils literal notranslate"><span class="pre">initialism_mode=&quot;conservative_undotted&quot;</span></code> for residual
+standalone ASCII uppercase tokens. This middle-ground matcher accepts only
+three-to-six-letter, consonant-only residual shapes, rejects unknown two-letter
+forms, lexical/headline runs, vowel-bearing words, Roman-like strings,
+mixed/alphanumeric identifiers, and hyphenated code fragments, and reports
+<code class="docutils literal notranslate"><span class="pre">abbr:initialism-conservative</span></code> provenance. The explicit <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> mode
+remains available when a caller knowingly wants broad spelling. Protected spans
 remain untouched.</p>
+<p>Reviewed locale registries and explicit lowercase aliases provide coverage for
+known initialisms such as common organization names and technical forms like
+<code class="docutils literal notranslate"><span class="pre">html</span></code>, <code class="docutils literal notranslate"><span class="pre">xml</span></code>, <code class="docutils literal notranslate"><span class="pre">xhtml</span></code>, <code class="docutils literal notranslate"><span class="pre">gtk</span></code>, <code class="docutils literal notranslate"><span class="pre">gfdl</span></code>, <code class="docutils literal notranslate"><span class="pre">sql</span></code>, and <code class="docutils literal notranslate"><span class="pre">glsl</span></code>. These aliases are
+case-sensitive data entries; ordinary words such as <code class="docutils literal notranslate"><span class="pre">us</span></code>, <code class="docutils literal notranslate"><span class="pre">in</span></code>, <code class="docutils literal notranslate"><span class="pre">as</span></code>, <code class="docutils literal notranslate"><span class="pre">at</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">no</span></code> are not made globally case-insensitive.</p>
+<p>Registered initialisms may expand in lexical hyphen compounds such as
+<code class="docutils literal notranslate"><span class="pre">ZDF-Sendung</span></code> and <code class="docutils literal notranslate"><span class="pre">EU-Richtlinie</span></code>. Code-like neighbors remain protected,
+including numeric, uppercase-code, compact mixed-alphanumeric, version-like,
+and one-character segments such as <code class="docutils literal notranslate"><span class="pre">ISO-9001</span></code>, <code class="docutils literal notranslate"><span class="pre">HH-GT</span></code>, and <code class="docutils literal notranslate"><span class="pre">FW-1.2.3</span></code>.</p>
 <p>The output case is independent of recognition: <code class="docutils literal notranslate"><span class="pre">initialism_case</span></code> may be
 <code class="docutils literal notranslate"><span class="pre">source</span></code>, <code class="docutils literal notranslate"><span class="pre">upper</span></code>, or <code class="docutils literal notranslate"><span class="pre">lower</span></code>. Registered entries retain their semantic
 expansions unless the caller explicitly requests
@@ -653,8 +668,17 @@ phone numbers, stock tickers, product/version codes, and other typed spans.</p><
 <li><p>The caller optionally enables residual undotted initialism spelling for
 spans still unclaimed by its structured recognizers.</p></li>
 </ol>
+<p>Use <code class="docutils literal notranslate"><span class="pre">iter_initialism_diagnostics()</span></code> to inspect why a candidate was accepted or
+preserved. Diagnostics expose source offsets and stable reasons such as
+<code class="docutils literal notranslate"><span class="pre">registered-semantic</span></code>, <code class="docutils literal notranslate"><span class="pre">conservative-unknown</span></code>, <code class="docutils literal notranslate"><span class="pre">vowel-bearing-unknown</span></code>,
+<code class="docutils literal notranslate"><span class="pre">two-letter-unknown</span></code>, <code class="docutils literal notranslate"><span class="pre">lexical-acronym</span></code>, <code class="docutils literal notranslate"><span class="pre">uppercase-run</span></code>, <code class="docutils literal notranslate"><span class="pre">roman-like</span></code>,
+<code class="docutils literal notranslate"><span class="pre">structured-candidate</span></code>, <code class="docutils literal notranslate"><span class="pre">hyphenated-code</span></code>, and <code class="docutils literal notranslate"><span class="pre">protected-span</span></code>;
+benchmark triage must not infer these decisions from a downstream rendering
+failure alone.</p>
 <p>This policy does not make benchmark-specific rules for <code class="docutils literal notranslate"><span class="pre">MIT</span></code>, <code class="docutils literal notranslate"><span class="pre">v.</span></code>, <code class="docutils literal notranslate"><span class="pre">Co.</span></code>,
-<code class="docutils literal notranslate"><span class="pre">e.g.</span></code>, <code class="docutils literal notranslate"><span class="pre">D.C.</span></code>, or language-data disagreements such as Italian <code class="docutils literal notranslate"><span class="pre">Onlus</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">e.g.</span></code>, <code class="docutils literal notranslate"><span class="pre">D.C.</span></code>, or language-data disagreements such as Italian <code class="docutils literal notranslate"><span class="pre">Onlus</span></code>.
+Lexical acronyms such as <code class="docutils literal notranslate"><span class="pre">NASA</span></code>, <code class="docutils literal notranslate"><span class="pre">NATO</span></code>, <code class="docutils literal notranslate"><span class="pre">FIFA</span></code>, and <code class="docutils literal notranslate"><span class="pre">UNESCO</span></code> remain outside
+the reviewed letter-spelling registry.</p>
 </section>
 <section id="compact-unit-diagnostics">
 <h2>Compact unit diagnostics</h2>

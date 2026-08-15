@@ -5,8 +5,8 @@ permalink: /tools/spokenform/api/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.5"
-docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
+docs_ref: "v0.2.6"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -544,7 +544,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="preparation">
 <h2>Preparation</h2>
-<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=True, strict=False)
+<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)
 :module: spokenform</p>
 <p>Convert one-language written text into a readable form intended for speech.</p>
 <p>The caller selects the processing language. Language detection, mixed-language
@@ -577,7 +577,7 @@ source/output mapping.</p>
 only generic grapheme-spaced uppercase acronyms; lexical acronyms, preserved
 terms, known initialisms, identifiers, and mixed-case tokens keep their normal
 policies.</p>
-<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=True, strict=False)
+<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)
 :module: spokenform
 :canonical: spokenform.config.PreparationConfig</p>
 <p>Immutable options controlling single-language written-to-spoken preparation.</p>

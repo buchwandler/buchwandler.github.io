@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/quickstart/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
+docs_ref: "v0.3.5"
+docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
 search_enabled: true
 ---
 

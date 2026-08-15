@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -562,6 +562,29 @@ audio stages do.</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> selects the highest-priority available provider. PyKokoro does not
 infer provider availability from platform names.</p>
+<section id="termux-android-model-assets">
+<h3>Termux/Android model assets</h3>
+<p>HuggingFace remains the default model source. If HuggingFace downloads are unavailable
+in Termux, select the self-contained GitHub v1.0 profile explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
+    <span class="n">PipelineConfig</span><span class="p">(</span>
+        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
+        <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
+        <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+        <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>GitHub v1.0 uses the embedded standard v1.0 vocabulary and does not download HuggingFace
+<code class="docutils literal notranslate"><span class="pre">config.json</span></code>. PyKokoro never silently changes the configured source. If <code class="docutils literal notranslate"><span class="pre">model_path</span></code>
+and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are supplied, each file is validated and used in place; missing custom
+files do not trigger a managed-cache download. The <code class="docutils literal notranslate"><span class="pre">Unsupported</span> <span class="pre">platform</span> <span class="pre">(android)</span></code>
+warning printed by some ONNX Runtime packages is independent of this model-source and
+asset fix.</p>
+</section>
 </section>
 <section id="other-providers">
 <h2>Other providers</h2>
@@ -579,9 +602,12 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="dependencies-and-optional-spacy">
 <h2>Dependencies and optional spaCy</h2>
-<p>The package installs kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the
-other runtime support libraries it needs. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are
-optional. The default tokenizer policy is safe on a clean install:</p>
+<p>PyKokoro 0.8.3 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.8.0,&lt;0.9</span></code>. The package installs
+kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support
+libraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and
+installs its compatible Spokenform and abbr2words dependencies transitively; do not
+install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are optional. The
+default tokenizer policy is safe on a clean install:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back
@@ -597,6 +623,24 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <p>No spaCy model is downloaded automatically. The native kokorog2p backend supports the
 languages declared by <code class="docutils literal notranslate"><span class="pre">pykokoro.constants.SUPPORTED_LANGUAGES</span></code>; languages in
 <code class="docutils literal notranslate"><span class="pre">ESPEAK_ONLY_LANGUAGES</span></code> require an explicit fallback backend.</p>
+</section>
+<section id="german-martin-assets">
+<h2>German Martin assets</h2>
+<p>German runs automatically select the single-speaker GitHub <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code> profile when
+no model or voice is supplied. It provides only <code class="docutils literal notranslate"><span class="pre">fp32</span></code> and downloads approximately 311
+MB for the ONNX model plus a 522,506-byte <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice archive on first use. Both
+artifacts are checked against their published SHA-256 digests before being cached under
+<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro</span></code>.</p>
+<p>The previous <code class="docutils literal notranslate"><span class="pre">v1.1-de</span></code> Eva/Bernd model remains an explicit compatibility choice. Use
+<code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_source=&quot;github&quot;,</span> <span class="pre">model_variant=&quot;v1.1-de&quot;,</span> <span class="pre">voice=&quot;df_eva&quot;)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">dm_bernd</span></code> when that legacy profile is required. Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>
+are never replaced by automatic selection; missing custom files fail directly rather
+than triggering a download to the shared cache. Managed cache hits are checksum and
+structure checked before use. The public GitHub download helpers also accept
+<code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a valid managed cache is required. Interrupted GitHub transfers
+retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code> file and resume with HTTP Range requests when the release
+host supports them; completed files are still checked for exact size, SHA-256, and
+structure before replacement.</p>
 </section>
 <section id="system-requirements">
 <h2>System requirements</h2>

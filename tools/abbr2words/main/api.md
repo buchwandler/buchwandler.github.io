@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
+docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
 search_enabled: true
 ---
 
@@ -561,6 +561,9 @@ authoritative over generic POS predictions.</p>
 <p>.. py:function:: iter_unit_diagnostics(text, language, *, overrides=None, suppressed=None, protected_spans=())
 :module: abbr2words</p>
 <p>Yield accepted unit matches and policy rejections for compact candidates.</p>
+<p>.. py:function:: iter_initialism_diagnostics(text, language=’en’, *, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, protected_spans=None)
+:module: abbr2words</p>
+<p>Yield source-aligned decisions for initialism-shaped candidates.</p>
 <p><code class="docutils literal notranslate"><span class="pre">abbr2words(...,</span> <span class="pre">annotations=...)</span></code> accepts an iterable of source-aligned
 <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> objects. Their offsets refer to the original input text;
 labels are normalized and overlapping or invalid spans raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.
@@ -604,25 +607,88 @@ same result. Existing convenience calls continue to return strings.</p>
 <p>The public expansion functions and <code class="docutils literal notranslate"><span class="pre">get_expander()</span></code>, <code class="docutils literal notranslate"><span class="pre">get_shared_expander()</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">Expander</span></code> accept these optional policy arguments:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span>
-    <span class="s2">&quot;BBC PDF&quot;</span><span class="p">,</span>
-    <span class="n">initialism_mode</span><span class="o">=</span><span class="s2">&quot;spell_undotted&quot;</span><span class="p">,</span>   <span class="c1"># default: &quot;dotted_only&quot;</span>
+    <span class="s2">&quot;NGO BBC PDF&quot;</span><span class="p">,</span>
+    <span class="n">initialism_mode</span><span class="o">=</span><span class="s2">&quot;conservative_undotted&quot;</span><span class="p">,</span>  <span class="c1"># default: &quot;dotted_only&quot;</span>
     <span class="n">initialism_case</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>             <span class="c1"># &quot;source&quot;, &quot;upper&quot;, or &quot;lower&quot;</span>
     <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span> <span class="c1"># or explicit &quot;spell&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>The default preserves existing behavior. <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> recognizes only
-standalone ASCII uppercase tokens from two through eight letters and renders
-source-aligned graphemes. It does not parse numbers, URLs, e-mail addresses,
-versions, product codes, phone numbers, stock tickers, or Roman numerals.
-Callers should reserve typed structured spans first, then use this policy for
-remaining uppercase tokens. <code class="docutils literal notranslate"><span class="pre">registered_initialism_mode=&quot;spell&quot;</span></code> affects only
+<p>The default preserves existing behavior for unknown uppercase text. The
+reviewed registry intentionally owns a small set of common initialisms such as
+<code class="docutils literal notranslate"><span class="pre">BBC</span></code>, <code class="docutils literal notranslate"><span class="pre">US</span></code>, <code class="docutils literal notranslate"><span class="pre">UK</span></code>, <code class="docutils literal notranslate"><span class="pre">ISBN</span></code>, <code class="docutils literal notranslate"><span class="pre">HTML</span></code>, and <code class="docutils literal notranslate"><span class="pre">TV</span></code>, which render source graphemes as
+ordinary abbreviation entries. <code class="docutils literal notranslate"><span class="pre">conservative_undotted</span></code> recognizes only
+high-confidence standalone ASCII uppercase residuals from two through eight
+letters and rejects reviewed lexical acronyms, ambiguous words, headline runs,
+Roman numerals, and structured identifiers. <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> retains the broad
+historical opt-in behavior and renders standalone source-aligned graphemes.
+Neither mode parses numbers, URLs, e-mail addresses, versions, product codes,
+phone numbers, stock tickers, or Roman numerals. Callers should reserve typed
+structured spans first, then use the conservative policy for remaining
+uppercase tokens. <code class="docutils literal notranslate"><span class="pre">registered_initialism_mode=&quot;spell&quot;</span></code> affects only
 reviewed registry entries carrying the explicit <code class="docutils literal notranslate"><span class="pre">speech_strategy=&quot;spell_source&quot;</span></code>
 metadata; semantic registry expansions remain the default.</p>
+<p>The compatibility surface is intentionally conservative:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Source</p></th>
+<th class="head"><p>Detection mode</p></th>
+<th class="head"><p>Case</p></th>
+<th class="head"><p>Registered mode</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ABC</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dotted_only</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">expand</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span></code> (reviewed entry)</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">NGO</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">conservative_undotted</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">expand</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">N</span> <span class="pre">G</span> <span class="pre">O</span></code> (high-confidence residual)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ABC</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">upper</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">expand</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">B</span> <span class="pre">C</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ABC</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lower</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">expand</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">a</span> <span class="pre">b</span> <span class="pre">c</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">U.S.</span></code></p></td>
+<td><p>dotted</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lower</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spell</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">u</span> <span class="pre">s.</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pp.</span> <span class="pre">12</span></code></p></td>
+<td><p>dotted</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spell</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">p</span> <span class="pre">p</span> <span class="pre">12</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The final period in the <code class="docutils literal notranslate"><span class="pre">U.S.</span></code> row is source sentence punctuation retained by
+the existing replacement policy. Reviewed entries continue to outrank the
+generic fallback, while Roman-only tokens and structured identifier
+components remain excluded.</p>
 <p>The shared-expander cache includes all policy values, so expanders with
 different initialism behavior are independent instances. Fallback replacement
 records use <code class="docutils literal notranslate"><span class="pre">abbr:initialism</span></code> for dotted matches and
-<code class="docutils literal notranslate"><span class="pre">abbr:initialism-undotted</span></code> for the opt-in undotted matcher.</p>
+<code class="docutils literal notranslate"><span class="pre">abbr:initialism-conservative</span></code> or <code class="docutils literal notranslate"><span class="pre">abbr:initialism-undotted</span></code> for undotted
+matches. <code class="docutils literal notranslate"><span class="pre">iter_initialism_diagnostics()</span></code> reports source-aligned <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">end</span></code>,
+<code class="docutils literal notranslate"><span class="pre">source_text</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">candidate_kind</span></code>, <code class="docutils literal notranslate"><span class="pre">decision</span></code>, stable <code class="docutils literal notranslate"><span class="pre">reason</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">registered_entry_id</span></code> fields. Protected spans are reported as
+<code class="docutils literal notranslate"><span class="pre">reason=&quot;protected&quot;</span></code> and are never claimed.</p>
 <p>The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>,
 <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>,
@@ -682,7 +748,7 @@ authoritative over generic POS predictions.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the configured abbreviation spellings.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’)
+<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, aliases=())
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation, optionally constrained by POS.
 
@@ -717,6 +783,11 @@ authoritative over generic POS predictions.</p>
 <p>.. py:method:: Expander.has(abbreviation, *, case_sensitive=False)
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return whether this instance contains an abbreviation.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.iter_initialism_diagnostics(text, *, protected_spans=None)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Yield source-aligned initialism decisions for this expander.
 </pre></div>
 </div>
 <p>.. py:method:: Expander.iter_unit_matches(text, *, protected_spans=())
@@ -906,7 +977,8 @@ deterministic and safe to evaluate against the original source text.</p>
 <p><code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.only_if_pos</span></code> and <code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> accept coarse POS labels such
 as <code class="docutils literal notranslate"><span class="pre">NOUN</span></code>, <code class="docutils literal notranslate"><span class="pre">PROPN</span></code>, and <code class="docutils literal notranslate"><span class="pre">ADP</span></code>. They are evaluated only when annotations are
 provided. <code class="docutils literal notranslate"><span class="pre">Expander.add()</span></code> exposes the same optional <code class="docutils literal notranslate"><span class="pre">only_if_pos</span></code> and
-<code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> keyword arguments.</p>
+<code class="docutils literal notranslate"><span class="pre">not_if_pos</span></code> keyword arguments, plus <code class="docutils literal notranslate"><span class="pre">aliases=(...)</span></code> for additional source
+spellings that share the entry’s guards, case policy, and speech strategy.</p>
 <p>The abbreviation stage returns lexical replacements with source-aligned spans;
 it does not interpret following numbers, dates, decimals, structured
 identifiers, article elision, surrounding grammar, or speech rendering. Those
@@ -930,7 +1002,7 @@ concerns remain with the consuming normalizer, including <code class="docutils l
   :param entry: The abbreviation entry to add
 </pre></div>
 </div>
-<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’)
+<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, aliases=())
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string context names and POS guards.
 
@@ -988,6 +1060,11 @@ concerns remain with the consuming normalizer, including <code class="docutils l
   :returns: True if the abbreviation exists, False otherwise
 </pre></div>
 </div>
+<p>.. py:method:: AbbreviationExpander.iter_initialism_diagnostics(text, *, protected_spans=())
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Yield initialism decisions using this expander&#39;s registry and policy.
+</pre></div>
+</div>
 <p>.. py:method:: AbbreviationExpander.iter_unit_matches(text, *, protected_spans=())
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Yield structured matches using this expander&#39;s unit customization.
@@ -1039,7 +1116,7 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the legacy trace view of :attr:`replacements`.
 </pre></div>
 </div>
-<p>.. py:class:: UnitMatch(start, end, value_start, value_end, value, symbol, canonical_id, canonical_symbol, expansion, language, category=’unit’)
+<p>.. py:class:: UnitMatch(start, end, value_start, value_end, value, symbol, canonical_id, canonical_symbol, expansion, language, category=’unit’, ambiguity=’none’, separator=’’)
 :module: abbr2words
 :canonical: abbr2words.units.UnitMatch</p>
 <p>One immutable, source-aligned recognized numeric quantity symbol.</p>

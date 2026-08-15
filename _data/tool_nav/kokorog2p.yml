@@ -4,17 +4,17 @@ nav_key: kokorog2p
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.7.2
-source_commit: aef17979f3930b332620e35a4d2cfd5c9ea374ef
-source_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2
+source_ref: v0.8.0
+source_commit: ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf
+source_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.8.0
 is_default: true
 repo_url: https://github.com/buchwandler/kokorog2p
-release_tag: v0.7.2
-release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.7.2
+release_tag: v0.8.0
+release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.8.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.7.2
+  ref: v0.8.0
   url: /tools/kokorog2p/
   current: true
 - name: main

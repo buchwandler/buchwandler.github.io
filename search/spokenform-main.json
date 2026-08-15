@@ -10,8 +10,8 @@
         {
           "anchor": "",
           "heading": "Preparation",
-          "text": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=True, strict=False)\n:module: spokenform\n\nConvert one-language written text into a readable form intended for speech.\n\nThe caller selects the processing language. Language detection, mixed-langu…",
-          "lower": ".. py:function:: prepare(text, *, language=’en’, config=none, annotations=none, nlp=none, protected_spans=none, use_spacy=none, spacy_model=none, expand_abbreviations=true, expand_structured=true, normalize_literals=false, expand_numbers=true, normalize_whitespace=true, normalize_unicode=true, strip_outer_whitespace=true, collapse_horizontal_whitespace=true, normalize_line_whitespace=true, collapse_blank_lines=true, number_policy=none, preserve_run_boundaries=false, model_punctuation=false, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, context=true, strict=false)\n:module: spokenform\n\nconvert one-language written text into a readable form intended for speech.\n\nthe caller selects the processing language. language detection, mixed-langu…"
+          "text": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)\n:module: spokenform\n\nConvert one-language written text into a readable form intended for speech.\n\nThe caller s…",
+          "lower": ".. py:function:: prepare(text, *, language=’en’, config=none, annotations=none, nlp=none, protected_spans=none, use_spacy=none, spacy_model=none, expand_abbreviations=true, expand_structured=true, normalize_literals=false, expand_numbers=true, normalize_whitespace=true, normalize_unicode=true, strip_outer_whitespace=true, collapse_horizontal_whitespace=true, normalize_line_whitespace=true, collapse_blank_lines=true, number_policy=none, preserve_run_boundaries=false, model_punctuation=false, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=true, strict=false)\n:module: spokenform\n\nconvert one-language written text into a readable form intended for speech.\n\nthe caller s…"
         },
         {
           "anchor": "",
@@ -59,21 +59,45 @@
         {
           "anchor": "",
           "heading": "Structured precedence",
-          "text": "Caller protection is absolute. Auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. Candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. Fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nUnclaimed or ambiguous forms remain opaque. Every selected candidate is still an\nexact Replacement, so precedence does not weaken source/output mapping or\nprotected-span behavior.",
-          "lower": "caller protection is absolute. auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nunclaimed or ambiguous forms remain opaque. every selected candidate is still an\nexact replacement, so precedence does not weaken source/output mapping or\nprotected-span behavior."
+          "text": "Caller protection is absolute. Auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. Candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. Fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nUnclaimed or ambiguous forms remain opaque. The concrete rule-family ordering is\ncentralized in spokenform.precedence.SequencePriority; recognizers do not rely\non source regex iteration order to reso…",
+          "lower": "caller protection is absolute. auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nunclaimed or ambiguous forms remain opaque. the concrete rule-family ordering is\ncentralized in spokenform.precedence.sequencepriority; recognizers do not rely\non source regex iteration order to reso…"
         }
       ]
     },
     {
       "url": "/tools/spokenform/main/changelog/",
       "title": "spokenform Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded Proteno bench …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded conservative …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added conservative acronym mode for context-aware initialism handling\n\n\nAdded contextual long-number mode for intelligent verbalization of 4+ digit numbers\n\n\nAdded registered acronym mode for controlling registered initialism expansion\n\n\nAdded bibliographic citation and reference sequence recognizers\n\n\nAdded decade rendering with natural English ordinal decade forms\n\n\nAdded duration recognition for HH:MM:SS timestamp formats\n\n\nAdded score recognition for sports results with contextual plausibility checks\n\n\nAdded chained score recognition for multi-set or multi-game results\n\n\nAdded software version recognition for named software packages\n\n\nAdded spaced ISBN label recognition for OCR or speech-recognized text\n\n\nAdded German Roman numeral title rendering for monarchs and popes\n\n\nAdded parent…",
+          "lower": "added conservative acronym mode for context-aware initialism handling\n\n\nadded contextual long-number mode for intelligent verbalization of 4+ digit numbers\n\n\nadded registered acronym mode for controlling registered initialism expansion\n\n\nadded bibliographic citation and reference sequence recognizers\n\n\nadded decade rendering with natural english ordinal decade forms\n\n\nadded duration recognition for hh:mm:ss timestamp formats\n\n\nadded score recognition for sports results with contextual plausibility checks\n\n\nadded chained score recognition for multi-set or multi-game results\n\n\nadded software version recognition for named software packages\n\n\nadded spaced isbn label recognition for ocr or speech-recognized text\n\n\nadded german roman numeral title rendering for monarchs and popes\n\n\nadded parent…"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved year detection with expanded temporal keyword context and bibliographic patterns\n\n\nImproved formula recognition with balanced parenthesis context checking\n\n\nImproved product code recognition with stronger label evidence requirements\n\n\nImproved Roman numeral recognition with expanded context keywords for articles, acts, and scenes\n\n\nChanged structured semantic precedence from regex iteration order to centralized precedence module",
+          "lower": "improved year detection with expanded temporal keyword context and bibliographic patterns\n\n\nimproved formula recognition with balanced parenthesis context checking\n\n\nimproved product code recognition with stronger label evidence requirements\n\n\nimproved roman numeral recognition with expanded context keywords for articles, acts, and scenes\n\n\nchanged structured semantic precedence from regex iteration order to centralized precedence module"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed fraction rendering to use natural word forms for fifths and sixths instead of Unicode fallback\n\n\nFixed formula recognition to reject fragments from unmatched parenthesized spans\n\n\nFixed slash fraction rendering to skip incomplete numerator or denominator matches\n\n\nFixed identifier separator handling to accept empty marker values\n\n\nFixed version literal detection to skip bare v-prefixed versions without contextual evidence\n\n\nFixed biology recognition to exclude temporal prepositions as false species markers\n\n\nFixed code recognition to classify vehicle-shaped codes with appropriate digit policies",
+          "lower": "fixed fraction rendering to use natural word forms for fifths and sixths instead of unicode fallback\n\n\nfixed formula recognition to reject fragments from unmatched parenthesized spans\n\n\nfixed slash fraction rendering to skip incomplete numerator or denominator matches\n\n\nfixed identifier separator handling to accept empty marker values\n\n\nfixed version literal detection to skip bare v-prefixed versions without contextual evidence\n\n\nfixed biology recognition to exclude temporal prepositions as false species markers\n\n\nfixed code recognition to classify vehicle-shaped codes with appropriate digit policies"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added Proteno diagnostic aggregates by rule, phase, ownership, and ambiguity family\n\n\nAdded PolyNorm ownership table documentation for comparison compatibility and quarantine policy",
+          "lower": "added proteno diagnostic aggregates by rule, phase, ownership, and ambiguity family\n\n\nadded polynorm ownership table documentation for comparison compatibility and quarantine policy"
         },
         {
           "anchor": "",
@@ -266,6 +290,43 @@
       ]
     },
     {
+      "url": "/tools/spokenform/main/google_tn/",
+      "title": "spokenform Google TN benchmark",
+      "snippet": "Spokenform’s Google TN benchmark consumes the Google text-normalization TSV\nformat also used by NVIDIA NeMo. It is called Google TN because …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Google TN benchmark",
+          "text": "Spokenform’s Google TN benchmark consumes the Google text-normalization TSV\nformat also used by NVIDIA NeMo. It is called Google TN because the format\nbelongs to the Google text-normalization corpus; NeMo is one consumer, not a\nruntime dependency or a separate corpus format.\n\nThis is an offline diagnostic benchmark. Google TN targets were produced by an\nexisting normalization system and are not unconditional human gold truth. Raw\nand reviewed metrics should be inspected alongside PolyNorm, Proteno, mapping,\nidentity-safety, protected-literal, and unit-test results. It is not a normal\nCI or release gate.",
+          "lower": "spokenform’s google tn benchmark consumes the google text-normalization tsv\nformat also used by nvidia nemo. it is called google tn because the format\nbelongs to the google text-normalization corpus; nemo is one consumer, not a\nruntime dependency or a separate corpus format.\n\nthis is an offline diagnostic benchmark. google tn targets were produced by an\nexisting normalization system and are not unconditional human gold truth. raw\nand reviewed metrics should be inspected alongside polynorm, proteno, mapping,\nidentity-safety, protected-literal, and unit-test results. it is not a normal\nci or release gate."
+        },
+        {
+          "anchor": "",
+          "heading": "Local data",
+          "text": "Supply a local English en_with_types directory. The default test split uses\nthe official evaluation shard output-00099-of-00100 and its first 100002\nphysical lines:\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types\n\n\n\n\nUseful focused runs are:\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types --class DATE --limit 500\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types --case en:099:000123 \\\n  --split test-full --show-failures all\n\n\n\n\ntest-full reads the complete evaluation shard; all reads all local output\nshards. --limit, class filters, and case filters do not renumber source-derived\ncase IDs. The initial implementation deliberately does not download data or\nclaim a corpus license: callers provide and manage their local source fil…",
+          "lower": "supply a local english en_with_types directory. the default test split uses\nthe official evaluation shard output-00099-of-00100 and its first 100002\nphysical lines:\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types\n\n\n\n\nuseful focused runs are:\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types --class date --limit 500\n\npython -m benchmarks.google_tn \\\n  --data-dir /path/to/en_with_types --case en:099:000123 \\\n  --split test-full --show-failures all\n\n\n\n\ntest-full reads the complete evaluation shard; all reads all local output\nshards. --limit, class filters, and case filters do not renumber source-derived\ncase ids. the initial implementation deliberately does not download data or\nclaim a corpus license: callers provide and manage their local source fil…"
+        },
+        {
+          "anchor": "",
+          "heading": "Format and integrity",
+          "text": "Rows are CLASS<TAB>WRITTEN<TAB>SPOKEN, and <eos>\\t<eos> ends a sentence.\n<self>, sil, and compatibility <sil> project to the written field for\nforward text normalization. Unknown classes remain visible. Source sentences\nare assembled by joining written fields with one ASCII space (field_join_v1),\nwhich makes every row span exact and reproducible without a detokenizer.\n\nThe benchmark records source filename, byte size, SHA256, selected line range,\nsurface and sentinel policies, Spokenform/dependency versions, Python/platform,\nand benchmark configuration. Gold class labels are grouping metadata only and\nare never passed as annotations or semantic hints to spokenform.prepare().",
+          "lower": "rows are class<tab>written<tab>spoken, and <eos>\\t<eos> ends a sentence.\n<self>, sil, and compatibility <sil> project to the written field for\nforward text normalization. unknown classes remain visible. source sentences\nare assembled by joining written fields with one ascii space (field_join_v1),\nwhich makes every row span exact and reproducible without a detokenizer.\n\nthe benchmark records source filename, byte size, sha256, selected line range,\nsurface and sentinel policies, spokenform/dependency versions, python/platform,\nand benchmark configuration. gold class labels are grouping metadata only and\nare never passed as annotations or semantic hints to spokenform.prepare()."
+        },
+        {
+          "anchor": "",
+          "heading": "Profiles and metrics",
+          "text": "The default profile uses en_US, use_spacy=False, symbol_mode=\"none\",\nconservative acronym and literal policies, and long_number_mode=preserve.\n--profile extended, --normalize-literals, and the explicit\n--long-number-mode cardinal option are experiments, not default behavior.\n\nReports include sentence literal/speech/equivalent exactness, presentation-only\ndifferences, semantic failures, WER, unchanged cases, normalization versus\nidentity rates, mapped row/span exactness, ambiguity counts, and raw-class\naggregates. Row outcomes distinguish correct-transform, identity-preserved,\ntransform-miss, wrong-transform, identity-mutation, presentation-only,\nmapping-ambiguous, and runtime-error.\n\nEach run is written under benchmark-results/google-tn/<run-id>/ with\nsummary.json, source-bearing rows.jso…",
+          "lower": "the default profile uses en_us, use_spacy=false, symbol_mode=\"none\",\nconservative acronym and literal policies, and long_number_mode=preserve.\n--profile extended, --normalize-literals, and the explicit\n--long-number-mode cardinal option are experiments, not default behavior.\n\nreports include sentence literal/speech/equivalent exactness, presentation-only\ndifferences, semantic failures, wer, unchanged cases, normalization versus\nidentity rates, mapped row/span exactness, ambiguity counts, and raw-class\naggregates. row outcomes distinguish correct-transform, identity-preserved,\ntransform-miss, wrong-transform, identity-mutation, presentation-only,\nmapping-ambiguous, and runtime-error.\n\neach run is written under benchmark-results/google-tn/<run-id>/ with\nsummary.json, source-bearing rows.jso…"
+        },
+        {
+          "anchor": "",
+          "heading": "Scope boundaries",
+          "text": "The parser is language-neutral, but the official adapter initially supports\nEnglish to en_US only. This feature adds no NeMo, PyTorch, Transformers,\nMoses, Kaggle, neural, WFST, or network dependency. It does not add global\nNeMo character rewrites, oracle class input, Russian/Polish runtime support, or\nan automatic digitwise long-number default.",
+          "lower": "the parser is language-neutral, but the official adapter initially supports\nenglish to en_us only. this feature adds no nemo, pytorch, transformers,\nmoses, kaggle, neural, wfst, or network dependency. it does not add global\nnemo character rewrites, oracle class input, russian/polish runtime support, or\nan automatic digitwise long-number default."
+        }
+      ]
+    },
+    {
       "url": "/tools/spokenform/main/",
       "title": "spokenform",
       "snippet": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes st …",
@@ -405,8 +466,8 @@
         {
           "anchor": "",
           "heading": "Benchmark profiles",
-          "text": "The default report uses the public conservative contract with\nnormalize_literals=False; URL/email and version rows remain protected and\nare reported separately from owned semantic failures. Use\n--profile extended (or --normalize-literals) to measure optional literal\nverbalization. Reports record the selected profile, ownership state, failure\nphase, primary rule, and render mode.",
-          "lower": "the default report uses the public conservative contract with\nnormalize_literals=false; url/email and version rows remain protected and\nare reported separately from owned semantic failures. use\n--profile extended (or --normalize-literals) to measure optional literal\nverbalization. reports record the selected profile, ownership state, failure\nphase, primary rule, and render mode."
+          "text": "The default report uses the public conservative contract with\nnormalize_literals=False; URL/email and version rows remain protected and\nare reported separately from owned semantic failures. Use\n--profile extended (or --normalize-literals) to measure optional literal\nverbalization. Reports record the selected profile, ownership state, failure\nphase, primary rule, and render mode.\nThe default profile is the safety baseline; extended is an opt-in speech\nexperiment. Neither profile turns arbitrary long integers, unknown acronyms,\nformula-looking words, or unlabeled product codes into spoken output without\nthe corresponding context and shape checks.\n\nSee the benchmark ownership table for comparison\ncompatibility, quarantine handling, and the residual non-goals.",
+          "lower": "the default report uses the public conservative contract with\nnormalize_literals=false; url/email and version rows remain protected and\nare reported separately from owned semantic failures. use\n--profile extended (or --normalize-literals) to measure optional literal\nverbalization. reports record the selected profile, ownership state, failure\nphase, primary rule, and render mode.\nthe default profile is the safety baseline; extended is an opt-in speech\nexperiment. neither profile turns arbitrary long integers, unknown acronyms,\nformula-looking words, or unlabeled product codes into spoken output without\nthe corresponding context and shape checks.\n\nsee the benchmark ownership table for comparison\ncompatibility, quarantine handling, and the residual non-goals."
         }
       ]
     },
@@ -455,8 +516,8 @@
         {
           "anchor": "",
           "heading": "Benchmark profiles",
-          "text": "Proteno reports default to normalize_literals=False. The extended profile is\nopt-in through --profile extended or --normalize-literals and is reported\nseparately so protected literal behavior is not mixed into the conservative\ndefault score.",
-          "lower": "proteno reports default to normalize_literals=false. the extended profile is\nopt-in through --profile extended or --normalize-literals and is reported\nseparately so protected literal behavior is not mixed into the conservative\ndefault score."
+          "text": "Proteno reports default to normalize_literals=False. The extended profile is\nopt-in through --profile extended or --normalize-literals and is reported\nseparately so protected literal behavior is not mixed into the conservative\ndefault score. Extended runs use conservative unknown-acronym handling and\nregistered source-letter spelling; contextual long-number normalization is an\nexplicit experiment, never the public default. The caller-level aggressive\ncombination (spell_unknown plus cardinal long numbers) is not a release\nprofile.\n\nSee the benchmark ownership table for the\nsafety, owned, extended-candidate, protected, downstream, unsupported, and\nquarantine gates.",
+          "lower": "proteno reports default to normalize_literals=false. the extended profile is\nopt-in through --profile extended or --normalize-literals and is reported\nseparately so protected literal behavior is not mixed into the conservative\ndefault score. extended runs use conservative unknown-acronym handling and\nregistered source-letter spelling; contextual long-number normalization is an\nexplicit experiment, never the public default. the caller-level aggressive\ncombination (spell_unknown plus cardinal long numbers) is not a release\nprofile.\n\nsee the benchmark ownership table for the\nsafety, owned, extended-candidate, protected, downstream, unsupported, and\nquarantine gates."
         }
       ]
     },

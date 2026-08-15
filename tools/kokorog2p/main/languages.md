@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
+docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
 search_enabled: true
 ---
 
@@ -733,7 +733,8 @@ abbreviations, and grammatical unit forms such as <code class="docutils literal 
 <li><p><strong>Ambiguity policy</strong>: Bare sentence-final numbers stay cardinals, invalid dates and
 times remain unchanged, and unit symbols only expand when preceded by a number. The
 exact written-to-spoken result, including abbreviation and initialism choices, is
-supplied by the pinned Spokenform profile rather than a second kokorog2p rule set.</p></li>
+supplied by the supported bounded Spokenform 0.2.x profile rather than a second
+kokorog2p rule set.</p></li>
 <li><p><strong>Regional variants</strong>: de-de, de-at, de-ch</p></li>
 </ul>
 <p>German was the first language migrated to the shared semantic-preparation architecture,
@@ -741,9 +742,9 @@ followed by French, Spanish, Italian, Portuguese, Czech, and English. These seve
 languages use the same per-homogeneous-run <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> path. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> remains the
 shared source of truth for lexical abbreviation and symbol recognition, while
 <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns accepted written-to-spoken behavior through its <code class="docutils literal notranslate"><span class="pre">for_kokorog2p</span></code>
-profile. The examples in this guide are illustrative; the pinned Spokenform release/API
-is authoritative. Kokorog2p retains only typography and phoneme-sensitive handling for
-spans Spokenform leaves protected or unsupported.</p>
+profile. The examples in this guide are illustrative; the supported bounded Spokenform
+0.2.x adapter API is authoritative. Kokorog2p retains only typography and
+phoneme-sensitive handling for spans Spokenform leaves protected or unsupported.</p>
 </section>
 <section id="id2">
 <h3>Usage</h3>

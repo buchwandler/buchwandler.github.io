@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 7c669107945b2214b1e78cd3596eddcdf0b551ed
+source_commit: 2e9c44616d08ae6271c3d81009bec7775ce5beb9
 source_url: https://github.com/buchwandler/spokenform/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.2.5
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.5
+release_tag: v0.2.6
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.6
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.5
+  ref: v0.2.6
   url: /tools/spokenform/
   current: false
 - name: main
@@ -59,6 +59,9 @@ entries:
 - slug: limitations
   title: spokenform Limitations
   url: /tools/spokenform/main/limitations/
+- slug: google_tn
+  title: spokenform Google TN benchmark
+  url: /tools/spokenform/main/google_tn/
 - slug: release-checklist
   title: spokenform Release checklist
   url: /tools/spokenform/main/release-checklist/

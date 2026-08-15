@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "be712cdada539083bfeb08fb2e026ddc0213ed2a"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -602,9 +602,12 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="dependencies-and-optional-spacy">
 <h2>Dependencies and optional spaCy</h2>
-<p>The package installs kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the
-other runtime support libraries it needs. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are
-optional. The default tokenizer policy is safe on a clean install:</p>
+<p>PyKokoro 0.8.3 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.8.0,&lt;0.9</span></code>. The package installs
+kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support
+libraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and
+installs its compatible Spokenform and abbr2words dependencies transitively; do not
+install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are optional. The
+default tokenizer policy is safe on a clean install:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back

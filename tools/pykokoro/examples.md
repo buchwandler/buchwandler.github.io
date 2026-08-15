@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/examples/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "787c4603af7f8e79f4cd2410ee1c079d42ed99c1"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -552,6 +552,16 @@ snippets in older examples, update them to the pipeline style shown below.</p>
 <h2>Pipeline Stage Showcase</h2>
 <p>Use the stage showcase script to see how the new pipeline stages fit together:</p>
 <p><code class="docutils literal notranslate"><span class="pre">examples/pipeline_stage_showcase.py</span></code></p>
+</section>
+<section id="spoken-form-normalization">
+<h2>Spoken-Form Normalization</h2>
+<p>Run:</p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/spokenform_showcase.py</span></code></p>
+<p>The example feeds unannotated text containing abbreviations, dates, times, currency,
+measurements, and other structured expressions through kokorog2p 0.8+’s automatic
+spoken-form preparation. It prints the prepared text and phonemes, then synthesizes the
+same raw source with PyKokoro. Use <code class="docutils literal notranslate"><span class="pre">--inspect-only</span></code> to inspect the front-end result
+without loading a synthesis model.</p>
 </section>
 <section id="hello-world">
 <h2>Hello World</h2>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
+docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
 search_enabled: true
 ---
 
@@ -606,6 +606,18 @@ approximation; use <code class="docutils literal notranslate"><span class="pre">
 such as <code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode. Language, voice,
 prosody, say-as, substitution, phoneme, break, mark, paragraph, heading, and supported
 audio attributes are passed to the renderer.</p>
+<section id="automatic-written-to-spoken-preparation-vs-explicit-say-as">
+<h3>Automatic written-to-spoken preparation vs explicit say-as</h3>
+<p>Ordinary unannotated text flows through the PyKokoro/kokorog2p 0.8.x preparation
+boundary. For supported languages and forms, kokorog2p may prepare dates, times,
+measurements, currency, ordinals, and abbreviations as speakable text before G2P.
+TTSForge does not rewrite source SSMD into automatic annotations or duplicate that
+upstream normalization.</p>
+<p>Explicit author intent remains separate: annotations such as <code class="docutils literal notranslate"><span class="pre">[100]{as=&quot;cardinal&quot;}</span></code> and
+other SSMD <code class="docutils literal notranslate"><span class="pre">say-as</span></code> values are document semantics and remain active overrides. The
+renderer applies explicit SSMD intent according to its upstream contract rather than
+treating every ordinary source form as an author annotation.</p>
+</section>
 </section>
 <section id="direct-ssmd-input">
 <h2>Direct SSMD input</h2>

@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -596,16 +596,24 @@ maps.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a></li>
 <li class="toctree-l1"><a class="reference internal" href="limitations/#limitations-and-readiness-gates">Limitations and readiness gates</a></li>
+<li class="toctree-l1"><a class="reference internal" href="google_tn/">Google TN benchmark</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="google_tn/#local-data">Local data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="google_tn/#format-and-integrity">Format and integrity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="google_tn/#profiles-and-metrics">Profiles and metrics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="google_tn/#scope-boundaries">Scope boundaries</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="release-checklist/">Release checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.5] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.4] - 2026-08-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.2.3] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.2.2] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.1] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.2.0] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.0] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.6] - 2026-08-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.5] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.2.4] - 2026-08-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.2.3] - 2026-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.2] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.2.1] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.2.0] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.1.0] - 2026-08-06</a></li>
 </ul>
 </li>
 </ul>

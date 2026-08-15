@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a56442d6a535f778245bcd9391b9c65ef8f399fb"
+docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
 search_enabled: true
 ---
 
@@ -548,92 +548,91 @@ entries and rebuild this file instead.</p>
 </div></blockquote>
 <section id="unreleased">
 <h2>[Unreleased]</h2>
-<section id="changed">
-<h3>Changed</h3>
-<ul class="simple">
-<li><p>Reordered migrated-language processing so Spokenform receives original source syntax
-before kokorog2p model-punctuation cleanup; removed the semantic-symbol allowlist.</p></li>
-<li><p>Preserved exact Spokenform source replacements, propagated upstream warnings, and
-retained replacement rule/language/stage provenance in token metadata.</p></li>
-<li><p>Raised the released dependency floors to <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.7,&lt;0.3.0</span></code> and
-<code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.2.5,&lt;0.3.0</span></code>, with compact structured handoff regressions.</p></li>
-<li><p>Fixed English contextual <code class="docutils literal notranslate"><span class="pre">N.0</span></code> release-label pronunciation through the <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>
-preparation layer, preserving source alignment and reading <code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">2.0</span></code> as
-<code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">two</span> <span class="pre">point</span> <span class="pre">oh</span></code> once the upstream release is consumed.</p></li>
-<li><p>Delegated German written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run while preserving kokorog2p overrides, token mapping, G2P,
-phoneme, and model responsibilities.</p></li>
-<li><p>Delegated French written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, removed duplicate French semantic hot-path helpers, and
-retained public number helpers as deprecated compatibility wrappers.</p></li>
-<li><p>Delegated Spanish written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, removed the duplicate local number and temperature
-hot-path helpers, and retained Spanish typography and dialect phoneme behavior.</p></li>
-<li><p>Delegated Italian written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, removed the duplicate Italian number/temperature hot
-path, and retained Italian typography, contraction handling, tokenization,
-stress/gemination, and phoneme behavior downstream.</p></li>
-<li><p>Delegated Portuguese written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, retaining Portuguese dialect selection, typography,
-tokenization, and phoneme behavior downstream.</p></li>
-<li><p>Delegated Czech written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, removed the duplicate Czech number/temperature hot path,
-and retained Czech typography, phonological rules, lexicon, and fallbacks.</p></li>
-<li><p>Delegated English written-to-spoken semantic preparation to <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> per
-source-aligned language run, removed duplicate English time and temperature helpers,
-and retained English typography, G2P, shared abbreviation customization, and the
-phoneme-sensitive <code class="docutils literal notranslate"><span class="pre">NumberConverter</span></code> path for reserved forms.</p></li>
-<li><p>Kept <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> as the shared lexical abbreviation and symbol source of truth for
-English, German, French, Spanish, Italian, Portuguese, and Czech while retaining local
-G2P typography and phoneme behavior.</p></li>
-</ul>
-</section>
-<section id="documentation">
-<h3>Documentation</h3>
-<ul class="simple">
-<li><p>Documented the <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> → <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> → <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> ownership boundary and the
-exact seven-language migration scope, including English’s reserved downstream number
-behavior and typography-only token normalization.</p></li>
-</ul>
-</section>
 </section>
 <section id="id1">
 <h2>[0.8.0] - Unreleased</h2>
-<section id="id2">
+<section id="added">
+<h3>Added</h3>
+<ul class="simple">
+<li><p>Added spaced ellipsis normalization and token realignment for model punctuation
+collapses</p></li>
+</ul>
+</section>
+<section id="changed">
 <h3>Changed</h3>
 <ul class="simple">
 <li><p>Changed German area, volume, hectare, and speed quantities to use the shared
 spokenform grammar</p></li>
 <li><p>Changed the reviewed seven-language pipeline to use shared written-to-spoken
 preparation</p></li>
-<li><p>Changed migrated-language written-to-spoken semantics to use Spokenform 0.2.5 and
-raised the abbr2words floor to 0.2.7</p></li>
+<li><p>Changed migrated-language written-to-spoken semantics to use Spokenform 0.2.6 and
+raised the abbr2words floor to 0.2.9</p></li>
+<li><p>Added Spokenform diagnostics and provenance tracking for upstream warnings</p></li>
+<li><p>Changed migrated-language processing order so Spokenform receives source syntax before
+model-punctuation cleanup</p></li>
+<li><p>Changed Spokenform source replacement handling to preserve exact spans and retain
+provenance in token metadata</p></li>
+<li><p>Changed dependency floors to abbr2words&gt;=0.2.9 and spokenform&gt;=0.2.6 with handoff
+regressions</p></li>
+<li><p>Changed English contextual N.0 release-label pronunciation through the spokenform
+preparation layer</p></li>
+<li><p>Changed German written-to-spoken semantic preparation to use spokenform while
+preserving kokorog2p overrides</p></li>
+<li><p>Changed French written-to-spoken semantic preparation to use spokenform and retained
+number helpers as deprecated</p></li>
+<li><p>Changed Spanish written-to-spoken semantic preparation to use spokenform and retained
+dialect phoneme behavior</p></li>
+<li><p>Changed Italian written-to-spoken semantic preparation to use spokenform and retained
+Italian phoneme behavior</p></li>
+<li><p>Changed Portuguese written-to-spoken semantic preparation to use spokenform and
+retained Portuguese phoneme behavior</p></li>
+<li><p>Changed Czech written-to-spoken semantic preparation to use spokenform and retained
+Czech phonological rules</p></li>
+<li><p>Changed English written-to-spoken semantic preparation to use spokenform and retained
+English G2P behavior</p></li>
+<li><p>Changed abbr2words to serve as shared lexical abbreviation source for all seven
+languages</p></li>
 </ul>
 </section>
-<section id="id3">
+<section id="fixed">
+<h3>Fixed</h3>
+<ul class="simple">
+<li><p>Fixed exact Spokenform replacement spans when sentence-final periods appear in
+structured replacements</p></li>
+<li><p>Fixed English abbreviation and core pipeline alignment compatibility with current
+Spokenform semantics</p></li>
+</ul>
+</section>
+<section id="documentation">
 <h3>Documentation</h3>
 <ul class="simple">
 <li><p>Documented English semantic ownership and the Portuguese migration boundary</p></li>
+<li><p>Documented that accepted Spokenform semantics are preserved literally in the English
+API documentation</p></li>
+<li><p>Documented the abbr2words-to-spokenform-to-kokorog2p ownership boundary and
+seven-language migration scope</p></li>
 </ul>
 </section>
 <section id="quality">
 <h3>Quality</h3>
 <ul class="simple">
 <li><p>Added runtime and parity fixture assets to portable Codecrate packs</p></li>
+<li><p>Added compact Spokenform handoff regression tests covering special characters and
+symbol preservation</p></li>
 </ul>
 <!-- generated by releaseledger -->
 </section>
 </section>
-<section id="id4">
+<section id="id2">
 <h2>[0.7.2] - 2026-08-04</h2>
-<section id="added">
+<section id="id3">
 <h3>Added</h3>
 <ul class="simple">
 <li><p>Added dependency-free adapters for SSMD annotation spans and phrasplit-compatible
 segment rebasing</p></li>
 </ul>
 </section>
-<section id="id5">
+<section id="id4">
 <h3>Changed</h3>
 <ul class="simple">
 <li><p>Changed automatic spaCy model discovery to be optional while keeping explicit model
@@ -641,14 +640,14 @@ requests strict</p></li>
 <li><p>Added valid German and French optional installation extras</p></li>
 </ul>
 </section>
-<section id="id6">
+<section id="id5">
 <h3>Documentation</h3>
 <ul class="simple">
 <li><p>Documented the SSMD-to-phrasplit-to-kokorog2p pipeline and shared clean-text
 coordinate contract</p></li>
 </ul>
 </section>
-<section id="id7">
+<section id="id6">
 <h3>Quality</h3>
 <ul class="simple">
 <li><p>Added cross-package coordinate, normalization, and no-model integration coverage</p></li>
@@ -656,9 +655,9 @@ coordinate contract</p></li>
 <!-- generated by releaseledger -->
 </section>
 </section>
-<section id="id8">
+<section id="id7">
 <h2>[0.7.1] - 2026-08-03</h2>
-<section id="fixed">
+<section id="id8">
 <h3>Fixed</h3>
 <ul class="simple">
 <li><p>Fixed French fallback voice resolution to prefer locale-specific fr-fr over bare fr,

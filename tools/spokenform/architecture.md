@@ -5,8 +5,8 @@ permalink: /tools/spokenform/architecture/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.5"
-docs_commit: "859153dd9687c67093b175dee4500bb7d2e20016"
+docs_ref: "v0.2.6"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -649,9 +649,17 @@ sports, and address forms, dates and times, contextual sequences,
 quantities/currencies/temperatures, specialist music/math forms, and generic
 acronym/product candidates. Fractions and date/phone ambiguity are resolved by
 semantic candidate priority rather than regex iteration order.
-Unclaimed or ambiguous forms remain opaque. Every selected candidate is still an
+Unclaimed or ambiguous forms remain opaque. The concrete rule-family ordering is
+centralized in <code class="docutils literal notranslate"><span class="pre">spokenform.precedence.SequencePriority</span></code>; recognizers do not rely
+on source regex iteration order to resolve time/reference, ISBN/phone,
+version/decimal, version/IPv4, or year/identifier conflicts. Every selected candidate is still an
 exact <code class="docutils literal notranslate"><span class="pre">Replacement</span></code>, so precedence does not weaken source/output mapping or
 protected-span behavior.</p>
+<p>Address numbers use the library’s stable default address policy: ordinary
+street numbers are rendered cardinally when the full address is recognized,
+while compact plates, suites, postal codes, and model identifiers retain their
+category-specific digitwise policies. Contradictory benchmark conventions are
+reported as data-quality evidence rather than encoded as row-specific rules.</p>
 </section>
 </section>
 </div>

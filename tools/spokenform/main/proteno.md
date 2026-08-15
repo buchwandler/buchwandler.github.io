@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7c669107945b2214b1e78cd3596eddcdf0b551ed"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -616,6 +616,12 @@ uses speech-token exactness plus the localized-letter equivalence diagnostic;
 literal comparison and word error rate are also reported. <code class="docutils literal notranslate"><span class="pre">unchanged</span></code> therefore
 means a likely miss for normalization cases but is generally desirable for
 identity cases.</p>
+<p>Each summary also exposes <code class="docutils literal notranslate"><span class="pre">diagnostic_aggregates</span></code> by primary rule, failure
+phase, ownership, and ambiguity family, plus an explicit per-row <code class="docutils literal notranslate"><span class="pre">outcome</span></code>
+(<code class="docutils literal notranslate"><span class="pre">semantic-mismatch</span></code>, <code class="docutils literal notranslate"><span class="pre">presentation-only</span></code>, <code class="docutils literal notranslate"><span class="pre">protected-by-profile</span></code>,
+<code class="docutils literal notranslate"><span class="pre">questionable-target</span></code>, <code class="docutils literal notranslate"><span class="pre">malformed-ground-truth</span></code>, or <code class="docutils literal notranslate"><span class="pre">runtime-error</span></code>). The local
+<code class="docutils literal notranslate"><span class="pre">PROTENO_QUARANTINE</span></code> table is intentionally separate from downloaded data and
+is populated only after a concrete source/target inconsistency is reviewed.</p>
 <p>Compare two local runs with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno_compare<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>benchmark-results/proteno/&lt;before&gt;<span class="w"> </span><span class="se">\</span>
@@ -631,7 +637,14 @@ must not be committed.</p>
 <p>Proteno reports default to <code class="docutils literal notranslate"><span class="pre">normalize_literals=False</span></code>. The extended profile is
 opt-in through <code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">extended</span></code> or <code class="docutils literal notranslate"><span class="pre">--normalize-literals</span></code> and is reported
 separately so protected literal behavior is not mixed into the conservative
-default score.</p>
+default score. Extended runs use conservative unknown-acronym handling and
+registered source-letter spelling; contextual long-number normalization is an
+explicit experiment, never the public default. The caller-level aggressive
+combination (<code class="docutils literal notranslate"><span class="pre">spell_unknown</span></code> plus cardinal long numbers) is not a release
+profile.</p>
+<p>See <span class="xref myst">the benchmark ownership table</span> for the
+safety, owned, extended-candidate, protected, downstream, unsupported, and
+quarantine gates.</p>
 </section>
 </section>
 </div>

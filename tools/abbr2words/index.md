@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.7"
-docs_commit: "fb644a7bef5f70043c12b80443fd19868f4055bf"
+docs_ref: "v0.2.9"
+docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
 search_enabled: true
 ---
 
@@ -597,17 +597,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-unreleased">[v0.2.7] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-9-2026-08-14">[v0.2.9] - 2026-08-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-8-unreleased">[v0.2.8] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-2026-08-12">[v0.2.7] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.2.4] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.2.3] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.2.2] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.2.4] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.3] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.2] - 2026-08-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-06">[v0.2.1] - 2026-08-06</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-05">[v0.1.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.1.0] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.0] - 2026-08-05</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>

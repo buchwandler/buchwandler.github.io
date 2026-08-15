@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "abbr2words"
-permalink: /tools/abbr2words/main/
-nav_tool: abbr2words-main
-docs_project: "abbr2words"
-docs_variant: "main"
-docs_ref: "main"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+title: "spokenform Google TN benchmark"
+permalink: /tools/spokenform/google_tn/
+nav_tool: spokenform
+docs_project: "spokenform"
+docs_variant: "release"
+docs_ref: "v0.2.6"
+docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
 search_enabled: true
 ---
 
@@ -540,80 +540,83 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="abbr2words">
-<h1>abbr2words</h1>
-<p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">User guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#users">Users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#development">Development</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#documentation">Documentation</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="customization/">Customization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="customization/#isolated-registries">Isolated registries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#ambiguous-english-dotted-forms">Ambiguous English dotted forms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#shared-registries">Shared registries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#unit-customization">Unit customization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#finite-aliases-and-exact-replacements">Finite aliases and exact replacements</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pos-annotations/">External POS annotations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#tokenannotation">TokenAnnotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#what-pos-changes-today">What POS changes today</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#spacy-adapter">spaCy adapter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#pos-guard-precedence-and-limitations">POS guard precedence and limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cli/">Command line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="languages/">Languages</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="languages/#known-ambiguity">Known ambiguity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#coverage-tiers-and-generated-inventory">Coverage tiers and generated inventory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="language-sources/">Language sources and review policy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#registry-scope">Registry scope</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#source-authority">Source authority</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#per-language-ledger">Per-language ledger</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#known-limitations">Known limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/#convenience-functions">Convenience functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#initialism-policies">Initialism policies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#mutable-facade">Mutable facade</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#guarded-unit-symbols">Guarded unit symbols</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#structured-quantity-matches">Structured quantity matches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#core-types">Core types</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/#install-and-run">Install and run</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#output-and-processing">Output and processing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-9-2026-08-14">[v0.2.9] - 2026-08-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-8-unreleased">[v0.2.8] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-2026-08-12">[v0.2.7] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.2.4] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.3] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.2] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-06">[v0.2.1] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-05">[v0.1.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.0] - 2026-08-05</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>
-</ul>
+<section id="google-tn-benchmark">
+<h1>Google TN benchmark</h1>
+<p>Spokenform’s Google TN benchmark consumes the Google text-normalization TSV
+format also used by NVIDIA NeMo. It is called <strong>Google TN</strong> because the format
+belongs to the Google text-normalization corpus; NeMo is one consumer, not a
+runtime dependency or a separate corpus format.</p>
+<p>This is an offline diagnostic benchmark. Google TN targets were produced by an
+existing normalization system and are not unconditional human gold truth. Raw
+and reviewed metrics should be inspected alongside PolyNorm, Proteno, mapping,
+identity-safety, protected-literal, and unit-test results. It is not a normal
+CI or release gate.</p>
+<section id="local-data">
+<h2>Local data</h2>
+<p>Supply a local English <code class="docutils literal notranslate"><span class="pre">en_with_types</span></code> directory. The default <code class="docutils literal notranslate"><span class="pre">test</span></code> split uses
+the official evaluation shard <code class="docutils literal notranslate"><span class="pre">output-00099-of-00100</span></code> and its first 100002
+physical lines:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.google_tn<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-dir<span class="w"> </span>/path/to/en_with_types
+</pre></div>
 </div>
+<p>Useful focused runs are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.google_tn<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-dir<span class="w"> </span>/path/to/en_with_types<span class="w"> </span>--class<span class="w"> </span>DATE<span class="w"> </span>--limit<span class="w"> </span><span class="m">500</span>
+
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.google_tn<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--data-dir<span class="w"> </span>/path/to/en_with_types<span class="w"> </span>--case<span class="w"> </span>en:099:000123<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--split<span class="w"> </span>test-full<span class="w"> </span>--show-failures<span class="w"> </span>all
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">test-full</span></code> reads the complete evaluation shard; <code class="docutils literal notranslate"><span class="pre">all</span></code> reads all local output
+shards. <code class="docutils literal notranslate"><span class="pre">--limit</span></code>, class filters, and case filters do not renumber source-derived
+case IDs. The initial implementation deliberately does not download data or
+claim a corpus license: callers provide and manage their local source files.</p>
+</section>
+<section id="format-and-integrity">
+<h2>Format and integrity</h2>
+<p>Rows are <code class="docutils literal notranslate"><span class="pre">CLASS&lt;TAB&gt;WRITTEN&lt;TAB&gt;SPOKEN</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;eos&gt;\t&lt;eos&gt;</span></code> ends a sentence.
+<code class="docutils literal notranslate"><span class="pre">&lt;self&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">sil</span></code>, and compatibility <code class="docutils literal notranslate"><span class="pre">&lt;sil&gt;</span></code> project to the written field for
+forward text normalization. Unknown classes remain visible. Source sentences
+are assembled by joining written fields with one ASCII space (<code class="docutils literal notranslate"><span class="pre">field_join_v1</span></code>),
+which makes every row span exact and reproducible without a detokenizer.</p>
+<p>The benchmark records source filename, byte size, SHA256, selected line range,
+surface and sentinel policies, Spokenform/dependency versions, Python/platform,
+and benchmark configuration. Gold class labels are grouping metadata only and
+are never passed as annotations or semantic hints to <code class="docutils literal notranslate"><span class="pre">spokenform.prepare()</span></code>.</p>
+</section>
+<section id="profiles-and-metrics">
+<h2>Profiles and metrics</h2>
+<p>The default profile uses <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, <code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;none&quot;</span></code>,
+conservative acronym and literal policies, and <code class="docutils literal notranslate"><span class="pre">long_number_mode=preserve</span></code>.
+<code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">extended</span></code>, <code class="docutils literal notranslate"><span class="pre">--normalize-literals</span></code>, and the explicit
+<code class="docutils literal notranslate"><span class="pre">--long-number-mode</span> <span class="pre">cardinal</span></code> option are experiments, not default behavior.</p>
+<p>Reports include sentence literal/speech/equivalent exactness, presentation-only
+differences, semantic failures, WER, unchanged cases, normalization versus
+identity rates, mapped row/span exactness, ambiguity counts, and raw-class
+aggregates. Row outcomes distinguish <code class="docutils literal notranslate"><span class="pre">correct-transform</span></code>, <code class="docutils literal notranslate"><span class="pre">identity-preserved</span></code>,
+<code class="docutils literal notranslate"><span class="pre">transform-miss</span></code>, <code class="docutils literal notranslate"><span class="pre">wrong-transform</span></code>, <code class="docutils literal notranslate"><span class="pre">identity-mutation</span></code>, <code class="docutils literal notranslate"><span class="pre">presentation-only</span></code>,
+<code class="docutils literal notranslate"><span class="pre">mapping-ambiguous</span></code>, and <code class="docutils literal notranslate"><span class="pre">runtime-error</span></code>.</p>
+<p>Each run is written under <code class="docutils literal notranslate"><span class="pre">benchmark-results/google-tn/&lt;run-id&gt;/</span></code> with
+<code class="docutils literal notranslate"><span class="pre">summary.json</span></code>, source-bearing <code class="docutils literal notranslate"><span class="pre">rows.jsonl</span></code> and <code class="docutils literal notranslate"><span class="pre">failures.jsonl</span></code>, and grouped
+Markdown failure reports. Keep these results local. Compare runs with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.google_tn_compare<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>benchmark-results/google-tn/&lt;before&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>benchmark-results/google-tn/&lt;after&gt;
+</pre></div>
+</div>
+<p>The comparison reports aggregate, raw-class, outcome, resolved, new, and
+remaining stable-ID deltas.</p>
+</section>
+<section id="scope-boundaries">
+<h2>Scope boundaries</h2>
+<p>The parser is language-neutral, but the official adapter initially supports
+English to <code class="docutils literal notranslate"><span class="pre">en_US</span></code> only. This feature adds no NeMo, PyTorch, Transformers,
+Moses, Kaggle, neural, WFST, or network dependency. It does not add global
+NeMo character rewrites, oracle class input, Russian/Polish runtime support, or
+an automatic digitwise long-number default.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

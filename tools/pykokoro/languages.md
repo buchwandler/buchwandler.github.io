@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "abbr2words"
-permalink: /tools/abbr2words/main/
-nav_tool: abbr2words-main
-docs_project: "abbr2words"
-docs_variant: "main"
-docs_ref: "main"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+title: "pykokoro Language and model profiles"
+permalink: /tools/pykokoro/languages/
+nav_tool: pykokoro
+docs_project: "pykokoro"
+docs_variant: "release"
+docs_ref: "v0.8.3"
+docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
 search_enabled: true
 ---
 
@@ -540,80 +540,47 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="abbr2words">
-<h1>abbr2words</h1>
-<p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">User guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#users">Users</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#development">Development</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#documentation">Documentation</a></li>
+<section id="language-and-model-profiles">
+<h1>Language and model profiles</h1>
+<p>PyKokoro resolves omitted model settings from the requested language before creating the
+ONNX backend or G2P cache. Non-German runs retain the existing Hugging Face v1.0
+default; Chinese automatic selection retains the GitHub v1.1-zh policy.</p>
+<section id="german">
+<h2>German</h2>
+<p><code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-at</span></code>, and <code class="docutils literal notranslate"><span class="pre">de-ch</span></code> automatically select:</p>
+<ul class="simple">
+<li><p>source: GitHub</p></li>
+<li><p>variant: <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code></p></li>
+<li><p>quality: <code class="docutils literal notranslate"><span class="pre">fp32</span></code></p></li>
+<li><p>voice: <code class="docutils literal notranslate"><span class="pre">martin</span></code></p></li>
+<li><p>vocabulary: built-in Kokoro v1.0</p></li>
 </ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quickstart</a></li>
-<li class="toctree-l1"><a class="reference internal" href="customization/">Customization</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="customization/#isolated-registries">Isolated registries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#ambiguous-english-dotted-forms">Ambiguous English dotted forms</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#shared-registries">Shared registries</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#unit-customization">Unit customization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="customization/#finite-aliases-and-exact-replacements">Finite aliases and exact replacements</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="pos-annotations/">External POS annotations</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#tokenannotation">TokenAnnotation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#what-pos-changes-today">What POS changes today</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#spacy-adapter">spaCy adapter</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pos-annotations/#pos-guard-precedence-and-limitations">POS guard precedence and limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="cli/">Command line interface</a></li>
-<li class="toctree-l1"><a class="reference internal" href="languages/">Languages</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="languages/#known-ambiguity">Known ambiguity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#coverage-tiers-and-generated-inventory">Coverage tiers and generated inventory</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="language-sources/">Language sources and review policy</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#registry-scope">Registry scope</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#source-authority">Source authority</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#per-language-ledger">Per-language ledger</a></li>
-<li class="toctree-l2"><a class="reference internal" href="language-sources/#known-limitations">Known limitations</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/#convenience-functions">Convenience functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#initialism-policies">Initialism policies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#mutable-facade">Mutable facade</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#guarded-unit-symbols">Guarded unit symbols</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#structured-quantity-matches">Structured quantity matches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#core-types">Core types</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/#install-and-run">Install and run</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#output-and-processing">Output and processing</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-9-2026-08-14">[v0.2.9] - 2026-08-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-8-unreleased">[v0.2.8] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-2026-08-12">[v0.2.7] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.2.4] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.3] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.2] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-06">[v0.2.1] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-05">[v0.1.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.0] - 2026-08-05</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>
-</ul>
+<p>The Martin profile is a single-speaker model. Its ONNX file is
+<code class="docutils literal notranslate"><span class="pre">kokoro-german-martin-v1.2.onnx</span></code>; its voice archive is <code class="docutils literal notranslate"><span class="pre">voices-german-martin-v1.2.bin</span></code>.
+Both downloads are checked with SHA-256 and the voice archive must contain <code class="docutils literal notranslate"><span class="pre">martin</span></code>. No
+model-specific config file is downloaded.</p>
+<p>The legacy Eva/Bernd profile remains explicit:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;df_eva&quot;</span><span class="p">,</span>
+    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
+    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-de&quot;</span><span class="p">,</span>
+    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
 </div>
+<p>Automatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x
+dependency across the language pipelines where kokorog2p supports it. This includes
+structured forms such as dates, times, decimal commas, measurements, ordinals,
+durations, currency amounts, and abbreviations before G2P. Sentence segmentation and
+source offsets continue to refer to the original document text. PyKokoro’s supported
+language and model list remains authoritative; kokorog2p support alone does not add a
+new synthesizer language.</p>
+<p>Managed Martin cache hits are checked against the pinned SHA-256 digests before use;
+invalid files are removed and downloaded again. Explicit custom paths are validated in
+place and are never replaced by managed downloads. The profile’s <code class="docutils literal notranslate"><span class="pre">suggested_speed</span></code>
+metadata is advisory only, so callers should set <code class="docutils literal notranslate"><span class="pre">GenerationConfig(speed=1.125)</span></code> when
+they want the demonstration speed.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

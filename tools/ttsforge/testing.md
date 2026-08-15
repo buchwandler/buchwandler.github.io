@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/testing/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "31eb8dd7b6bc49f05a95cf5de197d0b8ef74d49c"
+docs_ref: "v0.3.5"
+docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
 search_enabled: true
 ---
 
@@ -558,6 +558,23 @@ schema-5 paragraph rejection, atomic output and ownership, unit resume boundarie
 filename ordering, timing parity, no-gap merging, strict CLI mismatch handling, and
 merge-only recovery. The main regression test models a changed stochastic descriptor
 hash and verifies that a saved prefix is not rendered again.</p>
+<section id="minimum-dependency-contract">
+<h2>Minimum dependency contract</h2>
+<p>Release CI separately installs the exact lower-bound generation stack:</p>
+<ul class="simple">
+<li><p>PyKokoro 0.8.3</p></li>
+<li><p>kokorog2p 0.8.0</p></li>
+</ul>
+<p>The minimum-dependency job proves that the package’s declared lower bounds install and
+that representative written-to-spoken source reaches the upstream preparation/G2P
+boundary. The normal OS/Python matrix continues to test currently resolved compatible
+dependencies.</p>
+<p>The focused local equivalent is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_packaging.py<span class="w"> </span>tests/test_dependency_contract.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/test_pykokoro_unit_contract.py<span class="w"> </span>tests/test_name_extractor.py<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>tests/test_resume_identity.py<span class="w"> </span>tests/test_resume_integrity.py
+</pre></div>
+</div>
 <p>The maintained coverage policy is staged so high-risk code has explicit gates while the
 repository-wide target can be raised as the large CLI modules are decomposed:</p>
 <ul class="simple">
@@ -575,6 +592,7 @@ is stricter than the initial 80% target.</p></li>
 <p>The final changed-line check compares <code class="docutils literal notranslate"><span class="pre">coverage.xml</span></code> with <code class="docutils literal notranslate"><span class="pre">origin/main</span></code> using
 <code class="docutils literal notranslate"><span class="pre">diff-cover</span></code>. A local checkout without that remote can run the first three coverage
 commands directly and use an appropriate local base branch for the final comparison.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

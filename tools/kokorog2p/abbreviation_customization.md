@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/abbreviation_customization/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.7.2"
-docs_commit: "aef17979f3930b332620e35a4d2cfd5c9ea374ef"
+docs_ref: "v0.8.0"
+docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
 search_enabled: true
 ---
 
@@ -554,6 +554,14 @@ when:</p>
 instead of “Doctor”)</p></li>
 <li><p>You need context-aware expansions (e.g., “St.” → “Street” vs “Saint”)</p></li>
 </ul>
+<p>The abbreviation registry is provided by the required <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> dependency. The
+legacy <code class="docutils literal notranslate"><span class="pre">kokorog2p.*.abbreviations</span></code> import paths remain as deprecated, warning-free
+compatibility shims for this transition release; new integrations should import registry
+types and shared registries from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
+<p>The German Phase 1 migration uses this same shared registry through spokenform and
+kokorog2p. A customization made through the kokorog2p API remains visible to subsequent
+German semantic preparation; legacy normalizer import paths are compatibility facades,
+not independent registries.</p>
 </section>
 <section id="quick-start">
 <h2>Quick Start</h2>
