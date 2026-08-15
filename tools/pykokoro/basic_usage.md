@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/basic_usage/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.3"
-docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
+docs_ref: "v0.8.4"
+docs_commit: "ab23c6f5afff03efa326fc2e2c0d438a926abd75"
 search_enabled: true
 ---
 
@@ -897,10 +897,13 @@ annotations require an explicit resolver.</p>
 <h3>Emphasis behavior</h3>
 <p>The default <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;plain&quot;)</span></code> preserves emphasis metadata but
 leaves speech unmodified. Use <code class="docutils literal notranslate"><span class="pre">emphasis_mode=&quot;approximate&quot;</span></code> to opt into the core
-volume-only mapping <code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. <code class="docutils literal notranslate"><span class="pre">warn</span></code>
-keeps ordinary speech and reports one trace warning per logical source segment; <code class="docutils literal notranslate"><span class="pre">error</span></code>
-rejects effectful emphasis before inference. <code class="docutils literal notranslate"><span class="pre">emphasis=&quot;none&quot;</span></code> is silently accepted in
-every mode, and explicit prosody values take precedence.</p>
+gain-only mapping <code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. Set
+<code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale</span></code> between <code class="docutils literal notranslate"><span class="pre">0.0</span></code> and <code class="docutils literal notranslate"><span class="pre">2.0</span></code> to adjust only that automatic gain: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
+is the current/default strength, <code class="docutils literal notranslate"><span class="pre">0.5</span></code> halves it, and <code class="docutils literal notranslate"><span class="pre">1.5</span></code> makes it 50% stronger.
+<code class="docutils literal notranslate"><span class="pre">warn</span></code> keeps ordinary speech and reports one trace warning per logical source segment;
+<code class="docutils literal notranslate"><span class="pre">error</span></code> rejects effectful emphasis before inference. <code class="docutils literal notranslate"><span class="pre">emphasis=&quot;none&quot;</span></code> is silently
+accepted in every mode. Explicit SSMD <code class="docutils literal notranslate"><span class="pre">volume</span></code> takes precedence, and scaling does not
+add automatic pitch or rate changes.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">SSMDRenderConfig</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>
@@ -914,7 +917,13 @@ every mode, and explicit prosody values take precedence.</p>
 <span class="s2">---</span>
 <span class="s2">&lt;div voice=&quot;host&quot;&gt;Welcome to the portable podcast.&lt;/div&gt;</span>
 <span class="s2">&quot;&quot;&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">ssmd</span><span class="o">=</span><span class="n">SSMDRenderConfig</span><span class="p">()))</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">ssmd</span><span class="o">=</span><span class="n">SSMDRenderConfig</span><span class="p">(</span>
+        <span class="n">emphasis_mode</span><span class="o">=</span><span class="s2">&quot;approximate&quot;</span><span class="p">,</span>
+        <span class="n">emphasis_gain_scale</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">])</span>
 </pre></div>
 </div>

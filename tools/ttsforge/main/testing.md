@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
 search_enabled: true
 ---
 
@@ -562,7 +562,7 @@ hash and verifies that a saved prefix is not rendered again.</p>
 <h2>Minimum dependency contract</h2>
 <p>Release CI separately installs the exact lower-bound generation stack:</p>
 <ul class="simple">
-<li><p>PyKokoro 0.8.3</p></li>
+<li><p>PyKokoro 0.8.4</p></li>
 <li><p>kokorog2p 0.8.0</p></li>
 </ul>
 <p>The minimum-dependency job proves that the package’s declared lower bounds install and

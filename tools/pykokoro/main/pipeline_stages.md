@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
+docs_commit: "ab23c6f5afff03efa326fc2e2c0d438a926abd75"
 search_enabled: true
 ---
 
@@ -809,17 +809,19 @@ script demonstrates multiple wiring styles:</p>
 <h3>SSMD 0.8 document controls</h3>
 <p><code class="docutils literal notranslate"><span class="pre">PipelineConfig.ssmd</span></code> controls header parsing, provider-scoped API binding overrides,
 unknown-header strictness, missing-voice behavior, pause-default overrides, emphasis
-policy, and the explicit audio source resolver. Header bindings override direct logical
-references, while API bindings override header bindings. Document pause defaults are
-reduced before G2P; explicit breaks take precedence and simultaneous implicit defaults
-use the maximum duration. <code class="docutils literal notranslate"><span class="pre">DocumentResult.header</span></code>/<code class="docutils literal notranslate"><span class="pre">body</span></code> and
-<code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> expose copied metadata.</p>
+policy and gain scaling, and the explicit audio source resolver. Header bindings
+override direct logical references, while API bindings override header bindings.
+Document pause defaults are reduced before G2P; explicit breaks take precedence and
+simultaneous implicit defaults use the maximum duration. <code class="docutils literal notranslate"><span class="pre">DocumentResult.header</span></code>/<code class="docutils literal notranslate"><span class="pre">body</span></code>
+and <code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> expose copied metadata.</p>
 <p>Emphasis capability policy is evaluated after phoneme processing and before
 <code class="docutils literal notranslate"><span class="pre">audio_generation</span></code>. <code class="docutils literal notranslate"><span class="pre">plain</span></code> preserves metadata without modifying audio, <code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one
 diagnostic per logical source segment, <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects before inference, and
-<code class="docutils literal notranslate"><span class="pre">approximate</span></code> adds deterministic volume metadata (<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>,
-<code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>). <code class="docutils literal notranslate"><span class="pre">none</span></code> is ordinary speech in every mode. Explicit prosody metadata is
-retained with precedence over approximation.</p>
+<code class="docutils literal notranslate"><span class="pre">approximate</span></code> adds deterministic gain metadata (<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>,
+<code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>) at <code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=1.0</span></code>. The scale accepts finite values from
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code> and changes only automatic gain; semantic emphasis remains intact.
+<code class="docutils literal notranslate"><span class="pre">none</span></code> is ordinary speech in every mode. Explicit <code class="docutils literal notranslate"><span class="pre">volume</span></code> metadata is retained with
+precedence over approximation, and no automatic rate or pitch metadata is added.</p>
 </section>
 </section>
 <section id="local-model-files-and-providers">

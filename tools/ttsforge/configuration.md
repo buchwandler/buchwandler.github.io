@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/configuration/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.5"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_ref: "v0.3.6"
+docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
 search_enabled: true
 ---
 
@@ -644,10 +644,9 @@ false only for literal header text.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssmd_missing_voice</span></code> (<code class="docutils literal notranslate"><span class="pre">error</span></code> or <code class="docutils literal notranslate"><span class="pre">use-default</span></code>) : Policy for logical voice references
 that cannot be resolved.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssmd_validate_profile</span></code> and <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> : Validate Kokoro-supported constructs
-and choose <code class="docutils literal notranslate"><span class="pre">plain</span></code> (the default), <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code> emphasis behavior.
-Plain emphasis is spoken normally without automatic prosody; explicit SSMD prosody
-remains active. Approximation can also be selected per conversion with
-<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code>.</p>
+and choose the advanced <code class="docutils literal notranslate"><span class="pre">plain</span></code> (default), <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code> policy.
+Plain emphasis is spoken normally without automatic gain; explicit SSMD prosody remains
+active. Normal audible strength should use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssmd_voice_bindings</span></code> : Mapping such as <code class="docutils literal notranslate"><span class="pre">{&quot;narrator&quot;:</span> <span class="pre">&quot;af_sarah&quot;}</span></code>; CLI/API bindings are
 supplied with repeated <code class="docutils literal notranslate"><span class="pre">--ssmd-voice</span> <span class="pre">ROLE=VOICE</span></code>.</p>
 </section>
@@ -661,11 +660,17 @@ not silently fall back to it when the Markdown API is unavailable.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> (boolean, default <code class="docutils literal notranslate"><span class="pre">true</span></code>) preserves or unwraps EPUB italic and bold
 semantics while leaving headings, paragraphs, and scene breaks independent. CSS
 emphasis is resolved by epub2text in Markdown mode.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> controls how preserved SSMD emphasis is rendered audibly.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">emphasis_level</span></code> controls friendly gain-only audible strength while
+<code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> remains the advanced policy setting.</p></li>
 </ol>
-<p><code class="docutils literal notranslate"><span class="pre">plain</span></code> preserves normal synthesis, <code class="docutils literal notranslate"><span class="pre">approximate</span></code> enables the current deterministic
-gain-only approximation, and <code class="docutils literal notranslate"><span class="pre">warn</span></code>/<code class="docutils literal notranslate"><span class="pre">error</span></code> report or reject emphasis metadata. The
-approximation does not provide configurable strength profiles.</p>
+<p><code class="docutils literal notranslate"><span class="pre">emphasis_level</span></code> accepts <code class="docutils literal notranslate"><span class="pre">null</span></code>, <code class="docutils literal notranslate"><span class="pre">0</span></code> (Off), <code class="docutils literal notranslate"><span class="pre">1</span></code> (Light), <code class="docutils literal notranslate"><span class="pre">2</span></code> (Normal), and <code class="docutils literal notranslate"><span class="pre">3</span></code> (Strong).
+The default is <code class="docutils literal notranslate"><span class="pre">null</span></code>, which falls back to the legacy <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> value and
+therefore remains audible-off with the normal <code class="docutils literal notranslate"><span class="pre">plain</span></code> default. Level 2 is equivalent to
+the legacy flag. <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> accepts <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">error</span></code>; the latter two remain advanced policies because they cannot be represented by a
+numeric strength. If both keys are configured, equivalent <code class="docutils literal notranslate"><span class="pre">plain</span></code>/level-0 or
+<code class="docutils literal notranslate"><span class="pre">approximate</span></code>/level-2 settings are accepted, while a strict <code class="docutils literal notranslate"><span class="pre">warn</span></code>/<code class="docutils literal notranslate"><span class="pre">error</span></code> policy
+conflicts with a level.</p>
 <p><code class="docutils literal notranslate"><span class="pre">prosody_method</span></code> (default <code class="docutils literal notranslate"><span class="pre">wsola</span></code>) selects the AudioSig algorithm for explicit SSMD rate
 and pitch annotations. Supported methods are <code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>, <code class="docutils literal notranslate"><span class="pre">psola</span></code> (an
 alias for <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>), and <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code>.</p>
@@ -677,6 +682,7 @@ general audiobook choice; ESOLA and PSOLA are speech-oriented alternatives, whil
 vocoder is primarily a reference or fallback path.</p>
 <p>Examples:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>detect_emphasis<span class="w"> </span><span class="nb">true</span><span class="w"> </span>--set<span class="w"> </span>ssmd_emphasis_mode<span class="w"> </span>approximate
+ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>emphasis_level<span class="w"> </span><span class="m">2</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>epub_content_mode<span class="w"> </span>markdown
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>epub_content_mode<span class="w"> </span>plain
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>prosody_method<span class="w"> </span>esola<span class="w"> </span>--set<span class="w"> </span>prosody_fallback_methods<span class="w"> </span><span class="s1">&#39;[&quot;wsola&quot;,&quot;phase_vocoder&quot;]&#39;</span>
@@ -1172,7 +1178,7 @@ provider around runner initialization, chapter synthesis, WAV writing, result re
 state saves, final merging, and converter cleanup. RSS may remain elevated because
 native allocators retain high-water pages; that alone is not evidence of a provider
 leak.</p>
-<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.3,&lt;0.9</span></code>, uses compact segment results, and releases
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.4,&lt;0.9</span></code>, uses compact segment results, and releases
 completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
 remains buffered and streaming is future work.</p>
 </section>

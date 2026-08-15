@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.3"
-docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
+docs_ref: "v0.8.4"
+docs_commit: "ab23c6f5afff03efa326fc2e2c0d438a926abd75"
 search_enabled: true
 ---
 
@@ -912,12 +912,15 @@ binding, and pause metadata; <code class="docutils literal notranslate"><span cl
 offsets. Audio annotations require an explicit resolver and fall back to <code class="docutils literal notranslate"><span class="pre">alt</span></code> text;
 Kokoro extensions are rejected by profile validation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig.emphasis_mode</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;plain&quot;</span></code>, preserving emphasis metadata
-without changing generated audio. <code class="docutils literal notranslate"><span class="pre">&quot;approximate&quot;</span></code> applies core volume-only mappings
-(<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>); explicit prosody values win.
-<code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> preserves audio and adds one <code class="docutils literal notranslate"><span class="pre">ssmd.emphasis_unsupported</span></code> warning per logical
-source segment, while <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> rejects effectful emphasis before inference. The <code class="docutils literal notranslate"><span class="pre">none</span></code>
-level is always a silent no-op. Approximation is processed by the core AudioSig
-dependency; no prosody extra is required.</p>
+without changing generated audio. <code class="docutils literal notranslate"><span class="pre">&quot;approximate&quot;</span></code> applies core gain-only mappings
+(<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>) at <code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=1.0</span></code>. The
+scale accepts finite values from <code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code>; <code class="docutils literal notranslate"><span class="pre">0.5</span></code> halves automatic gain and
+<code class="docutils literal notranslate"><span class="pre">1.5</span></code> makes it 50% stronger without changing semantic emphasis. Explicit <code class="docutils literal notranslate"><span class="pre">volume</span></code> values
+win. <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> preserves audio and adds one <code class="docutils literal notranslate"><span class="pre">ssmd.emphasis_unsupported</span></code> warning per
+logical source segment, while <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> rejects effectful emphasis before inference. The
+<code class="docutils literal notranslate"><span class="pre">none</span></code> level is always a silent no-op. Scaling is gain-only: it adds no automatic <code class="docutils literal notranslate"><span class="pre">rate</span></code>
+or <code class="docutils literal notranslate"><span class="pre">pitch</span></code> fields. Explicit SSMD prosody remains independent and no prosody extra is
+required.</p>
 </section>
 <section id="see-also">
 <h2>See Also</h2>

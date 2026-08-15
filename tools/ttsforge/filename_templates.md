@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/filename_templates/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.5"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_ref: "v0.3.6"
+docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
 search_enabled: true
 ---
 

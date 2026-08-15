@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.5"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_ref: "v0.3.6"
+docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
 search_enabled: true
 ---
 
@@ -641,6 +641,7 @@ ONNX TTS (Text-to-Speech).</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.3] - 2026-08-05</a></li>

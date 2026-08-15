@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.5"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_ref: "v0.3.6"
+docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
 search_enabled: true
 ---
 
@@ -614,14 +614,16 @@ chapter content. Default: enabled.</p>
 block.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-unknown-header</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">warn</span></code>, <code class="docutils literal notranslate"><span class="pre">error</span></code>, or <code class="docutils literal notranslate"><span class="pre">ignore</span></code> unknown header keys.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-missing-voice</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">error</span></code> or <code class="docutils literal notranslate"><span class="pre">use-default</span></code> for unresolved logical roles.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">MODE</span></code> : <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code>. The default is the
-persisted <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code> value, normally <code class="docutils literal notranslate"><span class="pre">plain</span></code>. Plain speaks emphasis unchanged;
-approximate applies segment-level volume/rate changes.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> : Convenience opt-in equivalent to
-<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code>. It applies the current deterministic gain-only
-approximation to existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB
-italic/bold styling should first be extracted into SSMD annotations. This flag cannot be
-combined with <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">INTEGER</span></code> : User-friendly audible strength: <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>,
+<code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, or <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Level 2 is the backward-compatible equivalent of
+<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code>; omit the option to preserve saved resume settings.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">MODE</span></code> : Advanced policy: <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code>.
+For normal audible strength use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code>. Approximation is gain-only; it does
+not change speech rate.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> : Deprecated compatibility flag equivalent to
+<code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">2</span></code>. It applies the current deterministic gain-only approximation to
+existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling
+should first be extracted into SSMD annotations. Choose only one emphasis control.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">[markdown|plain]</span></code> : Select structured chapter Markdown extraction
 (default) or the explicit legacy plain compatibility path.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code> : Preserve or unwrap EPUB italic and bold

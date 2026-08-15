@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
 search_enabled: true
 ---
 
@@ -834,13 +834,18 @@ default, while emphasis is spoken plainly:</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--no-detect-emphasis</span></code> to unwrap italic/bold delimiters without removing headings or
 scene breaks. Use <code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">plain</span></code> to compare against the legacy flattened
 source path. The persisted equivalents are <code class="docutils literal notranslate"><span class="pre">epub_content_mode</span></code> and <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code>.</p>
-<p>To opt into the current deterministic gain-only emphasis approximation, enable it
-separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--detect-emphasis<span class="w"> </span>--enable-ssmd-emphasis
+<p>To control audible emphasis strength without changing the source semantics, use the
+friendly level option:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--emphasis-level<span class="w"> </span><span class="m">2</span>
+ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--emphasis-level<span class="w"> </span><span class="m">3</span>
 </pre></div>
 </div>
-<p>The persistent policy can be set with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">ssmd_emphasis_mode</span> <span class="pre">plain</span></code>.
-Explicit SSMD prosody remains supported in plain emphasis mode.</p>
+<p>The levels are <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>, <code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, and <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Persist the normal level
+with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">emphasis_level</span> <span class="pre">2</span></code>; subsequent conversions need no emphasis
+flag. The old <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> remains as a deprecated alias for level 2, while
+<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code> remains an advanced policy control. Explicit SSMD prosody remains
+supported independently, and a resume with omitted emphasis options restores the saved
+policy.</p>
 <p><strong>Example SSMD file</strong>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
 

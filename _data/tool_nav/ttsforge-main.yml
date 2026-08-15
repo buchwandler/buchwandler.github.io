@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: fa3f80a463f63267e3c7889b0116a4f00a08dc38
+source_commit: 2f35a2ba97f3013503dbff6f5ae6775612a93842
 source_url: https://github.com/buchwandler/ttsforge/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ttsforge
-release_tag: v0.3.5
-release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.5
+release_tag: v0.3.6
+release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.6
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.5
+  ref: v0.3.6
   url: /tools/ttsforge/
   current: false
 - name: main

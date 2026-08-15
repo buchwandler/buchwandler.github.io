@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
 search_enabled: true
 ---
 
@@ -564,7 +564,7 @@ AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration 
 </section>
 <section id="pykokoro-kokorog2p-and-spacy-model-policy">
 <h3>PyKokoro, kokorog2p, and spaCy model policy</h3>
-<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.3,&lt;0.9</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, SSMD
+<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.4,&lt;0.9</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, SSMD
 <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. TTSForge directly owns the PyKokoro and
 kokorog2p runtime boundary; the ownership chain is
 <code class="docutils literal notranslate"><span class="pre">TTSForge</span> <span class="pre">-&gt;</span> <span class="pre">PyKokoro</span> <span class="pre">-&gt;</span> <span class="pre">kokorog2p</span> <span class="pre">-&gt;</span> <span class="pre">Spokenform/abbr2words</span></code>. These releases provide the
@@ -575,7 +575,7 @@ back to non-spaCy splitting when no compatible model is installed. <code class="
 <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, an exact package, or an exact tier is strict; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> and
 <code class="docutils literal notranslate"><span class="pre">--no-spacy</span></code> disable spaCy.</p>
 <p>Users should not install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately for TTSForge. The compatible kokorog2p
-release owns its Spokenform and abbr2words constraints. The exact PyKokoro 0.8.3 and
+release owns its Spokenform and abbr2words constraints. The exact PyKokoro 0.8.4 and
 kokorog2p 0.8.0 releases must be available from the package index before installing the
 TTSForge 0.3.4 release.</p>
 <p>Install one or more compatible local spaCy packages when strict behavior or higher

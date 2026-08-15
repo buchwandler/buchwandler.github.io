@@ -47,3 +47,8 @@
   docs_url: /tools/abbr2words/
   repo_url: https://github.com/buchwandler/abbr2words
   pypi_url: https://pypi.org/project/abbr2words/
+- name: spokenform
+  description: Written-to-spoken text normalizer for speech applications.
+  docs_url: /tools/spokenform/
+  repo_url: https://github.com/buchwandler/spokenform
+  pypi_url: https://pypi.org/project/spokenform/

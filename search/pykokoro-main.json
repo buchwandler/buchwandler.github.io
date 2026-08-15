@@ -119,8 +119,8 @@
         {
           "anchor": "",
           "heading": "SSMD 0.8 API",
-          "text": "The public renderer configuration is pykokoro.ssmd_config.SSMDRenderConfig with\nSSMDPauseOverrides. PipelineConfig(ssmd=...) sets defaults, and run(..., ssmd=...)\naccepts a per-render replacement. AudioResult.document_metadata contains copied title,\nbinding, and pause metadata; AudioResult.markers contains structured marker sample\noffsets. Audio annotations require an explicit resolver and fall back to alt text;\nKokoro extensions are rejected by profile validation.\n\nSSMDRenderConfig.emphasis_mode defaults to \"plain\", preserving emphasis metadata\nwithout changing generated audio. \"approximate\" applies core volume-only mappings\n(strong +6dB, moderate +3dB, reduced -3dB); explicit prosody values win.\n\"warn\" preserves audio and adds one ssmd.emphasis_unsupported warning per logical\nsource seg…",
-          "lower": "the public renderer configuration is pykokoro.ssmd_config.ssmdrenderconfig with\nssmdpauseoverrides. pipelineconfig(ssmd=...) sets defaults, and run(..., ssmd=...)\naccepts a per-render replacement. audioresult.document_metadata contains copied title,\nbinding, and pause metadata; audioresult.markers contains structured marker sample\noffsets. audio annotations require an explicit resolver and fall back to alt text;\nkokoro extensions are rejected by profile validation.\n\nssmdrenderconfig.emphasis_mode defaults to \"plain\", preserving emphasis metadata\nwithout changing generated audio. \"approximate\" applies core volume-only mappings\n(strong +6db, moderate +3db, reduced -3db); explicit prosody values win.\n\"warn\" preserves audio and adds one ssmd.emphasis_unsupported warning per logical\nsource seg…"
+          "text": "The public renderer configuration is pykokoro.ssmd_config.SSMDRenderConfig with\nSSMDPauseOverrides. PipelineConfig(ssmd=...) sets defaults, and run(..., ssmd=...)\naccepts a per-render replacement. AudioResult.document_metadata contains copied title,\nbinding, and pause metadata; AudioResult.markers contains structured marker sample\noffsets. Audio annotations require an explicit resolver and fall back to alt text;\nKokoro extensions are rejected by profile validation.\n\nSSMDRenderConfig.emphasis_mode defaults to \"plain\", preserving emphasis metadata\nwithout changing generated audio. \"approximate\" applies core gain-only mappings\n(strong +6dB, moderate +3dB, reduced -3dB) at emphasis_gain_scale=1.0. The\nscale accepts finite values from 0.0 through 2.0; 0.5 halves automatic gain and\n1.5 makes it…",
+          "lower": "the public renderer configuration is pykokoro.ssmd_config.ssmdrenderconfig with\nssmdpauseoverrides. pipelineconfig(ssmd=...) sets defaults, and run(..., ssmd=...)\naccepts a per-render replacement. audioresult.document_metadata contains copied title,\nbinding, and pause metadata; audioresult.markers contains structured marker sample\noffsets. audio annotations require an explicit resolver and fall back to alt text;\nkokoro extensions are rejected by profile validation.\n\nssmdrenderconfig.emphasis_mode defaults to \"plain\", preserving emphasis metadata\nwithout changing generated audio. \"approximate\" applies core gain-only mappings\n(strong +6db, moderate +3db, reduced -3db) at emphasis_gain_scale=1.0. the\nscale accepts finite values from 0.0 through 2.0; 0.5 halves automatic gain and\n1.5 makes it…"
         },
         {
           "anchor": "",
@@ -246,8 +246,8 @@
         {
           "anchor": "",
           "heading": "Emphasis behavior",
-          "text": "The default SSMDRenderConfig(emphasis_mode=\"plain\") preserves emphasis metadata but\nleaves speech unmodified. Use emphasis_mode=\"approximate\" to opt into the core\nvolume-only mapping strong +6dB, moderate +3dB, and reduced -3dB. warn\nkeeps ordinary speech and reports one trace warning per logical source segment; error\nrejects effectful emphasis before inference. emphasis=\"none\" is silently accepted in\nevery mode, and explicit prosody values take precedence.\n\nfrom pykokoro import KokoroPipeline, PipelineConfig, SSMDRenderConfig\n\nscript = \"\"\"---\ntitle: Portable podcast\nvoice_bindings:\n  kokoro:\n    host: af_sarah\npause_defaults:\n  enabled: true\n  paragraph: 700ms\n---\n<div voice=\"host\">Welcome to the portable podcast.</div>\n\"\"\"\nresult = KokoroPipeline(PipelineConfig(ssmd=SSMDRenderConfig()))…",
-          "lower": "the default ssmdrenderconfig(emphasis_mode=\"plain\") preserves emphasis metadata but\nleaves speech unmodified. use emphasis_mode=\"approximate\" to opt into the core\nvolume-only mapping strong +6db, moderate +3db, and reduced -3db. warn\nkeeps ordinary speech and reports one trace warning per logical source segment; error\nrejects effectful emphasis before inference. emphasis=\"none\" is silently accepted in\nevery mode, and explicit prosody values take precedence.\n\nfrom pykokoro import kokoropipeline, pipelineconfig, ssmdrenderconfig\n\nscript = \"\"\"---\ntitle: portable podcast\nvoice_bindings:\n  kokoro:\n    host: af_sarah\npause_defaults:\n  enabled: true\n  paragraph: 700ms\n---\n<div voice=\"host\">welcome to the portable podcast.</div>\n\"\"\"\nresult = kokoropipeline(pipelineconfig(ssmd=ssmdrenderconfig()))…"
+          "text": "The default SSMDRenderConfig(emphasis_mode=\"plain\") preserves emphasis metadata but\nleaves speech unmodified. Use emphasis_mode=\"approximate\" to opt into the core\ngain-only mapping strong +6dB, moderate +3dB, and reduced -3dB. Set\nemphasis_gain_scale between 0.0 and 2.0 to adjust only that automatic gain: 1.0\nis the current/default strength, 0.5 halves it, and 1.5 makes it 50% stronger.\nwarn keeps ordinary speech and reports one trace warning per logical source segment;\nerror rejects effectful emphasis before inference. emphasis=\"none\" is silently\naccepted in every mode. Explicit SSMD volume takes precedence, and scaling does not\nadd automatic pitch or rate changes.\n\nfrom pykokoro import KokoroPipeline, PipelineConfig, SSMDRenderConfig\n\nscript = \"\"\"---\ntitle: Portable podcast\nvoice_bindin…",
+          "lower": "the default ssmdrenderconfig(emphasis_mode=\"plain\") preserves emphasis metadata but\nleaves speech unmodified. use emphasis_mode=\"approximate\" to opt into the core\ngain-only mapping strong +6db, moderate +3db, and reduced -3db. set\nemphasis_gain_scale between 0.0 and 2.0 to adjust only that automatic gain: 1.0\nis the current/default strength, 0.5 halves it, and 1.5 makes it 50% stronger.\nwarn keeps ordinary speech and reports one trace warning per logical source segment;\nerror rejects effectful emphasis before inference. emphasis=\"none\" is silently\naccepted in every mode. explicit ssmd volume takes precedence, and scaling does not\nadd automatic pitch or rate changes.\n\nfrom pykokoro import kokoropipeline, pipelineconfig, ssmdrenderconfig\n\nscript = \"\"\"---\ntitle: portable podcast\nvoice_bindin…"
         },
         {
           "anchor": "",
@@ -260,7 +260,7 @@
     {
       "url": "/tools/pykokoro/main/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded a spoken-form …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded configurable …",
       "sections": [
         {
           "anchor": "",
@@ -271,8 +271,14 @@
         {
           "anchor": "",
           "heading": "Added",
-          "text": "Added a spoken-form showcase for raw structured text through the PyKokoro pipeline",
-          "lower": "added a spoken-form showcase for raw structured text through the pykokoro pipeline"
+          "text": "Added configurable emphasis gain scaling with numeric dB resolution and a bounded\nemphasis_gain_scale setting",
+          "lower": "added configurable emphasis gain scaling with numeric db resolution and a bounded\nemphasis_gain_scale setting"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added a spoken-form showcase for raw structured text through the PyKokoro pipeline\n\n\nAdded configurable SSMD emphasis gain scaling for gain-only automatic emphasis\napproximation",
+          "lower": "added a spoken-form showcase for raw structured text through the pykokoro pipeline\n\n\nadded configurable ssmd emphasis gain scaling for gain-only automatic emphasis\napproximation"
         },
         {
           "anchor": "",
@@ -459,18 +465,6 @@
           "heading": "Fixed",
           "text": "Fixed paragraph splitting, pause parsing, and voice downloading",
           "lower": "fixed paragraph splitting, pause parsing, and voice downloading"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added model_path and voices_path settings in pipeline",
-          "lower": "added model_path and voices_path settings in pipeline"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed missing espeak and soundfile dependencies",
-          "lower": "fixed missing espeak and soundfile dependencies"
         }
       ]
     },
@@ -828,8 +822,8 @@
         {
           "anchor": "",
           "heading": "SSMD 0.8 document controls",
-          "text": "PipelineConfig.ssmd controls header parsing, provider-scoped API binding overrides,\nunknown-header strictness, missing-voice behavior, pause-default overrides, emphasis\npolicy, and the explicit audio source resolver. Header bindings override direct logical\nreferences, while API bindings override header bindings. Document pause defaults are\nreduced before G2P; explicit breaks take precedence and simultaneous implicit defaults\nuse the maximum duration. DocumentResult.header/body and\nAudioResult.document_metadata expose copied metadata.\n\nEmphasis capability policy is evaluated after phoneme processing and before\naudio_generation. plain preserves metadata without modifying audio, warn emits one\ndiagnostic per logical source segment, error rejects before inference, and\napproximate adds determi…",
-          "lower": "pipelineconfig.ssmd controls header parsing, provider-scoped api binding overrides,\nunknown-header strictness, missing-voice behavior, pause-default overrides, emphasis\npolicy, and the explicit audio source resolver. header bindings override direct logical\nreferences, while api bindings override header bindings. document pause defaults are\nreduced before g2p; explicit breaks take precedence and simultaneous implicit defaults\nuse the maximum duration. documentresult.header/body and\naudioresult.document_metadata expose copied metadata.\n\nemphasis capability policy is evaluated after phoneme processing and before\naudio_generation. plain preserves metadata without modifying audio, warn emits one\ndiagnostic per logical source segment, error rejects before inference, and\napproximate adds determi…"
+          "text": "PipelineConfig.ssmd controls header parsing, provider-scoped API binding overrides,\nunknown-header strictness, missing-voice behavior, pause-default overrides, emphasis\npolicy and gain scaling, and the explicit audio source resolver. Header bindings\noverride direct logical references, while API bindings override header bindings.\nDocument pause defaults are reduced before G2P; explicit breaks take precedence and\nsimultaneous implicit defaults use the maximum duration. DocumentResult.header/body\nand AudioResult.document_metadata expose copied metadata.\n\nEmphasis capability policy is evaluated after phoneme processing and before\naudio_generation. plain preserves metadata without modifying audio, warn emits one\ndiagnostic per logical source segment, error rejects before inference, and\napproxi…",
+          "lower": "pipelineconfig.ssmd controls header parsing, provider-scoped api binding overrides,\nunknown-header strictness, missing-voice behavior, pause-default overrides, emphasis\npolicy and gain scaling, and the explicit audio source resolver. header bindings\noverride direct logical references, while api bindings override header bindings.\ndocument pause defaults are reduced before g2p; explicit breaks take precedence and\nsimultaneous implicit defaults use the maximum duration. documentresult.header/body\nand audioresult.document_metadata expose copied metadata.\n\nemphasis capability policy is evaluated after phoneme processing and before\naudio_generation. plain preserves metadata without modifying audio, warn emits one\ndiagnostic per logical source segment, error rejects before inference, and\napproxi…"
         },
         {
           "anchor": "",
@@ -913,8 +907,8 @@
         {
           "anchor": "",
           "heading": "Portable SSMD 0.8 headers",
-          "text": "Valid first-line YAML front matter is consumed automatically. title is metadata only,\nand logical voice roles can be mapped without changing the spoken body. Use\nSSMDRenderConfig(parse_header=False) when the leading delimiter is literal text.\n\nSSMD emphasis is metadata-only by default: emphasis_mode=\"plain\" preserves the\nannotation without changing speech. For audible, deterministic volume-only emphasis, opt\nin with SSMDRenderConfig(emphasis_mode=\"approximate\"); this maps strong to +6dB,\nmoderate to +3dB, and reduced to -3dB. The none level is always a silent no-op.\nwarn emits one diagnostic per logical source segment, and error rejects effectful\nemphasis before inference.\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\nscript = \"\"\"---\ntitle: Quick review\nvoice_bindings:\n  kokoro:…",
-          "lower": "valid first-line yaml front matter is consumed automatically. title is metadata only,\nand logical voice roles can be mapped without changing the spoken body. use\nssmdrenderconfig(parse_header=false) when the leading delimiter is literal text.\n\nssmd emphasis is metadata-only by default: emphasis_mode=\"plain\" preserves the\nannotation without changing speech. for audible, deterministic volume-only emphasis, opt\nin with ssmdrenderconfig(emphasis_mode=\"approximate\"); this maps strong to +6db,\nmoderate to +3db, and reduced to -3db. the none level is always a silent no-op.\nwarn emits one diagnostic per logical source segment, and error rejects effectful\nemphasis before inference.\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\nscript = \"\"\"---\ntitle: quick review\nvoice_bindings:\n  kokoro:…"
+          "text": "Valid first-line YAML front matter is consumed automatically. title is metadata only,\nand logical voice roles can be mapped without changing the spoken body. Use\nSSMDRenderConfig(parse_header=False) when the leading delimiter is literal text.\n\nSSMD emphasis is metadata-only by default: emphasis_mode=\"plain\" preserves the\nannotation without changing speech. For audible, deterministic gain-only emphasis, opt\nin with SSMDRenderConfig(emphasis_mode=\"approximate\"); at the default scale of 1.0,\nthis maps strong to +6dB, moderate to +3dB, and reduced to -3dB. Use\nemphasis_gain_scale=0.5 for half gain or 1.5 for 50% stronger gain; values from\n0.0 through 2.0 are supported. The scale does not change semantic emphasis or add\nautomatic pitch/rate changes, and explicit SSMD volume overrides it. The n…",
+          "lower": "valid first-line yaml front matter is consumed automatically. title is metadata only,\nand logical voice roles can be mapped without changing the spoken body. use\nssmdrenderconfig(parse_header=false) when the leading delimiter is literal text.\n\nssmd emphasis is metadata-only by default: emphasis_mode=\"plain\" preserves the\nannotation without changing speech. for audible, deterministic gain-only emphasis, opt\nin with ssmdrenderconfig(emphasis_mode=\"approximate\"); at the default scale of 1.0,\nthis maps strong to +6db, moderate to +3db, and reduced to -3db. use\nemphasis_gain_scale=0.5 for half gain or 1.5 for 50% stronger gain; values from\n0.0 through 2.0 are supported. the scale does not change semantic emphasis or add\nautomatic pitch/rate changes, and explicit ssmd volume overrides it. the n…"
         },
         {
           "anchor": "",

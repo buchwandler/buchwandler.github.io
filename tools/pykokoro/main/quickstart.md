@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7d45e302485ebe4c5f6cee24adb83456e4944f59"
+docs_commit: "ab23c6f5afff03efa326fc2e2c0d438a926abd75"
 search_enabled: true
 ---
 
@@ -784,11 +784,14 @@ improve linguistic quality at higher memory and startup cost.</p>
 and logical voice roles can be mapped without changing the spoken body. Use
 <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(parse_header=False)</span></code> when the leading delimiter is literal text.</p>
 <p>SSMD emphasis is metadata-only by default: <code class="docutils literal notranslate"><span class="pre">emphasis_mode=&quot;plain&quot;</span></code> preserves the
-annotation without changing speech. For audible, deterministic volume-only emphasis, opt
-in with <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;approximate&quot;)</span></code>; this maps strong to <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>,
-moderate to <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and reduced to <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. The <code class="docutils literal notranslate"><span class="pre">none</span></code> level is always a silent no-op.
-<code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one diagnostic per logical source segment, and <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects effectful
-emphasis before inference.</p>
+annotation without changing speech. For audible, deterministic gain-only emphasis, opt
+in with <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;approximate&quot;)</span></code>; at the default scale of <code class="docutils literal notranslate"><span class="pre">1.0</span></code>,
+this maps strong to <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, moderate to <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and reduced to <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=0.5</span></code> for half gain or <code class="docutils literal notranslate"><span class="pre">1.5</span></code> for 50% stronger gain; values from
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code> are supported. The scale does not change semantic emphasis or add
+automatic pitch/rate changes, and explicit SSMD volume overrides it. The <code class="docutils literal notranslate"><span class="pre">none</span></code> level is
+always a silent no-op. <code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one diagnostic per logical source segment, and
+<code class="docutils literal notranslate"><span class="pre">error</span></code> rejects effectful emphasis before inference.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>

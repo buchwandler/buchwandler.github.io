@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fa3f80a463f63267e3c7889b0116a4f00a08dc38"
+docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
 search_enabled: true
 ---
 
@@ -641,6 +641,7 @@ ONNX TTS (Text-to-Speech).</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.3] - 2026-08-05</a></li>

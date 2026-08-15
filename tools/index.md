@@ -93,7 +93,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.3" rel="external noopener">Latest release: v0.8.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.8.4" rel="external noopener">Latest release: v0.8.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -113,7 +113,7 @@ permalink: /tools/
       <p>A Python-based TTS automation framework with multi-engine support.</p>
       <div class="card-links">
         <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.5" rel="external noopener">Latest release: v0.3.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.3.6" rel="external noopener">Latest release: v0.3.6 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
