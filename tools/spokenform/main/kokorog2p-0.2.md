@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
 search_enabled: true
 ---
 
@@ -544,8 +544,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>spokenform 0.2.3 downstream handoff</h1>
 <p>After the first fixed <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> patch is published, the kokorog2p adapter
 should require:</p>
-<div class="highlight-toml notranslate"><div class="highlight"><pre><span></span><span class="n">spokenform</span><span class="err">&gt;</span><span class="o">=</span><span class="mf">0.2</span><span class="p">.</span><span class="n">3</span><span class="err">,&lt;</span><span class="n">0</span><span class="p">.</span><span class="n">3</span><span class="p">.</span><span class="n">0</span>
-<span class="n">abbr2words</span><span class="err">&gt;</span><span class="o">=</span><span class="mf">0.2</span><span class="p">.</span><span class="n">4</span><span class="err">,&lt;</span><span class="n">0</span><span class="p">.</span><span class="n">3</span><span class="p">.</span><span class="n">0</span>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>spokenform&gt;=0.2.3,&lt;0.3.0
+abbr2words&gt;=0.2.4,&lt;0.3.0
 </pre></div>
 </div>
 <p>The downstream implementation should then:</p>

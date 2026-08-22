@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
+docs_ref: "v0.3.7"
+docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
 search_enabled: true
 ---
 
@@ -642,16 +642,17 @@ ONNX TTS (Text-to-Speech).</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.7] - 2026-08-18</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.3] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.3.2] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.3.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.3.0] - 2026-08-02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.0] - 2026-07-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.1.2] - 2026-02-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.1.1] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.1.0] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.4] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.3.3] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.3.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.1] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.3.0] - 2026-08-02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.2.0] - 2026-07-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.1.2] - 2026-02-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.1.1] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.1.0] - 2026-02-01</a></li>
 </ul>
 </li>
 </ul>

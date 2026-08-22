@@ -5,8 +5,8 @@ permalink: /tools/booktx/releasing/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 

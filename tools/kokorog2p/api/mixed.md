@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/mixed/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.0"
-docs_commit: "ae6c3aa1f3ea73578fc8ca580431f75f0bc9bacf"
+docs_ref: "v0.8.1"
+docs_commit: "4b7a4f633dade514641b5b47fdd1253864804b83"
 search_enabled: true
 ---
 

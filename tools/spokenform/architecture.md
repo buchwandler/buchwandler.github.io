@@ -5,8 +5,8 @@ permalink: /tools/spokenform/architecture/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -660,6 +660,14 @@ street numbers are rendered cardinally when the full address is recognized,
 while compact plates, suites, postal codes, and model identifiers retain their
 category-specific digitwise policies. Contradictory benchmark conventions are
 reported as data-quality evidence rather than encoded as row-specific rules.</p>
+</section>
+<section id="recognition-policy-boundary">
+<h2>Recognition policy boundary</h2>
+<p>Structured recognizers first emit candidates annotated with a semantic domain and evidence basis (<code class="docutils literal notranslate"><span class="pre">intrinsic</span></code> or <code class="docutils literal notranslate"><span class="pre">contextual</span></code>). <code class="docutils literal notranslate"><span class="pre">spokenform.recognition_policy</span></code> filters those candidates before <code class="docutils literal notranslate"><span class="pre">SequencePriority</span></code> overlap resolution. Surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. This keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. Diagnostics retain suppressed candidates with machine-readable reasons such as <code class="docutils literal notranslate"><span class="pre">context-not-allowed</span></code>, <code class="docutils literal notranslate"><span class="pre">disabled-domain</span></code>, and <code class="docutils literal notranslate"><span class="pre">blocked-by-disabled-domain</span></code>.</p>
+</section>
+<section id="semantic-segment-boundaries">
+<h2>Semantic segment boundaries</h2>
+<p>Recognized semantic expressions may consume source punctuation while preserving a generic textual segment boundary when the punctuation carries cadence or grouping semantics. Contextual countdowns therefore render <code class="docutils literal notranslate"><span class="pre">3-2-1</span></code> as <code class="docutils literal notranslate"><span class="pre">three</span> <span class="pre">-</span> <span class="pre">two</span> <span class="pre">-</span> <span class="pre">one</span></code>. The boundary is model-neutral and downstream G2P adapters own model-specific dash canonicalization. Residual <code class="docutils literal notranslate"><span class="pre">symbol_mode</span></code> filtering does not remove punctuation intentionally emitted by an accepted structured replacement.</p>
 </section>
 </section>
 </div>

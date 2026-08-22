@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -733,9 +733,10 @@ for an example.</p>
 </section>
 <section id="durable-model-import-contracts">
 <h2>Durable model import contracts</h2>
-<p>Persisted JSON boundary models (<code class="docutils literal notranslate"><span class="pre">TranslationTask</span></code>, <code class="docutils literal notranslate"><span class="pre">TranslationTodo</span></code>,
-<code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>, <code class="docutils literal notranslate"><span class="pre">TranslationVersionLedger</span></code>, context JSON models,
-manifest/config models) must validate without hidden import-order requirements.</p>
+<p>Persisted JSON boundary models (<code class="docutils literal notranslate"><span class="pre">TranslationTask</span></code>, <code class="docutils literal notranslate"><span class="pre">TranslationTodo</span></code>, the
+materialized translation-store model / compatibility alias <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>,
+<code class="docutils literal notranslate"><span class="pre">TranslationVersionLedger</span></code>, context JSON models, manifest/config models) must
+validate without hidden import-order requirements.</p>
 <p>Rules:</p>
 <ul class="simple">
 <li><p>Never use <code class="docutils literal notranslate"><span class="pre">TYPE_CHECKING</span></code>-gated imports for types referenced in model fields.</p></li>

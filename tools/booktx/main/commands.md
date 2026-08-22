@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -557,12 +557,17 @@ booktx<span class="w"> </span>guide<span class="w"> </span>./book<span class="w"
 booktx<span class="w"> </span>status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
+booktx<span class="w"> </span>check<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--epub-output<span class="w"> </span>--fail-on-warnings
+booktx<span class="w"> </span>finalize<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">inspect</span></code> for a read-only pre-extraction estimate and
 <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">qa-scan</span></code> for advanced target checks. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> is the detailed
 validation command. <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">epub</span> <span class="pre">inspect</span></code> is the EPUB output inspection
-surface.</p>
+surface.
+For a complete EPUB finalization, run <code class="docutils literal notranslate"><span class="pre">validate</span></code>, <code class="docutils literal notranslate"><span class="pre">build</span> <span class="pre">--require-complete</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">--epub-output</span> <span class="pre">--fail-on-warnings</span></code>. EPUB inspect, grep, and extract-text
+read the built archive directly and do not require shell archive tools.</p>
 </section>
 <section id="human-decisions">
 <h2>Human decisions</h2>
@@ -651,8 +656,9 @@ booktx<span class="w"> </span>translate<span class="w"> </span>insert<span class
 <span class="w">  </span>--file<span class="w"> </span>translations/PROFILE/ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
 booktx<span class="w"> </span>translate<span class="w"> </span>lint-block<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--file<span class="w"> </span>ingest/TASK.block.txt<span class="w"> </span>--format<span class="w"> </span>block
 booktx<span class="w"> </span>translate<span class="w"> </span>todo-next<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--batch-words<span class="w"> </span><span class="m">800</span><span class="w"> </span>--write
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest
-booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--latest<span class="w"> </span>--format<span class="w"> </span>block
+booktx<span class="w"> </span>translate<span class="w"> </span>todo-list<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--state<span class="w"> </span>open<span class="w"> </span>--json
+booktx<span class="w"> </span>translate<span class="w"> </span>todo-status<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--todo-id<span class="w"> </span>TODO_ID
+booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>--todo-id<span class="w"> </span>TODO_ID<span class="w"> </span>--format<span class="w"> </span>block
 booktx<span class="w"> </span>translate<span class="w"> </span>get-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--json
 booktx<span class="w"> </span>translate<span class="w"> </span>compare<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--versions<span class="w"> </span><span class="m">1</span>.1,1.2
 booktx<span class="w"> </span>translate<span class="w"> </span>revise-record<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>PROFILE<span class="w"> </span>RECORD<span class="w"> </span>--target<span class="w"> </span><span class="s2">&quot;Revised target&quot;</span>
@@ -794,6 +800,22 @@ booktx termbase
 booktx pass-through
 </pre></div>
 </div>
+<section id="translation-quality-gates">
+<h3>Translation quality gates</h3>
+<p>The generated lint command follows the profile’s effective quality policy. The
+manual form is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>lint-block<span class="w"> </span>.<span class="w"> </span>--task-id<span class="w"> </span>TASK<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--file<span class="w"> </span>translations/PROFILE/ingest/TASK.block.txt<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--format<span class="w"> </span>block<span class="w"> </span>--quality<span class="w"> </span>strict
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">protocol</span></code> for structural checks only, <code class="docutils literal notranslate"><span class="pre">basic</span></code> for configured linguistic
+errors with advisory warnings, and <code class="docutils literal notranslate"><span class="pre">strict</span></code> to block warnings as well. The
+acceptance path enforces the same policy, so lint is a read-only preview rather
+than a security boundary. A local LanguageTool backend is opt-in and must be
+configured with an explicit pinned command/version; booktx never downloads or
+uses a public grammar service automatically.</p>
+</section>
 </section>
 </section>
 </div>

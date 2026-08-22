@@ -5,8 +5,8 @@ permalink: /tools/booktx/agent-workflow/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -592,9 +592,10 @@ booktx<span class="w"> </span>context<span class="w"> </span>status<span class="
 </pre></div>
 </div>
 <p>In isolated mode, use only profile-local <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">...</span> <span class="pre">.</span></code> commands. Never use
-parent paths, absolute paths, shell globs, interpreter snippets, or sibling
-profile commands. If booktx prints a sibling profile or a parent path, stop and
-report a booktx isolation bug.</p>
+parent paths, absolute paths, shell globs, interpreter snippets, sibling profile
+commands, archive extraction, or shell archive inspection. If booktx prints a
+sibling profile or a parent path, stop and report a booktx isolation bug. Use
+<code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span> <span class="pre">--epub-output</span></code> and <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">epub</span> <span class="pre">inspect/grep/extract-text</span></code> for EPUBs.</p>
 </section>
 </section>
 <section id="read-the-profile-local-context">
@@ -660,9 +661,12 @@ not approval or policy.</p>
 <h2>6. Validate and build</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>validate<span class="w"> </span>.<span class="w"> </span>--fail-on-warnings
 booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--require-complete
+booktx<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--epub-output<span class="w"> </span>--fail-on-warnings
 </pre></div>
 </div>
-<p>For per-batch validation within a bounded todo, use scoped <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span> <span class="pre">.</span> <span class="pre">--chapter</span> <span class="pre">CHAPTER</span> <span class="pre">--fail-on-warnings</span></code> instead. Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> only for the final pre-build check.</p>
+<p>The todo submission workflow performs the active task chapter’s scoped check
+before continuation. Use <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span></code> for the final pre-build check and
+<code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">--epub-output</span></code> for the final artifact verification.</p>
 </section>
 <section id="b-refresh-editor-qa-indexes">
 <h2>6b. Refresh editor QA indexes</h2>
@@ -672,6 +676,14 @@ booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </s
 </div>
 <p>This writes <code class="docutils literal notranslate"><span class="pre">source-index.json</span></code>, <code class="docutils literal notranslate"><span class="pre">target-index.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">source-target-index.json</span></code> into the profile directory. Use <code class="docutils literal notranslate"><span class="pre">rg</span></code> to search translated terms without English source false positives (<code class="docutils literal notranslate"><span class="pre">rg</span> <span class="pre">&quot;Wespen&quot;</span> <span class="pre">target-index.json</span></code>) or source terms without target matches (<code class="docutils literal notranslate"><span class="pre">rg</span> <span class="pre">&quot;Wasp&quot;</span> <span class="pre">source-index.json</span></code>). Use <code class="docutils literal notranslate"><span class="pre">nvim</span> <span class="pre">source-target-index.json</span></code> for side-by-side scanning.</p>
 <p>The three files are generated artifacts. Do not edit them manually and do not use them as build input. They are optional human/editor exploration artifacts, not the agent consistency protocol; use <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">search</span></code> or <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">concordance</span></code> instead.</p>
+</section>
+<section id="c-resume-an-existing-bounded-todo">
+<h2>6c. Resume an existing bounded todo</h2>
+<p>Discover open todos without an expected-error probe:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>translate<span class="w"> </span>todo-list<span class="w"> </span>.<span class="w"> </span>--state<span class="w"> </span>open<span class="w"> </span>--json
+</pre></div>
+</div>
+<p>Select the exact <code class="docutils literal notranslate"><span class="pre">todo_id</span></code> and pass it to <code class="docutils literal notranslate"><span class="pre">todo-status</span></code> and <code class="docutils literal notranslate"><span class="pre">todo-resume</span></code>.</p>
 </section>
 <section id="longer-bounded-runs">
 <h2>7. Longer bounded runs</h2>
@@ -735,9 +747,9 @@ booktx<span class="w"> </span>translate<span class="w"> </span>todo-resume<span 
 </pre></div>
 </div>
 <p>Only use <code class="docutils literal notranslate"><span class="pre">--force-chapter</span></code> for small chapters or when explicitly requested.</p>
-<p>After each chapter, always run <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">check</span></code> before adding the chapter note:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--chapter<span class="w"> </span><span class="m">0005</span><span class="w"> </span>--fail-on-warnings
-booktx<span class="w"> </span>context<span class="w"> </span>chapter-note<span class="w"> </span>.<span class="w"> </span><span class="m">0005</span><span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;ONE&quot;</span><span class="w"> </span>...
+<p>After each chapter, the todo submission scoped gate must pass before adding
+the chapter note:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>context<span class="w"> </span>chapter-note<span class="w"> </span>.<span class="w"> </span><span class="m">0005</span><span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;ONE&quot;</span><span class="w"> </span>...
 </pre></div>
 </div>
 </section>
@@ -758,7 +770,7 @@ booktx<span class="w"> </span>context<span class="w"> </span>chapter-note<span c
 <li><p>Edit the prefilled ingest block under <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/reviews/</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">insert</span> <span class="pre">.</span> <span class="pre">--review-task-id</span> <span class="pre">TASK</span> <span class="pre">--file</span> <span class="pre">reviews/TASK.block.txt</span></code></p></li>
 <li><p>Repeat for pass 2: <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">review</span> <span class="pre">next</span> <span class="pre">.</span> <span class="pre">--pass</span> <span class="pre">2</span></code>, review, insert</p></li>
-<li><p>Validate and build: <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span> <span class="pre">.</span> <span class="pre">--fail-on-warnings</span> <span class="pre">&amp;&amp;</span> <span class="pre">booktx</span> <span class="pre">build</span> <span class="pre">.</span> <span class="pre">--require-complete</span> <span class="pre">--require-reviewed</span></code></p></li>
+<li><p>Validate and build: <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">validate</span> <span class="pre">.</span> <span class="pre">--fail-on-warnings</span> <span class="pre">&amp;&amp;</span> <span class="pre">booktx</span> <span class="pre">build</span> <span class="pre">.</span> <span class="pre">--require-complete</span> <span class="pre">--require-reviewed</span> <span class="pre">&amp;&amp;</span> <span class="pre">booktx</span> <span class="pre">check</span> <span class="pre">.</span> <span class="pre">--epub-output</span> <span class="pre">--fail-on-warnings</span></code></p></li>
 </ol>
 <p>During review pass tasks, review the existing target critically. Preserve meaning,
 placeholders, protected terms, and inline XHTML. If the current target is already
@@ -822,10 +834,11 @@ of the source candidate stores:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>judge<span class="w"> </span>prepare-isolation<span class="w"> </span>./book<span class="w"> </span>--profile<span class="w"> </span>JUDGE_PROFILE<span class="w"> </span>--write
 </pre></div>
 </div>
-<p>This copies source <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>, <code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code>,
-<code class="docutils literal notranslate"><span class="pre">identity.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">profile-config.json</span></code> into an immutable
-<code class="docutils literal notranslate"><span class="pre">judge-sources/snapshots/&lt;SNAPSHOT_ID&gt;/</span></code> directory and writes judge-specific
-<code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> instructions. Then start the judge agent inside the profile root:</p>
+<p>This materializes the source profiles’ canonical store state into a portable
+snapshot (<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> plus matching ledger/identity/config
+evidence) under <code class="docutils literal notranslate"><span class="pre">judge-sources/snapshots/&lt;SNAPSHOT_ID&gt;/</span></code> and writes
+judge-specific <code class="docutils literal notranslate"><span class="pre">AGENTS.md</span></code> instructions. Then start the judge agent inside the
+profile root:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>translations/JUDGE_PROFILE
 
 <span class="c1"># profile root</span>
@@ -887,6 +900,26 @@ or a documented blocker exists, otherwise run <code class="docutils literal notr
 A successful insert is not a stop condition. Before reporting progress, use the
 persisted status counts; never estimate from attempted tasks. If an unavoidable
 harness limit interrupts the loop, report the exact status and resume command.</p>
+</section>
+<section id="first-pass-translation-quality">
+<h2>First-pass translation quality</h2>
+<p>When a profile enables <code class="docutils literal notranslate"><span class="pre">[submission_quality]</span></code>, each generated translation task
+contains a same-call target-language quality gate. The agent drafts each
+sentence, rereads the target as target-language prose, checks the complete
+language checklist, rechecks source fidelity, and writes only the final target
+prose. After drafting a batch it performs one sequential target-only reread for
+agreement, reference, punctuation, and continuity. Checklist answers and
+intermediate drafts are never part of the ingest block.</p>
+<p><code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">lint-block</span></code>, <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">insert</span></code>, and <code class="docutils literal notranslate"><span class="pre">translate</span> <span class="pre">todo-submit</span></code> share
+the same configured quality policy. <code class="docutils literal notranslate"><span class="pre">protocol</span></code> runs structural checks only;
+<code class="docutils literal notranslate"><span class="pre">basic</span></code> blocks configured linguistic errors while showing warnings; <code class="docutils literal notranslate"><span class="pre">strict</span></code>
+blocks warnings and errors. Direct insertion is therefore safe even when an
+agent skipped lint. The built-in audit is a conservative regression gate, not
+proof of grammatically perfect literary German. An explicitly configured local
+LanguageTool backend can broaden coverage without sending book text to a
+public service or making a second LLM call.</p>
+<p>The grammar judge remains available for diagnostics, old-book repair, and
+benchmarking, but it is not a routine production stage.</p>
 </section>
 </section>
 </div>

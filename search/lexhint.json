@@ -1,0 +1,249 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "lexhint",
+  "entries": [
+    {
+      "url": "/tools/lexhint/architecture/",
+      "title": "lexhint Architecture Documentation",
+      "snippet": "Generated from archledger records. Do not edit this generated file directly.\nLexhint is a small Python runtime plus prebuilt SQLite evidence …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Architecture Documentation",
+          "text": "Generated from archledger records. Do not edit this generated file directly.",
+          "lower": "generated from archledger records. do not edit this generated file directly."
+        },
+        {
+          "anchor": "",
+          "heading": "Introduction and Goals",
+          "text": "Lexhint is a small Python runtime plus prebuilt SQLite evidence artifacts. It supplies lexical membership, optional corpus commonness, compact-string segmentation, stable semantic-domain evidence, and optional rich dictionary inspection.\n\nIt does not decide how text is spoken. Spokenform and other consumers own tokenization policy, URLs, numbers, versions, acronyms, pronunciation, and interpretation precedence. Dataset publication is outside this repository.",
+          "lower": "lexhint is a small python runtime plus prebuilt sqlite evidence artifacts. it supplies lexical membership, optional corpus commonness, compact-string segmentation, stable semantic-domain evidence, and optional rich dictionary inspection.\n\nit does not decide how text is spoken. spokenform and other consumers own tokenization policy, urls, numbers, versions, acronyms, pronunciation, and interpretation precedence. dataset publication is outside this repository."
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime contract",
+          "text": "word() and contains() query dictionary-derived lexemes.\n\n\nword() reports normalized lexical membership and the lowercase, titlecase, and uppercase forms attested by the artifact. uppercase_only is a convenience property for a known uppercase-only lexeme.\n\n\nsegment() uses authoritative full coverage, case flags, dynamic programming, and optional corpus rank. It applies surface-case acceptance, so a case-folded word may be known to word() while its observed lowercase segment remains unknown.\n\n\nentries() requires the dictionary capability.\n\n\ncontext_domains() and supports_domain() require semantic and full coverage. Their target is a character span: overlapping lexical tokens are excluded, while a target containing no lexical token acts as a virtual boundary and keeps adjacent words eligible…",
+          "lower": "word() and contains() query dictionary-derived lexemes.\n\n\nword() reports normalized lexical membership and the lowercase, titlecase, and uppercase forms attested by the artifact. uppercase_only is a convenience property for a known uppercase-only lexeme.\n\n\nsegment() uses authoritative full coverage, case flags, dynamic programming, and optional corpus rank. it applies surface-case acceptance, so a case-folded word may be known to word() while its observed lowercase segment remains unknown.\n\n\nentries() requires the dictionary capability.\n\n\ncontext_domains() and supports_domain() require semantic and full coverage. their target is a character span: overlapping lexical tokens are excluded, while a target containing no lexical token acts as a virtual boundary and keeps adjacent words eligible…"
+        },
+        {
+          "anchor": "",
+          "heading": "Architecture Constraints",
+          "text": "The architecture is constrained by a local, self-describing SQLite artifact and by the external sources used to build it.\n\n\nlexhint.Lexicon opens artifacts through SQLite read-only mode.\n\n\nRuntime operations never fetch network resources, create missing lexemes, or write partial caches.\n\n\nThe CLI resolves default cached or vendored artifacts for ordinary reads and exposes dictionary status for current SQL counts.\n\n\nSCHEMA_VERSION is an exact artifact compatibility key. Current schema 7 clients select and open only schema 7 artifacts; schema families are stored side by side under s<schema> paths.\n\n\nMetadata records schema version, base language, coverage, profile, capabilities, creation time, builder version, and source provenance.\n\n\nlexemes is present for the lexical capability. Semantic…",
+          "lower": "the architecture is constrained by a local, self-describing sqlite artifact and by the external sources used to build it.\n\n\nlexhint.lexicon opens artifacts through sqlite read-only mode.\n\n\nruntime operations never fetch network resources, create missing lexemes, or write partial caches.\n\n\nthe cli resolves default cached or vendored artifacts for ordinary reads and exposes dictionary status for current sql counts.\n\n\nschema_version is an exact artifact compatibility key. current schema 7 clients select and open only schema 7 artifacts; schema families are stored side by side under s<schema> paths.\n\n\nmetadata records schema version, base language, coverage, profile, capabilities, creation time, builder version, and source provenance.\n\n\nlexemes is present for the lexical capability. semantic…"
+        },
+        {
+          "anchor": "",
+          "heading": "Context and Scope",
+          "text": "Lexhint sits between lexical data artifacts and a text-normalization or speech consumer.",
+          "lower": "lexhint sits between lexical data artifacts and a text-normalization or speech consumer."
+        },
+        {
+          "anchor": "",
+          "heading": "Business context",
+          "text": "Lexical and semantic evidence ──> lexhint ──> consumer interpretation and speech policy\nCorpus frequency enrichment ────> lexhint ──> lexical ranking and evidence\n\n\n\n\nThe consumer decides what an unknown run, version, or candidate should mean. Lexhint ends at evidence and does not own tokenization, pronunciation, or interpretation precedence.",
+          "lower": "lexical and semantic evidence ──> lexhint ──> consumer interpretation and speech policy\ncorpus frequency enrichment ────> lexhint ──> lexical ranking and evidence\n\n\n\n\nthe consumer decides what an unknown run, version, or candidate should mean. lexhint ends at evidence and does not own tokenization, pronunciation, or interpretation precedence."
+        },
+        {
+          "anchor": "",
+          "heading": "Technical context",
+          "text": "Wiktextract/Kaikki JSONL supplies lexical and semantic data during builds.\n\n\nFrequencyWords enriches existing lexemes with corpus fields.\n\n\nA local SQLite artifact is the runtime boundary.\n\n\nNo service endpoint or daemon is required.",
+          "lower": "wiktextract/kaikki jsonl supplies lexical and semantic data during builds.\n\n\nfrequencywords enriches existing lexemes with corpus fields.\n\n\na local sqlite artifact is the runtime boundary.\n\n\nno service endpoint or daemon is required."
+        },
+        {
+          "anchor": "",
+          "heading": "Solution Strategy",
+          "text": "The solution is organized around a small, explicit evidence pipeline.\n\n\nResolve canonical capabilities, profile, frequency mode, source paths, and offline or refresh policy in an immutable build plan before schema creation.\n\n\nKeep lexical membership and corpus frequency evidence independent from semantic dictionary evidence.\n\n\nBuild rich dictionary tables only for the dictionary capability and materialize topic projections only for semantic.\n\n\nUse authoritative full coverage, case flags, and dynamic programming for compact-string segmentation.\n\n\nExclude every token overlapping the target span from semantic context scoring.\n\n\nQuery nearby context words in batches and apply bounded distance decay to explicit domain evidence.\n\n\nValidate pinned source hashes and use temporary files followed b…",
+          "lower": "the solution is organized around a small, explicit evidence pipeline.\n\n\nresolve canonical capabilities, profile, frequency mode, source paths, and offline or refresh policy in an immutable build plan before schema creation.\n\n\nkeep lexical membership and corpus frequency evidence independent from semantic dictionary evidence.\n\n\nbuild rich dictionary tables only for the dictionary capability and materialize topic projections only for semantic.\n\n\nuse authoritative full coverage, case flags, and dynamic programming for compact-string segmentation.\n\n\nexclude every token overlapping the target span from semantic context scoring.\n\n\nquery nearby context words in batches and apply bounded distance decay to explicit domain evidence.\n\n\nvalidate pinned source hashes and use temporary files followed b…"
+        },
+        {
+          "anchor": "",
+          "heading": "Building Block View",
+          "text": "The package is organized around a local artifact runtime and focused build modules.\n\n\nlexhint.lexicon.Lexicon owns read-only artifact access, lexical lookup, prefix completion, segmentation, dictionary inspection, and semantic evidence queries.\n\n\nlexhint.schema defines schema and capability validation for the self-describing SQLite artifact.\n\n\nlexhint.builder creates fresh atomic artifacts from streamed source data and applies the immutable build plan.\n\n\nlexhint.extract converts source records into curated lexical and dictionary data.\n\n\nlexhint.semantics projects source topics into the stable SemanticDomain taxonomy.\n\n\nlexhint.frequency and lexhint.sources resolve corpus enrichment and source provenance.\n\n\nlexhint.store persists lexemes, domains, rich dictionary tables, metadata, and inde…",
+          "lower": "the package is organized around a local artifact runtime and focused build modules.\n\n\nlexhint.lexicon.lexicon owns read-only artifact access, lexical lookup, prefix completion, segmentation, dictionary inspection, and semantic evidence queries.\n\n\nlexhint.schema defines schema and capability validation for the self-describing sqlite artifact.\n\n\nlexhint.builder creates fresh atomic artifacts from streamed source data and applies the immutable build plan.\n\n\nlexhint.extract converts source records into curated lexical and dictionary data.\n\n\nlexhint.semantics projects source topics into the stable semanticdomain taxonomy.\n\n\nlexhint.frequency and lexhint.sources resolve corpus enrichment and source provenance.\n\n\nlexhint.store persists lexemes, domains, rich dictionary tables, metadata, and inde…"
+        },
+        {
+          "anchor": "",
+          "heading": "Consumer interface",
+          "text": "from lexhint import Lexicon, SemanticDomain\n\nlexicon = Lexicon.from_path(\"en.sqlite3\")\ncompletions = lexicon.complete(\"comp\")\nsegments = lexicon.segment(\"chatgpt\")\ntext = \"The compiler is 8.3.2.\"\nstart = text.index(\"8.3.2\")\nevidence = lexicon.supports_domain(\n    text, target=(start, start + len(\"8.3.2\")), domain=SemanticDomain.COMPUTING\n)\n\n\n\n\nThe consumer decides what an unknown run, version, or candidate should mean. Lexhint ends at evidence.",
+          "lower": "from lexhint import lexicon, semanticdomain\n\nlexicon = lexicon.from_path(\"en.sqlite3\")\ncompletions = lexicon.complete(\"comp\")\nsegments = lexicon.segment(\"chatgpt\")\ntext = \"the compiler is 8.3.2.\"\nstart = text.index(\"8.3.2\")\nevidence = lexicon.supports_domain(\n    text, target=(start, start + len(\"8.3.2\")), domain=semanticdomain.computing\n)\n\n\n\n\nthe consumer decides what an unknown run, version, or candidate should mean. lexhint ends at evidence."
+        },
+        {
+          "anchor": "",
+          "heading": "Lexical lookup and segmentation",
+          "text": "The consumer constructs Lexicon from one local SQLite artifact, resolved from the vendored, configured cache, or schema-aware managed dataset path when no override is supplied.\n\n\nConstruction validates exact schema version, base language, coverage, and explicit capabilities before queries.\n\n\nAn optional locale such as GB or US is runtime presentation state. It does not change artifact resolution or physical English dataset identity.\n\n\nword() and contains() query dictionary-derived lexemes. word() exposes casing attestation already stored in the lexeme row. complete() performs bounded normalized prefix completion through exact lookup and indexed lexical range queries. segment() evaluates known spans using authoritative full coverage, case flags, dynamic programming, and optional corpus ran…",
+          "lower": "the consumer constructs lexicon from one local sqlite artifact, resolved from the vendored, configured cache, or schema-aware managed dataset path when no override is supplied.\n\n\nconstruction validates exact schema version, base language, coverage, and explicit capabilities before queries.\n\n\nan optional locale such as gb or us is runtime presentation state. it does not change artifact resolution or physical english dataset identity.\n\n\nword() and contains() query dictionary-derived lexemes. word() exposes casing attestation already stored in the lexeme row. complete() performs bounded normalized prefix completion through exact lookup and indexed lexical range queries. segment() evaluates known spans using authoritative full coverage, case flags, dynamic programming, and optional corpus ran…"
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic evidence",
+          "text": "lexhint.semantics maps supported raw source topics to stable SemanticDomain values at build time.\n\n\nContext distances are measured from the target character span. Every lexical token overlapping a non-empty target is excluded. If no lexical token overlaps, the target is a virtual insertion boundary and no real token is discarded.\n\n\nNearby words are queried in batches. Domain weights receive configurable distance decay, with adjacent eligible tokens at distance 1.\n\n\nResults preserve cue text, character spans, token distance, and contribution weight. The candidate cannot validate itself. Domain results are hints rather than sense-disambiguated semantic certainty, and missing evidence is not negative evidence.",
+          "lower": "lexhint.semantics maps supported raw source topics to stable semanticdomain values at build time.\n\n\ncontext distances are measured from the target character span. every lexical token overlapping a non-empty target is excluded. if no lexical token overlaps, the target is a virtual insertion boundary and no real token is discarded.\n\n\nnearby words are queried in batches. domain weights receive configurable distance decay, with adjacent eligible tokens at distance 1.\n\n\nresults preserve cue text, character spans, token distance, and contribution weight. the candidate cannot validate itself. domain results are hints rather than sense-disambiguated semantic certainty, and missing evidence is not negative evidence."
+        },
+        {
+          "anchor": "",
+          "heading": "Deployment View",
+          "text": "Lexhint is deployed as a local Python package and a local SQLite evidence artifact. There is no application server, worker, or persistent service.\n\n\nConsumers install the package and open an artifact with Lexicon.from_path() or the default Lexicon resolution.\n\n\nArtifact paths are selected by the caller or build workflow; CLI --path is an explicit override.\n\n\ndictionary status reports current row counts and metadata without rebuilding the artifact.\n\n\nA complete local artifact supports offline lexical, segmentation, dictionary, and semantic reads when the corresponding capabilities are present.\n\n\nGenerated artifacts contain source and hash provenance for dictionary and corpus inputs.\n\n\nBuild downloads and replacements use temporary files and atomic rename.\n\n\nGenerated external datasets are…",
+          "lower": "lexhint is deployed as a local python package and a local sqlite evidence artifact. there is no application server, worker, or persistent service.\n\n\nconsumers install the package and open an artifact with lexicon.from_path() or the default lexicon resolution.\n\n\nartifact paths are selected by the caller or build workflow; cli --path is an explicit override.\n\n\ndictionary status reports current row counts and metadata without rebuilding the artifact.\n\n\na complete local artifact supports offline lexical, segmentation, dictionary, and semantic reads when the corresponding capabilities are present.\n\n\ngenerated artifacts contain source and hash provenance for dictionary and corpus inputs.\n\n\nbuild downloads and replacements use temporary files and atomic rename.\n\n\ngenerated external datasets are…"
+        },
+        {
+          "anchor": "",
+          "heading": "Capability-specific schema",
+          "text": "Schema metadata is explicit and self-describing. language, locale, variant, schema_version, and dataset_version remain separate dimensions. Locale is optional and does not create en-GB or en-US artifacts. Strict equality, not a compatibility range, controls SQLite access.\n\nSchema 7 metadata is explicit and self-describing. lexemes is always present for lexical capability and already stores lowercase, titlecase, and uppercase attestation flags exposed by WordEvidence. lexeme_domains exists only for semantic; each row stores bounded deterministic weight and source-topic provenance. Rich entries, senses, sense_topics, forms, and pronunciations exist only for dictionary. Old partial-cache schemas are rejected and must be rebuilt. Prefix completion uses the existing lexemes.word primary-key ra…",
+          "lower": "schema metadata is explicit and self-describing. language, locale, variant, schema_version, and dataset_version remain separate dimensions. locale is optional and does not create en-gb or en-us artifacts. strict equality, not a compatibility range, controls sqlite access.\n\nschema 7 metadata is explicit and self-describing. lexemes is always present for lexical capability and already stores lowercase, titlecase, and uppercase attestation flags exposed by wordevidence. lexeme_domains exists only for semantic; each row stores bounded deterministic weight and source-topic provenance. rich entries, senses, sense_topics, forms, and pronunciations exist only for dictionary. old partial-cache schemas are rejected and must be rebuilt. prefix completion uses the existing lexemes.word primary-key ra…"
+        },
+        {
+          "anchor": "",
+          "heading": "Provenance and data lifecycle",
+          "text": "Metadata records dictionary_source, dictionary_source_sha256, frequency_source, and frequency_source_sha256, alongside profile, capabilities, creation time, and builder version. Remote dictionary input is hashed while streamed. Automatic FrequencyWords sources are cached by pinned revision and language, validated against an atomic SHA-256 sidecar, and downloaded through temporary files followed by atomic rename.",
+          "lower": "metadata records dictionary_source, dictionary_source_sha256, frequency_source, and frequency_source_sha256, alongside profile, capabilities, creation time, and builder version. remote dictionary input is hashed while streamed. automatic frequencywords sources are cached by pinned revision and language, validated against an atomic sha-256 sidecar, and downloaded through temporary files followed by atomic rename."
+        },
+        {
+          "anchor": "",
+          "heading": "Errors and offline behavior",
+          "text": "Capability, coverage, schema, language, and missing-artifact failures have controlled public exceptions. Offline mode rejects every HTTP(S) build source and permits only local or already validated cached inputs. Frequency acquisition fails the build unless the caller explicitly selects --no-frequency or a custom source. Missing semantic evidence is not semantic negation.",
+          "lower": "capability, coverage, schema, language, and missing-artifact failures have controlled public exceptions. offline mode rejects every http(s) build source and permits only local or already validated cached inputs. frequency acquisition fails the build unless the caller explicitly selects --no-frequency or a custom source. missing semantic evidence is not semantic negation."
+        },
+        {
+          "anchor": "",
+          "heading": "Verification and licensing",
+          "text": "Tests cover read-only behavior, no-network guards, segmentation, case attestation, virtual-boundary semantic target anchoring, schema and capability validation, frequency policy, semantic target exclusion, CLI contracts, and source extraction. External dictionary and corpus data remain subject to the obligations documented in DATA_SOURCES.md.",
+          "lower": "tests cover read-only behavior, no-network guards, segmentation, case attestation, virtual-boundary semantic target anchoring, schema and capability validation, frequency policy, semantic target exclusion, cli contracts, and source extraction. external dictionary and corpus data remain subject to the obligations documented in data_sources.md."
+        },
+        {
+          "anchor": "",
+          "heading": "Explicit immutable managed dataset artifacts",
+          "text": "Lexhint treats published datasets as explicit, immutable local artifacts rather than package-installed Python models. The dataset manager stores artifacts by normalized base language, capability variant, exact schema family, and exact release version under the persistent data directory. Downloads stream gzip data, verify manifest hashes, sizes, schema, language, coverage, and capabilities, then atomically install the database and sidecar metadata. Runtime Lexicon construction resolves only installed files and never contacts the network automatically. The highest-capability compatible installed variant is selected by default, while callers may pin a variant and release version.",
+          "lower": "lexhint treats published datasets as explicit, immutable local artifacts rather than package-installed python models. the dataset manager stores artifacts by normalized base language, capability variant, exact schema family, and exact release version under the persistent data directory. downloads stream gzip data, verify manifest hashes, sizes, schema, language, coverage, and capabilities, then atomically install the database and sidecar metadata. runtime lexicon construction resolves only installed files and never contacts the network automatically. the highest-capability compatible installed variant is selected by default, while callers may pin a variant and release version."
+        },
+        {
+          "anchor": "",
+          "heading": "Architecture Decisions",
+          "text": "The current architecture records these decisions.\n\n\nUse a self-describing SQLite artifact. Schema, language, coverage, profile, capabilities, and provenance are validated at runtime.\n\n\nSeparate lexical, semantic, and dictionary capabilities. Consumers can select the evidence they need without allowing data from an older artifact to leak into a fresh build.\n\n\nUse indexed lexical ranges for completion. complete() is a local read-only normalized prefix query with exact-match priority and explicit frequency or lexical ordering.\n\n\nTreat frequency as enrichment. Corpus rank improves segmentation and commonness evidence but does not define lexical capability.\n\n\nBuild fresh artifacts atomically. Capability-specific tables are created from the resolved build plan and replacements cannot expose par…",
+          "lower": "the current architecture records these decisions.\n\n\nuse a self-describing sqlite artifact. schema, language, coverage, profile, capabilities, and provenance are validated at runtime.\n\n\nseparate lexical, semantic, and dictionary capabilities. consumers can select the evidence they need without allowing data from an older artifact to leak into a fresh build.\n\n\nuse indexed lexical ranges for completion. complete() is a local read-only normalized prefix query with exact-match priority and explicit frequency or lexical ordering.\n\n\ntreat frequency as enrichment. corpus rank improves segmentation and commonness evidence but does not define lexical capability.\n\n\nbuild fresh artifacts atomically. capability-specific tables are created from the resolved build plan and replacements cannot expose par…"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality Requirements",
+          "text": "Quality attribute\n\nArchitectural response\n\nObservable scenario\n\n\n\n\n\nCorrectness\n\nExplicit schema and capability validation, case-aware lexemes, authoritative full coverage, and target exclusion\n\nA candidate is never used as its own semantic cue and incompatible artifacts fail at construction.\n\n\n\nDeterminism\n\nStable source projections, bounded weights, immutable build plans, and explicit result fields\n\nRepeating a local query returns the same segments and evidence ordering.\n\n\n\nPerformance\n\nIndexed SQLite lookups, bounded context windows, batched nearby-word queries, and streamed builds\n\nA context query evaluates only the bounded local evidence window.\n\n\n\nResilience\n\nRead-only runtime access, source hashes, temporary downloads, and atomic replacement\n\nA failed build does not replace an exis…",
+          "lower": "quality attribute\n\narchitectural response\n\nobservable scenario\n\n\n\n\n\ncorrectness\n\nexplicit schema and capability validation, case-aware lexemes, authoritative full coverage, and target exclusion\n\na candidate is never used as its own semantic cue and incompatible artifacts fail at construction.\n\n\n\ndeterminism\n\nstable source projections, bounded weights, immutable build plans, and explicit result fields\n\nrepeating a local query returns the same segments and evidence ordering.\n\n\n\nperformance\n\nindexed sqlite lookups, bounded context windows, batched nearby-word queries, and streamed builds\n\na context query evaluates only the bounded local evidence window.\n\n\n\nresilience\n\nread-only runtime access, source hashes, temporary downloads, and atomic replacement\n\na failed build does not replace an exis…"
+        },
+        {
+          "anchor": "",
+          "heading": "Risks and Technical Debt",
+          "text": "Upstream availability and format drift. FrequencyWords and Wiktextract/Kaikki remain external inputs. Hash validation and source checks reduce silent corruption, but upstream changes can still prevent builds.\n\n\nExternal data licensing. Generated artifacts inherit obligations from their dictionary and corpus sources. Redistribution must follow DATA_SOURCES.md.\n\n\nHeuristic segmentation. Dynamic-programming segmentation is evidence, not linguistic analysis, and may need tuning for new languages or identifier styles.\n\n\nIncomplete capability coverage. A consumer cannot use dictionary or semantic operations when the artifact lacks those capabilities. Missing evidence must not be treated as semantic negation.\n\n\nSchema evolution. Incompatible schema or capability changes require rebuilding artifa…",
+          "lower": "upstream availability and format drift. frequencywords and wiktextract/kaikki remain external inputs. hash validation and source checks reduce silent corruption, but upstream changes can still prevent builds.\n\n\nexternal data licensing. generated artifacts inherit obligations from their dictionary and corpus sources. redistribution must follow data_sources.md.\n\n\nheuristic segmentation. dynamic-programming segmentation is evidence, not linguistic analysis, and may need tuning for new languages or identifier styles.\n\n\nincomplete capability coverage. a consumer cannot use dictionary or semantic operations when the artifact lacks those capabilities. missing evidence must not be treated as semantic negation.\n\n\nschema evolution. incompatible schema or capability changes require rebuilding artifa…"
+        },
+        {
+          "anchor": "",
+          "heading": "Glossary",
+          "text": "Lexicon: The read-only runtime that opens one self-describing SQLite evidence artifact.\n\n\nLexeme: A dictionary-derived lexical row with case flags and optional corpus fields.\n\n\nSemanticDomain: A stable taxonomy value projected from supported source topics.\n\n\nCapability: An explicit artifact feature such as lexical, semantic, or dictionary.\n\n\nFull coverage: An authoritative artifact suitable for segmentation and semantic context queries.\n\n\nContext cue: A nearby non-target token whose domain evidence contributes a bounded score.\n\n\nTarget span: The source character interval excluded from semantic context evidence.\n\n\nWiktextract/Kaikki: The upstream dictionary data used for lexical, semantic, and rich dictionary builds.\n\n\nFrequencyWords: The upstream corpus source used to enrich existing lexe…",
+          "lower": "lexicon: the read-only runtime that opens one self-describing sqlite evidence artifact.\n\n\nlexeme: a dictionary-derived lexical row with case flags and optional corpus fields.\n\n\nsemanticdomain: a stable taxonomy value projected from supported source topics.\n\n\ncapability: an explicit artifact feature such as lexical, semantic, or dictionary.\n\n\nfull coverage: an authoritative artifact suitable for segmentation and semantic context queries.\n\n\ncontext cue: a nearby non-target token whose domain evidence contributes a bounded score.\n\n\ntarget span: the source character interval excluded from semantic context evidence.\n\n\nwiktextract/kaikki: the upstream dictionary data used for lexical, semantic, and rich dictionary builds.\n\n\nfrequencywords: the upstream corpus source used to enrich existing lexe…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexhint/changelog/",
+      "title": "lexhint Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded deterministic …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added deterministic normalized lexical prefix completion through Lexicon.complete() and the complete CLI command",
+          "lower": "added deterministic normalized lexical prefix completion through lexicon.complete() and the complete cli command"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Added automatic color styling for interactive human dictionary output with explicit opt-out controls",
+          "lower": "added automatic color styling for interactive human dictionary output with explicit opt-out controls"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added deterministic local lexical prefix completion through Lexicon.complete() and lexhint complete",
+          "lower": "added deterministic local lexical prefix completion through lexicon.complete() and lexhint complete"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed WordEvidence to expose lexical case attestation and uppercase-only evidence",
+          "lower": "changed wordevidence to expose lexical case attestation and uppercase-only evidence"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed semantic context anchoring so character-span numeric and symbolic targets do not consume adjacent cues",
+          "lower": "fixed semantic context anchoring so character-span numeric and symbolic targets do not consume adjacent cues"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added GitHub release dataset discovery and installation for versioned Lexhint SQLite artifacts",
+          "lower": "added github release dataset discovery and installation for versioned lexhint sqlite artifacts"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Added schema-aware dataset variants and regional locale preferences for dictionary lookup and rendering",
+          "lower": "added schema-aware dataset variants and regional locale preferences for dictionary lookup and rendering"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added CLI commands for lookup, segmentation, context evidence, artifact builds, dictionary inspection, and status\n\n\nAdded streamed Wiktextract and Kaikki dictionary builds that produce self-describing SQLite artifacts\n\n\nAdded stable semantic-domain evidence that explains context cues while excluding the target span\n\n\nAdded a local read-only Lexicon for dictionary-derived membership and compact identifier segmentation\n\n\nAdded zero runtime dependencies and support for Python 3.10 through 3.14",
+          "lower": "added cli commands for lookup, segmentation, context evidence, artifact builds, dictionary inspection, and status\n\n\nadded streamed wiktextract and kaikki dictionary builds that produce self-describing sqlite artifacts\n\n\nadded stable semantic-domain evidence that explains context cues while excluding the target span\n\n\nadded a local read-only lexicon for dictionary-derived membership and compact identifier segmentation\n\n\nadded zero runtime dependencies and support for python 3.10 through 3.14"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed FrequencyWords integration to optional counts and ranks that enrich dictionary-derived lexemes with provenance\n\n\nChanged rich dictionary entries to preserve senses, forms, pronunciations, examples, relations, and etymology",
+          "lower": "changed frequencywords integration to optional counts and ranks that enrich dictionary-derived lexemes with provenance\n\n\nchanged rich dictionary entries to preserve senses, forms, pronunciations, examples, relations, and etymology"
+        },
+        {
+          "anchor": "",
+          "heading": "Removed",
+          "text": "Removed standalone word-list vendoring in favor of dictionary-derived lexical membership\n\n\nRemoved lazy runtime dictionary fetching and per-word artifact population",
+          "lower": "removed standalone word-list vendoring in favor of dictionary-derived lexical membership\n\n\nremoved lazy runtime dictionary fetching and per-word artifact population"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the local SQLite artifact architecture and Sphinx documentation setup",
+          "lower": "documented the local sqlite artifact architecture and sphinx documentation setup"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved CI and publication checks for tests, static analysis, documentation, distributions, and wheel smoke tests",
+          "lower": "improved ci and publication checks for tests, static analysis, documentation, distributions, and wheel smoke tests"
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexhint/",
+      "title": "Lexhint",
+      "snippet": "Lexhint is a local lexical-evidence engine backed by self-describing SQLite artifacts.\n\nIt provides lexical membership, frequency enrichment …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Lexhint",
+          "text": "Lexhint is a local lexical-evidence engine backed by self-describing SQLite artifacts.\n\nIt provides lexical membership, frequency enrichment, compact-string segmentation, stable semantic-domain evidence, and optional rich dictionary entries. It does not speak or normalize text.\n\n\n\nArchitecture Documentation\n\nIntroduction and Goals\nRuntime contract\n\nRequirements Overview\n\nQuality Goals\n\nStakeholders\n\n\n\n\nArchitecture Constraints\n\nContext and Scope\nBusiness context\n\nTechnical context\n\nBusiness Context\n\nTechnical Context\n\n\n\n\nSolution Strategy\nStrategy Items\n\n\n\n\nBuilding Block View\nConsumer interface\n\n\n\n\nRuntime View\nLexical lookup and segmentation\n\nSemantic evidence\n\n\n\n\nDeployment View\n\nCross-cutting Concepts\nCapability-specific schema\n\nProvenance and data lifecycle\n\nErrors and offline behavi…",
+          "lower": "lexhint is a local lexical-evidence engine backed by self-describing sqlite artifacts.\n\nit provides lexical membership, frequency enrichment, compact-string segmentation, stable semantic-domain evidence, and optional rich dictionary entries. it does not speak or normalize text.\n\n\n\narchitecture documentation\n\nintroduction and goals\nruntime contract\n\nrequirements overview\n\nquality goals\n\nstakeholders\n\n\n\n\narchitecture constraints\n\ncontext and scope\nbusiness context\n\ntechnical context\n\nbusiness context\n\ntechnical context\n\n\n\n\nsolution strategy\nstrategy items\n\n\n\n\nbuilding block view\nconsumer interface\n\n\n\n\nruntime view\nlexical lookup and segmentation\n\nsemantic evidence\n\n\n\n\ndeployment view\n\ncross-cutting concepts\ncapability-specific schema\n\nprovenance and data lifecycle\n\nerrors and offline behavi…"
+        },
+        {
+          "anchor": "",
+          "heading": "Dataset lifecycle",
+          "text": "Install published SQLite datasets explicitly with lexhint dataset download LANGUAGE. The dataset manager stores language, capability variant, and release version side by side, verifies gzip and SQLite metadata before atomic installation, and never downloads from Lexicon or ordinary query commands. Use dataset list, dataset info, dataset validate, and dataset remove for local management; dataset available and dataset download are the networked catalog operations.",
+          "lower": "install published sqlite datasets explicitly with lexhint dataset download language. the dataset manager stores language, capability variant, and release version side by side, verifies gzip and sqlite metadata before atomic installation, and never downloads from lexicon or ordinary query commands. use dataset list, dataset info, dataset validate, and dataset remove for local management; dataset available and dataset download are the networked catalog operations."
+        }
+      ]
+    }
+  ]
+}

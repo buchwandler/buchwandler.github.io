@@ -5,8 +5,8 @@ permalink: /tools/ssmd/syntax/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "2def7060bc3513f8f82f0eed36f9fbccd353f9e3"
+docs_ref: "v0.8.2"
+docs_commit: "9fda4e532699353407751582398a9a8c036f2408"
 search_enabled: true
 ---
 

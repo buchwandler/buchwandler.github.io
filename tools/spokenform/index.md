@@ -5,8 +5,8 @@ permalink: /tools/spokenform/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -562,14 +562,18 @@ maps.</p>
 <li class="toctree-l1"><a class="reference internal" href="architecture/">Architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#ownership-boundary">Ownership boundary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#structured-precedence">Structured precedence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#recognition-policy-boundary">Recognition policy boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#semantic-segment-boundaries">Semantic segment boundaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#preparation">Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#configuration-policy-modes">Configuration policy modes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#result-models">Result models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#export-classification">Export classification</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#annotation-adapters">Annotation adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#number-normalization">Number normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#interpretation-policy">Interpretation policy</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="migration-kokorog2p/">kokorog2p migration boundary</a><ul>
@@ -577,7 +581,10 @@ maps.</p>
 <li class="toctree-l2"><a class="reference internal" href="migration-kokorog2p/#preferred-adapter-surface">Preferred adapter surface</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli/">Command-line interface</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/#interpretation-and-domain-controls">Interpretation and domain controls</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="spacy/">spaCy integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="spacy/#current-effect-with-the-released-abbr2words-structured-api">Current effect with the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spacy/#load-an-installed-model-by-name">Load an installed model by name</a></li>
@@ -595,27 +602,40 @@ maps.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="limitations/">Limitations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="limitations/#limitations-and-readiness-gates">Limitations and readiness gates</a></li>
-<li class="toctree-l1"><a class="reference internal" href="google_tn/">Google TN benchmark</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="google_tn/#local-data">Local data</a></li>
-<li class="toctree-l2"><a class="reference internal" href="google_tn/#format-and-integrity">Format and integrity</a></li>
-<li class="toctree-l2"><a class="reference internal" href="google_tn/#profiles-and-metrics">Profiles and metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="google_tn/#scope-boundaries">Scope boundaries</a></li>
+<li class="toctree-l1"><a class="reference internal" href="limitations/#limitations-and-readiness-gates">Limitations and readiness gates</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="limitations/#recognition-modes-and-specialist-domains">Recognition modes and specialist domains</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="benchmarks/">Benchmarks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="polynorm/">PolyNorm diagnostic benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="proteno/">Proteno benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="google_tn/">Google TN benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="async_tn/">Async Voice TTS Normalization Benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="benchmarks/#spokenform-gold">Spokenform Gold</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-checklist/">Release checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.6] - 2026-08-13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.5] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.2.4] - 2026-08-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.2.3] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.2] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.2.1] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.2.0] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.1.0] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.0] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.8] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.2.7] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.2.6] - 2026-08-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.2.5] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.2.4] - 2026-08-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.2.3] - 2026-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.2.2] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.2.1] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id37">[0.2.0] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id41">[0.1.0] - 2026-08-06</a></li>
 </ul>
 </li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Historical</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="kokorog2p-0.2.3-handoff/">spokenform 0.2.3 downstream handoff</a></li>
 </ul>
 </div>
 <section id="scope">

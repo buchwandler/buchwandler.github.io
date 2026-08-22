@@ -5,8 +5,8 @@ permalink: /tools/booktx/profiles/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -617,7 +617,7 @@ booktx<span class="w"> </span>build<span class="w"> </span>./book<span class="w"
 <section id="selection-and-revision-profiles">
 <h2>Selection and revision profiles</h2>
 <p><code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">judge</span> <span class="pre">create-profile</span></code> creates compare or revision profiles. A selection
-profile stores accepted judge decisions in its normal <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code>
+profile stores accepted judge decisions in its normal canonical translation
 store and keeps judge provenance separately. A single-source revision profile
 requires an explicit <code class="docutils literal notranslate"><span class="pre">copy</span></code> or <code class="docutils literal notranslate"><span class="pre">edited</span></code> judge decision for every record.
 Prepare isolated judge work from the project root with

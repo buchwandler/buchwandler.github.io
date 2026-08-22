@@ -5,8 +5,8 @@ permalink: /tools/booktx/troubleshooting/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -573,8 +573,8 @@ selected profile. Request a fresh task and use the matching profile-local
 <h2>Legacy paths after migration</h2>
 <p>After <code class="docutils literal notranslate"><span class="pre">booktx</span> <span class="pre">profile</span> <span class="pre">migrate-current</span></code>, mutable translation state belongs under
 <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/</span></code>. Old <code class="docutils literal notranslate"><span class="pre">.booktx/</span></code> paths such as <code class="docutils literal notranslate"><span class="pre">context.json</span></code>,
-<code class="docutils literal notranslate"><span class="pre">tasks/</span></code>, <code class="docutils literal notranslate"><span class="pre">ingest/</span></code>, <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, and <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> are legacy
-migration input, not current profile storage.</p>
+<code class="docutils literal notranslate"><span class="pre">tasks/</span></code>, <code class="docutils literal notranslate"><span class="pre">ingest/</span></code>, <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, and root-level <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>
+are legacy migration input, not current profile storage.</p>
 </section>
 <section id="stale-tasks-and-context">
 <h2>Stale tasks and context</h2>

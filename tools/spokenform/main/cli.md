@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
 search_enabled: true
 ---
 
@@ -572,6 +572,16 @@ spokenform<span class="w"> </span>--lang<span class="w"> </span>en<span class="w
 <p><code class="docutils literal notranslate"><span class="pre">--keep-symbols</span></code> is an exact-codepoint allowlist and is meaningful only with
 <code class="docutils literal notranslate"><span class="pre">--symbol-mode</span> <span class="pre">keep</span></code>; quote it in shells because characters such as <code class="docutils literal notranslate"><span class="pre">;</span></code> have
 special syntax.</p>
+<section id="interpretation-and-domain-controls">
+<h2>Interpretation and domain controls</h2>
+<p>Choose the recognition evidence policy explicitly and disable specialist domains independently:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--interpretation-mode<span class="w"> </span>surface<span class="w"> </span><span class="s2">&quot;final 3-2&quot;</span>
+spokenform<span class="w"> </span>--interpretation-mode<span class="w"> </span>contextual<span class="w"> </span>--disable-domain<span class="w"> </span>chemistry<span class="w"> </span><span class="s2">&quot;H2O&quot;</span>
+spokenform<span class="w"> </span>--disable-domain<span class="w"> </span>biology<span class="w"> </span>--disable-domain<span class="w"> </span>sports<span class="w"> </span><span class="s2">&quot;...&quot;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--disable-domain</span></code> is repeatable. Available values include <code class="docutils literal notranslate"><span class="pre">chemistry</span></code>, <code class="docutils literal notranslate"><span class="pre">biology</span></code>, <code class="docutils literal notranslate"><span class="pre">sports</span></code>, <code class="docutils literal notranslate"><span class="pre">finance</span></code>, <code class="docutils literal notranslate"><span class="pre">math</span></code>, <code class="docutils literal notranslate"><span class="pre">music</span></code>, <code class="docutils literal notranslate"><span class="pre">temporal</span></code>, <code class="docutils literal notranslate"><span class="pre">quantities</span></code>, <code class="docutils literal notranslate"><span class="pre">communications</span></code>, <code class="docutils literal notranslate"><span class="pre">network</span></code>, <code class="docutils literal notranslate"><span class="pre">identifiers</span></code>, <code class="docutils literal notranslate"><span class="pre">addresses</span></code>, <code class="docutils literal notranslate"><span class="pre">references</span></code>, <code class="docutils literal notranslate"><span class="pre">legal</span></code>, <code class="docutils literal notranslate"><span class="pre">social</span></code>, <code class="docutils literal notranslate"><span class="pre">geography</span></code>, and <code class="docutils literal notranslate"><span class="pre">core</span></code>. Surface mode does not use automatic spaCy context; explicit strict spaCy use is rejected.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

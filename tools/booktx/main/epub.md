@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -579,6 +579,24 @@ unresolved-token counters and include the resolved EPUB policy and warnings.</p>
 <p>Pass-through profiles are generated reconstruction checks. Compare their
 output with an EPUB diff tool or the repository’s reconstruction tests. The
 documentation does not promise byte identity for an arbitrary EPUB fixture.</p>
+</section>
+<section id="built-artifact-verification">
+<h2>Built artifact verification</h2>
+<p>A normal build writes one <code class="docutils literal notranslate"><span class="pre">.epub</span></code> ZIP archive under the profile output directory.
+The read-only inspection commands read that archive directly; they do not extract it
+to a temporary directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>booktx<span class="w"> </span>validate<span class="w"> </span>.<span class="w"> </span>--fail-on-warnings
+booktx<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--require-complete
+booktx<span class="w"> </span>check<span class="w"> </span>.<span class="w"> </span>--epub-output<span class="w"> </span>--fail-on-warnings
+booktx<span class="w"> </span>epub<span class="w"> </span>inspect<span class="w"> </span>.<span class="w"> </span>--chapter<span class="w"> </span>CHAPTER
+booktx<span class="w"> </span>epub<span class="w"> </span>grep<span class="w"> </span>.<span class="w"> </span><span class="s2">&quot;TEXT&quot;</span>
+booktx<span class="w"> </span>epub<span class="w"> </span>extract-text<span class="w"> </span>.<span class="w"> </span>--chapter<span class="w"> </span>CHAPTER
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">check</span> <span class="pre">--epub-output</span> <span class="pre">--json</span></code> reports archive validity, CRC status, the required
+EPUB mimetype, the resolvable OPF, XHTML count, unresolved placeholders, and
+output-policy findings. In isolated profile mode, use these booktx commands
+instead of <code class="docutils literal notranslate"><span class="pre">unzip</span></code>, shell <code class="docutils literal notranslate"><span class="pre">grep</span></code>, temporary extraction, or direct archive traversal.</p>
 </section>
 <section id="inline-xhtml-contract">
 <h2>Inline XHTML contract</h2>

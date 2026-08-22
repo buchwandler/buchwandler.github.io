@@ -5,8 +5,8 @@ permalink: /tools/spokenform/api/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -544,7 +544,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="preparation">
 <h2>Preparation</h2>
-<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)
+<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, strict=False)
 :module: spokenform</p>
 <p>Convert one-language written text into a readable form intended for speech.</p>
 <p>The caller selects the processing language. Language detection, mixed-language
@@ -577,7 +577,76 @@ source/output mapping.</p>
 only generic grapheme-spaced uppercase acronyms; lexical acronyms, preserved
 terms, known initialisms, identifiers, and mixed-case tokens keep their normal
 policies.</p>
-<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)
+</section>
+<section id="configuration-policy-modes">
+<h2>Configuration policy modes</h2>
+<p>The policy modes below are passed through the selected language’s <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>
+registry where abbreviation or initialism data is involved. They are available
+for every language profile, but the exact recognized vocabulary and number
+grammar remain locale-specific. They are safety controls: conservative modes
+prefer leaving an ambiguous token unchanged, while expansive modes can create
+false positives in identifiers, product names, headlines, years, and other
+uppercase or digit-heavy text.</p>
+<section id="generic-acronyms">
+<h3>Generic acronyms</h3>
+<p><code class="docutils literal notranslate"><span class="pre">generic_acronym_mode=&quot;known_only&quot;</span></code> is the default. It lets registered or
+otherwise known initialisms follow their registry policy and leaves unknown
+uppercase words alone. For example, an unknown <code class="docutils literal notranslate"><span class="pre">TST</span></code> remains unchanged while a
+known entry such as <code class="docutils literal notranslate"><span class="pre">ABC</span></code> can be rendered according to the registry.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;conservative_unknown&quot;</span></code> additionally spells unknown uppercase initialisms
+when the context provides abbreviation evidence, reducing accidental changes
+to ordinary uppercase prose. <code class="docutils literal notranslate"><span class="pre">&quot;spell_unknown&quot;</span></code> is the broadest mode: eligible
+unknown uppercase initialisms are spelled even without as much contextual
+evidence, so it is useful for abbreviation-heavy input but has the highest
+false-positive risk.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PreparationConfig</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">generic_acronym_mode</span><span class="o">=</span><span class="s2">&quot;known_only&quot;</span><span class="p">)</span>
+<span class="n">PreparationConfig</span><span class="p">(</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">generic_acronym_mode</span><span class="o">=</span><span class="s2">&quot;spell_unknown&quot;</span><span class="p">,</span>
+    <span class="n">generic_acronym_case</span><span class="o">=</span><span class="s2">&quot;upper&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For example, with <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;ABC</span> <span class="pre">TST&quot;,</span> <span class="pre">generic_acronym_mode=&quot;conservative_unknown&quot;)</span></code>
+produces <code class="docutils literal notranslate"><span class="pre">&quot;A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">T</span> <span class="pre">S</span> <span class="pre">T&quot;</span></code> in the current English registry, while the default
+keeps the unknown <code class="docutils literal notranslate"><span class="pre">TST</span></code> unchanged. <code class="docutils literal notranslate"><span class="pre">generic_acronym_case=&quot;lower&quot;</span></code> changes only
+generic grapheme-spaced output (<code class="docutils literal notranslate"><span class="pre">&quot;a</span> <span class="pre">b</span> <span class="pre">c</span> <span class="pre">t</span> <span class="pre">s</span> <span class="pre">t&quot;</span></code> in that example); it does not
+lowercase lexical acronyms or registered terms. These modes are delegated to
+<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>’ initialism policy rather than implemented as a second local
+abbreviation registry.</p>
+</section>
+<section id="registered-acronyms">
+<h3>Registered acronyms</h3>
+<p><code class="docutils literal notranslate"><span class="pre">registered_acronym_mode=&quot;expand&quot;</span></code> is the default and uses the registered
+initialism expansion supplied by <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>. Set it to <code class="docutils literal notranslate"><span class="pre">&quot;spell&quot;</span></code> when the
+letters of registered initialisms are preferable to their lexical expansion,
+for example <code class="docutils literal notranslate"><span class="pre">CEO</span> <span class="pre">MIT</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">C</span> <span class="pre">E</span> <span class="pre">O</span> <span class="pre">M</span> <span class="pre">I</span> <span class="pre">T</span></code> in English. This mode has lower lexical
+interpretation risk but may be less natural for acronyms whose full names are
+well known. It affects registered entries, not arbitrary unknown uppercase
+words, and is forwarded to <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> as <code class="docutils literal notranslate"><span class="pre">registered_initialism_mode</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PreparationConfig</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">registered_acronym_mode</span><span class="o">=</span><span class="s2">&quot;spell&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="long-numbers">
+<h3>Long numbers</h3>
+<p><code class="docutils literal notranslate"><span class="pre">long_number_mode=&quot;preserve&quot;</span></code> is the default. It leaves long ungrouped digit
+strings alone when they could be years, identifiers, account numbers, or other
+downstream-owned sequences. <code class="docutils literal notranslate"><span class="pre">&quot;contextual&quot;</span></code> verbalizes a long number when
+quantity evidence makes cardinal reading safe, such as <code class="docutils literal notranslate"><span class="pre">844361</span> <span class="pre">items</span></code>, while
+continuing to protect identifier-like uses. <code class="docutils literal notranslate"><span class="pre">&quot;cardinal&quot;</span></code> requests cardinal
+verbalization for eligible long numbers regardless of that contextual evidence;
+it is useful for prose known to contain quantities but carries a higher risk of
+rewriting IDs and years. The number grammar and rendered words are selected by
+the active language, and this policy is independent of <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>’ lexical
+abbreviation registry.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PreparationConfig</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">long_number_mode</span><span class="o">=</span><span class="s2">&quot;contextual&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For English, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;844361</span> <span class="pre">items&quot;,</span> <span class="pre">long_number_mode=&quot;preserve&quot;)</span></code> keeps the
+digits, while <code class="docutils literal notranslate"><span class="pre">&quot;contextual&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;cardinal&quot;</span></code> produce
+<code class="docutils literal notranslate"><span class="pre">&quot;eight</span> <span class="pre">hundred</span> <span class="pre">forty</span> <span class="pre">four</span> <span class="pre">thousand</span> <span class="pre">three</span> <span class="pre">hundred</span> <span class="pre">sixty</span> <span class="pre">one</span> <span class="pre">items&quot;</span></code>.</p>
+<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, interpretation_mode=InterpretationMode.CONTEXTUAL, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, disabled_domains=frozenset({}), allowed_domains=None, context=True, strict=False)
 :module: spokenform
 :canonical: spokenform.config.PreparationConfig</p>
 <p>Immutable options controlling single-language written-to-spoken preparation.</p>
@@ -587,6 +656,7 @@ policies.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a one-language profile safe for kokorog2p adapters.
 </pre></div>
 </div>
+</section>
 </section>
 <section id="result-models">
 <h2>Result models</h2>
@@ -734,12 +804,33 @@ colon-time candidates remain unchanged for caller-managed handling.</p>
 <p>URLs, email addresses, and semantic-version-like values are protected. The
 implementation is intentionally conservative and is an MVP, not a complete
 locale grammar.</p>
-<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)
+<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, trace=None)
 :module: spokenform</p>
 <p>Normalize structured values and return exact semantic provenance.</p>
-<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)
+<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, trace=None)
 :module: spokenform</p>
 <p>Return exact, non-overlapping semantic replacements for one language.</p>
+</section>
+<section id="interpretation-policy">
+<h2>Interpretation policy</h2>
+<p><code class="docutils literal notranslate"><span class="pre">PreparationConfig</span></code> and <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> expose two orthogonal recognition controls:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">interpretation_mode=&quot;contextual&quot;</span></code> (default) permits reviewed contextual semantic evidence.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">interpretation_mode=&quot;surface&quot;</span></code> permits only candidates marked with intrinsic evidence and fails closed on missing metadata.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">disabled_domains={&quot;chemistry&quot;,</span> <span class="pre">...}</span></code> suppresses selected <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code> families before precedence resolution.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">allowed_domains={&quot;quantities&quot;,</span> <span class="pre">...}</span></code> permits only selected semantic families and fails closed for candidates without domain metadata. If a domain appears in both sets, configuration raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare</span>
+
+<span class="n">prepare</span><span class="p">(</span>
+    <span class="s2">&quot;The sample contains H2O.&quot;</span><span class="p">,</span>
+    <span class="n">interpretation_mode</span><span class="o">=</span><span class="s2">&quot;surface&quot;</span><span class="p">,</span>
+    <span class="n">disabled_domains</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chemistry&quot;</span><span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">context</span></code> remains the legacy abbreviation-context switch. Surface mode clamps its effective abbreviation context off, but <code class="docutils literal notranslate"><span class="pre">context=False</span></code> under contextual mode does not disable structured recognizers. <code class="docutils literal notranslate"><span class="pre">InterpretationMode</span></code>, <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code>, and <code class="docutils literal notranslate"><span class="pre">RecognitionEvidence</span></code> are exported public types. Policy-suppressed candidates are visible in structured trace diagnostics.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=&quot;preserve&quot;</span></code> is the compatibility default. Set it to <code class="docutils literal notranslate"><span class="pre">&quot;spell&quot;</span></code> to render conservative residual sequence-shaped spans such as <code class="docutils literal notranslate"><span class="pre">AAPL</span></code> or <code class="docutils literal notranslate"><span class="pre">H2O</span></code> orthographically after semantic recognition. It does not spell ordinary lexical prose, does not claim a semantic domain, and never overrides caller-protected or auto-protected literal spans. <code class="docutils literal notranslate"><span class="pre">SequenceFallbackMode</span></code>, <code class="docutils literal notranslate"><span class="pre">InterpretationMode</span></code>, <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code>, and <code class="docutils literal notranslate"><span class="pre">RecognitionEvidence</span></code> are exported public types. Policy-suppressed candidates are visible in structured trace diagnostics.</p>
 </section>
 </section>
 </div>

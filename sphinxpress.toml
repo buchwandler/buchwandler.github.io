@@ -62,7 +62,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint"]
 
 [pdf]
 builder = "weasyprint"
@@ -221,6 +221,18 @@ conf_dir = "../spokenform/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/spokenform"
 description = "Single-language written-to-spoken text normalization for speech applications."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "lexhint"
+title = "lexhint"
+docs_root = "../lexhint/docs"
+conf_dir = "../lexhint/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/lexhint"
+description = "Compact lexical and dictionary-derived context hints for text normalization."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

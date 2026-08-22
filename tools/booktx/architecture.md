@@ -5,8 +5,8 @@ permalink: /tools/booktx/architecture/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -577,13 +577,15 @@ uses the marker-bound profile and brokers access to shared source data.</p>
 </section>
 <section id="store-and-provenance">
 <h2>Store and provenance</h2>
-<p>New profiles default to the v3 canonical store. Existing profiles remain on
-their detected backend and are never auto-migrated. V2 is the compatibility
-<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>; v3 stores a manifest plus per-chunk current,
-translation-candidate, and review-candidate shards. Each changed chunk shares
-one advancing revision across its three files, and normal readers retry around
-publication and validate cross-shard invariants. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains
-the compatibility materialization model returned by the Python loader surface.
+<p>The translation store is the logical canonical record repository for one
+profile. New profiles default to the v3 canonical backend. Existing profiles
+remain on their detected backend and are never auto-migrated. V2 is the
+compatibility <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>; v3 stores a manifest plus per-chunk
+current, translation-candidate, and review-candidate shards. Each changed
+chunk shares one advancing revision across its three files, and normal readers
+retry around publication and validate cross-shard invariants. The compatibility
+materialization model remains the Python loader surface only for workflows that
+explicitly need a whole-store view.
 Effective output still chooses a valid review candidate before the current
 translation version.
 Task context views and revision metadata preserve the source, baseline, and

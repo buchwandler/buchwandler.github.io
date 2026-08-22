@@ -5,8 +5,8 @@ permalink: /tools/spokenform/limitations/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -590,7 +590,7 @@ contract, <code class="docutils literal notranslate"><span class="pre">extended<
 experiment is not a release gate. Compare only compatible report identities;
 questionable upstream targets remain quarantined and visible rather than being
 used to justify a normalization rule. See
-<span class="xref myst">benchmarks/OWNERSHIP.md</span>.</p>
+<a class="reference external" href="https://github.com/buchwandler/spokenform/blob/main/benchmarks/OWNERSHIP.md">benchmarks/OWNERSHIP.md</a>.</p>
 </section>
 <section id="limitations-and-readiness-gates">
 <h1>Limitations and readiness gates</h1>
@@ -615,6 +615,11 @@ number ownership visible. <code class="docutils literal notranslate"><span class
 downstream; spokenform does not rewrite model punctuation. Do not remove a
 downstream normalizer until a dual-run comparison covers text, source offsets,
 token boundaries, phonemes, protected overrides, and warnings.</p>
+<section id="recognition-modes-and-specialist-domains">
+<h2>Recognition modes and specialist domains</h2>
+<p><code class="docutils literal notranslate"><span class="pre">contextual</span></code> remains the default compatibility mode. <code class="docutils literal notranslate"><span class="pre">surface</span></code> is intentionally fail-closed and context-independent, not a promise to spell every unknown token; genuinely ambiguous strings may be preserved. <code class="docutils literal notranslate"><span class="pre">disabled_domains</span></code> can suppress specialist families independently, with <code class="docutils literal notranslate"><span class="pre">chemistry</span></code> covering the current chemical-formula recognizer. Domain suppression can reduce speechability by design and is not a rendering fallback. Legacy <code class="docutils literal notranslate"><span class="pre">context</span></code> still controls abbreviation context only. An orthographic fallback for conservative sequence-shaped residual spans is opt-in through <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=&quot;spell&quot;</span></code>; it does not spell ordinary lexical prose. The default remains <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=&quot;preserve&quot;</span></code>.</p>
+<p>Explicit <code class="docutils literal notranslate"><span class="pre">allowed_domains</span></code> is fail-closed for candidates without recognized domain metadata. It is intended for callers that need a stable semantic permitlist across future Spokenform releases.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

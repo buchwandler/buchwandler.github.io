@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+docs_commit: "f60610571be569f10142542add3737dd8dbf3bd2"
 search_enabled: true
 ---
 
@@ -618,7 +618,7 @@ and <code class="docutils literal notranslate"><span class="pre">Expander</span>
 reviewed registry intentionally owns a small set of common initialisms such as
 <code class="docutils literal notranslate"><span class="pre">BBC</span></code>, <code class="docutils literal notranslate"><span class="pre">US</span></code>, <code class="docutils literal notranslate"><span class="pre">UK</span></code>, <code class="docutils literal notranslate"><span class="pre">ISBN</span></code>, <code class="docutils literal notranslate"><span class="pre">HTML</span></code>, and <code class="docutils literal notranslate"><span class="pre">TV</span></code>, which render source graphemes as
 ordinary abbreviation entries. <code class="docutils literal notranslate"><span class="pre">conservative_undotted</span></code> recognizes only
-high-confidence standalone ASCII uppercase residuals from two through eight
+high-confidence standalone ASCII uppercase residuals from three through six
 letters and rejects reviewed lexical acronyms, ambiguous words, headline runs,
 Roman numerals, and structured identifiers. <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> retains the broad
 historical opt-in behavior and renders standalone source-aligned graphemes.
@@ -688,7 +688,15 @@ records use <code class="docutils literal notranslate"><span class="pre">abbr:in
 matches. <code class="docutils literal notranslate"><span class="pre">iter_initialism_diagnostics()</span></code> reports source-aligned <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">end</span></code>,
 <code class="docutils literal notranslate"><span class="pre">source_text</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">candidate_kind</span></code>, <code class="docutils literal notranslate"><span class="pre">decision</span></code>, stable <code class="docutils literal notranslate"><span class="pre">reason</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">registered_entry_id</span></code> fields. Protected spans are reported as
-<code class="docutils literal notranslate"><span class="pre">reason=&quot;protected&quot;</span></code> and are never claimed.</p>
+<code class="docutils literal notranslate"><span class="pre">reason=&quot;protected-span&quot;</span></code> and are never claimed.</p>
+<p>For repository maintenance, <code class="docutils literal notranslate"><span class="pre">scripts/report_initialism_candidates.py</span></code> groups
+fresh benchmark failures by unresolved candidate token using the same
+diagnostic surface. It accepts JSONL or JSON rows with source text, language,
+expected output, and optional actual output, then reports grouped token counts,
+locales, reasons, Roman/vowel/two-letter flags, registry coverage, protection
+flags, uppercase-run evidence, and sample source sentences. The helper is for
+reviewing candidate additions after benchmark reruns; it does not change the
+runtime matching policy.</p>
 <p>The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>,
 <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>,

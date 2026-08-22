@@ -5,8 +5,8 @@ permalink: /tools/spokenform/polynorm/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -562,6 +562,7 @@ python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm<span
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm<span class="w"> </span>--offline<span class="w"> </span>--case<span class="w"> </span>en-US:1
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm<span class="w"> </span>--offline<span class="w"> </span>--show-failures<span class="w"> </span>all
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm<span class="w"> </span>--offline<span class="w"> </span>--speech-wer-threshold<span class="w"> </span><span class="m">0</span>.5
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm<span class="w"> </span>--offline<span class="w"> </span>--report<span class="w"> </span>html
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--speech-wer-threshold</span> <span class="pre">VALUE</span></code> to persist only failure entries whose word
@@ -592,6 +593,12 @@ equivalent speech is a parallel diagnostic. It continues after mismatches and in
 exceptions and does not add a score threshold to normal CI. Questionable
 upstream rows remain visible with quarantine reasons and are excluded only
 from reviewed metrics.</p>
+<p>Each run now also writes a self-contained <code class="docutils literal notranslate"><span class="pre">report.html</span></code> by default. The local
+dashboard includes KPI cards, a locale table, a canonical-category table, a
+locale × category view, a diagnostics/gate section, a filterable failure
+explorer, metadata, and an optional oracle section when <code class="docutils literal notranslate"><span class="pre">--candidate-oracle</span></code>
+data is present. Use <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">none</span></code> to skip HTML generation while keeping the
+existing JSONL, Markdown, and summary artifacts unchanged.</p>
 <p>The local quarantine annotations are intentionally limited to eight upstream
 rows whose expected text is malformed, questionable, or inconsistent with the
 source (for example, an instruction instead of normalized speech or an
@@ -631,7 +638,7 @@ The default profile is the safety baseline; extended is an opt-in speech
 experiment. Neither profile turns arbitrary long integers, unknown acronyms,
 formula-looking words, or unlabeled product codes into spoken output without
 the corresponding context and shape checks.</p>
-<p>See <span class="xref myst">the benchmark ownership table</span> for comparison
+<p>See <a class="reference external" href="https://github.com/buchwandler/spokenform/blob/main/benchmarks/OWNERSHIP.md">the benchmark ownership table</a> for comparison
 compatibility, quarantine handling, and the residual non-goals.</p>
 </section>
 </section>

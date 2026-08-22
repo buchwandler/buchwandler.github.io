@@ -6,7 +6,7 @@ nav_tool: booktx-main
 docs_project: "booktx"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -572,8 +572,8 @@ resolution.</p>
 <p>New profiles use v3 as the canonical record store. Existing profiles remain on
 the backend detected on disk; v2 is a single <code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> and v3 is
 the manifest plus per-chunk shard backend under
-<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code>. <code class="docutils literal notranslate"><span class="pre">TranslationStoreV2</span></code> remains the
-compatibility materialization model used at API and migration boundaries.
+<code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/translation-store/</span></code>. The compatibility materialization
+model remains the API and migration boundary regardless of the live backend.
 <code class="docutils literal notranslate"><span class="pre">translation-version-ledger.json</span></code> records version history. Generated
 <code class="docutils literal notranslate"><span class="pre">translated/</span></code>, editor indexes, reports, and output files are derived artifacts
 and can be rebuilt.</p>

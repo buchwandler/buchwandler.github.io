@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
 search_enabled: true
 ---
 
@@ -569,6 +569,7 @@ python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno<span 
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno<span class="w"> </span>--offline<span class="w"> </span>--language<span class="w"> </span>en<span class="w"> </span>--limit<span class="w"> </span><span class="m">100</span>
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno<span class="w"> </span>--offline<span class="w"> </span>--case<span class="w"> </span>en:00481<span class="w"> </span>--show-failures<span class="w"> </span>all
 python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno<span class="w"> </span>--offline<span class="w"> </span>--speech-wer-threshold<span class="w"> </span><span class="m">0</span>.5
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.proteno<span class="w"> </span>--offline<span class="w"> </span>--report<span class="w"> </span>html
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> to redownload selected pinned files. <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> and
@@ -610,6 +611,9 @@ corpus sentences.</p></li>
 shards grouped by language and case kind. Each shard is capped at 1 MiB and
 contains local source, expected, actual, WER, and provenance evidence.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">excluded.jsonl</span></code> records adapter exclusions separately from Spokenform output.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">report.html</span></code> is a self-contained local dashboard with KPI, language,
+normalization/identity, language × case-kind, diagnostics, failure, metadata,
+and optional oracle views. Use <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">none</span></code> to skip HTML generation.</p></li>
 </ul>
 <p>Metrics separate normalization cases from identity cases. Semantic comparison
 uses speech-token exactness plus the localized-letter equivalence diagnostic;
@@ -642,7 +646,7 @@ registered source-letter spelling; contextual long-number normalization is an
 explicit experiment, never the public default. The caller-level aggressive
 combination (<code class="docutils literal notranslate"><span class="pre">spell_unknown</span></code> plus cardinal long numbers) is not a release
 profile.</p>
-<p>See <span class="xref myst">the benchmark ownership table</span> for the
+<p>See <a class="reference external" href="https://github.com/buchwandler/spokenform/blob/main/benchmarks/OWNERSHIP.md">the benchmark ownership table</a> for the
 safety, owned, extended-candidate, protected, downstream, unsupported, and
 quarantine gates.</p>
 </section>

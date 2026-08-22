@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
+docs_ref: "v0.3.7"
+docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
 search_enabled: true
 ---
 
@@ -585,8 +585,8 @@ default, language is determined from the voice.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut: <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">auto</span></code> and
 <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name). Available on <code class="docutils literal notranslate"><span class="pre">convert</span></code>,
-<code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span> <span class="pre">convert</span></code>.</p>
+<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name). Available on
+<code class="docutils literal notranslate"><span class="pre">convert</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span> <span class="pre">convert</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapters to convert. Examples: <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, <code class="docutils literal notranslate"><span class="pre">1-3,5,7-10</span></code>,
 <code class="docutils literal notranslate"><span class="pre">all</span></code>. Default: all chapters (interactive selection if not specified).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence duration between chapters in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
@@ -753,7 +753,20 @@ inference. The maintained inspection workflow is
 <p>Paragraph mode persists an effective preparation seed per chapter before stochastic
 short-sentence handling. Omit <code class="docutils literal notranslate"><span class="pre">--seed</span></code> to receive a hidden durable seed for each fresh
 chapter, or pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> to use an explicit seed. State schema 5 paragraph
-workspaces cannot safely reconstruct this identity and require <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>.</p>
+workspaces cannot safely reconstruct this identity and require <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>. Existing
+schema-7 paragraph workspaces may be upgraded in place to schema 8 when their SSMD,
+generation identity, seed, structure, and retained artifacts still match.</p>
+<p>An accepted paragraph resume is monotonic: completed units and their WAV/marker sidecars
+are never silently discarded. Before printing the resume confirmation, TTSForge checks
+the saved contiguous cursor, ownership manifest, completed unit plan, and retained
+artifacts. TTSForge compares its canonical prepared-text SHA-256 and structural
+identity; an opaque provider-hash change alone is not a plan change. If prepared
+content, structure, a WAV, marker, path, or sequence is missing or changed, resume stops
+with a diagnostic such as <code class="docutils literal notranslate"><span class="pre">paragraph-unit-plan-changed</span></code> or <code class="docutils literal notranslate"><span class="pre">paragraph-audio-missing</span></code>. If
+the saved/current SSMD differs, the specific diagnostic is <code class="docutils literal notranslate"><span class="pre">paragraph-ssmd-changed</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">--fresh</span></code> only when a whole-conversion restart is intended. A valid interrupted
+conversion resumes with the first saved incomplete unit, and live paragraph numbering is
+one-based like the resume summary.</p>
 </section>
 </section>
 <section id="list">
@@ -815,7 +828,8 @@ workspaces cannot safely reconstruct this identity and require <code class="docu
 <p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
+<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly (also saves to file if <code class="docutils literal notranslate"><span class="pre">-o</span></code> specified).</p>
@@ -871,7 +885,8 @@ stdin.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
+<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">MODE</span></code> : Content mode: <code class="docutils literal notranslate"><span class="pre">chapters</span></code> or <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapter selection for <code class="docutils literal notranslate"><span class="pre">chapters</span></code> mode.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--pages</span> <span class="pre">SELECTION</span></code> : Page selection for <code class="docutils literal notranslate"><span class="pre">pages</span></code> mode.</p>
@@ -945,7 +960,10 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w">
 <p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICES</span></code> : Specific voices to include (comma-separated). Example:
 <code class="docutils literal notranslate"><span class="pre">af_heart,am_adam</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Enable or disable GPU acceleration.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut: <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">auto</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
+<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between voice samples in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--text</span> <span class="pre">TEXT</span></code> : Custom text to use. Use <code class="docutils literal notranslate"><span class="pre">{voice}</span></code> placeholder for voice name.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--separate</span></code> : Save each voice as a separate file instead of concatenating.</p>
@@ -1120,7 +1138,8 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb"
 <p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
+<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between chapters. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>

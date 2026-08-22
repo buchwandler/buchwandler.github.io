@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
+docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
 search_enabled: true
 ---
 
@@ -679,10 +679,14 @@ audio-affecting settings. An explicit changed setting is rejected with its field
 use the saved value or choose <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> for a new workspace.</p>
 <p>Paragraph resume persists a per-chapter preparation seed before randomized processing,
 so a second process skips already finalized units even when the default short-sentence
-handling is enabled. Pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> for an explicit reproducible seed. If saved state
-is incompatible, TTSForge reports the changed fields and stops; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to
-deliberately discard progress and begin again. Verifiable schema-6 state is migrated to
-schema 7, while unverifiable state and existing paragraph WAVs are preserved. See
+handling is enabled. Pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> for an explicit reproducible seed. TTSForge owns
+the persistent unit identity as a SHA-256 of exact prepared text; provider-internal
+descriptor hashes do not invalidate a compatible resume. If saved state is incompatible,
+TTSForge reports the changed fields and stops; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to deliberately discard
+progress and begin again. Verifiable schema-6 state is migrated to schema 7, and a
+compatible schema-7 paragraph identity can migrate to schema 8 without re-rendering its
+retained WAVs. A changed saved/current SSMD is reported as <code class="docutils literal notranslate"><span class="pre">paragraph-ssmd-changed</span></code>.
+Unverifiable state and existing paragraph WAVs are preserved. See
 <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_resume.py</span> <span class="pre">--help</span></code> for an example that cancels after a
 configurable number of units before restarting.</p>
 <p>Inspect the retained output without loading TTS models:</p>
@@ -871,9 +875,15 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 </pre></div>
 </div>
-<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full
+<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full
 <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> names are also accepted. The legacy <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> flags
-map to <code class="docutils literal notranslate"><span class="pre">auto</span></code> and <code class="docutils literal notranslate"><span class="pre">cpu</span></code> respectively.</p>
+map to <code class="docutils literal notranslate"><span class="pre">auto</span></code> and <code class="docutils literal notranslate"><span class="pre">cpu</span></code> respectively. Availability depends on the installed ONNX Runtime
+build, and PyKokoro may apply its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override.</p>
+<p>On a desktop build exposing OpenVINO, the equivalent persistent setup is:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>openvino
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
+</pre></div>
+</div>
 </section>
 <section id="complete-example">
 <h2>Complete Example</h2>

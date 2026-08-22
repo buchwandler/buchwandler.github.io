@@ -5,8 +5,8 @@ permalink: /tools/booktx/translation-contract/
 nav_tool: booktx
 docs_project: "booktx"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "b4af027e3a3370f0729a415b80f9a6ee31a1452d"
+docs_ref: "v0.5.2"
+docs_commit: "05f2c38e2388052f60180c27a6d464ed2fc2147a"
 search_enabled: true
 ---
 
@@ -605,9 +605,9 @@ opaque-content preservation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">context.json</span></code> is authoritative and <code class="docutils literal notranslate"><span class="pre">context.md</span></code> is rendered. Each task stores
 an immutable effective context view under
 <code class="docutils literal notranslate"><span class="pre">translations/&lt;profile&gt;/context-history/views/&lt;sha&gt;/</span></code>. Translation and review
-revisions retain baseline and context-view provenance. Do not edit
-<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code>, v3 shard files, or rendered context manually; use the
-CLI workflows.</p>
+revisions retain baseline and context-view provenance. Do not edit the
+canonical translation store (<code class="docutils literal notranslate"><span class="pre">translation-store.json</span></code> for v2 or shard files for
+v3) or rendered context manually; use the CLI workflows.</p>
 </section>
 <section id="glossary-phrase-collisions">
 <h2>Glossary phrase collisions</h2>
@@ -615,6 +615,21 @@ CLI workflows.</p>
 term occurs inside a longer configured phrase, add the longer phrase or use
 natural apposition rather than forcing an unnatural target token. A standalone
 shorter occurrence remains subject to its own rule.</p>
+</section>
+<section id="first-pass-quality-contract">
+<h2>First-pass quality contract</h2>
+<p>Translation profiles may configure <code class="docutils literal notranslate"><span class="pre">[submission_quality]</span></code> with a required
+same-call self-review and a built-in or explicitly configured local grammar
+backend. The self-review is an internal generation protocol: translate,
+reread the target sentence without following source syntax, check the
+target-language checklist, recheck omissions and terminology against SOURCE,
+then commit only final prose. A completed batch receives one additional
+target-only sequential reread in the same model call.</p>
+<p>The deterministic linguistic audit is intentionally limited to high-confidence
+mechanical and regression checks. It does not establish complete grammar,
+style, semantic fidelity, or literary quality. <code class="docutils literal notranslate"><span class="pre">strict</span></code> quality combines the
+model’s required self-review with blocking configured linguistic findings; the
+optional grammar judge is a separate diagnostic or repair workflow.</p>
 </section>
 </section>
 </div>

@@ -5,13 +5,37 @@
     {
       "url": "/tools/spokenform/main/api/",
       "title": "spokenform API reference",
-      "snippet": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model= …",
+      "snippet": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, lexical_evidence=None, use_s …",
       "sections": [
         {
           "anchor": "",
           "heading": "Preparation",
-          "text": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, strict=False)\n:module: spokenform\n\nConvert one-language written text into a readable form intended for speech.\n\nThe caller s…",
-          "lower": ".. py:function:: prepare(text, *, language=’en’, config=none, annotations=none, nlp=none, protected_spans=none, use_spacy=none, spacy_model=none, expand_abbreviations=true, expand_structured=true, normalize_literals=false, expand_numbers=true, normalize_whitespace=true, normalize_unicode=true, strip_outer_whitespace=true, collapse_horizontal_whitespace=true, normalize_line_whitespace=true, collapse_blank_lines=true, number_policy=none, preserve_run_boundaries=false, model_punctuation=false, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=true, strict=false)\n:module: spokenform\n\nconvert one-language written text into a readable form intended for speech.\n\nthe caller s…"
+          "text": ".. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, lexical_evidence=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=No…",
+          "lower": ".. py:function:: prepare(text, *, language=’en’, config=none, annotations=none, nlp=none, protected_spans=none, lexical_evidence=none, use_spacy=none, spacy_model=none, expand_abbreviations=true, expand_structured=true, normalize_literals=false, expand_numbers=true, normalize_whitespace=true, normalize_unicode=true, strip_outer_whitespace=true, collapse_horizontal_whitespace=true, normalize_line_whitespace=true, collapse_blank_lines=true, number_policy=none, preserve_run_boundaries=false, model_punctuation=false, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=true, interpretation_mode=interpretationmode.contextual, disabled_domains=frozenset({}), allowed_domains=no…"
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration policy modes",
+          "text": "The policy modes below are passed through the selected language’s abbr2words\nregistry where abbreviation or initialism data is involved. They are available\nfor every language profile, but the exact recognized vocabulary and number\ngrammar remain locale-specific. They are safety controls: conservative modes\nprefer leaving an ambiguous token unchanged, while expansive modes can create\nfalse positives in identifiers, product names, headlines, years, and other\nuppercase or digit-heavy text.",
+          "lower": "the policy modes below are passed through the selected language’s abbr2words\nregistry where abbreviation or initialism data is involved. they are available\nfor every language profile, but the exact recognized vocabulary and number\ngrammar remain locale-specific. they are safety controls: conservative modes\nprefer leaving an ambiguous token unchanged, while expansive modes can create\nfalse positives in identifiers, product names, headlines, years, and other\nuppercase or digit-heavy text."
+        },
+        {
+          "anchor": "",
+          "heading": "Generic acronyms",
+          "text": "generic_acronym_mode=\"known_only\" is the default. It lets registered or\notherwise known initialisms follow their registry policy and leaves unknown\nuppercase words alone. For example, an unknown TST remains unchanged while a\nknown entry such as ABC can be rendered according to the registry.\n\n\"conservative_unknown\" additionally spells unknown uppercase initialisms\nwhen the context provides abbreviation evidence, reducing accidental changes\nto ordinary uppercase prose. \"spell_unknown\" is the broadest mode: eligible\nunknown uppercase initialisms are spelled even without as much contextual\nevidence, so it is useful for abbreviation-heavy input but has the highest\nfalse-positive risk.\n\nPreparationConfig(language=\"en\", generic_acronym_mode=\"known_only\")\nPreparationConfig(\n    language=\"en\",…",
+          "lower": "generic_acronym_mode=\"known_only\" is the default. it lets registered or\notherwise known initialisms follow their registry policy and leaves unknown\nuppercase words alone. for example, an unknown tst remains unchanged while a\nknown entry such as abc can be rendered according to the registry.\n\n\"conservative_unknown\" additionally spells unknown uppercase initialisms\nwhen the context provides abbreviation evidence, reducing accidental changes\nto ordinary uppercase prose. \"spell_unknown\" is the broadest mode: eligible\nunknown uppercase initialisms are spelled even without as much contextual\nevidence, so it is useful for abbreviation-heavy input but has the highest\nfalse-positive risk.\n\npreparationconfig(language=\"en\", generic_acronym_mode=\"known_only\")\npreparationconfig(\n    language=\"en\",…"
+        },
+        {
+          "anchor": "",
+          "heading": "Registered acronyms",
+          "text": "registered_acronym_mode=\"expand\" is the default and uses the registered\ninitialism expansion supplied by abbr2words. Set it to \"spell\" when the\nletters of registered initialisms are preferable to their lexical expansion,\nfor example CEO MIT -> C E O M I T in English. This mode has lower lexical\ninterpretation risk but may be less natural for acronyms whose full names are\nwell known. It affects registered entries, not arbitrary unknown uppercase\nwords, and is forwarded to abbr2words as registered_initialism_mode.\n\nPreparationConfig(language=\"en\", registered_acronym_mode=\"spell\")",
+          "lower": "registered_acronym_mode=\"expand\" is the default and uses the registered\ninitialism expansion supplied by abbr2words. set it to \"spell\" when the\nletters of registered initialisms are preferable to their lexical expansion,\nfor example ceo mit -> c e o m i t in english. this mode has lower lexical\ninterpretation risk but may be less natural for acronyms whose full names are\nwell known. it affects registered entries, not arbitrary unknown uppercase\nwords, and is forwarded to abbr2words as registered_initialism_mode.\n\npreparationconfig(language=\"en\", registered_acronym_mode=\"spell\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Long numbers",
+          "text": "long_number_mode=\"preserve\" is the default. It leaves long ungrouped digit\nstrings alone when they could be years, identifiers, account numbers, or other\ndownstream-owned sequences. \"contextual\" verbalizes a long number when\nquantity evidence makes cardinal reading safe, such as 844361 items, while\ncontinuing to protect identifier-like uses. \"cardinal\" requests cardinal\nverbalization for eligible long numbers regardless of that contextual evidence;\nit is useful for prose known to contain quantities but carries a higher risk of\nrewriting IDs and years. The number grammar and rendered words are selected by\nthe active language, and this policy is independent of abbr2words’ lexical\nabbreviation registry.\n\nPreparationConfig(language=\"en\", long_number_mode=\"contextual\")\n\n\n\n\nFor English, prepare…",
+          "lower": "long_number_mode=\"preserve\" is the default. it leaves long ungrouped digit\nstrings alone when they could be years, identifiers, account numbers, or other\ndownstream-owned sequences. \"contextual\" verbalizes a long number when\nquantity evidence makes cardinal reading safe, such as 844361 items, while\ncontinuing to protect identifier-like uses. \"cardinal\" requests cardinal\nverbalization for eligible long numbers regardless of that contextual evidence;\nit is useful for prose known to contain quantities but carries a higher risk of\nrewriting ids and years. the number grammar and rendered words are selected by\nthe active language, and this policy is independent of abbr2words’ lexical\nabbreviation registry.\n\npreparationconfig(language=\"en\", long_number_mode=\"contextual\")\n\n\n\n\nfor english, prepare…"
         },
         {
           "anchor": "",
@@ -34,8 +58,20 @@
         {
           "anchor": "",
           "heading": "Number normalization",
-          "text": "The Czech normalize_numbers(language=\"cs\") path delegates to the reviewed\nstructured and structured-safe plain-number grammar. It verbalizes ordinary\nnumbers, validated dates, quantities, temperatures, and canonical currencies;\ncolon-time candidates remain unchanged for caller-managed handling.\n\n.. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nVerbalize common dates, times, currencies, ordinals, and numbers.\n\nURLs, email addresses, and semantic-version-like values are protected. The\nimplementation is intentionally conservative and is an MVP, not a complete\nlocale grammar.\n\n.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)\n:module: spokenform\n\nNorma…",
-          "lower": "the czech normalize_numbers(language=\"cs\") path delegates to the reviewed\nstructured and structured-safe plain-number grammar. it verbalizes ordinary\nnumbers, validated dates, quantities, temperatures, and canonical currencies;\ncolon-time candidates remain unchanged for caller-managed handling.\n\n.. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nverbalize common dates, times, currencies, ordinals, and numbers.\n\nurls, email addresses, and semantic-version-like values are protected. the\nimplementation is intentionally conservative and is an mvp, not a complete\nlocale grammar.\n\n.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=false, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’)\n:module: spokenform\n\nnorma…"
+          "text": "The Czech normalize_numbers(language=\"cs\") path delegates to the reviewed\nstructured and structured-safe plain-number grammar. It verbalizes ordinary\nnumbers, validated dates, quantities, temperatures, and canonical currencies;\ncolon-time candidates remain unchanged for caller-managed handling.\n\n.. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nVerbalize common dates, times, currencies, ordinals, and numbers.\n\nURLs, email addresses, and semantic-version-like values are protected. The\nimplementation is intentionally conservative and is an MVP, not a complete\nlocale grammar.\n\n.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=Interp…",
+          "lower": "the czech normalize_numbers(language=\"cs\") path delegates to the reviewed\nstructured and structured-safe plain-number grammar. it verbalizes ordinary\nnumbers, validated dates, quantities, temperatures, and canonical currencies;\ncolon-time candidates remain unchanged for caller-managed handling.\n\n.. py:function:: normalize_numbers(text, *, language)\n:module: spokenform\n\nverbalize common dates, times, currencies, ordinals, and numbers.\n\nurls, email addresses, and semantic-version-like values are protected. the\nimplementation is intentionally conservative and is an mvp, not a complete\nlocale grammar.\n\n.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=false, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=interp…"
+        },
+        {
+          "anchor": "",
+          "heading": "Interpretation policy",
+          "text": "PreparationConfig and prepare() expose two orthogonal recognition controls:\n\n\ninterpretation_mode=\"contextual\" (default) permits reviewed contextual semantic evidence.\n\n\ninterpretation_mode=\"surface\" permits only candidates marked with intrinsic evidence and fails closed on missing metadata.\n\n\ndisabled_domains={\"chemistry\", ...} suppresses selected RecognitionDomain families before precedence resolution.\n\n\nallowed_domains={\"quantities\", ...} permits only selected semantic families and fails closed for candidates without domain metadata. If a domain appears in both sets, configuration raises ValueError.\n\n\n\nfrom spokenform import prepare\n\nprepare(\n    \"The sample contains H2O.\",\n    interpretation_mode=\"surface\",\n    disabled_domains={\"chemistry\"},\n)\n\n\n\n\ncontext remains the legacy abbreviat…",
+          "lower": "preparationconfig and prepare() expose two orthogonal recognition controls:\n\n\ninterpretation_mode=\"contextual\" (default) permits reviewed contextual semantic evidence.\n\n\ninterpretation_mode=\"surface\" permits only candidates marked with intrinsic evidence and fails closed on missing metadata.\n\n\ndisabled_domains={\"chemistry\", ...} suppresses selected recognitiondomain families before precedence resolution.\n\n\nallowed_domains={\"quantities\", ...} permits only selected semantic families and fails closed for candidates without domain metadata. if a domain appears in both sets, configuration raises valueerror.\n\n\n\nfrom spokenform import prepare\n\nprepare(\n    \"the sample contains h2o.\",\n    interpretation_mode=\"surface\",\n    disabled_domains={\"chemistry\"},\n)\n\n\n\n\ncontext remains the legacy abbreviat…"
+        },
+        {
+          "anchor": "",
+          "heading": "Lexhint evidence provider",
+          "text": "Pass an installed Lexhint runtime Lexicon explicitly through lexical_evidence. No dataset is resolved or downloaded when the argument is omitted. URL lexical segmentation may work with a lexical-only provider. Contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import Lexicon\nfrom spokenform import prepare\n\nlexicon = Lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",\n    language=\"en\",\n    normalize_literals=True,\n    lexical_evidence=lexicon,\n    use_spacy=False,\n)\n\n\n\n\nLexhint semantic domains are mapped to Spokenform use cases rather than copied into RecognitionDomain. Surface mode ignores semantic evidence. URL lexical evidence is a rendering aid f…",
+          "lower": "pass an installed lexhint runtime lexicon explicitly through lexical_evidence. no dataset is resolved or downloaded when the argument is omitted. url lexical segmentation may work with a lexical-only provider. contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import lexicon\nfrom spokenform import prepare\n\nlexicon = lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",\n    language=\"en\",\n    normalize_literals=true,\n    lexical_evidence=lexicon,\n    use_spacy=false,\n)\n\n\n\n\nlexhint semantic domains are mapped to spokenform use cases rather than copied into recognitiondomain. surface mode ignores semantic evidence. url lexical evidence is a rendering aid f…"
         }
       ]
     },
@@ -61,19 +97,189 @@
           "heading": "Structured precedence",
           "text": "Caller protection is absolute. Auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. Candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. Fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nUnclaimed or ambiguous forms remain opaque. The concrete rule-family ordering is\ncentralized in spokenform.precedence.SequencePriority; recognizers do not rely\non source regex iteration order to reso…",
           "lower": "caller protection is absolute. auto-detected literals are a fallback reservation\nagainst partial generic rewrites; a complete semantic recognizer may claim an\nauto-literal before it is reserved. candidate conflict resolution gives priority\nto canonical identifiers, then coordinates and formulas, contextual legal,\nsports, and address forms, dates and times, contextual sequences,\nquantities/currencies/temperatures, specialist music/math forms, and generic\nacronym/product candidates. fractions and date/phone ambiguity are resolved by\nsemantic candidate priority rather than regex iteration order.\nunclaimed or ambiguous forms remain opaque. the concrete rule-family ordering is\ncentralized in spokenform.precedence.sequencepriority; recognizers do not rely\non source regex iteration order to reso…"
+        },
+        {
+          "anchor": "",
+          "heading": "Recognition policy boundary",
+          "text": "Structured recognizers first emit candidates annotated with a semantic domain and evidence basis (intrinsic or contextual). spokenform.recognition_policy filters those candidates before SequencePriority overlap resolution. Surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. This keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. Diagnostics retain suppressed candidates with machine-readable reasons such as context-not-allowed, disabled-domain, and blocked-by-disabled-domain.",
+          "lower": "structured recognizers first emit candidates annotated with a semantic domain and evidence basis (intrinsic or contextual). spokenform.recognition_policy filters those candidates before sequencepriority overlap resolution. surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. this keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. diagnostics retain suppressed candidates with machine-readable reasons such as context-not-allowed, disabled-domain, and blocked-by-disabled-domain."
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic segment boundaries",
+          "text": "Recognized semantic expressions may consume source punctuation while preserving a generic textual segment boundary when the punctuation carries cadence or grouping semantics. Contextual countdowns therefore render 3-2-1 as three - two - one. The boundary is model-neutral and downstream G2P adapters own model-specific dash canonicalization. Residual symbol_mode filtering does not remove punctuation intentionally emitted by an accepted structured replacement.",
+          "lower": "recognized semantic expressions may consume source punctuation while preserving a generic textual segment boundary when the punctuation carries cadence or grouping semantics. contextual countdowns therefore render 3-2-1 as three - two - one. the boundary is model-neutral and downstream g2p adapters own model-specific dash canonicalization. residual symbol_mode filtering does not remove punctuation intentionally emitted by an accepted structured replacement."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/main/async_tn/",
+      "title": "spokenform Async Voice TTS Normalization Benchmark",
+      "snippet": "Async TN is a diagnostic adapter for the Async Voice AI Text-to-Speech\nNormalization Benchmark. It evaluates Spokenform deterministically ag …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Async Voice TTS Normalization Benchmark",
+          "text": "Async TN is a diagnostic adapter for the Async Voice AI Text-to-Speech\nNormalization Benchmark. It evaluates Spokenform deterministically against the\nupstream normalized text. It does not change normalization behavior and does\nnot use upstream category labels as runtime hints.",
+          "lower": "async tn is a diagnostic adapter for the async voice ai text-to-speech\nnormalization benchmark. it evaluates spokenform deterministically against the\nupstream normalized text. it does not change normalization behavior and does\nnot use upstream category labels as runtime hints."
+        },
+        {
+          "anchor": "",
+          "heading": "Source and license",
+          "text": "The adapter uses the English data/sentences.json and multilingual\ndata/multilingual-sentences.json files from the Apache-2.0 Hugging Face Space:\n\nhttps://huggingface.co/spaces/async-vocie-ai/text-to-speech-normalization-benchmark\n\nThe source revision is pinned to\n516dfbf54c8f85db865b65de4272b1f4280ad1dd. Raw URLs include this revision, and\nrun metadata records the SHA-256 and byte size of every downloaded source and\nreference file. The full corpus is never packaged or committed.",
+          "lower": "the adapter uses the english data/sentences.json and multilingual\ndata/multilingual-sentences.json files from the apache-2.0 hugging face space:\n\nhttps://huggingface.co/spaces/async-vocie-ai/text-to-speech-normalization-benchmark\n\nthe source revision is pinned to\n516dfbf54c8f85db865b65de4272b1f4280ad1dd. raw urls include this revision, and\nrun metadata records the sha-256 and byte size of every downloaded source and\nreference file. the full corpus is never packaged or committed."
+        },
+        {
+          "anchor": "",
+          "heading": "Suites and languages",
+          "text": "The English suite maps en to Spokenform en_US. The multilingual suite\nsupports en, de, es, fr, it, and pt, with en mapped to en_US and\nthe other codes mapped to their Spokenform language. Both source and resolved\nlanguage are retained in every result.",
+          "lower": "the english suite maps en to spokenform en_us. the multilingual suite\nsupports en, de, es, fr, it, and pt, with en mapped to en_us and\nthe other codes mapped to their spokenform language. both source and resolved\nlanguage are retained in every result."
+        },
+        {
+          "anchor": "",
+          "heading": "Commands",
+          "text": "python -m benchmarks.async_tn --suite english\npython -m benchmarks.async_tn --suite multilingual\npython -m benchmarks.async_tn --suite multilingual --language de\npython -m benchmarks.async_tn --suite english --category date\npython -m benchmarks.async_tn --suite all --offline\npython -m benchmarks.async_tn --suite all --profile extended --show-failures semantic\npython -m benchmarks.async_tn --download-only\n\n\n\n\nUse --case, --limit, --speech-wer-threshold, --report none,\n--normalize-literals, --refresh, and --cache-dir for focused runs.\n--language is a multilingual filter and is rejected for the English-only\nsuite. --offline never makes a network request, and cannot be combined with\n--refresh.",
+          "lower": "python -m benchmarks.async_tn --suite english\npython -m benchmarks.async_tn --suite multilingual\npython -m benchmarks.async_tn --suite multilingual --language de\npython -m benchmarks.async_tn --suite english --category date\npython -m benchmarks.async_tn --suite all --offline\npython -m benchmarks.async_tn --suite all --profile extended --show-failures semantic\npython -m benchmarks.async_tn --download-only\n\n\n\n\nuse --case, --limit, --speech-wer-threshold, --report none,\n--normalize-literals, --refresh, and --cache-dir for focused runs.\n--language is a multilingual filter and is rejected for the english-only\nsuite. --offline never makes a network request, and cannot be combined with\n--refresh."
+        },
+        {
+          "anchor": "",
+          "heading": "Cache and result files",
+          "text": "Data is cached under:\n\n.cache/async-tn/516dfbf54c8f85db865b65de4272b1f4280ad1dd/\n\n\n\n\nmetadata.json records the source repository, commit, license, hashes, and\nsizes. Downloaded files are validated and replaced atomically. A cache miss in\noffline mode is an error.\n\nEach run writes benchmark-results/async-tn/<run-id>/ containing:\n\n\nsummary.json, counts, metrics, diagnostics, configuration, and provenance;\n\n\nrows.jsonl, one sentence record per evaluated case;\n\n\nunits.jsonl, one annotated unit record per source unit;\n\n\nfailures.jsonl and failures.md, triage-oriented failure records;\n\n\nexclusions.jsonl, quarantined source records;\n\n\nreference.json, pinned upstream published TTS reference values;\n\n\nreport.html, a self-contained static dashboard.",
+          "lower": "data is cached under:\n\n.cache/async-tn/516dfbf54c8f85db865b65de4272b1f4280ad1dd/\n\n\n\n\nmetadata.json records the source repository, commit, license, hashes, and\nsizes. downloaded files are validated and replaced atomically. a cache miss in\noffline mode is an error.\n\neach run writes benchmark-results/async-tn/<run-id>/ containing:\n\n\nsummary.json, counts, metrics, diagnostics, configuration, and provenance;\n\n\nrows.jsonl, one sentence record per evaluated case;\n\n\nunits.jsonl, one annotated unit record per source unit;\n\n\nfailures.jsonl and failures.md, triage-oriented failure records;\n\n\nexclusions.jsonl, quarantined source records;\n\n\nreference.json, pinned upstream published tts reference values;\n\n\nreport.html, a self-contained static dashboard."
+        },
+        {
+          "anchor": "",
+          "heading": "Metrics and mapping",
+          "text": "Sentence and unit records include literal exactness, speech exactness, speech\nequivalence, and word error rate from benchmarks.text_metrics. Category and\nlanguage reports expose total, scorable, correct, incorrect, quarantined, and\nruntime-error denominators. Percentages are never shown without their counts.\nSentence exactness and the all_units_correct unit result remain separate.\n\nThe source annotation is mapped into the expected full sentence using\nSpokenform’s OffsetMap and deterministic diff replacements. The actual unit\nis mapped from the single prepare() result for the complete sentence. A\nreplacement crossing a unit boundary is marked mapping-ambiguous rather than\nbeing assigned to a unit by heuristic substring matching.\n\nSource offsets are validated when provided. Missing offsets…",
+          "lower": "sentence and unit records include literal exactness, speech exactness, speech\nequivalence, and word error rate from benchmarks.text_metrics. category and\nlanguage reports expose total, scorable, correct, incorrect, quarantined, and\nruntime-error denominators. percentages are never shown without their counts.\nsentence exactness and the all_units_correct unit result remain separate.\n\nthe source annotation is mapped into the expected full sentence using\nspokenform’s offsetmap and deterministic diff replacements. the actual unit\nis mapped from the single prepare() result for the complete sentence. a\nreplacement crossing a unit boundary is marked mapping-ambiguous rather than\nbeing assigned to a unit by heuristic substring matching.\n\nsource offsets are validated when provided. missing offsets…"
+        },
+        {
+          "anchor": "",
+          "heading": "Profiles and safety",
+          "text": "The default profile uses conservative Spokenform behavior with literal\nnormalization disabled. extended is opt-in and enables the existing extended\nliteral behavior. The benchmark calls prepare() once per sentence and never\npasses an upstream category or other benchmark-only oracle to the runtime.\nOwnership, risk tier, provenance, and failure-family fields are diagnostic\nmetadata. Benchmark failures do not authorize broad runtime rule changes.",
+          "lower": "the default profile uses conservative spokenform behavior with literal\nnormalization disabled. extended is opt-in and enables the existing extended\nliteral behavior. the benchmark calls prepare() once per sentence and never\npasses an upstream category or other benchmark-only oracle to the runtime.\nownership, risk tier, provenance, and failure-family fields are diagnostic\nmetadata. benchmark failures do not authorize broad runtime rule changes."
+        },
+        {
+          "anchor": "",
+          "heading": "Dashboard",
+          "text": "report.html opens directly from a filesystem path. It has English,\nmultilingual, failures, and metadata views, category search and threshold\ncontrols, language/category/family/ownership/risk failure filters, live\nvisible-row counts, source-stage details, and a reproducibility panel. It\ncontains no CDN, external font, remote image, or server dependency. Dataset\nand runtime strings are HTML-escaped.\n\nThe failure explorer separates authoritative sentence failures from unit-level\ndiagnostics. Sentence rows always use sentence-level source, expected, and\nactual text. Unit rows expose projected expected and projected actual text as\ndiagnostic views only. When a source edit crosses a unit boundary, the unit row\nis marked mapping-ambiguous; the raw projected text stays available in the\ndiagnostic…",
+          "lower": "report.html opens directly from a filesystem path. it has english,\nmultilingual, failures, and metadata views, category search and threshold\ncontrols, language/category/family/ownership/risk failure filters, live\nvisible-row counts, source-stage details, and a reproducibility panel. it\ncontains no cdn, external font, remote image, or server dependency. dataset\nand runtime strings are html-escaped.\n\nthe failure explorer separates authoritative sentence failures from unit-level\ndiagnostics. sentence rows always use sentence-level source, expected, and\nactual text. unit rows expose projected expected and projected actual text as\ndiagnostic views only. when a source edit crosses a unit boundary, the unit row\nis marked mapping-ambiguous; the raw projected text stays available in the\ndiagnostic…"
+        },
+        {
+          "anchor": "",
+          "heading": "Comparing runs",
+          "text": "python -m benchmarks.async_tn_compare \\\n  benchmark-results/async-tn/run-a \\\n  benchmark-results/async-tn/run-b\n\n\n\n\nComparison requires matching benchmark, repository, commit, source file hashes,\nsuite, language mapping, profile, and configuration hash. It reports sentence\nand unit failures, language/category deltas, stable case and unit IDs, and new,\nresolved, and remaining quarantines. Use --allow-incompatible only for an\nintentional exploratory comparison; the result records that override.",
+          "lower": "python -m benchmarks.async_tn_compare \\\n  benchmark-results/async-tn/run-a \\\n  benchmark-results/async-tn/run-b\n\n\n\n\ncomparison requires matching benchmark, repository, commit, source file hashes,\nsuite, language mapping, profile, and configuration hash. it reports sentence\nand unit failures, language/category deltas, stable case and unit ids, and new,\nresolved, and remaining quarantines. use --allow-incompatible only for an\nintentional exploratory comparison; the result records that override."
+        },
+        {
+          "anchor": "",
+          "heading": "Baselines and policy",
+          "text": "Baseline commands are run after implementation against the pinned source. Keep\nonly small policy-approved summary or documentation artifacts. Do not commit the\ndownloaded corpus, full source-bearing failure data, or generated reports unless\nrepository policy explicitly requests them. Async TN is diagnostic and is not a\nreplacement for the false-positive safety suite or existing benchmark gates.",
+          "lower": "baseline commands are run after implementation against the pinned source. keep\nonly small policy-approved summary or documentation artifacts. do not commit the\ndownloaded corpus, full source-bearing failure data, or generated reports unless\nrepository policy explicitly requests them. async tn is diagnostic and is not a\nreplacement for the false-positive safety suite or existing benchmark gates."
+        }
+      ]
+    },
+    {
+      "url": "/tools/spokenform/main/benchmarks/",
+      "title": "spokenform Benchmarks",
+      "snippet": "The benchmark suites are diagnostic and release-supporting tools, not a\nreplacement for the semantic regression and false-positive tests. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Benchmarks",
+          "text": "The benchmark suites are diagnostic and release-supporting tools, not a\nreplacement for the semantic regression and false-positive tests.\n\n\n\nPolyNorm diagnostic benchmark\n\nProteno benchmark\n\nGoogle TN benchmark\n\nAsync Voice TTS Normalization Benchmark\n\n\n\n\nThe benchmark ownership and release policy are documented in\nbenchmarks/OWNERSHIP.md. PolyNorm and Proteno\nmeasure specialized external-corpus behavior; Google TN is an offline English\ntext-normalization comparison; Async TN is a pinned English and six-language\nannotated TTS-normalization diagnostic. Their data and reports live under\nbenchmarks/ and should be interpreted with the safety and quarantine guidance\nin the ownership document. See Async TN for its mapping,\nmethodology, and static dashboard contract.\n\nAsync TN, PolyNorm, and Pro…",
+          "lower": "the benchmark suites are diagnostic and release-supporting tools, not a\nreplacement for the semantic regression and false-positive tests.\n\n\n\npolynorm diagnostic benchmark\n\nproteno benchmark\n\ngoogle tn benchmark\n\nasync voice tts normalization benchmark\n\n\n\n\nthe benchmark ownership and release policy are documented in\nbenchmarks/ownership.md. polynorm and proteno\nmeasure specialized external-corpus behavior; google tn is an offline english\ntext-normalization comparison; async tn is a pinned english and six-language\nannotated tts-normalization diagnostic. their data and reports live under\nbenchmarks/ and should be interpreted with the safety and quarantine guidance\nin the ownership document. see async tn for its mapping,\nmethodology, and static dashboard contract.\n\nasync tn, polynorm, and pro…"
+        },
+        {
+          "anchor": "",
+          "heading": "Spokenform Gold",
+          "text": "Run the pinned Gold diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold\n\n\n\n\nThe adapter caches the exact reviewed source commit ba55d631a45a0fe8b3d87ad58beef2843c617151 and its verified experimental 0.1.0-exp release under .cache/spokenform-gold/<commit>/. The default evaluates the test split and writes results under benchmark-results/spokenform-gold/<run-id>/, including summary.json, rows.jsonl, Gold JSONL/Markdown artifacts, and a self-contained report.html.\n\nUse --offline after the cache is populated, --refresh to rebuild it, --download-only to populate without evaluation, --cache-dir to relocate the cache, --gold-root for an explicit local release, --split dev|test|all, --mode canonical|accepted, and --report none to disable HTML. Gold remains diagnostic and does not auto…",
+          "lower": "run the pinned gold diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold\n\n\n\n\nthe adapter caches the exact reviewed source commit ba55d631a45a0fe8b3d87ad58beef2843c617151 and its verified experimental 0.1.0-exp release under .cache/spokenform-gold/<commit>/. the default evaluates the test split and writes results under benchmark-results/spokenform-gold/<run-id>/, including summary.json, rows.jsonl, gold jsonl/markdown artifacts, and a self-contained report.html.\n\nuse --offline after the cache is populated, --refresh to rebuild it, --download-only to populate without evaluation, --cache-dir to relocate the cache, --gold-root for an explicit local release, --split dev|test|all, --mode canonical|accepted, and --report none to disable html. gold remains diagnostic and does not auto…"
+        },
+        {
+          "anchor": "",
+          "heading": "Lexhint A/B comparison",
+          "text": "Compare the existing provider-free configuration with the same configuration plus a pinned Lexhint runtime artifact. Keep Spokenform, abbr2words, language, profile, and benchmark inputs fixed. Record the Spokenform commit/version, abbr2words version, Lexhint package version, dataset version, schema version, variant, language, and profile.\n\nReview URL, version, identifier, and sports families separately. The provider-free run is the compatibility baseline. Lexhint is successful only when URL rendering improves and contextual true positives increase without material IP, date, reference, or score false positives. Do not use an unpinned latest dataset for release comparisons.",
+          "lower": "compare the existing provider-free configuration with the same configuration plus a pinned lexhint runtime artifact. keep spokenform, abbr2words, language, profile, and benchmark inputs fixed. record the spokenform commit/version, abbr2words version, lexhint package version, dataset version, schema version, variant, language, and profile.\n\nreview url, version, identifier, and sports families separately. the provider-free run is the compatibility baseline. lexhint is successful only when url rendering improves and contextual true positives increase without material ip, date, reference, or score false positives. do not use an unpinned latest dataset for release comparisons."
         }
       ]
     },
     {
       "url": "/tools/spokenform/main/changelog/",
       "title": "spokenform Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded conservative …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded opt-in conser …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added opt-in conservative orthographic fallback for residual sequences\n\n\nAdded diagnostics for fallback decisions and structured policy traces",
+          "lower": "added opt-in conservative orthographic fallback for residual sequences\n\n\nadded diagnostics for fallback decisions and structured policy traces"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed contextual countdowns to retain a generic spaced segment boundary\n\n\nChanged countdown ownership to temporal and added fail-closed domain allowlisting\n\n\nChanged sequence and code segment rendering to use one generic boundary\n\n\nChanged benchmark oracle coverage to isolate policy expansion results",
+          "lower": "changed contextual countdowns to retain a generic spaced segment boundary\n\n\nchanged countdown ownership to temporal and added fail-closed domain allowlisting\n\n\nchanged sequence and code segment rendering to use one generic boundary\n\n\nchanged benchmark oracle coverage to isolate policy expansion results"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented recognition evidence, domain ownership, fallback, and punctuation responsibilities",
+          "lower": "documented recognition evidence, domain ownership, fallback, and punctuation responsibilities"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added multilingual mapping coverage, recognizer extraction, and release validation evidence",
+          "lower": "added multilingual mapping coverage, recognizer extraction, and release validation evidence"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added Async TN benchmark suite with deterministic evaluation, data management, and HTML reporting\n\n\nAdded candidate oracle for measuring structured-candidate selection headroom across benchmarks\n\n\nAdded extended currency symbol recognition for Spanish with labeled amounts and feminine agreement\n\n\nAdded hyphenated date recognition for Spanish and Italian (e.g., 15-julio-2026, 3-marzo-25)\n\n\nAdded Spanish time period recognition for bare hour-period patterns (e.g., 3 pm)\n\n\nAdded Italian dotted-time ambiguity guard to prevent false time recognition on decimals and units\n\n\nAdded failure reporting module with risk tiers, ownership mapping, and diagnostic aggregates",
+          "lower": "added async tn benchmark suite with deterministic evaluation, data management, and html reporting\n\n\nadded candidate oracle for measuring structured-candidate selection headroom across benchmarks\n\n\nadded extended currency symbol recognition for spanish with labeled amounts and feminine agreement\n\n\nadded hyphenated date recognition for spanish and italian (e.g., 15-julio-2026, 3-marzo-25)\n\n\nadded spanish time period recognition for bare hour-period patterns (e.g., 3 pm)\n\n\nadded italian dotted-time ambiguity guard to prevent false time recognition on decimals and units\n\n\nadded failure reporting module with risk tiers, ownership mapping, and diagnostic aggregates"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved Spanish ordinal rendering with feminine compound forms, quince special case, and duodécimo for twelve\n\n\nImproved Spanish fraction rendering with natural forms for halves (media, medio) and feminine agreement\n\n\nImproved English fraction rendering to use fourths instead of quarters\n\n\nImproved French and Italian slash-fraction rendering with locale-specific natural forms (moitié, metà, centième)\n\n\nImproved sports and score recognition with broader multilingual context keywords and higher value ranges\n\n\nExpanded software version recognition to include macOS and WordPress\n\n\nImproved ISBN rendering for Spanish, Italian, and French with locale-specific separator words\n\n\nRefactored structured module to separate candidate collection from conflict resolution for reuse\n\n\nAdded sentence-star…",
+          "lower": "improved spanish ordinal rendering with feminine compound forms, quince special case, and duodécimo for twelve\n\n\nimproved spanish fraction rendering with natural forms for halves (media, medio) and feminine agreement\n\n\nimproved english fraction rendering to use fourths instead of quarters\n\n\nimproved french and italian slash-fraction rendering with locale-specific natural forms (moitié, metà, centième)\n\n\nimproved sports and score recognition with broader multilingual context keywords and higher value ranges\n\n\nexpanded software version recognition to include macos and wordpress\n\n\nimproved isbn rendering for spanish, italian, and french with locale-specific separator words\n\n\nrefactored structured module to separate candidate collection from conflict resolution for reuse\n\n\nadded sentence-star…"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed plural initialisms such as IDs, PCs, and ICs being misclassified as chemical formulas\n\n\nFixed French and Italian two-digit year date rendering to use two-digit expansion\n\n\nFixed Spanish currency grouping to accept comma-grouped decimals with three-digit tails\n\n\nFixed coordinate sequence priority and phone sequence priority to use correct precedence levels\n\n\nRestricted bare-dot ordinal detection to German to prevent false ordinals in other locales\n\n\nFixed English date context detection to exclude pieces and diluted as non-date right-context",
+          "lower": "fixed plural initialisms such as ids, pcs, and ics being misclassified as chemical formulas\n\n\nfixed french and italian two-digit year date rendering to use two-digit expansion\n\n\nfixed spanish currency grouping to accept comma-grouped decimals with three-digit tails\n\n\nfixed coordinate sequence priority and phone sequence priority to use correct precedence levels\n\n\nrestricted bare-dot ordinal detection to german to prevent false ordinals in other locales\n\n\nfixed english date context detection to exclude pieces and diluted as non-date right-context"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nImproved Polynorm and Proteno benchmark evaluation with numeric lexeme and sequence coverage",
+          "lower": "added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nimproved polynorm and proteno benchmark evaluation with numeric lexeme and sequence coverage"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed direct prepare() keyword validation to match PreparationConfig\n\n\nRemoved stale package manifest metadata and added distribution-content checks\n\n\nFixed plural initialism shapes such as IDs being misclassified as chemical formulas\n\n\nFixed explicit English leading-decimal signs and digit-wise precision for readings such as .3 and .02",
+          "lower": "fixed direct prepare() keyword validation to match preparationconfig\n\n\nremoved stale package manifest metadata and added distribution-content checks\n\n\nfixed plural initialism shapes such as ids being misclassified as chemical formulas\n\n\nfixed explicit english leading-decimal signs and digit-wise precision for readings such as .3 and .02"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the abbr2words 0.2.9 release boundary and configuration policy modes",
+          "lower": "documented the abbr2words 0.2.9 release boundary and configuration policy modes"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nImproved maintainability with shared date validation and dead-code cleanup",
+          "lower": "added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nimproved maintainability with shared date validation and dead-code cleanup"
         },
         {
           "anchor": "",
@@ -230,30 +436,6 @@
           "heading": "Added",
           "text": "Added core spoken form normalization with number verbalization, token annotations, and CLI\n\n\nAdded offset mapping, text protection, and spaCy model integration\n\n\nAdded structured text normalization for dates, times, currencies, and measurements with German locale support\n\n\nAdded configurable whitespace normalization policies and benchmark suite",
           "lower": "added core spoken form normalization with number verbalization, token annotations, and cli\n\n\nadded offset mapping, text protection, and spacy model integration\n\n\nadded structured text normalization for dates, times, currencies, and measurements with german locale support\n\n\nadded configurable whitespace normalization policies and benchmark suite"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Removed language detection and SSML features to simplify the API",
-          "lower": "removed language detection and ssml features to simplify the api"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed tomli dependency configuration for package installation\n\n\nFixed pytest configuration for proper test execution",
-          "lower": "fixed tomli dependency configuration for package installation\n\n\nfixed pytest configuration for proper test execution"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Added API reference, architecture guide, CLI docs, installation guide, and usage examples",
-          "lower": "added api reference, architecture guide, cli docs, installation guide, and usage examples"
-        },
-        {
-          "anchor": "",
-          "heading": "Internal",
-          "text": "Added CI workflow updates and pre-commit configuration\n\n\nAdded changelog documentation updates",
-          "lower": "added ci workflow updates and pre-commit configuration\n\n\nadded changelog documentation updates"
         }
       ]
     },
@@ -267,6 +449,12 @@
           "heading": "Command-line interface",
           "text": "Pass text as arguments or through standard input:\n\nspokenform --lang de \"Prof. Klein hat 2 kg.\"\necho \"There are 2 tests.\" | spokenform --lang en\n\n\n\n\nUse --changes for stage provenance and --json for a structured result:\n\nspokenform --lang de --changes \"Prof. Klein hat 2 kg.\"\nspokenform --lang de --json \"Prof. Klein hat 2 kg.\"\n\n\n\n\nSelect an installed spaCy model with --spacy-model. --strict turns an unavailable\nmodel or invalid protected range into an error. Without strict mode, recoverable\nwarnings are printed to standard error for plain-text output and included in\nstructured output.\n\nspokenform --lang en --spacy-model en_core_web_sm --strict \"The board is 2 in. wide.\"\n\n\n\n\nPipeline stages can be disabled independently with --no-structured,\n--no-abbreviations, --no-numbers, and --keep-whit…",
           "lower": "pass text as arguments or through standard input:\n\nspokenform --lang de \"prof. klein hat 2 kg.\"\necho \"there are 2 tests.\" | spokenform --lang en\n\n\n\n\nuse --changes for stage provenance and --json for a structured result:\n\nspokenform --lang de --changes \"prof. klein hat 2 kg.\"\nspokenform --lang de --json \"prof. klein hat 2 kg.\"\n\n\n\n\nselect an installed spacy model with --spacy-model. --strict turns an unavailable\nmodel or invalid protected range into an error. without strict mode, recoverable\nwarnings are printed to standard error for plain-text output and included in\nstructured output.\n\nspokenform --lang en --spacy-model en_core_web_sm --strict \"the board is 2 in. wide.\"\n\n\n\n\npipeline stages can be disabled independently with --no-structured,\n--no-abbreviations, --no-numbers, and --keep-whit…"
+        },
+        {
+          "anchor": "",
+          "heading": "Interpretation and domain controls",
+          "text": "Choose the recognition evidence policy explicitly and disable specialist domains independently:\n\nspokenform --interpretation-mode surface \"final 3-2\"\nspokenform --interpretation-mode contextual --disable-domain chemistry \"H2O\"\nspokenform --disable-domain biology --disable-domain sports \"...\"\n\n\n\n\n--disable-domain is repeatable. Available values include chemistry, biology, sports, finance, math, music, temporal, quantities, communications, network, identifiers, addresses, references, legal, social, geography, and core. Surface mode does not use automatic spaCy context; explicit strict spaCy use is rejected.",
+          "lower": "choose the recognition evidence policy explicitly and disable specialist domains independently:\n\nspokenform --interpretation-mode surface \"final 3-2\"\nspokenform --interpretation-mode contextual --disable-domain chemistry \"h2o\"\nspokenform --disable-domain biology --disable-domain sports \"...\"\n\n\n\n\n--disable-domain is repeatable. available values include chemistry, biology, sports, finance, math, music, temporal, quantities, communications, network, identifiers, addresses, references, legal, social, geography, and core. surface mode does not use automatic spacy context; explicit strict spacy use is rejected."
         }
       ]
     },
@@ -334,8 +522,8 @@
         {
           "anchor": "",
           "heading": "spokenform",
-          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\n\n\n\nQuickstart\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\n\n\n\nAPI reference\nPreparation\n\nResult models\n\nExport classification\n\nAnnotation adapters\n\nNumber normalization\n\n\n\n\nkokorog2p migration boundary\nOwnership audit\n\nPreferred adapter surface\n\n\n\n\nCommand-line interface\n\nspaCy integration\nCurrent effect with the released abbr2words structured API\n\nLoad an installed model by name\n\nInject an application-owned pipeline\n\nSupply annotations…",
-          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\n\n\n\nquickstart\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\n\n\n\napi reference\npreparation\n\nresult models\n\nexport classification\n\nannotation adapters\n\nnumber normalization\n\n\n\n\nkokorog2p migration boundary\nownership audit\n\npreferred adapter surface\n\n\n\n\ncommand-line interface\n\nspacy integration\ncurrent effect with the released abbr2words structured api\n\nload an installed model by name\n\ninject an application-owned pipeline\n\nsupply annotations…"
+          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\nOptional Lexhint integration\n\n\n\n\nQuickstart\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\nRecognition policy boundary\n\nSemantic segment boundaries\n\n\n\n\nAPI reference\nPreparation\n\nConfiguration policy modes\n\nResult models\n\nExport classification\n\nAnnotation adapters\n\nNumber normalization\n\nInterpretation policy\n\nLexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nOwnership audit\n\nPreferred adapter surface\n\n\n\n\nCommand-line interface\nIn…",
+          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\noptional lexhint integration\n\n\n\n\nquickstart\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\nrecognition policy boundary\n\nsemantic segment boundaries\n\n\n\n\napi reference\npreparation\n\nconfiguration policy modes\n\nresult models\n\nexport classification\n\nannotation adapters\n\nnumber normalization\n\ninterpretation policy\n\nlexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nownership audit\n\npreferred adapter surface\n\n\n\n\ncommand-line interface\nin…"
         },
         {
           "anchor": "",
@@ -367,6 +555,12 @@
           "heading": "Documentation",
           "text": "The documentation source uses MyST Markdown. Install the supplied requirements\nfile together with the project:\n\npython -m pip install -e .\npython -m pip install -r docs/requirements.txt\nsphinx-build -W -b html docs docs/_build/html",
           "lower": "the documentation source uses myst markdown. install the supplied requirements\nfile together with the project:\n\npython -m pip install -e .\npython -m pip install -r docs/requirements.txt\nsphinx-build -w -b html docs docs/_build/html"
+        },
+        {
+          "anchor": "",
+          "heading": "Optional Lexhint integration",
+          "text": "Install the optional provider and an explicit local runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download en --variant runtime\n\n\n\n\nSpokenform does not import Lexhint or download data unless the caller supplies a provider. The API accepts a structural LexicalEvidenceProvider, so applications may adapt Lexhint without coupling core normalization to that package. Provider language must match the Spokenform base language.",
+          "lower": "install the optional provider and an explicit local runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download en --variant runtime\n\n\n\n\nspokenform does not import lexhint or download data unless the caller supplies a provider. the api accepts a structural lexicalevidenceprovider, so applications may adapt lexhint without coupling core normalization to that package. provider language must match the spokenform base language."
         }
       ]
     },
@@ -399,6 +593,12 @@
           "heading": "Limitations and readiness gates",
           "text": "spokenform is a one-language written-to-spoken layer. Callers own language\nselection, mixed-language segmentation, markup/SSML, tokenization, lexicons,\nphonemization, and model-specific punctuation.\n\nGerman was the first kokorog2p parity target. English has a direct spokenform API\nparity contract; French, Spanish, Italian, and Portuguese now\nhave text, source mapping, downstream token/phoneme, protection, and\nreleased-stack fixtures. Portuguese and Czech time remain caller-managed.\nCzech and English semantic number categories are owned by\nspokenform, and English is active on the kokorog2p spokenform adapter for\nreviewed structured semantics, contextual single-dot release labels, and safe\nordinary-number categories. English phoneme-sensitive years, suffix ordinals,\nRoman numerals, phone/ID…",
           "lower": "spokenform is a one-language written-to-spoken layer. callers own language\nselection, mixed-language segmentation, markup/ssml, tokenization, lexicons,\nphonemization, and model-specific punctuation.\n\ngerman was the first kokorog2p parity target. english has a direct spokenform api\nparity contract; french, spanish, italian, and portuguese now\nhave text, source mapping, downstream token/phoneme, protection, and\nreleased-stack fixtures. portuguese and czech time remain caller-managed.\nczech and english semantic number categories are owned by\nspokenform, and english is active on the kokorog2p spokenform adapter for\nreviewed structured semantics, contextual single-dot release labels, and safe\nordinary-number categories. english phoneme-sensitive years, suffix ordinals,\nroman numerals, phone/id…"
+        },
+        {
+          "anchor": "",
+          "heading": "Recognition modes and specialist domains",
+          "text": "contextual remains the default compatibility mode. surface is intentionally fail-closed and context-independent, not a promise to spell every unknown token; genuinely ambiguous strings may be preserved. disabled_domains can suppress specialist families independently, with chemistry covering the current chemical-formula recognizer. Domain suppression can reduce speechability by design and is not a rendering fallback. Legacy context still controls abbreviation context only. An orthographic fallback for conservative sequence-shaped residual spans is opt-in through sequence_fallback_mode=\"spell\"; it does not spell ordinary lexical prose. The default remains sequence_fallback_mode=\"preserve\".\n\nExplicit allowed_domains is fail-closed for candidates without recognized domain metadata. It is inte…",
+          "lower": "contextual remains the default compatibility mode. surface is intentionally fail-closed and context-independent, not a promise to spell every unknown token; genuinely ambiguous strings may be preserved. disabled_domains can suppress specialist families independently, with chemistry covering the current chemical-formula recognizer. domain suppression can reduce speechability by design and is not a rendering fallback. legacy context still controls abbreviation context only. an orthographic fallback for conservative sequence-shaped residual spans is opt-in through sequence_fallback_mode=\"spell\"; it does not spell ordinary lexical prose. the default remains sequence_fallback_mode=\"preserve\".\n\nexplicit allowed_domains is fail-closed for candidates without recognized domain metadata. it is inte…"
         }
       ]
     },
@@ -498,8 +698,8 @@
         {
           "anchor": "",
           "heading": "Running",
-          "text": "After the cache is populated, offline runs do not access the network:\n\npython -m benchmarks.proteno --offline\npython -m benchmarks.proteno --offline --language en\npython -m benchmarks.proteno --offline --language es\npython -m benchmarks.proteno --offline --split test\npython -m benchmarks.proteno --offline --language en --limit 100\npython -m benchmarks.proteno --offline --case en:00481 --show-failures all\npython -m benchmarks.proteno --offline --speech-wer-threshold 0.5\n\n\n\n\nUse --refresh to redownload selected pinned files. --cache-dir and\n--results-dir relocate the cache and local reports. The default split is\nall; train is the first int(total * 0.60) rows (floor rounding), and\ntest is the remaining rows. Case IDs use the absolute one-based upstream row,\nfor example en:00481, so filtering…",
-          "lower": "after the cache is populated, offline runs do not access the network:\n\npython -m benchmarks.proteno --offline\npython -m benchmarks.proteno --offline --language en\npython -m benchmarks.proteno --offline --language es\npython -m benchmarks.proteno --offline --split test\npython -m benchmarks.proteno --offline --language en --limit 100\npython -m benchmarks.proteno --offline --case en:00481 --show-failures all\npython -m benchmarks.proteno --offline --speech-wer-threshold 0.5\n\n\n\n\nuse --refresh to redownload selected pinned files. --cache-dir and\n--results-dir relocate the cache and local reports. the default split is\nall; train is the first int(total * 0.60) rows (floor rounding), and\ntest is the remaining rows. case ids use the absolute one-based upstream row,\nfor example en:00481, so filtering…"
+          "text": "After the cache is populated, offline runs do not access the network:\n\npython -m benchmarks.proteno --offline\npython -m benchmarks.proteno --offline --language en\npython -m benchmarks.proteno --offline --language es\npython -m benchmarks.proteno --offline --split test\npython -m benchmarks.proteno --offline --language en --limit 100\npython -m benchmarks.proteno --offline --case en:00481 --show-failures all\npython -m benchmarks.proteno --offline --speech-wer-threshold 0.5\npython -m benchmarks.proteno --offline --report html\n\n\n\n\nUse --refresh to redownload selected pinned files. --cache-dir and\n--results-dir relocate the cache and local reports. The default split is\nall; train is the first int(total * 0.60) rows (floor rounding), and\ntest is the remaining rows. Case IDs use the absolute one-b…",
+          "lower": "after the cache is populated, offline runs do not access the network:\n\npython -m benchmarks.proteno --offline\npython -m benchmarks.proteno --offline --language en\npython -m benchmarks.proteno --offline --language es\npython -m benchmarks.proteno --offline --split test\npython -m benchmarks.proteno --offline --language en --limit 100\npython -m benchmarks.proteno --offline --case en:00481 --show-failures all\npython -m benchmarks.proteno --offline --speech-wer-threshold 0.5\npython -m benchmarks.proteno --offline --report html\n\n\n\n\nuse --refresh to redownload selected pinned files. --cache-dir and\n--results-dir relocate the cache and local reports. the default split is\nall; train is the first int(total * 0.60) rows (floor rounding), and\ntest is the remaining rows. case ids use the absolute one-b…"
         },
         {
           "anchor": "",
@@ -510,8 +710,8 @@
         {
           "anchor": "",
           "heading": "Reports and comparison",
-          "text": "Reports are written to benchmark-results/proteno/<UTC-run-id>/:\n\n\nsummary.json contains metadata and aggregate metrics only; it contains no\ncorpus sentences.\n\n\nfailures.jsonl contains the complete machine-readable failure report.\n\n\nfailures.md is a small index linking to bounded, source-bearing Markdown\nshards grouped by language and case kind. Each shard is capped at 1 MiB and\ncontains local source, expected, actual, WER, and provenance evidence.\n\n\nexcluded.jsonl records adapter exclusions separately from Spokenform output.\n\n\n\nMetrics separate normalization cases from identity cases. Semantic comparison\nuses speech-token exactness plus the localized-letter equivalence diagnostic;\nliteral comparison and word error rate are also reported. unchanged therefore\nmeans a likely miss for normali…",
-          "lower": "reports are written to benchmark-results/proteno/<utc-run-id>/:\n\n\nsummary.json contains metadata and aggregate metrics only; it contains no\ncorpus sentences.\n\n\nfailures.jsonl contains the complete machine-readable failure report.\n\n\nfailures.md is a small index linking to bounded, source-bearing markdown\nshards grouped by language and case kind. each shard is capped at 1 mib and\ncontains local source, expected, actual, wer, and provenance evidence.\n\n\nexcluded.jsonl records adapter exclusions separately from spokenform output.\n\n\n\nmetrics separate normalization cases from identity cases. semantic comparison\nuses speech-token exactness plus the localized-letter equivalence diagnostic;\nliteral comparison and word error rate are also reported. unchanged therefore\nmeans a likely miss for normali…"
+          "text": "Reports are written to benchmark-results/proteno/<UTC-run-id>/:\n\n\nsummary.json contains metadata and aggregate metrics only; it contains no\ncorpus sentences.\n\n\nfailures.jsonl contains the complete machine-readable failure report.\n\n\nfailures.md is a small index linking to bounded, source-bearing Markdown\nshards grouped by language and case kind. Each shard is capped at 1 MiB and\ncontains local source, expected, actual, WER, and provenance evidence.\n\n\nexcluded.jsonl records adapter exclusions separately from Spokenform output.\n\n\nreport.html is a self-contained local dashboard with KPI, language,\nnormalization/identity, language × case-kind, diagnostics, failure, metadata,\nand optional oracle views. Use --report none to skip HTML generation.\n\n\n\nMetrics separate normalization cases from ident…",
+          "lower": "reports are written to benchmark-results/proteno/<utc-run-id>/:\n\n\nsummary.json contains metadata and aggregate metrics only; it contains no\ncorpus sentences.\n\n\nfailures.jsonl contains the complete machine-readable failure report.\n\n\nfailures.md is a small index linking to bounded, source-bearing markdown\nshards grouped by language and case kind. each shard is capped at 1 mib and\ncontains local source, expected, actual, wer, and provenance evidence.\n\n\nexcluded.jsonl records adapter exclusions separately from spokenform output.\n\n\nreport.html is a self-contained local dashboard with kpi, language,\nnormalization/identity, language × case-kind, diagnostics, failure, metadata,\nand optional oracle views. use --report none to skip html generation.\n\n\n\nmetrics separate normalization cases from ident…"
         },
         {
           "anchor": "",
@@ -543,13 +743,13 @@
     {
       "url": "/tools/spokenform/main/release-checklist/",
       "title": "spokenform Release checklist",
-      "snippet": "Ensure the released abbr2words>=0.2.4 prerequisite containing the structured currency identities is available from the target package index. …",
+      "snippet": "Ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available f …",
       "sections": [
         {
           "anchor": "",
           "heading": "Release checklist",
-          "text": "Ensure the released abbr2words>=0.2.4 prerequisite containing the structured currency identities is available from the target package index.\n\n\nCreate an annotated Git tag such as v0.2.2 only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\".\n\n\nRun python -m pytest.\n\n\nRun python -m ruff check . and python -m ruff format --check ..\n\n\nRun python -m mypy spokenform examples.\n\n\nBuild with python -m build.\n\n\nValidate distributions with python -m twine check dist/*.\n\n\nBuild docs with sphinx-build -W -b html docs docs/_build/html.\n\n\nTest wheel installation and the spokenform console command in a fresh environment.\n\n\nConfirm the release workflow uses a PyPI trusted publisher when repository OIDC is configured; otherwise verify the configured API tok…",
-          "lower": "ensure the released abbr2words>=0.2.4 prerequisite containing the structured currency identities is available from the target package index.\n\n\ncreate an annotated git tag such as v0.2.2 only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\".\n\n\nrun python -m pytest.\n\n\nrun python -m ruff check . and python -m ruff format --check ..\n\n\nrun python -m mypy spokenform examples.\n\n\nbuild with python -m build.\n\n\nvalidate distributions with python -m twine check dist/*.\n\n\nbuild docs with sphinx-build -w -b html docs docs/_build/html.\n\n\ntest wheel installation and the spokenform console command in a fresh environment.\n\n\nconfirm the release workflow uses a pypi trusted publisher when repository oidc is configured; otherwise verify the configured api tok…"
+          "text": "Ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\nCreate an annotated Git tag for the target release, for example vX.Y.Z, only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nRun python -m pytest.\n\n\nRun python -m pytest --cov=spokenform --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85.\n\n\nRun python -m ruff check . and python -m ruff format --check ..\n\n\nRun python -m mypy spokenform examples.\n\n\nBuild with python -m build.\n\n\nValidate distributions with python -m twine check dist/*.\n\n\nBuild docs with sphinx-build -W -b html docs docs/_build/h…",
+          "lower": "ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\ncreate an annotated git tag for the target release, for example vx.y.z, only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nrun python -m pytest.\n\n\nrun python -m pytest --cov=spokenform --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85.\n\n\nrun python -m ruff check . and python -m ruff format --check ..\n\n\nrun python -m mypy spokenform examples.\n\n\nbuild with python -m build.\n\n\nvalidate distributions with python -m twine check dist/*.\n\n\nbuild docs with sphinx-build -w -b html docs docs/_build/h…"
         }
       ]
     },

@@ -5,8 +5,8 @@ permalink: /tools/spokenform/release-checklist/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.2.6"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_ref: "v0.3.0"
+docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
 search_enabled: true
 ---
 
@@ -543,16 +543,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="release-checklist">
 <h1>Release checklist</h1>
 <ol class="arabic simple">
-<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.4</span></code> prerequisite containing the structured currency identities is available from the target package index.</p></li>
-<li><p>Create an annotated Git tag such as <code class="docutils literal notranslate"><span class="pre">v0.2.2</span></code> only after all release gates pass.</p></li>
-<li><p>Install a clean environment with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code>.</p></li>
+<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.9,&lt;0.3.0</span></code> prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.</p></li>
+<li><p>Create an annotated Git tag for the target release, for example <code class="docutils literal notranslate"><span class="pre">vX.Y.Z</span></code>, only after all release gates pass.</p></li>
+<li><p>Install a clean environment with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">docs/requirements.txt</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span> <span class="pre">--cov=spokenform</span> <span class="pre">--cov-branch</span> <span class="pre">--cov-report=term-missing</span> <span class="pre">--cov-report=xml</span> <span class="pre">--cov-fail-under=85</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">ruff</span> <span class="pre">check</span> <span class="pre">.</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">ruff</span> <span class="pre">format</span> <span class="pre">--check</span> <span class="pre">.</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">mypy</span> <span class="pre">spokenform</span> <span class="pre">examples</span></code>.</p></li>
 <li><p>Build with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">build</span></code>.</p></li>
 <li><p>Validate distributions with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">twine</span> <span class="pre">check</span> <span class="pre">dist/*</span></code>.</p></li>
 <li><p>Build docs with <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-W</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">docs</span> <span class="pre">docs/_build/html</span></code>.</p></li>
-<li><p>Test wheel installation and the <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> console command in a fresh environment.</p></li>
+<li><p>Test wheel installation, one deterministic normalization example, and the <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> console command in a fresh environment.</p></li>
 <li><p>Confirm the release workflow uses a PyPI trusted publisher when repository OIDC is configured; otherwise verify the configured API token without changing authentication on release day.</p></li>
 <li><p>Publish the GitHub release only after all required checks pass.</p></li>
 <li><p>Before a downstream kokorog2p release raises its spokenform minimum, publish

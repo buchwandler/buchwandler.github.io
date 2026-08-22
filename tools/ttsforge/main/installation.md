@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2f35a2ba97f3013503dbff6f5ae6775612a93842"
+docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
 search_enabled: true
 ---
 
@@ -666,7 +666,7 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot
 <span class="c1"># Bundled ffmpeg binaries</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
 
-<span class="c1"># GPU acceleration</span>
+<span class="c1"># CUDA provider support</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
 </pre></div>
 </div>
@@ -698,8 +698,14 @@ providers rather than GPU modes:</p>
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>xnnpack
 </pre></div>
 </div>
-<p>For CUDA, install the GPU extra in a fresh environment so CPU and GPU ONNX Runtime
-distributions are not installed together:</p>
+<p>For a desktop build exposing OpenVINO:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>openvino
+ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
+</pre></div>
+</div>
+<p>For the CUDA provider, install the GPU extra in a fresh environment so CPU and CUDA ONNX
+Runtime distributions are not installed together:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
 ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
 </pre></div>
@@ -815,14 +821,17 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <li><p>The model directory can be found with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code></p></li>
 </ol>
 </section>
-<section id="gpu-not-detected">
-<h3>GPU not detected</h3>
-<p>If GPU acceleration isn’t working:</p>
+<section id="requested-provider-unavailable">
+<h3>Requested provider unavailable</h3>
+<p>If an explicitly requested provider is unavailable:</p>
 <ol class="arabic simple">
-<li><p>Ensure <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> is installed (not just <code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code>)</p></li>
-<li><p>Verify CUDA is properly installed</p></li>
-<li><p>Check GPU compatibility with ONNX Runtime</p></li>
+<li><p>Run <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code> and inspect the available, configured, and resolved
+providers.</p></li>
+<li><p>Confirm the installed ONNX Runtime build exposes the requested provider.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or another provider reported as available.</p></li>
 </ol>
+<p>For CUDA specifically, ensure <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> is installed (not just <code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code>),
+verify CUDA is installed, and check CUDA compatibility with ONNX Runtime.</p>
 </section>
 </section>
 </section>

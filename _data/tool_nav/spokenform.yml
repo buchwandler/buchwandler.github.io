@@ -4,17 +4,17 @@ nav_key: spokenform
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.2.6
-source_commit: 2e9c44616d08ae6271c3d81009bec7775ce5beb9
-source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.6
+source_ref: v0.3.0
+source_commit: c9f0dff441dbee5df347994d39fd524666515af1
+source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.0
 is_default: true
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.2.6
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.2.6
+release_tag: v0.3.0
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.6
+  ref: v0.3.0
   url: /tools/spokenform/
   current: true
 - name: main
@@ -59,12 +59,27 @@ entries:
 - slug: limitations
   title: spokenform Limitations
   url: /tools/spokenform/limitations/
+- slug: benchmarks
+  title: spokenform Benchmarks
+  url: /tools/spokenform/benchmarks/
+- slug: polynorm
+  title: spokenform PolyNorm diagnostic benchmark
+  url: /tools/spokenform/polynorm/
+- slug: proteno
+  title: spokenform Proteno benchmark
+  url: /tools/spokenform/proteno/
 - slug: google_tn
   title: spokenform Google TN benchmark
   url: /tools/spokenform/google_tn/
+- slug: async_tn
+  title: spokenform Async Voice TTS Normalization Benchmark
+  url: /tools/spokenform/async_tn/
 - slug: release-checklist
   title: spokenform Release checklist
   url: /tools/spokenform/release-checklist/
 - slug: changelog
   title: spokenform Changelog
   url: /tools/spokenform/changelog/
+- slug: kokorog2p-0.2.3-handoff
+  title: spokenform 0.2.3 downstream handoff
+  url: /tools/spokenform/kokorog2p-0.2.3-handoff/

@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2e9c44616d08ae6271c3d81009bec7775ce5beb9"
+docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
 search_enabled: true
 ---
 

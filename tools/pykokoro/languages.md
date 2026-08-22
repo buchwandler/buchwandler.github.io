@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/languages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.4"
-docs_commit: "ab23c6f5afff03efa326fc2e2c0d438a926abd75"
+docs_ref: "v0.8.5"
+docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
 search_enabled: true
 ---
 

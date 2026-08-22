@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/configuration/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "392976a19d2585629bdf72c9d7cf60ac12467714"
+docs_ref: "v0.3.7"
+docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
 search_enabled: true
 ---
 
@@ -1118,7 +1118,7 @@ details.</p>
 <span class="w">  </span><span class="nt">&quot;default_language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;default_speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;default_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;m4b&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;use_gpu&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;onnx_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;model_quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;model_variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;silence_between_chapters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span>
