@@ -1,0 +1,92 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "readio",
+  "entries": [
+    {
+      "url": "/tools/readio/changelog/",
+      "title": "readio Changelog",
+      "snippet": "Added local text playback from literals, files, standard input, and live paragraph streams\n\n\nAdded bounded-memory WAV rendering and explicit …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Added¶",
+          "text": "Added local text playback from literals, files, standard input, and live paragraph streams\n\n\nAdded bounded-memory WAV rendering and explicit Spotify publishing with readiness and chapter support\n\n\nAdded ingest artifacts, templates, SSMD voice preflight, configuration validation, and actionable diagnostics",
+          "lower": "added local text playback from literals, files, standard input, and live paragraph streams\n\n\nadded bounded-memory wav rendering and explicit spotify publishing with readiness and chapter support\n\n\nadded ingest artifacts, templates, ssmd voice preflight, configuration validation, and actionable diagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality¶",
+          "text": "Added cross-platform CI, pre-commit, coverage, package publishing checks, and a podcast example",
+          "lower": "added cross-platform ci, pre-commit, coverage, package publishing checks, and a podcast example"
+        }
+      ]
+    },
+    {
+      "url": "/tools/readio/",
+      "title": "Readio documentation",
+      "snippet": "Readio is a terminal text-to-speech tool. It reads plain text or SSMD documents with PyKokoro, plays speech locally, renders WAV files, and …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Readio documentation¶",
+          "text": "Readio is a terminal text-to-speech tool. It reads plain text or SSMD documents with PyKokoro, plays speech locally, renders WAV files, and can publish completed audio through save-to-spotify.",
+          "lower": "readio is a terminal text-to-speech tool. it reads plain text or ssmd documents with pykokoro, plays speech locally, renders wav files, and can publish completed audio through save-to-spotify."
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation map¶",
+          "text": "Changelog\n\n\n\n\n\nProject README, quick-start commands and feature overview.\n\n\nAgent Skill, instructions for using Readio from an agent workflow.",
+          "lower": "changelog\n\n\n\n\n\nproject readme, quick-start commands and feature overview.\n\n\nagent skill, instructions for using readio from an agent workflow."
+        },
+        {
+          "anchor": "",
+          "heading": "Installation¶",
+          "text": "Readio requires Python 3.10 or newer.\n\npython -m pip install -e \".[cpu]\"\n\n\n\n\nUse the GPU extra when a GPU-enabled ONNX Runtime is available:\n\npython -m pip install -e \".[gpu]\"\n\n\n\n\nPyKokoro may download model and voice assets the first time it is used. Spotify publishing additionally requires the separately installed and authenticated save-to-spotify executable.",
+          "lower": "readio requires python 3.10 or newer.\n\npython -m pip install -e \".[cpu]\"\n\n\n\n\nuse the gpu extra when a gpu-enabled onnx runtime is available:\n\npython -m pip install -e \".[gpu]\"\n\n\n\n\npykokoro may download model and voice assets the first time it is used. spotify publishing additionally requires the separately installed and authenticated save-to-spotify executable."
+        },
+        {
+          "anchor": "",
+          "heading": "Quick start¶",
+          "text": "Read literal text, a file, or standard input:\n\nreadio speak \"Hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"Read this text.\" | readio speak\n\n\n\n\nRender a WAV file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nWith no explicit output path, Readio writes a uniquely named WAV file below the configured output directory. Existing files are not overwritten unless --force is supplied for an explicit path.",
+          "lower": "read literal text, a file, or standard input:\n\nreadio speak \"hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"read this text.\" | readio speak\n\n\n\n\nrender a wav file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nwith no explicit output path, readio writes a uniquely named wav file below the configured output directory. existing files are not overwritten unless --force is supplied for an explicit path."
+        },
+        {
+          "anchor": "",
+          "heading": "Input and rendering¶",
+          "text": "The speak, render, and spotify commands accept the same input forms:\n\n\nPositional text, joined with spaces.\n\n\n--file PATH for UTF-8 text or SSMD.\n\n\nStandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. Blank lines close live paragraphs.\n\n\n\nFor non-live input, --select can be all, last-paragraph, or paragraph:N. The default synthesis unit is controlled by reader.unit and can be overridden with --unit sentence or --unit paragraph.\n\nSynthesis options are available on all three commands:\n\n--voice VOICE       PyKokoro voice ID\n--lang LANGUAGE     language code, such as en-us\n--speed NUMBER      speech speed multiplier\n--pause-mode MODE   tts, manual, or auto\n--unit UNIT         sentence or paragraph\n\n\n\n\nPlayback-only options…",
+          "lower": "the speak, render, and spotify commands accept the same input forms:\n\n\npositional text, joined with spaces.\n\n\n--file path for utf-8 text or ssmd.\n\n\nstandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. blank lines close live paragraphs.\n\n\n\nfor non-live input, --select can be all, last-paragraph, or paragraph:n. the default synthesis unit is controlled by reader.unit and can be overridden with --unit sentence or --unit paragraph.\n\nsynthesis options are available on all three commands:\n\n--voice voice       pykokoro voice id\n--lang language     language code, such as en-us\n--speed number      speech speed multiplier\n--pause-mode mode   tts, manual, or auto\n--unit unit         sentence or paragraph\n\n\n\n\nplayback-only options…"
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration¶",
+          "text": "Initialize and inspect the user-owned configuration:\n\nreadio config init\nreadio config path\nreadio config show\nreadio config validate\n\n\n\n\nREADIO_CONFIG overrides the default configuration file path. Configuration is TOML with schema 1. The main sections are:\n\n\n[reader]: voice, lang, speed, pause_mode, unit, queue_size, and device.\n\n\n[ssmd]: the selected voice_provider and SSMD validation behavior.\n\n\n[paths]: user template, ingest, and WAV output directories.\n\n\n[voices.<provider>]: concrete voice IDs and logical role mappings.\n\n\n\nSet values with dotted keys. Aliases voice, lang, and speed target the corresponding reader settings:\n\nreadio config set reader.voice bf_emma\nreadio config set voices.kokoro.roles.analyst am_michael\nreadio config set ssmd.voice_provider kokoro\n\n\n\n\nThe default prov…",
+          "lower": "initialize and inspect the user-owned configuration:\n\nreadio config init\nreadio config path\nreadio config show\nreadio config validate\n\n\n\n\nreadio_config overrides the default configuration file path. configuration is toml with schema 1. the main sections are:\n\n\n[reader]: voice, lang, speed, pause_mode, unit, queue_size, and device.\n\n\n[ssmd]: the selected voice_provider and ssmd validation behavior.\n\n\n[paths]: user template, ingest, and wav output directories.\n\n\n[voices.<provider>]: concrete voice ids and logical role mappings.\n\n\n\nset values with dotted keys. aliases voice, lang, and speed target the corresponding reader settings:\n\nreadio config set reader.voice bf_emma\nreadio config set voices.kokoro.roles.analyst am_michael\nreadio config set ssmd.voice_provider kokoro\n\n\n\n\nthe default prov…"
+        },
+        {
+          "anchor": "",
+          "heading": "Templates and ingest files¶",
+          "text": "Templates are copied from the package into the user template directory during initialization. User copies are not overwritten by normal initialization.\n\nreadio template list\nreadio template show podcast\nreadio template validate --all\nreadio template use podcast --name weekly-review.ssmd\n\n\n\n\nUse --roundtrip with template validation for strict SSMD authoring checks. template reset NAME restores a packaged template intentionally.\n\nIngest files are retained in the configured ingest directory for later editing or rendering:\n\nreadio ingest path\nreadio ingest new --name notes.txt\nreadio ingest new --template podcast --name weekly-review.ssmd\nreadio ingest list\n\n\n\n\nAutomatic artifact names contain a UTC timestamp and random suffix. Explicit ingest names must be single filenames below the ingest d…",
+          "lower": "templates are copied from the package into the user template directory during initialization. user copies are not overwritten by normal initialization.\n\nreadio template list\nreadio template show podcast\nreadio template validate --all\nreadio template use podcast --name weekly-review.ssmd\n\n\n\n\nuse --roundtrip with template validation for strict ssmd authoring checks. template reset name restores a packaged template intentionally.\n\ningest files are retained in the configured ingest directory for later editing or rendering:\n\nreadio ingest path\nreadio ingest new --name notes.txt\nreadio ingest new --template podcast --name weekly-review.ssmd\nreadio ingest list\n\n\n\n\nautomatic artifact names contain a utc timestamp and random suffix. explicit ingest names must be single filenames below the ingest d…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD documents¶",
+          "text": "Files ending in .ssmd are parsed as SSMD. Readio runs consumer preflight before rendering when ssmd.validate_before_render is enabled:\n\nreadio ssmd check episode.ssmd\nreadio ssmd check episode.ssmd --json\nreadio ssmd check episode.ssmd --roundtrip\n\n\n\n\nDocument-local voice_bindings are authoritative. Readio supplies only missing defaults from the selected provider’s configured roles. A voice reference must resolve to a document binding, configured logical role, or configured concrete voice ID. Unresolved references fail before model inference.\n\nPlain text remains the default for one-voice narration. Use SSMD when the document needs multiple speakers, logical roles, marks, or chapters.",
+          "lower": "files ending in .ssmd are parsed as ssmd. readio runs consumer preflight before rendering when ssmd.validate_before_render is enabled:\n\nreadio ssmd check episode.ssmd\nreadio ssmd check episode.ssmd --json\nreadio ssmd check episode.ssmd --roundtrip\n\n\n\n\ndocument-local voice_bindings are authoritative. readio supplies only missing defaults from the selected provider’s configured roles. a voice reference must resolve to a document binding, configured logical role, or configured concrete voice id. unresolved references fail before model inference.\n\nplain text remains the default for one-voice narration. use ssmd when the document needs multiple speakers, logical roles, marks, or chapters."
+        },
+        {
+          "anchor": "",
+          "heading": "Spotify publishing¶",
+          "text": "Publishing is explicit:\n\nreadio spotify --file episode.ssmd --title \"Weekly Review\" --wait\n\n\n\n\nThe command renders a WAV and invokes save-to-spotify --json. Without --output, the WAV is temporary and is deleted after the operation. With --output, the requested WAV is retained. --show-id and --new-show select the destination show, while --summary, --image, and --language set episode metadata.\n\nUse --json for a machine-readable result. --wait waits for readiness, and --wait-timeout sets the readiness timeout. --chapters-from-markers converts SSMD markers into a Spotify timeline and requires the episode to reach READY.\n\nReadio does not read Spotify credential files or perform authentication. It delegates the external write operation to save-to-spotify.",
+          "lower": "publishing is explicit:\n\nreadio spotify --file episode.ssmd --title \"weekly review\" --wait\n\n\n\n\nthe command renders a wav and invokes save-to-spotify --json. without --output, the wav is temporary and is deleted after the operation. with --output, the requested wav is retained. --show-id and --new-show select the destination show, while --summary, --image, and --language set episode metadata.\n\nuse --json for a machine-readable result. --wait waits for readiness, and --wait-timeout sets the readiness timeout. --chapters-from-markers converts ssmd markers into a spotify timeline and requires the episode to reach ready.\n\nreadio does not read spotify credential files or perform authentication. it delegates the external write operation to save-to-spotify."
+        },
+        {
+          "anchor": "",
+          "heading": "Diagnostics and development¶",
+          "text": "Run the offline environment check with:\n\nreadio doctor\n\n\n\n\nDoctor reports configuration, configured directories, PyKokoro, SSMD, the selected provider and voices, sound dependencies, and save-to-spotify availability. It does not create directories, modify configuration, inspect credentials, or call the network.\n\nRun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nThe main execution path is readio/cli.py. Input normalization is in readio/document.py, configuration in readio/config.py, synthesis orchestration in readio/reader.py, audio sinks in readio/audio.py and readio/wave.py, and external Spotify integration in readio/spotify.py.",
+          "lower": "run the offline environment check with:\n\nreadio doctor\n\n\n\n\ndoctor reports configuration, configured directories, pykokoro, ssmd, the selected provider and voices, sound dependencies, and save-to-spotify availability. it does not create directories, modify configuration, inspect credentials, or call the network.\n\nrun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nthe main execution path is readio/cli.py. input normalization is in readio/document.py, configuration in readio/config.py, synthesis orchestration in readio/reader.py, audio sinks in readio/audio.py and readio/wave.py, and external spotify integration in readio/spotify.py."
+        }
+      ]
+    }
+  ]
+}

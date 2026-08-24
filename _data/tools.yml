@@ -52,3 +52,7 @@
   docs_url: /tools/spokenform/
   repo_url: https://github.com/buchwandler/spokenform
   pypi_url: https://pypi.org/project/spokenform/
+- name: readio
+  description: Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.
+  docs_url: /tools/readio/
+  repo_url: https://github.com/buchwandler/readio

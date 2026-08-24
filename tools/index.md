@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">13<span>focused tools</span></div>
+    <div class="hero-stat">14<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -155,6 +155,16 @@ permalink: /tools/
         <a href="/tools/lexhint/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.1.3" rel="external noopener">Latest release: v0.1.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/lexhint" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>readio</h3>
+      <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
+      <div class="card-links">
+        <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.1.0" rel="external noopener">Latest release: v0.1.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>
