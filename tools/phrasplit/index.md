@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
+docs_ref: "v0.3.6"
+docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
 search_enabled: true
 ---
 
@@ -700,7 +700,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l1"><a class="reference internal" href="integration/">Integration Contract for Pipelines</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="integration/#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#core-guarantee-exact-slice-policy">Core Guarantee: Exact-Slice Policy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="integration/#coordinate-space">Coordinate Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#backend-and-model-diagnostics">Backend and Model Diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#determinism-and-stability">Determinism and Stability</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#max-chars-safety-splitting">Max-Chars Safety Splitting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#integration-examples">Integration Examples</a></li>
@@ -716,6 +716,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="offsets/#coordinate-system">Coordinate System</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#offset-guarantees">Offset Guarantees</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#usage-examples">Usage Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#backend-diagnostics-without-a-second-resolution-pass">Backend diagnostics without a second resolution pass</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#working-with-offsets">Working with Offsets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#edge-cases">Edge Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#boundary-whitespace">Boundary Whitespace</a></li>
@@ -732,6 +733,13 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="streaming/#performance-characteristics">Performance Characteristics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="streaming/#best-practices">Best Practices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="streaming/#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-6-2026-08-25">[v0.3.6] - 2026-08-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-24">[v0.3.5] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-4-2026-08-03">[v0.3.4] - 2026-08-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-3-2026-06-26">[v0.3.3] - 2026-06-26</a></li>
 </ul>
 </li>
 </ul>

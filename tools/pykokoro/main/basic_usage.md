@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 
@@ -685,7 +685,37 @@ separate from model downloads.</p>
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Install the optional playback support:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu,playback]&quot;</span>
+</pre></div>
+</div>
+<p>Then play the generated waveform without creating an intermediate WAV file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello!&quot;</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Playback is blocking until the audio finishes. To select a particular output device:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span><span class="o">.</span><span class="n">play</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="s2">&quot;Built-in Audio&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
+</section>
+<section id="low-latency-streaming-playback">
+<h2>Low-latency streaming playback</h2>
+<p>For long text, <code class="docutils literal notranslate"><span class="pre">play_streaming()</span></code> starts playback after the first sentence and generates
+subsequent sentence units while one persistent output stream consumes queued audio:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipe</span><span class="p">:</span>
+    <span class="n">pipe</span><span class="o">.</span><span class="n">play_streaming</span><span class="p">(</span><span class="s2">&quot;First sentence. Second sentence. Third sentence.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Preparation is still global; only audio generation and postprocessing are deferred per
+selected unit. The default bounded queue has capacity two and no temporary WAV or final
+concatenated waveform is created.</p>
 </section>
 <section id="voice-selection">
 <h2>Voice Selection</h2>
@@ -928,6 +958,22 @@ add automatic pitch or rate changes.</p>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="word-timings">
+<h2>Word timings</h2>
+<p>Use sentence units when a GUI needs to coordinate source highlighting with streamed
+audio. Timing offsets are integer samples relative to <code class="docutils literal notranslate"><span class="pre">AudioUnitResult.audio</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">char_start</span></code>/<code class="docutils literal notranslate"><span class="pre">char_end</span></code> refer to <code class="docutils literal notranslate"><span class="pre">DocumentResult.clean_text</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prepared</span><span class="o">.</span><span class="n">render</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">word_timings</span><span class="p">:</span>
+            <span class="n">source_span</span> <span class="o">=</span> <span class="n">text</span><span class="p">[</span><span class="n">word</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">word</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+            <span class="nb">print</span><span class="p">(</span><span class="n">source_span</span><span class="p">,</span> <span class="n">word</span><span class="o">.</span><span class="n">start_sample</span><span class="p">,</span> <span class="n">word</span><span class="o">.</span><span class="n">end_sample</span><span class="p">)</span>
+        <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Waveform-only models return <code class="docutils literal notranslate"><span class="pre">word_timings</span> <span class="pre">==</span> <span class="pre">[]</span></code>; PyKokoro does not silently estimate
+timings. See <code class="docutils literal notranslate"><span class="pre">examples/stream_with_word_timings.py</span></code> for sample-cursor highlighting.</p>
 </section>
 <section id="next-steps">
 <h2>Next Steps</h2>

@@ -6,7 +6,7 @@ nav_tool: lexhint-main
 docs_project: "lexhint"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4aafe0264de3e664b90fcea901cb0484eccfa465"
+docs_commit: "530fbd657bac58bc7908afb6c10da5daaf7bb59a"
 search_enabled: true
 ---
 
@@ -572,13 +572,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#runtime-view">Runtime View</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#lexical-lookup-and-segmentation">Lexical lookup and segmentation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#dictionary-relations">Dictionary relations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#semantic-evidence">Semantic evidence</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#deployment-view">Deployment View</a></li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#cross-cutting-concepts">Cross-cutting Concepts</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#capability-specific-schema">Capability-specific schema</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#source-contract-and-diagnostics">Source contract and diagnostics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#provenance-and-data-lifecycle">Provenance and data lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#relation-decision-evidence">Relation decision evidence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#errors-and-offline-behavior">Errors and offline behavior</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#verification-and-licensing">Verification and licensing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#explicit-immutable-managed-dataset-artifacts">Explicit immutable managed dataset artifacts</a></li>
@@ -596,10 +599,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#glossary">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.3] - 2026-08-22</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.1.2] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.1] - 2026-08-21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.0] - 2026-08-20</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.0] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.1] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.2.0] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.1.3] - 2026-08-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.2] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.1.1] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.1.0] - 2026-08-20</a></li>
 </ul>
 </li>
 </ul>

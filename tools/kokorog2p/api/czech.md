@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/czech/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "4b7a4f633dade514641b5b47fdd1253864804b83"
+docs_ref: "v0.8.2"
+docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
 search_enabled: true
 ---
 

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/advanced_features/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.5"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_ref: "v0.8.7"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 
@@ -544,11 +544,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>Advanced Features</h1>
 <p>This guide covers the supported pipeline-first API for controlled generation and
 long-form rendering.</p>
-<section id="paragraph-wise-rendering">
-<h2>Paragraph-wise rendering</h2>
-<p><code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> prepares the complete document once, then renders selected paragraphs
-one at a time. This preserves document-global SSMD offsets, voice bindings, pauses, and
-marker ownership while bounding live generated waveform memory:</p>
+<section id="unit-wise-rendering">
+<h2>Unit-wise rendering</h2>
+<p><code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> prepares the complete document once, then renders selected paragraph
+or sentence units one at a time. This preserves document-global SSMD offsets, voice
+bindings, pauses, and marker ownership while bounding live generated waveform memory to
+the selected unit:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
@@ -568,6 +569,12 @@ marker ownership while bounding live generated waveform memory:</p>
                 <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
 </pre></div>
 </div>
+<p>Sentence units provide the low-startup-latency direct-playback path:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+    <span class="n">pipeline</span><span class="o">.</span><span class="n">play_streaming</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">queue_size</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Playback starts after the first sentence and uses one persistent bounded output stream.</p>
 <p>Descriptors are available before inference and contain source-order indices, clean-text
 offsets, segment ownership, marker names, and a <code class="docutils literal notranslate"><span class="pre">text_hash</span></code>. Store the
 <code class="docutils literal notranslate"><span class="pre">pykokoro-audio-unit-v1</span></code> schema beside hashes in a resume manifest. Hashes include
@@ -586,7 +593,7 @@ generation and postprocessing.</p>
 <h2>SSMD 0.8 metadata</h2>
 <p>Portable YAML headers can define logical voices, pause defaults, title metadata, and
 markers. Bind logical roles to provider voices through <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig</span></code> and render
-paragraph units with the same lifecycle shown above. See
+either paragraph or sentence units with the same lifecycle shown above. See
 <code class="docutils literal notranslate"><span class="pre">examples/paragraph_ssmd_voices.py</span></code> for a complete script and marker offsets.</p>
 </section>
 <section id="generation-and-pauses">
@@ -636,6 +643,21 @@ passed through <code class="docutils literal notranslate"><span class="pre">Pipe
 <p>Custom stages can be injected into <code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code> for tests, experiments, and
 dependency-light processing. Importing the pipeline and running fully custom stages does
 not require ONNX Runtime. Default audio stages require one of the provider extras.</p>
+</section>
+<section id="word-timings">
+<h2>Word timings</h2>
+<p>Timestamp-capable Kokoro ONNX models expose model-derived word timings from the named
+duration outputs <code class="docutils literal notranslate"><span class="pre">pred_dur</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_duration</span></code>, or <code class="docutils literal notranslate"><span class="pre">durations</span></code>. The G2P alignment cache is
+schema-versioned; after upgrading, stale entries are rebuilt so alignment metadata is
+available. <code class="docutils literal notranslate"><span class="pre">WordTiming.start_sample</span></code> and <code class="docutils literal notranslate"><span class="pre">end_sample</span></code> address the exact final waveform
+after phrase cutting, trimming, prosody, pauses, and unit concatenation. Character
+offsets address <code class="docutils literal notranslate"><span class="pre">document.clean_text</span></code>, not source SSMD markup. If duration output is
+missing or incomplete, the public timing list is empty rather than partially fabricated.</p>
+<p>When an external SSMD audio source replaces generated TTS, timings for that segment are
+cleared because model timings cannot describe the replacement audio. Unsupported
+waveform-only models likewise return no fabricated estimates. <code class="docutils literal notranslate"><span class="pre">release_audio()</span></code>
+preserves timing metadata. Use <code class="docutils literal notranslate"><span class="pre">examples/stream_with_word_timings.py</span></code> as a GUI-neutral
+integration pattern.</p>
 </section>
 <section id="spacy-policy">
 <h2>spaCy policy</h2>

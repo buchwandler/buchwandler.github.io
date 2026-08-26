@@ -5,8 +5,8 @@ permalink: /tools/spokenform/spacy/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -587,9 +587,7 @@ selection, disabled components, and process-level caching.</p>
 <h2>Supply annotations directly</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenAnnotation</span><span class="p">,</span> <span class="n">prepare</span>
 
-<span class="n">annotations</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">TokenAnnotation</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;ADP&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;IN&quot;</span><span class="p">),</span>
-<span class="p">)</span>
+<span class="n">annotations</span> <span class="o">=</span> <span class="p">(</span><span class="n">TokenAnnotation</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;in&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;ADP&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;IN&quot;</span><span class="p">),)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;in.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="n">annotations</span><span class="p">)</span>
 </pre></div>
 </div>

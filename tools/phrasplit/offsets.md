@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/offsets/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
+docs_ref: "v0.3.6"
+docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
 search_enabled: true
 ---
 
@@ -676,6 +676,29 @@ Plain-text behavior is unchanged when it is omitted.</p>
 <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="n">text</span><span class="p">[</span><span class="n">s</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">s</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span> <span class="o">==</span> <span class="n">s</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">s</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+</section>
+<section id="backend-diagnostics-without-a-second-resolution-pass">
+<h2>Backend diagnostics without a second resolution pass</h2>
+<p>When an integration needs both exact source offsets and the backend/model selected for
+that operation, use the detailed offset API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_with_offsets_with_diagnostics</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello. World.&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">split_with_offsets_with_diagnostics</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">backend</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">diagnostics</span><span class="o">.</span><span class="n">selected_model</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>The diagnostics come from the same operation that produced <code class="docutils literal notranslate"><span class="pre">result.segments</span></code>; callers
+should not pre-resolve a model merely to produce metadata. <code class="docutils literal notranslate"><span class="pre">split_with_offsets()</span></code>
+remains the backward-compatible list-returning wrapper. The exact-slice policy remains
+the primary contract for both APIs.</p>
+<section id="id1">
+<h3>Optional inline XHTML markup</h3>
 <p>Passing <code class="docutils literal notranslate"><span class="pre">inline_markup=True</span></code> with <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code> raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> because this mode
 depends on regex tag balancing.</p>
 </section>

@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 
@@ -721,11 +721,14 @@ annotations override individual fields.</p>
 </section>
 <section id="plain-text-sentence-splitting">
 <h3>Plain text sentence splitting</h3>
-<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses the optional <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> package for sentence splitting.
-When <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single segment. The language model
-is derived from <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code> using spaCy package naming rules (for example
-<code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> for English).</p>
-<p>Split boundaries are forced at SSMD pause boundaries and at spans that contain phoneme
+<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses PhraseSplit 0.3.6’s offset-preserving detailed split API
+for sentence splitting. The returned diagnostics come from the same operation that
+produced the segments, so sentence-model metadata does not require a separate
+model-resolution pass. When <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single
+segment. PhraseSplit may resolve once per hard range; PyKokoro does not claim one
+resolution for the whole document. The language model is derived from <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code>
+using spaCy package naming rules (for example <code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> for English). Split
+boundaries are forced at SSMD pause boundaries and at spans that contain phoneme
 overrides so those overrides are kept intact. Set <code class="docutils literal notranslate"><span class="pre">PYKOKORO_DEBUG_SEGMENTS=1</span></code> to log
 segment offsets.</p>
 </section>

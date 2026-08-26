@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.1.0"
-docs_commit: "3d4229300f8977975d6ddff2ebf7ccbc322a4b1f"
+docs_ref: "v0.1.1"
+docs_commit: "55e9f4f43d4ede3011efa1e1be0d5a5d9a1a424e"
 search_enabled: true
 ---
 
@@ -580,6 +580,13 @@ readio<span class="w"> </span>speak<span class="w"> </span>--file<span class="w"
 </pre></div>
 </div>
 <p>With no explicit output path, Readio writes a uniquely named WAV file below the configured output directory. Existing files are not overwritten unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied for an explicit path.</p>
+<p>Markdown is a first-class input format. Files ending in <code class="docutils literal notranslate"><span class="pre">.md</span></code>, <code class="docutils literal notranslate"><span class="pre">.markdown</span></code>, <code class="docutils literal notranslate"><span class="pre">.mdown</span></code>, or <code class="docutils literal notranslate"><span class="pre">.mkd</span></code> are parsed before synthesis; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">markdown</span></code> for Markdown from stdin or literal text:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>speak<span class="w"> </span>--file<span class="w"> </span>README.md
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>docs/design.md
+cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>readio<span class="w"> </span>speak<span class="w"> </span>--input-format<span class="w"> </span>markdown
+</pre></div>
+</div>
+<p>Headings, lists, links, images, code blocks, block quotes, tables, task lists, HTML text, and front matter become speech-friendly text. Markdown styling does not create SSMD prosody. Use <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> for explicit voices, rate, volume, pitch, breaks, or markers; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">text</span></code> to force literal reading of a Markdown-looking file.</p>
 </section>
 <section id="input-and-rendering">
 <h2>Input and rendering</h2>

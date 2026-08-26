@@ -5,8 +5,8 @@ permalink: /tools/spokenform/installation/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -574,6 +574,15 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 sphinx-build<span class="w"> </span>-W<span class="w"> </span>-b<span class="w"> </span>html<span class="w"> </span>docs<span class="w"> </span>docs/_build/html
 </pre></div>
 </div>
+</section>
+<section id="optional-lexhint-integration">
+<h2>Optional Lexhint integration</h2>
+<p>Install the optional provider and an explicit local runtime artifact. Lexhint <code class="docutils literal notranslate"><span class="pre">0.1.2</span> <span class="pre">&lt;=</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">0.3.0</span></code> is supported; Lexhint 0.1.x uses schema-7 runtime artifacts, while Lexhint 0.2.x requires a separately published schema-8 runtime artifact:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;spokenform[lexhint]&quot;</span>
+lexhint<span class="w"> </span>dataset<span class="w"> </span>download<span class="w"> </span>&lt;language&gt;<span class="w"> </span>--variant<span class="w"> </span>runtime
+</pre></div>
+</div>
+<p>Spokenform does not import Lexhint or download data unless the caller supplies a provider. The API accepts a structural <code class="docutils literal notranslate"><span class="pre">LexicalEvidenceProvider</span></code>, so applications may adapt Lexhint without coupling core normalization to that package. Provider language must match the Spokenform base language.</p>
 </section>
 </section>
 </div>

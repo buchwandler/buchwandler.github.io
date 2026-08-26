@@ -5,8 +5,8 @@ permalink: /tools/spokenform/architecture/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -664,6 +664,11 @@ reported as data-quality evidence rather than encoded as row-specific rules.</p>
 <section id="recognition-policy-boundary">
 <h2>Recognition policy boundary</h2>
 <p>Structured recognizers first emit candidates annotated with a semantic domain and evidence basis (<code class="docutils literal notranslate"><span class="pre">intrinsic</span></code> or <code class="docutils literal notranslate"><span class="pre">contextual</span></code>). <code class="docutils literal notranslate"><span class="pre">spokenform.recognition_policy</span></code> filters those candidates before <code class="docutils literal notranslate"><span class="pre">SequencePriority</span></code> overlap resolution. Surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. This keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. Diagnostics retain suppressed candidates with machine-readable reasons such as <code class="docutils literal notranslate"><span class="pre">context-not-allowed</span></code>, <code class="docutils literal notranslate"><span class="pre">disabled-domain</span></code>, and <code class="docutils literal notranslate"><span class="pre">blocked-by-disabled-domain</span></code>.</p>
+</section>
+<section id="optional-lexhint-boundary">
+<h2>Optional Lexhint boundary</h2>
+<p>Lexhint is an optional, provider-neutral evidence source. Spokenform supports Lexhint <code class="docutils literal notranslate"><span class="pre">0.1.2</span> <span class="pre">&lt;=</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">0.3.0</span></code>; Lexhint 0.1.x uses schema-7 artifacts and Lexhint 0.2.x requires separately published schema-8 runtime artifacts. Applications install the desired local dataset with <code class="docutils literal notranslate"><span class="pre">lexhint</span> <span class="pre">dataset</span> <span class="pre">download</span> <span class="pre">&lt;language&gt;</span> <span class="pre">--variant</span> <span class="pre">runtime</span></code> and inject the provider; normalization never downloads data.</p>
+<p>The production boundary uses exact lexical lookup, authoritative segmentation, and positive semantic-domain corroboration only. Lexhint fuzzy completion, headword matching, and dictionary-definition search remain development/diagnostic capabilities and do not alter automatic recognition.</p>
 </section>
 <section id="semantic-segment-boundaries">
 <h2>Semantic segment boundaries</h2>

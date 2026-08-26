@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2eac8fe1fb31319bb660ce603569706b3e48069b"
+docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
 search_enabled: true
 ---
 
@@ -588,8 +588,35 @@ included</p></li>
 </div>
 </section>
 </section>
-<section id="coordinate-space">
-<h2>Coordinate Space</h2>
+<section id="backend-and-model-diagnostics">
+<h2>Backend and Model Diagnostics</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">split_text_with_diagnostics()</span></code> when ordinary <code class="docutils literal notranslate"><span class="pre">Segment</span></code> objects are sufficient. Use
+<code class="docutils literal notranslate"><span class="pre">split_with_offsets_with_diagnostics()</span></code> when source offsets are part of the integration
+contract. For TTS, token-alignment, and markup pipelines, prefer the offset-preserving
+detailed API so diagnostics describe the same operation that produced the offsets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">phrasplit</span><span class="w"> </span><span class="kn">import</span> <span class="n">split_with_offsets_with_diagnostics</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello. World.&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">split_with_offsets_with_diagnostics</span><span class="p">(</span>
+    <span class="s2">&quot;Hello. World.&quot;</span><span class="p">,</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">diagnostics</span>
+
+<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+    <span class="n">process</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Do not pre-resolve a spaCy model merely to produce metadata. The detailed offset API
+performs backend/model resolution once and returns that resolution with the exact
+segments. Forced regex has <code class="docutils literal notranslate"><span class="pre">backend</span> <span class="pre">==</span> <span class="pre">&quot;regex&quot;</span></code> and no resolution; paragraph mode has
+<code class="docutils literal notranslate"><span class="pre">backend</span> <span class="pre">==</span> <span class="pre">&quot;none&quot;</span></code> and skips model resolution. Automatic fallback retains the
+resolution record with no selected model, while spaCy diagnostics identify the concrete
+selected model and size. Existing <code class="docutils literal notranslate"><span class="pre">split_with_offsets()</span></code> and <code class="docutils literal notranslate"><span class="pre">split_text()</span></code>
+compatibility wrappers remain unchanged.</p>
 <section id="character-offsets">
 <h3>Character Offsets</h3>
 <ul class="simple">

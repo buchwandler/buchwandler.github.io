@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.5"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_ref: "v0.8.7"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 
@@ -602,12 +602,13 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="dependencies-and-optional-spacy">
 <h2>Dependencies and optional spaCy</h2>
-<p>PyKokoro 0.8.3 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.8.0,&lt;0.9</span></code>. The package installs
-kokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support
-libraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and
-installs its compatible Spokenform and abbr2words dependencies transitively; do not
-install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are optional. The
-default tokenizer policy is safe on a clean install:</p>
+<p>PyKokoro’s current integration baseline requires <code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.6,&lt;0.4</span></code> and
+<code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.4,&lt;0.9</span></code>, alongside <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.8.0,&lt;0.9</span></code>. The package installs
+phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support libraries it
+needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and installs its
+compatible Spokenform and abbr2words dependencies transitively; do not install
+<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are optional. The default
+tokenizer policy is safe on a clean install:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back

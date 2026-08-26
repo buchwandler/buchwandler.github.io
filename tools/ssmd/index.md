@@ -5,8 +5,8 @@ permalink: /tools/ssmd/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "9fda4e532699353407751582398a9a8c036f2408"
+docs_ref: "v0.8.4"
+docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
 search_enabled: true
 ---
 
@@ -663,9 +663,11 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.2] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.0] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.4] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.3] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.2] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>

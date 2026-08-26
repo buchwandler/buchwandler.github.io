@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fbb28700c25713076db35dbd05cb97228f0651d0"
+docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
 search_enabled: true
 ---
 
@@ -733,7 +733,7 @@ abbreviations, and grammatical unit forms such as <code class="docutils literal 
 <li><p><strong>Ambiguity policy</strong>: Bare sentence-final numbers stay cardinals, invalid dates and
 times remain unchanged, and unit symbols only expand when preceded by a number. The
 exact written-to-spoken result, including abbreviation and initialism choices, is
-supplied by the supported bounded Spokenform 0.2.x profile rather than a second
+supplied by the supported Spokenform 0.3.1-compatible profile rather than a second
 kokorog2p rule set.</p></li>
 <li><p><strong>Regional variants</strong>: de-de, de-at, de-ch</p></li>
 </ul>
@@ -742,8 +742,8 @@ followed by French, Spanish, Italian, Portuguese, Czech, and English. These seve
 languages use the same per-homogeneous-run <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> path. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> remains the
 shared source of truth for lexical abbreviation and symbol recognition, while
 <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns accepted written-to-spoken behavior through its <code class="docutils literal notranslate"><span class="pre">for_kokorog2p</span></code>
-profile. The examples in this guide are illustrative; the supported bounded Spokenform
-0.2.x adapter API is authoritative. Kokorog2p retains only typography and
+profile. The examples in this guide are illustrative; the declared Spokenform 0.3.1
+dependency contract is authoritative. Kokorog2p retains only typography and
 phoneme-sensitive handling for spans Spokenform leaves protected or unsupported.</p>
 </section>
 <section id="id2">

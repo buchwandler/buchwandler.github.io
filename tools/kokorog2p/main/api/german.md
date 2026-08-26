@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fbb28700c25713076db35dbd05cb97228f0651d0"
+docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
 search_enabled: true
 ---
 
@@ -556,7 +556,7 @@ has no language-owned normalizer. Unit symbols are context bound: <code class="d
 not treated as independent sentence punctuation. <code class="docutils literal notranslate"><span class="pre">Min.</span></code> is intentionally numeric-only:
 standalone <code class="docutils literal notranslate"><span class="pre">Min.</span> <span class="pre">Beispiel</span></code> remains unchanged, while <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Min.</span></code> becomes <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Minute</span></code>.
 Invalid dates/times and ambiguous punctuation are left unchanged. Flexible <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>,
-<code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> spellings are supported through the bounded Spokenform 0.2.x and
+<code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> spellings are supported through the Spokenform 0.3.1-compatible and
 abbr2words profiles. Accepted semantic replacements are not rewritten by kokorog2p; only
 German G2P typography remains local.</p>
 <p><code class="docutils literal notranslate"><span class="pre">GermanNormalizer</span></code> remains available as a compatibility facade for direct callers. Its

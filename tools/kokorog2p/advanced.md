@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.1"
-docs_commit: "4b7a4f633dade514641b5b47fdd1253864804b83"
+docs_ref: "v0.8.2"
+docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
 search_enabled: true
 ---
 
@@ -559,6 +559,21 @@ the examples covered by downstream tests are representative, not an exhaustive s
 category list. English phoneme-sensitive number conversion, Spanish dialect behavior,
 and other documented G2P decisions remain downstream-owned. Use <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> directly
 for reusable spoken text or <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> directly for registry-only workflows.</p>
+<p>Countdown example:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source:
+  Initiate in 3-2-1.
+
+Spokenform semantic preparation:
+  Initiate in three - two - one.
+
+KokoroG2P model punctuation:
+  Initiate in three — two — one.
+</pre></div>
+</div>
+<p>An accepted structured replacement may preserve a model-neutral punctuation boundary
+when that boundary carries grouping or cadence. KokoroG2P does not re-recognize the
+semantic category; it only maps that generic boundary to punctuation supported by the
+Kokoro model.</p>
 </section>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>

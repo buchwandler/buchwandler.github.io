@@ -5,8 +5,8 @@ permalink: /tools/spokenform/api/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -544,7 +544,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="preparation">
 <h2>Preparation</h2>
-<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, strict=False)
+<p>.. py:function:: prepare(text, *, language=’en’, config=None, annotations=None, nlp=None, protected_spans=None, lexical_evidence=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, strict=False)
 :module: spokenform</p>
 <p>Convert one-language written text into a readable form intended for speech.</p>
 <p>The caller selects the processing language. Language detection, mixed-language
@@ -804,10 +804,10 @@ colon-time candidates remain unchanged for caller-managed handling.</p>
 <p>URLs, email addresses, and semantic-version-like values are protected. The
 implementation is intentionally conservative and is an MVP, not a complete
 locale grammar.</p>
-<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, trace=None)
+<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, evidence=None, trace=None)
 :module: spokenform</p>
 <p>Normalize structured values and return exact semantic provenance.</p>
-<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, trace=None)
+<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, evidence=None, trace=None)
 :module: spokenform</p>
 <p>Return exact, non-overlapping semantic replacements for one language.</p>
 </section>
@@ -831,6 +831,25 @@ locale grammar.</p>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">context</span></code> remains the legacy abbreviation-context switch. Surface mode clamps its effective abbreviation context off, but <code class="docutils literal notranslate"><span class="pre">context=False</span></code> under contextual mode does not disable structured recognizers. <code class="docutils literal notranslate"><span class="pre">InterpretationMode</span></code>, <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code>, and <code class="docutils literal notranslate"><span class="pre">RecognitionEvidence</span></code> are exported public types. Policy-suppressed candidates are visible in structured trace diagnostics.</p>
 <p><code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=&quot;preserve&quot;</span></code> is the compatibility default. Set it to <code class="docutils literal notranslate"><span class="pre">&quot;spell&quot;</span></code> to render conservative residual sequence-shaped spans such as <code class="docutils literal notranslate"><span class="pre">AAPL</span></code> or <code class="docutils literal notranslate"><span class="pre">H2O</span></code> orthographically after semantic recognition. It does not spell ordinary lexical prose, does not claim a semantic domain, and never overrides caller-protected or auto-protected literal spans. <code class="docutils literal notranslate"><span class="pre">SequenceFallbackMode</span></code>, <code class="docutils literal notranslate"><span class="pre">InterpretationMode</span></code>, <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code>, and <code class="docutils literal notranslate"><span class="pre">RecognitionEvidence</span></code> are exported public types. Policy-suppressed candidates are visible in structured trace diagnostics.</p>
+</section>
+<section id="lexhint-evidence-provider">
+<h2>Lexhint evidence provider</h2>
+<p>Lexhint <code class="docutils literal notranslate"><span class="pre">0.1.2</span> <span class="pre">&lt;=</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">0.3.0</span></code> is supported as an optional provider. Lexhint 0.1.x uses schema-7 artifacts, while Lexhint 0.2.x requires schema-8 artifacts installed separately with <code class="docutils literal notranslate"><span class="pre">lexhint</span> <span class="pre">dataset</span> <span class="pre">download</span> <span class="pre">&lt;language&gt;</span> <span class="pre">--variant</span> <span class="pre">runtime</span></code>. Spokenform never downloads datasets automatically.</p>
+<p>Pass an installed Lexhint runtime <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code> explicitly through <code class="docutils literal notranslate"><span class="pre">lexical_evidence</span></code>. No dataset is resolved or downloaded when the argument is omitted. URL lexical segmentation may work with a lexical-only provider. Contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lexhint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lexicon</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare</span>
+
+<span class="n">lexicon</span> <span class="o">=</span> <span class="n">Lexicon</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;runtime&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span>
+    <span class="s2">&quot;compiler 8.3.2 and chatgpt.com&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
+    <span class="n">normalize_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">lexical_evidence</span><span class="o">=</span><span class="n">lexicon</span><span class="p">,</span>
+    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Lexhint semantic domains are mapped to Spokenform use cases rather than copied into <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code>. Surface mode ignores semantic evidence. URL lexical evidence is a rendering aid for a URL already recognized or promoted by Spokenform.</p>
 </section>
 </section>
 </div>

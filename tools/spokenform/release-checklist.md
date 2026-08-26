@@ -5,8 +5,8 @@ permalink: /tools/spokenform/release-checklist/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -544,6 +544,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>Release checklist</h1>
 <ol class="arabic simple">
 <li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.9,&lt;0.3.0</span></code> prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Confirm the released Lexhint versions allowed by the <code class="docutils literal notranslate"><span class="pre">spokenform[lexhint]</span></code> extra pass the real provider contract test.</p></li>
+<li><p>For Lexhint 0.2.x, confirm a compatible schema-8 <code class="docutils literal notranslate"><span class="pre">runtime</span></code> dataset is published and installable.</p></li>
+<li><p>Run the URL, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
 <li><p>Create an annotated Git tag for the target release, for example <code class="docutils literal notranslate"><span class="pre">vX.Y.Z</span></code>, only after all release gates pass.</p></li>
 <li><p>Install a clean environment with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">docs/requirements.txt</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p></li>

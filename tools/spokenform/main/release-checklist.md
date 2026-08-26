@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
+docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
 search_enabled: true
 ---
 
@@ -544,6 +544,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>Release checklist</h1>
 <ol class="arabic simple">
 <li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.9,&lt;0.3.0</span></code> prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.</p></li>
+</ol>
+<ul class="simple">
+<li><p>Confirm the released Lexhint versions allowed by the <code class="docutils literal notranslate"><span class="pre">spokenform[lexhint]</span></code> extra pass the real provider contract test.</p></li>
+<li><p>For Lexhint 0.2.x, confirm a compatible schema-8 <code class="docutils literal notranslate"><span class="pre">runtime</span></code> dataset is published and installable.</p></li>
+<li><p>Run the URL, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.</p></li>
+</ul>
+<ol class="arabic simple" start="2">
 <li><p>Create an annotated Git tag for the target release, for example <code class="docutils literal notranslate"><span class="pre">vX.Y.Z</span></code>, only after all release gates pass.</p></li>
 <li><p>Install a clean environment with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">&quot;.[dev]&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-r</span> <span class="pre">docs/requirements.txt</span></code>.</p></li>
 <li><p>Run <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code>.</p></li>

@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/polynorm_benchmark/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.5"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_ref: "v0.8.7"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 

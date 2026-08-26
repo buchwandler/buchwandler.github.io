@@ -5,8 +5,8 @@ permalink: /tools/ssmd/syntax/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "9fda4e532699353407751582398a9a8c036f2408"
+docs_ref: "v0.8.4"
+docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
 search_enabled: true
 ---
 
@@ -714,6 +714,11 @@ will be preserved as literal ellipsis in your text. :::</p>
 <p class="rubric" id="voice-selection">Voice Selection</p>
 <p>SSMD supports two ways to specify voices: <strong>inline annotations</strong> for short phrases and
 <strong>block directives</strong> for longer passages (ideal for dialogue and scripts).</p>
+<p>A voice block may be compact when its content fits on the same line:
+<code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;host&quot;&gt;Hello.&lt;/div&gt;</span></code>. Compact and multiline blocks are equivalent for
+parsing, reference discovery, materialization, and round-trip validation. Voice
+references may be logical roles resolved through <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> or concrete provider
+IDs.</p>
 <p class="rubric" id="inline-voice-annotations">Inline Voice Annotations</p>
 <p>Perfect for short voice changes within a sentence:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple voice name</span>
@@ -792,6 +797,11 @@ will be preserved as literal ellipsis in your text. :::</p>
 <li><p>Automatically detected on SSML→SSMD conversion for long voice blocks</p></li>
 <li><p>Much more readable than inline annotations for dialogue</p></li>
 </ul>
+</div></blockquote>
+<blockquote>
+<div><p>Generated front-matter bindings are defaults. An empty <code class="docutils literal notranslate"><span class="pre">voice_bindings:</span> <span class="pre">{}</span></code> mapping
+may be populated, missing provider or role entries may be added recursively, and
+explicit nested bindings always take precedence.</p>
 <p>Mixing inline and directive syntax:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Block directive for main speaker, inline for interruptions</span>
 <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
@@ -898,6 +908,22 @@ values generally provide more detailed pronunciation.</p>
 <li><p>Rate: 1=x-slow, 2=slow, 3=medium, 4=fast, 5=x-fast</p></li>
 <li><p>Pitch: 1=x-low, 2=low, 3=medium, 4=high, 5=x-high</p></li>
 </ul>
+<p class="rubric" id="compact-vrp-syntax">Compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code> syntax</p>
+<p>Pack volume, rate, and pitch into exactly three digits in V/R/P order:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[text]{vrp=&quot;555&quot;}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The valid shape is <code class="docutils literal notranslate"><span class="pre">[0-5][1-5][1-5]</span></code>: volume accepts <code class="docutils literal notranslate"><span class="pre">0-5</span></code>, and rate/pitch accept <code class="docutils literal notranslate"><span class="pre">1-5</span></code>.
+Surrounding whitespace is allowed; embedded separators are not. Explicit long names
+override short aliases, which override the corresponding packed component. The same
+compact syntax is supported on <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> directives.</p>
+<p class="rubric" id="symbolic-shorthand">Symbolic shorthand</p>
+<p>The required aliases are <code class="docutils literal notranslate"><span class="pre">++text++</span></code> (x-loud volume), <code class="docutils literal notranslate"><span class="pre">&gt;&gt;text&gt;&gt;</span></code> (x-fast rate), and
+<code class="docutils literal notranslate"><span class="pre">^^text^^</span></code> (x-high pitch). The non-conflicting compatible forms are also supported:
+<code class="docutils literal notranslate"><span class="pre">~text~</span></code>, <code class="docutils literal notranslate"><span class="pre">--text--</span></code>, <code class="docutils literal notranslate"><span class="pre">-text-</span></code>, <code class="docutils literal notranslate"><span class="pre">+text+</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;&lt;text&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;text&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;text&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">__text__</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">^text^</span></code>. The existing <code class="docutils literal notranslate"><span class="pre">_text_</span></code> syntax remains reduced emphasis, not low pitch, for
+compatibility. All aliases normalize to canonical explicit prosody attributes when
+semantically formatted.</p>
 <p class="rubric" id="relative-values">Relative Values</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decibels for volume</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[louder]{volume=&quot;+6dB&quot;}&#39;</span><span class="p">)</span>

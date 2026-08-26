@@ -5,8 +5,14 @@
     {
       "url": "/tools/readio/main/changelog/",
       "title": "readio Changelog",
-      "snippet": "Added local text playback from literals, files, standard input, and live paragraph streams\n\n\nAdded bounded-memory WAV rendering and explicit …",
+      "snippet": "Added speech-friendly Markdown input for files, stdin, and literal text\nAdded local text playback from literals, files, standard input, and …",
       "sections": [
+        {
+          "anchor": "",
+          "heading": "Added¶",
+          "text": "Added speech-friendly Markdown input for files, stdin, and literal text",
+          "lower": "added speech-friendly markdown input for files, stdin, and literal text"
+        },
         {
           "anchor": "",
           "heading": "Added¶",
@@ -47,8 +53,8 @@
         {
           "anchor": "",
           "heading": "Quick start¶",
-          "text": "Read literal text, a file, or standard input:\n\nreadio speak \"Hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"Read this text.\" | readio speak\n\n\n\n\nRender a WAV file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nWith no explicit output path, Readio writes a uniquely named WAV file below the configured output directory. Existing files are not overwritten unless --force is supplied for an explicit path.",
-          "lower": "read literal text, a file, or standard input:\n\nreadio speak \"hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"read this text.\" | readio speak\n\n\n\n\nrender a wav file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nwith no explicit output path, readio writes a uniquely named wav file below the configured output directory. existing files are not overwritten unless --force is supplied for an explicit path."
+          "text": "Read literal text, a file, or standard input:\n\nreadio speak \"Hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"Read this text.\" | readio speak\n\n\n\n\nRender a WAV file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nWith no explicit output path, Readio writes a uniquely named WAV file below the configured output directory. Existing files are not overwritten unless --force is supplied for an explicit path.\n\nMarkdown is a first-class input format. Files ending in .md, .markdown, .mdown, or .mkd are parsed before synthesis; use --input-format markdown for Markdown from stdin or literal text:\n\nreadio speak --file README.md\nreadio render --file docs/design.md\ncat README.md | readio speak --input-format markdown\n\n\n\n\nHeadings, lists, links, images, code…",
+          "lower": "read literal text, a file, or standard input:\n\nreadio speak \"hello from the terminal.\"\nreadio speak --file notes.md\nprintf '%s\\n' \"read this text.\" | readio speak\n\n\n\n\nrender a wav file instead of playing audio:\n\nreadio render --file notes.md -o notes.wav\n\n\n\n\nwith no explicit output path, readio writes a uniquely named wav file below the configured output directory. existing files are not overwritten unless --force is supplied for an explicit path.\n\nmarkdown is a first-class input format. files ending in .md, .markdown, .mdown, or .mkd are parsed before synthesis; use --input-format markdown for markdown from stdin or literal text:\n\nreadio speak --file readme.md\nreadio render --file docs/design.md\ncat readme.md | readio speak --input-format markdown\n\n\n\n\nheadings, lists, links, images, code…"
         },
         {
           "anchor": "",

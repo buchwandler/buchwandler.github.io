@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 870481b3c375c79d3cef9d122d1a0b8db3c3f955
+source_commit: 2b289122f180d1845d24d9ab320fca1790d53dac
 source_url: https://github.com/buchwandler/spokenform/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.3.0
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.0
+release_tag: v0.3.1
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.0
+  ref: v0.3.1
   url: /tools/spokenform/
   current: false
 - name: main

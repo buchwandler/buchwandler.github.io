@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "870481b3c375c79d3cef9d122d1a0b8db3c3f955"
+docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
 search_enabled: true
 ---
 
@@ -834,6 +834,7 @@ locale grammar.</p>
 </section>
 <section id="lexhint-evidence-provider">
 <h2>Lexhint evidence provider</h2>
+<p>Lexhint <code class="docutils literal notranslate"><span class="pre">0.1.2</span> <span class="pre">&lt;=</span> <span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">0.3.0</span></code> is supported as an optional provider. Lexhint 0.1.x uses schema-7 artifacts, while Lexhint 0.2.x requires schema-8 artifacts installed separately with <code class="docutils literal notranslate"><span class="pre">lexhint</span> <span class="pre">dataset</span> <span class="pre">download</span> <span class="pre">&lt;language&gt;</span> <span class="pre">--variant</span> <span class="pre">runtime</span></code>. Spokenform never downloads datasets automatically.</p>
 <p>Pass an installed Lexhint runtime <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code> explicitly through <code class="docutils literal notranslate"><span class="pre">lexical_evidence</span></code>. No dataset is resolved or downloaded when the argument is omitted. URL lexical segmentation may work with a lexical-only provider. Contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lexhint</span><span class="w"> </span><span class="kn">import</span> <span class="n">Lexicon</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare</span>

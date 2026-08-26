@@ -15,15 +15,15 @@
         },
         {
           "anchor": "",
-          "heading": "Paragraph-wise rendering",
-          "text": "prepare_units() prepares the complete document once, then renders selected paragraphs\none at a time. This preserves document-global SSMD offsets, voice bindings, pauses, and\nmarker ownership while bounding live generated waveform memory:\n\nfrom pathlib import Path\n\nimport soundfile as sf\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\nwith KokoroPipeline(PipelineConfig(voice=\"af_sarah\")) as pipeline:\n    with pipeline.prepare_units(script, unit=\"paragraph\") as prepared:\n        for result in prepared.render(skip_indices={0, 1}):\n            try:\n                sf.write(\n                    Path(f\"paragraph-{result.descriptor.index:04d}.wav\"),\n                    result.audio,\n                    result.sample_rate,\n                )\n            finally:\n                result.releas…",
-          "lower": "prepare_units() prepares the complete document once, then renders selected paragraphs\none at a time. this preserves document-global ssmd offsets, voice bindings, pauses, and\nmarker ownership while bounding live generated waveform memory:\n\nfrom pathlib import path\n\nimport soundfile as sf\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\nwith kokoropipeline(pipelineconfig(voice=\"af_sarah\")) as pipeline:\n    with pipeline.prepare_units(script, unit=\"paragraph\") as prepared:\n        for result in prepared.render(skip_indices={0, 1}):\n            try:\n                sf.write(\n                    path(f\"paragraph-{result.descriptor.index:04d}.wav\"),\n                    result.audio,\n                    result.sample_rate,\n                )\n            finally:\n                result.releas…"
+          "heading": "Unit-wise rendering",
+          "text": "prepare_units() prepares the complete document once, then renders selected paragraph\nor sentence units one at a time. This preserves document-global SSMD offsets, voice\nbindings, pauses, and marker ownership while bounding live generated waveform memory to\nthe selected unit:\n\nfrom pathlib import Path\n\nimport soundfile as sf\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\nwith KokoroPipeline(PipelineConfig(voice=\"af_sarah\")) as pipeline:\n    with pipeline.prepare_units(script, unit=\"paragraph\") as prepared:\n        for result in prepared.render(skip_indices={0, 1}):\n            try:\n                sf.write(\n                    Path(f\"paragraph-{result.descriptor.index:04d}.wav\"),\n                    result.audio,\n                    result.sample_rate,\n                )…",
+          "lower": "prepare_units() prepares the complete document once, then renders selected paragraph\nor sentence units one at a time. this preserves document-global ssmd offsets, voice\nbindings, pauses, and marker ownership while bounding live generated waveform memory to\nthe selected unit:\n\nfrom pathlib import path\n\nimport soundfile as sf\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\nwith kokoropipeline(pipelineconfig(voice=\"af_sarah\")) as pipeline:\n    with pipeline.prepare_units(script, unit=\"paragraph\") as prepared:\n        for result in prepared.render(skip_indices={0, 1}):\n            try:\n                sf.write(\n                    path(f\"paragraph-{result.descriptor.index:04d}.wav\"),\n                    result.audio,\n                    result.sample_rate,\n                )…"
         },
         {
           "anchor": "",
           "heading": "SSMD 0.8 metadata",
-          "text": "Portable YAML headers can define logical voices, pause defaults, title metadata, and\nmarkers. Bind logical roles to provider voices through SSMDRenderConfig and render\nparagraph units with the same lifecycle shown above. See\nexamples/paragraph_ssmd_voices.py for a complete script and marker offsets.",
-          "lower": "portable yaml headers can define logical voices, pause defaults, title metadata, and\nmarkers. bind logical roles to provider voices through ssmdrenderconfig and render\nparagraph units with the same lifecycle shown above. see\nexamples/paragraph_ssmd_voices.py for a complete script and marker offsets."
+          "text": "Portable YAML headers can define logical voices, pause defaults, title metadata, and\nmarkers. Bind logical roles to provider voices through SSMDRenderConfig and render\neither paragraph or sentence units with the same lifecycle shown above. See\nexamples/paragraph_ssmd_voices.py for a complete script and marker offsets.",
+          "lower": "portable yaml headers can define logical voices, pause defaults, title metadata, and\nmarkers. bind logical roles to provider voices through ssmdrenderconfig and render\neither paragraph or sentence units with the same lifecycle shown above. see\nexamples/paragraph_ssmd_voices.py for a complete script and marker offsets."
         },
         {
           "anchor": "",
@@ -42,6 +42,12 @@
           "heading": "Composable stages",
           "text": "The pipeline stages follow this order:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\nCustom stages can be injected into KokoroPipeline for tests, experiments, and\ndependency-light processing. Importing the pipeline and running fully custom stages does\nnot require ONNX Runtime. Default audio stages require one of the provider extras.",
           "lower": "the pipeline stages follow this order:\n\ndoc_parser -> g2p -> phoneme_processing -> audio_generation -> audio_postprocessing\n\ncustom stages can be injected into kokoropipeline for tests, experiments, and\ndependency-light processing. importing the pipeline and running fully custom stages does\nnot require onnx runtime. default audio stages require one of the provider extras."
+        },
+        {
+          "anchor": "",
+          "heading": "Word timings",
+          "text": "Timestamp-capable Kokoro ONNX models expose model-derived word timings from the named\nduration outputs pred_dur, pred_duration, or durations. The G2P alignment cache is\nschema-versioned; after upgrading, stale entries are rebuilt so alignment metadata is\navailable. WordTiming.start_sample and end_sample address the exact final waveform\nafter phrase cutting, trimming, prosody, pauses, and unit concatenation. Character\noffsets address document.clean_text, not source SSMD markup. If duration output is\nmissing or incomplete, the public timing list is empty rather than partially fabricated.\n\nWhen an external SSMD audio source replaces generated TTS, timings for that segment are\ncleared because model timings cannot describe the replacement audio. Unsupported\nwaveform-only models likewise return…",
+          "lower": "timestamp-capable kokoro onnx models expose model-derived word timings from the named\nduration outputs pred_dur, pred_duration, or durations. the g2p alignment cache is\nschema-versioned; after upgrading, stale entries are rebuilt so alignment metadata is\navailable. wordtiming.start_sample and end_sample address the exact final waveform\nafter phrase cutting, trimming, prosody, pauses, and unit concatenation. character\noffsets address document.clean_text, not source ssmd markup. if duration output is\nmissing or incomplete, the public timing list is empty rather than partially fabricated.\n\nwhen an external ssmd audio source replaces generated tts, timings for that segment are\ncleared because model timings cannot describe the replacement audio. unsupported\nwaveform-only models likewise return…"
         },
         {
           "anchor": "",
@@ -76,9 +82,15 @@
         },
         {
           "anchor": "",
-          "heading": "Paragraph unit streaming",
-          "text": "KokoroPipeline.prepare_units(text, unit=\"paragraph\") parses, phonemizes, and\npreprocesses the complete document once, then exposes deterministic paragraph\ndescriptors before any audio is generated. Rendered results own one final unit waveform\nand should be released after consumption:\n\nwith pipe.prepare_units(script) as prepared:\n    for result in prepared.render(skip_indices=completed_indices):\n        try:\n            consume(result.audio, result.sample_rate)\n        finally:\n            result.release_audio()",
-          "lower": "kokoropipeline.prepare_units(text, unit=\"paragraph\") parses, phonemizes, and\npreprocesses the complete document once, then exposes deterministic paragraph\ndescriptors before any audio is generated. rendered results own one final unit waveform\nand should be released after consumption:\n\nwith pipe.prepare_units(script) as prepared:\n    for result in prepared.render(skip_indices=completed_indices):\n        try:\n            consume(result.audio, result.sample_rate)\n        finally:\n            result.release_audio()"
+          "heading": "Unit streaming",
+          "text": "AudioUnitResult.word_timings uses sample offsets relative to that unit’s audio;\nAudioResult.word_timings uses offsets relative to the complete result waveform.\nchar_start and char_end refer to document.clean_text, not SSMD markup. Timings are\nderived only from named model duration outputs (pred_dur, pred_duration, or\ndurations); waveform-only or incomplete-duration models return [] rather than\nestimates. The timings follow the exact final waveform after phrase fallback, trimming,\nprosody, pauses, and unit concatenation, and timing lists are preserved by\nrelease_audio(). AudioUnitKind supports \"paragraph\" and \"sentence\"; paragraph\nremains the default for prepare_units() and iter_units(). unit_kind and\nsentence_idx identify the selected grouping on each descriptor. Preparation parses,\nphone…",
+          "lower": "audiounitresult.word_timings uses sample offsets relative to that unit’s audio;\naudioresult.word_timings uses offsets relative to the complete result waveform.\nchar_start and char_end refer to document.clean_text, not ssmd markup. timings are\nderived only from named model duration outputs (pred_dur, pred_duration, or\ndurations); waveform-only or incomplete-duration models return [] rather than\nestimates. the timings follow the exact final waveform after phrase fallback, trimming,\nprosody, pauses, and unit concatenation, and timing lists are preserved by\nrelease_audio(). audiounitkind supports \"paragraph\" and \"sentence\"; paragraph\nremains the default for prepare_units() and iter_units(). unit_kind and\nsentence_idx identify the selected grouping on each descriptor. preparation parses,\nphone…"
+        },
+        {
+          "anchor": "",
+          "heading": "Streaming playback",
+          "text": "KokoroPipeline.play_streaming(text, unit=\"sentence\", device=None, queue_size=2) uses\none persistent SoundDevicePlayer. It begins playback after the first rendered unit,\nqueues copied waveforms with bounded backpressure, and blocks until the final queued\nunit has finished. It creates no temporary WAV and does not concatenate a final\nwaveform. The queue capacity is pending waveform capacity in addition to the actively\nwritten waveform, not an exact startup prebuffer count. Empty input opens no device.\n\nplay_prepared_units() is the lower-level helper for callers that already own a\nprepared unit lifecycle. SoundDevicePlayer is also available for custom consumers; its\nsubmit() copy makes releasing a source AudioUnitResult after submission safe.\nSynthesis remains sequential on the caller thread…",
+          "lower": "kokoropipeline.play_streaming(text, unit=\"sentence\", device=none, queue_size=2) uses\none persistent sounddeviceplayer. it begins playback after the first rendered unit,\nqueues copied waveforms with bounded backpressure, and blocks until the final queued\nunit has finished. it creates no temporary wav and does not concatenate a final\nwaveform. the queue capacity is pending waveform capacity in addition to the actively\nwritten waveform, not an exact startup prebuffer count. empty input opens no device.\n\nplay_prepared_units() is the lower-level helper for callers that already own a\nprepared unit lifecycle. sounddeviceplayer is also available for custom consumers; its\nsubmit() copy makes releasing a source audiounitresult after submission safe.\nsynthesis remains sequential on the caller thread…"
         },
         {
           "anchor": "",
@@ -95,8 +107,8 @@
         {
           "anchor": "",
           "heading": "AudioResult",
-          "text": "AudioResult owns references to its final waveform and any raw or processed per-segment\nwaveforms. AudioResult.release_segment_audio() destructively and idempotently releases\nonly segment arrays, while AudioResult.release_audio() also replaces the final\nwaveform with an empty array of the same dtype. Metadata, markers, trace data, segments,\nand sample rate remain available. Callers should copy or retain result.audio\nseparately before releasing it if they need that array afterward.\n\nSet PipelineConfig(retain_segment_audio=False) for compact results when segment\nwaveforms are not needed. This reduces retained memory after generation, but\nwhole-result concatenation still occurs and peak memory remains dependent on input\nduration. run() retains whole-result concatenation semantics; use prepare…",
-          "lower": "audioresult owns references to its final waveform and any raw or processed per-segment\nwaveforms. audioresult.release_segment_audio() destructively and idempotently releases\nonly segment arrays, while audioresult.release_audio() also replaces the final\nwaveform with an empty array of the same dtype. metadata, markers, trace data, segments,\nand sample rate remain available. callers should copy or retain result.audio\nseparately before releasing it if they need that array afterward.\n\nset pipelineconfig(retain_segment_audio=false) for compact results when segment\nwaveforms are not needed. this reduces retained memory after generation, but\nwhole-result concatenation still occurs and peak memory remains dependent on input\nduration. run() retains whole-result concatenation semantics; use prepare…"
+          "text": "AudioResult owns references to its final waveform and any raw or processed per-segment\nwaveforms. AudioResult.release_segment_audio() destructively and idempotently releases\nonly segment arrays, while AudioResult.release_audio() also replaces the final\nwaveform with an empty array of the same dtype. Metadata, markers, trace data, segments,\nand sample rate remain available. Callers should copy or retain result.audio\nseparately before releasing it if they need that array afterward.\n\nAudioResult.play() and AudioUnitResult.play() provide optional direct system\nplayback. They import sounddevice lazily, block until playback completes, accept an\noptional device= selector, and never create a temporary file. Install playback support\nwith pip install \"pykokoro[playback]\"; Linux-like systems may als…",
+          "lower": "audioresult owns references to its final waveform and any raw or processed per-segment\nwaveforms. audioresult.release_segment_audio() destructively and idempotently releases\nonly segment arrays, while audioresult.release_audio() also replaces the final\nwaveform with an empty array of the same dtype. metadata, markers, trace data, segments,\nand sample rate remain available. callers should copy or retain result.audio\nseparately before releasing it if they need that array afterward.\n\naudioresult.play() and audiounitresult.play() provide optional direct system\nplayback. they import sounddevice lazily, block until playback completes, accept an\noptional device= selector, and never create a temporary file. install playback support\nwith pip install \"pykokoro[playback]\"; linux-like systems may als…"
         },
         {
           "anchor": "",
@@ -174,8 +186,14 @@
         {
           "anchor": "",
           "heading": "Saving Audio",
-          "text": "Using soundfile (recommended):\n\nimport soundfile as sf\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(\"Hello!\")\nsf.write(\"output.wav\", result.audio, result.sample_rate)",
-          "lower": "using soundfile (recommended):\n\nimport soundfile as sf\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(\"hello!\")\nsf.write(\"output.wav\", result.audio, result.sample_rate)"
+          "text": "Using soundfile (recommended):\n\nimport soundfile as sf\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(\"Hello!\")\nsf.write(\"output.wav\", result.audio, result.sample_rate)\n\n\n\n\nInstall the optional playback support:\n\npip install \"pykokoro[cpu,playback]\"\n\n\n\n\nThen play the generated waveform without creating an intermediate WAV file:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(\"Hello!\")\nresult.play()\n\n\n\n\nPlayback is blocking until the audio finishes. To select a particular output device:\n\nresult.play(device=\"Built-in Audio\")",
+          "lower": "using soundfile (recommended):\n\nimport soundfile as sf\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(\"hello!\")\nsf.write(\"output.wav\", result.audio, result.sample_rate)\n\n\n\n\ninstall the optional playback support:\n\npip install \"pykokoro[cpu,playback]\"\n\n\n\n\nthen play the generated waveform without creating an intermediate wav file:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(\"hello!\")\nresult.play()\n\n\n\n\nplayback is blocking until the audio finishes. to select a particular output device:\n\nresult.play(device=\"built-in audio\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Low-latency streaming playback",
+          "text": "For long text, play_streaming() starts playback after the first sentence and generates\nsubsequent sentence units while one persistent output stream consumes queued audio:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\nwith KokoroPipeline(PipelineConfig(voice=\"af_bella\")) as pipe:\n    pipe.play_streaming(\"First sentence. Second sentence. Third sentence.\")\n\n\n\n\nPreparation is still global; only audio generation and postprocessing are deferred per\nselected unit. The default bounded queue has capacity two and no temporary WAV or final\nconcatenated waveform is created.",
+          "lower": "for long text, play_streaming() starts playback after the first sentence and generates\nsubsequent sentence units while one persistent output stream consumes queued audio:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\nwith kokoropipeline(pipelineconfig(voice=\"af_bella\")) as pipe:\n    pipe.play_streaming(\"first sentence. second sentence. third sentence.\")\n\n\n\n\npreparation is still global; only audio generation and postprocessing are deferred per\nselected unit. the default bounded queue has capacity two and no temporary wav or final\nconcatenated waveform is created."
         },
         {
           "anchor": "",
@@ -251,6 +269,12 @@
         },
         {
           "anchor": "",
+          "heading": "Word timings",
+          "text": "Use sentence units when a GUI needs to coordinate source highlighting with streamed\naudio. Timing offsets are integer samples relative to AudioUnitResult.audio, and\nchar_start/char_end refer to DocumentResult.clean_text:\n\nwith pipeline.prepare_units(text, unit=\"sentence\") as prepared:\n    for result in prepared.render():\n        for word in result.word_timings:\n            source_span = text[word.char_start:word.char_end]\n            print(source_span, word.start_sample, word.end_sample)\n        result.release_audio()\n\n\n\n\nWaveform-only models return word_timings == []; PyKokoro does not silently estimate\ntimings. See examples/stream_with_word_timings.py for sample-cursor highlighting.",
+          "lower": "use sentence units when a gui needs to coordinate source highlighting with streamed\naudio. timing offsets are integer samples relative to audiounitresult.audio, and\nchar_start/char_end refer to documentresult.clean_text:\n\nwith pipeline.prepare_units(text, unit=\"sentence\") as prepared:\n    for result in prepared.render():\n        for word in result.word_timings:\n            source_span = text[word.char_start:word.char_end]\n            print(source_span, word.start_sample, word.end_sample)\n        result.release_audio()\n\n\n\n\nwaveform-only models return word_timings == []; pykokoro does not silently estimate\ntimings. see examples/stream_with_word_timings.py for sample-cursor highlighting."
+        },
+        {
+          "anchor": "",
           "heading": "Next Steps",
           "text": "Advanced Features - Voice blending, phoneme control, and more\n\n\nExamples - Real-world examples\n\n\nAPI Reference - Complete API documentation",
           "lower": "advanced features - voice blending, phoneme control, and more\n\n\nexamples - real-world examples\n\n\napi reference - complete api documentation"
@@ -260,13 +284,55 @@
     {
       "url": "/tools/pykokoro/main/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded polynorm benc …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded model-derived …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added model-derived word timings to audio results with clean-text offsets and sample\npositions",
+          "lower": "added model-derived word timings to audio results with clean-text offsets and sample\npositions"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Raised the minimum PhraseSplit version to 0.3.6 and the SSMD version to 0.8.4\n\n\nPlain-text sentence metadata now comes from the PhraseSplit operation that produced\nthe document segments",
+          "lower": "raised the minimum phrasesplit version to 0.3.6 and the ssmd version to 0.8.4\n\n\nplain-text sentence metadata now comes from the phrasesplit operation that produced\nthe document segments"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed timing alignment for named duration outputs and final-waveform transformations",
+          "lower": "fixed timing alignment for named duration outputs and final-waveform transformations"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Removed the separate plain-text PhraseSplit model-resolution preflight pass",
+          "lower": "removed the separate plain-text phrasesplit model-resolution preflight pass"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added low-startup-latency sentence streaming playback through one persistent bounded\noutput stream\n\n\nAdded sentence audio units to the prepared-unit rendering API\n\n\nAdded model-derived WordTiming metadata to audio results for timestamp-capable Kokoro\nmodels",
+          "lower": "added low-startup-latency sentence streaming playback through one persistent bounded\noutput stream\n\n\nadded sentence audio units to the prepared-unit rendering api\n\n\nadded model-derived wordtiming metadata to audio results for timestamp-capable kokoro\nmodels"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed public timing offsets and fallback ownership to track the final returned\nwaveform",
+          "lower": "fixed public timing offsets and fallback ownership to track the final returned\nwaveform"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented global document preparation with lazy sentence audio generation and\nstreaming examples\n\n\nDocumented clean-text character offsets, sample-domain timing semantics, and\nunsupported waveform behavior",
+          "lower": "documented global document preparation with lazy sentence audio generation and\nstreaming examples\n\n\ndocumented clean-text character offsets, sample-domain timing semantics, and\nunsupported waveform behavior"
         },
         {
           "anchor": "",
@@ -435,36 +501,6 @@
           "heading": "Documentation",
           "text": "Changed documentation with updated usage examples",
           "lower": "changed documentation with updated usage examples"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added German language support with ONNX model files",
-          "lower": "added german language support with onnx model files"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added threading support for concurrent audio generation",
-          "lower": "added threading support for concurrent audio generation"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed Windows cache path handling and default backend selection",
-          "lower": "fixed windows cache path handling and default backend selection"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed unit tests and mypy type errors",
-          "lower": "fixed unit tests and mypy type errors"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added integrated splitter into doc parsers, removing separate splitter pipeline\n\n\nAdded automatic language detection based on voice selection\n\n\nAdded improved SSMD parsing with better span handling",
-          "lower": "added integrated splitter into doc parsers, removing separate splitter pipeline\n\n\nadded automatic language detection based on voice selection\n\n\nadded improved ssmd parsing with better span handling"
         }
       ]
     },
@@ -494,8 +530,8 @@
         {
           "anchor": "",
           "heading": "Hello World",
-          "text": "The simplest example:\n\nimport soundfile as sf\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(\"Hello, world!\")\nsf.write(\"hello.wav\", result.audio, result.sample_rate)",
-          "lower": "the simplest example:\n\nimport soundfile as sf\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(\"hello, world!\")\nsf.write(\"hello.wav\", result.audio, result.sample_rate)"
+          "text": "The simplest example:\n\nfrom pykokoro import KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(PipelineConfig(voice=\"af_bella\"))\nresult = pipe.run(\"Hello, world!\")\n\n# Direct system playback, using the optional playback dependency:\nresult.play()\n\n# Or persist the waveform:\nresult.save_wav(\"hello.wav\")",
+          "lower": "the simplest example:\n\nfrom pykokoro import kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(pipelineconfig(voice=\"af_bella\"))\nresult = pipe.run(\"hello, world!\")\n\n# direct system playback, using the optional playback dependency:\nresult.play()\n\n# or persist the waveform:\nresult.save_wav(\"hello.wav\")"
         },
         {
           "anchor": "",
@@ -579,8 +615,8 @@
         {
           "anchor": "",
           "heading": "PyKokoro Documentation",
-          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nPortable SSMD 0.8 headers\n\nNext Steps\n\n\n\n\nInstallation Guide\nAndroid/Termux providers\n\nOther providers\n\nDependencies and optional spaCy\n\nGerman Martin assets\n\nSystem requirements\n\nVerify installation\n\nDevelopment installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nProsody Backend Selection\n\nPause Control\n\nText Normalization (Say-As)\n\nError H…",
-          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model. it\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nportable ssmd 0.8 headers\n\nnext steps\n\n\n\n\ninstallation guide\nandroid/termux providers\n\nother providers\n\ndependencies and optional spacy\n\ngerman martin assets\n\nsystem requirements\n\nverify installation\n\ndevelopment installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\nprosody backend selection\n\npause control\n\ntext normalization (say-as)\n\nerror h…"
+          "text": "PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\nContents:\n\n\nQuick Start Guide\nFirst Steps\n\nBasic Usage\n\nComplete Example\n\nPortable SSMD 0.8 headers\n\nNext Steps\n\n\n\n\nInstallation Guide\nAndroid/Termux providers\n\nOther providers\n\nDependencies and optional spaCy\n\nGerman Martin assets\n\nSystem requirements\n\nVerify installation\n\nDevelopment installation\n\nTroubleshooting\n\n\n\n\nBasic Usage\nInitializing the Pipeline\n\nGenerating Speech\n\nLow-latency streaming playback\n\nVoice Selection\n\nLanguage Settings\n\nLanguage-Aware spaCy Models\n\nSpeech Speed Control\n\nProsody Backend Selection\n\nPause Control\n\nText…",
+          "lower": "pykokoro is a python library for text-to-speech synthesis using the kokoro tts model. it\nprovides high-quality, natural-sounding speech generation with support for multiple\nlanguages, voices, and advanced features like pause control and text splitting.\n\n\ncontents:\n\n\nquick start guide\nfirst steps\n\nbasic usage\n\ncomplete example\n\nportable ssmd 0.8 headers\n\nnext steps\n\n\n\n\ninstallation guide\nandroid/termux providers\n\nother providers\n\ndependencies and optional spacy\n\ngerman martin assets\n\nsystem requirements\n\nverify installation\n\ndevelopment installation\n\ntroubleshooting\n\n\n\n\nbasic usage\ninitializing the pipeline\n\ngenerating speech\n\nlow-latency streaming playback\n\nvoice selection\n\nlanguage settings\n\nlanguage-aware spacy models\n\nspeech speed control\n\nprosody backend selection\n\npause control\n\ntext…"
         },
         {
           "anchor": "",
@@ -658,8 +694,8 @@
         {
           "anchor": "",
           "heading": "Dependencies and optional spaCy",
-          "text": "PyKokoro 0.8.3 requires kokorog2p[espeak,en]>=0.8.0,<0.9. The package installs\nkokorog2p, phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support\nlibraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and\ninstalls its compatible Spokenform and abbr2words dependencies transitively; do not\ninstall spokenform separately. spacy itself and language models are optional. The\ndefault tokenizer policy is safe on a clean install:\n\n\nuse_spacy=False disables spaCy;\n\n\nuse_spacy=None selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=True, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\nInstall a model only when you want spaCy-aware splitting or G2P:\n\npip instal…",
-          "lower": "pykokoro 0.8.3 requires kokorog2p[espeak,en]>=0.8.0,<0.9. the package installs\nkokorog2p, phrasplit, ssmd, numpy, audiosig, soundfile, and the other runtime support\nlibraries it needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and\ninstalls its compatible spokenform and abbr2words dependencies transitively; do not\ninstall spokenform separately. spacy itself and language models are optional. the\ndefault tokenizer policy is safe on a clean install:\n\n\nuse_spacy=false disables spacy;\n\n\nuse_spacy=none selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=true, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\ninstall a model only when you want spacy-aware splitting or g2p:\n\npip instal…"
+          "text": "PyKokoro’s current integration baseline requires phrasplit>=0.3.6,<0.4 and\nssmd>=0.8.4,<0.9, alongside kokorog2p[espeak,en]>=0.8.0,<0.9. The package installs\nphrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support libraries it\nneeds. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and installs its\ncompatible Spokenform and abbr2words dependencies transitively; do not install\nspokenform separately. spacy itself and language models are optional. The default\ntokenizer policy is safe on a clean install:\n\n\nuse_spacy=False disables spaCy;\n\n\nuse_spacy=None selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=True, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\nInstall…",
+          "lower": "pykokoro’s current integration baseline requires phrasplit>=0.3.6,<0.4 and\nssmd>=0.8.4,<0.9, alongside kokorog2p[espeak,en]>=0.8.0,<0.9. the package installs\nphrasplit, ssmd, numpy, audiosig, soundfile, and the other runtime support libraries it\nneeds. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and installs its\ncompatible spokenform and abbr2words dependencies transitively; do not install\nspokenform separately. spacy itself and language models are optional. the default\ntokenizer policy is safe on a clean install:\n\n\nuse_spacy=false disables spacy;\n\n\nuse_spacy=none selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=true, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\ninstall…"
         },
         {
           "anchor": "",
@@ -786,8 +822,8 @@
         {
           "anchor": "",
           "heading": "Plain text sentence splitting",
-          "text": "PlainTextDocumentParser uses the optional phrasplit package for sentence splitting.\nWhen phrasplit is unavailable, it falls back to a single segment. The language model\nis derived from generation.lang using spaCy package naming rules (for example\nen_core_web_sm for English).\n\nSplit boundaries are forced at SSMD pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. Set PYKOKORO_DEBUG_SEGMENTS=1 to log\nsegment offsets.",
-          "lower": "plaintextdocumentparser uses the optional phrasplit package for sentence splitting.\nwhen phrasplit is unavailable, it falls back to a single segment. the language model\nis derived from generation.lang using spacy package naming rules (for example\nen_core_web_sm for english).\n\nsplit boundaries are forced at ssmd pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. set pykokoro_debug_segments=1 to log\nsegment offsets."
+          "text": "PlainTextDocumentParser uses PhraseSplit 0.3.6’s offset-preserving detailed split API\nfor sentence splitting. The returned diagnostics come from the same operation that\nproduced the segments, so sentence-model metadata does not require a separate\nmodel-resolution pass. When phrasplit is unavailable, it falls back to a single\nsegment. PhraseSplit may resolve once per hard range; PyKokoro does not claim one\nresolution for the whole document. The language model is derived from generation.lang\nusing spaCy package naming rules (for example en_core_web_sm for English). Split\nboundaries are forced at SSMD pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. Set PYKOKORO_DEBUG_SEGMENTS=1 to log\nsegment offsets.",
+          "lower": "plaintextdocumentparser uses phrasesplit 0.3.6’s offset-preserving detailed split api\nfor sentence splitting. the returned diagnostics come from the same operation that\nproduced the segments, so sentence-model metadata does not require a separate\nmodel-resolution pass. when phrasplit is unavailable, it falls back to a single\nsegment. phrasesplit may resolve once per hard range; pykokoro does not claim one\nresolution for the whole document. the language model is derived from generation.lang\nusing spacy package naming rules (for example en_core_web_sm for english). split\nboundaries are forced at ssmd pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. set pykokoro_debug_segments=1 to log\nsegment offsets."
         },
         {
           "anchor": "",

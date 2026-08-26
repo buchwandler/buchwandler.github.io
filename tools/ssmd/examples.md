@@ -5,8 +5,8 @@ permalink: /tools/ssmd/examples/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "9fda4e532699353407751582398a9a8c036f2408"
+docs_ref: "v0.8.4"
+docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
 search_enabled: true
 ---
 
@@ -1167,8 +1167,13 @@ useful for building custom TTS pipelines.</p>
     <span class="n">voice_name</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">compact_script</span> <span class="o">=</span> <span class="s1">&#39;&lt;div voice=&quot;sarah&quot;&gt;Welcome.&lt;/div&gt;&#39;</span>
+<span class="k">assert</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">compact_script</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sarah&quot;</span>
 </pre></div>
 </div>
+<p>Compact voice blocks are also supported and have the same parsing and reference
+behavior.</p>
 <p class="rubric" id="custom-tts-pipeline">Custom TTS Pipeline</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
 

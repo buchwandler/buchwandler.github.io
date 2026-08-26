@@ -40,8 +40,14 @@
         {
           "anchor": "",
           "heading": "split_text",
-          "text": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str | None = None, apply_corrections: bool = True, split_on_colon: bool = True, use_spacy: bool | None = None, *, language: str = 'en', model_size: Literal['sm', 'md', 'lg', 'trf'] | None = None) → list[Segment][source]\nSplit text into segments with hierarchical position information.\n\nThis function provides a unified interface for text splitting with different\ngranularity levels, while preserving paragraph and sentence structure information.\nUseful for audiobook generation where different pause lengths are needed\nbetween paragraphs vs. sentences vs. clauses.\n\n\nParameters:\n\ntext – Input text to split\n\n\nmode – Splitting mode. Valid values are \"paragraph\", \"sentence\",\nand \"clause\".\n\n\nlanguage_model – Language model name…",
-          "lower": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str | none = none, apply_corrections: bool = true, split_on_colon: bool = true, use_spacy: bool | none = none, *, language: str = 'en', model_size: literal['sm', 'md', 'lg', 'trf'] | none = none) → list[segment][source]\nsplit text into segments with hierarchical position information.\n\nthis function provides a unified interface for text splitting with different\ngranularity levels, while preserving paragraph and sentence structure information.\nuseful for audiobook generation where different pause lengths are needed\nbetween paragraphs vs. sentences vs. clauses.\n\n\nparameters:\n\ntext – input text to split\n\n\nmode – splitting mode. valid values are \"paragraph\", \"sentence\",\nand \"clause\".\n\n\nlanguage_model – language model name…"
+          "text": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str | None = None, apply_corrections: bool = True, split_on_colon: bool = True, use_spacy: bool | None = None, *, language: str = 'en', model_size: Literal['sm', 'md', 'lg', 'trf'] | None = None) → list[Segment][source]\nCompatibility wrapper returning only segments from a detailed split.\n\n\n\nExample:\n\nfrom phrasplit import split_text, Segment\n\ntext = \"First sentence. Second sentence.\\n\\nNew paragraph.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"P{seg.paragraph} S{seg.sentence}: {seg.text}\")\n# P0 S0: First sentence.\n# P0 S1: Second sentence.\n# P1 S0: New paragraph.\n\n# Clause mode for finer granularity\ntext = \"Hello, world.\\n\\nGoodbye, friend.\"\nsegments = split_text(text, mode=\"clause…",
+          "lower": "phrasplit.split_text(text: str, mode: str = 'sentence', language_model: str | none = none, apply_corrections: bool = true, split_on_colon: bool = true, use_spacy: bool | none = none, *, language: str = 'en', model_size: literal['sm', 'md', 'lg', 'trf'] | none = none) → list[segment][source]\ncompatibility wrapper returning only segments from a detailed split.\n\n\n\nexample:\n\nfrom phrasplit import split_text, segment\n\ntext = \"first sentence. second sentence.\\n\\nnew paragraph.\"\nsegments = split_text(text, mode=\"sentence\")\n\nfor seg in segments:\n    print(f\"p{seg.paragraph} s{seg.sentence}: {seg.text}\")\n# p0 s0: first sentence.\n# p0 s1: second sentence.\n# p1 s0: new paragraph.\n\n# clause mode for finer granularity\ntext = \"hello, world.\\n\\ngoodbye, friend.\"\nsegments = split_text(text, mode=\"clause…"
+        },
+        {
+          "anchor": "",
+          "heading": "split_text_with_diagnostics",
+          "text": "phrasplit.split_text_with_diagnostics(text: str, mode: str = 'sentence', language_model: str | None = None, apply_corrections: bool = True, split_on_colon: bool = True, use_spacy: bool | None = None, *, language: str = 'en', model_size: Literal['sm', 'md', 'lg', 'trf'] | None = None) → SplitTextResult[source]\n\nSplit text and return segments with the resolution used for the operation.\n\nThis function provides a unified interface for text splitting with different\ngranularity levels, preserving paragraph and sentence structure information\nwhile exposing backend/model diagnostics without a second resolution pass.\nUseful for integrations that need to report or map the selected backend.\nArgs:\n\n\ntext: Input text to split\nmode: Splitting mode. Valid values are \"paragraph\", \"sentence\",\n\n\nand \"clau…",
+          "lower": "phrasplit.split_text_with_diagnostics(text: str, mode: str = 'sentence', language_model: str | none = none, apply_corrections: bool = true, split_on_colon: bool = true, use_spacy: bool | none = none, *, language: str = 'en', model_size: literal['sm', 'md', 'lg', 'trf'] | none = none) → splittextresult[source]\n\nsplit text and return segments with the resolution used for the operation.\n\nthis function provides a unified interface for text splitting with different\ngranularity levels, preserving paragraph and sentence structure information\nwhile exposing backend/model diagnostics without a second resolution pass.\nuseful for integrations that need to report or map the selected backend.\nargs:\n\n\ntext: input text to split\nmode: splitting mode. valid values are \"paragraph\", \"sentence\",\n\n\nand \"clau…"
         },
         {
           "anchor": "",
@@ -52,8 +58,8 @@
         {
           "anchor": "",
           "heading": "Offset APIs",
-          "text": "phrasplit.split_with_offsets(text: str, *, mode: str = 'sentence', use_spacy: bool | None = None, language_model: str | None = None, language: str = 'en', model_size: Literal['sm', 'md', 'lg', 'trf'] | None = None, apply_corrections: bool = True, max_chars: int | None = None, inline_markup: bool = False) → list[SplitSegment][source]\nSplit text into segments with character offsets and stable IDs.\n\nThis is the main API for offset-preserving segmentation, designed for\ndownstream processing where exact character positions are critical.\n\nExact-Slice Policy\n\nThis function implements the exact-slice policy. For every returned segment,\nthe following invariant ALWAYS holds:\n\nsegment.text == text[segment.char_start:segment.char_end]\n\n\n\n\nThis guarantee means:\n\n\nOffsets map precisely to the original…",
-          "lower": "phrasplit.split_with_offsets(text: str, *, mode: str = 'sentence', use_spacy: bool | none = none, language_model: str | none = none, language: str = 'en', model_size: literal['sm', 'md', 'lg', 'trf'] | none = none, apply_corrections: bool = true, max_chars: int | none = none, inline_markup: bool = false) → list[splitsegment][source]\nsplit text into segments with character offsets and stable ids.\n\nthis is the main api for offset-preserving segmentation, designed for\ndownstream processing where exact character positions are critical.\n\nexact-slice policy\n\nthis function implements the exact-slice policy. for every returned segment,\nthe following invariant always holds:\n\nsegment.text == text[segment.char_start:segment.char_end]\n\n\n\n\nthis guarantee means:\n\n\noffsets map precisely to the original…"
+          "text": "phrasplit.split_with_offsets_with_diagnostics(text: str, *, mode: str = 'sentence', use_spacy: bool | None = None, language_model: str | None = None, language: str = 'en', model_size: Literal['sm', 'md', 'lg', 'trf'] | None = None, apply_corrections: bool = True, max_chars: int | None = None, inline_markup: bool = False) → SplitWithOffsetsResult[source]\nSplit text into offset-preserving segments with backend diagnostics.\n\nThe returned SplitWithOffsetsResult contains the exact segments produced\nby this operation and the SplitDiagnostics for its backend/model choice.\nThis is the main API for offset-preserving segmentation, designed for\ndownstream processing where exact character positions are critical.\n\nExact-Slice Policy\n\nThis function implements the exact-slice policy. For every returned…",
+          "lower": "phrasplit.split_with_offsets_with_diagnostics(text: str, *, mode: str = 'sentence', use_spacy: bool | none = none, language_model: str | none = none, language: str = 'en', model_size: literal['sm', 'md', 'lg', 'trf'] | none = none, apply_corrections: bool = true, max_chars: int | none = none, inline_markup: bool = false) → splitwithoffsetsresult[source]\nsplit text into offset-preserving segments with backend diagnostics.\n\nthe returned splitwithoffsetsresult contains the exact segments produced\nby this operation and the splitdiagnostics for its backend/model choice.\nthis is the main api for offset-preserving segmentation, designed for\ndownstream processing where exact character positions are critical.\n\nexact-slice policy\n\nthis function implements the exact-slice policy. for every returned…"
         },
         {
           "anchor": "",
@@ -72,6 +78,55 @@
           "heading": "Type Information",
           "text": "phrasplit is fully typed and includes a py.typed marker file for PEP 561 compliance.\nYou can use it with mypy and other type checkers.\n\nFunction signatures:\n\nfrom typing import NamedTuple\n\nclass Segment(NamedTuple):\n    text: str\n    paragraph: int\n    sentence: int | None = None\n\ndef split_sentences(\n    text: str,\n    language_model: str | None = None,\n    apply_corrections: bool = True,\n    split_on_colon: bool = True,\n    use_spacy: bool | None = None,\n    *,\n    language: str = \"en\",\n    model_size: str | None = None,\n) -> list[str]: ...\n\ndef split_clauses(\n    text: str,\n    language_model: str | None = None,\n    use_spacy: bool | None = None,\n    *,\n    language: str = \"en\",\n    model_size: str | None = None,\n) -> list[str]: ...\n\ndef split_paragraphs(text: str) -> list[str]: ...\n\nd…",
           "lower": "phrasplit is fully typed and includes a py.typed marker file for pep 561 compliance.\nyou can use it with mypy and other type checkers.\n\nfunction signatures:\n\nfrom typing import namedtuple\n\nclass segment(namedtuple):\n    text: str\n    paragraph: int\n    sentence: int | none = none\n\ndef split_sentences(\n    text: str,\n    language_model: str | none = none,\n    apply_corrections: bool = true,\n    split_on_colon: bool = true,\n    use_spacy: bool | none = none,\n    *,\n    language: str = \"en\",\n    model_size: str | none = none,\n) -> list[str]: ...\n\ndef split_clauses(\n    text: str,\n    language_model: str | none = none,\n    use_spacy: bool | none = none,\n    *,\n    language: str = \"en\",\n    model_size: str | none = none,\n) -> list[str]: ...\n\ndef split_paragraphs(text: str) -> list[str]: ...\n\nd…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phrasplit/changelog/",
+      "title": "phrasplit Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\n\n\n\nAll notable chan …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\n\n\n\nAll notable changes to this project will be documented in this file.\n\nThe format is based on Keep a Changelog, and\nthis project adheres to Semantic Versioning.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead.\n\n\n\nall notable changes to this project will be documented in this file.\n\nthe format is based on keep a changelog, and\nthis project adheres to semantic versioning."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added detailed offset splitting with backend diagnostics from one operation",
+          "lower": "added detailed offset splitting with backend diagnostics from one operation"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed split_with_offsets() to delegate to detailed offset splitting while preserving\nlist results",
+          "lower": "changed split_with_offsets() to delegate to detailed offset splitting while preserving\nlist results"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added detailed split results with backend and model diagnostics while preserving the\nexisting list-returning API",
+          "lower": "added detailed split results with backend and model diagnostics while preserving the\nexisting list-returning api"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Added highest-quality local spaCy model selection without downloads\n\n\nDocumented local model selection, language controls, and CLI usage\n\n\nImproved resolver diagnostics, deterministic tests, and package verification",
+          "lower": "added highest-quality local spacy model selection without downloads\n\n\ndocumented local model selection, language controls, and cli usage\n\n\nimproved resolver diagnostics, deterministic tests, and package verification"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added inline_markup parameter for XHTML inline tag handling",
+          "lower": "added inline_markup parameter for xhtml inline tag handling"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed repository URL to buchwandler/phrasplit",
+          "lower": "changed repository url to buchwandler/phrasplit"
         }
       ]
     },
@@ -368,6 +423,12 @@
         },
         {
           "anchor": "",
+          "heading": "Backend and Model Diagnostics",
+          "text": "Use split_text_with_diagnostics() when ordinary Segment objects are sufficient. Use\nsplit_with_offsets_with_diagnostics() when source offsets are part of the integration\ncontract. For TTS, token-alignment, and markup pipelines, prefer the offset-preserving\ndetailed API so diagnostics describe the same operation that produced the offsets.\n\nfrom phrasplit import split_with_offsets_with_diagnostics\n\ntext = \"Hello. World.\"\nresult = split_with_offsets_with_diagnostics(\n    \"Hello. World.\",\n    mode=\"sentence\",\n    language=\"en\",\n    use_spacy=None,\n)\ndiagnostics = result.diagnostics\n\nfor segment in result.segments:\n    assert segment.text == text[segment.char_start:segment.char_end]\n    process(segment.text)\n\n\n\n\nDo not pre-resolve a spaCy model merely to produce metadata. The detailed offset A…",
+          "lower": "use split_text_with_diagnostics() when ordinary segment objects are sufficient. use\nsplit_with_offsets_with_diagnostics() when source offsets are part of the integration\ncontract. for tts, token-alignment, and markup pipelines, prefer the offset-preserving\ndetailed api so diagnostics describe the same operation that produced the offsets.\n\nfrom phrasplit import split_with_offsets_with_diagnostics\n\ntext = \"hello. world.\"\nresult = split_with_offsets_with_diagnostics(\n    \"hello. world.\",\n    mode=\"sentence\",\n    language=\"en\",\n    use_spacy=none,\n)\ndiagnostics = result.diagnostics\n\nfor segment in result.segments:\n    assert segment.text == text[segment.char_start:segment.char_end]\n    process(segment.text)\n\n\n\n\ndo not pre-resolve a spacy model merely to produce metadata. the detailed offset a…"
+        },
+        {
+          "anchor": "",
           "heading": "Character Offsets",
           "text": "All char_start and char_end values are in the coordinate space of the input\ntext\n\n\nOffsets are 0-based with exclusive end positions (Python slice convention)\n\n\nOffsets are measured in Unicode code points (characters), not bytes",
           "lower": "all char_start and char_end values are in the coordinate space of the input\ntext\n\n\noffsets are 0-based with exclusive end positions (python slice convention)\n\n\noffsets are measured in unicode code points (characters), not bytes"
@@ -532,8 +593,20 @@
         {
           "anchor": "",
           "heading": "Optional inline XHTML markup",
-          "text": "The regex backend can preserve balanced inline XHTML tags with inline_markup=True. The\noption is opt-in, keeps exact source slices, and rejects an explicit spaCy backend.\nPlain-text behavior is unchanged when it is omitted.\n\nfrom phrasplit import split_with_offsets\n\ntext = \"One. <em>Two.</em> Three.\"\nsegments = split_with_offsets(text, use_spacy=False, inline_markup=True)\nassert [segment.text for segment in segments] == [\n    \"One.\", \"<em>Two.</em>\", \"Three.\"\n]\nassert all(text[s.char_start:s.char_end] == s.text for s in segments)\n\n\n\n\nPassing inline_markup=True with use_spacy=True raises ValueError because this mode\ndepends on regex tag balancing.",
-          "lower": "the regex backend can preserve balanced inline xhtml tags with inline_markup=true. the\noption is opt-in, keeps exact source slices, and rejects an explicit spacy backend.\nplain-text behavior is unchanged when it is omitted.\n\nfrom phrasplit import split_with_offsets\n\ntext = \"one. <em>two.</em> three.\"\nsegments = split_with_offsets(text, use_spacy=false, inline_markup=true)\nassert [segment.text for segment in segments] == [\n    \"one.\", \"<em>two.</em>\", \"three.\"\n]\nassert all(text[s.char_start:s.char_end] == s.text for s in segments)\n\n\n\n\npassing inline_markup=true with use_spacy=true raises valueerror because this mode\ndepends on regex tag balancing."
+          "text": "The regex backend can preserve balanced inline XHTML tags with inline_markup=True. The\noption is opt-in, keeps exact source slices, and rejects an explicit spaCy backend.\nPlain-text behavior is unchanged when it is omitted.\n\nfrom phrasplit import split_with_offsets\n\ntext = \"One. <em>Two.</em> Three.\"\nsegments = split_with_offsets(text, use_spacy=False, inline_markup=True)\nassert [segment.text for segment in segments] == [\n    \"One.\", \"<em>Two.</em>\", \"Three.\"\n]\nassert all(text[s.char_start:s.char_end] == s.text for s in segments)",
+          "lower": "the regex backend can preserve balanced inline xhtml tags with inline_markup=true. the\noption is opt-in, keeps exact source slices, and rejects an explicit spacy backend.\nplain-text behavior is unchanged when it is omitted.\n\nfrom phrasplit import split_with_offsets\n\ntext = \"one. <em>two.</em> three.\"\nsegments = split_with_offsets(text, use_spacy=false, inline_markup=true)\nassert [segment.text for segment in segments] == [\n    \"one.\", \"<em>two.</em>\", \"three.\"\n]\nassert all(text[s.char_start:s.char_end] == s.text for s in segments)"
+        },
+        {
+          "anchor": "",
+          "heading": "Backend diagnostics without a second resolution pass",
+          "text": "When an integration needs both exact source offsets and the backend/model selected for\nthat operation, use the detailed offset API:\n\nfrom phrasplit import split_with_offsets_with_diagnostics\n\ntext = \"Hello. World.\"\nresult = split_with_offsets_with_diagnostics(text, language=\"en\")\n\nprint(result.diagnostics.backend)\nprint(result.diagnostics.selected_model)\nfor segment in result.segments:\n    assert segment.text == text[segment.char_start:segment.char_end]\n\n\n\n\nThe diagnostics come from the same operation that produced result.segments; callers\nshould not pre-resolve a model merely to produce metadata. split_with_offsets()\nremains the backward-compatible list-returning wrapper. The exact-slice policy remains\nthe primary contract for both APIs.",
+          "lower": "when an integration needs both exact source offsets and the backend/model selected for\nthat operation, use the detailed offset api:\n\nfrom phrasplit import split_with_offsets_with_diagnostics\n\ntext = \"hello. world.\"\nresult = split_with_offsets_with_diagnostics(text, language=\"en\")\n\nprint(result.diagnostics.backend)\nprint(result.diagnostics.selected_model)\nfor segment in result.segments:\n    assert segment.text == text[segment.char_start:segment.char_end]\n\n\n\n\nthe diagnostics come from the same operation that produced result.segments; callers\nshould not pre-resolve a model merely to produce metadata. split_with_offsets()\nremains the backward-compatible list-returning wrapper. the exact-slice policy remains\nthe primary contract for both apis."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional inline XHTML markup",
+          "text": "Passing inline_markup=True with use_spacy=True raises ValueError because this mode\ndepends on regex tag balancing.",
+          "lower": "passing inline_markup=true with use_spacy=true raises valueerror because this mode\ndepends on regex tag balancing."
         },
         {
           "anchor": "",

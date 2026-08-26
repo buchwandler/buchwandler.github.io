@@ -5,8 +5,8 @@ permalink: /tools/spokenform/benchmarks/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "c9f0dff441dbee5df347994d39fd524666515af1"
+docs_ref: "v0.3.1"
+docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
 search_enabled: true
 ---
 
@@ -578,6 +578,11 @@ selection project.</p>
 </div>
 <p>The adapter caches the exact reviewed source commit <code class="docutils literal notranslate"><span class="pre">ba55d631a45a0fe8b3d87ad58beef2843c617151</span></code> and its verified experimental <code class="docutils literal notranslate"><span class="pre">0.1.0-exp</span></code> release under <code class="docutils literal notranslate"><span class="pre">.cache/spokenform-gold/&lt;commit&gt;/</span></code>. The default evaluates the <code class="docutils literal notranslate"><span class="pre">test</span></code> split and writes results under <code class="docutils literal notranslate"><span class="pre">benchmark-results/spokenform-gold/&lt;run-id&gt;/</span></code>, including <code class="docutils literal notranslate"><span class="pre">summary.json</span></code>, <code class="docutils literal notranslate"><span class="pre">rows.jsonl</span></code>, Gold JSONL/Markdown artifacts, and a self-contained <code class="docutils literal notranslate"><span class="pre">report.html</span></code>.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--offline</span></code> after the cache is populated, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> to rebuild it, <code class="docutils literal notranslate"><span class="pre">--download-only</span></code> to populate without evaluation, <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> to relocate the cache, <code class="docutils literal notranslate"><span class="pre">--gold-root</span></code> for an explicit local release, <code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">dev|test|all</span></code>, <code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">canonical|accepted</span></code>, and <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">none</span></code> to disable HTML. Gold remains diagnostic and does not automatically hydrate restricted PolyNorm or Proteno source references.</p>
+</section>
+<section id="lexhint-a-b-comparison">
+<h2>Lexhint A/B comparison</h2>
+<p>Compare the existing provider-free configuration with the same configuration plus a pinned Lexhint runtime artifact. Keep Spokenform, abbr2words, language, profile, and benchmark inputs fixed. Record the Spokenform commit/version, abbr2words version, Lexhint package version, dataset version, schema version, variant, language, and profile.</p>
+<p>Review URL, version, identifier, and sports families separately. The provider-free run is the compatibility baseline. Lexhint is successful only when URL rendering improves and contextual true positives increase without material IP, date, reference, or score false positives. Do not use an unpinned latest dataset for release comparisons.</p>
 </section>
 </section>
 </div>

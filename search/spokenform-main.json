@@ -70,8 +70,8 @@
         {
           "anchor": "",
           "heading": "Lexhint evidence provider",
-          "text": "Pass an installed Lexhint runtime Lexicon explicitly through lexical_evidence. No dataset is resolved or downloaded when the argument is omitted. URL lexical segmentation may work with a lexical-only provider. Contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import Lexicon\nfrom spokenform import prepare\n\nlexicon = Lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",\n    language=\"en\",\n    normalize_literals=True,\n    lexical_evidence=lexicon,\n    use_spacy=False,\n)\n\n\n\n\nLexhint semantic domains are mapped to Spokenform use cases rather than copied into RecognitionDomain. Surface mode ignores semantic evidence. URL lexical evidence is a rendering aid f…",
-          "lower": "pass an installed lexhint runtime lexicon explicitly through lexical_evidence. no dataset is resolved or downloaded when the argument is omitted. url lexical segmentation may work with a lexical-only provider. contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import lexicon\nfrom spokenform import prepare\n\nlexicon = lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",\n    language=\"en\",\n    normalize_literals=true,\n    lexical_evidence=lexicon,\n    use_spacy=false,\n)\n\n\n\n\nlexhint semantic domains are mapped to spokenform use cases rather than copied into recognitiondomain. surface mode ignores semantic evidence. url lexical evidence is a rendering aid f…"
+          "text": "Lexhint 0.1.2 <= x < 0.3.0 is supported as an optional provider. Lexhint 0.1.x uses schema-7 artifacts, while Lexhint 0.2.x requires schema-8 artifacts installed separately with lexhint dataset download <language> --variant runtime. Spokenform never downloads datasets automatically.\n\nPass an installed Lexhint runtime Lexicon explicitly through lexical_evidence. No dataset is resolved or downloaded when the argument is omitted. URL lexical segmentation may work with a lexical-only provider. Contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import Lexicon\nfrom spokenform import prepare\n\nlexicon = Lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",…",
+          "lower": "lexhint 0.1.2 <= x < 0.3.0 is supported as an optional provider. lexhint 0.1.x uses schema-7 artifacts, while lexhint 0.2.x requires schema-8 artifacts installed separately with lexhint dataset download <language> --variant runtime. spokenform never downloads datasets automatically.\n\npass an installed lexhint runtime lexicon explicitly through lexical_evidence. no dataset is resolved or downloaded when the argument is omitted. url lexical segmentation may work with a lexical-only provider. contextual computing and sports support requires the semantic capability, and missing semantic evidence never vetoes an existing candidate.\n\nfrom lexhint import lexicon\nfrom spokenform import prepare\n\nlexicon = lexicon(\"en\", variant=\"runtime\")\nresult = prepare(\n    \"compiler 8.3.2 and chatgpt.com\",…"
         }
       ]
     },
@@ -103,6 +103,12 @@
           "heading": "Recognition policy boundary",
           "text": "Structured recognizers first emit candidates annotated with a semantic domain and evidence basis (intrinsic or contextual). spokenform.recognition_policy filters those candidates before SequencePriority overlap resolution. Surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. This keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. Diagnostics retain suppressed candidates with machine-readable reasons such as context-not-allowed, disabled-domain, and blocked-by-disabled-domain.",
           "lower": "structured recognizers first emit candidates annotated with a semantic domain and evidence basis (intrinsic or contextual). spokenform.recognition_policy filters those candidates before sequencepriority overlap resolution. surface mode admits intrinsic evidence only and treats missing metadata as contextual, while disabled domains suppress their ownership family and reserve overlapping spans against weaker semantic takeover. this keeps interpretation depth, semantic ownership, and rendering settings as separate policy axes. diagnostics retain suppressed candidates with machine-readable reasons such as context-not-allowed, disabled-domain, and blocked-by-disabled-domain."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional Lexhint boundary",
+          "text": "Lexhint is an optional, provider-neutral evidence source. Spokenform supports Lexhint 0.1.2 <= x < 0.3.0; Lexhint 0.1.x uses schema-7 artifacts and Lexhint 0.2.x requires separately published schema-8 runtime artifacts. Applications install the desired local dataset with lexhint dataset download <language> --variant runtime and inject the provider; normalization never downloads data.\n\nThe production boundary uses exact lexical lookup, authoritative segmentation, and positive semantic-domain corroboration only. Lexhint fuzzy completion, headword matching, and dictionary-definition search remain development/diagnostic capabilities and do not alter automatic recognition.",
+          "lower": "lexhint is an optional, provider-neutral evidence source. spokenform supports lexhint 0.1.2 <= x < 0.3.0; lexhint 0.1.x uses schema-7 artifacts and lexhint 0.2.x requires separately published schema-8 runtime artifacts. applications install the desired local dataset with lexhint dataset download <language> --variant runtime and inject the provider; normalization never downloads data.\n\nthe production boundary uses exact lexical lookup, authoritative segmentation, and positive semantic-domain corroboration only. lexhint fuzzy completion, headword matching, and dictionary-definition search remain development/diagnostic capabilities and do not alter automatic recognition."
         },
         {
           "anchor": "",
@@ -207,13 +213,31 @@
     {
       "url": "/tools/spokenform/main/changelog/",
       "title": "spokenform Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded opt-in conser …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nChanged optional Le …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed optional Lexhint compatibility to cover 0.2.x while retaining 0.1.2 support",
+          "lower": "changed optional lexhint compatibility to cover 0.2.x while retaining 0.1.2 support"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented Lexhint 0.2.x schema-8 dataset requirements and the runtime dataset upgrade path",
+          "lower": "documented lexhint 0.2.x schema-8 dataset requirements and the runtime dataset upgrade path"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added an explicit CI compatibility gate for the supported Lexhint version families",
+          "lower": "added an explicit ci compatibility gate for the supported lexhint version families"
         },
         {
           "anchor": "",
@@ -418,24 +442,6 @@
           "heading": "Added",
           "text": "Added source replacement composition and abbr2words conversion helpers for offset mapping\n\n\nAdded German locale module with quantity grammar for units, currencies, and magnitudes\n\n\nAdded German structured text normalization for dates, times, currencies, temperatures, quantities, ordinals, and labels\n\n\nAdded kokorog2p integration with prepare_for_kokorog2p() adapter projection API\n\n\nAdded locale registry with stub modules for cs, en, es, fr, it, and pt",
           "lower": "added source replacement composition and abbr2words conversion helpers for offset mapping\n\n\nadded german locale module with quantity grammar for units, currencies, and magnitudes\n\n\nadded german structured text normalization for dates, times, currencies, temperatures, quantities, ordinals, and labels\n\n\nadded kokorog2p integration with prepare_for_kokorog2p() adapter projection api\n\n\nadded locale registry with stub modules for cs, en, es, fr, it, and pt"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed pytest configuration for proper test execution\n\n\nFixed tomli dependency configuration for package installation",
-          "lower": "fixed pytest configuration for proper test execution\n\n\nfixed tomli dependency configuration for package installation"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Added kokorog2p migration guide with language ownership audit and integration boundaries",
-          "lower": "added kokorog2p migration guide with language ownership audit and integration boundaries"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added core spoken form normalization with number verbalization, token annotations, and CLI\n\n\nAdded offset mapping, text protection, and spaCy model integration\n\n\nAdded structured text normalization for dates, times, currencies, and measurements with German locale support\n\n\nAdded configurable whitespace normalization policies and benchmark suite",
-          "lower": "added core spoken form normalization with number verbalization, token annotations, and cli\n\n\nadded offset mapping, text protection, and spacy model integration\n\n\nadded structured text normalization for dates, times, currencies, and measurements with german locale support\n\n\nadded configurable whitespace normalization policies and benchmark suite"
         }
       ]
     },
@@ -522,8 +528,8 @@
         {
           "anchor": "",
           "heading": "spokenform",
-          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\nOptional Lexhint integration\n\n\n\n\nQuickstart\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\nRecognition policy boundary\n\nSemantic segment boundaries\n\n\n\n\nAPI reference\nPreparation\n\nConfiguration policy modes\n\nResult models\n\nExport classification\n\nAnnotation adapters\n\nNumber normalization\n\nInterpretation policy\n\nLexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nOwnership audit\n\nPreferred adapter surface\n\n\n\n\nCommand-line interface\nIn…",
-          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\noptional lexhint integration\n\n\n\n\nquickstart\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\nrecognition policy boundary\n\nsemantic segment boundaries\n\n\n\n\napi reference\npreparation\n\nconfiguration policy modes\n\nresult models\n\nexport classification\n\nannotation adapters\n\nnumber normalization\n\ninterpretation policy\n\nlexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nownership audit\n\npreferred adapter surface\n\n\n\n\ncommand-line interface\nin…"
+          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\nOptional Lexhint integration\n\n\n\n\nQuickstart\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\nRecognition policy boundary\n\nOptional Lexhint boundary\n\nSemantic segment boundaries\n\n\n\n\nAPI reference\nPreparation\n\nConfiguration policy modes\n\nResult models\n\nExport classification\n\nAnnotation adapters\n\nNumber normalization\n\nInterpretation policy\n\nLexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nOwnership audit\n\nPreferred adapter surface…",
+          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\noptional lexhint integration\n\n\n\n\nquickstart\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\nrecognition policy boundary\n\noptional lexhint boundary\n\nsemantic segment boundaries\n\n\n\n\napi reference\npreparation\n\nconfiguration policy modes\n\nresult models\n\nexport classification\n\nannotation adapters\n\nnumber normalization\n\ninterpretation policy\n\nlexhint evidence provider\n\n\n\n\nkokorog2p migration boundary\nownership audit\n\npreferred adapter surface…"
         },
         {
           "anchor": "",
@@ -559,8 +565,8 @@
         {
           "anchor": "",
           "heading": "Optional Lexhint integration",
-          "text": "Install the optional provider and an explicit local runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download en --variant runtime\n\n\n\n\nSpokenform does not import Lexhint or download data unless the caller supplies a provider. The API accepts a structural LexicalEvidenceProvider, so applications may adapt Lexhint without coupling core normalization to that package. Provider language must match the Spokenform base language.",
-          "lower": "install the optional provider and an explicit local runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download en --variant runtime\n\n\n\n\nspokenform does not import lexhint or download data unless the caller supplies a provider. the api accepts a structural lexicalevidenceprovider, so applications may adapt lexhint without coupling core normalization to that package. provider language must match the spokenform base language."
+          "text": "Install the optional provider and an explicit local runtime artifact. Lexhint 0.1.2 <= x < 0.3.0 is supported; Lexhint 0.1.x uses schema-7 runtime artifacts, while Lexhint 0.2.x requires a separately published schema-8 runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download <language> --variant runtime\n\n\n\n\nSpokenform does not import Lexhint or download data unless the caller supplies a provider. The API accepts a structural LexicalEvidenceProvider, so applications may adapt Lexhint without coupling core normalization to that package. Provider language must match the Spokenform base language.",
+          "lower": "install the optional provider and an explicit local runtime artifact. lexhint 0.1.2 <= x < 0.3.0 is supported; lexhint 0.1.x uses schema-7 runtime artifacts, while lexhint 0.2.x requires a separately published schema-8 runtime artifact:\n\npython -m pip install \"spokenform[lexhint]\"\nlexhint dataset download <language> --variant runtime\n\n\n\n\nspokenform does not import lexhint or download data unless the caller supplies a provider. the api accepts a structural lexicalevidenceprovider, so applications may adapt lexhint without coupling core normalization to that package. provider language must match the spokenform base language."
         }
       ]
     },
@@ -748,8 +754,8 @@
         {
           "anchor": "",
           "heading": "Release checklist",
-          "text": "Ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\nCreate an annotated Git tag for the target release, for example vX.Y.Z, only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nRun python -m pytest.\n\n\nRun python -m pytest --cov=spokenform --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85.\n\n\nRun python -m ruff check . and python -m ruff format --check ..\n\n\nRun python -m mypy spokenform examples.\n\n\nBuild with python -m build.\n\n\nValidate distributions with python -m twine check dist/*.\n\n\nBuild docs with sphinx-build -W -b html docs docs/_build/h…",
-          "lower": "ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\ncreate an annotated git tag for the target release, for example vx.y.z, only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nrun python -m pytest.\n\n\nrun python -m pytest --cov=spokenform --cov-branch --cov-report=term-missing --cov-report=xml --cov-fail-under=85.\n\n\nrun python -m ruff check . and python -m ruff format --check ..\n\n\nrun python -m mypy spokenform examples.\n\n\nbuild with python -m build.\n\n\nvalidate distributions with python -m twine check dist/*.\n\n\nbuild docs with sphinx-build -w -b html docs docs/_build/h…"
+          "text": "Ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\n\n\nConfirm the released Lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nFor Lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nRun the URL, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\nCreate an annotated Git tag for the target release, for example vX.Y.Z, only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nRun python -m pytest.\n\n\nRun python -m pytest --cov=spokenform --co…",
+          "lower": "ensure the released abbr2words>=0.2.9,<0.3.0 prerequisite containing the reviewed structured identities and initialism policy is available from the target package index.\n\n\n\n\nconfirm the released lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nfor lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nrun the url, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\ncreate an annotated git tag for the target release, for example vx.y.z, only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nrun python -m pytest.\n\n\nrun python -m pytest --cov=spokenform --co…"
         }
       ]
     },
@@ -785,8 +791,8 @@
         {
           "anchor": "",
           "heading": "Supply annotations directly",
-          "text": "from spokenform import TokenAnnotation, prepare\n\nannotations = (\n    TokenAnnotation(start=0, end=2, text=\"in\", pos=\"ADP\", tag=\"IN\"),\n)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nExplicit annotations take precedence over nlp and spacy_model.",
-          "lower": "from spokenform import tokenannotation, prepare\n\nannotations = (\n    tokenannotation(start=0, end=2, text=\"in\", pos=\"adp\", tag=\"in\"),\n)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nexplicit annotations take precedence over nlp and spacy_model."
+          "text": "from spokenform import TokenAnnotation, prepare\n\nannotations = (TokenAnnotation(start=0, end=2, text=\"in\", pos=\"ADP\", tag=\"IN\"),)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nExplicit annotations take precedence over nlp and spacy_model.",
+          "lower": "from spokenform import tokenannotation, prepare\n\nannotations = (tokenannotation(start=0, end=2, text=\"in\", pos=\"adp\", tag=\"in\"),)\nresult = prepare(\"in.\", language=\"en\", annotations=annotations)\n\n\n\n\nexplicit annotations take precedence over nlp and spacy_model."
         },
         {
           "anchor": "",

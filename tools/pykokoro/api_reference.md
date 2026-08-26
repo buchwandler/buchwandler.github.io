@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.5"
-docs_commit: "999472fd9e8c0e64e61bfba2469a53805cf17c36"
+docs_ref: "v0.8.7"
+docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
 search_enabled: true
 ---
 
@@ -556,13 +556,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 </pre></div>
 </div>
 </section>
-<section id="paragraph-unit-streaming">
-<h3>Paragraph unit streaming</h3>
-<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline.prepare_units(text,</span> <span class="pre">unit=&quot;paragraph&quot;)</span></code> parses, phonemizes, and
-preprocesses the complete document once, then exposes deterministic paragraph
-descriptors before any audio is generated. Rendered results own one final unit waveform
-and should be released after consumption:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pipe</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">script</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
+<section id="unit-streaming">
+<h3>Unit streaming</h3>
+<p><code class="docutils literal notranslate"><span class="pre">AudioUnitResult.word_timings</span></code> uses sample offsets relative to that unit’s <code class="docutils literal notranslate"><span class="pre">audio</span></code>;
+<code class="docutils literal notranslate"><span class="pre">AudioResult.word_timings</span></code> uses offsets relative to the complete result waveform.
+<code class="docutils literal notranslate"><span class="pre">char_start</span></code> and <code class="docutils literal notranslate"><span class="pre">char_end</span></code> refer to <code class="docutils literal notranslate"><span class="pre">document.clean_text</span></code>, not SSMD markup. Timings are
+derived only from named model duration outputs (<code class="docutils literal notranslate"><span class="pre">pred_dur</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_duration</span></code>, or
+<code class="docutils literal notranslate"><span class="pre">durations</span></code>); waveform-only or incomplete-duration models return <code class="docutils literal notranslate"><span class="pre">[]</span></code> rather than
+estimates. The timings follow the exact final waveform after phrase fallback, trimming,
+prosody, pauses, and unit concatenation, and timing lists are preserved by
+<code class="docutils literal notranslate"><span class="pre">release_audio()</span></code>. <code class="docutils literal notranslate"><span class="pre">AudioUnitKind</span></code> supports <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>; paragraph
+remains the default for <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> and <code class="docutils literal notranslate"><span class="pre">iter_units()</span></code>. <code class="docutils literal notranslate"><span class="pre">unit_kind</span></code> and
+<code class="docutils literal notranslate"><span class="pre">sentence_idx</span></code> identify the selected grouping on each descriptor. Preparation parses,
+phonemizes, and preprocesses the complete document once, then defers audio generation
+until a selected unit is rendered. Generated waveform memory is bounded by the selected
+unit size and the playback queue, while document metadata remains global.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pipe</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prepared</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">skip_indices</span><span class="o">=</span><span class="n">completed_indices</span><span class="p">):</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="n">consume</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
@@ -570,6 +579,22 @@ and should be released after consumption:</p>
             <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
 </pre></div>
 </div>
+</section>
+<section id="streaming-playback">
+<h3>Streaming playback</h3>
+<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline.play_streaming(text,</span> <span class="pre">unit=&quot;sentence&quot;,</span> <span class="pre">device=None,</span> <span class="pre">queue_size=2)</span></code> uses
+one persistent <code class="docutils literal notranslate"><span class="pre">SoundDevicePlayer</span></code>. It begins playback after the first rendered unit,
+queues copied waveforms with bounded backpressure, and blocks until the final queued
+unit has finished. It creates no temporary WAV and does not concatenate a final
+waveform. The queue capacity is pending waveform capacity in addition to the actively
+written waveform, not an exact startup prebuffer count. Empty input opens no device.</p>
+<p><code class="docutils literal notranslate"><span class="pre">play_prepared_units()</span></code> is the lower-level helper for callers that already own a
+prepared unit lifecycle. <code class="docutils literal notranslate"><span class="pre">SoundDevicePlayer</span></code> is also available for custom consumers; its
+<code class="docutils literal notranslate"><span class="pre">submit()</span></code> copy makes releasing a source <code class="docutils literal notranslate"><span class="pre">AudioUnitResult</span></code> after submission safe.
+Synthesis remains sequential on the caller thread; playback is the only worker-thread
+operation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AudioResult.play()</span></code> and <code class="docutils literal notranslate"><span class="pre">AudioUnitResult.play()</span></code> remain blocking helpers for an already
+generated single waveform.</p>
 </section>
 <section id="pipelineconfig">
 <h3>PipelineConfig</h3>
@@ -823,11 +848,17 @@ only segment arrays, while <code class="docutils literal notranslate"><span clas
 waveform with an empty array of the same dtype. Metadata, markers, trace data, segments,
 and sample rate remain available. Callers should copy or retain <code class="docutils literal notranslate"><span class="pre">result.audio</span></code>
 separately before releasing it if they need that array afterward.</p>
+<p><code class="docutils literal notranslate"><span class="pre">AudioResult.play()</span></code> and <code class="docutils literal notranslate"><span class="pre">AudioUnitResult.play()</span></code> provide optional direct system
+playback. They import <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> lazily, block until playback completes, accept an
+optional <code class="docutils literal notranslate"><span class="pre">device=</span></code> selector, and never create a temporary file. Install playback support
+with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pykokoro[playback]&quot;</span></code>; Linux-like systems may also require PortAudio.
+Calling either method after <code class="docutils literal notranslate"><span class="pre">release_audio()</span></code> raises a clear empty/released-audio error.</p>
 <p>Set <code class="docutils literal notranslate"><span class="pre">PipelineConfig(retain_segment_audio=False)</span></code> for compact results when segment
 waveforms are not needed. This reduces retained memory after generation, but
 whole-result concatenation still occurs and peak memory remains dependent on input
 duration. <code class="docutils literal notranslate"><span class="pre">run()</span></code> retains whole-result concatenation semantics; use <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> when peak waveform memory should remain bounded to one paragraph.</p>
+<code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> when generated waveform memory should remain bounded to the selected unit
+size plus the bounded playback queue.</p>
 <p>Prepared unit descriptor hashes use the <code class="docutils literal notranslate"><span class="pre">pykokoro-audio-unit-v1</span></code> schema. Store the
 schema alongside each hash for resumable exporters. Indices are zero-based source order,
 hashes include audio-semantic configuration, and advancing a render iterator releases

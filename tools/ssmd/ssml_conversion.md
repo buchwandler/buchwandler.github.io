@@ -5,8 +5,8 @@ permalink: /tools/ssmd/ssml_conversion/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "9fda4e532699353407751582398a9a8c036f2408"
+docs_ref: "v0.8.4"
+docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
 search_enabled: true
 ---
 
@@ -653,6 +653,10 @@ workflows.</p>
 <span class="c1"># → [text]{volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;}</span>
 </pre></div>
 </div>
+<p>Symbolic shorthand and compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code> syntax are accepted as SSMD input aliases, but
+SSML-to-SSMD conversion remains explicit and unambiguous. Semantic formatting likewise
+canonicalizes them to named <code class="docutils literal notranslate"><span class="pre">volume</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>, and <code class="docutils literal notranslate"><span class="pre">pitch</span></code> attributes; it does not
+preserve the original source delimiter or packed spelling.</p>
 </section>
 <section id="say-as">
 <h3>Say-As</h3>
@@ -758,6 +762,12 @@ workflows.</p>
 <span class="c1"># Semantically equivalent, even if syntax differs slightly</span>
 </pre></div>
 </div>
+<p>Voice block boundaries are preserved across this conversion. Single-line and multiline
+<code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;...&quot;&gt;</span></code> forms are equivalent, and nested emphasis or other supported SSMD
+markup is reconstructed in a block form when inline annotation syntax would make it
+literal text. Round-trip checks compare semantic text, voice context, annotations,
+breaks, marks, paragraph structure, and front matter; formatting-only whitespace changes
+are allowed.</p>
 </section>
 <section id="complex-examples">
 <h2>Complex Examples</h2>
