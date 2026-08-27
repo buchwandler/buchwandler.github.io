@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -547,6 +547,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;There are 2 tests.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>spokenform<span class="w"> </span>--lang<span class="w"> </span>en
 </pre></div>
 </div>
+<p>Canonical language options include <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">ko</span></code>, and <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">zh_CN</span></code>. <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">zh</span></code> selects the conservative Chinese base. Compatibility aliases <code class="docutils literal notranslate"><span class="pre">jp</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ja</span></code> and <code class="docutils literal notranslate"><span class="pre">cn</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code> are accepted, but new scripts should use canonical identifiers.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--changes</span></code> for stage provenance and <code class="docutils literal notranslate"><span class="pre">--json</span></code> for a structured result:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--changes<span class="w"> </span><span class="s2">&quot;Prof. Klein hat 2 kg.&quot;</span>
 spokenform<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--json<span class="w"> </span><span class="s2">&quot;Prof. Klein hat 2 kg.&quot;</span>

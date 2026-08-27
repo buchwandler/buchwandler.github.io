@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: f60610571be569f10142542add3737dd8dbf3bd2
+source_commit: dcedefb7844d4dc02912f105ee1c78c1c6947214
 source_url: https://github.com/buchwandler/abbr2words/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/abbr2words
-release_tag: v0.2.9
-release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.9
+release_tag: v0.2.12
+release_url: https://github.com/buchwandler/abbr2words/releases/tag/v0.2.12
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.9
+  ref: v0.2.12
   url: /tools/abbr2words/
   current: false
 - name: main

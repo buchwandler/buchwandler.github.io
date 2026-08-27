@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/api/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.9"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+docs_ref: "v0.2.12"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -554,7 +554,12 @@ fail open when usable lexical evidence is missing, and numeric units remain
 authoritative over generic POS predictions.</p>
 <p>.. py:function:: abbr2words_with_replacements(text, *, lang=’en’, context=True, initialism_mode=’dotted_only’, initialism_case=’source’, registered_initialism_mode=’expand’, annotations=None, protected_spans=None)
 :module: abbr2words</p>
-<p>Expand <em>text</em> and return exact source-aligned replacement metadata.</p>
+<p>Expand <em>text</em> and return exact, immutable source-aligned replacement metadata.</p>
+<p>Offsets refer to the original input. Records are deterministic and
+non-overlapping, include their matched source surface, and carry stable rule
+provenance; unit records may also expose canonical identity. Callers should
+consume <code class="docutils literal notranslate"><span class="pre">result.replacements</span></code> instead of diffing <code class="docutils literal notranslate"><span class="pre">result.source_text</span></code> and
+<code class="docutils literal notranslate"><span class="pre">result.text</span></code>.</p>
 <p>.. py:function:: iter_unit_matches(text, language, *, overrides=None, suppressed=None, protected_spans=())
 :module: abbr2words</p>
 <p>Yield structured source-aligned matches for numeric quantity symbols.</p>
@@ -590,17 +595,92 @@ prevents replacements in caller-owned ranges such as URLs, markup, or code.</p>
 <code class="docutils literal notranslate"><span class="pre">Expander.expand_with_replacements(...)</span></code>. The immutable <code class="docutils literal notranslate"><span class="pre">ExpansionResult</span></code>
 contains the original <code class="docutils literal notranslate"><span class="pre">source_text</span></code>, expanded <code class="docutils literal notranslate"><span class="pre">text</span></code>, and deterministic,
 non-overlapping <code class="docutils literal notranslate"><span class="pre">ExpansionReplacement</span></code> records. Replacement offsets refer to
-the original input, and applying the records from right to left reproduces the
-result exactly. <code class="docutils literal notranslate"><span class="pre">expand_with_trace(...)</span></code> remains as a compatibility view of the
-same result. Existing convenience calls continue to return strings.</p>
+the original input, and applying records from right to left reproduces the
+result exactly. Each record is self-contained: <code class="docutils literal notranslate"><span class="pre">matched_text</span></code> and its
+<code class="docutils literal notranslate"><span class="pre">source_text</span></code> alias contain the consumed source surface, <code class="docutils literal notranslate"><span class="pre">rule_id</span></code> identifies
+the producing rule, and unit records expose <code class="docutils literal notranslate"><span class="pre">canonical_id</span></code> when available.
+The records are the authoritative accepted-edit plan. Do not reconstruct these
+edits by diffing <code class="docutils literal notranslate"><span class="pre">source_text</span></code> and <code class="docutils literal notranslate"><span class="pre">text</span></code>. Existing convenience calls continue
+to return strings.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">abbr2words_with_replacements</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">abbr2words_with_replacements</span><span class="p">(</span><span class="s2">&quot;Prof. Klein, S. 12&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Prof. Klein, 500 g&quot;</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">abbr2words_with_replacements</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">replacements</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">matched_text</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">kind</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">language</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">canonical_id</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">context</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
+<p>For every replacement, <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">start</span> <span class="pre">&lt;=</span> <span class="pre">end</span> <span class="pre">&lt;=</span> <span class="pre">len(source_text)</span></code>, the source
+surface equals <code class="docutils literal notranslate"><span class="pre">source_text[start:end]</span></code>, records are ordered and non-overlapping,
+and an unchanged input has <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">==</span> <span class="pre">source_text</span></code> and no replacements. Protected
+spans are never claimed.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ExpansionKind</span> <span class="pre">=</span> <span class="pre">Literal[&quot;abbreviation&quot;,</span> <span class="pre">&quot;unit&quot;]</span></code> bounds the replacement families.
+The fields have distinct meanings:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Field</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code></p></td>
+<td><p>Original Python string character offsets.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">matched_text</span></code></p></td>
+<td><p>Exact source substring consumed by this edit.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">source_text</span></code></p></td>
+<td><p>Compatibility/readability alias of <code class="docutils literal notranslate"><span class="pre">matched_text</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">text</span></code></p></td>
+<td><p>Replacement text generated by Abbr2words.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">replacement</span></code></p></td>
+<td><p>Compatibility alias of <code class="docutils literal notranslate"><span class="pre">text</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kind</span></code></p></td>
+<td><p>Bounded replacement family, <code class="docutils literal notranslate"><span class="pre">abbreviation</span></code> or <code class="docutils literal notranslate"><span class="pre">unit</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">language</span></code></p></td>
+<td><p>Resolved language or locale used for the rule.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rule_id</span></code></p></td>
+<td><p>Stable provenance/rule identifier.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">rule</span></code></p></td>
+<td><p>Existing stored compatibility field used by <code class="docutils literal notranslate"><span class="pre">rule_id</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">source</span></code></p></td>
+<td><p>Legacy provenance field, not the matched source substring.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">abbreviation</span></code></p></td>
+<td><p>Canonical lexical registry identity when available.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">canonical_id</span></code></p></td>
+<td><p>Locale-independent unit identity when available.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">priority</span></code></p></td>
+<td><p>Resolver priority used during candidate selection.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">context</span></code></p></td>
+<td><p>Selected abbreviation context when applicable.</p></td>
+</tr>
+</tbody>
+</table>
+<p>Do not parse <code class="docutils literal notranslate"><span class="pre">source</span></code> to recover matched source text. Use <code class="docutils literal notranslate"><span class="pre">matched_text</span></code>. Do not
+parse <code class="docutils literal notranslate"><span class="pre">rule_id</span></code> to recover unit identity. Use <code class="docutils literal notranslate"><span class="pre">canonical_id</span></code>. Replacement records
+returned by the expansion APIs always expose <code class="docutils literal notranslate"><span class="pre">matched_text</span> <span class="pre">==</span> <span class="pre">source_text[start:end]</span></code>.</p>
 </section>
 <section id="initialism-policies">
 <h2>Initialism policies</h2>
@@ -609,8 +689,8 @@ and <code class="docutils literal notranslate"><span class="pre">Expander</span>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span>
     <span class="s2">&quot;NGO BBC PDF&quot;</span><span class="p">,</span>
     <span class="n">initialism_mode</span><span class="o">=</span><span class="s2">&quot;conservative_undotted&quot;</span><span class="p">,</span>  <span class="c1"># default: &quot;dotted_only&quot;</span>
-    <span class="n">initialism_case</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>             <span class="c1"># &quot;source&quot;, &quot;upper&quot;, or &quot;lower&quot;</span>
-    <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span> <span class="c1"># or explicit &quot;spell&quot;</span>
+    <span class="n">initialism_case</span><span class="o">=</span><span class="s2">&quot;lower&quot;</span><span class="p">,</span>  <span class="c1"># &quot;source&quot;, &quot;upper&quot;, or &quot;lower&quot;</span>
+    <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span>  <span class="c1"># or explicit &quot;spell&quot;</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -618,7 +698,7 @@ and <code class="docutils literal notranslate"><span class="pre">Expander</span>
 reviewed registry intentionally owns a small set of common initialisms such as
 <code class="docutils literal notranslate"><span class="pre">BBC</span></code>, <code class="docutils literal notranslate"><span class="pre">US</span></code>, <code class="docutils literal notranslate"><span class="pre">UK</span></code>, <code class="docutils literal notranslate"><span class="pre">ISBN</span></code>, <code class="docutils literal notranslate"><span class="pre">HTML</span></code>, and <code class="docutils literal notranslate"><span class="pre">TV</span></code>, which render source graphemes as
 ordinary abbreviation entries. <code class="docutils literal notranslate"><span class="pre">conservative_undotted</span></code> recognizes only
-high-confidence standalone ASCII uppercase residuals from two through eight
+high-confidence standalone ASCII uppercase residuals from three through six
 letters and rejects reviewed lexical acronyms, ambiguous words, headline runs,
 Roman numerals, and structured identifiers. <code class="docutils literal notranslate"><span class="pre">spell_undotted</span></code> retains the broad
 historical opt-in behavior and renders standalone source-aligned graphemes.
@@ -688,7 +768,15 @@ records use <code class="docutils literal notranslate"><span class="pre">abbr:in
 matches. <code class="docutils literal notranslate"><span class="pre">iter_initialism_diagnostics()</span></code> reports source-aligned <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">end</span></code>,
 <code class="docutils literal notranslate"><span class="pre">source_text</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">candidate_kind</span></code>, <code class="docutils literal notranslate"><span class="pre">decision</span></code>, stable <code class="docutils literal notranslate"><span class="pre">reason</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">registered_entry_id</span></code> fields. Protected spans are reported as
-<code class="docutils literal notranslate"><span class="pre">reason=&quot;protected&quot;</span></code> and are never claimed.</p>
+<code class="docutils literal notranslate"><span class="pre">reason=&quot;protected-span&quot;</span></code> and are never claimed.</p>
+<p>For repository maintenance, <code class="docutils literal notranslate"><span class="pre">scripts/report_initialism_candidates.py</span></code> groups
+fresh benchmark failures by unresolved candidate token using the same
+diagnostic surface. It accepts JSONL or JSON rows with source text, language,
+expected output, and optional actual output, then reports grouped token counts,
+locales, reasons, Roman/vowel/two-letter flags, registry coverage, protection
+flags, uppercase-run evidence, and sample source sentences. The helper is for
+reviewing candidate additions after benchmark reruns; it does not change the
+runtime matching policy.</p>
 <p>The bundled language registry follows a 66-key current-master parity snapshot:
 49 base keys plus the explicit locale overlays <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>,
 <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>,
@@ -883,7 +971,7 @@ not amount or number grammar.</p>
 <p>Offsets use Python string indices: <code class="docutils literal notranslate"><span class="pre">text[start:end]</span></code>. <code class="docutils literal notranslate"><span class="pre">pos</span></code> is
 normally an uppercase coarse Universal POS label; <code class="docutils literal notranslate"><span class="pre">tag</span></code> may contain a
 provider-specific fine-grained tag.</p>
-<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’)
+<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’, preserve_sentence_final_period=True)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationEntry</p>
 <p>A single abbreviation with its expansion(s).</p>
@@ -1025,7 +1113,11 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 </div>
 <p>.. py:method:: AbbreviationExpander.expand_with_replacements(text, *, annotations=None, protected_spans=None)
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand text and return exact immutable replacement metadata.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Expand text and return the immutable source-aligned accepted-edit plan.
+
+  Offsets refer to the original input. Returned records are ordered,
+  non-overlapping, expose exact matched source text, and reconstruct
+  ``result.text`` when applied right-to-left.
 </pre></div>
 </div>
 <p>.. py:method:: AbbreviationExpander.expand_with_trace(text, *, annotations=None, protected_spans=None)
@@ -1090,7 +1182,7 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Override one reviewed unit for this expander instance.
 </pre></div>
 </div>
-<p>.. py:class:: ExpansionReplacement(start, end, text, source, kind, language, abbreviation=None, rule=None, priority=0, context=None)
+<p>.. py:class:: ExpansionReplacement(start, end, text, source, kind, language, abbreviation=None, rule=None, priority=0, context=None, matched_text=’’, canonical_id=None)
 :module: abbr2words
 :canonical: abbr2words.core.ExpansionReplacement</p>
 <p>One accepted replacement against the original source text.</p>
@@ -1106,6 +1198,18 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Compatibility alias for the replacement text.
 </pre></div>
 </div>
+<p>.. py:property:: ExpansionReplacement.rule_id
+:module: abbr2words
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Stable identifier for the rule that produced this replacement.
+</pre></div>
+</div>
+<p>.. py:property:: ExpansionReplacement.source_text
+:module: abbr2words
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Original source substring consumed by this replacement.
+</pre></div>
+</div>
 <p>.. py:class:: ExpansionResult(source_text, text, replacements)
 :module: abbr2words
 :canonical: abbr2words.core.ExpansionResult</p>
@@ -1116,7 +1220,7 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the legacy trace view of :attr:`replacements`.
 </pre></div>
 </div>
-<p>.. py:class:: UnitMatch(start, end, value_start, value_end, value, symbol, canonical_id, canonical_symbol, expansion, language, category=’unit’, ambiguity=’none’, separator=’’)
+<p>.. py:class:: UnitMatch(start, end, value_start, value_end, value, symbol, canonical_id, canonical_symbol, expansion, language, category=’unit’, ambiguity=’none’, separator=’’, quantity_template=None)
 :module: abbr2words
 :canonical: abbr2words.units.UnitMatch</p>
 <p>One immutable, source-aligned recognized numeric quantity symbol.</p>
@@ -1124,7 +1228,7 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 :module: abbr2words
 :canonical: abbr2words.core.ProtectedSpan</p>
 <p>A source range that must not be changed by expansion.</p>
-<p>.. py:class:: UnitEntry(symbols, expansion, case_sensitive=True, description=’’, canonical_symbol=None, requires_numeric_value=True, canonical_id=None, reject_following_apostrophe=False, category=’unit’, quantity_position=’suffix’, allow_lexical_overlap=False, preserve_sentence_final_period=False, reject_following_period=False, requires_separator=False)
+<p>.. py:class:: UnitEntry(symbols, expansion, case_sensitive=True, description=’’, canonical_symbol=None, requires_numeric_value=True, canonical_id=None, reject_following_apostrophe=False, category=’unit’, quantity_position=’suffix’, allow_lexical_overlap=False, preserve_sentence_final_period=False, reject_following_period=False, requires_separator=False, quantity_template=None)
 :module: abbr2words
 :canonical: abbr2words.units.UnitEntry</p>
 <p>A localized unit spelling recognized only after a numeric quantity.</p>

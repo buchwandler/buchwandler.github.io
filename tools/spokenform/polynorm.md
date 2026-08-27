@@ -5,8 +5,8 @@ permalink: /tools/spokenform/polynorm/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
+docs_ref: "v0.3.3"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -544,7 +544,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>PolyNorm diagnostic benchmark</h1>
 <p>Spokenform’s PolyNorm adapter evaluates the overlap between the external
 Apple PolyNorm-Bench corpus and the seven base languages supported by
-Spokenform. The overlap is <code class="docutils literal notranslate"><span class="pre">de-DE</span></code>, <code class="docutils literal notranslate"><span class="pre">en-US</span></code>, <code class="docutils literal notranslate"><span class="pre">es-MX</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-FR</span></code>, and <code class="docutils literal notranslate"><span class="pre">it-IT</span></code>;
+Spokenform. The overlap is <code class="docutils literal notranslate"><span class="pre">de-DE</span></code>, <code class="docutils literal notranslate"><span class="pre">en-US</span></code>, <code class="docutils literal notranslate"><span class="pre">es-MX</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-FR</span></code>, and <code class="docutils literal notranslate"><span class="pre">it-IT</span></code>;</p>
+<p>This benchmark remains limited to its existing seven-language overlap. Japanese, Korean, and Chinese runtime support is covered by focused spokenform regression tests, not by this PolyNorm parity set.
 the default run derives its case count from the selected cached files because
 upstream locale files may differ in length. PolyNorm BCP-47 tags are translated
 to regional Spokenform identifiers only inside the benchmark adapter; they are

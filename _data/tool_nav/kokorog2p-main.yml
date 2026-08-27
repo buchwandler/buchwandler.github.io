@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f
+source_commit: 77d91cb50322d543bb2d63facec30011a077cb36
 source_url: https://github.com/buchwandler/kokorog2p/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/kokorog2p
@@ -80,12 +80,27 @@ entries:
 - slug: api/korean
   title: kokorog2p Korean API
   url: /tools/kokorog2p/main/api/korean/
+- slug: api/vietnamese
+  title: kokorog2p Vietnamese API
+  url: /tools/kokorog2p/main/api/vietnamese/
+- slug: api/russian
+  title: kokorog2p Russian API
+  url: /tools/kokorog2p/main/api/russian/
 - slug: api/hebrew
   title: kokorog2p Hebrew API
   url: /tools/kokorog2p/main/api/hebrew/
 - slug: api/mixed
   title: kokorog2p Multilang Preprocessing
   url: /tools/kokorog2p/main/api/mixed/
+- slug: api/thai
+  title: kokorog2p Thai G2P
+  url: /tools/kokorog2p/main/api/thai/
+- slug: api/kazakh
+  title: kokorog2p Kazakh G2P
+  url: /tools/kokorog2p/main/api/kazakh/
+- slug: api/arabic
+  title: kokorog2p Arabic MSA
+  url: /tools/kokorog2p/main/api/arabic/
 - slug: api/backends
   title: kokorog2p Backends API
   url: /tools/kokorog2p/main/api/backends/

@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
+docs_commit: "dc7c856864d80424adf5dd41f50345ad636ffae9"
 search_enabled: true
 ---
 
@@ -559,15 +559,6 @@ default; Chinese automatic selection retains the GitHub v1.1-zh policy.</p>
 <code class="docutils literal notranslate"><span class="pre">kokoro-german-martin-v1.2.onnx</span></code>; its voice archive is <code class="docutils literal notranslate"><span class="pre">voices-german-martin-v1.2.bin</span></code>.
 Both downloads are checked with SHA-256 and the voice archive must contain <code class="docutils literal notranslate"><span class="pre">martin</span></code>. No
 model-specific config file is downloaded.</p>
-<p>The legacy Eva/Bernd profile remains explicit:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;df_eva&quot;</span><span class="p">,</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-de&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
-<span class="p">)</span>
-</pre></div>
-</div>
 <p>Automatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x
 dependency across the language pipelines where kokorog2p supports it. This includes
 structured forms such as dates, times, decimal commas, measurements, ordinals,

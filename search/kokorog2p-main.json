@@ -396,6 +396,43 @@
       ]
     },
     {
+      "url": "/tools/kokorog2p/main/api/arabic/",
+      "title": "kokorog2p Arabic MSA",
+      "snippet": "KokoroG2P provides a native Arabic frontend for Modern Standard Arabic (MSA). It is not\na dialect frontend and does not identify or convert …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Arabic MSA",
+          "text": "KokoroG2P provides a native Arabic frontend for Modern Standard Arabic (MSA). It is not\na dialect frontend and does not identify or convert Arabic dialects.",
+          "lower": "kokorog2p provides a native arabic frontend for modern standard arabic (msa). it is not\na dialect frontend and does not identify or convert arabic dialects."
+        },
+        {
+          "anchor": "",
+          "heading": "Construction",
+          "text": "from kokorog2p import get_g2p, phonemize\n\ng2p = get_g2p(\"ar\", diacritizer=\"none\")\nresult = phonemize(\n    \"مَرْحَبًا بِكَ؟\",\n    language=\"ar\",\n    g2p=g2p,\n    return_phonemes=True,\n    return_ids=True,\n)\n\n\n\n\nThe native frontend uses the existing Arabic eSpeak-ng voice and raw IPA. It then\napplies a small Nabra cleanup policy and targets nabra-82m-v0.1. The Nabra profile\nreserves IDs 7 and 8 for ʕ and ħ; those IDs are intended for the Nabra model, not\nstock Kokoro 1.0.",
+          "lower": "from kokorog2p import get_g2p, phonemize\n\ng2p = get_g2p(\"ar\", diacritizer=\"none\")\nresult = phonemize(\n    \"مَرْحَبًا بِكَ؟\",\n    language=\"ar\",\n    g2p=g2p,\n    return_phonemes=true,\n    return_ids=true,\n)\n\n\n\n\nthe native frontend uses the existing arabic espeak-ng voice and raw ipa. it then\napplies a small nabra cleanup policy and targets nabra-82m-v0.1. the nabra profile\nreserves ids 7 and 8 for ʕ and ħ; those ids are intended for the nabra model, not\nstock kokoro 1.0."
+        },
+        {
+          "anchor": "",
+          "heading": "Diacritization",
+          "text": "Already-vocalized text can use diacritizer=\"none\" and does not require CAMeL Tools.\nUnvocalized text can use diacritizer=\"auto\" (the default), which uses CAMeL when its\nlocal package and data are available and otherwise emits a warning and continues. Use\ndiacritizer=\"camel-tools\" with strict_diacritizer=True when missing dependencies or\ndata must fail.\n\nCAMeL and its MSA data are optional. KokoroG2P never downloads or provisions that data.\nInstall the optional package and provision disambig-mle-calima-msa-r13 using CAMeL\nTools’ documented workflow.\n\nAdapters can be injected when a different local diacritizer is required. Each adapter\nmust return one output token for every input Arabic lexical token.",
+          "lower": "already-vocalized text can use diacritizer=\"none\" and does not require camel tools.\nunvocalized text can use diacritizer=\"auto\" (the default), which uses camel when its\nlocal package and data are available and otherwise emits a warning and continues. use\ndiacritizer=\"camel-tools\" with strict_diacritizer=true when missing dependencies or\ndata must fail.\n\ncamel and its msa data are optional. kokorog2p never downloads or provisions that data.\ninstall the optional package and provision disambig-mle-calima-msa-r13 using camel\ntools’ documented workflow.\n\nadapters can be injected when a different local diacritizer is required. each adapter\nmust return one output token for every input arabic lexical token."
+        },
+        {
+          "anchor": "",
+          "heading": "Source behavior and offsets",
+          "text": "Arabic harakat remain attached to their lexical source token.\n\n\nASCII Latin runs are suppressed by default with latin_policy=\"drop\".\n\n\nNumeric square-bracket citation spans such as [12] are suppressed.\n\n\nReal parentheses remain distinct and are not treated as citations.\n\n\nSource token offsets always refer to the original input string.\n\n\n،, ؛, and ؟ are mapped to ,, ;, and ? after source classification.\n\n\n\nArabic numbers, dates, currencies, and dialect-specific normalization are not\nimplemented by this frontend. Those belong to the upstream semantic normalization\narchitecture.",
+          "lower": "arabic harakat remain attached to their lexical source token.\n\n\nascii latin runs are suppressed by default with latin_policy=\"drop\".\n\n\nnumeric square-bracket citation spans such as [12] are suppressed.\n\n\nreal parentheses remain distinct and are not treated as citations.\n\n\nsource token offsets always refer to the original input string.\n\n\n،, ؛, and ؟ are mapped to ,, ;, and ? after source classification.\n\n\n\narabic numbers, dates, currencies, and dialect-specific normalization are not\nimplemented by this frontend. those belong to the upstream semantic normalization\narchitecture."
+        },
+        {
+          "anchor": "",
+          "heading": "Generic eSpeak backend",
+          "text": "get_g2p(\"ar\", backend=\"espeak\") intentionally returns the generic EspeakOnlyG2P. It\ndoes not select the Nabra cleanup or vocabulary profile.",
+          "lower": "get_g2p(\"ar\", backend=\"espeak\") intentionally returns the generic espeakonlyg2p. it\ndoes not select the nabra cleanup or vocabulary profile."
+        }
+      ]
+    },
+    {
       "url": "/tools/kokorog2p/main/api/backends/",
       "title": "kokorog2p Backends API",
       "snippet": "kokorog2p supports multiple phonemization backends.\nfrom kokorog2p.backends.espeak import EspeakBackend\n\nbackend = EspeakBackend(language=\"e …",
@@ -694,27 +731,40 @@
       ]
     },
     {
+      "url": "/tools/kokorog2p/main/api/kazakh/",
+      "title": "kokorog2p Kazakh G2P",
+      "snippet": "Kazakh (kk) is a native eSpeak-NG frontend. Install the existing eSpeak integration:\n\npip install \"kokorog2p[kk]\"\n\n\n\n\nThe frontend uses the …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Kazakh G2P",
+          "text": "Kazakh (kk) is a native eSpeak-NG frontend. Install the existing eSpeak integration:\n\npip install \"kokorog2p[kk]\"\n\n\n\n\nThe frontend uses the eSpeak-NG kk voice and requests raw non-English IPA. It\npreserves ordinary Kazakh IPA semantics and applies only small generic tied-phoneme\ncompatibility transforms before validating output against the stock Kokoro 1.0\nvocabulary.\n\nfrom kokorog2p import get_g2p, phonemize\n\n# All aliases share one cached instance.\ng2p = get_g2p(\"kazakh\")\nassert g2p is get_g2p(\"kk\")\n\nresult = phonemize(\"Сәлем әлем!\", language=\"kk\")\nprint(result.phonemes)\n\n\n\n\nKazakhG2P preserves punctuation, whitespace, source offsets, and espeak ratings on\nsuccessful lexical tokens. strict=True reports missing voices, empty output, and\nsymbols outside the target vocabulary. strict=False…",
+          "lower": "kazakh (kk) is a native espeak-ng frontend. install the existing espeak integration:\n\npip install \"kokorog2p[kk]\"\n\n\n\n\nthe frontend uses the espeak-ng kk voice and requests raw non-english ipa. it\npreserves ordinary kazakh ipa semantics and applies only small generic tied-phoneme\ncompatibility transforms before validating output against the stock kokoro 1.0\nvocabulary.\n\nfrom kokorog2p import get_g2p, phonemize\n\n# all aliases share one cached instance.\ng2p = get_g2p(\"kazakh\")\nassert g2p is get_g2p(\"kk\")\n\nresult = phonemize(\"сәлем әлем!\", language=\"kk\")\nprint(result.phonemes)\n\n\n\n\nkazakhg2p preserves punctuation, whitespace, source offsets, and espeak ratings on\nsuccessful lexical tokens. strict=true reports missing voices, empty output, and\nsymbols outside the target vocabulary. strict=false…"
+        }
+      ]
+    },
+    {
       "url": "/tools/kokorog2p/main/api/korean/",
       "title": "kokorog2p Korean API",
-      "snippet": "Korean G2P provides phoneme conversion using MeCab for morphological analysis and custom\nphonological rules based on Korean Standard Pronunc …",
+      "snippet": "Korean G2P uses the vendored 5Hyeons g2pkc compatibility rules and the Kokoro 82M v1.0\nmodel alphabet by default. The default Korean voice m …",
       "sections": [
         {
           "anchor": "",
           "heading": "Korean API",
-          "text": "Korean G2P provides phoneme conversion using MeCab for morphological analysis and custom\nphonological rules based on Korean Standard Pronunciation.",
-          "lower": "korean g2p provides phoneme conversion using mecab for morphological analysis and custom\nphonological rules based on korean standard pronunciation."
+          "text": "Korean G2P uses the vendored 5Hyeons g2pkc compatibility rules and the Kokoro 82M v1.0\nmodel alphabet by default. The default Korean voice metadata is jf_alpha, using the\nJapanese voice requested for Korean synthesis.",
+          "lower": "korean g2p uses the vendored 5hyeons g2pkc compatibility rules and the kokoro 82m v1.0\nmodel alphabet by default. the default korean voice metadata is jf_alpha, using the\njapanese voice requested for korean synthesis."
         },
         {
           "anchor": "",
           "heading": "Examples",
-          "text": "from kokorog2p.ko import KoreanG2P\n\ng2p = KoreanG2P(language=\"ko-kr\")\ntokens = g2p(\"안녕하세요!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")",
-          "lower": "from kokorog2p.ko import koreang2p\n\ng2p = koreang2p(language=\"ko-kr\")\ntokens = g2p(\"안녕하세요!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")"
+          "text": "from kokorog2p.ko import KoreanG2P\n\ng2p = KoreanG2P(\n    language=\"ko-kr\",\n    morphology=\"auto\",\n    voice=\"jf_alpha\",\n    output=\"model\",\n)\ntokens = g2p(\"안녕하세요!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nUse output=\"ipa\" to retain the linguistic IPA-like form and positional coda markers,\nor output=\"jamo\" to inspect the g2pkc intermediate representation. The morphology\nsetting accepts auto, required, and off. The compatible morphology extra is\nkokorog2p[ko-mecab], which installs python-mecab-ko.\n\nPure Hangul input does not load CMUdict. Latin input uses NLTK CMUdict and requires the\nresource to be installed explicitly.",
+          "lower": "from kokorog2p.ko import koreang2p\n\ng2p = koreang2p(\n    language=\"ko-kr\",\n    morphology=\"auto\",\n    voice=\"jf_alpha\",\n    output=\"model\",\n)\ntokens = g2p(\"안녕하세요!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nuse output=\"ipa\" to retain the linguistic ipa-like form and positional coda markers,\nor output=\"jamo\" to inspect the g2pkc intermediate representation. the morphology\nsetting accepts auto, required, and off. the compatible morphology extra is\nkokorog2p[ko-mecab], which installs python-mecab-ko.\n\npure hangul input does not load cmudict. latin input uses nltk cmudict and requires the\nresource to be installed explicitly."
         },
         {
           "anchor": "",
           "heading": "Implementation",
-          "text": "The Korean G2P implementation is based on g2pK by kyubyong and uses:\n\n\nMeCab for morphological analysis\n\n\nKorean Standard Pronunciation rules\n\n\nJamo-to-IPA conversion for phoneme output\n\n\n\nReference: https://github.com/kyubyong/g2pK",
-          "lower": "the korean g2p implementation is based on g2pk by kyubyong and uses:\n\n\nmecab for morphological analysis\n\n\nkorean standard pronunciation rules\n\n\njamo-to-ipa conversion for phoneme output\n\n\n\nreference: https://github.com/kyubyong/g2pk"
+          "text": "The Korean backend is based on the 5Hyeons StyleTTS2 g2pkc fork of Kyubyong’s g2pK.\nSee kokorog2p/ko/README.md for source revision, checksums, local adaptations, and\nlicensing provenance.",
+          "lower": "the korean backend is based on the 5hyeons styletts2 g2pkc fork of kyubyong’s g2pk.\nsee kokorog2p/ko/readme.md for source revision, checksums, local adaptations, and\nlicensing provenance."
         }
       ]
     },
@@ -775,6 +825,37 @@
       ]
     },
     {
+      "url": "/tools/kokorog2p/main/api/russian/",
+      "title": "kokorog2p Russian API",
+      "snippet": "Russian is provided by the native RussianG2P frontend. It targets the stock Kokoro 1.0\nvocabulary and keeps token offsets in the original so …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Russian API",
+          "text": "Russian is provided by the native RussianG2P frontend. It targets the stock Kokoro 1.0\nvocabulary and keeps token offsets in the original source text.\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"ru\")\ntokens = g2p(\"Это русский текст.\")\n\n\n\n\nThe default accentuator=\"auto\" uses RUAccent lazily for sentence-level stress, ё\nrestoration, and contextual homographs. Install the optional extra first:\n\npip install \"kokorog2p[ru]\"\n\n\n\n\nRUAccent and its model artifacts can be large. They are not imported or loaded by\nimport kokorog2p, and model loading starts only when an instance is used. A missing\ninstallation produces an actionable optional-dependency error.",
+          "lower": "russian is provided by the native russiang2p frontend. it targets the stock kokoro 1.0\nvocabulary and keeps token offsets in the original source text.\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"ru\")\ntokens = g2p(\"это русский текст.\")\n\n\n\n\nthe default accentuator=\"auto\" uses ruaccent lazily for sentence-level stress, ё\nrestoration, and contextual homographs. install the optional extra first:\n\npip install \"kokorog2p[ru]\"\n\n\n\n\nruaccent and its model artifacts can be large. they are not imported or loaded by\nimport kokorog2p, and model loading starts only when an instance is used. a missing\ninstallation produces an actionable optional-dependency error."
+        },
+        {
+          "anchor": "",
+          "heading": "Explicit stress",
+          "text": "For text that already contains combining acute stress, bypass the contextual model with\nphonemize_accented:\n\nexplicit = get_g2p(\"ru\", accentuator=\"none\", strict_stress=False)\ntokens = explicit.phonemize_accented(\"за́мок\")\n\n\n\n\nThe canonical annotation is U+0301 immediately after the stressed Cyrillic vowel. The\nlegacy +-before-vowel form is accepted at this boundary and is normalized to combining\nacute.",
+          "lower": "for text that already contains combining acute stress, bypass the contextual model with\nphonemize_accented:\n\nexplicit = get_g2p(\"ru\", accentuator=\"none\", strict_stress=false)\ntokens = explicit.phonemize_accented(\"за́мок\")\n\n\n\n\nthe canonical annotation is u+0301 immediately after the stressed cyrillic vowel. the\nlegacy +-before-vowel form is accepted at this boundary and is normalized to combining\nacute."
+        },
+        {
+          "anchor": "",
+          "heading": "eSpeak data",
+          "text": "Russian uses raw eSpeak IPA and verifies at runtime that the selected Russian data\nhonors explicit combining-acute stress. A custom data directory can be provided through\nthe factory:\n\ng2p = get_g2p(\"ru\", espeak_data=\"/path/to/espeak-ng-data\")\n\n\n\n\nIf the capability probe fails in strict mode, configure a compatible eSpeak-ng\ninstallation rather than silently losing stress information. The compiled espeak-data\nfrom external Russian projects is not distributed by KokoroG2P.",
+          "lower": "russian uses raw espeak ipa and verifies at runtime that the selected russian data\nhonors explicit combining-acute stress. a custom data directory can be provided through\nthe factory:\n\ng2p = get_g2p(\"ru\", espeak_data=\"/path/to/espeak-ng-data\")\n\n\n\n\nif the capability probe fails in strict mode, configure a compatible espeak-ng\ninstallation rather than silently losing stress information. the compiled espeak-data\nfrom external russian projects is not distributed by kokorog2p."
+        },
+        {
+          "anchor": "",
+          "heading": "Latin and punctuation",
+          "text": "Russian and punctuation tokens retain original text and offsets. The default\nlatin_policy=\"preserve\" keeps Latin source tokens without pretending they are Russian\nphonemes. Use latin_policy=\"drop\" when a downstream pipeline explicitly wants them\nmarked as dropped. Brackets are normalized through the shared punctuation pipeline and\ndo not become phoneme vocabulary symbols.\n\nRussian-specific number and abbreviation expansion remains owned by the shared\nspokenform and abbr2words pipeline where supported.",
+          "lower": "russian and punctuation tokens retain original text and offsets. the default\nlatin_policy=\"preserve\" keeps latin source tokens without pretending they are russian\nphonemes. use latin_policy=\"drop\" when a downstream pipeline explicitly wants them\nmarked as dropped. brackets are normalized through the shared punctuation pipeline and\ndo not become phoneme vocabulary symbols.\n\nrussian-specific number and abbreviation expansion remains owned by the shared\nspokenform and abbr2words pipeline where supported."
+        }
+      ]
+    },
+    {
       "url": "/tools/kokorog2p/main/api/spanish/",
       "title": "kokorog2p Spanish API",
       "snippet": "Spanish G2P provides rule-based phoneme conversion for Spanish, designed for Kokoro TTS\nmodels.\nabbr2words owns Spanish abbreviation and sym …",
@@ -802,6 +883,50 @@
           "heading": "Phonology Features",
           "text": "Spanish phonology includes:\n\n\n5 pure vowels (a, e, i, o, u) - always pronounced clearly\n\n\nNo vowel reduction (unlike English)\n\n\nPredictable stress (penultimate for vowel-ending words, final for consonant-ending)\n\n\nPalatal sounds: ñ [ɲ], ll [ʎ] (or [j] in most dialects), ch [ʧ]\n\n\nJota: j/g+e/i [x]\n\n\nTheta: z/c+e/i [θ] in European Spanish (or [s] in Latin America)\n\n\nTap vs trill: r [ɾ] vs rr/initial r [r]\n\n\nNo consonant clusters simplification",
           "lower": "spanish phonology includes:\n\n\n5 pure vowels (a, e, i, o, u) - always pronounced clearly\n\n\nno vowel reduction (unlike english)\n\n\npredictable stress (penultimate for vowel-ending words, final for consonant-ending)\n\n\npalatal sounds: ñ [ɲ], ll [ʎ] (or [j] in most dialects), ch [ʧ]\n\n\njota: j/g+e/i [x]\n\n\ntheta: z/c+e/i [θ] in european spanish (or [s] in latin america)\n\n\ntap vs trill: r [ɾ] vs rr/initial r [r]\n\n\nno consonant clusters simplification"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/api/swedish/",
+      "title": "kokorog2p Swedish G2P",
+      "snippet": "Swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import pho …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Swedish G2P",
+          "text": "Swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"Hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nThe aliases sv, sv-se, swe, and swedish select the same native implementation.\nRuntime phonemization contains no Swedish pronunciation dictionary, network access, or\nneural model. eSpeak and Goruut are disabled by default and can be requested explicitly\nas fallback options.\n\nphonemize_word_raw() returns Swedish reference-style IPA. SwedishG2P then uses an\nexplicit adapter for phones not present in the selected Kokoro vocabulary. The external\nbenchmark compares only the raw result, not adapted Kokoro output.\n\nThis is a…",
+          "lower": "swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nthe aliases sv, sv-se, swe, and swedish select the same native implementation.\nruntime phonemization contains no swedish pronunciation dictionary, network access, or\nneural model. espeak and goruut are disabled by default and can be requested explicitly\nas fallback options.\n\nphonemize_word_raw() returns swedish reference-style ipa. swedishg2p then uses an\nexplicit adapter for phones not present in the selected kokoro vocabulary. the external\nbenchmark compares only the raw result, not adapted kokoro output.\n\nthis is a…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/api/thai/",
+      "title": "kokorog2p Thai G2P",
+      "snippet": "Thai support is a native optional frontend targeting wayu-kokoro-thai-v1. Install it\nwith:\n\npip install \"kokorog2p[th]\"\n\n\n\n\nThe aliases th, …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Thai G2P",
+          "text": "Thai support is a native optional frontend targeting wayu-kokoro-thai-v1. Install it\nwith:\n\npip install \"kokorog2p[th]\"\n\n\n\n\nThe aliases th, th-th, tha, and thai share one cached frontend:\n\nfrom kokorog2p import phonemize\n\nresult = phonemize(\"สวัสดี\", language=\"th\", return_ids=True)\nprint(result.phonemes)\nprint(result.token_ids)",
+          "lower": "thai support is a native optional frontend targeting wayu-kokoro-thai-v1. install it\nwith:\n\npip install \"kokorog2p[th]\"\n\n\n\n\nthe aliases th, th-th, tha, and thai share one cached frontend:\n\nfrom kokorog2p import phonemize\n\nresult = phonemize(\"สวัสดี\", language=\"th\", return_ids=true)\nprint(result.phonemes)\nprint(result.token_ids)"
+        },
+        {
+          "anchor": "",
+          "heading": "Behavior",
+          "text": "Thai runs use TLTK with PyThaiNLP segmentation for recovery. Latin runs use the existing\nEnglishG2P lazily, so ordinary phrases such as text to speech are pronounced as\nEnglish rather than spelled as Thai letter names. Whitespace and supported punctuation\nremain source-aligned.\n\nThe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. That profile maps the Thai low-tone symbol ˩ to token ID 7 and is\nisolated from stock Kokoro and Nabra profiles. Do not combine this profile with another\nincompatible custom profile in one ID stream.",
+          "lower": "thai runs use tltk with pythainlp segmentation for recovery. latin runs use the existing\nenglishg2p lazily, so ordinary phrases such as text to speech are pronounced as\nenglish rather than spelled as thai letter names. whitespace and supported punctuation\nremain source-aligned.\n\nthe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. that profile maps the thai low-tone symbol ˩ to token id 7 and is\nisolated from stock kokoro and nabra profiles. do not combine this profile with another\nincompatible custom profile in one id stream."
+        },
+        {
+          "anchor": "",
+          "heading": "Normalization",
+          "text": "The local Thai normalizer handles Thai digits, cardinal and decimal numbers, ranges,\nrepetition marks, common currency and operator forms, punctuation folding, conservative\nchat elongation, and tested identifier/time forms. Thai combining marks are preserved.\nThai semantic ownership remains local until a released spokenform version provides the\nrequired Thai semantics.",
+          "lower": "the local thai normalizer handles thai digits, cardinal and decimal numbers, ranges,\nrepetition marks, common currency and operator forms, punctuation folding, conservative\nchat elongation, and tested identifier/time forms. thai combining marks are preserved.\nthai semantic ownership remains local until a released spokenform version provides the\nrequired thai semantics."
+        },
+        {
+          "anchor": "",
+          "heading": "Strictness and diagnostics",
+          "text": "strict=True raises after a lexical Thai unit remains unrecovered or the engine\nproduces an invalid model symbol. strict=False retains recovered material and places\ndiagnostic warnings on the frontend and public PhonemizeResult where available.\nDiagnostics include engine exceptions, empty or truncated output, unrecovered words,\ninvalid model symbols, unsupported source symbols, and unrecovered Latin fallback runs.\n\nTLTK and PyThaiNLP are optional and are loaded only by the Thai frontend. A missing\ninstallation raises an actionable error recommending kokorog2p[th]. The pinned Wayu\nbehavior baseline and clean-room deviations are documented in Thai frontend provenance.",
+          "lower": "strict=true raises after a lexical thai unit remains unrecovered or the engine\nproduces an invalid model symbol. strict=false retains recovered material and places\ndiagnostic warnings on the frontend and public phonemizeresult where available.\ndiagnostics include engine exceptions, empty or truncated output, unrecovered words,\ninvalid model symbols, unsupported source symbols, and unrecovered latin fallback runs.\n\ntltk and pythainlp are optional and are loaded only by the thai frontend. a missing\ninstallation raises an actionable error recommending kokorog2p[th]. the pinned wayu\nbehavior baseline and clean-room deviations are documented in thai frontend provenance."
         }
       ]
     },
@@ -839,6 +964,50 @@
           "heading": "Number Processing",
           "text": "Internal number processing utilities shared across languages.",
           "lower": "internal number processing utilities shared across languages."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/api/vietnamese/",
+      "title": "kokorog2p Vietnamese API",
+      "snippet": "kokorog2p provides a native pure-Python Vietnamese frontend under the canonical\nlanguage code vi-vn. The aliases vi, vie, and vietnamese res …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Vietnamese API",
+          "text": "kokorog2p provides a native pure-Python Vietnamese frontend under the canonical\nlanguage code vi-vn. The aliases vi, vie, and vietnamese resolve to the same\nfrontend.\n\nfrom kokorog2p import get_g2p, phonemize\n\ng2p = get_g2p(\"vi\", foreign_fallback=\"english\")\nprint(g2p.phonemize(\"Xin chào!\"))\nresult = phonemize(\"Xin chào!\", language=\"vi\", return_ids=True)\nprint(result.phonemes, result.token_ids)\n\n\n\n\nThe first profile is broad Northern/Hanoi Vietnamese. Each whitespace-separated syllable\nis parsed as onset, optional medial /w/, nucleus, coda or off-glide, and one named\ntone. The six tones are ngang, huyen, hoi, nga, sac, and nang.\n\nInput is normalized to NFC for rule processing while source text and token positions\nremain source-oriented. NFC and NFD spellings have identical pronunciation. V…",
+          "lower": "kokorog2p provides a native pure-python vietnamese frontend under the canonical\nlanguage code vi-vn. the aliases vi, vie, and vietnamese resolve to the same\nfrontend.\n\nfrom kokorog2p import get_g2p, phonemize\n\ng2p = get_g2p(\"vi\", foreign_fallback=\"english\")\nprint(g2p.phonemize(\"xin chào!\"))\nresult = phonemize(\"xin chào!\", language=\"vi\", return_ids=true)\nprint(result.phonemes, result.token_ids)\n\n\n\n\nthe first profile is broad northern/hanoi vietnamese. each whitespace-separated syllable\nis parsed as onset, optional medial /w/, nucleus, coda or off-glide, and one named\ntone. the six tones are ngang, huyen, hoi, nga, sac, and nang.\n\ninput is normalized to nfc for rule processing while source text and token positions\nremain source-oriented. nfc and nfd spellings have identical pronunciation. v…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/ar/PROVENANCE/",
+      "title": "kokorog2p Arabic clean-room provenance",
+      "snippet": "Review date: 2026-08-26\n\n\nTarget: Modern Standard Arabic (MSA)\n\n\nModel profile: nabra-82m-v0.1\n\n\n\nThe Arabic frontend is an independent impl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Arabic clean-room provenance",
+          "text": "Review date: 2026-08-26\n\n\nTarget: Modern Standard Arabic (MSA)\n\n\nModel profile: nabra-82m-v0.1\n\n\n\nThe Arabic frontend is an independent implementation based on the behavior and\ninteroperability requirements in 01_todo.md, KokoroG2P’s public architecture, and\npublic eSpeak-ng and CAMeL Tools APIs. No source from the external Arabic reference was\ncopied, translated, mechanically rewritten, or vendored.",
+          "lower": "review date: 2026-08-26\n\n\ntarget: modern standard arabic (msa)\n\n\nmodel profile: nabra-82m-v0.1\n\n\n\nthe arabic frontend is an independent implementation based on the behavior and\ninteroperability requirements in 01_todo.md, kokorog2p’s public architecture, and\npublic espeak-ng and camel tools apis. no source from the external arabic reference was\ncopied, translated, mechanically rewritten, or vendored."
+        },
+        {
+          "anchor": "",
+          "heading": "Behavioral sources",
+          "text": "Oddadmix reference revision:\nraw revision\n\n\nNabra model card:\noddadmix/Nabra-82M-v0.1\n\n\nCAMeL Tools API: documentation\n\n\neSpeak-ng behavior: the existing KokoroG2P EspeakBackend\n\n\n\nThese links are behavioral and API references only. The reference implementation and its\noutput corpus are not package inputs.",
+          "lower": "oddadmix reference revision:\nraw revision\n\n\nnabra model card:\noddadmix/nabra-82m-v0.1\n\n\ncamel tools api: documentation\n\n\nespeak-ng behavior: the existing kokorog2p espeakbackend\n\n\n\nthese links are behavioral and api references only. the reference implementation and its\noutput corpus are not package inputs."
+        },
+        {
+          "anchor": "",
+          "heading": "Data and licensing",
+          "text": "KokoroG2P source is Apache-2.0. CAMeL Tools is an optional external dependency, and its\nMSA morphology/disambiguation data is a separate external distribution with separate\nlicensing. No CAMeL or CALIMA data, model weights, or external reference artifacts are\nbundled here. CAMeL data must be provisioned locally by the user through CAMeL Tools’\ndocumented workflow; KokoroG2P does not download it.",
+          "lower": "kokorog2p source is apache-2.0. camel tools is an optional external dependency, and its\nmsa morphology/disambiguation data is a separate external distribution with separate\nlicensing. no camel or calima data, model weights, or external reference artifacts are\nbundled here. camel data must be provisioned locally by the user through camel tools’\ndocumented workflow; kokorog2p does not download it."
+        },
+        {
+          "anchor": "",
+          "heading": "Tests and benchmark isolation",
+          "text": "Unit tests use independently authored MSA examples, synthetic cleanup strings, and\ninjected fake adapters. The optional differential benchmark accepts an explicitly\nsupplied oracle environment and never imports or downloads the reference automatically.\nOnly comparison metrics and categorized observations may be recorded in the repository.\n\nThe current checkout contains no external oracle run. Differential results must be\nrecorded only after a maintainer performs that isolated run.",
+          "lower": "unit tests use independently authored msa examples, synthetic cleanup strings, and\ninjected fake adapters. the optional differential benchmark accepts an explicitly\nsupplied oracle environment and never imports or downloads the reference automatically.\nonly comparison metrics and categorized observations may be recorded in the repository.\n\nthe current checkout contains no external oracle run. differential results must be\nrecorded only after a maintainer performs that isolated run."
         }
       ]
     },
@@ -1001,14 +1170,14 @@
         {
           "anchor": "",
           "heading": "Running Tests",
-          "text": "Run all tests:\n\npytest tests/\n\n\n\n\nRun specific test file:\n\npytest tests/test_en_g2p.py\n\n\n\n\nRun with coverage:\n\npytest tests/ --cov=kokorog2p --cov-report=html",
-          "lower": "run all tests:\n\npytest tests/\n\n\n\n\nrun specific test file:\n\npytest tests/test_en_g2p.py\n\n\n\n\nrun with coverage:\n\npytest tests/ --cov=kokorog2p --cov-report=html"
+          "text": "Run the complete suite with one fresh Python process per test module:\n\npython tools/run_test_suite.py\n\n\n\n\nThe isolated runner discovers every tests/test_*.py file in sorted order and runs the\nmodules sequentially. It is the canonical full-suite command on developer machines and\nin exhaustive CI. Use --list to inspect coverage, --fail-fast to stop after the\nfirst failing module, --start-at tests/test_en_g2p.py to resume from a module, and\n--match \"en|normalization\" to select matching modules. Pass pytest options with\n--pytest-arg=-vv or additional arguments after the runner options.\n\nRun targeted selections with plain pytest when process isolation is not needed:\n\npython -m pytest -q tests/test_en_g2p.py\npython -m pytest -m \"not spacy\"\npython -m pytest -q tests/test_attr_parser.py tests/tes…",
+          "lower": "run the complete suite with one fresh python process per test module:\n\npython tools/run_test_suite.py\n\n\n\n\nthe isolated runner discovers every tests/test_*.py file in sorted order and runs the\nmodules sequentially. it is the canonical full-suite command on developer machines and\nin exhaustive ci. use --list to inspect coverage, --fail-fast to stop after the\nfirst failing module, --start-at tests/test_en_g2p.py to resume from a module, and\n--match \"en|normalization\" to select matching modules. pass pytest options with\n--pytest-arg=-vv or additional arguments after the runner options.\n\nrun targeted selections with plain pytest when process isolation is not needed:\n\npython -m pytest -q tests/test_en_g2p.py\npython -m pytest -m \"not spacy\"\npython -m pytest -q tests/test_attr_parser.py tests/tes…"
         },
         {
           "anchor": "",
           "heading": "Running on memory-constrained machines",
-          "text": "The English and German dictionaries are large, and optional spaCy models add substantial\nnative memory. Prefer sequential pytest processes for independent language groups\ninstead of pytest-xdist; each xdist worker loads another interpreter and may load\nanother dictionary or model.\n\npython -m pytest -q tests/test_attr_parser.py tests/test_base.py tests/test_pipeline_api.py\npython -m pytest -q tests/test_en_*.py tests/test_quote_*.py\npython -m pytest -q tests/test_de_g2p.py\n\n\n\n\nPeak RSS can be observed with python tools/run_pytest_with_memory.py -q. For a clean\ncollection comparison, set PYTEST_DISABLE_PLUGIN_AUTOLOAD=1. A bare Killed message\nor exit status 137 can indicate an operating-system OOM kill; on Linux, inspect dmesg\nor journalctl -k after the run and check any container or cgroup…",
-          "lower": "the english and german dictionaries are large, and optional spacy models add substantial\nnative memory. prefer sequential pytest processes for independent language groups\ninstead of pytest-xdist; each xdist worker loads another interpreter and may load\nanother dictionary or model.\n\npython -m pytest -q tests/test_attr_parser.py tests/test_base.py tests/test_pipeline_api.py\npython -m pytest -q tests/test_en_*.py tests/test_quote_*.py\npython -m pytest -q tests/test_de_g2p.py\n\n\n\n\npeak rss can be observed with python tools/run_pytest_with_memory.py -q. for a clean\ncollection comparison, set pytest_disable_plugin_autoload=1. a bare killed message\nor exit status 137 can indicate an operating-system oom kill; on linux, inspect dmesg\nor journalctl -k after the run and check any container or cgroup…"
+          "text": "The English and German dictionaries, optional spaCy models, and native backends can use\nsubstantial memory. Do not use pytest-xdist as the RAM fix. Concurrent workers can\neach load another interpreter, dictionary, or model. The isolated full-suite runner uses\nprocess exit as the hard memory boundary and keeps only one test module active.\n\nFocused peak RSS diagnostics can be run with the separate measurement tool:\n\npython tools/run_pytest_with_memory.py -q tests/test_en_g2p.py\npython tools/run_pytest_with_memory.py -q tests/test_normalization.py\npython tools/run_pytest_with_memory.py -q tests/test_tokenizer.py\npython tools/run_pytest_with_memory.py -q tests/test_ko_g2p.py\npython tools/run_pytest_with_memory.py --max-rss-mb 1500 -q tests/test_en_g2p.py\n\n\n\n\nThe spacy marker identifies tests…",
+          "lower": "the english and german dictionaries, optional spacy models, and native backends can use\nsubstantial memory. do not use pytest-xdist as the ram fix. concurrent workers can\neach load another interpreter, dictionary, or model. the isolated full-suite runner uses\nprocess exit as the hard memory boundary and keeps only one test module active.\n\nfocused peak rss diagnostics can be run with the separate measurement tool:\n\npython tools/run_pytest_with_memory.py -q tests/test_en_g2p.py\npython tools/run_pytest_with_memory.py -q tests/test_normalization.py\npython tools/run_pytest_with_memory.py -q tests/test_tokenizer.py\npython tools/run_pytest_with_memory.py -q tests/test_ko_g2p.py\npython tools/run_pytest_with_memory.py --max-rss-mb 1500 -q tests/test_en_g2p.py\n\n\n\n\nthe spacy marker identifies tests…"
         },
         {
           "anchor": "",
@@ -1068,8 +1237,8 @@
         {
           "anchor": "",
           "heading": "Features",
-          "text": "Multi-language support: English (US/GB), German, French, Czech, Spanish, Italian,\nPortuguese, Chinese, Japanese, Korean, Hebrew\n\n\nMixed-language detection: Automatic detection and handling of texts mixing\nmultiple languages\n\n\nDictionary-based lookup with large gold/silver tier lexicons for select languages\n\n\nRule-based G2P for Romance and Slavic languages with comprehensive phonological\nrules\n\n\nespeak-ng integration as a fallback for out-of-vocabulary words\n\n\nAutomatic IPA to Kokoro phoneme conversion\n\n\nNumber and currency handling across all languages\n\n\nStress assignment based on linguistic rules\n\n\nHigh performance with caching and optimized lookup",
-          "lower": "multi-language support: english (us/gb), german, french, czech, spanish, italian,\nportuguese, chinese, japanese, korean, hebrew\n\n\nmixed-language detection: automatic detection and handling of texts mixing\nmultiple languages\n\n\ndictionary-based lookup with large gold/silver tier lexicons for select languages\n\n\nrule-based g2p for romance and slavic languages with comprehensive phonological\nrules\n\n\nespeak-ng integration as a fallback for out-of-vocabulary words\n\n\nautomatic ipa to kokoro phoneme conversion\n\n\nnumber and currency handling across all languages\n\n\nstress assignment based on linguistic rules\n\n\nhigh performance with caching and optimized lookup"
+          "text": "Multi-language support: English (US/GB), German, French, Czech, Spanish, Italian,\nPortuguese, Chinese, Japanese, Korean, Hebrew, Vietnamese, Kazakh\n\n\nNative Vietnamese: Pure-Python Northern/Hanoi profile with NFC/NFD support and six\nnamed tones\n\n\nMixed-language detection: Automatic detection and handling of texts mixing\nmultiple languages\n\n\nNative Thai (optional): TLTK frontend with Wayu vocabulary targeting, bilingual\nLatin routing, and diagnostics\n\n\nNative Russian (optional): Contextual stress, ё restoration, source-aligned\ntokens, and Kokoro 1.0 vocabulary transforms\n\n\nDictionary-based lookup with large gold/silver tier lexicons for select languages\n\n\nRule-based G2P for Romance and Slavic languages with comprehensive phonological\nrules\n\n\nespeak-ng integration as a fallback for out-of-v…",
+          "lower": "multi-language support: english (us/gb), german, french, czech, spanish, italian,\nportuguese, chinese, japanese, korean, hebrew, vietnamese, kazakh\n\n\nnative vietnamese: pure-python northern/hanoi profile with nfc/nfd support and six\nnamed tones\n\n\nmixed-language detection: automatic detection and handling of texts mixing\nmultiple languages\n\n\nnative thai (optional): tltk frontend with wayu vocabulary targeting, bilingual\nlatin routing, and diagnostics\n\n\nnative russian (optional): contextual stress, ё restoration, source-aligned\ntokens, and kokoro 1.0 vocabulary transforms\n\n\ndictionary-based lookup with large gold/silver tier lexicons for select languages\n\n\nrule-based g2p for romance and slavic languages with comprehensive phonological\nrules\n\n\nespeak-ng integration as a fallback for out-of-v…"
         },
         {
           "anchor": "",
@@ -1080,8 +1249,8 @@
         {
           "anchor": "",
           "heading": "Installation",
-          "text": "# Core package\npip install kokorog2p\n\n# With English support (includes spaCy)\npip install kokorog2p[en]\n\n# With espeak-ng backend\npip install kokorog2p[espeak]\n\n# Full installation (all languages and backends)\npip install kokorog2p[all]\n\n\n\n\n\nUser Guide\n\n\nInstallation\nBasic Installation\n\nWith Language Support\n\nWith Backend Support\n\nFull Installation\n\nDevelopment Installation\n\nSystem Dependencies\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nQuick Start\nBasic Usage\n\nError Handling\n\nSpecifying Language\n\nUsing G2P Instances\n\nLanguage-Specific G2P\n\nWorking with Tokens\n\nNumber Handling\n\nChoosing Backends\n\nDisabling Fallback\n\nPerformance Tips\n\nNext Steps\n\n\n\n\nLanguage Support\nEnglish (en-us, en-gb)\n\nGerman (de)\n\nFrench (fr)\n\nCzech (cs)\n\nSpanish (es)\n\nItalian (it)\n\nPortuguese (pt)\n\nChinese (zh)\n\nJa…",
-          "lower": "# core package\npip install kokorog2p\n\n# with english support (includes spacy)\npip install kokorog2p[en]\n\n# with espeak-ng backend\npip install kokorog2p[espeak]\n\n# full installation (all languages and backends)\npip install kokorog2p[all]\n\n\n\n\n\nuser guide\n\n\ninstallation\nbasic installation\n\nwith language support\n\nwith backend support\n\nfull installation\n\ndevelopment installation\n\nsystem dependencies\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nquick start\nbasic usage\n\nerror handling\n\nspecifying language\n\nusing g2p instances\n\nlanguage-specific g2p\n\nworking with tokens\n\nnumber handling\n\nchoosing backends\n\ndisabling fallback\n\nperformance tips\n\nnext steps\n\n\n\n\nlanguage support\nenglish (en-us, en-gb)\n\ngerman (de)\n\nfrench (fr)\n\nczech (cs)\n\nspanish (es)\n\nitalian (it)\n\nportuguese (pt)\n\nchinese (zh)\n\nja…"
+          "text": "# Core package\npip install kokorog2p\n\n# With English support (includes spaCy)\npip install kokorog2p[en]\n\n# With espeak-ng backend\npip install kokorog2p[espeak]\n\n\n# Kazakh support\npip install \"kokorog2p[kk]\"\n\npip install \"kokorog2p[th]\"  # Thai support with TLTK and PyThaiNLP\n# Full installation (all languages and backends)\npip install kokorog2p[all]\n\n\n\n\n\nUser Guide\n\n\nInstallation\nBasic Installation\n\nWith Language Support\n\nKorean support\n\nWith Backend Support\n\nFull Installation\n\nDevelopment Installation\n\nSystem Dependencies\n\nVerifying Installation\n\nTroubleshooting\n\n\n\n\nQuick Start\nBasic Usage\n\nError Handling\n\nSpecifying Language\n\nUsing G2P Instances\n\nLanguage-Specific G2P\n\nWorking with Tokens\n\nNumber Handling\n\nChoosing Backends\n\nDisabling Fallback\n\nPerformance Tips\n\nNext Steps\n\n\n\n\nLanguage…",
+          "lower": "# core package\npip install kokorog2p\n\n# with english support (includes spacy)\npip install kokorog2p[en]\n\n# with espeak-ng backend\npip install kokorog2p[espeak]\n\n\n# kazakh support\npip install \"kokorog2p[kk]\"\n\npip install \"kokorog2p[th]\"  # thai support with tltk and pythainlp\n# full installation (all languages and backends)\npip install kokorog2p[all]\n\n\n\n\n\nuser guide\n\n\ninstallation\nbasic installation\n\nwith language support\n\nkorean support\n\nwith backend support\n\nfull installation\n\ndevelopment installation\n\nsystem dependencies\n\nverifying installation\n\ntroubleshooting\n\n\n\n\nquick start\nbasic usage\n\nerror handling\n\nspecifying language\n\nusing g2p instances\n\nlanguage-specific g2p\n\nworking with tokens\n\nnumber handling\n\nchoosing backends\n\ndisabling fallback\n\nperformance tips\n\nnext steps\n\n\n\n\nlanguage…"
         },
         {
           "anchor": "",
@@ -1122,6 +1291,30 @@
         },
         {
           "anchor": "",
+          "heading": "Russian",
+          "text": "Russian support is an optional native frontend with lazy contextual stress and an\neSpeak-ng raw IPA path:\n\npip install \"kokorog2p[ru]\"\n\n\n\n\nRUAccent model artifacts may be heavyweight and are not loaded during import. Russian\neSpeak data must pass the runtime combining-acute stress capability probe. Configure a\ncustom data directory with get_g2p(\"ru\", espeak_data=\"/path/to/espeak-ng-data\").\nKokoroG2P does not install or bundle kokoro-ru model weights or compiled eSpeak data.\nSee Russian API.",
+          "lower": "russian support is an optional native frontend with lazy contextual stress and an\nespeak-ng raw ipa path:\n\npip install \"kokorog2p[ru]\"\n\n\n\n\nruaccent model artifacts may be heavyweight and are not loaded during import. russian\nespeak data must pass the runtime combining-acute stress capability probe. configure a\ncustom data directory with get_g2p(\"ru\", espeak_data=\"/path/to/espeak-ng-data\").\nkokorog2p does not install or bundle kokoro-ru model weights or compiled espeak data.\nsee russian api."
+        },
+        {
+          "anchor": "",
+          "heading": "Kazakh",
+          "text": "Kazakh support uses the existing eSpeak-NG integration and the upstream kk voice:\n\npip install \"kokorog2p[kk]\"\n\n\n\n\nThe frontend consumes raw non-English IPA, validates stock Kokoro 1.0 labels, and does\nnot install Epitran, Misaki, or a Kazakh lexicon. The upstream voice is marked\ntesting.",
+          "lower": "kazakh support uses the existing espeak-ng integration and the upstream kk voice:\n\npip install \"kokorog2p[kk]\"\n\n\n\n\nthe frontend consumes raw non-english ipa, validates stock kokoro 1.0 labels, and does\nnot install epitran, misaki, or a kazakh lexicon. the upstream voice is marked\ntesting."
+        },
+        {
+          "anchor": "",
+          "heading": "Vietnamese",
+          "text": "Vietnamese is included in the core pure-Python installation. It uses the vi-vn\nNorthern/Hanoi profile and does not require a Vietnamese-specific package or model\ndownload:\n\nfrom kokorog2p import phonemize\nprint(phonemize(\"Xin chào!\", language=\"vi\").phonemes)",
+          "lower": "vietnamese is included in the core pure-python installation. it uses the vi-vn\nnorthern/hanoi profile and does not require a vietnamese-specific package or model\ndownload:\n\nfrom kokorog2p import phonemize\nprint(phonemize(\"xin chào!\", language=\"vi\").phonemes)"
+        },
+        {
+          "anchor": "",
+          "heading": "Thai",
+          "text": "Thai support is optional and installs TLTK plus PyThaiNLP:\n\npip install \"kokorog2p[th]\"\n\n\n\n\nThe native Thai frontend targets wayu-kokoro-thai-v1, uses a separate vocabulary\nprofile, and lazily creates the existing English frontend for Latin phrases. Core\ninstallation does not import Thai dependencies. See Thai G2P for normalization,\ndiagnostics, and strict-mode behavior.",
+          "lower": "thai support is optional and installs tltk plus pythainlp:\n\npip install \"kokorog2p[th]\"\n\n\n\n\nthe native thai frontend targets wayu-kokoro-thai-v1, uses a separate vocabulary\nprofile, and lazily creates the existing english frontend for latin phrases. core\ninstallation does not import thai dependencies. see thai g2p for normalization,\ndiagnostics, and strict-mode behavior."
+        },
+        {
+          "anchor": "",
           "heading": "Chinese",
           "text": "For Chinese support:\n\npip install kokorog2p[zh]\n\n\n\n\nThis includes:\n\n\njieba for tokenization\n\n\npypinyin for pinyin conversion\n\n\ncn2an for number handling\n\n\nTone sandhi rules",
           "lower": "for chinese support:\n\npip install kokorog2p[zh]\n\n\n\n\nthis includes:\n\n\njieba for tokenization\n\n\npypinyin for pinyin conversion\n\n\ncn2an for number handling\n\n\ntone sandhi rules"
@@ -1129,14 +1322,14 @@
         {
           "anchor": "",
           "heading": "Japanese",
-          "text": "For Japanese support:\n\npip install kokorog2p[ja]\n\n\n\n\nThis includes:\n\n\npyopenjtalk for text analysis\n\n\nCutlet for romanization\n\n\nMora-based phoneme generation",
-          "lower": "for japanese support:\n\npip install kokorog2p[ja]\n\n\n\n\nthis includes:\n\n\npyopenjtalk for text analysis\n\n\ncutlet for romanization\n\n\nmora-based phoneme generation"
+          "text": "For the recommended OpenJTalk-compatible Japanese backend:\n\npip install \"kokorog2p[ja]\"\n\n\n\n\nThis installs only the primary pyopenjtalk frontend and the Kokoro mora mapper. The\nlegacy Cutlet backend is separate:\n\npip install \"kokorog2p[ja-cutlet]\"\n\n\n\n\nThe Cutlet extra uses unidic-lite and is intended for compatibility use. Full UniDic\nis an explicit opt-in and is not downloaded by pip:\n\npip install \"kokorog2p[ja-cutlet-full]\"\npython -m unidic download\n\n\n\n\nbackend selects the Japanese frontend and version selects the target model\nrepresentation. use_espeak_fallback is retained for API compatibility but is not used\nby Japanese G2P.",
+          "lower": "for the recommended openjtalk-compatible japanese backend:\n\npip install \"kokorog2p[ja]\"\n\n\n\n\nthis installs only the primary pyopenjtalk frontend and the kokoro mora mapper. the\nlegacy cutlet backend is separate:\n\npip install \"kokorog2p[ja-cutlet]\"\n\n\n\n\nthe cutlet extra uses unidic-lite and is intended for compatibility use. full unidic\nis an explicit opt-in and is not downloaded by pip:\n\npip install \"kokorog2p[ja-cutlet-full]\"\npython -m unidic download\n\n\n\n\nbackend selects the japanese frontend and version selects the target model\nrepresentation. use_espeak_fallback is retained for api compatibility but is not used\nby japanese g2p."
         },
         {
           "anchor": "",
-          "heading": "Mixed-Language Detection",
-          "text": "For automatic language detection in mixed-language texts:\n\npip install kokorog2p[mixed]\n\n\n\n\nThis includes:\n\n\nlingua-language-detector for high-accuracy detection\n\n\nAutomatic routing to appropriate G2P engines\n\n\nSupport for 17+ languages\n\n\nCaching for performance",
-          "lower": "for automatic language detection in mixed-language texts:\n\npip install kokorog2p[mixed]\n\n\n\n\nthis includes:\n\n\nlingua-language-detector for high-accuracy detection\n\n\nautomatic routing to appropriate g2p engines\n\n\nsupport for 17+ languages\n\n\ncaching for performance"
+          "heading": "Korean support",
+          "text": "For Korean G2P with the Kokoro 82M v1.0 model alphabet:\n\npip install \"kokorog2p[ko]\"\n\n\n\n\nKorean morphology is optional. Install the upstream-compatible Korean analyzer with:\n\npip install \"kokorog2p[ko-mecab]\"\n\n\n\n\nThe default Korean voice metadata is jf_alpha, the Japanese voice requested for Korean\nsynthesis. Pure Hangul does not require CMUdict. Latin input requires the NLTK cmudict\nresource, which is installed separately with python -m nltk.downloader cmudict. For\nautomatic language detection in mixed-language texts:\n\npip install kokorog2p[mixed]\n\n\n\n\nThis includes:\n\n\nlingua-language-detector for high-accuracy detection\n\n\nAutomatic routing to appropriate G2P engines\n\n\nSupport for 17+ languages\n\n\nCaching for performance",
+          "lower": "for korean g2p with the kokoro 82m v1.0 model alphabet:\n\npip install \"kokorog2p[ko]\"\n\n\n\n\nkorean morphology is optional. install the upstream-compatible korean analyzer with:\n\npip install \"kokorog2p[ko-mecab]\"\n\n\n\n\nthe default korean voice metadata is jf_alpha, the japanese voice requested for korean\nsynthesis. pure hangul does not require cmudict. latin input requires the nltk cmudict\nresource, which is installed separately with python -m nltk.downloader cmudict. for\nautomatic language detection in mixed-language texts:\n\npip install kokorog2p[mixed]\n\n\n\n\nthis includes:\n\n\nlingua-language-detector for high-accuracy detection\n\n\nautomatic routing to appropriate g2p engines\n\n\nsupport for 17+ languages\n\n\ncaching for performance"
         },
         {
           "anchor": "",
@@ -1197,6 +1390,25 @@
           "heading": "Performance Issues",
           "text": "For better performance:\n\n\nUse dictionary-based G2P when possible (English, German, French)\n\n\nEnable caching (enabled by default)\n\n\nReuse G2P instances instead of creating new ones\n\n\nConsider using espeak-ng fallback only for truly OOV words",
           "lower": "for better performance:\n\n\nuse dictionary-based g2p when possible (english, german, french)\n\n\nenable caching (enabled by default)\n\n\nreuse g2p instances instead of creating new ones\n\n\nconsider using espeak-ng fallback only for truly oov words"
+        },
+        {
+          "anchor": "",
+          "heading": "Arabic MSA",
+          "text": "Install the native Arabic path with the existing eSpeak extra:\n\npip install \"kokorog2p[ar]\"\n\n\n\n\nFor unvocalized MSA, the optional CAMeL adapter is available separately:\n\npip install \"kokorog2p[ar-diacritize]\"\n\n\n\n\nProvision disambig-mle-calima-msa-r13 using CAMeL Tools’ documented local data\nworkflow. KokoroG2P does not download or provision CAMeL data, and the data license is\nseparate from the Apache-2.0 KokoroG2P package. Use diacritizer=\"none\" for\nalready-vocalized Arabic.",
+          "lower": "install the native arabic path with the existing espeak extra:\n\npip install \"kokorog2p[ar]\"\n\n\n\n\nfor unvocalized msa, the optional camel adapter is available separately:\n\npip install \"kokorog2p[ar-diacritize]\"\n\n\n\n\nprovision disambig-mle-calima-msa-r13 using camel tools’ documented local data\nworkflow. kokorog2p does not download or provision camel data, and the data license is\nseparate from the apache-2.0 kokorog2p package. use diacritizer=\"none\" for\nalready-vocalized arabic."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/kk/PROVENANCE/",
+      "title": "kokorog2p Kazakh provenance",
+      "snippet": "kokorog2p does not copy eSpeak-NG Kazakh spelling rules into Python.\n\n\neSpeak-NG is invoked as the external runtime pronunciation engine wit …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Kazakh provenance",
+          "text": "kokorog2p does not copy eSpeak-NG Kazakh spelling rules into Python.\n\n\neSpeak-NG is invoked as the external runtime pronunciation engine with voice kk.\n\n\nThe upstream Kazakh language declaration, spelling rules, and letter/number list were\ninspected to establish supported scope.\n\n\nMisaki’s generic eSpeak architecture informed the raw-IPA compatibility design, but\nMisaki is not a runtime dependency.\n\n\nEpitran was researched as an optional differential benchmark reference only.\n\n\nThe Kazakh Kokoro fine-tune model card was used as interoperability evidence that a\nKokoro-derived model already uses eSpeak-NG for kk.\n\n\n\nThe upstream eSpeak-NG Kazakh voice currently reports status testing. The benchmark is\ntherefore diagnostic and avoids treating one eSpeak release’s exact IPA output as a\nperman…",
+          "lower": "kokorog2p does not copy espeak-ng kazakh spelling rules into python.\n\n\nespeak-ng is invoked as the external runtime pronunciation engine with voice kk.\n\n\nthe upstream kazakh language declaration, spelling rules, and letter/number list were\ninspected to establish supported scope.\n\n\nmisaki’s generic espeak architecture informed the raw-ipa compatibility design, but\nmisaki is not a runtime dependency.\n\n\nepitran was researched as an optional differential benchmark reference only.\n\n\nthe kazakh kokoro fine-tune model card was used as interoperability evidence that a\nkokoro-derived model already uses espeak-ng for kk.\n\n\n\nthe upstream espeak-ng kazakh voice currently reports status testing. the benchmark is\ntherefore diagnostic and avoids treating one espeak release’s exact ipa output as a\nperman…"
         }
       ]
     },
@@ -1418,56 +1630,56 @@
         {
           "anchor": "",
           "heading": "Japanese (ja)",
-          "text": "Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.",
-          "lower": "japanese g2p uses pyopenjtalk for text analysis and mora-based phoneme generation."
+          "text": "Japanese G2P uses an OpenJTalk-compatible frontend for linguistic analysis, then maps\npronunciation moras and accent metadata into the Kokoro Japanese vocabulary.",
+          "lower": "japanese g2p uses an openjtalk-compatible frontend for linguistic analysis, then maps\npronunciation moras and accent metadata into the kokoro japanese vocabulary."
         },
         {
           "anchor": "",
           "heading": "Features",
-          "text": "pyopenjtalk: Full Japanese text analysis\n\n\nMora-based: Phonemes aligned with mora structure\n\n\nPitch accent: Automatic pitch accent assignment\n\n\nNumber handling: Japanese numerals",
-          "lower": "pyopenjtalk: full japanese text analysis\n\n\nmora-based: phonemes aligned with mora structure\n\n\npitch accent: automatic pitch accent assignment\n\n\nnumber handling: japanese numerals"
+          "text": "OpenJTalk frontend: Morphological analysis, readings, phrase boundaries, and\naccent data\n\n\nMora-based mapping: Japanese pronunciation is converted to Kokoro phoneme symbols\n\n\nAligned pitch channel: JapaneseG2P.phonemize() returns base phonemes followed by\nan equally long pitch/control channel\n\n\nOptional Cutlet backend: A legacy romaji backend is available separately",
+          "lower": "openjtalk frontend: morphological analysis, readings, phrase boundaries, and\naccent data\n\n\nmora-based mapping: japanese pronunciation is converted to kokoro phoneme symbols\n\n\naligned pitch channel: japaneseg2p.phonemize() returns base phonemes followed by\nan equally long pitch/control channel\n\n\noptional cutlet backend: a legacy romaji backend is available separately"
         },
         {
           "anchor": "",
           "heading": "Usage",
-          "text": "from kokorog2p.ja import JapaneseG2P\n\ng2p = JapaneseG2P(\n    language=\"ja\",\n    version=\"pyopenjtalk\"\n)",
-          "lower": "from kokorog2p.ja import japaneseg2p\n\ng2p = japaneseg2p(\n    language=\"ja\",\n    version=\"pyopenjtalk\"\n)"
+          "text": "from kokorog2p.ja import JapaneseG2P\n\ng2p = JapaneseG2P(\n    language=\"ja\",\n    backend=\"pyopenjtalk\",\n    version=\"1.0\",\n)\nprint(g2p.phonemize(\"こんにちは\"))\n\n\n\n\nbackend selects the linguistic frontend. version selects the target Kokoro model\nrepresentation and is not a backend selector. The legacy version=\"pyopenjtalk\" and\nversion=\"cutlet\" forms are deprecated.\n\nFor the legacy backend, install kokorog2p[ja-cutlet]. The recommended ja extra\ncontains only the primary OpenJTalk-compatible backend. Full UniDic is an explicit\noption and requires python -m unidic download after installation.",
+          "lower": "from kokorog2p.ja import japaneseg2p\n\ng2p = japaneseg2p(\n    language=\"ja\",\n    backend=\"pyopenjtalk\",\n    version=\"1.0\",\n)\nprint(g2p.phonemize(\"こんにちは\"))\n\n\n\n\nbackend selects the linguistic frontend. version selects the target kokoro model\nrepresentation and is not a backend selector. the legacy version=\"pyopenjtalk\" and\nversion=\"cutlet\" forms are deprecated.\n\nfor the legacy backend, install kokorog2p[ja-cutlet]. the recommended ja extra\ncontains only the primary openjtalk-compatible backend. full unidic is an explicit\noption and requires python -m unidic download after installation."
         },
         {
           "anchor": "",
-          "heading": "Examples",
-          "text": "from kokorog2p import phonemize\n\nprint(phonemize(\"こんにちは\", language=\"ja\"))\n# → koɴɲit͡ɕiha\n\nprint(phonemize(\"世界\", language=\"ja\"))\n# → sekai",
-          "lower": "from kokorog2p import phonemize\n\nprint(phonemize(\"こんにちは\", language=\"ja\"))\n# → koɴɲit͡ɕiha\n\nprint(phonemize(\"世界\", language=\"ja\"))\n# → sekai"
+          "heading": "Japanese espeak flag",
+          "text": "use_espeak_fallback is retained for common API compatibility but is not used by the\nJapanese backend. It is not a Japanese benchmark or performance configuration.",
+          "lower": "use_espeak_fallback is retained for common api compatibility but is not used by the\njapanese backend. it is not a japanese benchmark or performance configuration."
         },
         {
           "anchor": "",
           "heading": "Korean (ko)",
-          "text": "Korean G2P uses MeCab-based morphological analysis with comprehensive phonological\nrules.",
-          "lower": "korean g2p uses mecab-based morphological analysis with comprehensive phonological\nrules."
+          "text": "Korean G2P uses the vendored 5Hyeons g2pkc compatibility rules. Morphology is optional\nand is used only when a supported Korean analyzer is installed.",
+          "lower": "korean g2p uses the vendored 5hyeons g2pkc compatibility rules. morphology is optional\nand is used only when a supported korean analyzer is installed."
         },
         {
           "anchor": "",
           "heading": "Features",
-          "text": "MeCab integration: Korean morphological analysis\n\n\nPhonological rules:\n\n\nConsonant assimilation\n\n\nPalatalization\n\n\nTensification\n\n\nAspiration\n\n\nLiaison (연음)\n\n\nFinal consonant neutralization\n\n\n\n\n\nHanja support: Sino-Korean character handling\n\n\nNumber handling: Korean numerals",
-          "lower": "mecab integration: korean morphological analysis\n\n\nphonological rules:\n\n\nconsonant assimilation\n\n\npalatalization\n\n\ntensification\n\n\naspiration\n\n\nliaison (연음)\n\n\nfinal consonant neutralization\n\n\n\n\n\nhanja support: sino-korean character handling\n\n\nnumber handling: korean numerals"
+          "text": "g2pkc compatibility baseline: Korean Standard Pronunciation rules, liaison,\nassimilation, palatalization, tensification, aspiration, and number context\n\n\nMorphology modes: auto, required, or off\n\n\nOutput modes: model (default Kokoro 82M v1.0 alphabet), ipa, or positional\njamo\n\n\nDefault voice metadata: jf_alpha, the Japanese Kokoro voice requested for Korean\n\n\nOffline behavior: pure Hangul does not load CMUdict; Latin input requires the NLTK\nCMUdict resource\n\n\nHanja: not currently converted; Hanja support is intentionally not claimed\n\n\nProvenance: see kokorog2p/ko/README.md for the frozen source revision and\nchecksums",
+          "lower": "g2pkc compatibility baseline: korean standard pronunciation rules, liaison,\nassimilation, palatalization, tensification, aspiration, and number context\n\n\nmorphology modes: auto, required, or off\n\n\noutput modes: model (default kokoro 82m v1.0 alphabet), ipa, or positional\njamo\n\n\ndefault voice metadata: jf_alpha, the japanese kokoro voice requested for korean\n\n\noffline behavior: pure hangul does not load cmudict; latin input requires the nltk\ncmudict resource\n\n\nhanja: not currently converted; hanja support is intentionally not claimed\n\n\nprovenance: see kokorog2p/ko/readme.md for the frozen source revision and\nchecksums"
         },
         {
           "anchor": "",
           "heading": "Usage",
-          "text": "from kokorog2p.ko import KoreanG2P\n\ng2p = KoreanG2P(\n    language=\"ko-kr\",\n    use_mecab=True\n)",
-          "lower": "from kokorog2p.ko import koreang2p\n\ng2p = koreang2p(\n    language=\"ko-kr\",\n    use_mecab=true\n)"
+          "text": "from kokorog2p.ko import KoreanG2P\n\ng2p = KoreanG2P(\n    language=\"ko-kr\",\n    morphology=\"auto\",\n    voice=\"jf_alpha\",\n    output=\"model\",\n )\n\n\n\n\nUse output=\"ipa\" for the linguistic IPA-like representation, including positional coda\nmarkers. Use output=\"jamo\" to inspect the g2pkc intermediate form. The model output\nexplicitly maps markers absent from Kokoro 82M v1.0 and rejects other unsupported\nsymbols.",
+          "lower": "from kokorog2p.ko import koreang2p\n\ng2p = koreang2p(\n    language=\"ko-kr\",\n    morphology=\"auto\",\n    voice=\"jf_alpha\",\n    output=\"model\",\n )\n\n\n\n\nuse output=\"ipa\" for the linguistic ipa-like representation, including positional coda\nmarkers. use output=\"jamo\" to inspect the g2pkc intermediate form. the model output\nexplicitly maps markers absent from kokoro 82m v1.0 and rejects other unsupported\nsymbols."
+        },
+        {
+          "anchor": "",
+          "heading": "Vietnamese (vi-vn)",
+          "text": "Vietnamese uses a native pure-Python broad Northern/Hanoi frontend. The aliases vi,\nvie, and vietnamese resolve to vi-vn. It parses each whitespace-separated syllable\nstructurally, extracts six named tones, and renders directly with the Kokoro model\nprofile.\n\nfrom kokorog2p import phonemize\n\nresult = phonemize(\"Xin chào!\", language=\"vi\", return_ids=True)\nprint(result.phonemes, result.token_ids)\n\n\n\n\nNo Vietnamese-specific extra or vig2p runtime dependency is required. Invalid or\nforeign tokens use the existing lazy English fallback by default; pass\nforeign_fallback=\"none\" or \"espeak\" to get_g2p. Semantic number, date, URL, and\ncurrency normalization remains outside this phonology module. See Vietnamese API\nand vi/PROVENANCE for the model profile, limitations, and clean-room sources.",
+          "lower": "vietnamese uses a native pure-python broad northern/hanoi frontend. the aliases vi,\nvie, and vietnamese resolve to vi-vn. it parses each whitespace-separated syllable\nstructurally, extracts six named tones, and renders directly with the kokoro model\nprofile.\n\nfrom kokorog2p import phonemize\n\nresult = phonemize(\"xin chào!\", language=\"vi\", return_ids=true)\nprint(result.phonemes, result.token_ids)\n\n\n\n\nno vietnamese-specific extra or vig2p runtime dependency is required. invalid or\nforeign tokens use the existing lazy english fallback by default; pass\nforeign_fallback=\"none\" or \"espeak\" to get_g2p. semantic number, date, url, and\ncurrency normalization remains outside this phonology module. see vietnamese api\nand vi/provenance for the model profile, limitations, and clean-room sources."
         },
         {
           "anchor": "",
           "heading": "Examples",
-          "text": "from kokorog2p import phonemize\n\nprint(phonemize(\"안녕하세요\", language=\"ko\"))\n# → annjʌŋhasejo\n\n# Phonological rules\nprint(phonemize(\"학교\", language=\"ko\"))     # → hakk͈jo (tensification)\nprint(phonemize(\"받침\", language=\"ko\"))     # → patʃʰim (palatalization)",
-          "lower": "from kokorog2p import phonemize\n\nprint(phonemize(\"안녕하세요\", language=\"ko\"))\n# → annjʌŋhasejo\n\n# phonological rules\nprint(phonemize(\"학교\", language=\"ko\"))     # → hakk͈jo (tensification)\nprint(phonemize(\"받침\", language=\"ko\"))     # → patʃʰim (palatalization)"
-        },
-        {
-          "anchor": "",
-          "heading": "Hebrew (he)",
-          "text": "Hebrew G2P uses phonikud for nikud-based phonemization.",
-          "lower": "hebrew g2p uses phonikud for nikud-based phonemization."
+          "text": "from kokorog2p import phonemize\n\nprint(phonemize(\"안녕하세요\", language=\"ko\"))\n # → annjʌŋhasejo\n\nprint(phonemize(\"학교\", language=\"ko\"))\n # → hakkjo in the model alphabet\n\n# Explicit linguistic output\nfrom kokorog2p.ko import KoreanG2P\nprint(KoreanG2P(output=\"ipa\", morphology=\"off\").phonemize(\"강\"))\n # → kaŋ\n\n\n\n\nuse_espeak_fallback, use_goruut_fallback, spaCy settings, and dictionary tier flags\nare retained for common factory compatibility but do not control Korean pronunciation.\n\nHebrew G2P uses phonikud for nikud-based phonemization.",
+          "lower": "from kokorog2p import phonemize\n\nprint(phonemize(\"안녕하세요\", language=\"ko\"))\n # → annjʌŋhasejo\n\nprint(phonemize(\"학교\", language=\"ko\"))\n # → hakkjo in the model alphabet\n\n# explicit linguistic output\nfrom kokorog2p.ko import koreang2p\nprint(koreang2p(output=\"ipa\", morphology=\"off\").phonemize(\"강\"))\n # → kaŋ\n\n\n\n\nuse_espeak_fallback, use_goruut_fallback, spacy settings, and dictionary tier flags\nare retained for common factory compatibility but do not control korean pronunciation.\n\nhebrew g2p uses phonikud for nikud-based phonemization."
         },
         {
           "anchor": "",
@@ -1502,8 +1714,8 @@
         {
           "anchor": "",
           "heading": "Supported Languages",
-          "text": "English (en-us, en-gb)\n\n\nGerman (de)\n\n\nFrench (fr)\n\n\nSpanish (es)\n\n\nItalian (it)\n\n\nPortuguese (pt)\n\n\nJapanese (ja)\n\n\nChinese (zh)\n\n\nKorean (ko)\n\n\nHebrew (he)\n\n\nCzech (cs)\n\n\nDutch (nl)\n\n\nPolish (pl)\n\n\nRussian (ru)\n\n\nArabic (ar)\n\n\nHindi (hi)\n\n\nTurkish (tr)",
-          "lower": "english (en-us, en-gb)\n\n\ngerman (de)\n\n\nfrench (fr)\n\n\nspanish (es)\n\n\nitalian (it)\n\n\nportuguese (pt)\n\n\njapanese (ja)\n\n\nchinese (zh)\n\n\nkorean (ko)\n\n\nhebrew (he)\n\n\nczech (cs)\n\n\ndutch (nl)\n\n\npolish (pl)\n\n\nrussian (ru)\n\n\narabic (ar)\n\n\nhindi (hi)\n\n\nturkish (tr)"
+          "text": "English (en-us, en-gb)\n\n\nGerman (de)\n\n\nFrench (fr)\n\n\nSpanish (es)\n\n\nItalian (it)\n\n\nPortuguese (pt)\n\n\nJapanese (ja)\n\n\nChinese (zh)\n\n\nKorean (ko)\n\n\nVietnamese (vi-vn, vi)\n\n\nHebrew (he)\n\n\nCzech (cs)\n\n\nDutch (nl)\n\n\nPolish (pl)\n\n\nRussian (ru)\n\n\nArabic (ar)\n\n\nHindi (hi)\n\n\nTurkish (tr)",
+          "lower": "english (en-us, en-gb)\n\n\ngerman (de)\n\n\nfrench (fr)\n\n\nspanish (es)\n\n\nitalian (it)\n\n\nportuguese (pt)\n\n\njapanese (ja)\n\n\nchinese (zh)\n\n\nkorean (ko)\n\n\nvietnamese (vi-vn, vi)\n\n\nhebrew (he)\n\n\nczech (cs)\n\n\ndutch (nl)\n\n\npolish (pl)\n\n\nrussian (ru)\n\n\narabic (ar)\n\n\nhindi (hi)\n\n\nturkish (tr)"
         }
       ]
     },
@@ -1791,6 +2003,12 @@
         },
         {
           "anchor": "",
+          "heading": "Nabra Arabic profile",
+          "text": "Arabic MSA uses the explicit nabra-82m-v0.1 vocabulary profile. It is derived from\nstock Kokoro 1.0 without mutating that mapping. The profile preserves the dedicated\nsymbols ʕ and ħ at IDs 7 and 8 respectively. These IDs are only meaningful when\npassed to the compatible Nabra model; they are not a stock Kokoro 1.0 Arabic contract.",
+          "lower": "arabic msa uses the explicit nabra-82m-v0.1 vocabulary profile. it is derived from\nstock kokoro 1.0 without mutating that mapping. the profile preserves the dedicated\nsymbols ʕ and ħ at ids 7 and 8 respectively. these ids are only meaningful when\npassed to the compatible nabra model; they are not a stock kokoro 1.0 arabic contract."
+        },
+        {
+          "anchor": "",
           "heading": "References",
           "text": "IPA Chart -\nOfficial IPA reference\n\n\nKokoro TTS - Kokoro TTS model\n\n\nEnglish Phonology - Wikipedia\nreference\n\n\nGerman Phonology -\nWikipedia reference",
           "lower": "ipa chart -\nofficial ipa reference\n\n\nkokoro tts - kokoro tts model\n\n\nenglish phonology - wikipedia\nreference\n\n\ngerman phonology -\nwikipedia reference"
@@ -1823,8 +2041,8 @@
         {
           "anchor": "",
           "heading": "Specifying Language",
-          "text": "You can specify the language explicitly:\n\nfrom kokorog2p import phonemize\n\n# US English (default)\nus_phonemes = phonemize(\"Hello world!\", language=\"en-us\").phonemes\n\n# British English\ngb_phonemes = phonemize(\"Hello world!\", language=\"en-gb\").phonemes\n\n# German\nde_phonemes = phonemize(\"Guten Tag\", language=\"de\").phonemes\n\n# French\nfr_phonemes = phonemize(\"Bonjour le monde\", language=\"fr\").phonemes\n\n# Czech\ncs_phonemes = phonemize(\"Dobrý den\", language=\"cs\").phonemes\n\n# Mixed-language (German with English words)\nfrom kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"Das Meeting war great!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\nmixed_phonemes = phonemize(\n    text, language=\"de\",…",
-          "lower": "you can specify the language explicitly:\n\nfrom kokorog2p import phonemize\n\n# us english (default)\nus_phonemes = phonemize(\"hello world!\", language=\"en-us\").phonemes\n\n# british english\ngb_phonemes = phonemize(\"hello world!\", language=\"en-gb\").phonemes\n\n# german\nde_phonemes = phonemize(\"guten tag\", language=\"de\").phonemes\n\n# french\nfr_phonemes = phonemize(\"bonjour le monde\", language=\"fr\").phonemes\n\n# czech\ncs_phonemes = phonemize(\"dobrý den\", language=\"cs\").phonemes\n\n# mixed-language (german with english words)\nfrom kokorog2p import phonemize\nfrom kokorog2p.multilang import preprocess_multilang\n\ntext = \"das meeting war great!\"\noverrides = preprocess_multilang(\n    text,\n    default_language=\"de\",\n    allowed_languages=[\"de\", \"en-us\"],\n)\nmixed_phonemes = phonemize(\n    text, language=\"de\",…"
+          "text": "You can specify the language explicitly:\n\nfrom kokorog2p import phonemize\n\n# US English (default)\nus_phonemes = phonemize(\"Hello world!\", language=\"en-us\").phonemes\n\n# British English\ngb_phonemes = phonemize(\"Hello world!\", language=\"en-gb\").phonemes\n\n# German\nde_phonemes = phonemize(\"Guten Tag\", language=\"de\").phonemes\n\n# French\nfr_phonemes = phonemize(\"Bonjour le monde\", language=\"fr\").phonemes\n\n# Czech\ncs_phonemes = phonemize(\"Dobrý den\", language=\"cs\").phonemes\n\n\n# Kazakh eSpeak-NG frontend\nkk_phonemes = phonemize(\"Сәлем әлем!\", language=\"kk\").phonemes\nprint(kk_phonemes)\n# Requires: pip install \"kokorog2p[kk]\"\n\n# Vietnamese native frontend\nvi_phonemes = phonemize(\"Xin chào!\", language=\"vi\").phonemes\nprint(vi_phonemes)\n# Mixed-language (German with English words)\nfrom kokorog2p import…",
+          "lower": "you can specify the language explicitly:\n\nfrom kokorog2p import phonemize\n\n# us english (default)\nus_phonemes = phonemize(\"hello world!\", language=\"en-us\").phonemes\n\n# british english\ngb_phonemes = phonemize(\"hello world!\", language=\"en-gb\").phonemes\n\n# german\nde_phonemes = phonemize(\"guten tag\", language=\"de\").phonemes\n\n# french\nfr_phonemes = phonemize(\"bonjour le monde\", language=\"fr\").phonemes\n\n# czech\ncs_phonemes = phonemize(\"dobrý den\", language=\"cs\").phonemes\n\n\n# kazakh espeak-ng frontend\nkk_phonemes = phonemize(\"сәлем әлем!\", language=\"kk\").phonemes\nprint(kk_phonemes)\n# requires: pip install \"kokorog2p[kk]\"\n\n# vietnamese native frontend\nvi_phonemes = phonemize(\"xin chào!\", language=\"vi\").phonemes\nprint(vi_phonemes)\n# mixed-language (german with english words)\nfrom kokorog2p import…"
         },
         {
           "anchor": "",
@@ -1915,6 +2133,62 @@
           "heading": "Next Steps",
           "text": "Learn about Language Support for language-specific features\n\n\nSee Advanced Usage for advanced usage patterns\n\n\nCheck the Core API for detailed API documentation",
           "lower": "learn about language support for language-specific features\n\n\nsee advanced usage for advanced usage patterns\n\n\ncheck the core api for detailed api documentation"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/ru/PROVENANCE/",
+      "title": "kokorog2p Russian frontend provenance",
+      "snippet": "Russian support in KokoroG2P is an independent implementation. The file\nzaakirio/kokoro-ru/ru_g2p.py at commit 6c10ac3c058d2baf887f8991049b8 …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Clean-room statement",
+          "text": "Russian support in KokoroG2P is an independent implementation. The file\nzaakirio/kokoro-ru/ru_g2p.py at commit 6c10ac3c058d2baf887f8991049b845ce30b984b is\nused only as a behavioral oracle. KokoroG2P does not copy or vendor its implementation\nsource, comments, regular expressions, exception sets, generated tables, model weights,\ncompiled eSpeak data, or control flow. Any differential benchmark communicates with an\nexplicitly supplied oracle through process I/O only.",
+          "lower": "russian support in kokorog2p is an independent implementation. the file\nzaakirio/kokoro-ru/ru_g2p.py at commit 6c10ac3c058d2baf887f8991049b845ce30b984b is\nused only as a behavioral oracle. kokorog2p does not copy or vendor its implementation\nsource, comments, regular expressions, exception sets, generated tables, model weights,\ncompiled espeak data, or control flow. any differential benchmark communicates with an\nexplicitly supplied oracle through process i/o only."
+        },
+        {
+          "anchor": "",
+          "heading": "Model and vocabulary",
+          "text": "The Russian frontend targets the stock Kokoro 1.0 vocabulary. Russian does not introduce\ntoken IDs or mutate the shared vocabulary. The implementation checks that every final\nsymbol is present in that profile before creating a GToken. The external kokoro-ru\nweights are not a KokoroG2P dependency and are not bundled.",
+          "lower": "the russian frontend targets the stock kokoro 1.0 vocabulary. russian does not introduce\ntoken ids or mutate the shared vocabulary. the implementation checks that every final\nsymbol is present in that profile before creating a gtoken. the external kokoro-ru\nweights are not a kokorog2p dependency and are not bundled."
+        },
+        {
+          "anchor": "",
+          "heading": "Independent linguistic sources",
+          "text": "The initial rules are deliberately conservative and are based on these independent\nreferences:\n\n\nR. I. Avanesov, Russian Literary Pronunciation and Stress, Russian Language, 1984,\nfor literary pronunciation, vowel reduction, and the pronunciation of -ого/-его.\n\n\nM. V. Panov, Russian Phonetics, Prosveshchenie, 1999, for positional vowel\nreduction, palatalized contexts, consonant clusters, and the limited lexical nature of\nчн variation.\n\n\nA. N. Gvozdev, Modern Russian Literary Pronunciation, 1967, for orthoepic exceptions\nand standard consonant cluster treatment.\n\n\nThe Russian National Corpus and the Gramota.ru orthoepic reference service are used as\nindependent checks when selecting lexical examples. Corpus and dictionary data are not\ndistributed with the package.\n\n\neSpeak-ng’s public docu…",
+          "lower": "the initial rules are deliberately conservative and are based on these independent\nreferences:\n\n\nr. i. avanesov, russian literary pronunciation and stress, russian language, 1984,\nfor literary pronunciation, vowel reduction, and the pronunciation of -ого/-его.\n\n\nm. v. panov, russian phonetics, prosveshchenie, 1999, for positional vowel\nreduction, palatalized contexts, consonant clusters, and the limited lexical nature of\nчн variation.\n\n\na. n. gvozdev, modern russian literary pronunciation, 1967, for orthoepic exceptions\nand standard consonant cluster treatment.\n\n\nthe russian national corpus and the gramota.ru orthoepic reference service are used as\nindependent checks when selecting lexical examples. corpus and dictionary data are not\ndistributed with the package.\n\n\nespeak-ng’s public docu…"
+        },
+        {
+          "anchor": "",
+          "heading": "RUAccent",
+          "text": "RUAccent is an optional runtime dependency. The selected package and model revision must\nbe recorded separately when an integration environment is chosen. No model is imported,\ndownloaded, or loaded during import kokorog2p or import kokorog2p.ru. The final\ndependency bounds must reflect the tested Python and Transformers/ONNX Runtime\ncombination rather than an unverified latest-version assumption.\n\nCurrent package metadata and model artifact terms must be checked at release time. This\ndocument intentionally does not make a blanket license claim for future RUAccent model\nartifacts.",
+          "lower": "ruaccent is an optional runtime dependency. the selected package and model revision must\nbe recorded separately when an integration environment is chosen. no model is imported,\ndownloaded, or loaded during import kokorog2p or import kokorog2p.ru. the final\ndependency bounds must reflect the tested python and transformers/onnx runtime\ncombination rather than an unverified latest-version assumption.\n\ncurrent package metadata and model artifact terms must be checked at release time. this\ndocument intentionally does not make a blanket license claim for future ruaccent model\nartifacts."
+        },
+        {
+          "anchor": "",
+          "heading": "eSpeak-ng",
+          "text": "eSpeak-ng source and language rule data are GPL-3.0-or-later. KokoroG2P uses a system or\nseparately installed eSpeak data path and verifies its behavior at runtime. The\nreference repository’s compiled espeak-data is not distributed here. If a custom\ncompiled data artifact is ever distributed, it requires a separate licensing review and\nthe appropriate GPL notices.",
+          "lower": "espeak-ng source and language rule data are gpl-3.0-or-later. kokorog2p uses a system or\nseparately installed espeak data path and verifies its behavior at runtime. the\nreference repository’s compiled espeak-data is not distributed here. if a custom\ncompiled data artifact is ever distributed, it requires a separate licensing review and\nthe appropriate gpl notices."
+        },
+        {
+          "anchor": "",
+          "heading": "Benchmark boundary",
+          "text": "benchmarks/benchmark_ru_differential.py is diagnostic, not a source of implementation\ndata. It requires the caller to provide an oracle interpreter or command explicitly,\nrecords only input/output behavior and metrics, and classifies mismatches as\nimplementation bugs, oracle bugs, valid variants, eSpeak differences, accentuator\ndifferences, or unresolved cases.",
+          "lower": "benchmarks/benchmark_ru_differential.py is diagnostic, not a source of implementation\ndata. it requires the caller to provide an oracle interpreter or command explicitly,\nrecords only input/output behavior and metrics, and classifies mismatches as\nimplementation bugs, oracle bugs, valid variants, espeak differences, accentuator\ndifferences, or unresolved cases."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/ru/README/",
+      "title": "kokorog2p Russian frontend",
+      "snippet": "See the Russian API and the provenance record for\ninstallation, stress behavior, source alignment, licensing, and clean-room boundaries.",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Russian frontend",
+          "text": "See the Russian API and the provenance record for\ninstallation, stress behavior, source alignment, licensing, and clean-room boundaries.",
+          "lower": "see the russian api and the provenance record for\ninstallation, stress behavior, source alignment, licensing, and clean-room boundaries."
         }
       ]
     },
@@ -2114,6 +2388,105 @@
           "heading": "See Also",
           "text": "Core API - Main API functions\n\n\nMarker-Delimited Helper Guide - Convenient marker-based syntax for creating override spans\n\n\nQuick Start - Getting started with kokorog2p",
           "lower": "core api - main api functions\n\n\nmarker-delimited helper guide - convenient marker-based syntax for creating override spans\n\n\nquick start - getting started with kokorog2p"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/sv/PROVENANCE/",
+      "title": "kokorog2p Swedish provenance",
+      "snippet": "The Swedish frontend is a new clean-room Python rule implementation in kokorog2p. No\nsource code is copied from the upstream neural G2P. No …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Runtime implementation",
+          "text": "The Swedish frontend is a new clean-room Python rule implementation in kokorog2p. No\nsource code is copied from the upstream neural G2P. No upstream lexicon is bundled with\nor loaded by the runtime package.",
+          "lower": "the swedish frontend is a new clean-room python rule implementation in kokorog2p. no\nsource code is copied from the upstream neural g2p. no upstream lexicon is bundled with\nor loaded by the runtime package."
+        },
+        {
+          "anchor": "",
+          "heading": "Benchmark reference",
+          "text": "Development benchmarking may use:\n\n\nJoakim/kokoro-sv-g2p/g2p/lexicon.tsv\n\n\nhttps://huggingface.co/Joakim/kokoro-sv-g2p/blob/main/g2p/lexicon.tsv\n\n\nReviewed SHA256: 65eb3aae9c737f6d04c22a44b2ab836d1ec01f682b1cdee07bb2209852355296\n\n\n\nThe TSV is an external NST-derived pronunciation reference. It must be provided\nexplicitly to the benchmark and is not runtime data. The source is a benchmark oracle,\nnot an infallible claim that every row is correct. Underlying Språkbanken/NST provenance\nshould be confirmed separately before adding more specific attribution.",
+          "lower": "development benchmarking may use:\n\n\njoakim/kokoro-sv-g2p/g2p/lexicon.tsv\n\n\nhttps://huggingface.co/joakim/kokoro-sv-g2p/blob/main/g2p/lexicon.tsv\n\n\nreviewed sha256: 65eb3aae9c737f6d04c22a44b2ab836d1ec01f682b1cdee07bb2209852355296\n\n\n\nthe tsv is an external nst-derived pronunciation reference. it must be provided\nexplicitly to the benchmark and is not runtime data. the source is a benchmark oracle,\nnot an infallible claim that every row is correct. underlying språkbanken/nst provenance\nshould be confirmed separately before adding more specific attribution."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/th/PROVENANCE/",
+      "title": "kokorog2p Thai frontend provenance",
+      "snippet": "The Thai frontend is an independent implementation for kokorog2p. The pinned Wayu\nrepository is used only as an externally observed behavior …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Clean-room statement",
+          "text": "The Thai frontend is an independent implementation for kokorog2p. The pinned Wayu\nrepository is used only as an externally observed behavioral oracle. No Wayu\nimplementation source, comments, regular expressions, control flow, model weights,\ngenerated name tables, evaluation corpus, or serving code is copied or vendored.",
+          "lower": "the thai frontend is an independent implementation for kokorog2p. the pinned wayu\nrepository is used only as an externally observed behavioral oracle. no wayu\nimplementation source, comments, regular expressions, control flow, model weights,\ngenerated name tables, evaluation corpus, or serving code is copied or vendored."
+        },
+        {
+          "anchor": "",
+          "heading": "Behavioral baseline",
+          "text": "Reference: kunato/wayu-kokoro-thai-v1\n\n\nBehavioral baseline commit: 50d7f60e41ac118e5bb92b0ba52c30bb7830103c\n\n\nLater tree commits may be used only for packaging context, not as the behavioral\nbaseline.\n\n\nTarget vocabulary fact: Wayu uses ˩ (U+02E9 MODIFIER LETTER EXTRA-LOW TONE BAR) at\ntoken ID 7.",
+          "lower": "reference: kunato/wayu-kokoro-thai-v1\n\n\nbehavioral baseline commit: 50d7f60e41ac118e5bb92b0ba52c30bb7830103c\n\n\nlater tree commits may be used only for packaging context, not as the behavioral\nbaseline.\n\n\ntarget vocabulary fact: wayu uses ˩ (u+02e9 modifier letter extra-low tone bar) at\ntoken id 7."
+        },
+        {
+          "anchor": "",
+          "heading": "Dependencies and licenses",
+          "text": "TLTK, version range selected by the package, is used as the optional Thai\npronunciation engine. TLTK is distributed under the BSD 3-Clause license.\n\n\nPyThaiNLP, version range selected by the package, is used for optional Thai\nsegmentation and recovery. PyThaiNLP is distributed under the Apache License 2.0. Its\ndata and models may have separate CC0 or CC-BY terms, which remain subject to their\nindividual notices.\n\n\nThe Wayu model repository is Apache-2.0 licensed. This implementation does not\nredistribute its weights or source.",
+          "lower": "tltk, version range selected by the package, is used as the optional thai\npronunciation engine. tltk is distributed under the bsd 3-clause license.\n\n\npythainlp, version range selected by the package, is used for optional thai\nsegmentation and recovery. pythainlp is distributed under the apache license 2.0. its\ndata and models may have separate cc0 or cc-by terms, which remain subject to their\nindividual notices.\n\n\nthe wayu model repository is apache-2.0 licensed. this implementation does not\nredistribute its weights or source."
+        },
+        {
+          "anchor": "",
+          "heading": "Deliberate deviations",
+          "text": "Latin runs use the existing kokorog2p.en.EnglishG2P lazily instead of a direct\nMisaki English dependency.\n\n\nNo Rust TLTK port is included.\n\n\nNo generated Thai-name respelling database, runtime Thai lexicon, license-plate\nacrophony, or model-training entity patch table is included.\n\n\nThai semantic normalization remains local to this package until a released\nspokenform version advertises the required Thai semantics.",
+          "lower": "latin runs use the existing kokorog2p.en.englishg2p lazily instead of a direct\nmisaki english dependency.\n\n\nno rust tltk port is included.\n\n\nno generated thai-name respelling database, runtime thai lexicon, license-plate\nacrophony, or model-training entity patch table is included.\n\n\nthai semantic normalization remains local to this package until a released\nspokenform version advertises the required thai semantics."
+        },
+        {
+          "anchor": "",
+          "heading": "Fixture policy",
+          "text": "Tests and benchmark cases are independently authored synthetic or reviewed cases.\nExpected Thai pronunciation may be recorded from the pinned TLTK release, the observed\nreference, or human review. Reference checkouts and network access are development-only\ninputs and are not runtime or normal CI dependencies.",
+          "lower": "tests and benchmark cases are independently authored synthetic or reviewed cases.\nexpected thai pronunciation may be recorded from the pinned tltk release, the observed\nreference, or human review. reference checkouts and network access are development-only\ninputs and are not runtime or normal ci dependencies."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/vi/PROVENANCE/",
+      "title": "kokorog2p Vietnamese frontend provenance",
+      "snippet": "The Vietnamese frontend is a native clean-room implementation for the vi-vn\nNorthern/Hanoi-oriented broad phonemic profile. The implementati …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Vietnamese frontend provenance",
+          "text": "The Vietnamese frontend is a native clean-room implementation for the vi-vn\nNorthern/Hanoi-oriented broad phonemic profile. The implementation did not inspect,\ncopy, translate, or depend on hoang1007/vig2p. The gold cases are independently\nconstructed from ordinary Vietnamese vocabulary and the sources below.",
+          "lower": "the vietnamese frontend is a native clean-room implementation for the vi-vn\nnorthern/hanoi-oriented broad phonemic profile. the implementation did not inspect,\ncopy, translate, or depend on hoang1007/vig2p. the gold cases are independently\nconstructed from ordinary vietnamese vocabulary and the sources below."
+        },
+        {
+          "anchor": "",
+          "heading": "Unicode and tone extraction",
+          "text": "Sources:\n\n\nUnicode Standard, Chapter 7:\nhttps://unicode.org/versions/Unicode16.0.0/core-spec/chapter-7/\n\n\nVietnamese orthography uses U+0300 grave, U+0309 hook above, U+0303 tilde, U+0301\nacute, and U+0323 dot below for the five marked tones.\n\n\n\nReason: canonical NFC/NFD normalization and combining-mark classification.",
+          "lower": "sources:\n\n\nunicode standard, chapter 7:\nhttps://unicode.org/versions/unicode16.0.0/core-spec/chapter-7/\n\n\nvietnamese orthography uses u+0300 grave, u+0309 hook above, u+0303 tilde, u+0301\nacute, and u+0323 dot below for the five marked tones.\n\n\n\nreason: canonical nfc/nfd normalization and combining-mark classification."
+        },
+        {
+          "anchor": "",
+          "heading": "Syllable structure",
+          "text": "Sources:\n\n\nVietnamese syllable structure summary:\nhttps://pmc.ncbi.nlm.nih.gov/articles/PMC9131412/\n\n\nLuong, Vietnamese Speech Synthesis:\nhttps://www.isca-archive.org/iscslp_2006/luong06_iscslp.pdf\n\n\n\nReason: optional onset, medial glide, obligatory nucleus, optional coda, and lexical\ntone represented as separate structural fields.",
+          "lower": "sources:\n\n\nvietnamese syllable structure summary:\nhttps://pmc.ncbi.nlm.nih.gov/articles/pmc9131412/\n\n\nluong, vietnamese speech synthesis:\nhttps://www.isca-archive.org/iscslp_2006/luong06_iscslp.pdf\n\n\n\nreason: optional onset, medial glide, obligatory nucleus, optional coda, and lexical\ntone represented as separate structural fields."
+        },
+        {
+          "anchor": "",
+          "heading": "Inventory and tones",
+          "text": "Source:\n\n\nASHA Vietnamese phonology overview:\nhttps://pubs.asha.org/doi/10.1044/2023_JSLHR-21-00669\n\n\nNorthern Vietnamese tone description:\nhttps://www.frontiersin.org/journals/education/articles/10.3389/feduc.2024.1411660/full\n\n\n\nReason: broad Northern onset, vowel, coda, glide, and six-tone categories. The output\ndeliberately remains broad rather than claiming narrow allophonic accuracy.",
+          "lower": "source:\n\n\nasha vietnamese phonology overview:\nhttps://pubs.asha.org/doi/10.1044/2023_jslhr-21-00669\n\n\nnorthern vietnamese tone description:\nhttps://www.frontiersin.org/journals/education/articles/10.3389/feduc.2024.1411660/full\n\n\n\nreason: broad northern onset, vowel, coda, glide, and six-tone categories. the output\ndeliberately remains broad rather than claiming narrow allophonic accuracy."
+        },
+        {
+          "anchor": "",
+          "heading": "Model adaptation",
+          "text": "Source:\n\n\nKokoro 82M vocabulary is read from this repository’s existing\nkokorog2p/data/kokoro_config.json.\n\n\n\nReason: Vietnamese rendering is checked against the selected Kokoro model vocabulary.\nUnsupported characters are reported instead of silently removed.",
+          "lower": "source:\n\n\nkokoro 82m vocabulary is read from this repository’s existing\nkokorog2p/data/kokoro_config.json.\n\n\n\nreason: vietnamese rendering is checked against the selected kokoro model vocabulary.\nunsupported characters are reported instead of silently removed."
+        },
+        {
+          "anchor": "",
+          "heading": "Gold data",
+          "text": "tests/data/vi_gold.json contains independently selected, human-reviewable examples.\nExpected output is structural broad phonology rendered with the named tone markers.\nExternal G2P implementations are not used to generate the curated expected values.",
+          "lower": "tests/data/vi_gold.json contains independently selected, human-reviewable examples.\nexpected output is structural broad phonology rendered with the named tone markers.\nexternal g2p implementations are not used to generate the curated expected values."
         }
       ]
     }

@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f60610571be569f10142542add3737dd8dbf3bd2"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -680,11 +680,19 @@ example, the German registry accepts <code class="docutils literal notranslate">
 the same boundary policy and replacement metadata. Aliases are registry data,
 not global regular-expression substitutions, so attached strings such as
 <code class="docutils literal notranslate"><span class="pre">pizzaB</span></code>, <code class="docutils literal notranslate"><span class="pre">ModellzB12</span></code>, and <code class="docutils literal notranslate"><span class="pre">du.a.test</span></code> remain unchanged.</p>
-<p>Use the replacement result when a caller needs semantic provenance instead of
-reconstructing edits with a text diff:</p>
+<p>Use the replacement result when a caller needs semantic provenance or exact
+source-aligned edits. <code class="docutils literal notranslate"><span class="pre">ExpansionResult.replacements</span></code> is the authoritative edit
+plan; do not reconstruct these edits with a text diff:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">expander</span><span class="o">.</span><span class="n">expand_with_replacements</span><span class="p">(</span><span class="s2">&quot;Prof. Klein, S. 12&quot;</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">replacement</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">replacements</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">replacement</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span> <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">matched_text</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">start</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">end</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">text</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">rule_id</span><span class="p">,</span>
+        <span class="n">replacement</span><span class="o">.</span><span class="n">canonical_id</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 </section>

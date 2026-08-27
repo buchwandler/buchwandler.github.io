@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -598,6 +598,50 @@ models.</p>
 <li><p>Number and currency handling</p></li>
 </ul>
 </section>
+<section id="russian">
+<h3>Russian</h3>
+<p>Russian support is an optional native frontend with lazy contextual stress and an
+eSpeak-ng raw IPA path:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ru]&quot;</span>
+</pre></div>
+</div>
+<p>RUAccent model artifacts may be heavyweight and are not loaded during import. Russian
+eSpeak data must pass the runtime combining-acute stress capability probe. Configure a
+custom data directory with <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;ru&quot;,</span> <span class="pre">espeak_data=&quot;/path/to/espeak-ng-data&quot;)</span></code>.
+KokoroG2P does not install or bundle <code class="docutils literal notranslate"><span class="pre">kokoro-ru</span></code> model weights or compiled eSpeak data.
+See <a class="reference internal" href="../api/russian/"><span class="std std-doc">Russian API</span></a>.</p>
+</section>
+<section id="kazakh">
+<h3>Kazakh</h3>
+<p>Kazakh support uses the existing eSpeak-NG integration and the upstream <code class="docutils literal notranslate"><span class="pre">kk</span></code> voice:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[kk]&quot;</span>
+</pre></div>
+</div>
+<p>The frontend consumes raw non-English IPA, validates stock Kokoro 1.0 labels, and does
+not install Epitran, Misaki, or a Kazakh lexicon. The upstream voice is marked
+<code class="docutils literal notranslate"><span class="pre">testing</span></code>.</p>
+</section>
+<section id="vietnamese">
+<h3>Vietnamese</h3>
+<p>Vietnamese is included in the core pure-Python installation. It uses the <code class="docutils literal notranslate"><span class="pre">vi-vn</span></code>
+Northern/Hanoi profile and does not require a Vietnamese-specific package or model
+download:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Xin chào!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="thai">
+<h3>Thai</h3>
+<p>Thai support is optional and installs TLTK plus PyThaiNLP:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[th]&quot;</span>
+</pre></div>
+</div>
+<p>The native Thai frontend targets <code class="docutils literal notranslate"><span class="pre">wayu-kokoro-thai-v1</span></code>, uses a separate vocabulary
+profile, and lazily creates the existing English frontend for Latin phrases. Core
+installation does not import Thai dependencies. See <a class="reference internal" href="../api/thai/"><span class="doc">Thai G2P</span></a> for normalization,
+diagnostics, and strict-mode behavior.</p>
+</section>
 <section id="chinese">
 <h3>Chinese</h3>
 <p>For Chinese support:</p>
@@ -614,20 +658,43 @@ models.</p>
 </section>
 <section id="japanese">
 <h3>Japanese</h3>
-<p>For Japanese support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>ja<span class="o">]</span>
+<p>For the recommended OpenJTalk-compatible Japanese backend:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ja]&quot;</span>
 </pre></div>
 </div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>pyopenjtalk for text analysis</p></li>
-<li><p>Cutlet for romanization</p></li>
-<li><p>Mora-based phoneme generation</p></li>
-</ul>
+<p>This installs only the primary <code class="docutils literal notranslate"><span class="pre">pyopenjtalk</span></code> frontend and the Kokoro mora mapper. The
+legacy Cutlet backend is separate:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ja-cutlet]&quot;</span>
+</pre></div>
+</div>
+<p>The Cutlet extra uses <code class="docutils literal notranslate"><span class="pre">unidic-lite</span></code> and is intended for compatibility use. Full UniDic
+is an explicit opt-in and is not downloaded by pip:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ja-cutlet-full]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>unidic<span class="w"> </span>download
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">backend</span></code> selects the Japanese frontend and <code class="docutils literal notranslate"><span class="pre">version</span></code> selects the target model
+representation. <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback</span></code> is retained for API compatibility but is not used
+by Japanese G2P.</p>
 </section>
 <section id="mixed-language-detection">
 <h3>Mixed-Language Detection</h3>
-<p>For automatic language detection in mixed-language texts:</p>
+</section>
+</section>
+<section id="korean-support">
+<h2>Korean support</h2>
+<p>For Korean G2P with the Kokoro 82M v1.0 model alphabet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ko]&quot;</span>
+</pre></div>
+</div>
+<p>Korean morphology is optional. Install the upstream-compatible Korean analyzer with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ko-mecab]&quot;</span>
+</pre></div>
+</div>
+<p>The default Korean voice metadata is <code class="docutils literal notranslate"><span class="pre">jf_alpha</span></code>, the Japanese voice requested for Korean
+synthesis. Pure Hangul does not require CMUdict. Latin input requires the NLTK <code class="docutils literal notranslate"><span class="pre">cmudict</span></code>
+resource, which is installed separately with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">nltk.downloader</span> <span class="pre">cmudict</span></code>. For
+automatic language detection in mixed-language texts:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>mixed<span class="o">]</span>
 </pre></div>
 </div>
@@ -638,7 +705,6 @@ models.</p>
 <li><p>Support for 17+ languages</p></li>
 <li><p>Caching for performance</p></li>
 </ul>
-</section>
 <section id="ssmd-and-phrasplit-integration">
 <h3>SSMD and phrasplit integration</h3>
 <p>The integration adapters are dependency-free. Install the upstream packages only when
@@ -775,6 +841,21 @@ only that requested package; it does not substitute another tier.</p>
 <li><p>Reuse G2P instances instead of creating new ones</p></li>
 <li><p>Consider using espeak-ng fallback only for truly OOV words</p></li>
 </ol>
+</section>
+<section id="arabic-msa">
+<h3>Arabic MSA</h3>
+<p>Install the native Arabic path with the existing eSpeak extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ar]&quot;</span>
+</pre></div>
+</div>
+<p>For unvocalized MSA, the optional CAMeL adapter is available separately:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ar-diacritize]&quot;</span>
+</pre></div>
+</div>
+<p>Provision <code class="docutils literal notranslate"><span class="pre">disambig-mle-calima-msa-r13</span></code> using CAMeL Tools’ documented local data
+workflow. KokoroG2P does not download or provision CAMeL data, and the data license is
+separate from the Apache-2.0 KokoroG2P package. Use <code class="docutils literal notranslate"><span class="pre">diacritizer=&quot;none&quot;</span></code> for
+already-vocalized Arabic.</p>
 </section>
 </section>
 </section>

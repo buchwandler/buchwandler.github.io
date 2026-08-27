@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -556,7 +556,20 @@ maps.</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#optional-lexhint-integration">Optional Lexhint integration</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="languages/">Language support matrix</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="languages/#swedish-scope">Swedish scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#vietnamese-scope">Vietnamese scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#thai-scope">Thai scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#russian-scope">Russian scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#identifier-rules">Identifier rules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#ownership-and-safety">Ownership and safety</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart/">Quickstart</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#japanese-korean-and-chinese">Japanese, Korean, and Chinese</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#swedish">Swedish</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#vietnamese">Vietnamese</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#thai">Thai</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#configuration-object">Configuration object</a></li>
 </ul>
 </li>
@@ -570,6 +583,7 @@ maps.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/">API reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#preparation">Preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#language-identifiers-and-number-backends">Language identifiers and number backends</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#configuration-policy-modes">Configuration policy modes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#result-models">Result models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#export-classification">Export classification</a></li>
@@ -620,19 +634,20 @@ maps.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-checklist/">Release checklist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.1] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.3.0] - 2026-08-19</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.2.8] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.2.7] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.2.6] - 2026-08-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.2.5] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.2.4] - 2026-08-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.2.3] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.2.2] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id37">[0.2.1] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id41">[0.2.0] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id45">[0.1.0] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.3.3] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.2] - 2026-08-26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.1] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.3.0] - 2026-08-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.2.8] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.7] - 2026-08-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.2.6] - 2026-08-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.2.5] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id31">[0.2.4] - 2026-08-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id36">[0.2.3] - 2026-08-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id40">[0.2.2] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id45">[0.2.1] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id49">[0.2.0] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id53">[0.1.0] - 2026-08-07</a></li>
 </ul>
 </li>
 </ul>

@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -553,6 +553,50 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">render_changes</span><span class="p">())</span>
 </pre></div>
 </div>
+<section id="japanese-korean-and-chinese">
+<h2>Japanese, Korean, and Chinese</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;㈱東京は 20°C で 5 km 進む。&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ja&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;株式会社東京は 摂氏 二十 度 で 五 キロメートル 進む。&quot;</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;AI 시스템은 20°C 에서 5 km 이동한다.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;에이아이 시스템은 섭씨 이십도 에서 오 킬로미터 이동한다.&quot;</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;AI系统在 20°C 下运行，距离 5 km。&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;zh_CN&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;人工智能系统在 二十 摄氏度 下运行，距离 五 公里。&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="swedish">
+<h2>Swedish</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare</span>
+
+<span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;Vi har t.ex. 2 kg och temperaturen är 5 °C.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;sv&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;Vi har till exempel två kilogram och temperaturen är fem grader Celsius.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Swedish uses comma decimals and reviewed quantities, temperatures, and Swedish krona amounts. Dates, digital times, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.</p>
+</section>
+<section id="vietnamese">
+<h2>Vietnamese</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span>
+    <span class="s2">&quot;TP. Hà Nội có 2 kg hàng với giá 1000 VND.&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">,</span>
+<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Vietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and VND/₫ amounts, and guarded dependency abbreviations. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed.</p>
+</section>
+<section id="thai">
+<h2>Thai</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;ระยะ 5 กม.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;th&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="s2">&quot;ระยะ ห้า กิโลเมตร&quot;</span>
+</pre></div>
+</div>
+<p>Thai accepts Latin and Thai digits, point decimals, comma or space-family grouping, reviewed quantities, temperatures, and THB amounts. Dates, times, ordinals, ranges, and unreviewed specialist sequences remain caller-managed or fail closed.
+Use canonical <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code> identifiers. The compatibility aliases are <code class="docutils literal notranslate"><span class="pre">jp</span></code> and <code class="docutils literal notranslate"><span class="pre">cn</span></code>.</p>
 <p>The output is a <code class="docutils literal notranslate"><span class="pre">PreparedText</span></code> object. Its main fields are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">source_text</span></code>: input exactly as supplied;</p></li>
@@ -563,6 +607,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p><code class="docutils literal notranslate"><span class="pre">offset_map</span></code>: composed source/output boundary map;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">warnings</span></code>: recoverable protection or spaCy issues.</p></li>
 </ul>
+</section>
 <section id="configuration-object">
 <h2>Configuration object</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">PreparationConfig</span><span class="p">,</span> <span class="n">prepare</span>

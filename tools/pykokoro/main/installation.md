@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
+docs_commit: "dc7c856864d80424adf5dd41f50345ad636ffae9"
 search_enabled: true
 ---
 
@@ -632,16 +632,12 @@ no model or voice is supplied. It provides only <code class="docutils literal no
 MB for the ONNX model plus a 522,506-byte <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice archive on first use. Both
 artifacts are checked against their published SHA-256 digests before being cached under
 <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro</span></code>.</p>
-<p>The previous <code class="docutils literal notranslate"><span class="pre">v1.1-de</span></code> Eva/Bernd model remains an explicit compatibility choice. Use
-<code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_source=&quot;github&quot;,</span> <span class="pre">model_variant=&quot;v1.1-de&quot;,</span> <span class="pre">voice=&quot;df_eva&quot;)</span></code> or
-<code class="docutils literal notranslate"><span class="pre">dm_bernd</span></code> when that legacy profile is required. Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>
-are never replaced by automatic selection; missing custom files fail directly rather
-than triggering a download to the shared cache. Managed cache hits are checksum and
-structure checked before use. The public GitHub download helpers also accept
-<code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a valid managed cache is required. Interrupted GitHub transfers
-retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code> file and resume with HTTP Range requests when the release
-host supports them; completed files are still checked for exact size, SHA-256, and
-structure before replacement.</p>
+<p>Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are never replaced by automatic selection; missing
+custom files fail directly rather than triggering a download to the shared cache.
+Managed cache hits are checksum and structure checked before use. <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a
+valid managed cache is required. Interrupted GitHub transfers retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code>
+file and resume with HTTP Range requests when the release host supports them; completed
+files are still checked for exact size, SHA-256, and structure before replacement.</p>
 </section>
 <section id="system-requirements">
 <h2>System requirements</h2>

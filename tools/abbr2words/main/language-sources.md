@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f60610571be569f10142542add3737dd8dbf3bd2"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -586,23 +586,47 @@ import, build, or normal runtime.</p>
 <td><p>BIPM SI + CLDR</p></td>
 <td><p>conservative agent seed; native review pending</p></td>
 </tr>
-<tr class="row-even"><td><p>RTL</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code>, <code class="docutils literal notranslate"><span class="pre">fa</span></code>, <code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
+<tr class="row-even"><td><p>Arabic</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
+<td><p>Unicode CLDR Arabic units/eras; KSU title/reference guidance; Saudi institutional date usage</p></td>
+<td><p>CLDR + BIPM SI</p></td>
+<td><p>source-backed conservative baseline; native review pending</p></td>
+</tr>
+<tr class="row-odd"><td><p>RTL</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code>, <code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
 <td><p>national orthography guidance</p></td>
 <td><p>BIPM SI + CLDR</p></td>
 <td><p>conservative agent seed; native review pending</p></td>
 </tr>
-<tr class="row-odd"><td><p>Indic</p></td>
+<tr class="row-even"><td><p>Indic</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code>, <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">kn</span></code>, <code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
 <td><p>national orthography guidance</p></td>
 <td><p>BIPM SI + CLDR</p></td>
 <td><p>conservative agent seed; native review pending</p></td>
 </tr>
-<tr class="row-even"><td><p>East/Southeast Asian</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">th</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<tr class="row-odd"><td><p>East/Southeast Asian</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
 <td><p>national orthography guidance</p></td>
 <td><p>BIPM SI + CLDR</p></td>
 <td><p>conservative agent seed; native review pending</p></td>
+</tr>
+<tr class="row-even"><td><p>Mandarin Chinese</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<td><p>PRC legal measurement terminology; MOE translation guidance</p></td>
+<td><p>GB 3100 + CLDR</p></td>
+<td><p>conservative generic Chinese base; Mainland locale reviewed</p></td>
+</tr>
+<tr class="row-odd"><td><p>Korean</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+<td><p>NIKL corporate/terminology guidance; KRISS SI terminology</p></td>
+<td><p>KRISS SI + CLDR</p></td>
+<td><p>source-backed reviewed baseline; broader lexical review pending</p></td>
+</tr>
+<tr class="row-even"><td><p>Japanese</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
+<td><p>NTA organization and government usage guidance</p></td>
+<td><p>NMIJ SI + CLDR</p></td>
+<td><p>reviewed baseline / source-backed; native review pending</p></td>
 </tr>
 <tr class="row-odd"><td><p>Specialist</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">am</span></code>, <code class="docutils literal notranslate"><span class="pre">az</span></code>, <code class="docutils literal notranslate"><span class="pre">ce</span></code>, <code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
@@ -614,7 +638,8 @@ import, build, or normal runtime.</p>
 </table>
 <p>Locale overlays are <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>,
 <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code>.</p>
-<p>Czech, English, French, Italian, Portuguese, and Spanish expose reviewed
+<p>For Mainland Chinese, the runtime terminology follows the currently effective GB 3100-1993 and the pinned CLDR 48.2.1 data. As of 2026-08-26, GB 3100-1993 remains current; SAMR opened consultation on a replacement draft published 2026-08-17. Draft terminology is not treated as normative until a replacement standard is formally issued.
+Czech, English, French, Italian, Portuguese, and Spanish expose reviewed
 structured currency identities. Czech recognizes <code class="docutils literal notranslate"><span class="pre">Kč</span></code>/<code class="docutils literal notranslate"><span class="pre">CZK</span></code> as
 <code class="docutils literal notranslate"><span class="pre">currency-czech-koruna</span></code>; Portuguese recognizes <code class="docutils literal notranslate"><span class="pre">R$</span></code>/<code class="docutils literal notranslate"><span class="pre">BRL</span></code> as
 <code class="docutils literal notranslate"><span class="pre">currency-brazilian-real</span></code>; English, French, Italian, and Spanish reuse the
@@ -631,6 +656,79 @@ case, numeral government, gender, vowel harmony, or apostrophe-attached suffixes
 Turkish unit symbols followed by <code class="docutils literal notranslate"><span class="pre">'</span></code> or <code class="docutils literal notranslate"><span class="pre">’</span></code> remain unchanged under the restricted
 first-release policy.</p>
 </section>
+<section id="russian-source-ledger">
+<h2>Russian source ledger</h2>
+<p>The Russian registry uses the following sources by scope:</p>
+<ul class="simple">
+<li><p><strong>Gramota.ru, Графические сокращения</strong>. Standard graphical abbreviations, including multi-part forms, reference forms, and conservative handling of ambiguous one-letter abbreviations. https://gramota.ru/biblioteka/spravochniki/pravila-russkoy-orfografii-i-punktuatsii/graficheskie-sokrashcheniya</p></li>
+<li><p><strong>Gramota.ru, Как правильно сокращать слова?</strong>. Conventional title, address, railway, and reference abbreviations used selectively with local guards. https://gramota.ru/biblioteka/spravochniki/pismovnik/kak-pravilno-sokrashchat-slova</p></li>
+<li><p><strong>ГОСТ Р 7.0.12-2011</strong>. Bibliographic abbreviation guidance only; its complete appendix is not imported into general prose normalization. https://protect.gost.ru/gost/details/d3976f19-de4b-4509-a799-4f1073690522</p></li>
+<li><p><strong>ГОСТ 8.417-2024</strong>. Active measurement-unit standard effective 2024-09-30, replacing ГОСТ 8.417-2002. It is the primary source for Russian unit symbols and designations. https://protect.gost.ru/gost/details/fa1165d5-0547-429a-9c3e-f16f4bdb101f</p></li>
+<li><p><strong>Unicode CLDR, Russian unit grammar</strong>. Supports the architectural boundary that numeral and case inflection belongs downstream. https://unicode.org/cldr/charts/46/grammar/ru.html</p></li>
+</ul>
+<p>The checked-in Russian source IDs are <code class="docutils literal notranslate"><span class="pre">ru-gramota-graphical-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">ru-gost-r-7-0-12-2011</span></code>, and <code class="docutils literal notranslate"><span class="pre">ru-gost-8-417-2024</span></code>. The unit implementation maps international and Cyrillic symbols to shared canonical identities and emits canonical lemmas without Russian numeral inflection.</p>
+</section>
+<section id="swedish-source-ledger">
+<h2>Swedish source ledger</h2>
+<p>The Swedish registry uses the following sources by scope:</p>
+<ul class="simple">
+<li><p><strong>ISOF, Språkrådet, Snabba skrivregler, 2024</strong>. Lexical abbreviation spelling, including <code class="docutils literal notranslate"><span class="pre">ca</span></code>, prose abbreviations, and weekday forms. https://www.isof.se/utforska/publikationer/publikationer/2024-01-22-snabba-skrivregler</p></li>
+<li><p><strong>ISOF, Myndigheternas skrivregler, section 11.4</strong>. Numeric and reference abbreviations such as <code class="docutils literal notranslate"><span class="pre">bil.</span></code>, <code class="docutils literal notranslate"><span class="pre">ca</span></code>, <code class="docutils literal notranslate"><span class="pre">kap.</span></code>, <code class="docutils literal notranslate"><span class="pre">kl.</span></code>, <code class="docutils literal notranslate"><span class="pre">nr</span></code>, <code class="docutils literal notranslate"><span class="pre">s.</span></code>, <code class="docutils literal notranslate"><span class="pre">tfn</span></code>, and <code class="docutils literal notranslate"><span class="pre">tim</span></code>. https://www.isof.se/download/18.17dda5f1791cdbd2873a99/1620030264840/Mynd-skrivreg2014-1.pdf</p></li>
+<li><p><strong>ISOF Frågelådan, FAQ 22308</strong>. Formal spelling recommendation for <code class="docutils literal notranslate"><span class="pre">p.g.a.</span></code>. https://frageladan.isof.se/faqs/22308</p></li>
+<li><p><strong>ISOF Frågelådan, FAQ 22191</strong>. Current dotted weekday abbreviations. https://frageladan.isof.se/faqs/22191</p></li>
+<li><p><strong>Unicode CLDR 49 Swedish locale data</strong>. Localized unit and shared currency display labels. https://unicode.org/cldr/charts/49/summary/sv.html and https://www.unicode.org/cldr/charts/49/by_type/units.energy_and_power.html</p></li>
+<li><p><strong>Sveriges Riksbank, Valutakoder</strong>. Swedish krona identity, <code class="docutils literal notranslate"><span class="pre">SEK</span></code>, and <code class="docutils literal notranslate"><span class="pre">krona</span></code>. https://www.riksbank.se/sv/statistik/rantor-och-valutakurser/forklaringar—rantor-och-valutakurser/valutakoder/</p></li>
+</ul>
+<p>The Swedish implementation keeps compact undotted weekday and month table forms, initialisms, ambiguous abbreviations, pluralization, and time normalization out of this change. Unit expansions remain canonical labels without Swedish inflection.</p>
+</section>
+<section id="vietnamese-source-ledger">
+<h2>Vietnamese source ledger</h2>
+<p>The Vietnamese baseline uses the following source-backed additions:</p>
+<ul class="simple">
+<li><p><strong>Vietnamese government contact/address usage</strong>. <code class="docutils literal notranslate"><span class="pre">ĐT</span></code>, <code class="docutils literal notranslate"><span class="pre">ĐT.</span></code>, <code class="docutils literal notranslate"><span class="pre">SĐT</span></code>, and <code class="docutils literal notranslate"><span class="pre">TP.</span></code> examples in government directories. https://nongthonmoi.gov.vn/Pages/danh-ba-dien-thoai.aspx and https://langgiang.bacninh.gov.vn/web/bn/duong-day-nong</p></li>
+<li><p><strong>TCVN 7870-1:2010</strong>. Vietnamese SI names, quotient-unit terminology using <code class="docutils literal notranslate"><span class="pre">trên</span></code>, and squared/cubed forms. https://thuvienphapluat.vn/TCVN/Linh-vuc-khac/TCVN-7870-1-2010-Dai-luong-va-don-vi-Quy-dinh-chung-907745.aspx</p></li>
+<li><p><strong>Unicode CLDR 48.2.1</strong>. Vietnamese locale and unit data. https://www.unicode.org/cldr/charts/48/summary/vi.html</p></li>
+<li><p><strong>Vietnam National University academic title usage</strong>. <code class="docutils literal notranslate"><span class="pre">TS.</span></code>, <code class="docutils literal notranslate"><span class="pre">ThS.</span></code>, <code class="docutils literal notranslate"><span class="pre">GS.TS.</span></code>, and <code class="docutils literal notranslate"><span class="pre">PGS.TS.</span></code> examples. https://fes.hus.vnu.edu.vn/employees?status=working</p></li>
+</ul>
+<p>Vietnamese remains a reviewed baseline with source-backed data and native-language review pending. The registry deliberately does not expand ambiguous administrative abbreviations, legal/document identifiers, or arbitrary uppercase initialisms.</p>
+</section>
+<section id="arabic-ar">
+<h2>Arabic (<code class="docutils literal notranslate"><span class="pre">ar</span></code>)</h2>
+<p>Primary sources:</p>
+<ul class="simple">
+<li><p><strong>Unicode CLDR 48 Arabic unit grammar and locale summary</strong>. Neutral unit labels, Arabic calendar-era markers (<code class="docutils literal notranslate"><span class="pre">م</span></code>, <code class="docutils literal notranslate"><span class="pre">هـ</span></code>, <code class="docutils literal notranslate"><span class="pre">ق.م</span></code>), and Arabic numbering evidence. https://www.unicode.org/cldr/charts/48/grammar/ar.html and https://www.unicode.org/cldr/charts/48/summary/ar.html</p></li>
+<li><p><strong>King Saud University official correspondence guide</strong>. Professional title abbreviations <code class="docutils literal notranslate"><span class="pre">د.</span></code> and <code class="docutils literal notranslate"><span class="pre">م.</span></code>. https://faculty.ksu.edu.sa/sites/default/files/190710_dlyl_lmrslt.pdf</p></li>
+<li><p><strong>Saudi Capital Market Authority and Saudi Press Agency usage</strong>. Spaced and attached Gregorian/Hijri date markers. https://cma.org.sa/Market/Circulars/Documents/SAAB_Shareholder_Circular.pdf and https://www.spa.gov.sa/ar/</p></li>
+<li><p><strong>King Saud University reference usage</strong>. Numeric page-marker forms <code class="docutils literal notranslate"><span class="pre">ص.</span></code> and <code class="docutils literal notranslate"><span class="pre">ص</span></code>. https://engineering.ksu.edu.sa/ar/CE_faculty</p></li>
+<li><p><strong>BIPM International System of Units</strong>. International input symbols and capitalization retained by the shared parser. https://www.bipm.org/en/measurement-units/si-base-units</p></li>
+</ul>
+<p>Implementation policy:</p>
+<ul class="simple">
+<li><p>Arabic uses a source-backed conservative baseline. All 38 shared common-unit identities have neutral Arabic labels, while numeric unit context remains responsible for preventing standalone-symbol expansions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">م.</span></code> expands to <code class="docutils literal notranslate"><span class="pre">مهندس</span></code> only before a lexical name and not after numeric text. Numeric Gregorian <code class="docutils literal notranslate"><span class="pre">م</span></code>, Hijri <code class="docutils literal notranslate"><span class="pre">هـ</span></code>, and historical <code class="docutils literal notranslate"><span class="pre">ق.م</span></code> require a numeric-year context. Dotless <code class="docutils literal notranslate"><span class="pre">ص</span></code> requires a following number.</p></li>
+<li><p>Unit output does not perform Arabic number agreement, case, gender, dialect selection, or number-to-words conversion.</p></li>
+<li><p>Generic currencies, region-specific academic ranks, ambiguous Arabic-letter unit aliases, and optional bibliographic abbreviations remain out of scope.</p></li>
+</ul>
+<p>The checked-in Arabic source IDs are <code class="docutils literal notranslate"><span class="pre">ar-unicode-cldr-48-units</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-unicode-cldr-48-calendar-eras</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-ksu-official-correspondence-titles</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-saudi-official-era-usage</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-ksu-reference-style</span></code>, and <code class="docutils literal notranslate"><span class="pre">bipm-si</span></code>. Native-speaker review is still recommended before promotion beyond the baseline tier.</p>
+</section>
+<section id="thai-th">
+<h2>Thai (<code class="docutils literal notranslate"><span class="pre">th</span></code>)</h2>
+<p>Primary sources:</p>
+<ul class="simple">
+<li><p>Office of the Royal Society and Ministry of Education Thai abbreviation-writing guidance.</p></li>
+<li><p>Office of the Royal Society professional-title abbreviation guidance.</p></li>
+<li><p>Unicode CLDR 48.2.1 Thai locale data for month, era, unit, and currency forms.</p></li>
+<li><p>Thai Industrial Standards Institute TIS 17-2561 for SI unit symbols and Thai unit names.</p></li>
+</ul>
+<p>Implementation policy:</p>
+<ul class="simple">
+<li><p>Source validity and automatic expandability are separate decisions.</p></li>
+<li><p>Ambiguous one-letter forms are not expanded globally.</p></li>
+<li><p>Numeric quantity context owns Thai unit short forms such as <code class="docutils literal notranslate"><span class="pre">ม.</span></code>.</p></li>
+<li><p>Month abbreviations are expanded only with date evidence.</p></li>
+</ul>
+<p>Review status: source-backed conservative baseline; native review is recommended for broader administrative, address, and institution abbreviations.</p>
+</section>
 <section id="source-authority">
 <h2>Source authority</h2>
 <ul class="simple">
@@ -642,15 +740,35 @@ first-release policy.</p>
 <li><p>Rada Języka Polskiego: current Polish spelling, abbreviations, month names, and
 unit-spacing guidance, including the 2026 spelling change notice.</p></li>
 <li><p>Gramota and GOST R 7.0.12-2011 guidance: Russian graphical abbreviations.</p></li>
+<li><p>ГОСТ 8.417-2024: current Russian measurement-unit names and symbols; it replaced ГОСТ 8.417-2002.</p></li>
 <li><p>Türk Dil Kurumu: Turkish abbreviation, abbreviation-index, and punctuation
 guidance.</p></li>
 <li><p>ISO 4217: currency codes and locale currency identities.</p></li>
+<li><p>National Tax Agency: organization-name abbreviations and parenthesized <code class="docutils literal notranslate"><span class="pre">(株)</span></code>/<code class="docutils literal notranslate"><span class="pre">(有)</span></code> forms.</p></li>
+<li><p>NMIJ/AIST: Japanese SI terminology and unit names.</p></li>
+<li><p>Unicode CLDR Japanese locale data: localized display names and quantity patterns.</p></li>
+<li><p>Japanese government usage examples: suffixal page markers and address counters.</p></li>
+<li><p>National Institute of Korean Language: <code class="docutils literal notranslate"><span class="pre">(주)</span></code>/<code class="docutils literal notranslate"><span class="pre">㈜</span></code> corporate abbreviation guidance, <code class="docutils literal notranslate"><span class="pre">기압</span></code>/<code class="docutils literal notranslate"><span class="pre">atm</span></code> terminology, and reviewed Korean initialism spellings.</p></li>
+<li><p>KRISS: Korean names and symbols for the International System of Units.</p></li>
+<li><p>Unicode CLDR 48.2.1: Korean locale and common-unit quantity guidance.</p></li>
+<li><p>PRC State Council legal measurement-unit order and Ministry of Justice database: GB 3100-1993 terminology and statutory units.</p></li>
+<li><p>State Administration for Market Regulation: current GB 3100-1993 record and 2026 revision consultation status.</p></li>
+<li><p>Ministry of Education / State Language Commission: recommended Chinese translations for reviewed foreign abbreviations.</p></li>
+<li><p>Unicode CLDR 48.2.1: Mainland Chinese unit names and quantity patterns.</p></li>
 </ul>
 <p>The checked-in source IDs are <code class="docutils literal notranslate"><span class="pre">legacy-abbr2words</span></code> for compatibility-preserved
 entries, <code class="docutils literal notranslate"><span class="pre">language-style-baseline</span></code> for baseline lexical rules, and
-<code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code> for the pinned locale-data baseline. Review status is
+<code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code> for the pinned locale-data baseline. Japanese additionally
+uses <code class="docutils literal notranslate"><span class="pre">ja-nta-organization-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">ja-nmij-si</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">ja-government-page-reference-examples</span></code>. Korean additionally uses
+<code class="docutils literal notranslate"><span class="pre">ko-nikl-corporate-ju</span></code>, <code class="docutils literal notranslate"><span class="pre">ko-kriss-si</span></code>, and <code class="docutils literal notranslate"><span class="pre">ko-nikl-atmosphere</span></code>. Mainland Chinese
+uses <code class="docutils literal notranslate"><span class="pre">zh-cn-prc-legal-units</span></code>, <code class="docutils literal notranslate"><span class="pre">zh-cn-moe-foreign-terms-batch-1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">zh-cn-moe-foreign-terms-batch-6-7</span></code>, and <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code>. Review status is
 <code class="docutils literal notranslate"><span class="pre">legacy-preserved</span></code>, <code class="docutils literal notranslate"><span class="pre">generated-reviewed</span></code>, or <code class="docutils literal notranslate"><span class="pre">linguistically-reviewed</span></code> as
-appropriate; this repository does not claim native-speaker sign-off.</p>
+appropriate. Japanese is reviewed baseline and Korean is a source-backed reviewed
+baseline with broader lexical abbreviation review pending; Mainland Chinese is a
+source-backed locale enhancement. This repository does not claim native-speaker
+sign-off for the complete registries.</p>
 </section>
 <section id="per-language-ledger">
 <h2>Per-language ledger</h2>
@@ -663,20 +781,60 @@ appropriate; this repository does not claim native-speaker sign-off.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span> <span class="pre">ar</span> <span class="pre">az</span> <span class="pre">be</span> <span class="pre">bn</span> <span class="pre">ca</span> <span class="pre">ce</span> <span class="pre">cy</span> <span class="pre">da</span> <span class="pre">eo</span> <span class="pre">fa</span> <span class="pre">fi</span> <span class="pre">he</span> <span class="pre">hi</span> <span class="pre">hu</span> <span class="pre">hy</span> <span class="pre">id</span> <span class="pre">is</span> <span class="pre">ja</span> <span class="pre">kn</span> <span class="pre">ko</span> <span class="pre">kz</span> <span class="pre">lt</span> <span class="pre">lv</span> <span class="pre">mn</span> <span class="pre">no</span> <span class="pre">ro</span> <span class="pre">sk</span> <span class="pre">sl</span> <span class="pre">sr</span> <span class="pre">te</span> <span class="pre">tet</span> <span class="pre">tg</span> <span class="pre">th</span> <span class="pre">uk</span> <span class="pre">vi</span> <span class="pre">zh</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span> <span class="pre">az</span> <span class="pre">be</span> <span class="pre">bn</span> <span class="pre">ca</span> <span class="pre">ce</span> <span class="pre">cy</span> <span class="pre">da</span> <span class="pre">eo</span> <span class="pre">fa</span> <span class="pre">fi</span> <span class="pre">he</span> <span class="pre">hi</span> <span class="pre">hu</span> <span class="pre">hy</span> <span class="pre">id</span> <span class="pre">is</span> <span class="pre">kn</span> <span class="pre">kz</span> <span class="pre">lt</span> <span class="pre">lv</span> <span class="pre">mn</span> <span class="pre">no</span> <span class="pre">ro</span> <span class="pre">sk</span> <span class="pre">sl</span> <span class="pre">sr</span> <span class="pre">te</span> <span class="pre">tet</span> <span class="pre">tg</span> <span class="pre">uk</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">language-style-baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
 <td><p>guarded reference/title baseline and neutral units</p></td>
 <td><p>linguistically-reviewed pending native review</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span> <span class="pre">de</span> <span class="pre">en</span> <span class="pre">es</span> <span class="pre">fr</span> <span class="pre">it</span> <span class="pre">nl</span> <span class="pre">pl</span> <span class="pre">pt</span> <span class="pre">ru</span> <span class="pre">sv</span> <span class="pre">tr</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ar-unicode-cldr-48-units</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-unicode-cldr-48-calendar-eras</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-ksu-official-correspondence-titles</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-saudi-official-era-usage</span></code>, <code class="docutils literal notranslate"><span class="pre">ar-ksu-reference-style</span></code>, <code class="docutils literal notranslate"><span class="pre">bipm-si</span></code></p></td>
+<td><p>guarded title/reference/calendar rules; complete localized neutral units</p></td>
+<td><p>source-backed conservative baseline; native review pending</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">th-orst-abbreviation-rules</span></code>, <code class="docutils literal notranslate"><span class="pre">th-orst-professional-titles</span></code>, <code class="docutils literal notranslate"><span class="pre">th-academic-title-source</span></code>, <code class="docutils literal notranslate"><span class="pre">th-education-title-source</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1-th</span></code>, <code class="docutils literal notranslate"><span class="pre">th-tisi-si-units</span></code></p></td>
+<td><p>guarded titles, eras, date/time forms; Thai and Latin/SI units; THB identity</p></td>
+<td><p>source-backed conservative baseline; native review recommended</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">legacy-abbr2words</span></code>, <code class="docutils literal notranslate"><span class="pre">language-style-baseline</span></code>, <code class="docutils literal notranslate"><span class="pre">vi-government-contact-usage</span></code>, <code class="docutils literal notranslate"><span class="pre">vi-government-sdt-usage</span></code>, <code class="docutils literal notranslate"><span class="pre">vi-tcvn-7870-1</span></code>, <code class="docutils literal notranslate"><span class="pre">vi-vnu-academic-title-usage</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>guarded address, phone, academic-title rules; complete localized units; VND/₫ identity</p></td>
+<td><p>source-backed reviewed baseline; native review pending</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">legacy-abbr2words</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>guarded № reference and neutral generic units</p></td>
+<td><p>conservative generic base; plain Han words remain unchanged</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ko-nikl-corporate-ju</span></code>, <code class="docutils literal notranslate"><span class="pre">ko-kriss-si</span></code>, <code class="docutils literal notranslate"><span class="pre">ko-nikl-atmosphere</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>№ and organization abbreviations; complete common units; reviewed initialisms</p></td>
+<td><p>source-backed reviewed baseline; broader lexical review pending</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ja-nta-organization-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">ja-nmij-si</span></code>, <code class="docutils literal notranslate"><span class="pre">ja-government-page-reference-examples</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>guarded № and structural organization abbreviations; complete common units</p></td>
+<td><p>reviewed baseline / source-backed; native review pending</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ru-gramota-graphical-abbreviations</span></code>, <code class="docutils literal notranslate"><span class="pre">ru-gost-r-7-0-12-2011</span></code>, <code class="docutils literal notranslate"><span class="pre">ru-gost-8-417-2024</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>guarded lexical abbreviations; Cyrillic and international unit aliases; canonical lemma labels</p></td>
+<td><p>active standards; conservative review</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span> <span class="pre">de</span> <span class="pre">en</span> <span class="pre">es</span> <span class="pre">fr</span> <span class="pre">it</span> <span class="pre">nl</span> <span class="pre">pl</span> <span class="pre">pt</span> <span class="pre">sv</span> <span class="pre">tr</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">legacy-&lt;code&gt;</span></code> plus pinned common sources</p></td>
 <td><p>preserved mature lexical registry and structured quantities</p></td>
 <td><p>legacy-preserved; parity tested</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span> <span class="pre">en_NG</span> <span class="pre">es_CO</span> <span class="pre">es_CR</span> <span class="pre">es_GT</span> <span class="pre">es_NI</span> <span class="pre">es_VE</span> <span class="pre">fr_BE</span> <span class="pre">fr_CH</span> <span class="pre">fr_DZ</span> <span class="pre">pt_BR</span> <span class="pre">zh_CN</span> <span class="pre">zh_HK</span> <span class="pre">zh_TW</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span> <span class="pre">en_NG</span> <span class="pre">es_CO</span> <span class="pre">es_CR</span> <span class="pre">es_GT</span> <span class="pre">es_NI</span> <span class="pre">es_VE</span> <span class="pre">fr_BE</span> <span class="pre">fr_CH</span> <span class="pre">fr_DZ</span> <span class="pre">pt_BR</span> <span class="pre">zh_HK</span> <span class="pre">zh_TW</span></code></p></td>
 <td><p>locale overlay modules plus ISO 4217/CLDR</p></td>
 <td><p>numeric currency and locale-specific overlay data</p></td>
 <td><p>generated-reviewed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zh-cn-prc-legal-units</span></code>, <code class="docutils literal notranslate"><span class="pre">zh-cn-moe-foreign-terms-batch-1</span></code>, <code class="docutils literal notranslate"><span class="pre">zh-cn-moe-foreign-terms-batch-6-7</span></code>, <code class="docutils literal notranslate"><span class="pre">unicode-cldr-48.2.1</span></code></p></td>
+<td><p>Mainland semantic abbreviations and complete localized common units</p></td>
+<td><p>source-backed reviewed locale</p></td>
 </tr>
 </tbody>
 </table>

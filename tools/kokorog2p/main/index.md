@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -552,9 +552,15 @@ high-quality text-to-phoneme conversion for multiple languages.</p>
 <h2>Features</h2>
 <ul class="simple">
 <li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian,
-Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
+Portuguese, Chinese, Japanese, Korean, Hebrew, Vietnamese, Kazakh</p></li>
+<li><p><strong>Native Vietnamese</strong>: Pure-Python Northern/Hanoi profile with NFC/NFD support and six
+named tones</p></li>
 <li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing
 multiple languages</p></li>
+<li><p><strong>Native Thai (optional)</strong>: TLTK frontend with Wayu vocabulary targeting, bilingual
+Latin routing, and diagnostics</p></li>
+<li><p><strong>Native Russian (optional)</strong>: Contextual stress, ё restoration, source-aligned
+tokens, and Kokoro 1.0 vocabulary transforms</p></li>
 <li><p><strong>Dictionary-based lookup</strong> with large gold/silver tier lexicons for select languages</p></li>
 <li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological
 rules</p></li>
@@ -594,6 +600,11 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <span class="c1"># With espeak-ng backend</span>
 pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>espeak<span class="o">]</span>
 
+
+<span class="c1"># Kazakh support</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[kk]&quot;</span>
+
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[th]&quot;</span><span class="w">  </span><span class="c1"># Thai support with TLTK and PyThaiNLP</span>
 <span class="c1"># Full installation (all languages and backends)</span>
 pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>all<span class="o">]</span>
 </pre></div>
@@ -604,6 +615,7 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation/#basic-installation">Basic Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#with-language-support">With Language Support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#korean-support">Korean support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#with-backend-support">With Backend Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#full-installation">Full Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development Installation</a></li>
@@ -637,11 +649,15 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="languages/#chinese-zh">Chinese (zh)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#japanese-ja">Japanese (ja)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#korean-ko">Korean (ko)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#hebrew-he">Hebrew (he)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#vietnamese-vi-vn">Vietnamese (vi-vn)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#mixed-language-support">Mixed-Language Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#language-specific-number-handling">Language-Specific Number Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#fallback-languages">Fallback Languages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#arabic-msa">Arabic (MSA)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#swedish-sv-se">Swedish (sv-se)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#kazakh-kk">Kazakh (kk)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#thai-th-th">Thai (th-th)</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Usage</a><ul>
@@ -695,6 +711,7 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#czech-phonemes">Czech Phonemes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#working-with-phonemes">Working with Phonemes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#conversion-between-formats">Conversion Between Formats</a></li>
+<li class="toctree-l2"><a class="reference internal" href="phonemes/#nabra-arabic-profile">Nabra Arabic profile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="phonemes/#references">References</a></li>
 </ul>
 </li>
@@ -780,6 +797,13 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="api/korean/#implementation">Implementation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="api/vietnamese/">Vietnamese API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/russian/">Russian API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/russian/#explicit-stress">Explicit stress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/russian/#espeak-data">eSpeak data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/russian/#latin-and-punctuation">Latin and punctuation</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/hebrew/">Hebrew API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/hebrew/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/hebrew/#examples">Examples</a></li>
@@ -789,6 +813,20 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l1"><a class="reference internal" href="api/mixed/">Multilang Preprocessing</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/mixed/#api">API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/mixed/#examples">Examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/thai/">Thai G2P</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#behavior">Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#normalization">Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#strictness-and-diagnostics">Strictness and diagnostics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/kazakh/">Kazakh G2P</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/arabic/">Arabic MSA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#construction">Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#diacritization">Diacritization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#source-behavior-and-offsets">Source behavior and offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#generic-espeak-backend">Generic eSpeak backend</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/backends/">Backends API</a><ul>

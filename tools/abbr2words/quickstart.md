@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/quickstart/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.9"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+docs_ref: "v0.2.12"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -560,7 +560,7 @@ rest of the input:</p>
 </div>
 <p>Context detection is enabled by default. For German <code class="docutils literal notranslate"><span class="pre">Fr.</span></code>, the surrounding text
 can distinguish a title from the weekday:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;Fr. Klein&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>       <span class="c1"># Frau Klein</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;Fr. Klein&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>  <span class="c1"># Frau Klein</span>
 <span class="n">abbr2words</span><span class="p">(</span><span class="s2">&quot;Fr. Klein&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">context</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>  <span class="c1"># Freitag Klein</span>
 </pre></div>
 </div>

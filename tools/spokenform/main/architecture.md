@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -588,48 +588,33 @@ punctuation is consumed first by structured recognizers, and model-specific
 punctuation remains downstream unless the caller explicitly requests filtering.</p>
 <p>The structured boundary is deliberately split by locale: <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> recognizes
 numeric symbols and returns the exact span, numeric lexeme, category, and canonical
-identity; <code class="docutils literal notranslate"><span class="pre">spokenform.structured</span></code> dispatches to locale-owned English, German, French,
-Spanish, Italian, Portuguese, or Czech semantic grammar. No symbol or alias inventory is copied
-into spokenform. French owns its dates, h/colon times, ordinals, decimal digit
-reading, quantities, temperatures, and currency decomposition. Spanish owns
-reviewed dates, quantities, temperatures, currencies, and ordinary numbers;
-Spanish colon times remain caller-managed. Italian owns reviewed dates,
-quantities, temperatures, currencies, and ordinary numbers; Italian colon times
-remain caller-managed. Portuguese owns reviewed dates, quantities, temperatures,
-currencies, and ordinary numbers; Portuguese colon times remain caller-managed.
-Czech owns reviewed dates, quantities, temperatures, currencies, ordinary numbers,
-and canonical extended units; Czech colon times remain caller-managed. English
-owns reviewed dates, validated clock times, canonical quantities and currencies,
-a conservative ordinary-number pass, and reviewed contextual single-dot release
-labels such as <code class="docutils literal notranslate"><span class="pre">bot</span> <span class="pre">2.0</span></code>. That label rule uses <code class="docutils literal notranslate"><span class="pre">point</span> <span class="pre">oh</span></code> only in the reviewed
-version context; ordinary decimals retain digit-wise zero wording. English
-deliberately leaves years, suffix ordinals, Roman numerals, phone/ID sequences,
-arbitrary multi-dot versions/IDs, numeric suffixes, and phoneme-sensitive helpers
-downstream. G2P typography and phonemes stay downstream.</p>
-<p>French is promoted to <code class="docutils literal notranslate"><span class="pre">NumberPolicy.STRUCTURED_AND_PLAIN</span></code> only after its parity
-corpus and real downstream gate pass. Every locale replacement retains exact
-source spans and composed source/output mapping, and partial caller protection
-expands to a complete structured candidate before semantic matching.</p>
-<p>Spanish is promoted to the same policy only after its parity corpus and real
-<code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> <code class="docutils literal notranslate"><span class="pre">es</span></code>/<code class="docutils literal notranslate"><span class="pre">la</span></code> gate pass. Its plain-number stage protects reviewed dates,
-time candidates, URLs, e-mail addresses, and semantic versions so policy
-promotion cannot silently claim an unreviewed category.</p>
-<p>Italian is promoted to the same policy after its parity corpus and real
-<code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> Italian gate pass. Its plain-number stage protects valid and invalid
-date candidates, colon-time candidates, URLs, e-mail addresses, and semantic
-versions. Portuguese is promoted to the same policy after its parity corpus and
-real <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> Portuguese gate pass; its plain-number stage protects reviewed
-dates, time candidates, URLs, e-mail addresses, and semantic versions. Czech is
-promoted to the same policy with a structured-safe plain-number stage that
-protects date/time candidates, URLs, e-mail addresses, semantic versions, and
-canonical structured values; Czech colon times remain caller-managed. English is
-promoted to the same policy after its parity corpus and real <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> English
-gate pass; its plain-number stage protects reviewed date/time candidates, URLs,
-e-mail addresses, semantic versions, canonical unit candidates, and ambiguous
-long digit strings. Its structured single-dot release-label rule is contextual
-and yields to recognized quantity spans. All reviewed quantity and currency
-symbols continue to come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code> is a deterministic one-language adapter. Its profile
+identity; <code class="docutils literal notranslate"><span class="pre">spokenform.structured</span></code> dispatches to locale-owned semantic grammar.
+No symbol or alias inventory is copied into spokenform. French owns its dates,
+h/colon times, ordinals, decimal digit reading, quantities, temperatures, and
+currency decomposition. Spanish, Italian, Portuguese, and Czech own their
+reviewed dates, quantities, temperatures, currencies, ordinary numbers, and
+locale-specific extensions; caller-managed time boundaries remain documented.
+English owns reviewed dates, validated clock times, canonical quantities and
+currencies, conservative ordinary numbers, and contextual release labels.
+Japanese, Korean, and Chinese use explicit native numeric and sequence
+vocabularies, with Chinese routed through <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>. Swedish owns comma-decimal
+numbers, reviewed quantities, temperatures, SEK grammar, and canonical
+<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> unit identities. Swedish dates, digital times, arbitrary initialisms,
+and unreviewed specialist sequence domains remain caller-managed or fail closed.
+Vietnamese owns comma-decimal numbers, exact fractional precision, reviewed quantities, temperatures, VND/₫ currency, and canonical <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> unit identities. <code class="docutils literal notranslate"><span class="pre">num2words</span></code> owns generic Vietnamese cardinals, while <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Vietnamese abbreviation, unit, currency recognition, and labels. Vietnamese dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.
+Thai follows the same small-locale architecture: <code class="docutils literal notranslate"><span class="pre">num2words</span></code> owns generic Thai cardinals, <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Thai abbreviation, unit, and baht identities, and Spokenform owns compact digitwise numeric realization and source mapping. Thai calendar protection is applied after abbreviation expansion and before the plain number pass, so structured values -&gt; abbreviation expansion -&gt; plain number pass preserves date, era, and time bodies. Thai unsupported ranges and specialist sequences fail closed without English vocabulary.
+Every locale replacement retains exact source spans and composed source/output
+mapping. Supported languages never borrow English fallback words merely because a
+shared renderer lacks a locale entry. All reviewed quantity and currency symbols
+continue to come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
+<p>The dependency direction is:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>abbr2words ──────────┐
+num2words (ja/ko/sv/vi) ──┼─&gt; spokenform
+cn2an (zh) ─────────┘
+</pre></div>
+</div>
+<p>Full-width numeric compatibility forms are folded in a dedicated mapped stage after NFC and only inside numeric-looking spans. Compatibility symbols such as <code class="docutils literal notranslate"><span class="pre">㈱</span></code> remain available to <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; global NFKC is not used.
+<code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code> is a deterministic one-language adapter. Its profile
 preserves run boundaries, honors protected spans fail-closed, and does not perform
 language detection, tokenization, G2P, or model-punctuation rewriting.</p>
 <p>The downstream migration set currently includes <code class="docutils literal notranslate"><span class="pre">cs</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>,

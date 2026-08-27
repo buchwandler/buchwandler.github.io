@@ -4,17 +4,17 @@ nav_key: spokenform
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.3.1
-source_commit: bbe7f1098a60ffb52573227ae9dad1793ba94057
-source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.1
+source_ref: v0.3.3
+source_commit: 882ad4dfc7be9b70831cdb91b418891d9ddb2ec7
+source_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.3
 is_default: true
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.3.1
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.1
+release_tag: v0.3.3
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.3
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.1
+  ref: v0.3.3
   url: /tools/spokenform/
   current: true
 - name: main
@@ -29,6 +29,9 @@ entries:
 - slug: installation
   title: spokenform Installation
   url: /tools/spokenform/installation/
+- slug: languages
+  title: spokenform Language support matrix
+  url: /tools/spokenform/languages/
 - slug: quickstart
   title: spokenform Quickstart
   url: /tools/spokenform/quickstart/

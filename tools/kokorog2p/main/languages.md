@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -543,7 +543,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="language-support">
 <h1>Language Support</h1>
 <p>kokorog2p supports multiple languages with varying levels of functionality.</p>
-<table class="docutils align-default" id="id35">
+<table class="docutils align-default" id="id34">
 <caption><span class="caption-text">Language Support Overview</span></caption>
 <colgroup>
 <col style="width: 15.0%" />
@@ -632,6 +632,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>—</p></td>
 <td><p>phonikud</p></td>
 <td><p>Nikud handling, stress</p></td>
+</tr>
+<tr class="row-even"><td><p>Russian</p></td>
+<td><p>ru-ru</p></td>
+<td><p>RUAccent (optional)</p></td>
+<td><p>espeak-ng</p></td>
+<td><p>Contextual stress, ё restoration, reduction, source-aligned tokens</p></td>
+</tr>
+<tr class="row-odd"><td><p>Kazakh</p></td>
+<td><p>kk</p></td>
+<td><p>—</p></td>
+<td><p>espeak-ng</p></td>
+<td><p>Raw non-English IPA, Kokoro vocabulary validation</p></td>
 </tr>
 <tr class="row-even"><td><p>Mixed</p></td>
 <td><p>multilingual</p></td>
@@ -1085,14 +1097,17 @@ supports European Portuguese wording (pt-pt)</p></li>
 </section>
 <section id="japanese-ja">
 <h2>Japanese (ja)</h2>
-<p>Japanese G2P uses pyopenjtalk for text analysis and mora-based phoneme generation.</p>
+<p>Japanese G2P uses an OpenJTalk-compatible frontend for linguistic analysis, then maps
+pronunciation moras and accent metadata into the Kokoro Japanese vocabulary.</p>
 <section id="id23">
 <h3>Features</h3>
 <ul class="simple">
-<li><p><strong>pyopenjtalk</strong>: Full Japanese text analysis</p></li>
-<li><p><strong>Mora-based</strong>: Phonemes aligned with mora structure</p></li>
-<li><p><strong>Pitch accent</strong>: Automatic pitch accent assignment</p></li>
-<li><p><strong>Number handling</strong>: Japanese numerals</p></li>
+<li><p><strong>OpenJTalk frontend</strong>: Morphological analysis, readings, phrase boundaries, and
+accent data</p></li>
+<li><p><strong>Mora-based mapping</strong>: Japanese pronunciation is converted to Kokoro phoneme symbols</p></li>
+<li><p><strong>Aligned pitch channel</strong>: <code class="docutils literal notranslate"><span class="pre">JapaneseG2P.phonemize()</span></code> returns base phonemes followed by
+an equally long pitch/control channel</p></li>
+<li><p><strong>Optional Cutlet backend</strong>: A legacy romaji backend is available separately</p></li>
 </ul>
 </section>
 <section id="id24">
@@ -1101,75 +1116,101 @@ supports European Portuguese wording (pt-pt)</p></li>
 
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">JapaneseG2P</span><span class="p">(</span>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ja&quot;</span><span class="p">,</span>
-    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;pyopenjtalk&quot;</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;pyopenjtalk&quot;</span><span class="p">,</span>
+    <span class="n">version</span><span class="o">=</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;こんにちは&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">backend</span></code> selects the linguistic frontend. <code class="docutils literal notranslate"><span class="pre">version</span></code> selects the target Kokoro model
+representation and is not a backend selector. The legacy <code class="docutils literal notranslate"><span class="pre">version=&quot;pyopenjtalk&quot;</span></code> and
+<code class="docutils literal notranslate"><span class="pre">version=&quot;cutlet&quot;</span></code> forms are deprecated.</p>
+<p>For the legacy backend, install <code class="docutils literal notranslate"><span class="pre">kokorog2p[ja-cutlet]</span></code>. The recommended <code class="docutils literal notranslate"><span class="pre">ja</span></code> extra
+contains only the primary OpenJTalk-compatible backend. Full UniDic is an explicit
+option and requires <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">unidic</span> <span class="pre">download</span></code> after installation.</p>
 </section>
-<section id="id25">
-<h3>Examples</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;こんにちは&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ja&quot;</span><span class="p">))</span>
-<span class="c1"># → koɴɲit͡ɕiha</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;世界&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ja&quot;</span><span class="p">))</span>
-<span class="c1"># → sekai</span>
-</pre></div>
-</div>
+<section id="japanese-espeak-flag">
+<h3>Japanese espeak flag</h3>
+<p><code class="docutils literal notranslate"><span class="pre">use_espeak_fallback</span></code> is retained for common API compatibility but is not used by the
+Japanese backend. It is not a Japanese benchmark or performance configuration.</p>
 </section>
 </section>
 <section id="korean-ko">
 <h2>Korean (ko)</h2>
-<p>Korean G2P uses MeCab-based morphological analysis with comprehensive phonological
-rules.</p>
-<section id="id26">
+<p>Korean G2P uses the vendored 5Hyeons <code class="docutils literal notranslate"><span class="pre">g2pkc</span></code> compatibility rules. Morphology is optional
+and is used only when a supported Korean analyzer is installed.</p>
+<section id="id25">
 <h3>Features</h3>
 <ul class="simple">
-<li><p><strong>MeCab integration</strong>: Korean morphological analysis</p></li>
-<li><p><strong>Phonological rules</strong>:</p>
-<ul>
-<li><p>Consonant assimilation</p></li>
-<li><p>Palatalization</p></li>
-<li><p>Tensification</p></li>
-<li><p>Aspiration</p></li>
-<li><p>Liaison (연음)</p></li>
-<li><p>Final consonant neutralization</p></li>
-</ul>
-</li>
-<li><p><strong>Hanja support</strong>: Sino-Korean character handling</p></li>
-<li><p><strong>Number handling</strong>: Korean numerals</p></li>
+<li><p><strong>g2pkc compatibility baseline</strong>: Korean Standard Pronunciation rules, liaison,
+assimilation, palatalization, tensification, aspiration, and number context</p></li>
+<li><p><strong>Morphology modes</strong>: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">required</span></code>, or <code class="docutils literal notranslate"><span class="pre">off</span></code></p></li>
+<li><p><strong>Output modes</strong>: <code class="docutils literal notranslate"><span class="pre">model</span></code> (default Kokoro 82M v1.0 alphabet), <code class="docutils literal notranslate"><span class="pre">ipa</span></code>, or positional
+<code class="docutils literal notranslate"><span class="pre">jamo</span></code></p></li>
+<li><p><strong>Default voice metadata</strong>: <code class="docutils literal notranslate"><span class="pre">jf_alpha</span></code>, the Japanese Kokoro voice requested for Korean</p></li>
+<li><p><strong>Offline behavior</strong>: pure Hangul does not load CMUdict; Latin input requires the NLTK
+CMUdict resource</p></li>
+<li><p><strong>Hanja</strong>: not currently converted; Hanja support is intentionally not claimed</p></li>
+<li><p><strong>Provenance</strong>: see <code class="docutils literal notranslate"><span class="pre">kokorog2p/ko/README.md</span></code> for the frozen source revision and
+checksums</p></li>
 </ul>
 </section>
-<section id="id27">
+<section id="id26">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ko</span><span class="w"> </span><span class="kn">import</span> <span class="n">KoreanG2P</span>
 
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">KoreanG2P</span><span class="p">(</span>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko-kr&quot;</span><span class="p">,</span>
-    <span class="n">use_mecab</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+    <span class="n">morphology</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;jf_alpha&quot;</span><span class="p">,</span>
+    <span class="n">output</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+ <span class="p">)</span>
 </pre></div>
 </div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">output=&quot;ipa&quot;</span></code> for the linguistic IPA-like representation, including positional coda
+markers. Use <code class="docutils literal notranslate"><span class="pre">output=&quot;jamo&quot;</span></code> to inspect the g2pkc intermediate form. The model output
+explicitly maps markers absent from Kokoro 82M v1.0 and rejects other unsupported
+symbols.</p>
 </section>
-<section id="id28">
+</section>
+<section id="vietnamese-vi-vn">
+<h2>Vietnamese (vi-vn)</h2>
+<p>Vietnamese uses a native pure-Python broad Northern/Hanoi frontend. The aliases <code class="docutils literal notranslate"><span class="pre">vi</span></code>,
+<code class="docutils literal notranslate"><span class="pre">vie</span></code>, and <code class="docutils literal notranslate"><span class="pre">vietnamese</span></code> resolve to <code class="docutils literal notranslate"><span class="pre">vi-vn</span></code>. It parses each whitespace-separated syllable
+structurally, extracts six named tones, and renders directly with the Kokoro model
+profile.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Xin chào!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">,</span> <span class="n">return_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">token_ids</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>No Vietnamese-specific extra or <code class="docutils literal notranslate"><span class="pre">vig2p</span></code> runtime dependency is required. Invalid or
+foreign tokens use the existing lazy English fallback by default; pass
+<code class="docutils literal notranslate"><span class="pre">foreign_fallback=&quot;none&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;espeak&quot;</span></code> to <code class="docutils literal notranslate"><span class="pre">get_g2p</span></code>. Semantic number, date, URL, and
+currency normalization remains outside this phonology module. See <a class="reference internal" href="../api/vietnamese/"><span class="doc">Vietnamese API</span></a>
+and <code class="docutils literal notranslate"><span class="pre">vi/PROVENANCE</span></code> for the model profile, limitations, and clean-room sources.</p>
+<section id="id27">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;안녕하세요&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">))</span>
-<span class="c1"># → annjʌŋhasejo</span>
+ <span class="c1"># → annjʌŋhasejo</span>
 
-<span class="c1"># Phonological rules</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;학교&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">))</span>     <span class="c1"># → hakk͈jo (tensification)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;받침&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">))</span>     <span class="c1"># → patʃʰim (palatalization)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;학교&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko&quot;</span><span class="p">))</span>
+ <span class="c1"># → hakkjo in the model alphabet</span>
+
+<span class="c1"># Explicit linguistic output</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ko</span><span class="w"> </span><span class="kn">import</span> <span class="n">KoreanG2P</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">KoreanG2P</span><span class="p">(</span><span class="n">output</span><span class="o">=</span><span class="s2">&quot;ipa&quot;</span><span class="p">,</span> <span class="n">morphology</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;강&quot;</span><span class="p">))</span>
+ <span class="c1"># → kaŋ</span>
 </pre></div>
 </div>
-</section>
-</section>
-<section id="hebrew-he">
-<h2>Hebrew (he)</h2>
+<p><code class="docutils literal notranslate"><span class="pre">use_espeak_fallback</span></code>, <code class="docutils literal notranslate"><span class="pre">use_goruut_fallback</span></code>, spaCy settings, and dictionary tier flags
+are retained for common factory compatibility but do not control Korean pronunciation.</p>
 <p>Hebrew G2P uses phonikud for nikud-based phonemization.</p>
-<section id="id29">
+</section>
+<section id="id28">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>phonikud integration</strong>: Hebrew nikud to IPA conversion</p></li>
@@ -1178,7 +1219,7 @@ rules.</p>
 <li><p><strong>Modern Hebrew</strong>: Optimized for contemporary pronunciation</p></li>
 </ul>
 </section>
-<section id="id30">
+<section id="id29">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.he</span><span class="w"> </span><span class="kn">import</span> <span class="n">HebrewG2P</span>
 
@@ -1190,7 +1231,7 @@ rules.</p>
 </pre></div>
 </div>
 </section>
-<section id="id31">
+<section id="id30">
 <h3>Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 
@@ -1208,7 +1249,7 @@ rules.</p>
 <h2>Mixed-Language Support</h2>
 <p>kokorog2p can automatically detect and handle texts that mix multiple languages, routing
 each word to the appropriate G2P engine.</p>
-<section id="id32">
+<section id="id31">
 <h3>Features</h3>
 <ul class="simple">
 <li><p><strong>Automatic detection</strong>: Word-level language detection using lingua-py</p></li>
@@ -1231,6 +1272,7 @@ each word to the appropriate G2P engine.</p>
 <li><p>Japanese (ja)</p></li>
 <li><p>Chinese (zh)</p></li>
 <li><p>Korean (ko)</p></li>
+<li><p>Vietnamese (vi-vn, vi)</p></li>
 <li><p>Hebrew (he)</p></li>
 <li><p>Czech (cs)</p></li>
 <li><p>Dutch (nl)</p></li>
@@ -1241,7 +1283,7 @@ each word to the appropriate G2P engine.</p>
 <li><p>Turkish (tr)</p></li>
 </ul>
 </section>
-<section id="id33">
+<section id="id32">
 <h3>Usage</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
@@ -1257,7 +1299,7 @@ each word to the appropriate G2P engine.</p>
 </pre></div>
 </div>
 </section>
-<section id="id34">
+<section id="id33">
 <h3>Examples</h3>
 <p><strong>German with English:</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
@@ -1435,6 +1477,40 @@ not explicitly supported, select the eSpeak backend explicitly:</p>
 </ul>
 </li>
 </ul>
+</section>
+<section id="arabic-msa">
+<h2>Arabic (MSA)</h2>
+<p>Arabic support is native and Nabra-compatible for Modern Standard Arabic (MSA). It uses
+raw Arabic eSpeak IPA and optionally uses CAMeL MLE diacritization for unvocalized text.
+Dialects are not supported by this frontend. See <a class="reference internal" href="../api/arabic/"><span class="doc">Arabic MSA</span></a>.</p>
+</section>
+<section id="swedish-sv-se">
+<h2>Swedish (sv-se)</h2>
+<p>Swedish uses a native deterministic rule-based grapheme-to-phoneme frontend. It has no
+runtime pronunciation lexicon and does not download a model. The external NST-derived
+TSV is accepted only by <code class="docutils literal notranslate"><span class="pre">benchmarks/benchmark_sv_rules.py</span></code> for development benchmarking.</p>
+<p>Aliases are <code class="docutils literal notranslate"><span class="pre">sv</span></code>, <code class="docutils literal notranslate"><span class="pre">sv-se</span></code>, <code class="docutils literal notranslate"><span class="pre">swe</span></code>, and <code class="docutils literal notranslate"><span class="pre">swedish</span></code>. Swedish number, date, unit,
+abbreviation, and spoken semantic normalization remain outside this frontend. See
+<a class="reference internal" href="../api/swedish/"><span class="doc">Swedish G2P</span></a>.</p>
+</section>
+<section id="kazakh-kk">
+<h2>Kazakh (kk)</h2>
+<p>Kazakh uses eSpeak-NG voice <code class="docutils literal notranslate"><span class="pre">kk</span></code> as its pronunciation engine. The frontend requests raw
+non-English IPA, applies only generic Kokoro compatibility transforms, and validates
+output against the stock Kokoro 1.0 vocabulary. Install <code class="docutils literal notranslate"><span class="pre">kokorog2p[kk]</span></code>.</p>
+<p>The upstream Kazakh voice is currently marked <code class="docutils literal notranslate"><span class="pre">testing</span></code>, so output quality follows the
+installed eSpeak-NG release. See <a class="reference internal" href="../api/kazakh/"><span class="doc">Kazakh G2P</span></a> and <code class="docutils literal notranslate"><span class="pre">kk/PROVENANCE</span></code>.</p>
+</section>
+<section id="thai-th-th">
+<h2>Thai (th-th)</h2>
+<p>Thai is an optional native frontend using TLTK and PyThaiNLP, with lazy EnglishG2P
+pronunciation for Latin runs. Install <code class="docutils literal notranslate"><span class="pre">kokorog2p[th]</span></code>; the aliases <code class="docutils literal notranslate"><span class="pre">th</span></code>, <code class="docutils literal notranslate"><span class="pre">th-th</span></code>, <code class="docutils literal notranslate"><span class="pre">tha</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">thai</span></code> share one cached frontend.</p>
+<p>Thai output targets <code class="docutils literal notranslate"><span class="pre">wayu-kokoro-thai-v1</span></code>. Its low-tone symbol <code class="docutils literal notranslate"><span class="pre">˩</span></code> uses token ID 7 in an
+isolated profile, so it must not be combined with another incompatible custom model
+profile in one ID stream. Normalization and recovery diagnostics are source-aware, and
+strict mode reports unrecovered lexical material. See <a class="reference internal" href="../api/thai/"><span class="doc">Thai G2P</span></a> and
+<code class="docutils literal notranslate"><span class="pre">th/PROVENANCE</span></code>.</p>
 </section>
 </section>
 </div>

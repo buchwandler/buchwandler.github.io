@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -542,8 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="korean-api">
 <h1>Korean API</h1>
-<p>Korean G2P provides phoneme conversion using MeCab for morphological analysis and custom
-phonological rules based on Korean Standard Pronunciation.</p>
+<p>Korean G2P uses the vendored 5Hyeons <code class="docutils literal notranslate"><span class="pre">g2pkc</span></code> compatibility rules and the Kokoro 82M v1.0
+model alphabet by default. The default Korean voice metadata is <code class="docutils literal notranslate"><span class="pre">jf_alpha</span></code>, using the
+Japanese voice requested for Korean synthesis.</p>
 <section id="main-class">
 <h2>Main Class</h2>
 </section>
@@ -551,23 +552,30 @@ phonological rules based on Korean Standard Pronunciation.</p>
 <h2>Examples</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ko</span><span class="w"> </span><span class="kn">import</span> <span class="n">KoreanG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">KoreanG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko-kr&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">KoreanG2P</span><span class="p">(</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko-kr&quot;</span><span class="p">,</span>
+    <span class="n">morphology</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;jf_alpha&quot;</span><span class="p">,</span>
+    <span class="n">output</span><span class="o">=</span><span class="s2">&quot;model&quot;</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;안녕하세요!&quot;</span><span class="p">)</span>
 
 <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">output=&quot;ipa&quot;</span></code> to retain the linguistic IPA-like form and positional coda markers,
+or <code class="docutils literal notranslate"><span class="pre">output=&quot;jamo&quot;</span></code> to inspect the g2pkc intermediate representation. The <code class="docutils literal notranslate"><span class="pre">morphology</span></code>
+setting accepts <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">required</span></code>, and <code class="docutils literal notranslate"><span class="pre">off</span></code>. The compatible morphology extra is
+<code class="docutils literal notranslate"><span class="pre">kokorog2p[ko-mecab]</span></code>, which installs <code class="docutils literal notranslate"><span class="pre">python-mecab-ko</span></code>.</p>
+<p>Pure Hangul input does not load CMUdict. Latin input uses NLTK CMUdict and requires the
+resource to be installed explicitly.</p>
 </section>
 <section id="implementation">
 <h2>Implementation</h2>
-<p>The Korean G2P implementation is based on g2pK by kyubyong and uses:</p>
-<ul class="simple">
-<li><p>MeCab for morphological analysis</p></li>
-<li><p>Korean Standard Pronunciation rules</p></li>
-<li><p>Jamo-to-IPA conversion for phoneme output</p></li>
-</ul>
-<p>Reference: <a class="reference external" href="https://github.com/kyubyong/g2pK">https://github.com/kyubyong/g2pK</a></p>
+<p>The Korean backend is based on the 5Hyeons StyleTTS2 <code class="docutils literal notranslate"><span class="pre">g2pkc</span></code> fork of Kyubyong’s g2pK.
+See <code class="docutils literal notranslate"><span class="pre">kokorog2p/ko/README.md</span></code> for source revision, checksums, local adaptations, and
+licensing provenance.</p>
 </section>
 </section>
 </div>

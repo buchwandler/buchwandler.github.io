@@ -5,8 +5,8 @@ permalink: /tools/spokenform/mapping/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
+docs_ref: "v0.3.3"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 

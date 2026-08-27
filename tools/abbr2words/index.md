@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.9"
-docs_commit: "65320c8c9dc6fedbcbf21d2753599f4a7512567a"
+docs_ref: "v0.2.12"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -571,12 +571,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command line interface</a></li>
 <li class="toctree-l1"><a class="reference internal" href="languages/">Languages</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="languages/#russian-support">Russian support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#japanese-support">Japanese support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#arabic-support">Arabic support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#thai-support">Thai support</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#mandarin-chinese-support">Mandarin Chinese support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#known-ambiguity">Known ambiguity</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#coverage-tiers-and-generated-inventory">Coverage tiers and generated inventory</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="language-sources/">Language sources and review policy</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="language-sources/#registry-scope">Registry scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#russian-source-ledger">Russian source ledger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#swedish-source-ledger">Swedish source ledger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#vietnamese-source-ledger">Vietnamese source ledger</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#arabic-ar">Arabic (<code class="docutils literal notranslate"><span class="pre">ar</span></code>)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-sources/#thai-th">Thai (<code class="docutils literal notranslate"><span class="pre">th</span></code>)</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language-sources/#source-authority">Source authority</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language-sources/#per-language-ledger">Per-language ledger</a></li>
 <li class="toctree-l2"><a class="reference internal" href="language-sources/#known-limitations">Known limitations</a></li>
@@ -597,18 +607,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-12-unreleased">[v0.2.12] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-11-2026-08-26">[v0.2.11] - 2026-08-26</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-10-2026-08-26">[v0.2.10] - 2026-08-26</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-9-2026-08-14">[v0.2.9] - 2026-08-14</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-8-unreleased">[v0.2.8] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-2026-08-12">[v0.2.7] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.2.4] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.3] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.2] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-06">[v0.2.1] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.4] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.3] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.2.2] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-07">[v0.2.1] - 2026-08-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-05">[v0.1.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.0] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-06">[v0.1.1] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.1.0] - 2026-08-05</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>

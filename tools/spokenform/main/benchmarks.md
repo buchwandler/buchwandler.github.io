@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -560,6 +560,7 @@ annotated TTS-normalization diagnostic. Their data and reports live under
 <code class="docutils literal notranslate"><span class="pre">benchmarks/</span></code> and should be interpreted with the safety and quarantine guidance
 in the ownership document. See <a class="reference internal" href="../async_tn/"><span class="std std-doc">Async TN</span></a> for its mapping,
 methodology, and static dashboard contract.</p>
+<p>Japanese, Korean, and Chinese runtime support is regression-tested but is not part of the current seven-language PolyNorm or kokorog2p parity scope without a dedicated benchmark adapter and corpus.</p>
 <p>Async TN, PolyNorm, and Proteno now each write a self-contained local
 <code class="docutils literal notranslate"><span class="pre">report.html</span></code> dashboard by default. These dashboards reuse a shared static HTML
 shell, keep dataset/runtime strings escaped, expose local KPI and diagnostic

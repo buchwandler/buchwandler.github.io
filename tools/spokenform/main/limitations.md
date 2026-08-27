@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2b289122f180d1845d24d9ab320fca1790d53dac"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -557,9 +557,14 @@ necessarily require POS labels. spaCy therefore does not necessarily alter
 default output.</p></li>
 <li><p>German quantity recognition depends on the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured
 match API. spokenform owns the semantic grammar, not the symbol inventory.</p></li>
-<li><p>English, German, French, Spanish, Italian, Portuguese, and Czech have parity-gated
-structured ownership. Spanish and Italian colon-time expressions are owned by
-locale policies; Portuguese and Czech time expressions remain caller-managed.
+<li><p>English, German, French, Spanish, Italian, Portuguese, Czech, Japanese, Korean, Russian, Swedish, Vietnamese, and Chinese have explicit runtime structured policies. Japanese, Korean, Russian, Swedish, Vietnamese, and Chinese runtime support is covered by focused regression tests, but it does not imply kokorog2p or PolyNorm parity.</p></li>
+<li><p>Japanese and Korean use released <code class="docutils literal notranslate"><span class="pre">num2words</span></code>; Chinese uses released <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>. Generic <code class="docutils literal notranslate"><span class="pre">zh</span></code> is conservative, while Mainland reviewed terminology and RMB live under exact <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>. <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code> and <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code> are not claimed.</p></li>
+<li><p>Swedish uses comma decimals, space/NBSP/NNBSP grouping, reviewed quantities, temperatures, and SEK currency grammar. Numeric dates and digital times are caller-managed but protected from generic rewriting; arbitrary initialisms and unreviewed specialist domains fail closed instead of borrowing English vocabulary.</p></li>
+<li><p>Vietnamese runtime support covers reviewed plain-number punctuation, exact decimal precision, canonical quantities, temperatures, VND/₫ amounts, and dependency-backed guarded abbreviations. Vietnamese dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist semantic domains remain caller-managed or fail closed.</p></li>
+<li><p>Thai runtime support covers point-decimal numbers, comma or space-family grouping, Thai and Latin digits, reviewed quantities and temperatures, exact THB/฿ amounts, and guarded Thai abbreviations. Thai ordinals are not enabled; dates, eras, and digital times remain caller-managed; unreviewed specialist sequence and range semantics remain literal or fail closed without English fallback.</p></li>
+<li><p>Russian runtime support covers ordinary cardinals, comma decimals, reviewed canonical quantities and temperatures, and nominative numeral-government forms. It does not infer arbitrary surrounding grammatical case. Numeric dates, digital times, year abbreviations, currency including RUB, phone-number speech, arbitrary initialisms, and unreviewed specialist semantic domains remain caller-managed or fail closed. Unknown future Russian <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> canonical unit IDs are preserved until a Spokenform grammar entry is reviewed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">jp</span></code> and <code class="docutils literal notranslate"><span class="pre">cn</span></code> are compatibility aliases for <code class="docutils literal notranslate"><span class="pre">ja</span></code> and <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>; <code class="docutils literal notranslate"><span class="pre">kr</span></code> is intentionally rejected. Unknown CJK-adjacent Latin identifiers remain unchanged, and ambiguous date formats remain unclaimed.</p></li>
+<li><p>CJK date/time and semantic renderers use reviewed native forms. Unsupported phone, ISBN, reference, legal, music, biology, geography, sports, chemistry, and math constructions decline rather than borrowing English words.
 Spanish explicit AM/PM forms use a 12-hour conversational branch, while
 unqualified 24-hour forms retain their written hour/minute values in speech.
 English owns a conservative contextual single-dot release-label

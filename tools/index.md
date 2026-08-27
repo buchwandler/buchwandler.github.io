@@ -133,7 +133,7 @@ permalink: /tools/
       <p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
       <div class="card-links">
         <a href="/tools/abbr2words/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.9" rel="external noopener">Latest release: v0.2.9 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.12" rel="external noopener">Latest release: v0.2.12 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/abbr2words" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -143,7 +143,7 @@ permalink: /tools/
       <p>Single-language written-to-spoken text normalization for speech applications.</p>
       <div class="card-links">
         <a href="/tools/spokenform/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.3.1" rel="external noopener">Latest release: v0.3.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.3.3" rel="external noopener">Latest release: v0.3.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/spokenform" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -153,7 +153,7 @@ permalink: /tools/
       <p>Compact lexical and dictionary-derived context hints for text normalization.</p>
       <div class="card-links">
         <a href="/tools/lexhint/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.3.0" rel="external noopener">Latest release: v0.3.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/lexhint" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -163,7 +163,7 @@ permalink: /tools/
       <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
       <div class="card-links">
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.1.1" rel="external noopener">Latest release: v0.1.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.1.2" rel="external noopener">Latest release: v0.1.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

@@ -5,8 +5,8 @@ permalink: /tools/lexhint/
 nav_tool: lexhint
 docs_project: "lexhint"
 docs_variant: "release"
-docs_ref: "v0.3.0"
-docs_commit: "530fbd657bac58bc7908afb6c10da5daaf7bb59a"
+docs_ref: "v0.4.0"
+docs_commit: "fc3b2c85cacd49c7d9ade5145f81b2ca7aded755"
 search_enabled: true
 ---
 
@@ -554,7 +554,10 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l2"><a class="reference internal" href="architecture/#stakeholders">Stakeholders</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="architecture/#architecture-constraints">Architecture Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#architecture-constraints">Architecture Constraints</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#schema-10-freeze-and-bump-policy">Schema 10 freeze and bump policy</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#context-and-scope">Context and Scope</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#business-context">Business context</a></li>
 <li class="toctree-l2"><a class="reference internal" href="architecture/#technical-context">Technical context</a></li>
@@ -599,13 +602,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#glossary">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-0-2026-08-25">[v0.4.0] - 2026-08-25</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.0] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.1] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.2.0] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.1.3] - 2026-08-22</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.2] - 2026-08-21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.1.1] - 2026-08-21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.1.0] - 2026-08-20</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.2.1] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.2.0] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.3] - 2026-08-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.1.2] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.1.1] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.0] - 2026-08-20</a></li>
 </ul>
 </li>
 </ul>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -595,6 +595,15 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="c1"># Czech</span>
 <span class="n">cs_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Dobrý den&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 
+
+<span class="c1"># Kazakh eSpeak-NG frontend</span>
+<span class="n">kk_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Сәлем әлем!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;kk&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">kk_phonemes</span><span class="p">)</span>
+<span class="c1"># Requires: pip install &quot;kokorog2p[kk]&quot;</span>
+
+<span class="c1"># Vietnamese native frontend</span>
+<span class="n">vi_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Xin chào!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">vi_phonemes</span><span class="p">)</span>
 <span class="c1"># Mixed-language (German with English words)</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>

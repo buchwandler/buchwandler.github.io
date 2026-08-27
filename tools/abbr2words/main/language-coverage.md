@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f60610571be569f10142542add3737dd8dbf3bd2"
+docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
 search_enabled: true
 ---
 
@@ -550,6 +550,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <th class="head text-right"><p>Lexical entries</p></th>
 <th class="head text-right"><p>Contextual entries</p></th>
 <th class="head text-right"><p>Unit identities</p></th>
+<th class="head text-right"><p>Localized unit labels</p></th>
 <th class="head"><p>Source status</p></th>
 <th class="head"><p>Notes</p></th>
 </tr>
@@ -559,15 +560,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">am</span></code> / base</p></td>
 <td class="text-right"><p>2</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code> / base</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>7</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -575,7 +578,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">az</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -583,7 +587,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">be</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -591,7 +596,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -599,7 +605,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -607,7 +614,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -615,7 +623,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code> / base</p></td>
 <td class="text-right"><p>65</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -623,7 +632,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -631,39 +641,62 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">da</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">de</span></code> / base</p></td>
-<td class="text-right"><p>61</p></td>
-<td class="text-right"><p>1</p></td>
-<td class="text-right"><p>47</p></td>
+<td class="text-right"><p>91</p></td>
+<td class="text-right"><p>2</p></td>
+<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en</span></code> / base</p></td>
-<td class="text-right"><p>163</p></td>
-<td class="text-right"><p>2</p></td>
-<td class="text-right"><p>45</p></td>
+<td class="text-right"><p>212</p></td>
+<td class="text-right"><p>7</p></td>
+<td class="text-right"><p>79</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en_GB</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en</span></code> / locale</p></td>
-<td class="text-right"><p>163</p></td>
-<td class="text-right"><p>2</p></td>
-<td class="text-right"><p>46</p></td>
+<td class="text-right"><p>212</p></td>
+<td class="text-right"><p>7</p></td>
+<td class="text-right"><p>79</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en_NG</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en_IN</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en</span></code> / locale</p></td>
-<td class="text-right"><p>163</p></td>
-<td class="text-right"><p>2</p></td>
-<td class="text-right"><p>46</p></td>
+<td class="text-right"><p>212</p></td>
+<td class="text-right"><p>7</p></td>
+<td class="text-right"><p>79</p></td>
+<td class="text-right"><p>38</p></td>
+<td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en_NG</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en</span></code> / locale</p></td>
+<td class="text-right"><p>212</p></td>
+<td class="text-right"><p>7</p></td>
+<td class="text-right"><p>80</p></td>
+<td class="text-right"><p>38</p></td>
+<td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en_US</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en</span></code> / locale</p></td>
+<td class="text-right"><p>212</p></td>
+<td class="text-right"><p>7</p></td>
+<td class="text-right"><p>79</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -671,391 +704,449 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">eo</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / base</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">es_CO</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es_CR</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">es_GT</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es_NI</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es_MX</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">es_VE</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">es_NI</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es_VE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
+<td class="text-right"><p>98</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>38</p></td>
+<td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fi</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fi</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fi</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code> / base</p></td>
-<td class="text-right"><p>57</p></td>
+<td class="text-right"><p>80</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr_BE</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fr_BE</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code> / locale</p></td>
-<td class="text-right"><p>57</p></td>
+<td class="text-right"><p>80</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fr_CH</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr_CH</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code> / locale</p></td>
-<td class="text-right"><p>58</p></td>
+<td class="text-right"><p>81</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code> / locale</p></td>
-<td class="text-right"><p>58</p></td>
+<td class="text-right"><p>81</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">he</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hu</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hu</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">hu</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">hy</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">id</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">is</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">is</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">is</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">it</span></code> / base</p></td>
-<td class="text-right"><p>84</p></td>
-<td class="text-right"><p>0</p></td>
-<td class="text-right"><p>34</p></td>
+<td class="text-right"><p>112</p></td>
+<td class="text-right"><p>2</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code> / base</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>7</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code> / base</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>10</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kz</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kz</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">kz</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mn</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">mn</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code> / base</p></td>
 <td class="text-right"><p>37</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>62</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">no</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">no</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">no</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code> / base</p></td>
 <td class="text-right"><p>39</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>62</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code> / base</p></td>
 <td class="text-right"><p>72</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pt_BR</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt_BR</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code> / locale</p></td>
 <td class="text-right"><p>73</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>35</p></td>
+<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ro</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ro</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ro</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code> / base</p></td>
-<td class="text-right"><p>16</p></td>
+<td class="text-right"><p>23</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>128</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sk</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sk</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sk</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sl</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sl</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sl</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code> / base</p></td>
-<td class="text-right"><p>30</p></td>
+<td class="text-right"><p>53</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>65</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">te</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tet</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tet</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">tet</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tg</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tg</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">tg</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">th</span></code> / base</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>23</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code> / base</p></td>
 <td class="text-right"><p>15</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>62</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">uk</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uk</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">uk</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>4</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code> / base</p></td>
-<td class="text-right"><p>2</p></td>
+<td class="text-right"><p>8</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / base</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>28</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>10</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>38</p></td>
 <td><p>locale overlay</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_HK</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_HK</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>locale overlay</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_TW</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_TW</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
-<td class="text-right"><p>3</p></td>
+<td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>29</p></td>
+<td class="text-right"><p>39</p></td>
+<td class="text-right"><p>5</p></td>
 <td><p>locale overlay</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>

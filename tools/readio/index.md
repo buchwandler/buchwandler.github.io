@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.1.1"
-docs_commit: "55e9f4f43d4ede3011efa1e1be0d5a5d9a1a424e"
+docs_ref: "v0.1.2"
+docs_commit: "33a4dc7d76f464eca3597877350afa5452f5c66a"
 search_enabled: true
 ---
 
@@ -542,7 +542,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="readio-documentation">
 <h1>Readio documentation</h1>
-<p>Readio is a terminal text-to-speech tool. It reads plain text or SSMD documents with PyKokoro, plays speech locally, renders WAV files, and can publish completed audio through <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
+<p>Readio is a terminal text-to-speech tool. It reads plain text or SSMD documents with PyKokoro, plays speech locally, renders WAV, MP3, M4A, or OGG files, and can publish completed audio through <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
 <section id="documentation-map">
 <h2>Documentation map</h2>
 <div class="toctree-wrapper compound">
@@ -575,11 +575,15 @@ readio<span class="w"> </span>speak<span class="w"> </span>--file<span class="w"
 <span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;%s\n&#39;</span><span class="w"> </span><span class="s2">&quot;Read this text.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>readio<span class="w"> </span>speak
 </pre></div>
 </div>
-<p>Render a WAV file instead of playing audio:</p>
+<p>Render an audio file instead of playing audio:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.wav
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>m4a
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>ogg
 </pre></div>
 </div>
-<p>With no explicit output path, Readio writes a uniquely named WAV file below the configured output directory. Existing files are not overwritten unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied for an explicit path.</p>
+<p>WAV is the default. An output suffix selects the encoder, while <code class="docutils literal notranslate"><span class="pre">--format</span></code> selects the automatic output suffix or can be combined with a matching explicit suffix. Extensionless output is normalized to the selected format. M4A requires an <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> executable on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>; MP3 and OGG require matching SoundFile/libsndfile codec support.</p>
+<p>With no explicit output path, Readio writes a uniquely named file below the configured output directory. Existing files are not overwritten unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied for an explicit path.</p>
 <p>Markdown is a first-class input format. Files ending in <code class="docutils literal notranslate"><span class="pre">.md</span></code>, <code class="docutils literal notranslate"><span class="pre">.markdown</span></code>, <code class="docutils literal notranslate"><span class="pre">.mdown</span></code>, or <code class="docutils literal notranslate"><span class="pre">.mkd</span></code> are parsed before synthesis; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">markdown</span></code> for Markdown from stdin or literal text:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>speak<span class="w"> </span>--file<span class="w"> </span>README.md
 readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>docs/design.md
@@ -606,7 +610,16 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --unit UNIT         sentence or paragraph
 </pre></div>
 </div>
-<p>Playback-only options are <code class="docutils literal notranslate"><span class="pre">--queue-size</span></code> and <code class="docutils literal notranslate"><span class="pre">--device</span></code>. WAV rendering is streamed to an atomic output file through a bounded audio path rather than accumulated as one in-memory waveform.</p>
+</section>
+<section id="render-progress">
+<h2>Render progress</h2>
+<p><code class="docutils literal notranslate"><span class="pre">render</span></code> and <code class="docutils literal notranslate"><span class="pre">spotify</span></code> use a dependency-free progress reporter on stderr. In the default <code class="docutils literal notranslate"><span class="pre">auto</span></code> mode it is enabled only when stderr is an interactive terminal; <code class="docutils literal notranslate"><span class="pre">--progress</span></code> forces it for redirected logs and <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> disables it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3<span class="w"> </span>--progress
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3<span class="w"> </span>--no-progress
+</pre></div>
+</div>
+<p>Bounded renders show phases, completed/total units, percentage, elapsed time, approximate ETA, generated audio duration, and finalization. Live rendering shows elapsed time, cumulative units, and audio duration but no invented percentage or ETA. Progress is separate from command results: render keeps its output path on stdout, and <code class="docutils literal notranslate"><span class="pre">spotify</span> <span class="pre">--json</span></code> keeps one JSON object on stdout.</p>
+<p>Playback-only options are <code class="docutils literal notranslate"><span class="pre">--queue-size</span></code> and <code class="docutils literal notranslate"><span class="pre">--device</span></code>. Audio rendering is streamed to an atomic output file through a bounded audio path rather than accumulated as one in-memory waveform.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
@@ -621,7 +634,7 @@ readio<span class="w"> </span>config<span class="w"> </span>validate
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">queue_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: the selected <code class="docutils literal notranslate"><span class="pre">voice_provider</span></code> and SSMD validation behavior.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and WAV output directories.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;]</span></code>: concrete voice IDs and logical role mappings.</p></li>
 </ul>
 <p>Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p>
@@ -668,7 +681,7 @@ readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>spotify<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Weekly Review&quot;</span><span class="w"> </span>--wait
 </pre></div>
 </div>
-<p>The command renders a WAV and invokes <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span> <span class="pre">--json</span></code>. Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the WAV is temporary and is deleted after the operation. With <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the requested WAV is retained. <code class="docutils literal notranslate"><span class="pre">--show-id</span></code> and <code class="docutils literal notranslate"><span class="pre">--new-show</span></code> select the destination show, while <code class="docutils literal notranslate"><span class="pre">--summary</span></code>, <code class="docutils literal notranslate"><span class="pre">--image</span></code>, and <code class="docutils literal notranslate"><span class="pre">--language</span></code> set episode metadata.</p>
+<p>The command renders the selected WAV, MP3, M4A, or OGG format and invokes <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span> <span class="pre">--json</span></code>. A recognized <code class="docutils literal notranslate"><span class="pre">--output</span></code> suffix selects the format, or use <code class="docutils literal notranslate"><span class="pre">--format</span></code> for temporary output. Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the selected-format file is temporary and deleted after the operation. With <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the requested file is retained. M4A requires <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. <code class="docutils literal notranslate"><span class="pre">--show-id</span></code> and <code class="docutils literal notranslate"><span class="pre">--new-show</span></code> select the destination show, while <code class="docutils literal notranslate"><span class="pre">--summary</span></code>, <code class="docutils literal notranslate"><span class="pre">--image</span></code>, and <code class="docutils literal notranslate"><span class="pre">--language</span></code> set episode metadata.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--json</span></code> for a machine-readable result. <code class="docutils literal notranslate"><span class="pre">--wait</span></code> waits for readiness, and <code class="docutils literal notranslate"><span class="pre">--wait-timeout</span></code> sets the readiness timeout. <code class="docutils literal notranslate"><span class="pre">--chapters-from-markers</span></code> converts SSMD markers into a Spotify timeline and requires the episode to reach <code class="docutils literal notranslate"><span class="pre">READY</span></code>.</p>
 <p>Readio does not read Spotify credential files or perform authentication. It delegates the external write operation to <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
 </section>
@@ -678,13 +691,28 @@ readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>doctor
 </pre></div>
 </div>
-<p>Doctor reports configuration, configured directories, PyKokoro, SSMD, the selected provider and voices, sound dependencies, and <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> availability. It does not create directories, modify configuration, inspect credentials, or call the network.</p>
+<p>Doctor reports configuration, configured directories, PyKokoro, SSMD, the selected provider and voices, sound dependencies, per-format WAV/MP3/M4A/OGG availability, and <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> availability. It does not create directories, modify configuration, inspect credentials, or call the network.</p>
 <p>Run the test suite and lint checks from a development checkout:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
 ruff<span class="w"> </span>check<span class="w"> </span>.
 </pre></div>
 </div>
 <p>The main execution path is <code class="docutils literal notranslate"><span class="pre">readio/cli.py</span></code>. Input normalization is in <code class="docutils literal notranslate"><span class="pre">readio/document.py</span></code>, configuration in <code class="docutils literal notranslate"><span class="pre">readio/config.py</span></code>, synthesis orchestration in <code class="docutils literal notranslate"><span class="pre">readio/reader.py</span></code>, audio sinks in <code class="docutils literal notranslate"><span class="pre">readio/audio.py</span></code> and <code class="docutils literal notranslate"><span class="pre">readio/wave.py</span></code>, and external Spotify integration in <code class="docutils literal notranslate"><span class="pre">readio/spotify.py</span></code>.</p>
+</section>
+<section id="ssmd-voice-resolution">
+<h2>SSMD voice resolution</h2>
+<p>SSMD document bindings use <code class="docutils literal notranslate"><span class="pre">voice_bindings.PROVIDER.ROLE:</span> <span class="pre">CONCRETE_VOICE_ID</span></code> and remain authoritative. Inspect configured voices and persisted role mappings with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--provider<span class="w"> </span>kokoro<span class="w"> </span>--json
+readio<span class="w"> </span>voices<span class="w"> </span>roles<span class="w"> </span>--provider<span class="w"> </span>kokoro
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">bind</span> <span class="pre">ROLE</span> <span class="pre">VOICE_ID</span></code> for an explicit persistent mapping. For automation, pass missing logical roles only for one invocation:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">moderator</span><span class="o">=</span>af_sarah<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">architect</span><span class="o">=</span>am_michael
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is an explicit interactive convenience. It prompts once per unique missing role only on a usable TTY and never persists choices. JSON and non-TTY execution never prompts. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">FILE</span> <span class="pre">--voice-bind</span> <span class="pre">ROLE=VOICE_ID</span> <span class="pre">-o</span> <span class="pre">OUTPUT.ssmd</span></code> is the explicit source-materialization workflow; ordinary <code class="docutils literal notranslate"><span class="pre">speak</span></code>, <code class="docutils literal notranslate"><span class="pre">render</span></code>, and <code class="docutils literal notranslate"><span class="pre">spotify</span></code> commands do not mutate SSMD.</p>
 </section>
 </section>
 </div>

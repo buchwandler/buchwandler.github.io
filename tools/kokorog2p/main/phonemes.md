@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
 search_enabled: true
 ---
 
@@ -1264,6 +1264,13 @@ some contexts.</p>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="nabra-arabic-profile">
+<h2>Nabra Arabic profile</h2>
+<p>Arabic MSA uses the explicit <code class="docutils literal notranslate"><span class="pre">nabra-82m-v0.1</span></code> vocabulary profile. It is derived from
+stock Kokoro 1.0 without mutating that mapping. The profile preserves the dedicated
+symbols <code class="docutils literal notranslate"><span class="pre">ʕ</span></code> and <code class="docutils literal notranslate"><span class="pre">ħ</span></code> at IDs 7 and 8 respectively. These IDs are only meaningful when
+passed to the compatible Nabra model; they are not a stock Kokoro 1.0 Arabic contract.</p>
 </section>
 <section id="references">
 <h2>References</h2>

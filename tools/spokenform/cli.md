@@ -5,8 +5,8 @@ permalink: /tools/spokenform/cli/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "bbe7f1098a60ffb52573227ae9dad1793ba94057"
+docs_ref: "v0.3.3"
+docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
 search_enabled: true
 ---
 
@@ -547,6 +547,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;There are 2 tests.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>spokenform<span class="w"> </span>--lang<span class="w"> </span>en
 </pre></div>
 </div>
+<p>Canonical language options include <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">ko</span></code>, and <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">zh_CN</span></code>. <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">zh</span></code> selects the conservative Chinese base. Compatibility aliases <code class="docutils literal notranslate"><span class="pre">jp</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">ja</span></code> and <code class="docutils literal notranslate"><span class="pre">cn</span></code> -&gt; <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code> are accepted, but new scripts should use canonical identifiers.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--changes</span></code> for stage provenance and <code class="docutils literal notranslate"><span class="pre">--json</span></code> for a structured result:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>spokenform<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--changes<span class="w"> </span><span class="s2">&quot;Prof. Klein hat 2 kg.&quot;</span>
 spokenform<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--json<span class="w"> </span><span class="s2">&quot;Prof. Klein hat 2 kg.&quot;</span>
