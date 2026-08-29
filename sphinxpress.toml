@@ -62,7 +62,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio"]
 
 [pdf]
 builder = "weasyprint"
@@ -138,6 +138,19 @@ description = "Publish multiple Sphinx documentation projects as one site and bo
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }
+
+[[projects]]
+name = "g2lex"
+title = "g2lex"
+docs_root = "../g2lex/docs"
+conf_dir = "../g2lex/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/g2lex"
+description = "Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
 [[projects]]
 name = "kokorog2p"
 title = "kokorog2p"

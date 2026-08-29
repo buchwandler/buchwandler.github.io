@@ -5,6 +5,8 @@ install:
     bundle install
 
 sphinxpress-build:
+    sphinxpress list > /dev/null
+    python3 scripts/patch_sphinxpress_sources.py
     sphinxpress build-site --all
 
 sync:
