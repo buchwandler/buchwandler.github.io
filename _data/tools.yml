@@ -18,6 +18,10 @@
   description: Publish multiple Sphinx documentation projects as one site and book.
   docs_url: /tools/sphinxpress/
   repo_url: https://github.com/buchwandler/sphinxpress
+- name: g2lex
+  description: Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons.
+  docs_url: /tools/g2lex/
+  repo_url: https://github.com/buchwandler/g2lex
 - name: kokorog2p
   description: A unified multi-language G2P library for Kokoro TTS.
   docs_url: /tools/kokorog2p/
@@ -52,6 +56,11 @@
   docs_url: /tools/spokenform/
   repo_url: https://github.com/buchwandler/spokenform
   pypi_url: https://pypi.org/project/spokenform/
+- name: lexhint
+  description: Compact lexical and dictionary-derived context hints for text normalization.
+  docs_url: /tools/lexhint/
+  repo_url: https://github.com/buchwandler/lexhint
+  pypi_url: https://pypi.org/project/lexhint/
 - name: readio
   description: Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.
   docs_url: /tools/readio/
