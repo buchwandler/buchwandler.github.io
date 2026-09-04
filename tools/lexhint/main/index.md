@@ -6,7 +6,7 @@ nav_tool: lexhint-main
 docs_project: "lexhint"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc3b2c85cacd49c7d9ade5145f81b2ca7aded755"
+docs_commit: "d0ba51271aaa45e310689bce18df35cfd7687f7c"
 search_enabled: true
 ---
 
@@ -602,14 +602,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 </li>
 <li class="toctree-l1"><a class="reference internal" href="architecture/#glossary">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-4-unreleased">[v0.4.4] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-3-unreleased">[v0.4.3] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-2-unreleased">[v0.4.2] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-1-2026-08-31">[v0.4.1] - 2026-08-31</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-4-0-2026-08-25">[v0.4.0] - 2026-08-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.0] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.2.1] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.2.0] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.3] - 2026-08-22</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.1.2] - 2026-08-21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.1.1] - 2026-08-21</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.0] - 2026-08-20</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.3.0] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.2.1] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.2.0] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.1.3] - 2026-08-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.1.2] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.1.1] - 2026-08-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.1.0] - 2026-08-20</a></li>
 </ul>
 </li>
 </ul>
@@ -617,7 +621,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>See the <a class="reference external" href="https://github.com/buchwandler/lexhint">README</a> for installation, build commands, API examples, and data-source boundaries.</p>
 <section id="dataset-lifecycle">
 <h2>Dataset lifecycle</h2>
-<p>Install published SQLite datasets explicitly with <code class="docutils literal notranslate"><span class="pre">lexhint</span> <span class="pre">dataset</span> <span class="pre">download</span> <span class="pre">LANGUAGE</span></code>. The dataset manager stores language, capability variant, and release version side by side, verifies gzip and SQLite metadata before atomic installation, and never downloads from <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code> or ordinary query commands. Use <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">validate</span></code>, and <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">remove</span></code> for local management; <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">available</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">download</span></code> are the networked catalog operations.</p>
+<p>Install published SQLite datasets explicitly with <code class="docutils literal notranslate"><span class="pre">lexhint</span> <span class="pre">dataset</span> <span class="pre">download</span> <span class="pre">LANGUAGE</span></code>. The client reads the <code class="docutils literal notranslate"><span class="pre">lexhint-datasets</span></code> catalog, caches its validated bytes under <code class="docutils literal notranslate"><span class="pre">LEXHINT_CACHE_DIR</span></code> (or the platform cache directory), and downloads selected assets from immutable GitHub Releases. Online catalog reads use conditional refresh metadata and fall back to a valid cached catalog on transport failure. <code class="docutils literal notranslate"><span class="pre">--offline</span> <span class="pre">dataset</span> <span class="pre">available</span></code> and <code class="docutils literal notranslate"><span class="pre">--offline</span> <span class="pre">dataset</span> <span class="pre">check</span></code> read the cache without network access. The catalog is an index only; detailed provenance remains in each release’s <code class="docutils literal notranslate"><span class="pre">datasets-v2.json</span></code>. Exact schema equality is required, and historical releases remain reachable through compatible catalog entries or the compatibility Releases API fallback. The dataset manager stores language, capability variant, and release version side by side, verifies gzip and SQLite metadata before atomic installation, and never downloads from <code class="docutils literal notranslate"><span class="pre">Lexicon</span></code> or ordinary query commands. Use <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">list</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">info</span></code>, <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">validate</span></code>, and <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">remove</span></code> for local management; <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">available</span></code> lists all compatible catalog artifacts, <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">check</span></code> reports updates for installed slots, and <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">update</span></code> updates all installed slots or selected language and variant filters, removing superseded versions after successful installation.</p>
 </section>
 </section>
 </div>

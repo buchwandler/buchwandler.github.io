@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -765,7 +765,7 @@ separates the marking from the attribute assignment.</p>
 <span class="n">assignments</span> <span class="o">=</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;pɪˈkɑːn&quot;</span><span class="p">}}</span>
 <span class="n">overrides</span> <span class="o">=</span> <span class="n">apply_marker_overrides</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="n">assignments</span><span class="p">)</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="c1"># &quot;pecan&quot; pronounced as /pɪˈkɑːn/</span>
 </pre></div>
 </div>
@@ -830,7 +830,7 @@ are stored in token metadata for downstream processing.</p>
     <span class="mi">2</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ði&quot;</span><span class="p">},</span>  <span class="c1"># Second &quot;the&quot; (emphasized)</span>
 <span class="p">}</span>
 <span class="n">overrides</span> <span class="o">=</span> <span class="n">apply_marker_overrides</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="n">assignments</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -888,7 +888,7 @@ are stored in token metadata for downstream processing.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I like @coffee@.&quot;</span>
 <span class="n">clean_text</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">parse_delimited</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 <span class="n">overrides</span> <span class="o">=</span> <span class="n">apply_marker_overrides</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ˈkɔfi&quot;</span><span class="p">}})</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -896,7 +896,7 @@ are stored in token metadata for downstream processing.</p>
 <h3>Direct Spans (More Control)</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;I like coffee.&quot;</span>
 <span class="n">overrides</span> <span class="o">=</span> <span class="p">[</span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">7</span><span class="p">,</span> <span class="mi">13</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ˈkɔfi&quot;</span><span class="p">})]</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 </pre></div>
 </div>
 <p><strong>When to Use Markers:</strong></p>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,45 +542,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="spanish-api">
 <h1>Spanish API</h1>
-<p>Spanish G2P provides rule-based phoneme conversion for Spanish, designed for Kokoro TTS
-models.</p>
-<section id="text-preparation-ownership">
-<h2>Text preparation ownership</h2>
-<p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns Spanish abbreviation and symbol recognition, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns
-semantic written-to-spoken preparation for numbers, quantities, temperatures,
-currencies, and reviewed dates, and kokorog2p owns downstream typography, tokenization,
-overrides, alignment, and G2P. European (<code class="docutils literal notranslate"><span class="pre">dialect=&quot;es&quot;</span></code>) and Latin-American
-(<code class="docutils literal notranslate"><span class="pre">dialect=&quot;la&quot;</span></code>) phoneme behavior remains local to <code class="docutils literal notranslate"><span class="pre">SpanishG2P</span></code>.</p>
-</section>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="examples">
-<h2>Examples</h2>
+<p>The Spanish frontend provides intrinsic Spanish phonological normalization and G2P for
+prepared text. Semantic expansion of written numbers, quantities, dates, units,
+currencies, and abbreviations belongs to the calling application.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.es</span><span class="w"> </span><span class="kn">import</span> <span class="n">SpanishG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">SpanishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;es-es&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;¡Hola mundo!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">SpanishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hola mundo&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-<section id="phonology-features">
-<h2>Phonology Features</h2>
-<p>Spanish phonology includes:</p>
-<ul class="simple">
-<li><p>5 pure vowels (a, e, i, o, u) - always pronounced clearly</p></li>
-<li><p>No vowel reduction (unlike English)</p></li>
-<li><p>Predictable stress (penultimate for vowel-ending words, final for consonant-ending)</p></li>
-<li><p>Palatal sounds: ñ [ɲ], ll [ʎ] (or [j] in most dialects), ch [ʧ]</p></li>
-<li><p>Jota: j/g+e/i [x]</p></li>
-<li><p>Theta: z/c+e/i [θ] in European Spanish (or [s] in Latin America)</p></li>
-<li><p>Tap vs trill: r [ɾ] vs rr/initial r [r]</p></li>
-<li><p>No consonant clusters simplification</p></li>
-</ul>
-</section>
+<p>Select the supported dialect explicitly when needed. The frontend does not detect or
+segment document languages automatically.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -546,46 +546,1125 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="main-functions">
 <h2>Main Functions</h2>
 </section>
+<section id="structured-stress-overrides">
+<h2>Structured stress overrides</h2>
+<p><code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> supports explicit phoneme stress changes through the <code class="docutils literal notranslate"><span class="pre">stress</span></code> attribute.
+Values are strings and must be one of <code class="docutils literal notranslate"><span class="pre">&quot;-2&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;-1&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;+1&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;+2&quot;</span></code>. The stress
+change is applied after language resolution and pronunciation or <code class="docutils literal notranslate"><span class="pre">ph</span></code> override
+resolution.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">OverrideSpan</span><span class="p">,</span> <span class="n">phonemize</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span>
+    <span class="s2">&quot;zwei Minuten&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">overrides</span><span class="o">=</span><span class="p">[</span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="s2">&quot;+2&quot;</span><span class="p">})],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The values mean:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-2</span></code>: remove stress markers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-1</span></code>: lower stress by one level.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+1</span></code>: raise stress by one level.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">+2</span></code>: promote or force primary stress.</p></li>
+</ul>
+<p>A span covering multiple lexical tokens applies independently to each spoken token. This
+changes phoneme stress markers (<code class="docutils literal notranslate"><span class="pre">ˌ</span></code> and <code class="docutils literal notranslate"><span class="pre">ˈ</span></code>), not volume, pitch, duration, or SSML
+emphasis. Markdown, Misaki, Kokoro markup, and other prosody syntax are not supported.</p>
+</section>
+<section id="prepared-input">
+<h2>Prepared input</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">phonemize_prepared</span></code> when the caller has already converted written text to spoken
+text. It retains kokorog2p tokenization, G2P, model punctuation handling, overrides,
+phoneme construction, and token IDs, but does not run written-to-spoken semantic
+expansion again.</p>
+<p>All canonical public entry points require the language to be supplied explicitly.
+<code class="docutils literal notranslate"><span class="pre">phonemize</span></code>, <code class="docutils literal notranslate"><span class="pre">phonemize_prepared</span></code>, and <code class="docutils literal notranslate"><span class="pre">tokenize</span></code> require <code class="docutils literal notranslate"><span class="pre">language=...</span></code>; the
+convenience wrappers <code class="docutils literal notranslate"><span class="pre">phonemes</span></code> and <code class="docutils literal notranslate"><span class="pre">phoneme_ids</span></code> follow the same rule.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.phonemize_prepared">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">phonemize_prepared</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpanLike</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TokenAnnotationLike</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">alignment</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'span'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'legacy'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'span'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overlap</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'snap'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'strict'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'snap'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_normalizer_rules</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SpacyModelSize</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lexicons</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'kokorog2p'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'espeak'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'goruut'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kokorog2p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kokorog2p.G2PBase" title="kokorog2p.base.G2PBase"><span class="pre">G2PBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g2p_options</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.14)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">PhonemizeResult</span></span></span><a class="reference internal" href="../../_modules/kokorog2p/#phonemize_prepared"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Explicit alias for the prepared-text phonemization contract.</p>
+<p>The caller owns written-to-spoken semantic preparation; kokorog2p performs
+tokenization, overrides, G2P, model punctuation handling, and ID generation.
+<code class="docutils literal notranslate"><span class="pre">text</span></code> is the prepared coordinate space, so override offsets and returned
+token offsets refer directly to it.</p>
+</dd></dl>
+
+<p>The supplied string is the coordinate authority: <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> and token/override offsets
+refer to the prepared text. Do not pass arbitrary written text when number, date, unit,
+currency, or abbreviation expansion is expected.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.tokenize">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">tokenize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">keep_punct</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TokenSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/#tokenize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to a list of tokens with phonemes.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text to convert.
+language: Language code (e.g., ‘en-us’, ‘en-gb’).
+keep_punct: Whether to include punctuation tokens.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of TokenSpan objects with char offsets.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
+<span class="gp">... </span>    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> [</span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">char_start</span><span class="si">}</span><span class="s2">:</span><span class="si">{</span><span class="n">t</span><span class="o">.</span><span class="n">char_end</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
+<span class="go">Hello [0:5]</span>
+<span class="go">world [6:11]</span>
+<span class="go">! [11:12]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.get_g2p">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">get_g2p</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_spacy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'kokorog2p'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'espeak'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'goruut'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'kokorog2p'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_silver</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">load_gold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lexicons</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phoneme_quotes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'curly'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacy_model_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SpacyModelSize</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kokorog2p.G2PBase" title="kokorog2p.base.G2PBase"><span class="pre">G2PBase</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/#get_g2p"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a G2P instance for the specified language.</p>
+<p>This factory function returns an appropriate G2P instance based on the</p>
+<dl>
+<dt>Args:</dt><dd><p>language: Language code (e.g., ‘en-us’, ‘en-gb’, ‘zh’, ‘ja’, ‘fr’, etc.).
+use_espeak_fallback: Whether to use espeak for out-of-vocabulary words</p>
+<blockquote>
+<div><p>when using the dictionary-based “kokorog2p” backend. Ignored when
+backend is set to “espeak” (espeak is the primary backend).</p>
+</div></blockquote>
+<dl>
+<dt>use_goruut_fallback: Whether to use goruut for out-of-vocabulary words</dt><dd><p>when using the dictionary-based “kokorog2p” backend. Ignored when
+backend is set to “goruut” (goruut is the primary backend).</p>
+</dd>
+<dt>use_spacy: Whether to use spaCy for tokenization and POS tagging. If</dt><dd><p><code class="docutils literal notranslate"><span class="pre">None</span></code>, the highest-quality installed and loadable local model is
+attempted for languages with spaCy defaults and the native path is
+used when no model is available. <code class="docutils literal notranslate"><span class="pre">True</span></code> requires a loadable model;
+<code class="docutils literal notranslate"><span class="pre">False</span></code> forces the native path. No model is downloaded automatically.</p>
+</dd>
+<dt>spacy_model: Concrete spaCy model package name, or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> for the</dt><dd><p>highest installed loadable tier. Concrete names are strict.</p>
+</dd>
+<dt>spacy_model_size: Exact model tier (<code class="docutils literal notranslate"><span class="pre">&quot;trf&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;lg&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;md&quot;</span></code>, or</dt><dd><p><code class="docutils literal notranslate"><span class="pre">&quot;sm&quot;</span></code>) to select when <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> is unset.</p>
+</dd>
+<dt>use_cli: If True, force use of CLI espeak phonemizer instead of</dt><dd><p>library bindings. Only applies when backend=”espeak”.</p>
+</dd>
+<dt>backend: Phonemization backend to use: “kokorog2p”, “espeak”, “goruut”.</dt><dd><p>The goruut backend requires pygoruut to be installed.</p>
+</dd>
+<dt>load_silver: If True, load silver tier dictionary (~100k extra entries).</dt><dd><p>Defaults to True for backward compatibility and maximum coverage.
+Set to False to save memory (~22-31 MB) and initialization time.
+Only applies to English (en-us, en-gb). Other languages reserve
+this parameter for future use.</p>
+</dd>
+<dt>load_gold: If True, load gold tier dictionary (~170k common words).</dt><dd><p>Defaults to True for maximum quality and coverage.
+Set to False when only silver tier or no dictionaries needed.
+Only applies to languages with dictionaries (English, French, German).</p>
+</dd>
+<dt>lexicons: A named lexicon or ordered sequence of named lexicons for the</dt><dd><p>language. When omitted, the language default stack is used. In an
+explicit sequence, the first lexicon wins collisions. Use
+<code class="docutils literal notranslate"><span class="pre">available_lexicons(language)</span></code> to inspect registered names.</p>
+</dd>
+<dt>version: Model version to use. Default: “1.0” (base model).</dt><dd><ul class="simple">
+<li><p>“1.0”: Base model</p></li>
+<li><p>“1.1”: Chinese/English model</p></li>
+</ul>
+<p>Different languages may have different behavior:
+- Chinese: “1.0” = IPA output, “1.1” = Zhuyin output</p>
+</dd>
+<dt>phoneme_quotes: Quote character style in phoneme output. Options:</dt><dd><ul class="simple">
+<li><p>“curly”: Use curly quotes (”, “) - default, backward compatible</p></li>
+<li><p>“ascii”: Use ASCII double quotes (“)</p></li>
+<li><p>“none”: Remove quote characters from phoneme output</p></li>
+</ul>
+<p>Only applies to English currently.</p>
+</dd>
+<dt>strict: If True (default), raise exceptions when backend initialization</dt><dd><p>or phonemization fails. If False, log errors and return empty results
+for backward compatibility with older versions that silently failed.
+Recommended: True for production use to catch configuration issues.</p>
+</dd>
+</dl>
+<p><a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Additional arguments passed to the G2P constructor.</p>
+</dd>
+<dt>Returns:</dt><dd><p>A G2PBase instance for the specified language.</p>
+</dd>
+<dt>Raises:</dt><dd><dl class="simple">
+<dt>ValueError: If the language is not supported and no fallback is available,</dt><dd><p>or if version is not “1.0” or “1.1”.</p>
+</dd>
+</dl>
+<p>ImportError: If backend=”goruut” but pygoruut is not installed.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Disable silver for better performance</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_fast</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Ultra-fast initialization with no dictionaries</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_minimal</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">load_gold</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Chinese</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_zh</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;zh&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Japanese</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_ja</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;ja&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># French (uses espeak fallback)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_fr</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="c1"># Using goruut backend</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">g2p_goruut</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;goruut&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.clear_cache">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">clear_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">deep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/#clear_cache"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Clear the G2P instance cache.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>deep: Also clear language dictionary resource caches.  This can be</dt><dd><p>useful when a long-running process must release parsed lexicons.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
 <section id="pipeline-integration-adapters">
 <h2>Pipeline integration adapters</h2>
 <p>These adapters accept SSMD- and phrasplit-shaped objects structurally, without making
 either package a runtime dependency:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.coerce_override_spans">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">coerce_override_spans</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/integrations/#coerce_override_spans"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Copy and validate structurally compatible override spans.</p>
+<p>The returned dataclasses own their attribute dictionaries, so adapting
+foreign spans never mutates caller-owned mappings.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.overrides_from_ssmd">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">overrides_from_ssmd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">spans</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">xsampa</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Literal" title="(in Python v3.14)"><span class="pre">Literal</span></a><span class="p"><span class="pre">[</span></span><span class="s"><span class="pre">'reject'</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'convert'</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'reject'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/integrations/#overrides_from_ssmd"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Normalize SSMD-style annotation spans into kokorog2p overrides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ph</span></code> and IPA-valued <code class="docutils literal notranslate"><span class="pre">ipa</span></code> attributes become <code class="docutils literal notranslate"><span class="pre">ph</span></code>.  <code class="docutils literal notranslate"><span class="pre">lang</span></code> and
+<code class="docutils literal notranslate"><span class="pre">language</span></code> become <code class="docutils literal notranslate"><span class="pre">lang</span></code>.  X-SAMPA is rejected unless a converter is
+explicitly supplied by a future implementation; it is never silently
+interpreted as IPA.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.overrides_for_segment">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">overrides_for_segment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">segment_start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">segment_end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Iterable" title="(in Python v3.14)"><span class="pre">Iterable</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/integrations/#overrides_for_segment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Intersect document spans and rebase them to segment-local offsets.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.phonemize_segments">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">phonemize_segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">clean_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">segments</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><span class="pre">object</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">annotations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><span class="pre">TokenAnnotationLike</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">()</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonemize</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Callable" title="(in Python v3.14)"><span class="pre">Callable</span></a><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">PhonemizeResult</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">PhonemizeResult</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/integrations/#phonemize_segments"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Phonemize offset-preserving segments with document-level overrides.</p>
+</dd></dl>
+
 </section>
 <section id="base-classes">
 <h2>Base Classes</h2>
 <section id="g2pbase">
 <h3>G2PBase</h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">G2PBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/abc.html#abc.ABC" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ABC</span></code></a></p>
+<p>Abstract base class for grapheme-to-phoneme converters.</p>
+<p>Subclasses must implement the <cite>__call__</cite> method to convert text to phonemes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the G2P converter.</p>
+<dl>
+<dt>Args:</dt><dd><p>language: Language code (e.g., ‘en-us’, ‘en-gb’).
+use_espeak_fallback: Whether to use espeak for OOV words.
+use_goruut_fallback: Whether to use goruut for OOV words.
+use_cli: If True, use CLI phonemizer instead of library bindings.
+strict: If True, raise exceptions on errors. If False, log warnings</p>
+<blockquote>
+<div><p>and return empty results (backward compatible mode).</p>
+</div></blockquote>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.is_british">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_british</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></dt>
+<dd><p>Check if this is British English.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.__call__">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kokorog2p.GToken" title="kokorog2p.token.GToken"><span class="pre">GToken</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to a list of tokens with phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of GToken objects with phonemes assigned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.phonemize">
+<span class="sig-name descname"><span class="pre">phonemize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.phonemize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to a phoneme string.</p>
+<p>This is a convenience method that calls __call__ and joins the results.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string with word boundaries.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.word_to_phonemes">
+<span class="sig-name descname"><span class="pre">word_to_phonemes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.word_to_phonemes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a single word to phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>word: The word to convert.
+tag: Optional POS tag for disambiguation.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string or None if conversion failed.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.lookup">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Look up a word in the dictionary.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>word: The word to look up.
+tag: Optional POS tag for disambiguation.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string or None if not found.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Release resources owned by this G2P instance.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.G2PBase.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/base/#G2PBase.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return a string representation.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="gtoken">
 <h3>GToken</h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.GToken">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">GToken</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">whitespace</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end_ts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rating</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">~typing.Any]</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/token/#GToken"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>A token representing a word or text unit with optional phoneme information.</p>
+<dl class="simple">
+<dt>Attributes:</dt><dd><p>text: The original text of the token.
+tag: Part-of-speech tag (e.g., ‘NN’, ‘VB’, ‘JJ’).
+whitespace: Trailing whitespace after this token.
+phonemes: The phonemic transcription of the token.
+start_ts: Start timestamp for audio alignment.
+end_ts: End timestamp for audio alignment.
+rating: Quality rating of the phoneme transcription.
+_: Extension dictionary for custom attributes.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.text">
+<span class="sig-name descname"><span class="pre">text</span></span></dt>
+<dd><p>The original text of this token.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.phonemes">
+<span class="sig-name descname"><span class="pre">phonemes</span></span></dt>
+<dd><p>The IPA phoneme string for this token.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.tag">
+<span class="sig-name descname"><span class="pre">tag</span></span></dt>
+<dd><p>Part-of-speech tag (if available).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.whitespace">
+<span class="sig-name descname"><span class="pre">whitespace</span></span></dt>
+<dd><p>Whitespace following this token.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">tag</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">whitespace</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'</span> <span class="pre">'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id3">
+<span class="sig-name descname"><span class="pre">phonemes</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.start_ts">
+<span class="sig-name descname"><span class="pre">start_ts</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.end_ts">
+<span class="sig-name descname"><span class="pre">end_ts</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.GToken.rating">
+<span class="sig-name descname"><span class="pre">rating</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.GToken.has_phonemes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">has_phonemes</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></dt>
+<dd><p>Check if this token has phonemes assigned.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.GToken.is_punctuation">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_punctuation</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></dt>
+<dd><p>Check if this token is punctuation.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.GToken.is_word">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_word</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></dt>
+<dd><p>Check if this token is a word (not punctuation or whitespace).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.GToken.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/token/#GToken.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get a custom attribute from the extension dict.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.GToken.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.14)"><span class="pre">Any</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/token/#GToken.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Set a custom attribute in the extension dict.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.GToken.copy">
+<span class="sig-name descname"><span class="pre">copy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kokorog2p.GToken" title="kokorog2p.token.GToken"><span class="pre">GToken</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/token/#GToken.copy"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Create a shallow copy of this token.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.GToken.__repr__">
+<span class="sig-name descname"><span class="pre">__repr__</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/token/#GToken.__repr__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return a string representation of the token.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 </section>
 <section id="phoneme-utilities">
 <h2>Phoneme Utilities</h2>
 <section id="vocabulary">
 <h3>Vocabulary</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.get_vocab">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">get_vocab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" title="(in Python v3.14)"><span class="pre">frozenset</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/phonemes/#get_vocab"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Get the phoneme vocabulary for a dialect.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>british: Whether to get British or US vocabulary.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Frozen set of valid phonemes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.validate_phonemes">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">validate_phonemes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/phonemes/#validate_phonemes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check if all phonemes in a string are valid Kokoro phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>phonemes: Phoneme string to validate.
+british: Whether to validate against British or US vocabulary.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if all phonemes are valid.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.US_VOCAB">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">US_VOCAB</span></span></dt>
+<dd><p>Build an immutable unordered collection of unique elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.GB_VOCAB">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">GB_VOCAB</span></span></dt>
+<dd><p>Build an immutable unordered collection of unique elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.VOWELS">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">VOWELS</span></span></dt>
+<dd><p>Build an immutable unordered collection of unique elements.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.CONSONANTS">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">CONSONANTS</span></span></dt>
+<dd><p>Build an immutable unordered collection of unique elements.</p>
+</dd></dl>
+
 </section>
 <section id="conversion">
 <h3>Conversion</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.from_espeak">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">from_espeak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/phonemes/#from_espeak"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert espeak IPA output to Kokoro phonemes.</p>
+<dl>
+<dt>Args:</dt><dd><p>phonemes: The espeak phoneme string (with tie character ^ or ͡).
+british: Whether to use British English mappings.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Kokoro-compatible phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">from_espeak</span><span class="p">(</span><span class="s2">&quot;mˈɜːt͡ʃənt͡ʃˌɪp&quot;</span><span class="p">,</span> <span class="n">british</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&#39;mˈɜɹʧəntʃˌɪp&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.from_goruut">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">from_goruut</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/phonemes/#from_goruut"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert goruut/pygoruut IPA output to Kokoro phonemes.</p>
+<p>Goruut outputs standard IPA without tie characters for diphthongs
+and affricates, which requires different handling than espeak.</p>
+<dl>
+<dt>Args:</dt><dd><p>phonemes: The goruut phoneme string (standard IPA).
+british: Whether to use British English mappings.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Kokoro-compatible phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">from_goruut</span><span class="p">(</span><span class="s2">&quot;həlˈoʊ wˈɜɹld&quot;</span><span class="p">,</span> <span class="n">british</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&#39;həlˈO wˈɜɹld&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">from_goruut</span><span class="p">(</span><span class="s2">&quot;sˈeɪ&quot;</span><span class="p">,</span> <span class="n">british</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="go">&#39;sˈA&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.to_espeak">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">to_espeak</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/phonemes/#to_espeak"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert Kokoro phonemes to standard IPA (espeak-compatible).</p>
+<dl>
+<dt>Args:</dt><dd><p>phonemes: Kokoro phoneme string.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Standard IPA phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">to_espeak</span><span class="p">(</span><span class="s2">&quot;hˈA&quot;</span><span class="p">)</span>
+<span class="go">&#39;hˈeɪ&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 <section id="kokoro-vocabulary">
 <h2>Kokoro Vocabulary</h2>
 <section id="encoding-decoding">
 <h3>Encoding/Decoding</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.encode">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">encode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">add_spaces</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#encode"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a phoneme string to token indices.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Phoneme string to encode.
+add_spaces: Whether to include space tokens (default True).
+model: Model variant to encode for (default: “1.0”).</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of token indices.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">encode</span><span class="p">(</span><span class="s2">&quot;hˈɛlO&quot;</span><span class="p">)</span>
+<span class="go">[50, 156, 86, 54, 31]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.decode">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">decode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_special</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#decode"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert token indices back to a phoneme string.</p>
+<dl>
+<dt>Args:</dt><dd><p>indices: List of token indices.
+skip_special: Whether to skip padding/unknown tokens.
+model: Model variant to decode from (default: “1.0”).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">decode</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">31</span><span class="p">])</span>
+<span class="go">&#39;hˈɛlO&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.phonemes_to_ids">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">phonemes_to_ids</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">phonemes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#phonemes_to_ids"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert phoneme string to model input IDs.</p>
+<p>This is the main function used to prepare text for the Kokoro model.</p>
+<dl>
+<dt>Args:</dt><dd><p>phonemes: Phoneme string from G2P conversion.
+model: Model variant to encode for (default: “1.0”).</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of token IDs ready for model input.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">phonemes_to_ids</span><span class="p">(</span><span class="s2">&quot;hˈɛlO wˈɜɹld!&quot;</span><span class="p">)</span>
+<span class="go">[50, 156, 86, 54, 31, 16, 65, 156, 87, 123, 54, 46, 5]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.ids_to_phonemes">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">ids_to_phonemes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#ids_to_phonemes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert model output IDs back to phoneme string.</p>
+<dl>
+<dt>Args:</dt><dd><p>ids: List of token IDs from model.
+model: Model variant to decode from (default: “1.0”).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">ids_to_phonemes</span><span class="p">([</span><span class="mi">50</span><span class="p">,</span> <span class="mi">156</span><span class="p">,</span> <span class="mi">86</span><span class="p">,</span> <span class="mi">54</span><span class="p">,</span> <span class="mi">31</span><span class="p">])</span>
+<span class="go">&#39;hˈɛlO&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="validation">
 <h3>Validation</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.validate_for_kokoro">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">validate_for_kokoro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#validate_for_kokoro"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Validate that all characters in text are in Kokoro vocabulary.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Phoneme string to validate.
+model: Model variant to validate against:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>“1.0”: Base multilingual model (default)</p></li>
+<li><p>“1.1”: Chinese-specific model with Zhuyin</p></li>
+</ul>
+</div></blockquote>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple of (is_valid, list_of_invalid_chars).</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">validate_for_kokoro</span><span class="p">(</span><span class="s2">&quot;hˈɛlO&quot;</span><span class="p">)</span>
+<span class="go">(True, [])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate_for_kokoro</span><span class="p">(</span><span class="s2">&quot;hˈɛlO§&quot;</span><span class="p">)</span>
+<span class="go">(False, [&#39;§&#39;])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">validate_for_kokoro</span><span class="p">(</span><span class="s2">&quot;ㄋㄧ2ㄏㄠ3&quot;</span><span class="p">,</span> <span class="n">model</span><span class="o">=</span><span class="s2">&quot;1.1&quot;</span><span class="p">)</span>
+<span class="go">(True, [])</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.filter_for_kokoro">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">filter_for_kokoro</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">replacement</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/vocab/#filter_for_kokoro"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Remove characters not in Kokoro vocabulary.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Phoneme string to filter.
+replacement: String to replace invalid characters with.
+model: Model variant to filter for (same options as validate_for_kokoro).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Filtered phoneme string.</p>
+</dd>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_for_kokoro</span><span class="p">(</span><span class="s2">&quot;hˈɛlO§&quot;</span><span class="p">)</span>
+<span class="go">&#39;hˈɛlO&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 <section id="configuration">
 <h3>Configuration</h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.get_kokoro_vocab">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">get_kokoro_vocab</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span></dt>
+<dd><p>Get the Kokoro vocabulary mapping (token -&gt; index).</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>model: Model variant to load vocab for:</dt><dd><ul class="simple">
+<li><p>“1.0”: Base multilingual Kokoro model (default)</p></li>
+<li><p>“1.1”: Chinese-specific Kokoro v1.1 model with Zhuyin</p></li>
+</ul>
+</dd>
+</dl>
+</dd>
+<dt>Returns:</dt><dd><p>Dictionary mapping tokens to their indices.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.get_kokoro_config">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">get_kokoro_config</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a></span></span></dt>
+<dd><p>Get the full Kokoro model configuration.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>Dictionary containing the full model config.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.N_TOKENS">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">N_TOKENS</span></span></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating-point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer
+iteral.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.PAD_IDX">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">PAD_IDX</span></span></dt>
+<dd><p>int([x]) -&gt; integer
+int(x, base=10) -&gt; integer</p>
+<p>Convert a number or string to an integer, or return 0 if no arguments
+are given.  If x is a number, return x.__int__().  For floating-point
+numbers, this truncates towards zero.</p>
+<p>If x is not a number or if base is given, then x must be a string,
+bytes, or bytearray instance representing an integer literal in the
+given base.  The literal can be preceded by ‘+’ or ‘-’ and be surrounded
+by whitespace.  The base defaults to 10.  Valid bases are 0 and 2-36.
+Base 0 means to interpret the base from the string as an integer
+iteral.
+&gt;&gt;&gt; int(‘0b100’, base=0)
+4</p>
+</dd></dl>
+
 </section>
 </section>
 <section id="punctuation">
 <h2>Punctuation</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">Punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">marks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">';:,.!?—…&quot;()“”'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Preserve, remove, or normalize punctuation during phonemization.</p>
+<p>This class provides methods to:
+1. Normalize Unicode punctuation to Kokoro-compatible marks
+2. remove configured marks
+3. Preserve punctuation positions for later restoration</p>
+<dl>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span> <span class="o">=</span> <span class="n">Punctuation</span><span class="p">()</span>
+</pre></div>
+</div>
+<p># Normalize Unicode punctuation
+&gt;&gt;&gt; punct.normalize(“Hello… world！”)
+‘Hello… world!’</p>
+<p># Remove all punctuation
+&gt;&gt;&gt; punct.remove(“Hello, world!”)
+‘Hello world’</p>
+<p># Preserve and restore
+&gt;&gt;&gt; text, marks = punct.preserve(“Hello, world!”)
+&gt;&gt;&gt; text
+[‘Hello’, ‘world’]
+&gt;&gt;&gt; # After phonemization…
+&gt;&gt;&gt; punct.restore([‘həˈloʊ’, ‘wˈɜːld’], marks)
+[‘həˈloʊ, wˈɜːld!’]</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">marks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">';:,.!?—…&quot;()“”'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize punctuation handler.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><dl class="simple">
+<dt>marks: Punctuation marks to consider. Either a string of</dt><dd><p>single-character marks or a compiled regex pattern.</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.default_marks">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">default_marks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.default_marks"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return the default punctuation marks.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.kokoro_marks">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">kokoro_marks</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" title="(in Python v3.14)"><span class="pre">frozenset</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.kokoro_marks"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Return all punctuation marks in Kokoro’s vocabulary.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.marks">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">marks</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></dt>
+<dd><p>The punctuation marks as a string.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.normalize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Normalize Unicode punctuation to Kokoro-compatible equivalents.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text with various Unicode punctuation.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Text with normalized punctuation.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span> <span class="o">=</span> <span class="n">Punctuation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;Hello… world！&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hello… world!&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s1">&#39;&quot;Hello,&quot; she said.&#39;</span><span class="p">)</span>
+<span class="go">&#39;&quot;Hello,&quot; she said.&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;Wait...what?!&quot;</span><span class="p">)</span>
+<span class="go">&#39;Wait…what?!&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;don&#39;t worry&quot;</span><span class="p">)</span>
+<span class="go">&quot;don&#39;t worry&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="s2">&quot;Wait - now&quot;</span><span class="p">)</span>
+<span class="go">&#39;Wait — now&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.remove">
+<span class="sig-name descname"><span class="pre">remove</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.remove"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Remove all punctuation marks, replacing with spaces.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text or list of texts.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Text(s) with punctuation replaced by spaces.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span> <span class="o">=</span> <span class="n">Punctuation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hello world&#39;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">remove</span><span class="p">([</span><span class="s2">&quot;Hello!&quot;</span><span class="p">,</span> <span class="s2">&quot;How are you?&quot;</span><span class="p">])</span>
+<span class="go">[&#39;Hello&#39;, &#39;How are you&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.preserve">
+<span class="sig-name descname"><span class="pre">preserve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">MarkIndex</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.preserve"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Extract punctuation from text, preserving positions for restoration.</p>
+<p>This splits the text into chunks without punctuation, while recording
+where each punctuation mark was located.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text or list of texts.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple of (text_chunks, mark_indices) where:
+- text_chunks: List of text segments without punctuation
+- mark_indices: List of MarkIndex objects for restoration</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span> <span class="o">=</span> <span class="n">Punctuation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span><span class="p">,</span> <span class="n">marks</span> <span class="o">=</span> <span class="n">punct</span><span class="o">.</span><span class="n">preserve</span><span class="p">(</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span>
+<span class="go">[&#39;Hello&#39;, &#39;world&#39;]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">[(</span><span class="n">m</span><span class="o">.</span><span class="n">mark</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">position</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">marks</span><span class="p">]</span>
+<span class="go">[(&#39;, &#39;, &#39;I&#39;), (&#39;!&#39;, &#39;E&#39;)]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.Punctuation.restore">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">restore</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">marks</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">MarkIndex</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">word_sep</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'</span> <span class="pre">'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strip</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#Punctuation.restore"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Restore punctuation to phonemized text.</p>
+<p>This is the reverse of preserve(). It takes phonemized text chunks
+and reinserts the punctuation marks at their original positions.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Phonemized text chunks.
+marks: Mark indices from preserve().
+word_sep: Word separator used in phonemized output.
+strip: Whether to strip trailing separators.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of phonemized text with punctuation restored.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span> <span class="o">=</span> <span class="n">Punctuation</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">text</span><span class="p">,</span> <span class="n">marks</span> <span class="o">=</span> <span class="n">punct</span><span class="o">.</span><span class="n">preserve</span><span class="p">(</span><span class="s1">&#39;Hello, world!&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">punct</span><span class="o">.</span><span class="n">restore</span><span class="p">([</span><span class="s1">&#39;həˈloʊ&#39;</span><span class="p">,</span> <span class="s1">&#39;wˈɜːld&#39;</span><span class="p">],</span> <span class="n">marks</span><span class="p">)</span>
+<span class="go">[&#39;həˈloʊ, wˈɜːld!&#39;]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.normalize_punctuation">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">normalize_punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#normalize_punctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Normalize Unicode punctuation to Kokoro-compatible equivalents.</p>
+<p>This is a convenience function that creates a Punctuation instance
+and calls normalize().</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text with various Unicode punctuation.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Text with normalized punctuation.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalize_punctuation</span><span class="p">(</span><span class="s2">&quot;Hello… world！&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hello… world!&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.filter_punctuation">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">filter_punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#filter_punctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Keep only Kokoro-supported punctuation, remove everything else.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Input text.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Text with only Kokoro-supported punctuation.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">filter_punctuation</span><span class="p">(</span><span class="s2">&quot;Hello~world!&quot;</span><span class="p">)</span>
+<span class="go">&#39;Hello world!&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.is_kokoro_punctuation">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">is_kokoro_punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">char</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/punctuation/#is_kokoro_punctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check if a character is a Kokoro-supported punctuation mark.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>char: Single character to check.</p>
+</dd>
+<dt>Returns:</dt><dd><p>True if the character is in Kokoro’s punctuation vocabulary.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="kokorog2p.KOKORO_PUNCTUATION">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">KOKORO_PUNCTUATION</span></span></dt>
+<dd><p>Build an immutable unordered collection of unique elements.</p>
+</dd></dl>
+
 </section>
 <section id="word-mismatch-detection">
 <h2>Word Mismatch Detection</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.MismatchMode">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">MismatchMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#MismatchMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Enum" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Enum</span></code></a></p>
+<p>How to handle word count mismatches.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchMode.IGNORE">
+<span class="sig-name descname"><span class="pre">IGNORE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'ignore'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchMode.WARN">
+<span class="sig-name descname"><span class="pre">WARN</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'warn'</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchMode.REMOVE">
+<span class="sig-name descname"><span class="pre">REMOVE</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'remove'</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">MismatchInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line_num</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">expected</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">actual</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#MismatchInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Information about a word count mismatch.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo.line_num">
+<span class="sig-name descname"><span class="pre">line_num</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo.expected">
+<span class="sig-name descname"><span class="pre">expected</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo.actual">
+<span class="sig-name descname"><span class="pre">actual</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo.input_text">
+<span class="sig-name descname"><span class="pre">input_text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchInfo.output_text">
+<span class="sig-name descname"><span class="pre">output_text</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">''</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.MismatchStats">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">MismatchStats</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">total_lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatched_lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mismatches</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kokorog2p.MismatchInfo" title="kokorog2p.words_mismatch.MismatchInfo"><span class="pre">MismatchInfo</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#MismatchStats"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Statistics about word count mismatches.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchStats.total_lines">
+<span class="sig-name descname"><span class="pre">total_lines</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchStats.mismatched_lines">
+<span class="sig-name descname"><span class="pre">mismatched_lines</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.MismatchStats.mismatches">
+<span class="sig-name descname"><span class="pre">mismatches</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#kokorog2p.MismatchInfo" title="kokorog2p.words_mismatch.MismatchInfo"><span class="pre">MismatchInfo</span></a><span class="p"><span class="pre">]</span></span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.MismatchStats.mismatch_rate">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">mismatch_rate</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></dt>
+<dd><p>Percentage of lines with mismatches.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.detect_mismatches">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">detect_mismatches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">re.compile('\\s+')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">re.compile('\\s+')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">store_texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#kokorog2p.MismatchStats" title="kokorog2p.words_mismatch.MismatchStats"><span class="pre">MismatchStats</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#detect_mismatches"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Detect word count mismatches between input and output.</p>
+<dl>
+<dt>Args:</dt><dd><p>input_texts: Original input texts.
+output_texts: Phonemized output texts.
+input_separator: Word separator for input.
+output_separator: Word separator for output.
+store_texts: Whether to store input/output in MismatchInfo.</p>
+</dd>
+<dt>Returns:</dt><dd><p>MismatchStats with details about any mismatches.</p>
+</dd>
+<dt>Raises:</dt><dd><p>ValueError: If input and output have different lengths.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;one two three&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;həˈloʊ wˈɜːld&quot;</span><span class="p">,</span> <span class="s2">&quot;wˈʌn tuː θɹiː fɔːɹ&quot;</span><span class="p">]</span>  <span class="c1"># Extra word!</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span> <span class="o">=</span> <span class="n">detect_mismatches</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">mismatched_lines</span>
+<span class="go">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">mismatches</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">line_num</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.check_word_alignment">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">check_word_alignment</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#kokorog2p.MismatchMode" title="kokorog2p.words_mismatch.MismatchMode"><span class="pre">MismatchMode</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">MismatchMode.WARN</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">re.compile('\\s+')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">re.compile('\\s+')</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/logging.html#logging.Logger" title="(in Python v3.14)"><span class="pre">Logger</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.14)"><span class="pre">tuple</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#kokorog2p.MismatchStats" title="kokorog2p.words_mismatch.MismatchStats"><span class="pre">MismatchStats</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#check_word_alignment"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check word alignment between input and output, optionally fixing issues.</p>
+<p>This is a convenience function that combines detection and processing.</p>
+<dl>
+<dt>Args:</dt><dd><p>input_texts: Original input texts.
+output_texts: Phonemized output texts.
+mode: How to handle mismatches (ignore, warn, remove).
+input_separator: Word separator for input texts.
+output_separator: Word separator for output texts.
+logger: Logger instance.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Tuple of (processed_outputs, statistics).</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hello world&quot;</span><span class="p">,</span> <span class="s2">&quot;good morning&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">outputs</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;həˈloʊ wˈɜːld&quot;</span><span class="p">,</span> <span class="s2">&quot;gʊd ˈmɔːnɪŋ ɛkstɹə&quot;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">result</span><span class="p">,</span> <span class="n">stats</span> <span class="o">=</span> <span class="n">check_word_alignment</span><span class="p">(</span><span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">stats</span><span class="o">.</span><span class="n">mismatched_lines</span>
+<span class="go">1</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="kokorog2p.count_words">
+<span class="sig-prename descclassname"><span class="pre">kokorog2p.</span></span><span class="sig-name descname"><span class="pre">count_words</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">separator</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/re.html#re.Pattern" title="(in Python v3.14)"><span class="pre">Pattern</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">re.compile('\\s+')</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/words_mismatch/#count_words"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Count the number of words in text.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Text to count words in.
+separator: Word separator (string or regex pattern).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Number of words.</p>
+</dd>
+<dt>Examples:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">count_words</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count_words</span><span class="p">(</span><span class="s2">&quot;hello  world&quot;</span><span class="p">)</span>  <span class="c1"># Multiple spaces</span>
+<span class="go">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">count_words</span><span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="go">0</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 </section>
 </div>

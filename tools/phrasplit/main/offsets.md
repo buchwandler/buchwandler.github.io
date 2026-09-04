@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
+docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
 search_enabled: true
 ---
 
@@ -926,6 +926,28 @@ etc.), you need to ensure segmentation doesn’t break markup tags or placeholde
 <li><p><a class="reference internal" href="../api/"><span class="doc">API Reference</span></a> - Complete API reference</p></li>
 <li><p><a class="reference internal" href="../examples/"><span class="doc">Examples</span></a> - More examples</p></li>
 </ul>
+</section>
+<section id="reusing-prepared-spacy-analysis">
+<h2>Reusing prepared spaCy analysis</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">doc=</span></code> when an upstream TTS orchestrator has already normalized text and run spaCy.
+This avoids a second <code class="docutils literal notranslate"><span class="pre">nlp(text)</span></code> call while retaining phrasplit’s corrections and
+exact-offset projection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prepared</span> <span class="o">=</span> <span class="n">spokenform</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">raw_written_text</span><span class="p">)</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">split_with_offsets_with_diagnostics</span><span class="p">(</span>
+    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span>
+ <span class="p">)</span>
+<span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+    <span class="k">assert</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="o">==</span> <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">char_start</span><span class="p">:</span><span class="n">segment</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">nlp=</span></code> instead when the caller owns the pipeline but wants phrasplit to run it.
+<code class="docutils literal notranslate"><span class="pre">doc=</span></code> takes precedence over <code class="docutils literal notranslate"><span class="pre">nlp=</span></code>. Both injected forms reject <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>,
+bypass internal model resolution, and report caller-owned analysis in
+<code class="docutils literal notranslate"><span class="pre">SplitDiagnostics</span></code>. The document text must exactly match the input. Phrasplit does not
+mutate, cache, close, or unload either resource.</p>
+<p>For raw standalone text, omit both arguments. Phrasplit remains independent of
+Spokenform and keeps its normal abbreviation and boundary corrections.</p>
 </section>
 </section>
 </div>

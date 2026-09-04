@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.12"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_ref: "v0.2.13"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 
@@ -556,6 +556,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="quickstart/">Quickstart</a></li>
 <li class="toctree-l1"><a class="reference internal" href="customization/">Customization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="customization/#isolated-registries">Isolated registries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization/#per-entry-speech-strategies">Per-entry speech strategies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="customization/#bulk-glossary-registration">Bulk glossary registration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#ambiguous-english-dotted-forms">Ambiguous English dotted forms</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#shared-registries">Shared registries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="customization/#unit-customization">Unit customization</a></li>
@@ -598,15 +600,19 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l2"><a class="reference internal" href="api/#mutable-facade">Mutable facade</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#guarded-unit-symbols">Guarded unit symbols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#structured-quantity-matches">Structured quantity matches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#custom-glossary-api">Custom glossary API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#core-types">Core types</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/#german-lexical-example">German lexical example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#install-and-run">Install and run</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#specialist-glossary-example">Specialist glossary example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#output-and-processing">Output and processing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-13-unreleased">[v0.2.13] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-12-unreleased">[v0.2.12] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-11-2026-08-26">[v0.2.11] - 2026-08-26</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-10-2026-08-26">[v0.2.10] - 2026-08-26</a></li>
@@ -615,13 +621,13 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-7-2026-08-12">[v0.2.7] - 2026-08-12</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-6-2026-08-11">[v0.2.6] - 2026-08-11</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-08-10">[v0.2.5] - 2026-08-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.2.4] - 2026-08-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.2.3] - 2026-08-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.2.2] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.2.4] - 2026-08-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.2.3] - 2026-08-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id26">[0.2.2] - 2026-08-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-08-07">[v0.2.1] - 2026-08-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-08-06">[v0.2.0] - 2026-08-06</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-1-2026-08-06">[v0.1.1] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.1.0] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id40">[0.1.0] - 2026-08-05</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="release-notes/">Release notes</a></li>

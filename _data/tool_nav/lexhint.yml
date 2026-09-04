@@ -4,17 +4,17 @@ nav_key: lexhint
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.4.0
-source_commit: fc3b2c85cacd49c7d9ade5145f81b2ca7aded755
-source_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.0
+source_ref: v0.4.4
+source_commit: 8d7725f4c72249f660c6ce1ec41d2ef23ad378d5
+source_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.4
 is_default: true
 repo_url: https://github.com/buchwandler/lexhint
-release_tag: v0.4.0
-release_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.0
+release_tag: v0.4.4
+release_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.4
 versions:
 - name: release
   label: Latest release
-  ref: v0.4.0
+  ref: v0.4.4
   url: /tools/lexhint/
   current: true
 - name: main

@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/contributing/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -572,33 +572,49 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="running-tests">
 <h2>Running Tests</h2>
-<p>Run all tests:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/
+<p>Run the complete suite with one fresh Python process per test module:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/run_test_suite.py
 </pre></div>
 </div>
-<p>Run specific test file:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/test_en_g2p.py
+<p>The isolated runner discovers every <code class="docutils literal notranslate"><span class="pre">tests/test_*.py</span></code> file in sorted order and runs the
+modules sequentially. It is the canonical full-suite command on developer machines and
+in exhaustive CI. Use <code class="docutils literal notranslate"><span class="pre">--list</span></code> to inspect coverage, <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> to stop after the
+first failing module, <code class="docutils literal notranslate"><span class="pre">--start-at</span> <span class="pre">tests/test_en_g2p.py</span></code> to resume from a module, and
+<code class="docutils literal notranslate"><span class="pre">--match</span> <span class="pre">&quot;en|normalization&quot;</span></code> to select matching modules. Pass pytest options with
+<code class="docutils literal notranslate"><span class="pre">--pytest-arg=-vv</span></code> or additional arguments after the runner options.</p>
+<p>Run targeted selections with plain pytest when process isolation is not needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_en_g2p.py
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not spacy&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_attr_parser.py<span class="w"> </span>tests/test_base.py
 </pre></div>
 </div>
-<p>Run with coverage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>tests/<span class="w"> </span>--cov<span class="o">=</span>kokorog2p<span class="w"> </span>--cov-report<span class="o">=</span>html
+<p>Coverage aggregation across isolated subprocesses is intentionally separate from the
+first version of the runner. Use the existing single-process command when generating a
+local coverage report:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>--cov<span class="o">=</span>kokorog2p<span class="w"> </span>--cov-report<span class="o">=</span>html
 </pre></div>
 </div>
 <section id="running-on-memory-constrained-machines">
 <h3>Running on memory-constrained machines</h3>
-<p>The English and German dictionaries are large, and optional spaCy models add substantial
-native memory. Prefer sequential pytest processes for independent language groups
-instead of <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code>; each xdist worker loads another interpreter and may load
-another dictionary or model.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_attr_parser.py<span class="w"> </span>tests/test_base.py<span class="w"> </span>tests/test_pipeline_api.py
-python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_en_*.py<span class="w"> </span>tests/test_quote_*.py
-python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_de_g2p.py
+<p>The English and German dictionaries, optional spaCy models, and native backends can use
+substantial memory. Do not use <code class="docutils literal notranslate"><span class="pre">pytest-xdist</span></code> as the RAM fix. Concurrent workers can
+each load another interpreter, dictionary, or model. The isolated full-suite runner uses
+process exit as the hard memory boundary and keeps only one test module active.</p>
+<p>Focused peak RSS diagnostics can be run with the separate measurement tool:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>tools/run_pytest_with_memory.py<span class="w"> </span>-q<span class="w"> </span>tests/test_en_g2p.py
+python<span class="w"> </span>tools/run_pytest_with_memory.py<span class="w"> </span>-q<span class="w"> </span>tests/test_normalization.py
+python<span class="w"> </span>tools/run_pytest_with_memory.py<span class="w"> </span>-q<span class="w"> </span>tests/test_tokenizer.py
+python<span class="w"> </span>tools/run_pytest_with_memory.py<span class="w"> </span>-q<span class="w"> </span>tests/test_ko_g2p.py
+python<span class="w"> </span>tools/run_pytest_with_memory.py<span class="w"> </span>--max-rss-mb<span class="w"> </span><span class="m">1500</span><span class="w"> </span>-q<span class="w"> </span>tests/test_en_g2p.py
 </pre></div>
 </div>
-<p>Peak RSS can be observed with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">tools/run_pytest_with_memory.py</span> <span class="pre">-q</span></code>. For a clean
-collection comparison, set <code class="docutils literal notranslate"><span class="pre">PYTEST_DISABLE_PLUGIN_AUTOLOAD=1</span></code>. A bare <code class="docutils literal notranslate"><span class="pre">Killed</span></code> message
-or exit status 137 can indicate an operating-system OOM kill; on Linux, inspect <code class="docutils literal notranslate"><span class="pre">dmesg</span></code>
-or <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">-k</span></code> after the run and check any container or cgroup memory limit.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">spacy</span></code> marker identifies tests that load real spaCy resources. Use
+<code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-m</span> <span class="pre">spacy</span></code> or <code class="docutils literal notranslate"><span class="pre">pytest</span> <span class="pre">-m</span> <span class="pre">&quot;not</span> <span class="pre">spacy&quot;</span></code> to compare resource-heavy and lightweight
+selections. For collection comparisons, set <code class="docutils literal notranslate"><span class="pre">PYTEST_DISABLE_PLUGIN_AUTOLOAD=1</span></code>; do not
+disable plugin autoload unconditionally in the canonical suite because explicitly used
+plugins may be needed. A bare <code class="docutils literal notranslate"><span class="pre">Killed</span></code> message or exit status 137 can indicate an
+operating-system OOM kill; on Linux, inspect <code class="docutils literal notranslate"><span class="pre">dmesg</span></code> or <code class="docutils literal notranslate"><span class="pre">journalctl</span> <span class="pre">-k</span></code> and check
+container or cgroup limits.</p>
 </section>
 </section>
 <section id="code-quality">
@@ -639,7 +655,7 @@ xdg-open<span class="w"> </span>_build/html/index.html<span class="w">  </span><
     ├── __init__.py
     ├── g2p.py
     ├── lexicon.py (if dictionary-based)
-    ├── numbers.py (for number handling)
+├── normalizer.py (for intrinsic typography/phonology)
     └── data/
         └── __init__.py
 </pre></div>

@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/spans/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -617,6 +617,37 @@ removal)</p></li>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="structured-stress-overrides">
+<h2>Structured stress overrides</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">stress</span></code> in an <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> to change the relative stress of the resolved phonemes
+for a token or span:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">OverrideSpan</span><span class="p">,</span> <span class="n">phonemize</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span>
+    <span class="s2">&quot;zwei Minuten&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">overrides</span><span class="o">=</span><span class="p">[</span>
+        <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;stress&quot;</span><span class="p">:</span> <span class="s2">&quot;+2&quot;</span><span class="p">}),</span>
+    <span class="p">],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Supported values are strings:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;-2&quot;</span></code> removes <code class="docutils literal notranslate"><span class="pre">ˌ</span></code> and <code class="docutils literal notranslate"><span class="pre">ˈ</span></code> markers.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;-1&quot;</span></code> lowers primary stress to secondary stress.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;+1&quot;</span></code> adds secondary stress or promotes existing secondary stress.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;+2&quot;</span></code> adds or promotes primary stress.</p></li>
+</ul>
+<p>Stress is applied after <code class="docutils literal notranslate"><span class="pre">lang</span></code>, G2P, lexicon, fallback, and <code class="docutils literal notranslate"><span class="pre">ph</span></code> resolution. A span
+covering several lexical tokens applies the same relative stress independently to each
+spoken token. Punctuation, whitespace, and empty phoneme output are unchanged. A
+one-word <code class="docutils literal notranslate"><span class="pre">ph</span></code> override may combine with stress. A collapsed multi-word <code class="docutils literal notranslate"><span class="pre">ph</span></code> override is
+diagnosed instead of guessing which word receives stress.</p>
+<p>This structured feature changes phoneme stress markers only. It is not direct volume,
+pitch, duration, SSML emphasis, or general prosody control. Markdown, Misaki, and
+Kokoro-compatible stress syntax are outside this API.</p>
 <section id="phonemizeresult">
 <h3>PhonemizeResult</h3>
 <p>The complete phonemization output:</p>
@@ -632,20 +663,32 @@ removal)</p></li>
 </div>
 </section>
 </section>
-<section id="extended-text-layer">
-<h2>Extended Text Layer</h2>
-<p>Span alignment always uses <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> offsets. When abbreviations or numbers are
-expanded for phonemization, the expanded form is stored on each token’s <code class="docutils literal notranslate"><span class="pre">extended_text</span></code>
-and in <code class="docutils literal notranslate"><span class="pre">PhonemizeResult.extended_text</span></code>. This keeps character offsets stable while
-allowing the phonemizer to speak the expanded form.</p>
-<p>Example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Meet Mr. Smith&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="c1"># TokenSpan(text=&quot;Mr.&quot;, extended_text=&quot;Mister&quot;, char_start=5, char_end=8, ...)</span>
-<span class="c1"># result.clean_text == &quot;Meet Mr. Smith&quot;</span>
-<span class="c1"># result.extended_text == &quot;Meet Mister Smith&quot;</span>
+<section id="prepared-phonemization">
+<h2>Prepared phonemization</h2>
+<p><code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> is the explicit core entry point. <code class="docutils literal notranslate"><span class="pre">phonemize()</span></code> remains a
+prepared-text compatibility spelling; neither entry point performs written-to-spoken
+semantic expansion:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="n">prepared_text</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">overrides</span><span class="o">=</span><span class="n">prepared_coordinate_overrides</span><span class="p">,</span>
+    <span class="n">return_phonemes</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">return_ids</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+ <span class="p">)</span>
 </pre></div>
 </div>
+<p>The supplied prepared text remains the coordinate space for <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>, tokens, and
+offsets. KokoroG2P performs tokenization, explicit language/phoneme overrides,
+G2P/backend normalization, punctuation handling, and token-ID generation. Semantic
+preparation is owned by the caller.</p>
+</section>
+<section id="extended-text-layer">
+<h2>Extended Text Layer</h2>
+<p><code class="docutils literal notranslate"><span class="pre">extended_text</span></code> is retained as a result field for compatibility and normally equals the
+prepared input. The core does not populate it with number, abbreviation, date, unit, or
+currency expansions.</p>
 </section>
 <section id="ssmd-and-phrasplit-compatibility">
 <h2>SSMD and phrasplit compatibility</h2>
@@ -895,7 +938,7 @@ via the <code class="docutils literal notranslate"><span class="pre">overlap</sp
     <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ɹˈEd&quot;</span><span class="p">}),</span>  <span class="c1"># &quot;read&quot; as past tense</span>
 <span class="p">]</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="c1"># Uses provided phonemes for &quot;read&quot; instead of G2P lookup</span>
 </pre></div>
 </div>
@@ -917,7 +960,7 @@ precedence:</p>
     <span class="p">})</span>
 <span class="p">]</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="c1"># Custom attributes stored in token.meta</span>
 <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">meta</span><span class="p">)</span>  <span class="c1"># {&quot;ph&quot;: &quot;həlˈO&quot;, &quot;speaker&quot;: &quot;male&quot;, &quot;emphasis&quot;: &quot;strong&quot;, ...}</span>
@@ -930,10 +973,10 @@ precedence:</p>
 <h3>1. Use Span Alignment (Default)</h3>
 <p>Always use span-based alignment unless you have a specific reason to use legacy mode:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># ✅ Good</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 
 <span class="c1"># ❌ Avoid (unless backward compatibility required)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="s2">&quot;legacy&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="s2">&quot;legacy&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -971,7 +1014,7 @@ precedence:</p>
 <section id="check-warnings">
 <h3>4. Check Warnings</h3>
 <p>Always inspect <code class="docutils literal notranslate"><span class="pre">result.warnings</span></code> to catch alignment issues:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 
 <span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">warnings</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Alignment warnings:&quot;</span><span class="p">)</span>
@@ -989,7 +1032,7 @@ precedence:</p>
     <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ðə&quot;</span><span class="p">}),</span>    <span class="c1"># First &quot;the&quot;</span>
     <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ði&quot;</span><span class="p">}),</span>  <span class="c1"># Second &quot;the&quot;</span>
 <span class="p">]</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">warnings</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span>
 </pre></div>
 </div>
@@ -1042,11 +1085,11 @@ precedence:</p>
     <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ðə&quot;</span><span class="p">}),</span>
     <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ði&quot;</span><span class="p">}),</span>
 <span class="p">]</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="s2">&quot;legacy&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">alignment</span><span class="o">=</span><span class="s2">&quot;legacy&quot;</span><span class="p">)</span>
 <span class="c1"># Both overrides apply to first &quot;the&quot; only!</span>
 
 <span class="c1"># RIGHT: Use span alignment (default)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
 <span class="c1"># Correctly applies to each &quot;the&quot; instance</span>
 </pre></div>
 </div>

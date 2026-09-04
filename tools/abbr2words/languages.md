@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/languages/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.12"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_ref: "v0.2.13"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 
@@ -627,6 +627,13 @@ generic abbreviation layer, and French number grammar remains downstream.</p>
 for example, <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">mA</span></code> matches but <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">ma</span></code> does not. Dotted German aliases and
 their base symbols share canonical IDs, so <code class="docutils literal notranslate"><span class="pre">h</span></code>/<code class="docutils literal notranslate"><span class="pre">Std.</span></code>, <code class="docutils literal notranslate"><span class="pre">min</span></code>/<code class="docutils literal notranslate"><span class="pre">Min.</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">l</span></code>/<code class="docutils literal notranslate"><span class="pre">Ltr.</span></code> cannot acquire separate semantic identities.</p>
+<p>German lexical coverage includes the reviewed common forms <code class="docutils literal notranslate"><span class="pre">vgl.</span></code>, <code class="docutils literal notranslate"><span class="pre">i.d.R.</span></code>, <code class="docutils literal notranslate"><span class="pre">o.ä.</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">u.U.</span></code>, including narrowly spaced-dot aliases such as <code class="docutils literal notranslate"><span class="pre">i.</span> <span class="pre">d.</span> <span class="pre">R.</span></code>. For example,</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>vgl. Abschnitt 2; i.d.R. gilt das, u.U. auch für Geräte o.ä.
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns the lexical abbreviation expansion. Brand, foreign-word, and
+model-specific pronunciation remains downstream.</p>
 </section>
 <section id="japanese-support">
 <h2>Japanese support</h2>

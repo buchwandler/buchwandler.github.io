@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "33a4dc7d76f464eca3597877350afa5452f5c66a"
+docs_ref: "v0.1.3"
+docs_commit: "72a80de79ba62a6f236957b019735e991bafc750"
 search_enabled: true
 ---
 
@@ -610,15 +610,24 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --unit UNIT         sentence or paragraph
 </pre></div>
 </div>
+<p>Runtime discovery and per-language defaults are separate from legacy provider role configuration:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>models<span class="w"> </span>list<span class="w"> </span>--language<span class="w"> </span>de
+readio<span class="w"> </span>models<span class="w"> </span>show<span class="w"> </span>de-thorsten
+readio<span class="w"> </span>defaults<span class="w"> </span><span class="nb">set</span><span class="w"> </span>de<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--voice<span class="w"> </span>thorsten<span class="w"> </span>--lexicon<span class="w"> </span>crane
+readio<span class="w"> </span>defaults<span class="w"> </span>show<span class="w"> </span>de
+readio<span class="w"> </span>render<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--file<span class="w"> </span>notes.md
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">models</span></code> reads PyKokoro’s lightweight registry and supports <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">--status</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>; it never loads model weights. <code class="docutils literal notranslate"><span class="pre">defaults</span></code> stores user policy in schema 2. Exact locale profiles override base-language profiles, and <code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code> explicitly clears inherited lexicons.</p>
 </section>
 <section id="render-progress">
 <h2>Render progress</h2>
-<p><code class="docutils literal notranslate"><span class="pre">render</span></code> and <code class="docutils literal notranslate"><span class="pre">spotify</span></code> use a dependency-free progress reporter on stderr. In the default <code class="docutils literal notranslate"><span class="pre">auto</span></code> mode it is enabled only when stderr is an interactive terminal; <code class="docutils literal notranslate"><span class="pre">--progress</span></code> forces it for redirected logs and <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> disables it:</p>
+<p><code class="docutils literal notranslate"><span class="pre">render</span></code> uses a dependency-free progress reporter on stderr. In default <code class="docutils literal notranslate"><span class="pre">auto</span></code> mode it is enabled only for an interactive stderr; <code class="docutils literal notranslate"><span class="pre">--progress</span></code> forces it and <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> disables it. <code class="docutils literal notranslate"><span class="pre">--json</span></code> keeps stdout to exactly one result object, disables automatic progress, and still permits explicit stderr progress:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3<span class="w"> </span>--progress
-readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3<span class="w"> </span>--no-progress
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.mp3<span class="w"> </span>--json<span class="w"> </span>--progress
 </pre></div>
 </div>
-<p>Bounded renders show phases, completed/total units, percentage, elapsed time, approximate ETA, generated audio duration, and finalization. Live rendering shows elapsed time, cumulative units, and audio duration but no invented percentage or ETA. Progress is separate from command results: render keeps its output path on stdout, and <code class="docutils literal notranslate"><span class="pre">spotify</span> <span class="pre">--json</span></code> keeps one JSON object on stdout.</p>
+<p>Bounded renders show phases, completed/total units, percentage, elapsed time, approximate ETA, generated audio duration, and finalization. Live rendering shows elapsed time, cumulative units, and audio duration but no invented percentage or ETA.</p>
 <p>Playback-only options are <code class="docutils literal notranslate"><span class="pre">--queue-size</span></code> and <code class="docutils literal notranslate"><span class="pre">--device</span></code>. Audio rendering is streamed to an atomic output file through a bounded audio path rather than accumulated as one in-memory waveform.</p>
 </section>
 <section id="configuration">
@@ -630,14 +639,15 @@ readio<span class="w"> </span>config<span class="w"> </span>show
 readio<span class="w"> </span>config<span class="w"> </span>validate
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML with schema 1. The main sections are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML with schema 2; schema-0/1 files remain readable and are upgraded when saved. The main sections are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">queue_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: the selected <code class="docutils literal notranslate"><span class="pre">voice_provider</span></code> and SSMD validation behavior.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;]</span></code>: concrete voice IDs and logical role mappings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[languages.&lt;locale&gt;]</span></code>: validated model, source, quality, voice, ordered lexicons, and experimental opt-in defaults.
+Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p></li>
 </ul>
-<p>Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>bf_emma
 readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>voices.kokoro.roles.analyst<span class="w"> </span>am_michael
 readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ssmd.voice_provider<span class="w"> </span>kokoro
@@ -678,12 +688,16 @@ readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> 
 <section id="spotify-publishing">
 <h2>Spotify publishing</h2>
 <p>Publishing is explicit:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>spotify<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Weekly Review&quot;</span><span class="w"> </span>--wait
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>spotify<span class="w"> </span>publish<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Weekly Review&quot;</span><span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--wait
+readio<span class="w"> </span>spotify<span class="w"> </span>upload<span class="w"> </span>recording.m4a<span class="w"> </span>--title<span class="w"> </span><span class="s2">&quot;Lecture 3&quot;</span><span class="w"> </span>--show-id<span class="w"> </span>spotify:show:abc<span class="w"> </span>--wait<span class="w"> </span>2m
+readio<span class="w"> </span>spotify<span class="w"> </span>shows<span class="w"> </span>--json
+readio<span class="w"> </span>spotify<span class="w"> </span>status<span class="w"> </span>spotify:episode:abc<span class="w"> </span>--wait
+readio<span class="w"> </span>spotify<span class="w"> </span>doctor<span class="w"> </span>--json
 </pre></div>
 </div>
-<p>The command renders the selected WAV, MP3, M4A, or OGG format and invokes <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span> <span class="pre">--json</span></code>. A recognized <code class="docutils literal notranslate"><span class="pre">--output</span></code> suffix selects the format, or use <code class="docutils literal notranslate"><span class="pre">--format</span></code> for temporary output. Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the selected-format file is temporary and deleted after the operation. With <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the requested file is retained. M4A requires <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>. <code class="docutils literal notranslate"><span class="pre">--show-id</span></code> and <code class="docutils literal notranslate"><span class="pre">--new-show</span></code> select the destination show, while <code class="docutils literal notranslate"><span class="pre">--summary</span></code>, <code class="docutils literal notranslate"><span class="pre">--image</span></code>, and <code class="docutils literal notranslate"><span class="pre">--language</span></code> set episode metadata.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--json</span></code> for a machine-readable result. <code class="docutils literal notranslate"><span class="pre">--wait</span></code> waits for readiness, and <code class="docutils literal notranslate"><span class="pre">--wait-timeout</span></code> sets the readiness timeout. <code class="docutils literal notranslate"><span class="pre">--chapters-from-markers</span></code> converts SSMD markers into a Spotify timeline and requires the episode to reach <code class="docutils literal notranslate"><span class="pre">READY</span></code>.</p>
-<p>Readio does not read Spotify credential files or perform authentication. It delegates the external write operation to <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">spotify</span> <span class="pre">publish</span></code> renders source and delegates the completed media to <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>; <code class="docutils literal notranslate"><span class="pre">spotify</span> <span class="pre">upload</span></code> accepts existing caller-owned WAV, MP3, M4A, or OGG without rendering or deleting it. Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, publish’s generated media is temporary and cleaned up; explicit output is retained. <code class="docutils literal notranslate"><span class="pre">--timeline</span> <span class="pre">FILE</span></code> passes through a caller-owned JSON object, while <code class="docutils literal notranslate"><span class="pre">--chapters-from-markers</span></code> generates Readio chapters; they are mutually exclusive and both wait for READY before setting the timeline.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--json</span></code> for machine-readable output. Global <code class="docutils literal notranslate"><span class="pre">--json</span></code> is accepted before or after the command. <code class="docutils literal notranslate"><span class="pre">--wait</span></code> optionally takes a duration and <code class="docutils literal notranslate"><span class="pre">--wait-timeout</span></code> is deprecated; <code class="docutils literal notranslate"><span class="pre">--api-timeout</span></code> is separate from readiness waiting.</p>
+<p>Readio does not read Spotify credential files or perform authentication. It delegates external writes and account setup to <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
 </section>
 <section id="diagnostics-and-development">
 <h2>Diagnostics and development</h2>
@@ -691,7 +705,7 @@ readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> 
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>doctor
 </pre></div>
 </div>
-<p>Doctor reports configuration, configured directories, PyKokoro, SSMD, the selected provider and voices, sound dependencies, per-format WAV/MP3/M4A/OGG availability, and <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> availability. It does not create directories, modify configuration, inspect credentials, or call the network.</p>
+<p>The local doctor is human-readable by default and supports <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code>. It reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">spotify</span> <span class="pre">doctor</span></code> for the explicit external integration check.</p>
 <p>Run the test suite and lint checks from a development checkout:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
 ruff<span class="w"> </span>check<span class="w"> </span>.

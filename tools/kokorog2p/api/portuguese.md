@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/portuguese/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -556,6 +556,13 @@ for Kokoro TTS models.</p>
 
 <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Known words are checked against the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">pt:lexhint</span></code> dictionary before
+productive dialect rules. Missing or invalid dictionary data uses the existing
+rule-based path; KokoroG2P never downloads the dictionary:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>pt:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>pt:lexhint
 </pre></div>
 </div>
 </section>

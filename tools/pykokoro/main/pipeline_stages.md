@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dc7c856864d80424adf5dd41f50345ad636ffae9"
+docs_commit: "c80ad91b56445cd3f3da9604741bb62748b4262b"
 search_enabled: true
 ---
 
@@ -565,6 +565,7 @@ wires the missing adapters automatically.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
 <span class="p">)</span>
@@ -721,7 +722,7 @@ annotations override individual fields.</p>
 </section>
 <section id="plain-text-sentence-splitting">
 <h3>Plain text sentence splitting</h3>
-<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses PhraseSplit 0.3.6’s offset-preserving detailed split API
+<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses PhraseSplit 0.3.7’s offset-preserving detailed split API
 for sentence splitting. The returned diagnostics come from the same operation that
 produced the segments, so sentence-model metadata does not require a separate
 model-resolution pass. When <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single
@@ -832,9 +833,10 @@ precedence over approximation, and no automatic rate or pitch metadata is added.
 <p>To load local ONNX artifacts, set <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>. You can also select a
 specific execution provider.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">model_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/models/kokoro.onnx&quot;</span><span class="p">),</span>
     <span class="n">voices_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/models/voices.bin&quot;</span><span class="p">),</span>

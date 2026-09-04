@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/release-notes/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.12"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_ref: "v0.2.13"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 

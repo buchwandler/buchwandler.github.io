@@ -6,7 +6,7 @@ nav_tool: g2lex-main
 docs_project: "g2lex"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "23276d2297b354bbb470e1ba6847ffe5fd409ce8"
+docs_commit: "1dea948ed9e7d35587d4ce2b2641772642b52210"
 search_enabled: true
 ---
 

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "kokorog2p Multilang Preprocessing"
-permalink: /tools/kokorog2p/api/mixed/
+title: "kokorog2p Thai frontend provenance"
+permalink: /tools/kokorog2p/th/PROVENANCE/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -540,66 +540,54 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="multilang-preprocessing">
-<h1>Multilang Preprocessing</h1>
-<p>The multilang preprocessor detects word-level languages with <code class="docutils literal notranslate"><span class="pre">lingua-language-detector</span></code>
-and returns <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> objects for language switching. It integrates with the
-span-based phonemization API.</p>
-<section id="api">
-<h2>API</h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="kokorog2p.multilang.preprocess_multilang">
-<span class="sig-prename descclassname"><span class="pre">kokorog2p.multilang.</span></span><span class="sig-name descname"><span class="pre">preprocess_multilang</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_languages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phrase_overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_token_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/multilang/#preprocess_multilang"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Detect word-level languages and return OverrideSpan objects.</p>
-<p>Returns OverrideSpan objects for language switching.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text to annotate.
-default_language: Base language for unmarked words.
-allowed_languages: Language codes to detect (must include default_language).
-confidence_threshold: Minimum confidence (0.0-1.0) to accept detection.
-phrase_overrides: Optional dict mapping exact phrases to language codes.
-min_token_length: Minimum token length for detection (default: 3).</p>
-</dd>
-<dt>Returns:</dt><dd><p>List of OverrideSpan objects with language overrides for detected words.</p>
-</dd>
-<dt>Raises:</dt><dd><p>ImportError: If lingua-language-detector is not installed.
-ValueError: If allowed_languages is missing or default_language not allowed.</p>
-</dd>
-</dl>
-</dd></dl>
-
+<section id="thai-frontend-provenance">
+<h1>Thai frontend provenance</h1>
+<section id="clean-room-statement">
+<h2>Clean-room statement</h2>
+<p>The Thai frontend is an independent implementation for <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code>. The pinned Wayu
+repository is used only as an externally observed behavioral oracle. No Wayu
+implementation source, comments, regular expressions, control flow, model weights,
+generated name tables, evaluation corpus, or serving code is copied or vendored.</p>
 </section>
-<section id="examples">
-<h2>Examples</h2>
-<section id="basic-usage">
-<h3>Basic Usage</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Schöne World&quot;</span>
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
-</pre></div>
-</div>
+<section id="behavioral-baseline">
+<h2>Behavioral baseline</h2>
+<ul class="simple">
+<li><p>Reference: <code class="docutils literal notranslate"><span class="pre">kunato/wayu-kokoro-thai-v1</span></code></p></li>
+<li><p>Behavioral baseline commit: <code class="docutils literal notranslate"><span class="pre">50d7f60e41ac118e5bb92b0ba52c30bb7830103c</span></code></p></li>
+<li><p>Later tree commits may be used only for packaging context, not as the behavioral
+baseline.</p></li>
+<li><p>Target vocabulary fact: Wayu uses <code class="docutils literal notranslate"><span class="pre">˩</span></code> (<code class="docutils literal notranslate"><span class="pre">U+02E9</span> <span class="pre">MODIFIER</span> <span class="pre">LETTER</span> <span class="pre">EXTRA-LOW</span> <span class="pre">TONE</span> <span class="pre">BAR</span></code>) at
+token ID <code class="docutils literal notranslate"><span class="pre">7</span></code>.</p></li>
+</ul>
 </section>
-<section id="confidence-tuning">
-<h3>Confidence Tuning</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="s2">&quot;Bonjour World&quot;</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">],</span>
-    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<section id="dependencies-and-licenses">
+<h2>Dependencies and licenses</h2>
+<ul class="simple">
+<li><p>Lexphon provides the provisioned <code class="docutils literal notranslate"><span class="pre">th:lexhint</span></code> pronunciation dictionary. The asset is
+installed and verified outside this package and is not downloaded at runtime.</p></li>
+<li><p>The Wayu model repository is Apache-2.0 licensed. This implementation does not
+redistribute its weights or source.</p></li>
+</ul>
 </section>
+<section id="deliberate-deviations">
+<h2>Deliberate deviations</h2>
+<ul class="simple">
+<li><p>Latin runs use the existing <code class="docutils literal notranslate"><span class="pre">kokorog2p.en.EnglishG2P</span></code> lazily instead of a direct
+Misaki English dependency.</p></li>
+<li><p>No external Thai runtime engine or generated Thai-name respelling database is
+included.</p></li>
+<li><p>No generated Thai-name respelling database, license-plate acrophony, or model-training
+entity patch table is included.</p></li>
+<li><p>Thai semantic normalization remains local to this package until a released
+<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> version advertises the required Thai semantics.</p></li>
+</ul>
+</section>
+<section id="fixture-policy">
+<h2>Fixture policy</h2>
+<p>Tests and benchmark cases are independently authored synthetic or reviewed cases.
+Expected Thai pronunciation may be recorded from the released LexHint data, the observed
+reference, or human review. Reference checkouts and network access are development-only
+inputs and are not runtime or normal CI dependencies.</p>
 </section>
 </section>
 </div>

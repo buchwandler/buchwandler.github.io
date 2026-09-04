@@ -5,8 +5,8 @@ permalink: /tools/ssmd/quickstart/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.4"
-docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
+docs_ref: "v0.8.6"
+docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
 search_enabled: true
 ---
 
@@ -688,6 +688,23 @@ the output exists; linting is complete only when <code class="docutils literal n
 <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Last: </span><span class="si">{</span><span class="n">doc</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="tts-pipeline-integration">
+<h2>TTS pipeline integration</h2>
+<p>For an application that normalizes text before sentence splitting, parse SSMD
+structurally first:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
+
+<span class="n">parsed</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_spans</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="n">prepared_text</span> <span class="o">=</span> <span class="n">normalize</span><span class="p">(</span><span class="n">parsed</span><span class="o">.</span><span class="n">clean_text</span><span class="p">,</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+<span class="n">sentence_spans</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span><span class="n">prepared_text</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">sentence_spans</span><span class="o">=</span><span class="n">sentence_spans</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>External spans use offsets in the structural clean-text space after the caller has
+remapped them through normalization. SSMD does not perform number normalization,
+abbreviation expansion, language detection, or G2P. Explicit <code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">ipa</span></code> annotations
+should be marked protected by the downstream normalizer.</p>
 </section>
 <section id="document-editing">
 <h2>Document Editing</h2>

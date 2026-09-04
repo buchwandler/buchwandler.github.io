@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 77d91cb50322d543bb2d63facec30011a077cb36
+source_commit: 783480748caad912ca6d4a8fd5338544c688da3b
 source_url: https://github.com/buchwandler/kokorog2p/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/kokorog2p
-release_tag: v0.8.2
-release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.8.2
+release_tag: v0.9.2
+release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.2
 versions:
 - name: release
   label: Latest release
-  ref: v0.8.2
+  ref: v0.9.2
   url: /tools/kokorog2p/
   current: false
 - name: main
@@ -24,29 +24,8 @@ versions:
   current: true
 entries:
 - slug: index
-  title: "Welcome to kokorog2p\u2019s documentation!"
+  title: kokorog2p documentation
   url: /tools/kokorog2p/main/
-- slug: installation
-  title: kokorog2p Installation
-  url: /tools/kokorog2p/main/installation/
-- slug: quickstart
-  title: kokorog2p Quick Start
-  url: /tools/kokorog2p/main/quickstart/
-- slug: languages
-  title: kokorog2p Language Support
-  url: /tools/kokorog2p/main/languages/
-- slug: advanced
-  title: kokorog2p Advanced Usage
-  url: /tools/kokorog2p/main/advanced/
-- slug: abbreviation_customization
-  title: kokorog2p Abbreviation Customization Guide
-  url: /tools/kokorog2p/main/abbreviation_customization/
-- slug: spans
-  title: kokorog2p Span-Based Phonemization Guide
-  url: /tools/kokorog2p/main/spans/
-- slug: phonemes
-  title: kokorog2p Phoneme Inventory
-  url: /tools/kokorog2p/main/phonemes/
 - slug: api/core
   title: kokorog2p Core API
   url: /tools/kokorog2p/main/api/core/
@@ -89,9 +68,6 @@ entries:
 - slug: api/hebrew
   title: kokorog2p Hebrew API
   url: /tools/kokorog2p/main/api/hebrew/
-- slug: api/mixed
-  title: kokorog2p Multilang Preprocessing
-  url: /tools/kokorog2p/main/api/mixed/
 - slug: api/thai
   title: kokorog2p Thai G2P
   url: /tools/kokorog2p/main/api/thai/
@@ -107,9 +83,21 @@ entries:
 - slug: api/utils
   title: kokorog2p Utilities API
   url: /tools/kokorog2p/main/api/utils/
-- slug: contributing
-  title: kokorog2p Contributing
-  url: /tools/kokorog2p/main/contributing/
-- slug: changelog
-  title: kokorog2p Changelog
-  url: /tools/kokorog2p/main/changelog/
+- slug: quickstart
+  title: kokorog2p Quick Start
+  url: /tools/kokorog2p/main/quickstart/
+- slug: prepared_phonemization
+  title: kokorog2p Prepared phonemization
+  url: /tools/kokorog2p/main/prepared_phonemization/
+- slug: languages
+  title: kokorog2p Language support
+  url: /tools/kokorog2p/main/languages/
+- slug: spans
+  title: kokorog2p Span-Based Phonemization Guide
+  url: /tools/kokorog2p/main/spans/
+- slug: advanced
+  title: kokorog2p Advanced Usage
+  url: /tools/kokorog2p/main/advanced/
+- slug: installation
+  title: kokorog2p Installation
+  url: /tools/kokorog2p/main/installation/

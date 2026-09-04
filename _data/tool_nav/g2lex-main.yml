@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 23276d2297b354bbb470e1ba6847ffe5fd409ce8
+source_commit: 1dea948ed9e7d35587d4ce2b2641772642b52210
 source_url: https://github.com/buchwandler/g2lex/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/g2lex
-release_tag: v0.1.7
-release_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.7
+release_tag: v0.1.8
+release_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.8
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.7
+  ref: v0.1.8
   url: /tools/g2lex/
   current: false
 - name: main

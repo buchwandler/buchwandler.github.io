@@ -5,8 +5,8 @@ permalink: /tools/ssmd/spans/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.4"
-docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
+docs_ref: "v0.8.6"
+docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
 search_enabled: true
 ---
 
@@ -545,6 +545,43 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>SSMD spans report offsets in the cleaned text returned by <code class="docutils literal notranslate"><span class="pre">parse_spans</span></code>. The coordinate
 system matches <code class="docutils literal notranslate"><span class="pre">ParseSpansResult.clean_text</span></code> after markup is removed and placeholders
 are unescaped.</p>
+<section id="tts-pipeline-integration">
+<h2>TTS pipeline integration</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> as the primary integration boundary when another TTS pipeline
+prepares and segments text:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SSMD parse -&gt; semantic preparation/normalization -&gt; sentence splitting -&gt; G2P
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parsed</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_spans</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="c1"># Pass parsed.clean_text and parsed.annotations to the downstream normalizer.</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> performs structural parsing only. It does not expand numbers or
+abbreviations, infer a document language, phonemize text, or run sentence detection.
+Annotation offsets refer to structural <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>; after normalization changes text
+length, the orchestrator remaps those offsets. Phoneme (<code class="docutils literal notranslate"><span class="pre">ph</span></code>/<code class="docutils literal notranslate"><span class="pre">ipa</span></code>) annotations expose
+exact source ranges that can be passed to the normalizer as protected spans.</p>
+</section>
+<section id="structure-only-parsing">
+<h2>Structure-only parsing</h2>
+<p><code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> is the sentence-neutral companion to <code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code>. It returns the
+same clean-text and annotation concepts plus zero-width <code class="docutils literal notranslate"><span class="pre">StructuralEvent</span></code> values for
+breaks, marks, and paragraph boundaries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parsed</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_structure</span><span class="p">(</span><span class="s2">&quot;Hello ...500ms @chapter world&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">parsed</span><span class="o">.</span><span class="n">clean_text</span> <span class="o">==</span> <span class="s2">&quot;Hello world&quot;</span>
+<span class="k">assert</span> <span class="n">parsed</span><span class="o">.</span><span class="n">events</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">pos</span> <span class="o">==</span> <span class="mi">5</span>  <span class="c1"># a boundary, not the last character index</span>
+</pre></div>
+</div>
+<p>Events and annotations are calculated in the returned clean-text coordinate system.
+Events use <code class="docutils literal notranslate"><span class="pre">anchor=&quot;before&quot;</span></code> for content that follows the boundary and <code class="docutils literal notranslate"><span class="pre">anchor=&quot;after&quot;</span></code>
+for content that precedes it. Break attributes use <code class="docutils literal notranslate"><span class="pre">time</span></code> or semantic <code class="docutils literal notranslate"><span class="pre">strength</span></code>; mark
+attributes use <code class="docutils literal notranslate"><span class="pre">name</span></code>. Final breaks and marks are flushed rather than discarded.
+Paragraph events are structural and carry no pause duration.</p>
+<p>The result also exposes YAML front matter as <code class="docutils literal notranslate"><span class="pre">header</span></code>, separately from <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>.
+<code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> does not detect language, normalize written language into spoken
+language, phonemize, or invoke sentence detection. Those operations remain owned by the
+downstream consumer.</p>
+</section>
 <section id="coordinate-system">
 <h2>Coordinate system</h2>
 <ul class="simple">

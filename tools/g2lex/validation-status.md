@@ -5,8 +5,8 @@ permalink: /tools/g2lex/validation-status/
 nav_tool: g2lex
 docs_project: "g2lex"
 docs_variant: "release"
-docs_ref: "v0.1.7"
-docs_commit: "23276d2297b354bbb470e1ba6847ffe5fd409ce8"
+docs_ref: "v0.1.8"
+docs_commit: "c3e14313b2c40d4c3bd189101d30328eac6b9b98"
 search_enabled: true
 ---
 

@@ -5,8 +5,8 @@ permalink: /tools/spokenform/architecture/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_ref: "v0.3.6"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -565,11 +565,12 @@ the caller’s <code class="docutils literal notranslate"><span class="pre">symb
 </ol>
 <p>Each stage records its input, output, edits, and mapped edits. Structured and
 abbreviation stages emit exact replacements; temporary text-only stages retain
-deterministic diff edits only at stage scope. The final
-<code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code> composes all stage maps from <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> coordinates to
-<code class="docutils literal notranslate"><span class="pre">spoken_text</span></code> coordinates. <code class="docutils literal notranslate"><span class="pre">PreparedText.source_edits</span></code> contains composed
-<code class="docutils literal notranslate"><span class="pre">SourceReplacement</span></code> records in original-source/final-output coordinates; it must
-not be confused with stage-local <code class="docutils literal notranslate"><span class="pre">mapped_edits</span></code>.</p>
+deterministic diff edits only at stage scope. Semantic rule, domain, and optional
+evidence metadata are carried with mapped and composed source replacements for
+diagnostics. The final <code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code> composes all stage maps from
+<code class="docutils literal notranslate"><span class="pre">clean_text</span></code> coordinates to <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code> coordinates. <code class="docutils literal notranslate"><span class="pre">PreparedText.source_edits</span></code>
+contains composed <code class="docutils literal notranslate"><span class="pre">SourceReplacement</span></code> records in original-source/final-output
+coordinates; it must not be confused with stage-local <code class="docutils literal notranslate"><span class="pre">mapped_edits</span></code>.</p>
 <p>All public source offsets refer to the original string passed to <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>.
 Final offsets refer to <code class="docutils literal notranslate"><span class="pre">PreparedText.spoken_text</span></code>. Boundary APIs expose explicit
 left/right bias for insertions, deletions, and generated replacement text.</p>
@@ -579,7 +580,16 @@ left/right bias for insertions, deletions, and generated replacement text.</p>
 mapping. Callers own language selection, markup parsing, and mixed-language
 segmentation. Downstream G2P systems own tokenization for phoneme generation,
 lexicons, pronunciations, and vocabulary IDs.</p>
-<p>spokenform owns semantic spacing and punctuation consumed by a structured or
+<p><code class="docutils literal notranslate"><span class="pre">prepare_language()</span></code> is the strict application entry point and requires an explicit
+language for every call. <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> retains its English default only for compatibility.
+<code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_speech()</span></code> is the generic TTS-neutral preset; the KokoroG2P
+preset and adapter are compatibility conveniences implemented through the same generic
+policies.</p>
+<p>Annotations supplied to the preparation pipeline are source-aligned input evidence.
+Transformations can replace a token, so <code class="docutils literal notranslate"><span class="pre">PreparedText</span></code> and its mappings do not promise
+that source POS, tags, lemmas, or morphology remain valid for generated tokens. A
+downstream consumer that needs linguistic analysis must analyze <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code> afresh.
+spokenform owns semantic spacing and punctuation consumed by a structured or
 lexical expression. Downstream G2P owns quote style, dash canonicalization,
 apostrophe variants, and punctuation choices required only by a model tokenizer.</p>
 <p>The optional <code class="docutils literal notranslate"><span class="pre">symbols</span></code> stage is a caller-requested final residual-output policy,
@@ -590,10 +600,15 @@ punctuation remains downstream unless the caller explicitly requests filtering.<
 numeric symbols and returns the exact span, numeric lexeme, category, and canonical
 identity; <code class="docutils literal notranslate"><span class="pre">spokenform.structured</span></code> dispatches to locale-owned semantic grammar.
 No symbol or alias inventory is copied into spokenform. French owns its dates,
-h/colon times, ordinals, decimal digit reading, quantities, temperatures, and
-currency decomposition. Spanish, Italian, Portuguese, and Czech own their
-reviewed dates, quantities, temperatures, currencies, ordinary numbers, and
-locale-specific extensions; caller-managed time boundaries remain documented.
+times, ordinals, decimal digit reading, quantities, temperatures, and currency
+decomposition. German owns validated dates and times, conservative contextual years
+through the shared <code class="docutils literal notranslate"><span class="pre">render_year()</span></code> policy, reviewed Euro major/minor realization
+with explicit Cent labels, exact excess-fraction preservation, and lexical-boundary
+validation. German ordinary abbreviations remain supplied by <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>, while
+German currencies without reviewed minor grammar use a safe exact decimal fallback
+or fail closed. Spanish, Italian, Portuguese, and Czech own their reviewed dates,
+quantities, temperatures, currencies, ordinary numbers, and locale-specific
+extensions; caller-managed time boundaries remain documented.
 English owns reviewed dates, validated clock times, canonical quantities and
 currencies, conservative ordinary numbers, and contextual release labels.
 Japanese, Korean, and Chinese use explicit native numeric and sequence

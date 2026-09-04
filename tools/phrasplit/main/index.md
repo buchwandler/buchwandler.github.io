@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
+docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
 search_enabled: true
 ---
 
@@ -685,6 +685,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="api/#data-types">Data Types</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#module-contents">Module Contents</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/#type-information">Type Information</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#injected-spacy-analysis">Injected spaCy analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
@@ -708,6 +709,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="integration/#performance-considerations">Performance Considerations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#versioning-and-compatibility">Versioning and Compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#summary">Summary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#prepared-text-spacy-integration">Prepared-text spaCy integration</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="offsets/">Offset-Preserving Segmentation</a><ul>
@@ -722,6 +724,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="offsets/#boundary-whitespace">Boundary Whitespace</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#integration-with-markup-languages">Integration with Markup Languages</a></li>
 <li class="toctree-l2"><a class="reference internal" href="offsets/#see-also">See Also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets/#reusing-prepared-spacy-analysis">Reusing prepared spaCy analysis</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="streaming/">Iterator API</a><ul>
@@ -736,6 +739,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-7-2026-09-01">[v0.3.7] - 2026-09-01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-6-2026-08-25">[v0.3.6] - 2026-08-25</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-24">[v0.3.5] - 2026-08-24</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-4-2026-08-03">[v0.3.4] - 2026-08-03</a></li>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "Welcome to kokorog2p\u2019s documentation!"
+title: "kokorog2p documentation"
 permalink: /tools/kokorog2p/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -540,171 +540,35 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="welcome-to-kokorog2p-s-documentation">
-<h1>Welcome to kokorog2p’s documentation!</h1>
-<p><strong>kokorog2p</strong> is a unified G2P (Grapheme-to-Phoneme) library for Kokoro TTS, providing
-high-quality text-to-phoneme conversion for multiple languages.</p>
-<a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="PyPI version" src="https://img.shields.io/pypi/v/kokorog2p.svg" />
-</a>
-<a class="reference external image-reference" href="https://pypi.org/project/kokorog2p/"><img alt="Python versions" src="https://img.shields.io/pypi/pyversions/kokorog2p.svg" />
-</a>
-<section id="features">
-<h2>Features</h2>
-<ul class="simple">
-<li><p><strong>Multi-language support</strong>: English (US/GB), German, French, Czech, Spanish, Italian,
-Portuguese, Chinese, Japanese, Korean, Hebrew</p></li>
-<li><p><strong>Mixed-language detection</strong>: Automatic detection and handling of texts mixing
-multiple languages</p></li>
-<li><p><strong>Dictionary-based lookup</strong> with large gold/silver tier lexicons for select languages</p></li>
-<li><p><strong>Rule-based G2P</strong> for Romance and Slavic languages with comprehensive phonological
-rules</p></li>
-<li><p><strong>espeak-ng integration</strong> as a fallback for out-of-vocabulary words</p></li>
-<li><p><strong>Automatic IPA to Kokoro phoneme conversion</strong></p></li>
-<li><p><strong>Number and currency handling</strong> across all languages</p></li>
-<li><p><strong>Stress assignment</strong> based on linguistic rules</p></li>
-<li><p><strong>High performance</strong> with caching and optimized lookup</p></li>
-</ul>
+<section id="kokorog2p-documentation">
+<h1>kokorog2p documentation</h1>
+<p><strong>kokorog2p</strong> is a multilingual grapheme-to-phoneme and Kokoro model adaptation layer.
+The core accepts prepared, speakable text and an explicit language.</p>
+<section id="responsibility-boundary">
+<h2>Responsibility boundary</h2>
+<p>KokoroG2P owns tokenization, phonological normalization, language routing requested by
+the caller, annotations, overrides, and phoneme/model output. It does not verbalize
+numbers, abbreviations, units, currencies, dates, URLs, or other written semantics.
+Applications may prepare those forms with an external tool such as Spokenform before
+calling <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>.</p>
 </section>
 <section id="quick-start">
-<h2>Quick Start</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+<h2>Quick start</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="c1"># English</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># hˈɛlO wˈɜɹld!</span>
-
-<span class="c1"># German</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># ɡuːtn̩ taːk</span>
-
-<span class="c1"># French</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># bɔ̃ʒuʁ</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="installation">
-<h2>Installation</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Core package</span>
-pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
-
-<span class="c1"># With English support (includes spaCy)</span>
-pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>en<span class="o">]</span>
-
-<span class="c1"># With espeak-ng backend</span>
-pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>espeak<span class="o">]</span>
-
-<span class="c1"># Full installation (all languages and backends)</span>
-pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>all<span class="o">]</span>
-</pre></div>
-</div>
-<div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#basic-installation">Basic Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#with-language-support">With Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#with-backend-support">With Backend Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#full-installation">Full Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#system-dependencies">System Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#troubleshooting">Troubleshooting</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick Start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#specifying-language">Specifying Language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#using-g2p-instances">Using G2P Instances</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#language-specific-g2p">Language-Specific G2P</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#working-with-tokens">Working with Tokens</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#number-handling">Number Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#choosing-backends">Choosing Backends</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#disabling-fallback">Disabling Fallback</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#performance-tips">Performance Tips</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="languages/">Language Support</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="languages/#english-en-us-en-gb">English (en-us, en-gb)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#german-de">German (de)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#french-fr">French (fr)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#czech-cs">Czech (cs)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#spanish-es">Spanish (es)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#italian-it">Italian (it)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#portuguese-pt">Portuguese (pt)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#chinese-zh">Chinese (zh)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#japanese-ja">Japanese (ja)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#korean-ko">Korean (ko)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#hebrew-he">Hebrew (he)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#mixed-language-support">Mixed-Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#language-specific-number-handling">Language-Specific Number Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#fallback-languages">Fallback Languages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#semantic-preparation-boundary">Semantic preparation boundary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-g2p-configuration">Custom G2P Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#token-inspection">Token Inspection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#dictionary-lookup">Dictionary Lookup</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#phoneme-utilities">Phoneme Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#vocabulary-encoding">Vocabulary Encoding</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#quote-handling">Quote Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#punctuation-handling">Punctuation Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#word-mismatch-detection">Word Mismatch Detection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#number-expansion">Number Expansion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-backend-selection">Custom Backend Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#caching-and-performance">Caching and Performance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-phoneme-filtering">Custom Phoneme Filtering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#multilang-preprocessing">Multilang Preprocessing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced/#next-steps">Next Steps</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="abbreviation_customization/">Abbreviation Customization Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#quick-start">Quick Start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#api-reference">API Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#common-use-cases">Common Use Cases</a></li>
-<li class="toctree-l2"><a class="reference internal" href="abbreviation_customization/#persistence">Persistence</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="spans/">Span-Based Phonemization Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="spans/#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#core-types">Core Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#extended-text-layer">Extended Text Layer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#ssmd-and-phrasplit-compatibility">SSMD and phrasplit compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#character-offset-coordinate-system">Character Offset Coordinate System</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#alignment-modes">Alignment Modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#overlap-handling">Overlap Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#language-switching">Language Switching</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#phoneme-overrides">Phoneme Overrides</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#custom-attributes">Custom Attributes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#best-practices">Best Practices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#common-pitfalls">Common Pitfalls</a></li>
-<li class="toctree-l2"><a class="reference internal" href="spans/#see-also">See Also</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="phonemes/">Phoneme Inventory</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#kokoro-phoneme-set">Kokoro Phoneme Set</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#british-english-differences">British English Differences</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#german-phonemes">German Phonemes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#french-phonemes">French Phonemes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#czech-phonemes">Czech Phonemes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#working-with-phonemes">Working with Phonemes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#conversion-between-formats">Conversion Between Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="phonemes/#references">References</a></li>
-</ul>
-</li>
-</ul>
-</div>
+<p>See <a class="reference internal" href="quickstart/"><span class="std std-doc">Quick Start</span></a>, <a class="reference internal" href="prepared_phonemization/"><span class="std std-doc">prepared phonemization</span></a>,
+and the <a class="reference internal" href="spans/"><span class="std std-doc">span guide</span></a> for details.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/core/">Core API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#main-functions">Main Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/core/#structured-stress-overrides">Structured stress overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/core/#prepared-input">Prepared input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#pipeline-integration-adapters">Pipeline integration adapters</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#base-classes">Base Classes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/core/#phoneme-utilities">Phoneme Utilities</a></li>
@@ -714,47 +578,19 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/english/">English API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/english/#semantic-preparation">Semantic Preparation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/english/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/english/#lexicon">Lexicon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/english/#number-conversion">Number Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/english/#examples">Examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/english/#lexicon-controls">Lexicon controls</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/german/">German API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/german/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/german/#lexicon">Lexicon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/german/#number-conversion">Number Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/german/#examples">Examples</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/french/">French API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/french/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/french/#lexicon">Lexicon</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/french/#number-conversion">Number Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/french/#examples">Examples</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api/german/">German API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/french/">French API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/czech/">Czech API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/czech/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/czech/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/czech/#phonological-rules">Phonological Rules</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/spanish/">Spanish API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/spanish/#text-preparation-ownership">Text preparation ownership</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/spanish/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/spanish/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/spanish/#phonology-features">Phonology Features</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="api/italian/">Italian API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/italian/#semantic-preparation">Semantic preparation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/italian/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/italian/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/italian/#phonology-features">Phonology Features</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api/spanish/">Spanish API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/italian/">Italian API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/portuguese/">Portuguese API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/portuguese/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/portuguese/#examples">Examples</a></li>
@@ -772,23 +608,30 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 <li class="toctree-l2"><a class="reference internal" href="api/japanese/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/japanese/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/japanese/#features">Features</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/japanese/#cutlet-membership-dictionary">Cutlet membership dictionary</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/korean/">Korean API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/korean/#main-class">Main Class</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/korean/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/korean/#implementation">Implementation</a></li>
-</ul>
-</li>
+<li class="toctree-l1"><a class="reference internal" href="api/korean/">Korean API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/vietnamese/">Vietnamese API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/russian/">Russian API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="api/hebrew/">Hebrew API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/hebrew/#main-class">Main Class</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/hebrew/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/hebrew/#implementation">Implementation</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/mixed/">Multilang Preprocessing</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/mixed/#api">API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/mixed/#examples">Examples</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/thai/">Thai G2P</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#behavior">Behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#normalization">Normalization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/thai/#strictness-and-diagnostics">Strictness and diagnostics</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/kazakh/">Kazakh G2P</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/arabic/">Arabic MSA</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#construction">Construction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#diacritization">Diacritization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#source-behavior-and-offsets">Source behavior and offsets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/arabic/#generic-espeak-backend">Generic eSpeak backend</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/backends/">Backends API</a><ul>
@@ -806,21 +649,77 @@ pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="
 </ul>
 </div>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Development</span></p>
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="contributing/">Contributing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-usage">Basic usage</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#explicit-languages">Explicit languages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#prepare-semantics-outside-the-core">Prepare semantics outside the core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#linguistic-annotations">Linguistic annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#g2p-instances">G2P instances</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="prepared_phonemization/">Prepared phonemization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepared_phonemization/#linguistic-annotations">Linguistic annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepared_phonemization/#explicit-language-routing">Explicit language routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepared_phonemization/#migration-from-pre-v0-9">Migration from pre-v0.9</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="languages/">Language support</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="languages/#common-contract">Common contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#native-and-dictionary-frontends">Native and dictionary frontends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#backend-and-model-controls">Backend and model controls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#prepared-language-composition">Prepared-language composition</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="spans/">Span-Based Phonemization Guide</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spans/#overview">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#core-types">Core Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#structured-stress-overrides">Structured stress overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#prepared-phonemization">Prepared phonemization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#extended-text-layer">Extended Text Layer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#ssmd-and-phrasplit-compatibility">SSMD and phrasplit compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#character-offset-coordinate-system">Character Offset Coordinate System</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#alignment-modes">Alignment Modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#overlap-handling">Overlap Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#language-switching">Language Switching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#phoneme-overrides">Phoneme Overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#custom-attributes">Custom Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#common-pitfalls">Common Pitfalls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#see-also">See Also</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#prepared-text-boundary">Prepared text boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-g2p-configuration">Custom G2P Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#token-inspection">Token Inspection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#dictionary-lookup">Dictionary Lookup</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#german-lexicon">German Lexicon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#phoneme-utilities">Phoneme Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#vocabulary-encoding">Vocabulary Encoding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#quote-handling">Quote Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#punctuation-handling">Punctuation Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#word-mismatch-detection">Word Mismatch Detection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#semantic-preparation">Semantic preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-backend-selection">Custom Backend Selection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#caching-and-performance">Caching and Performance</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#custom-phoneme-filtering">Custom Phoneme Filtering</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#explicit-language-spans">Explicit language spans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#error-handling">Error Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#next-steps">Next Steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#selecting-named-lexicons">Selecting named lexicons</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation/#language-extras">Language extras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#released-lexhint-data">Released LexHint data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development installation</a></li>
+</ul>
+</li>
 </ul>
 </div>
 </section>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables</h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex/"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex/"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search/"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

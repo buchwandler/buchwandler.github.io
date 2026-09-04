@@ -5,8 +5,8 @@ permalink: /tools/spokenform/languages/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_ref: "v0.3.6"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -542,6 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="language-support-matrix">
 <h1>Language support matrix</h1>
+<p>| <code class="docutils literal notranslate"><span class="pre">ar</span></code> | <code class="docutils literal notranslate"><span class="pre">ara</span></code> | <code class="docutils literal notranslate"><span class="pre">ar_MSA</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">ar</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
+| <code class="docutils literal notranslate"><span class="pre">he</span></code> | <code class="docutils literal notranslate"><span class="pre">heb</span></code> | <code class="docutils literal notranslate"><span class="pre">he_IL</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">he</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
+| <code class="docutils literal notranslate"><span class="pre">kk</span></code> | <code class="docutils literal notranslate"><span class="pre">kaz</span></code> | <code class="docutils literal notranslate"><span class="pre">kk_KZ</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">kk</span></code> | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |</p>
 <p>This page is the canonical runtime support matrix for <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>. It describes
 implemented capabilities, not full parity with PolyNorm, benchmarks, or
 kokorog2p.</p>
@@ -582,8 +585,8 @@ kokorog2p.</p>
 <td><p>comma</p></td>
 <td><p>yes</p></td>
 <td><p>EUR</p></td>
-<td><p>reviewed</p></td>
-<td><p>reviewed, conservative</p></td>
+<td><p>validated digital times and context-sensitive dates/ordinals</p></td>
+<td><p>legal, phone, percent, and other reviewed sequences</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
 <td><p>none</p></td>
@@ -731,6 +734,21 @@ kokorog2p.</p>
 </tr>
 </tbody>
 </table>
+<section id="german-scope">
+<h2>German scope</h2>
+<p>German structured normalization validates Gregorian dates and digital times, including
+complete-word handling for <code class="docutils literal notranslate"><span class="pre">Uhr</span></code>, and applies bounded contextual inflection to dates
+and ordinals. German owns conservative contextual year speech through the shared
+<code class="docutils literal notranslate"><span class="pre">render_year()</span></code> policy, reviewed Euro major/minor realization with explicit Cent
+labels, and exact excess-fraction preservation. Date, text-date, hyphen-date, and
+time candidates validate full lexical boundaries and reject identifier adjacency.
+German <code class="docutils literal notranslate"><span class="pre">§</span></code> and conservative <code class="docutils literal notranslate"><span class="pre">§§</span></code> paragraph references, percentages, and contextual
+phone sequences are owned by typed structured recognizers and remain subject to
+precedence, protection, and recognition-domain policy. Ordinary abbreviations,
+including the reviewed <code class="docutils literal notranslate"><span class="pre">vgl.</span></code>, <code class="docutils literal notranslate"><span class="pre">i.d.R.</span></code>, <code class="docutils literal notranslate"><span class="pre">o.ä.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.U.</span></code> forms, remain owned by
+<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; they are not duplicated in this locale. Currencies without reviewed
+minor-unit grammar use a safe exact decimal fallback or fail closed.</p>
+</section>
 <section id="swedish-scope">
 <h2>Swedish scope</h2>
 <p>Swedish uses comma decimal punctuation and space, NBSP, or NNBSP grouping.

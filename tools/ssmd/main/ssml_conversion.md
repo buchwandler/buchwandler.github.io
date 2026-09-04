@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
+docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
 search_enabled: true
 ---
 
@@ -545,6 +545,24 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>SSMD supports bidirectional conversion: you can convert SSML back to SSMD format. This
 is useful for editing existing SSML, migrating from other tools, or creating round-trip
 workflows.</p>
+<section id="tts-pipeline-integration">
+<h2>TTS pipeline integration</h2>
+<p>Use structural parsing when sentence boundaries must be computed after semantic
+preparation:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SSMD parse -&gt; semantic preparation/normalization -&gt; sentence splitting -&gt; G2P
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parsed</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_spans</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="c1"># Normalize parsed.clean_text and remap annotations before splitting.</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">sentence_spans</span><span class="o">=</span><span class="n">sentence_spans</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">sentence_spans</span></code> accepts objects exposing <code class="docutils literal notranslate"><span class="pre">char_start</span></code> and <code class="docutils literal notranslate"><span class="pre">char_end</span></code> offsets, or the
+three-item tuples returned by <code class="docutils literal notranslate"><span class="pre">iter_sentences_spans()</span></code>. These offsets must refer to the
+structural clean-text coordinate space. SSMD does not normalize numbers or
+abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect explicit
+<code class="docutils literal notranslate"><span class="pre">ph</span></code> and <code class="docutils literal notranslate"><span class="pre">ipa</span></code> ranges during downstream normalization.</p>
+</section>
 <section id="basic-conversion">
 <h2>Basic Conversion</h2>
 <section id="using-the-convenience-function">

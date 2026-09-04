@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9265514423c822fed08c182902858a184b3d2e1"
+docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
 search_enabled: true
 ---
 
@@ -881,6 +881,23 @@ before yielding; it does not provide bounded-memory streaming yet</p></li>
 <li><p><a class="reference internal" href="../offsets/"><span class="std std-doc">SSMD Integration Examples</span></a></p></li>
 </ul>
 </section>
+</section>
+<section id="prepared-text-spacy-integration">
+<h2>Prepared-text spaCy integration</h2>
+<p>For TTS orchestration, prepare written text before analysis, then share one analysis
+between phrasplit and pronunciation processing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prepared</span> <span class="o">=</span> <span class="n">spokenform</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">raw_written_text</span><span class="p">)</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">)</span>
+<span class="n">split</span> <span class="o">=</span> <span class="n">split_with_offsets_with_diagnostics</span><span class="p">(</span>
+    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span>
+ <span class="p">)</span>
+<span class="c1"># Use the same prepared text and analysis for POS-aware G2P.</span>
+</pre></div>
+</div>
+<p>This is distinct from standalone raw-text use, where phrasplit may apply its complete
+language-specific abbreviation handling. Supplied documents and pipelines are
+caller-owned. Phrasplit does not mutate or retain them, and a supplied document must
+have exactly the same <code class="docutils literal notranslate"><span class="pre">.text</span></code> as the input.</p>
 </section>
 </section>
 </div>

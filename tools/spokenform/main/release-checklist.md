@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -543,7 +543,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="release-checklist">
 <h1>Release checklist</h1>
 <ol class="arabic simple">
-<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.12,&lt;0.3.0</span></code> prerequisite containing the source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.</p></li>
+<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code> prerequisite containing the source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.</p></li>
 </ol>
 <ul class="simple">
 <li><p>Confirm the released Lexhint versions allowed by the <code class="docutils literal notranslate"><span class="pre">spokenform[lexhint]</span></code> extra pass the real provider contract test.</p></li>

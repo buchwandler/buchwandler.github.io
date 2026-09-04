@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -563,8 +563,15 @@ vowel-quality marks are retained during tone extraction.</p>
 default), tokens that fail structural Vietnamese parsing use the existing lazy English
 frontend. <code class="docutils literal notranslate"><span class="pre">&quot;espeak&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> are also supported. Use <code class="docutils literal notranslate"><span class="pre">strict=True</span></code> to raise when no
 fallback pronunciation is available.</p>
-<p>The model profile uses Kokoro’s supported characters and tone arrows directly.
-<code class="docutils literal notranslate"><span class="pre">validate_output()</span></code> and <code class="docutils literal notranslate"><span class="pre">encode_output()</span></code> in <code class="docutils literal notranslate"><span class="pre">kokorog2p.vi.model_profile</span></code> expose
+<p>The model profile uses Kokoro’s supported characters and tone arrows directly. The
+provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">vi:lexhint</span></code> dictionary is consulted first for known words; invalid
+or missing LexHint output falls back to the native Vietnamese rules and configured
+English fallback. The dictionary is managed outside KokoroG2P:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>vi:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>vi:lexhint
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">validate_output()</span></code> and <code class="docutils literal notranslate"><span class="pre">encode_output()</span></code> in <code class="docutils literal notranslate"><span class="pre">kokorog2p.vi.model_profile</span></code> expose
 explicit model checks. The frontend does not add a <code class="docutils literal notranslate"><span class="pre">vig2p</span></code> dependency and does not
 implement a second semantic number, date, URL, or currency normalizer.</p>
 <p>See <a class="reference internal" href="../../vi/PROVENANCE/"><span class="std std-doc">Vietnamese provenance</span></a> for independent linguistic sources and

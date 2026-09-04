@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/japanese/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -566,6 +566,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p>Automatic pitch accent assignment</p></li>
 <li><p>Japanese numeral handling</p></li>
 </ul>
+</section>
+<section id="cutlet-membership-dictionary">
+<h2>Cutlet membership dictionary</h2>
+<p>The optional Cutlet backend uses the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">ja:lexhint</span></code> dictionary for
+lazy known-word membership checks. KokoroG2P does not package a Japanese word-list
+source or generated membership asset. Install the local asset before using Cutlet:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ja:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ja:lexhint
+</pre></div>
+</div>
+<p>The default PyOpenJTalk backend retains its existing pronunciation and pitch path and
+does not require the LexHint asset.</p>
 </section>
 </section>
 </div>

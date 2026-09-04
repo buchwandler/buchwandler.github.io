@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "569eaee0fff8c26d86501358bb005c8f86540d51"
+docs_commit: "e4f6a43888e70a43a0ce7b8b9446b9825e213884"
 search_enabled: true
 ---
 
@@ -610,6 +610,16 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --unit UNIT         sentence or paragraph
 </pre></div>
 </div>
+<p>Runtime discovery and per-language defaults are separate from legacy provider role configuration. Readio 0.2.0 requires the PyKokoro 0.9.x public discovery contract:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>models<span class="w"> </span>list<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--offline
+readio<span class="w"> </span>models<span class="w"> </span>show<span class="w"> </span>de-thorsten<span class="w"> </span>--offline
+readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--json
+readio<span class="w"> </span>defaults<span class="w"> </span><span class="nb">set</span><span class="w"> </span>de<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--lexicon<span class="w"> </span>crane<span class="w"> </span>--offline
+readio<span class="w"> </span>defaults<span class="w"> </span>show<span class="w"> </span>de-at<span class="w"> </span>--json
+readio<span class="w"> </span>render<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--file<span class="w"> </span>notes.md
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">models</span></code> reads PyKokoro’s lightweight registry and supports <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">--status</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>; it never loads model weights. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> updates metadata only and cannot be combined with <code class="docutils literal notranslate"><span class="pre">--offline</span></code>. Offline synthesis still needs cached model and voice assets. <code class="docutils literal notranslate"><span class="pre">defaults</span></code> stores validated user policy in schema 2. Exact locale profiles override base-language profiles, and <code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code> explicitly clears inherited lexicons. Repeated named lexicons retain their order for layered lookup.</p>
 </section>
 <section id="render-progress">
 <h2>Render progress</h2>
@@ -630,14 +640,15 @@ readio<span class="w"> </span>config<span class="w"> </span>show
 readio<span class="w"> </span>config<span class="w"> </span>validate
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML with schema 1. The main sections are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML with schema 2; schema-0/1 files remain readable and are upgraded when saved. The main sections are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">queue_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: the selected <code class="docutils literal notranslate"><span class="pre">voice_provider</span></code> and SSMD validation behavior.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;]</span></code>: concrete voice IDs and logical role mappings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[languages.&lt;locale&gt;]</span></code>: validated model, source, quality, voice, ordered lexicons, and experimental opt-in defaults.
+Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p></li>
 </ul>
-<p>Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>bf_emma
 readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>voices.kokoro.roles.analyst<span class="w"> </span>am_michael
 readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>ssmd.voice_provider<span class="w"> </span>kokoro
@@ -710,7 +721,8 @@ ruff<span class="w"> </span>check<span class="w"> </span>.
 readio<span class="w"> </span>voices<span class="w"> </span>roles<span class="w"> </span>--provider<span class="w"> </span>kokoro
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">bind</span> <span class="pre">ROLE</span> <span class="pre">VOICE_ID</span></code> for an explicit persistent mapping. For automation, pass missing logical roles only for one invocation:</p>
+<p>For a selected model, inspect concrete voices with <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">list</span> <span class="pre">--model</span> <span class="pre">MODEL</span> <span class="pre">--language</span> <span class="pre">LANG</span> <span class="pre">--json</span></code>. Document bindings take precedence over invocation bindings, which take precedence over configured portable roles. Readio rejects a concrete target outside the active model roster and lists the valid voices.
+Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">bind</span> <span class="pre">ROLE</span> <span class="pre">VOICE_ID</span></code> for an explicit persistent mapping. For automation, pass missing logical roles only for one invocation:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">moderator</span><span class="o">=</span>af_sarah<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">architect</span><span class="o">=</span>am_michael

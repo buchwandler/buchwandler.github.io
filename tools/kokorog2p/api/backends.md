@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/backends/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -545,9 +545,334 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>kokorog2p supports multiple phonemization backends.</p>
 <section id="espeak-ng-backend">
 <h2>espeak-ng Backend</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.backends.espeak.</span></span><span class="sig-name descname"><span class="pre">EspeakBackend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'^'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>High-level espeak backend for Kokoro TTS phonemization.</p>
+<p>This class provides a simple interface for converting text to phonemes
+using espeak-ng. It automatically converts espeak’s IPA output to
+Kokoro’s phoneme format.</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">backend</span> <span class="o">=</span> <span class="n">EspeakBackend</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">backend</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;hello world&quot;</span><span class="p">)</span>
+<span class="go">&#39;hˈɛlO wˈɜɹld&#39;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_stress</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tie</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'^'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/pathlib.html#pathlib.Path" title="(in Python v3.14)"><span class="pre">Path</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the espeak backend.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>language: Language code (e.g., “en-us”, “en-gb”, “fr-fr”).
+with_stress: Whether to include stress markers in output.
+tie: Tie character mode. “^” uses tie character for affricates.
+use_cli: If True, force use of CLI phonemizer instead of library.
+data_path: Optional instance-scoped espeak-ng data directory.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.wrapper">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">wrapper</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EspeakPhonemizerBase</span></span></dt>
+<dd><p>Get the underlying Phonemizer instance (lazy initialization).</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.native_error">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">native_error</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.14)"><span class="pre">Exception</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
+<dd><p>Return the native setup error that caused an automatic CLI downgrade.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.info">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">info</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">EspeakBackendInfo</span></span></dt>
+<dd><p>Return backend metadata without resolving the lazy wrapper.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.diagnostics">
+<span class="sig-name descname"><span class="pre">diagnostics</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">EspeakBackendInfo</span></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.diagnostics"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Compatibility method returning <a class="reference internal" href="#kokorog2p.backends.espeak.EspeakBackend.info" title="kokorog2p.backends.espeak.EspeakBackend.info"><code class="xref py py-attr docutils literal notranslate"><span class="pre">info</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.is_british">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_british</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></dt>
+<dd><p>Check if using British English variant.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.remove_punctuation">
+<span class="sig-name descname"><span class="pre">remove_punctuation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.remove_punctuation"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Remove punctuation from text before phonemization.</p>
+<p>Preserves:
+- Hyphens between letters: “my-world” → “my-world”
+- Apostrophes between letters: “don’t” → “don’t”
+- Single periods between letters: “Dr. Smith” → “Dr. Smith”</p>
+<p>Removes:
+- Quote marks around words: “‘Hello’” → “Hello”
+- Repeated punctuation: “Hello??” → “Hello?”
+- Standalone punctuation: “!” → “”, “?” → “”
+- Standalone dots: “..” → “”
+- Ellipsis sequences: “I like this … . Hello.” → “I like this. Hello.”
+- Special sequences: “I dont’t like you.!” → “I dont’t like you.”</p>
+<p>Enforces:
+- Single punctuation between words
+- Space after punctuation: “Hello,world” → “Hello, world”</p>
+<p>Preserves special symbols: &#64;, #, etc.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Text with punctuation cleaned.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.phonemize">
+<span class="sig-name descname"><span class="pre">phonemize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_kokoro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">remove_punctuation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.phonemize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to phonemes.</p>
+<dl>
+<dt>Args:</dt><dd><p>text: Text to convert to phonemes.
+convert_to_kokoro: If True, convert espeak IPA to Kokoro format.</p>
+<blockquote>
+<div><p>If False, return raw espeak IPA output.</p>
+</div></blockquote>
+<p>remove_punctuation: If True, remove punctuation before phonemization.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.phonemize_list">
+<span class="sig-name descname"><span class="pre">phonemize_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_kokoro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.phonemize_list"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert multiple texts to phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>texts: List of texts to convert.
+convert_to_kokoro: If True, convert to Kokoro format.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of phoneme strings.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.phonemize_many">
+<span class="sig-name descname"><span class="pre">phonemize_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">texts</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.14)"><span class="pre">Sequence</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_kokoro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.phonemize_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert independently framed texts while reusing one eSpeak backend.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.word_phonemes">
+<span class="sig-name descname"><span class="pre">word_phonemes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">convert_to_kokoro</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/backends/espeak/backend/#EspeakBackend.word_phonemes"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert a single word to phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>word: Word to convert.
+convert_to_kokoro: If True, convert to Kokoro format.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string for the word (without separators).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.backends.espeak.EspeakBackend.version">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">version</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></dt>
+<dd><p>Get espeak version as string (e.g., “1.51.1”).</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.espeak_g2p.</span></span><span class="sig-name descname"><span class="pre">EspeakOnlyG2P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/espeak_g2p/#EspeakOnlyG2P"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../core/#kokorog2p.G2PBase" title="kokorog2p.base.G2PBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">G2PBase</span></code></a></p>
+<p>G2P implementation using only espeak-ng.</p>
+<p>This is used for languages that don’t have dedicated dictionaries
+or custom G2P logic. It provides basic phonemization via espeak.</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g2p</span> <span class="o">=</span> <span class="n">EspeakOnlyG2P</span><span class="p">(</span><span class="s2">&quot;fr-fr&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.VOICE_MAP">
+<span class="sig-name descname"><span class="pre">VOICE_MAP</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{'ar':</span> <span class="pre">'ar',</span> <span class="pre">'ar-sa':</span> <span class="pre">'ar',</span> <span class="pre">'bn':</span> <span class="pre">'bn',</span> <span class="pre">'bn-in':</span> <span class="pre">'bn',</span> <span class="pre">'cs':</span> <span class="pre">'cs',</span> <span class="pre">'cs-cz':</span> <span class="pre">'cs',</span> <span class="pre">'da':</span> <span class="pre">'da',</span> <span class="pre">'da-dk':</span> <span class="pre">'da',</span> <span class="pre">'de':</span> <span class="pre">'de',</span> <span class="pre">'de-de':</span> <span class="pre">'de',</span> <span class="pre">'el':</span> <span class="pre">'el',</span> <span class="pre">'el-gr':</span> <span class="pre">'el',</span> <span class="pre">'es':</span> <span class="pre">'es',</span> <span class="pre">'es-es':</span> <span class="pre">'es',</span> <span class="pre">'fa':</span> <span class="pre">'fa',</span> <span class="pre">'fa-ir':</span> <span class="pre">'fa',</span> <span class="pre">'fi':</span> <span class="pre">'fi',</span> <span class="pre">'fi-fi':</span> <span class="pre">'fi',</span> <span class="pre">'fr':</span> <span class="pre">'fr-fr',</span> <span class="pre">'fr-fr':</span> <span class="pre">'fr-fr',</span> <span class="pre">'he':</span> <span class="pre">'he',</span> <span class="pre">'he-il':</span> <span class="pre">'he',</span> <span class="pre">'hi':</span> <span class="pre">'hi',</span> <span class="pre">'hi-in':</span> <span class="pre">'hi',</span> <span class="pre">'hu':</span> <span class="pre">'hu',</span> <span class="pre">'hu-hu':</span> <span class="pre">'hu',</span> <span class="pre">'id':</span> <span class="pre">'id',</span> <span class="pre">'id-id':</span> <span class="pre">'id',</span> <span class="pre">'it':</span> <span class="pre">'it',</span> <span class="pre">'it-it':</span> <span class="pre">'it',</span> <span class="pre">'ms':</span> <span class="pre">'ms',</span> <span class="pre">'ms-my':</span> <span class="pre">'ms',</span> <span class="pre">'nb':</span> <span class="pre">'nb',</span> <span class="pre">'nb-no':</span> <span class="pre">'nb',</span> <span class="pre">'nl':</span> <span class="pre">'nl',</span> <span class="pre">'nl-nl':</span> <span class="pre">'nl',</span> <span class="pre">'no':</span> <span class="pre">'nb',</span> <span class="pre">'pl':</span> <span class="pre">'pl',</span> <span class="pre">'pl-pl':</span> <span class="pre">'pl',</span> <span class="pre">'pt':</span> <span class="pre">'pt',</span> <span class="pre">'pt-br':</span> <span class="pre">'pt-br',</span> <span class="pre">'pt-pt':</span> <span class="pre">'pt',</span> <span class="pre">'ro':</span> <span class="pre">'ro',</span> <span class="pre">'ro-ro':</span> <span class="pre">'ro',</span> <span class="pre">'ru':</span> <span class="pre">'ru',</span> <span class="pre">'ru-ru':</span> <span class="pre">'ru',</span> <span class="pre">'sv':</span> <span class="pre">'sv',</span> <span class="pre">'sv-se':</span> <span class="pre">'sv',</span> <span class="pre">'ta':</span> <span class="pre">'ta',</span> <span class="pre">'ta-in':</span> <span class="pre">'ta',</span> <span class="pre">'th':</span> <span class="pre">'th',</span> <span class="pre">'th-th':</span> <span class="pre">'th',</span> <span class="pre">'tr':</span> <span class="pre">'tr',</span> <span class="pre">'tr-tr':</span> <span class="pre">'tr',</span> <span class="pre">'uk':</span> <span class="pre">'uk',</span> <span class="pre">'uk-ua':</span> <span class="pre">'uk',</span> <span class="pre">'vi':</span> <span class="pre">'vi',</span> <span class="pre">'vi-vn':</span> <span class="pre">'vi'}</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/espeak_g2p/#EspeakOnlyG2P.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the espeak-only G2P.</p>
+<dl>
+<dt>Args:</dt><dd><p>language: Language code (e.g., ‘fr-fr’, ‘de-de’).
+use_espeak_fallback: Ignored (always uses espeak).
+strict: If True (default), raise exceptions on errors. If False,</p>
+<blockquote>
+<div><p>log warnings and return empty results for backward compatibility.</p>
+</div></blockquote>
+<p>version: Model version (default: “1.0”).
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Additional arguments (ignored).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.espeak_backend">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">espeak_backend</span></span></dt>
+<dd><p>Lazy initialization of espeak backend.</p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>RuntimeError: If espeak backend initialization or validation fails.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/#kokorog2p.GToken" title="kokorog2p.token.GToken"><span class="pre">GToken</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/espeak_g2p/#EspeakOnlyG2P.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to tokens with phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of GToken objects with phonemes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/espeak_g2p/#EspeakOnlyG2P.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Look up a word using espeak.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>word: The word to look up.
+tag: Optional POS tag (ignored for espeak).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string from espeak, or None if strict=False and error occurs.</p>
+</dd>
+<dt>Raises:</dt><dd><p>RuntimeError: If espeak backend fails and strict=True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.espeak_g2p.EspeakOnlyG2P.phonemize">
+<span class="sig-name descname"><span class="pre">phonemize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/espeak_g2p/#EspeakOnlyG2P.phonemize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to phonemes using espeak.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string, or empty string if strict=False and error occurs.</p>
+</dd>
+<dt>Raises:</dt><dd><p>RuntimeError: If espeak backend fails and strict=True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="goruut-backend">
 <h2>goruut Backend</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.goruut_g2p.</span></span><span class="sig-name descname"><span class="pre">GoruutOnlyG2P</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference internal" href="../core/#kokorog2p.G2PBase" title="kokorog2p.base.G2PBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">G2PBase</span></code></a></p>
+<p>G2P implementation using only pygoruut/goruut.</p>
+<p>This is used as an alternative to espeak for languages that
+pygoruut supports well. It provides phonemization via the
+goruut engine.</p>
+<dl>
+<dt>Example:</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">g2p</span> <span class="o">=</span> <span class="n">GoruutOnlyG2P</span><span class="p">(</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_espeak_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_goruut_fallback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">version</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'1.0'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the goruut-only G2P.</p>
+<dl>
+<dt>Args:</dt><dd><p>language: Language code (e.g., ‘fr’, ‘de’, ‘en-us’).
+use_espeak_fallback: Ignored (always uses goruut).
+use_goruut_fallback: Ignored (always uses goruut).
+strict: If True (default), raise exceptions on errors. If False,</p>
+<blockquote>
+<div><p>log warnings and return empty results for backward compatibility.</p>
+</div></blockquote>
+<p>version: Model version (default: “1.0”).
+<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs: Additional arguments (ignored).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.goruut_backend">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">goruut_backend</span></span></dt>
+<dd><p>Lazy initialization of goruut backend.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.__call__">
+<span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="../core/#kokorog2p.GToken" title="kokorog2p.token.GToken"><span class="pre">GToken</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to tokens with phonemes.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>List of GToken objects with phonemes.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.lookup">
+<span class="sig-name descname"><span class="pre">lookup</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">word</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tag</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P.lookup"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Look up a word using goruut.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>word: The word to look up.
+tag: Optional POS tag (ignored for goruut).</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string from goruut, or None if strict=False and error occurs.</p>
+</dd>
+<dt>Raises:</dt><dd><p>RuntimeError: If goruut backend fails and strict=True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.phonemize">
+<span class="sig-name descname"><span class="pre">phonemize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P.phonemize"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Convert text to phonemes using goruut.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>text: Input text to convert.</p>
+</dd>
+<dt>Returns:</dt><dd><p>Phoneme string, or empty string if strict=False and error occurs.</p>
+</dd>
+<dt>Raises:</dt><dd><p>RuntimeError: If goruut backend fails and strict=True.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.goruut_g2p.GoruutOnlyG2P.is_available">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_available</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/goruut_g2p/#GoruutOnlyG2P.is_available"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Check if pygoruut is available.</p>
+<dl class="simple">
+<dt>Returns:</dt><dd><p>True if pygoruut can be imported.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="examples">
 <h2>Examples</h2>

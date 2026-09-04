@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
+docs_ref: "v0.9.0"
+docs_commit: "c80ad91b56445cd3f3da9604741bb62748b4262b"
 search_enabled: true
 ---
 
@@ -554,9 +554,9 @@ audio stages do.</p>
 <section id="android-termux-providers">
 <h2>Android/Termux providers</h2>
 <p>Use a provider name exposed by the installed ONNX Runtime build:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
-<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello from Android.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -602,13 +602,12 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="dependencies-and-optional-spacy">
 <h2>Dependencies and optional spaCy</h2>
-<p>PyKokoro’s current integration baseline requires <code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.6,&lt;0.4</span></code> and
-<code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.4,&lt;0.9</span></code>, alongside <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.8.0,&lt;0.9</span></code>. The package installs
-phrasplit, SSMD, NumPy, AudioSig, soundfile, and the other runtime support libraries it
-needs. kokorog2p 0.8.0 owns automatic written-to-spoken preparation and installs its
-compatible Spokenform and abbr2words dependencies transitively; do not install
-<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately. <code class="docutils literal notranslate"><span class="pre">spacy</span></code> itself and language models are optional. The default
-tokenizer policy is safe on a clean install:</p>
+<p>PyKokoro v0.9 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.9.0,&lt;1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.7,&lt;0.4</span></code>,
+<code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.6,&lt;0.9</span></code>, and <code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.3.6,&lt;0.4</span></code>. The document language is explicit:
+pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;en-us&quot;)</span></code>. Voice and profile
+selection never supplies the document language. SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code> spans are the supported
+mechanism for explicit mixed-language documents.</p>
+<p>The pipeline owns reusable spaCy resources for integrated Pass A and Pass B analysis:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back
@@ -632,16 +631,38 @@ no model or voice is supplied. It provides only <code class="docutils literal no
 MB for the ONNX model plus a 522,506-byte <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice archive on first use. Both
 artifacts are checked against their published SHA-256 digests before being cached under
 <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro</span></code>.</p>
-<p>The previous <code class="docutils literal notranslate"><span class="pre">v1.1-de</span></code> Eva/Bernd model remains an explicit compatibility choice. Use
-<code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_source=&quot;github&quot;,</span> <span class="pre">model_variant=&quot;v1.1-de&quot;,</span> <span class="pre">voice=&quot;df_eva&quot;)</span></code> or
-<code class="docutils literal notranslate"><span class="pre">dm_bernd</span></code> when that legacy profile is required. Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>
-are never replaced by automatic selection; missing custom files fail directly rather
-than triggering a download to the shared cache. Managed cache hits are checksum and
-structure checked before use. The public GitHub download helpers also accept
-<code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a valid managed cache is required. Interrupted GitHub transfers
-retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code> file and resume with HTTP Range requests when the release
-host supports them; completed files are still checked for exact size, SHA-256, and
-structure before replacement.</p>
+<p>Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are never replaced by automatic selection; missing
+custom files fail directly rather than triggering a download to the shared cache.
+Managed cache hits are checksum and structure checked before use. <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a
+valid managed cache is required. Interrupted GitHub transfers retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code>
+file and resume with HTTP Range requests when the release host supports them; completed
+files are still checked for exact size, SHA-256, and structure before replacement.</p>
+<p>The registry catalog is cached at <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/registry/models.json</span></code>, with runtime
+artifacts kept under model and distribution-specific directories. PyKokoro revalidates
+cached files and replaces invalid artifacts individually. If a downloaded file reveals
+stale catalog metadata, the catalog is refreshed once without falling back to the stale
+cache, then asset resolution is retried. Offline mode never refreshes over the network,
+and manual deletion of the registry catalog or model directory is not required.</p>
+</section>
+<section id="model-capability-discovery">
+<h2>Model capability discovery</h2>
+<p>Use the public discovery API to inspect models, voices, languages, qualities, frontends,
+and runtime status without downloading model or voice assets:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
+
+<span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The default call follows the registry network and cache policy. <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> forbids
+network access and requires cached registry metadata. <code class="docutils literal notranslate"><span class="pre">refresh=True</span></code> forces a registry
+metadata refresh and may report <code class="docutils literal notranslate"><span class="pre">cache_fallback=True</span></code> if the existing policy uses a
+valid cache after a failed refresh. Refresh never downloads model assets, and
+<code class="docutils literal notranslate"><span class="pre">offline=True,</span> <span class="pre">refresh=True</span></code> is invalid. <code class="docutils literal notranslate"><span class="pre">registry_source</span></code> identifies the registry or
+cache used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> is runtime capability discovery. <code class="docutils literal notranslate"><span class="pre">available_model_releases()</span></code>
+remains the API for published release and artifact discovery.</p>
 </section>
 <section id="system-requirements">
 <h2>System requirements</h2>
@@ -657,9 +678,12 @@ use <code class="docutils literal notranslate"><span class="pre">choco</span> <s
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.generation_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
+<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
+    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
     <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples at </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
     <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>

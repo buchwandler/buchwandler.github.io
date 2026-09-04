@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -580,16 +580,16 @@ compiled data is copied into this project.</p></li>
 <p>The implementation documents a source note next to each lexical rule family. A mismatch
 with the behavioral oracle is not by itself evidence that a local rule is wrong.</p>
 </section>
-<section id="ruaccent">
-<h2>RUAccent</h2>
-<p>RUAccent is an optional runtime dependency. The selected package and model revision must
-be recorded separately when an integration environment is chosen. No model is imported,
-downloaded, or loaded during <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">kokorog2p</span></code> or <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">kokorog2p.ru</span></code>. The final
-dependency bounds must reflect the tested Python and Transformers/ONNX Runtime
-combination rather than an unverified latest-version assumption.</p>
-<p>Current package metadata and model artifact terms must be checked at release time. This
-document intentionally does not make a blanket license claim for future RUAccent model
-artifacts.</p>
+<section id="lexhint">
+<h2>LexHint</h2>
+<p>Russian pronunciation is owned by the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">ru:lexhint</span></code> dictionary.
+KokoroG2P opens local Lexphon data lazily and never downloads it. Install and verify the
+released asset separately:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ru:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ru:lexhint
+</pre></div>
+</div>
+<p>eSpeak-ng remains an optional fallback for unresolved words.</p>
 </section>
 <section id="espeak-ng">
 <h2>eSpeak-ng</h2>

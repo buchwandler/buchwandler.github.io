@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,149 +542,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="english-api">
 <h1>English API</h1>
-<p>English G2P provides high-quality phoneme conversion for US and British English.</p>
-<section id="semantic-preparation">
-<h2>Semantic Preparation</h2>
-<p>English written-to-spoken preparation is owned by the shared source-aligned <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>
-path, with lexical abbreviation recognition and customization owned by the shared
-<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> registry. Once Spokenform accepts a source span, kokorog2p preserves its
-semantic replacement and provenance. Dates, times, currencies, quantities, temperatures,
-safe ordinary numbers, and exact decimal digit reading are prepared once per homogeneous
-language run, with protected source spans preserved.</p>
-<p>Kokorog2p retains English typography normalization, tokenization, lexicon, G2P and
-fallback behavior. The English <code class="docutils literal notranslate"><span class="pre">NumberConverter</span></code> remains downstream for reserved and
-phoneme-sensitive forms such as years, ordinals, Roman numerals, phone/version-like
-sequences, and suffix transformations. Token normalization is typography-only after
-source-aligned semantic preparation.</p>
-</section>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="lexicon">
-<h2>Lexicon</h2>
-</section>
-<section id="number-conversion">
-<h2>Number Conversion</h2>
-<section id="converter-class">
-<h3>Converter Class</h3>
-</section>
-<section id="helper-functions">
-<h3>Helper Functions</h3>
-</section>
-<section id="constants">
-<h3>Constants</h3>
-</section>
-</section>
-<section id="examples">
-<h2>Examples</h2>
-<section id="basic-usage">
-<h3>Basic Usage</h3>
+<p>The English frontend phonemizes prepared English text with the shipped lexicons and
+optional backend/model controls. It does not expand numbers, currencies, dates, units,
+or abbreviations.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
 
-<span class="c1"># US English</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># British English</span>
-<span class="n">g2p_gb</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p_gb</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-<section id="spacy-model-selection">
-<h3>spaCy Model Selection</h3>
-<p>English G2P uses spaCy for POS tagging when <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>. You can choose the spaCy
-English model with <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
-
-<span class="c1"># Default model (recommended balance)</span>
-<span class="n">g2p_md</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">)</span>
-
-<span class="c1"># Smaller model</span>
-<span class="n">g2p_sm</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
-
-<span class="c1"># Larger model</span>
-<span class="n">g2p_lg</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_lg&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="dictionary-lookup">
-<h3>Dictionary Lookup</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishLexicon</span>
-
-<span class="n">lexicon</span> <span class="o">=</span> <span class="n">EnglishLexicon</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="c1"># Simple lookup</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># həlˈO</span>
-
-<span class="c1"># POS-aware lookup</span>
-<span class="n">read_present</span> <span class="o">=</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VB&quot;</span><span class="p">)</span>
-<span class="n">read_past</span> <span class="o">=</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VBD&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="number-expansion">
-<h3>Number Expansion</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
-
-<span class="c1"># Numbers are automatically expanded during G2P processing</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;I have $42.50 and 3 cats.&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="c1"># → I -&gt; aɪ</span>
-<span class="c1"># → have -&gt; hæv</span>
-<span class="c1"># → forty-two dollars and fifty cents -&gt; ...</span>
-<span class="c1"># → and -&gt; ænd</span>
-<span class="c1"># → three -&gt; θɹi</span>
-<span class="c1"># → cats -&gt; kæts</span>
-</pre></div>
-</div>
-</section>
-<section id="punctuation-normalization">
-<h3>Punctuation Normalization</h3>
-<p>English G2P automatically normalizes punctuation variants:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="c1"># Apostrophe variants (all normalize to &#39;)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;don&#39;t&quot;</span><span class="p">)</span>    <span class="c1"># Right single quote (&#39;)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;don&#39;t&quot;</span><span class="p">)</span>    <span class="c1"># Apostrophe (&#39;)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;don`t&quot;</span><span class="p">)</span>    <span class="c1"># Grave accent (`)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;don´t&quot;</span><span class="p">)</span>    <span class="c1"># Acute accent (´)</span>
-
-<span class="c1"># Ellipsis variants (all normalize to …)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait...&quot;</span><span class="p">)</span>       <span class="c1"># Three dots</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait. . .&quot;</span><span class="p">)</span>     <span class="c1"># Spaced dots</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait…&quot;</span><span class="p">)</span>         <span class="c1"># Ellipsis character</span>
-
-<span class="c1"># Dash variants (all normalize to — when spaced)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait - now&quot;</span><span class="p">)</span>    <span class="c1"># Hyphen with spaces</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait -- now&quot;</span><span class="p">)</span>   <span class="c1"># Double hyphen</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait – now&quot;</span><span class="p">)</span>    <span class="c1"># En dash</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait — now&quot;</span><span class="p">)</span>    <span class="c1"># Em dash</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait ― now&quot;</span><span class="p">)</span>    <span class="c1"># Horizontal bar</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait ‒ now&quot;</span><span class="p">)</span>    <span class="c1"># Figure dash</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wait − now&quot;</span><span class="p">)</span>    <span class="c1"># Minus sign</span>
-
-<span class="c1"># Compound words keep hyphens (then removed in output)</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;well-known&quot;</span><span class="p">)</span>         <span class="c1"># Hyphen joins words</span>
-<span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;state-of-the-art&quot;</span><span class="p">)</span>   <span class="c1"># Multiple hyphens</span>
-</pre></div>
-</div>
-<p><strong>Normalized Characters:</strong></p>
-<ul class="simple">
-<li><p>Apostrophes: <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> <code class="docutils literal notranslate"><span class="pre">'</span></code> `` `` <code class="docutils literal notranslate"><span class="pre">´</span></code> <code class="docutils literal notranslate"><span class="pre">ʹ</span></code> <code class="docutils literal notranslate"><span class="pre">′</span></code> <code class="docutils literal notranslate"><span class="pre">＇</span></code> → <code class="docutils literal notranslate"><span class="pre">'</span></code></p></li>
-<li><p>Ellipsis: <code class="docutils literal notranslate"><span class="pre">...</span></code> <code class="docutils literal notranslate"><span class="pre">.</span> <span class="pre">.</span> <span class="pre">.</span></code> <code class="docutils literal notranslate"><span class="pre">..</span></code> <code class="docutils literal notranslate"><span class="pre">....</span></code> → <code class="docutils literal notranslate"><span class="pre">…</span></code></p></li>
-<li><p>Dashes (when spaced): <code class="docutils literal notranslate"><span class="pre">-</span></code> <code class="docutils literal notranslate"><span class="pre">--</span></code> <code class="docutils literal notranslate"><span class="pre">–</span></code> <code class="docutils literal notranslate"><span class="pre">―</span></code> <code class="docutils literal notranslate"><span class="pre">‒</span></code> <code class="docutils literal notranslate"><span class="pre">−</span></code> → <code class="docutils literal notranslate"><span class="pre">—</span></code></p></li>
-</ul>
-</section>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code> for factory construction. The frontend preserves supplied text
+and token offsets; semantic preparation belongs to the caller.</p>
+<section id="lexicon-controls">
+<h2>Lexicon controls</h2>
+<p><code class="docutils literal notranslate"><span class="pre">load_gold</span></code> and <code class="docutils literal notranslate"><span class="pre">load_silver</span></code> control the shipped dictionary tiers. <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> and
+explicit local model settings control optional POS-aware tokenization. No semantic
+preparation package is imported by this frontend.</p>
 </section>
 </section>
 </div>

@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 

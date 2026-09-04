@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -557,7 +557,8 @@ with:</p>
 </div>
 <section id="behavior">
 <h2>Behavior</h2>
-<p>Thai runs use TLTK with PyThaiNLP segmentation for recovery. Latin runs use the existing
+<p>Thai runs use the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">th:lexhint</span></code> dictionary with dictionary-driven
+segmentation and the existing Thai tone adaptation. Latin runs use the existing
 EnglishG2P lazily, so ordinary phrases such as <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">to</span> <span class="pre">speech</span></code> are pronounced as
 English rather than spelled as Thai letter names. Whitespace and supported punctuation
 remain source-aligned.</p>
@@ -576,14 +577,18 @@ required Thai semantics.</p>
 </section>
 <section id="strictness-and-diagnostics">
 <h2>Strictness and diagnostics</h2>
-<p><code class="docutils literal notranslate"><span class="pre">strict=True</span></code> raises after a lexical Thai unit remains unrecovered or the engine
+<p><code class="docutils literal notranslate"><span class="pre">strict=True</span></code> raises after a lexical Thai unit remains unrecovered or the frontend
 produces an invalid model symbol. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> retains recovered material and places
 diagnostic warnings on the frontend and public <code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code> where available.
-Diagnostics include engine exceptions, empty or truncated output, unrecovered words,
 invalid model symbols, unsupported source symbols, and unrecovered Latin fallback runs.</p>
-<p>TLTK and PyThaiNLP are optional and are loaded only by the Thai frontend. A missing
-installation raises an actionable error recommending <code class="docutils literal notranslate"><span class="pre">kokorog2p[th]</span></code>. The pinned Wayu
-behavior baseline and clean-room deviations are documented in <a class="reference internal" href="../../th/PROVENANCE/"><span class="doc">Thai frontend provenance</span></a>.</p>
+<p>Thai pronunciation data is provisioned through Lexphon and is not downloaded by
+KokoroG2P. Install and verify the released asset before Thai dictionary use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>th:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>th:lexhint
+</pre></div>
+</div>
+<p>The pinned Wayu behavior baseline and clean-room deviations are documented in
+<a class="reference internal" href="../../th/PROVENANCE/"><span class="doc">Thai frontend provenance</span></a>.</p>
 </section>
 </section>
 </div>

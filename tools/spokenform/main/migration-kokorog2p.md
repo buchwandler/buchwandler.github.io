@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -622,7 +622,7 @@ downstream in kokorog2p; the adapter does not claim those categories.</p>
 language orchestration, lexicon lookup, phoneme suffix rules, token IDs, or model
 specific quote/dash behavior into spokenform. French, Spanish, Italian, and
 Portuguese are
-ready for downstream handoff only with the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.12,&lt;0.3.0</span></code>
+ready for downstream handoff only with the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code>
 prerequisite and their real parity gates; package publication remains the release
 workflow boundary. Spanish, Italian, Portuguese, and Czech time ownership is
 intentionally deferred until reviewed time corpora exist. English semantic
@@ -637,6 +637,11 @@ G2P decisions remain downstream-owned.</p>
 <code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>. Low-level mapping and stage helpers remain exported for advanced
 use but are not required for a normal kokorog2p adapter.</p>
+</section>
+<section id="compatibility-cleanup">
+<h2>Compatibility cleanup</h2>
+<p>KokoroG2P’s historical Thai and Korean normalizer modules are compatibility adapters only. Their semantic number, counter, unit, currency, and time behavior delegates to Spokenform. Prepared-input G2P paths bypass these adapters and perform pronunciation, tokenization, and model sanitation only.</p>
+<p>The semantic transfer manifest at <code class="docutils literal notranslate"><span class="pre">tests/data/kokorog2p_semantic_transfer_manifest.json</span></code> records the source test or fixture, its classification, and its permanent Spokenform destination. The refreshed KokoroG2P oracle baseline resolves product aliases before calling Spokenform.</p>
 </section>
 </section>
 </div>

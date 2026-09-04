@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/korean/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,33 +542,24 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="korean-api">
 <h1>Korean API</h1>
-<p>Korean G2P provides phoneme conversion using MeCab for morphological analysis and custom
-phonological rules based on Korean Standard Pronunciation.</p>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="examples">
-<h2>Examples</h2>
+<p>KoreanG2P applies g2pK phonological rules and optional morphology to prepared Korean
+text. It does not convert Arabic numerals, Latin words, abbreviations, units, or
+currencies. Those semantics must be prepared before calling the frontend.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ko</span><span class="w"> </span><span class="kn">import</span> <span class="n">KoreanG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">KoreanG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;ko-kr&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;안녕하세요!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">KoreanG2P</span><span class="p">(</span><span class="n">use_dict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;안녕하세요&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-<section id="implementation">
-<h2>Implementation</h2>
-<p>The Korean G2P implementation is based on g2pK by kyubyong and uses:</p>
-<ul class="simple">
-<li><p>MeCab for morphological analysis</p></li>
-<li><p>Korean Standard Pronunciation rules</p></li>
-<li><p>Jamo-to-IPA conversion for phoneme output</p></li>
-</ul>
-<p>Reference: <a class="reference external" href="https://github.com/kyubyong/g2pK">https://github.com/kyubyong/g2pK</a></p>
-</section>
+<p>Install <code class="docutils literal notranslate"><span class="pre">kokorog2p[ko-mecab]</span></code> only when morphology/POS analysis is required. The core
+Korean frontend has no Spokenform or semantic-preparation dependency.</p>
+<p>The default isolated-word fast path consults provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">ko:lexhint</span></code> data
+before falling back to sentence-level g2pK rules. Korean LexHint data is not bundled or
+downloaded by KokoroG2P:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ko:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ko:lexhint
+</pre></div>
+</div>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

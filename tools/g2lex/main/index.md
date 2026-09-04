@@ -6,7 +6,7 @@ nav_tool: g2lex-main
 docs_project: "g2lex"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "23276d2297b354bbb470e1ba6847ffe5fd409ce8"
+docs_commit: "1dea948ed9e7d35587d4ce2b2641772642b52210"
 search_enabled: true
 ---
 
@@ -587,10 +587,14 @@ alignment, and other speech systems that need large read-only dictionaries.</p>
 <li class="toctree-l1"><a class="reference internal" href="experimental-reduction/">Experimental reduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="benchmarking/">Benchmarking</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-8-unreleased">[v0.1.8] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-7-2026-08-30">[v0.1.7] - 2026-08-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-6-unreleased">[v0.1.6] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-5-unreleased">[v0.1.5] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-6-2026-08-30">[v0.1.6] - 2026-08-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-5-2026-08-29">[v0.1.5] - 2026-08-29</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-4-2026-08-29">[v0.1.4] - 2026-08-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.3] - 2026-08-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.1.2] - 2026-08-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.1.1] - 2026-08-28</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-0-2026-08-28">[v0.1.0] - 2026-08-28</a></li>
 </ul>
 </li>

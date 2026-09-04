@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,46 +542,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="french-api">
 <h1>French API</h1>
-<p>French G2P provides phoneme conversion using a gold dictionary with espeak-ng fallback.</p>
-<p>French semantic preparation runs through the released shared stack:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>abbr2words -&gt; French abbreviation/symbol recognition
-spokenform -&gt; French semantic written-to-spoken preparation
-kokorog2p  -&gt; French G2P, tokenization, and phonemes
-</pre></div>
-</div>
-<p>The span pipeline prepares each homogeneous French run once and rebases the exact source
-replacements to document offsets. French typography, tokenization, lexicon lookup,
-fallback, and phoneme conversion remain local to kokorog2p. The number helper functions
-below are retained for compatibility and are deprecated; new code should call
-<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> directly.</p>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="lexicon">
-<h2>Lexicon</h2>
-</section>
-<section id="number-conversion">
-<h2>Number Conversion</h2>
-<p>The public helper functions are deprecated compatibility wrappers around the released
-<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> implementation. <code class="docutils literal notranslate"><span class="pre">FrenchG2P(expand_nums=False)</span></code> selects the upstream
-no-number-expansion policy, so ordinary written numbers and structured expressions
-remain written rather than being silently expanded.</p>
-<section id="helper-functions">
-<h3>Helper Functions</h3>
-</section>
-</section>
-<section id="examples">
-<h2>Examples</h2>
+<p>The French frontend phonemizes prepared French text using its dictionary and optional
+spaCy/espeak controls. Numbers, currencies, dates, units, and abbreviations are not
+expanded by KokoroG2P.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.fr</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrenchG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">FrenchG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr-fr&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">FrenchG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
+<p>Semantic preparation and language segmentation belong to the caller. The frontend keeps
+prepared source text and offsets stable.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

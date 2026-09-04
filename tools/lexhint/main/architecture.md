@@ -6,7 +6,7 @@ nav_tool: lexhint-main
 docs_project: "lexhint"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "fc3b2c85cacd49c7d9ade5145f81b2ca7aded755"
+docs_commit: "d0ba51271aaa45e310689bce18df35cfd7687f7c"
 search_enabled: true
 ---
 
@@ -739,6 +739,8 @@ Corpus frequency enrichment ────&gt; lexhint ──&gt; lexical ranking 
 <section id="provenance-and-data-lifecycle">
 <h2>Provenance and data lifecycle</h2>
 <p>Metadata records <code class="docutils literal notranslate"><span class="pre">dictionary_source</span></code>, <code class="docutils literal notranslate"><span class="pre">dictionary_source_sha256</span></code>, <code class="docutils literal notranslate"><span class="pre">dictionary_source_format</span></code>, <code class="docutils literal notranslate"><span class="pre">dictionary_source_contract</span></code>, <code class="docutils literal notranslate"><span class="pre">frequency_source</span></code>, and <code class="docutils literal notranslate"><span class="pre">frequency_source_sha256</span></code>, alongside profile, capabilities, creation time, and builder version. Remote dictionary input is hashed while streamed. Automatic FrequencyWords sources are cached by pinned revision and language, validated against an atomic SHA-256 sidecar, and downloaded through temporary files followed by atomic rename.</p>
+<p>The static dataset catalog is a small validated cache under the platform cache directory or <code class="docutils literal notranslate"><span class="pre">LEXHINT_CACHE_DIR</span></code>. Networked dataset operations send conditional refresh metadata and atomically replace catalog bytes only after schema and artifact validation. Transport failures reuse a valid cache, while malformed reachable catalogs remain errors. Offline <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">available</span></code> and <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">check</span></code> use cached catalog data; dataset installation and update remain networked operations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">available</span></code> exposes all catalog artifacts compatible with the running SQLite schema, including historical versions. <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">check</span></code> compares the newest compatible artifact with every selected installed language and variant. <code class="docutils literal notranslate"><span class="pre">dataset</span> <span class="pre">update</span></code> processes all installed slots by default, installs and validates replacements atomically, and removes superseded versions only after successful installation. Lexicon construction and ordinary query operations remain local-only.</p>
 </section>
 <section id="relation-decision-evidence">
 <h2>Relation decision evidence</h2>

@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,47 +542,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="german-api">
 <h1>German API</h1>
-<p>German G2P provides phoneme conversion using a large 738k+ entry dictionary with
-rule-based fallback.</p>
-<p>German semantic normalization is provided by <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> and runs once per homogeneous
-language run before token-local G2P processing. In the public default span pipeline,
-spokenform source replacements are rebased to original document offsets and merged into
-semantic token spans before token-local expansion. This keeps numeric context intact for
-grouped numbers (<code class="docutils literal notranslate"><span class="pre">1.000</span></code>), decimals (<code class="docutils literal notranslate"><span class="pre">3,14</span></code>), EUR amounts, dates, times, temperatures,
-ordinals, and numbered units with singular/plural agreement, including when the backend
-has no language-owned normalizer. Unit symbols are context bound: <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">kg</span></code> becomes
-<code class="docutils literal notranslate"><span class="pre">zwei</span> <span class="pre">Kilogramm</span></code>, while a standalone <code class="docutils literal notranslate"><span class="pre">kg</span></code> is preserved. Dotted numeric aliases such as
-<code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">ltr.</span></code> and <code class="docutils literal notranslate"><span class="pre">45</span> <span class="pre">Min.</span></code> are consumed as part of the semantic span, so their periods are
-not treated as independent sentence punctuation. <code class="docutils literal notranslate"><span class="pre">Min.</span></code> is intentionally numeric-only:
-standalone <code class="docutils literal notranslate"><span class="pre">Min.</span> <span class="pre">Beispiel</span></code> remains unchanged, while <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">Min.</span></code> becomes <code class="docutils literal notranslate"><span class="pre">eine</span> <span class="pre">Minute</span></code>.
-Invalid dates/times and ambiguous punctuation are left unchanged. Flexible <code class="docutils literal notranslate"><span class="pre">z.B.</span></code>,
-<code class="docutils literal notranslate"><span class="pre">d.h.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.a.</span></code> spellings are supported through the Spokenform 0.3.1-compatible and
-abbr2words profiles. Accepted semantic replacements are not rewritten by kokorog2p; only
-German G2P typography remains local.</p>
-<p><code class="docutils literal notranslate"><span class="pre">GermanNormalizer</span></code> remains available as a compatibility facade for direct callers. Its
-semantic result is backed by spokenform, while G2P-specific German typography remains
-local. Abbreviation customization continues to use the shared <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> registry.</p>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="lexicon">
-<h2>Lexicon</h2>
-</section>
-<section id="number-conversion">
-<h2>Number Conversion</h2>
-</section>
-<section id="examples">
-<h2>Examples</h2>
+<p>The German frontend provides dictionary and phonological G2P for prepared German text.
+Written numbers, units, currencies, dates, and abbreviations must be prepared by the
+caller; this package does not expand them.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">GermanG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">GermanG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;de-de&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Guten Tag, wie geht es Ihnen?&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">GermanG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;de&quot;)</span></code> for factory construction. Intrinsic German phonological rules and
+optional backend selection remain available.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

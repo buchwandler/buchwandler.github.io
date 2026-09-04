@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/utils/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -549,6 +549,77 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="fallback-handling">
 <h2>Fallback Handling</h2>
 <p>The fallback module provides functionality for handling out-of-vocabulary words:</p>
+<p id="module-kokorog2p.en.fallback">Fallback options for OOV words with IPA to Kokoro conversion.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.EspeakFallback">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.en.fallback.</span></span><span class="sig-name descname"><span class="pre">EspeakFallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/en/fallback/#EspeakFallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FallbackBase</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">EspeakBackend</span></code>]</p>
+<p>Fallback G2P using espeak-ng with Kokoro phoneme conversion.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.EspeakFallback.install_hint">
+<span class="sig-name descname"><span class="pre">install_hint</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Check</span> <span class="pre">that</span> <span class="pre">espeak-ng</span> <span class="pre">is</span> <span class="pre">properly</span> <span class="pre">installed.'</span></span></dt>
+<dd><p>Extra hint appended to backend-init error logs (RuntimeError).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.EspeakFallback.backend_word_kokoro">
+<span class="sig-name descname"><span class="pre">backend_word_kokoro</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span></dt>
+<dd><p>If True, pass convert_to_kokoro=True into backend.word_phonemes().</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.EspeakFallback.backend_text_kokoro">
+<span class="sig-name descname"><span class="pre">backend_text_kokoro</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span></dt>
+<dd><p>If True, pass convert_to_kokoro=True into backend.phonemize().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.EspeakFallback.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_cli</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/en/fallback/#EspeakFallback.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the espeak fallback.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>british: Whether to use British English.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.GoruutFallback">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">kokorog2p.en.fallback.</span></span><span class="sig-name descname"><span class="pre">GoruutFallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/kokorog2p/en/fallback/#GoruutFallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">FallbackBase</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">GoruutBackend</span></code>]</p>
+<p>Fallback G2P using goruut with Kokoro phoneme conversion.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.GoruutFallback.install_hint">
+<span class="sig-name descname"><span class="pre">install_hint</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'Check</span> <span class="pre">that</span> <span class="pre">pygoruut</span> <span class="pre">is</span> <span class="pre">properly</span> <span class="pre">installed.'</span></span></dt>
+<dd><p>Extra hint appended to backend-init error logs (RuntimeError).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.GoruutFallback.backend_word_kokoro">
+<span class="sig-name descname"><span class="pre">backend_word_kokoro</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">False</span></span></dt>
+<dd><p>If True, pass convert_to_kokoro=True into backend.word_phonemes().</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.GoruutFallback.backend_text_kokoro">
+<span class="sig-name descname"><span class="pre">backend_text_kokoro</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">True</span></span></dt>
+<dd><p>If True, pass convert_to_kokoro=True into backend.phonemize().</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="kokorog2p.en.fallback.GoruutFallback.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">british</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../../_modules/kokorog2p/en/fallback/#GoruutFallback.__init__"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Initialize the goruut fallback.</p>
+<dl class="simple">
+<dt>Args:</dt><dd><p>british: Whether to use British English.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="internal-utilities">
 <h2>Internal Utilities</h2>

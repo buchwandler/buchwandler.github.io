@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -543,37 +543,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="advanced-usage">
 <h1>Advanced Usage</h1>
 <p>This guide covers advanced features and usage patterns for kokorog2p.</p>
-<section id="semantic-preparation-boundary">
-<h2>Semantic preparation boundary</h2>
-<p>For migrated English, German, French, Spanish, Italian, Portuguese, and Czech text,
-<code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> supplies lexical abbreviation and symbol recognition, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns
-semantic written-to-spoken preparation, and <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> owns routing, spans, overrides,
-tokenization, model punctuation, G2P, phonemes, and vocabulary IDs. The ordering is
-explicit:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>original source spans → Spokenform semantic preparation → model punctuation cleanup → G2P
-</pre></div>
-</div>
-<p>Preparation runs separately for each homogeneous language run, with caller-protected
-ranges passed to Spokenform first. The supported Spokenform profile is authoritative;
-the examples covered by downstream tests are representative, not an exhaustive semantic
-category list. English phoneme-sensitive number conversion, Spanish dialect behavior,
-and other documented G2P decisions remain downstream-owned. Use <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> directly
-for reusable spoken text or <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> directly for registry-only workflows.</p>
-<p>Countdown example:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source:
-  Initiate in 3-2-1.
-
-Spokenform semantic preparation:
-  Initiate in three - two - one.
-
-KokoroG2P model punctuation:
-  Initiate in three — two — one.
-</pre></div>
-</div>
-<p>An accepted structured replacement may preserve a model-neutral punctuation boundary
-when that boundary carries grouping or cadence. KokoroG2P does not re-recognize the
-semantic category; it only maps that generic boundary to punctuation supported by the
-Kokoro model.</p>
+<section id="prepared-text-boundary">
+<h2>Prepared text boundary</h2>
+<p>Semantic preparation is outside KokoroG2P. Prepare written forms in the owning
+application or an optional cross-package tool, then pass the result to
+<code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>. Core normalizers may apply only intrinsic typography and
+phonological normalization.</p>
 </section>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>
@@ -788,19 +763,26 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <span class="n">phonemes_past</span> <span class="o">=</span> <span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VBD&quot;</span><span class="p">)</span>  <span class="c1"># ɹˈɛd (past)</span>
 </pre></div>
 </div>
+</section>
 <section id="german-lexicon">
-<h3>German Lexicon</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">GermanLexicon</span>
-
-<span class="n">lexicon</span> <span class="o">=</span> <span class="n">GermanLexicon</span><span class="p">(</span><span class="n">strip_stress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;Haus&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># haʊ̯s</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Dictionary has </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">lexicon</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> entries&quot;</span><span class="p">)</span>  <span class="c1"># 738,427</span>
+<h2>German Lexicon</h2>
+<p>German dictionaries are externally managed by <code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code> and installed explicitly
+through Lexphon. KokoroG2P does not bundle or download German dictionary data.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[de]&quot;</span>
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
 </pre></div>
 </div>
-</section>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
+
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">))</span>
+</pre></div>
+</div>
+<p>The runtime uses the installed local store without network access. Install
+<code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code>, or <code class="docutils literal notranslate"><span class="pre">de-de:olaph</span></code> before selecting those names.
+<code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code> selects the static Lexphon dictionary and is distinct from
+<code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>. Use <code class="docutils literal notranslate"><span class="pre">use_lexicon=False</span></code> for fallback-only operation.</p>
 </section>
 <section id="phoneme-utilities">
 <h2>Phoneme Utilities</h2>
@@ -1064,61 +1046,11 @@ output</p></li>
 </pre></div>
 </div>
 </section>
-<section id="number-expansion">
-<h2>Number Expansion</h2>
-<p>Customize number handling:</p>
-<section id="english">
-<h3>English</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en.numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishNumberConverter</span>
-
-<span class="n">converter</span> <span class="o">=</span> <span class="n">EnglishNumberConverter</span><span class="p">()</span>
-
-<span class="c1"># Cardinals</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_cardinal</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">))</span>
-<span class="c1"># → forty-two</span>
-
-<span class="c1"># Ordinals</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_ordinal</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">))</span>
-<span class="c1"># → forty-second</span>
-
-<span class="c1"># Years</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_year</span><span class="p">(</span><span class="s2">&quot;1984&quot;</span><span class="p">))</span>
-<span class="c1"># → nineteen eighty-four</span>
-
-<span class="c1"># Currency</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_currency</span><span class="p">(</span><span class="s2">&quot;12.50&quot;</span><span class="p">,</span> <span class="s2">&quot;$&quot;</span><span class="p">))</span>
-<span class="c1"># → twelve dollars and fifty cents</span>
-
-<span class="c1"># Decimals</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_decimal</span><span class="p">(</span><span class="s2">&quot;3.14&quot;</span><span class="p">))</span>
-<span class="c1"># → three point one four</span>
-</pre></div>
-</div>
-</section>
-<section id="german">
-<h3>German</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.de.numbers</span><span class="w"> </span><span class="kn">import</span> <span class="n">GermanNumberConverter</span>
-
-<span class="n">converter</span> <span class="o">=</span> <span class="n">GermanNumberConverter</span><span class="p">()</span>
-
-<span class="c1"># Cardinals</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_cardinal</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">))</span>
-<span class="c1"># → zweiundvierzig</span>
-
-<span class="c1"># Ordinals</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_ordinal</span><span class="p">(</span><span class="s2">&quot;42&quot;</span><span class="p">))</span>
-<span class="c1"># → zweiundvierzigste</span>
-
-<span class="c1"># Years</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_year</span><span class="p">(</span><span class="s2">&quot;1984&quot;</span><span class="p">))</span>
-<span class="c1"># → neunzehnhundertvierundachtzig</span>
-
-<span class="c1"># Currency</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">converter</span><span class="o">.</span><span class="n">convert_currency</span><span class="p">(</span><span class="s2">&quot;12,50&quot;</span><span class="p">,</span> <span class="s2">&quot;€&quot;</span><span class="p">))</span>
-<span class="c1"># → zwölf Euro fünfzig</span>
-</pre></div>
-</div>
-</section>
+<section id="semantic-preparation">
+<h2>Semantic preparation</h2>
+<p>Number, currency, date, abbreviation, and unit expansion are not configurable G2P
+features. Prepare these forms before calling <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>; the core preserves
+the supplied text and applies only phonological/model normalization.</p>
 </section>
 <section id="custom-backend-selection">
 <h2>Custom Backend Selection</h2>
@@ -1211,71 +1143,11 @@ output</p></li>
 </pre></div>
 </div>
 </section>
-<section id="multilang-preprocessing">
-<h2>Multilang Preprocessing</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">preprocess_multilang</span></code> to get language override spans for mixed-language text. This
-integrates with the span-based phonemization API.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, mein Freund! Bonjour!&quot;</span>
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">],</span>
-    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.6</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="confidence-tuning">
-<h3>Confidence Tuning</h3>
-<p>Adjust detection sensitivity based on your use case:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Das Meeting ist wichtig&quot;</span>
-
-<span class="n">conservative</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
-    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">aggressive</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
-    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="integration-with-span-api">
-<h3>Integration with Span API</h3>
-<p>Combine language detection with other span overrides:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span><span class="p">,</span> <span class="n">OverrideSpan</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Das Meeting ist wichtig&quot;</span>
-
-<span class="c1"># Get language overrides</span>
-<span class="n">lang_overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-
-<span class="c1"># Add custom phoneme override</span>
-<span class="n">all_overrides</span> <span class="o">=</span> <span class="n">lang_overrides</span> <span class="o">+</span> <span class="p">[</span>
-    <span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">11</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;ph&quot;</span><span class="p">:</span> <span class="s2">&quot;ˈmiːtɪŋ&quot;</span><span class="p">})</span>  <span class="c1"># Custom pronunciation for &quot;Meeting&quot;</span>
-<span class="p">]</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">all_overrides</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
+<section id="explicit-language-spans">
+<h2>Explicit language spans</h2>
+<p>For mixed-language documents, the application must identify foreign spans and supply
+their language explicitly. Use <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> or annotation <code class="docutils literal notranslate"><span class="pre">language</span></code> metadata with the
+prepared text. KokoroG2P does not provide generic language detection or segmentation.</p>
 </section>
 <section id="error-handling">
 <h2>Error Handling</h2>
@@ -1409,9 +1281,23 @@ use <strong>lenient mode</strong> (<code class="docutils literal notranslate"><s
 <h2>Next Steps</h2>
 <ul class="simple">
 <li><p>See <a class="reference internal" href="../api/core/"><span class="doc">Core API</span></a> for detailed API reference</p></li>
-<li><p>Check <a class="reference internal" href="../languages/"><span class="doc">Language Support</span></a> for language-specific features</p></li>
+<li><p>Check <a class="reference internal" href="../languages/"><span class="doc">Language support</span></a> for language-specific features</p></li>
 <li><p>Read <a class="reference internal" href="../phonemes/"><span class="doc">Phoneme Inventory</span></a> to understand the phoneme inventory</p></li>
 </ul>
+</section>
+<section id="selecting-named-lexicons">
+<h2>Selecting named lexicons</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">available_lexicons(language)</span></code> to inspect registered names and pass <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> to
+<code class="docutils literal notranslate"><span class="pre">get_g2p</span></code> or <code class="docutils literal notranslate"><span class="pre">phonemize</span></code>. A sequence is an ordered precedence stack, so
+<code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;silver&quot;)</span></code> retains the compatibility default. The legacy <code class="docutils literal notranslate"><span class="pre">load_gold</span></code> and
+<code class="docutils literal notranslate"><span class="pre">load_silver</span></code> flags remain supported.</p>
+<p>For German, <code class="docutils literal notranslate"><span class="pre">available_lexicons(&quot;de&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;crane&quot;,</span> <span class="pre">&quot;espeak&quot;,</span> <span class="pre">&quot;olaph&quot;)</span></code>.
+<code class="docutils literal notranslate"><span class="pre">gold</span></code> remains the implicit default; all three third-party dictionaries are opt-in.
+Explicit order controls collisions, German casing candidates are searched inside each
+layer, and all runtime pronunciation selection is offline. <code class="docutils literal notranslate"><span class="pre">espeak</span></code> is a bundled static
+lexicon and is distinct from the optional <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> backend.
+Unsupported source IPA fails closed and may fall through to configured fallback. See
+<a class="reference internal" href="../api/german/"><span class="doc">German API</span></a> for provenance and examples.</p>
 </section>
 </section>
 </div>

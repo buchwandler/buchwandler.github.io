@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/quickstart/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,326 +542,75 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="quick-start">
 <h1>Quick Start</h1>
-<p>This guide will help you get started with kokorog2p quickly.</p>
+<p>KokoroG2P converts prepared, speakable text to Kokoro phonemes. It does not verbalize
+numbers, abbreviations, units, dates, currencies, URLs, or other written semantics.
+Prepare those forms in the application layer (for example with Spokenform), then pass
+the resulting text to <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>.</p>
 <section id="basic-usage">
-<h2>Basic Usage</h2>
-<p>The simplest way to use kokorog2p is with the <code class="docutils literal notranslate"><span class="pre">phonemize()</span></code> function:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+<h2>Basic usage</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="c1"># Convert text to phonemes</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">phonemes</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># hˈɛlO wˈɜɹld!</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">phonemize()</span></code> is the compatibility spelling for the same prepared-text operation. The
+input text is preserved as the coordinate space for tokens and offsets.</p>
 </section>
-<section id="error-handling">
-<h2>Error Handling</h2>
-<p>By default, kokorog2p raises clear errors when backends fail (v0.4.0+):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
+<section id="explicit-languages">
+<h2>Explicit languages</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="c1"># Strict mode (default) - raises errors</span>
-<span class="k">try</span><span class="p">:</span>
-    <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">)</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="c1"># Will show helpful message if espeak-ng is not installed</span>
-
-<span class="c1"># Lenient mode - returns empty strings on errors (backward compatible)</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">)</span>  <span class="c1"># Returns empty strings if backend fails</span>
+<span class="k">for</span> <span class="n">text</span><span class="p">,</span> <span class="n">language</span> <span class="ow">in</span> <span class="p">[</span>
+    <span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">&quot;안녕하세요&quot;</span><span class="p">,</span> <span class="s2">&quot;ko&quot;</span><span class="p">),</span>
+<span class="p">]:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">phonemize_prepared</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="n">language</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For more details, see <a class="reference internal" href="../advanced/"><span class="doc">Advanced Usage</span></a>.</p>
+<p>Language selection is explicit. For a foreign span, supply an <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> or
+annotation language metadata; automatic document-language detection is outside the core
+package.</p>
 </section>
-<section id="specifying-language">
-<h2>Specifying Language</h2>
-<p>You can specify the language explicitly:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
+<section id="prepare-semantics-outside-the-core">
+<h2>Prepare semantics outside the core</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_kokorog2p</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="c1"># US English (default)</span>
-<span class="n">us_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
+<span class="n">prepared</span> <span class="o">=</span> <span class="n">prepare_for_kokorog2p</span><span class="p">(</span><span class="s2">&quot;Meet Dr. Smith at 2 kg.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="n">prepared</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The optional preparation package is not a KokoroG2P runtime dependency. A minimal core
+installation works without it.</p>
+</section>
+<section id="linguistic-annotations">
+<h2>Linguistic annotations</h2>
+<p>Applications may provide already-computed token metadata without installing a parser:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenAnnotation</span><span class="p">,</span> <span class="n">phonemize_prepared</span>
 
-<span class="c1"># British English</span>
-<span class="n">gb_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-
-<span class="c1"># German</span>
-<span class="n">de_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-
-<span class="c1"># French</span>
-<span class="n">fr_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-
-<span class="c1"># Czech</span>
-<span class="n">cs_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Dobrý den&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
-
-<span class="c1"># Mixed-language (German with English words)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Das Meeting war great!&quot;</span>
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
+<span class="n">annotations</span> <span class="o">=</span> <span class="p">[</span><span class="n">TokenAnnotation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="s2">&quot;record&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;NOUN&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;NN&quot;</span><span class="p">)]</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;record this record&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">annotations</span><span class="o">=</span><span class="n">annotations</span>
 <span class="p">)</span>
-<span class="n">mixed_phonemes</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span>
-<span class="p">)</span><span class="o">.</span><span class="n">phonemes</span>
 </pre></div>
 </div>
+<p>Annotation offsets are half-open, ordered, non-overlapping, and relative to the supplied
+prepared text. See <a class="reference internal" href="../spans/"><span class="std std-doc">the span guide</span></a> for explicit overrides and offsets.</p>
 </section>
-<section id="using-g2p-instances">
-<h2>Using G2P Instances</h2>
-<p>For more control, create a G2P instance:</p>
+<section id="g2p-instances">
+<h2>G2P instances</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
-<span class="c1"># Get a G2P instance for US English</span>
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="c1"># Convert text</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;The quick brown fox jumps over the lazy dog.&quot;</span><span class="p">)</span>
-
-<span class="c1"># Access individual tokens</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">:</span><span class="s2">15</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;The quick brown fox&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>The             → ðə
-quick           → kwˈɪk
-brown           → bɹˈaʊn
-fox             → fˈɑks
-jumps           → dʒˈʌmps
-over            → ˈOvɚ
-the             → ðə
-lazy            → lˈeɪzi
-dog             → dˈɔɡ
-.               → .
-</pre></div>
-</div>
-</section>
-<section id="language-specific-g2p">
-<h2>Language-Specific G2P</h2>
-<p>You can also import language-specific G2P classes:</p>
-<section id="english">
-<h3>English</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># explicit; auto selection is the default when enabled</span>
-<span class="p">)</span>
-
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;I can&#39;t believe it!&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2"> (tag: </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
-
-<span class="c1"># Optional: choose an exact model; omitted model selects the highest installed loadable tier</span>
-<span class="n">g2p_auto</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">g2p_small</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_sm&quot;</span><span class="p">)</span>
-<span class="n">g2p_large</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_lg&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="german">
-<h3>German</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.de</span><span class="w"> </span><span class="kn">import</span> <span class="n">GermanG2P</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">GermanG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de-de&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Wie geht es Ihnen?&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="french">
-<h3>French</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.fr</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrenchG2P</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">FrenchG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;fr-fr&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
-
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Comment allez-vous?&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="czech">
-<h3>Czech</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.cs</span><span class="w"> </span><span class="kn">import</span> <span class="n">CzechG2P</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">CzechG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;cs-cz&quot;</span><span class="p">)</span>
-
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Jak se máte?&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="mixed-language">
-<h3>Mixed-Language</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Das Meeting war great!&quot;</span>
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> (</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">lang</span><span class="si">}</span><span class="s2">) → </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Das (de) → das
-Meeting (en-us) → mˈiɾɪŋ
-war (de) → vaːɐ̯
-great (en-us) → ɡɹˈeɪt
-</pre></div>
-</div>
-</section>
-</section>
-<section id="working-with-tokens">
-<h2>Working with Tokens</h2>
-<p>Tokens contain rich information:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
-
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;I love reading!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text:      </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phonemes:  </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;POS tag:   </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">tag</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Rating:    </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;rating&#39;</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Whitespace: &#39;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">whitespace</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;---&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Output:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Text:      I
-Phonemes:  ˈaɪ
-POS tag:   PRP
-Rating:    5
-Whitespace: &#39; &#39;
----
-Text:      love
-Phonemes:  lˈʌv
-POS tag:   VBP
-Rating:    5
-Whitespace: &#39; &#39;
----
-</pre></div>
-</div>
-</section>
-<section id="number-handling">
-<h2>Number Handling</h2>
-<p>kokorog2p automatically handles numbers:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-
-<span class="c1"># Numbers</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;I have 42 apples.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
-<span class="c1"># → aɪ hæv fˈOɹti tˈu ˈæpəlz.</span>
-
-<span class="c1"># Currency</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;It costs $12.50&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
-<span class="c1"># → ɪt kˈɑsts twˈɛlv dˈɑlɚz ænd fˈɪfti sˈɛnts</span>
-
-<span class="c1"># German numbers</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Ich habe 42 Äpfel.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">))</span>
-<span class="c1"># → ɪç haːbə t͡svaɪ̯ʊntfɪɐ̯t͡sɪç ɛːpfl̩.</span>
-</pre></div>
-</div>
-</section>
-<section id="choosing-backends">
-<h2>Choosing Backends</h2>
-<p>You can choose different phonemization backends:</p>
-<section id="espeak-backend-default">
-<h3>espeak Backend (Default)</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-
-<span class="c1"># Uses espeak-ng for fallback</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="goruut-backend">
-<h3>goruut Backend</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-
-<span class="c1"># Uses goruut (if installed)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;goruut&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="disabling-fallback">
-<h2>Disabling Fallback</h2>
-<p>You can disable fallback for out-of-vocabulary words:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
-
-<span class="c1"># No fallback - unknown words will have empty phonemes</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;xyznotaword&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">tokens</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># Will be empty or &quot;?&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="performance-tips">
-<h2>Performance Tips</h2>
-<ol class="arabic">
-<li><p><strong>Reuse G2P instances</strong>: Creating instances is expensive</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Good: Reuse the same instance</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-<span class="c1"># Bad: Create new instance each time</span>
-<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">texts</span><span class="p">:</span>
-    <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>  <span class="c1"># Slow!</span>
-    <span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-<li><p><strong>Use caching</strong>: G2P instances are cached by default</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># These return the same cached instance</span>
-<span class="n">g2p1</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="n">g2p2</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="n">g2p2</span>
-</pre></div>
-</div>
-</li>
-<li><p><strong>Clear cache when needed</strong>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">clear_cache</span>
-
-<span class="c1"># Clear all cached instances</span>
-<span class="n">clear_cache</span><span class="p">()</span>
-</pre></div>
-</div>
-</li>
-</ol>
-</section>
-<section id="next-steps">
-<h2>Next Steps</h2>
-<ul class="simple">
-<li><p>Learn about <a class="reference internal" href="../languages/"><span class="doc">Language Support</span></a> for language-specific features</p></li>
-<li><p>See <a class="reference internal" href="../advanced/"><span class="doc">Advanced Usage</span></a> for advanced usage patterns</p></li>
-<li><p>Check the <a class="reference internal" href="../api/core/"><span class="doc">Core API</span></a> for detailed API documentation</p></li>
-</ul>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> for backend-specific controls. Semantic preparation flags and
+abbreviation registries are intentionally not part of the v0.9 API.</p>
 </section>
 </section>
 </div>

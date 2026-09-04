@@ -5,8 +5,8 @@ permalink: /tools/ssmd/cli/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.4"
-docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
+docs_ref: "v0.8.6"
+docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
 search_enabled: true
 ---
 

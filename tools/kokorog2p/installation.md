@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/installation/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,240 +542,73 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation">
 <h1>Installation</h1>
-<p>kokorog2p can be installed with different feature sets depending on your needs.</p>
-<section id="basic-installation">
-<h2>Basic Installation</h2>
-<p>The core package has minimal dependencies:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
+<p>Install the core package for the prepared-text G2P pipeline:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
 </pre></div>
 </div>
-<p>The core install includes runtime dependencies <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.9,&lt;0.3.0</span></code> and
-<code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.3.1,&lt;0.4.0</span></code>. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns abbreviation recognition and
-customization, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> owns reusable written-to-spoken semantic preparation and is
-authoritative after accepting a source span, while kokorog2p remains the G2P and phoneme
-layer. The declared dependency floor guarantees the released Spokenform 0.3.1 behavior
-used by this package.</p>
-<p>This gives you:</p>
-<ul class="simple">
-<li><p>Core G2P functionality</p></li>
-<li><p>Basic phoneme conversion</p></li>
-<li><p>German, Czech support (rule-based)</p></li>
-<li><p>Number handling</p></li>
-</ul>
-</section>
-<section id="with-language-support">
-<h2>With Language Support</h2>
-<section id="english-with-spacy">
-<h3>English (with spaCy)</h3>
-<p>For full English support with POS tagging and advanced tokenization:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>en<span class="o">]</span>
+<p>The core package does not install or import a semantic text-preparation package. Written
+numbers, abbreviations, units, currencies, dates, URLs, and similar forms must be
+prepared by the calling application before phonemization.</p>
+<section id="language-extras">
+<h2>Language extras</h2>
+<p>Language and backend integrations are optional extras:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[en]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[de]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[fr]&quot;</span>
+
+German<span class="w"> </span>pronunciation<span class="w"> </span>dictionaries<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>bundled<span class="w"> </span>with<span class="w"> </span>KokoroG2P.<span class="w"> </span>Install<span class="w"> </span>the<span class="w"> </span>default<span class="w"> </span>data<span class="w"> </span>explicitly<span class="w"> </span>through<span class="w"> </span>Lexphon:
+
+<span class="sb">```</span>bash
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
 </pre></div>
 </div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>spaCy runtime support (models are installed separately and never downloaded by
-kokorog2p)</p></li>
-<li><p>US and GB dictionaries (gold/silver tiers)</p></li>
-<li><p>Context-dependent pronunciation</p></li>
-<li><p>Number and currency expansion</p></li>
-</ul>
-<p>With <code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code>, English and French try the highest installed and loadable local
-model in <code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code> order, then fall back to native tokenization when no model
-is available. <code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>, <code class="docutils literal notranslate"><span class="pre">spacy_model=...</span></code>, and <code class="docutils literal notranslate"><span class="pre">spacy_model_size=&quot;md&quot;</span></code> are
-strict requests and raise if the requested model is unavailable. No mode downloads
-models.</p>
-</section>
-<section id="french">
-<h3>French</h3>
-<p>For French support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>fr<span class="o">]</span>
-</pre></div>
-</div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>French gold dictionary</p></li>
-<li><p>espeak-ng fallback</p></li>
-<li><p>Number and currency handling</p></li>
-</ul>
-</section>
-<section id="chinese">
-<h3>Chinese</h3>
-<p>For Chinese support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>zh<span class="o">]</span>
-</pre></div>
-</div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>jieba for tokenization</p></li>
-<li><p>pypinyin for pinyin conversion</p></li>
-<li><p>cn2an for number handling</p></li>
-<li><p>Tone sandhi rules</p></li>
-</ul>
-</section>
-<section id="japanese">
-<h3>Japanese</h3>
-<p>For Japanese support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>ja<span class="o">]</span>
-</pre></div>
-</div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>pyopenjtalk for text analysis</p></li>
-<li><p>Cutlet for romanization</p></li>
-<li><p>Mora-based phoneme generation</p></li>
-</ul>
-</section>
-<section id="mixed-language-detection">
-<h3>Mixed-Language Detection</h3>
-<p>For automatic language detection in mixed-language texts:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>mixed<span class="o">]</span>
-</pre></div>
-</div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>lingua-language-detector for high-accuracy detection</p></li>
-<li><p>Automatic routing to appropriate G2P engines</p></li>
-<li><p>Support for 17+ languages</p></li>
-<li><p>Caching for performance</p></li>
-</ul>
-</section>
-<section id="ssmd-and-phrasplit-integration">
-<h3>SSMD and phrasplit integration</h3>
-<p>The integration adapters are dependency-free. Install the upstream packages only when
-your application needs them, and use <code class="docutils literal notranslate"><span class="pre">overrides_from_ssmd()</span></code> plus
-<code class="docutils literal notranslate"><span class="pre">overrides_for_segment()</span></code> to keep document-level clean-text offsets aligned with each
-sentence. The compatibility test targets are phrasplit 0.3.4 and SSMD 0.8.0; they are
-not runtime dependencies of the core package.</p>
-</section>
-</section>
-<section id="with-backend-support">
-<h2>With Backend Support</h2>
-<section id="espeak-ng-backend">
-<h3>espeak-ng Backend</h3>
-<p>For espeak-ng fallback (recommended for production):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>espeak<span class="o">]</span>
-</pre></div>
-</div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>espeak-ng Python bindings</p></li>
-<li><p>Fallback for OOV words</p></li>
-<li><p>Support for 100+ languages via espeak-ng</p></li>
-</ul>
-</section>
-<section id="goruut-backend">
-<h3>goruut Backend</h3>
-<p>For goruut backend (experimental):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>goruut<span class="o">]</span>
+<p>Install optional named layers only when needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph
 </pre></div>
 </div>
 </section>
-</section>
-<section id="full-installation">
-<h2>Full Installation</h2>
-<p>To install all features:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p<span class="o">[</span>all<span class="o">]</span>
+<section id="released-lexhint-data">
+<h2>Released LexHint data</h2>
+<p>Russian, Thai, Vietnamese, Japanese, Korean, and Portuguese pronunciation dictionaries
+are provisioned through Lexphon and are not bundled or downloaded by KokoroG2P:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint
 </pre></div>
 </div>
-<p>This includes all language packs and backends.</p>
+<p>The corresponding language extras only install frontend dependencies. Provision these
+assets during image or container construction. German lookup is offline at runtime and
+performs no implicit download. python -m pip install “kokorog2p[ko]” python -m pip
+install “kokorog2p[ja]” python -m pip install “kokorog2p[espeak]”</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+See `pyproject.toml` for the complete list of language extras. Optional spaCy models are
+never downloaded by KokoroG2P; install the model required by your application
+separately.
+
+## Optional semantic preparation
+
+If the application uses Spokenform, install and invoke it independently:
+
+```bash
+python -m pip install &quot;spokenform&gt;=0.3.5,&lt;0.4&quot;
+</pre></div>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_kokorog2p</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
+
+<span class="n">prepared</span> <span class="o">=</span> <span class="n">prepare_for_kokorog2p</span><span class="p">(</span><span class="s2">&quot;Read 2 kg&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="n">prepared</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 </section>
 <section id="development-installation">
-<h2>Development Installation</h2>
-<p>For development, clone the repository and install in editable mode:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/kokorog2p.git
-<span class="nb">cd</span><span class="w"> </span>kokorog2p
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+<h2>Development installation</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_prepared_core.py<span class="w"> </span>tests/test_dependency_contract.py
 </pre></div>
 </div>
-<p>This includes:</p>
-<ul class="simple">
-<li><p>All language packs and backends</p></li>
-<li><p>Development tools (pytest, ruff, mypy)</p></li>
-<li><p>Pre-commit hooks</p></li>
-<li><p>Documentation building tools</p></li>
-</ul>
-</section>
-<section id="system-dependencies">
-<h2>System Dependencies</h2>
-<section id="espeak-ng">
-<h3>espeak-ng</h3>
-<p>If using the espeak backend, you’ll need espeak-ng installed on your system:</p>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>macOS:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download the installer from the
-<a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">espeak-ng releases page</a>.</p>
-</section>
-</section>
-<section id="verifying-installation">
-<h2>Verifying Installation</h2>
-<p>To verify your installation:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">kokorog2p</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">kokorog2p</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-
-<span class="c1"># Test basic functionality</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If you see phoneme output, your installation is successful!</p>
-</section>
-<section id="troubleshooting">
-<h2>Troubleshooting</h2>
-<section id="import-errors">
-<h3>Import Errors</h3>
-<p>If you get import errors for optional dependencies:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check what&#39;s installed</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">importlib.util</span>
-
-<span class="c1"># Check for spaCy</span>
-<span class="n">spacy_available</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;spacy&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;spaCy available: </span><span class="si">{</span><span class="n">spacy_available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Check for espeak</span>
-<span class="n">espeak_available</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">find_spec</span><span class="p">(</span><span class="s2">&quot;espeakng_loader&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;espeak-ng available: </span><span class="si">{</span><span class="n">espeak_available</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="missing-language-models">
-<h3>Missing Language Models</h3>
-<p>If spaCy models are missing:</p>
-<p>kokorog2p never downloads models during import or inference. Install the requested model
-explicitly in the environment that runs the application:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install one or more candidates; automatic selection uses the best installed one</span>
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
-
-<span class="c1"># Optional alternatives</span>
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg
-
-<span class="c1"># Transformer tier (highest quality when installed and loadable)</span>
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_trf
-</pre></div>
-</div>
-<p>For French, German, Spanish, Italian, or Portuguese, install the matching
-<code class="docutils literal notranslate"><span class="pre">*_core_news_{trf,lg,md,sm}</span></code> package. Automatic errors list every compatible candidate
-checked and any load errors. An explicit package or size request is strict and reports
-only that requested package; it does not substitute another tier.</p>
-</section>
-<section id="performance-issues">
-<h3>Performance Issues</h3>
-<p>For better performance:</p>
-<ol class="arabic simple">
-<li><p>Use dictionary-based G2P when possible (English, German, French)</p></li>
-<li><p>Enable caching (enabled by default)</p></li>
-<li><p>Reuse G2P instances instead of creating new ones</p></li>
-<li><p>Consider using espeak-ng fallback only for truly OOV words</p></li>
-</ol>
-</section>
+<p>For release and integration checks, consult the project workflow and keep optional
+cross-package tests separate from the Spokenform-free core suite.</p>
 </section>
 </section>
 </div>

@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 
@@ -836,17 +836,19 @@ authoritative over generic POS predictions.</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the configured abbreviation spellings.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, aliases=())
+<p>.. py:method:: Expander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, spoken_form=None, aliases=())
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation, optionally constrained by POS.
-
-  A string is one POS label; collections support multiple labels. Deny
-  constraints take precedence over allow constraints.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace a custom abbreviation.
 </pre></div>
 </div>
-<p>.. py:method:: Expander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’)
+<p>.. py:method:: Expander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, spoken_form=None, aliases=())
 :module: abbr2words</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Register an entry using string-named context expansions.
+</pre></div>
+</div>
+<p>.. py:method:: Expander.add_many(entries, *, on_conflict=’error’)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Atomically register a batch of abbreviation entries.
 </pre></div>
 </div>
 <p>.. py:method:: Expander.expand(text, *, annotations=None, protected_spans=None)
@@ -962,6 +964,45 @@ overlay gives unqualified <code class="docutils literal notranslate"><span class
 remain US dollar. These are recognition contracts for a downstream consumer,
 not amount or number grammar.</p>
 </section>
+<section id="custom-glossary-api">
+<h2>Custom glossary API</h2>
+<p><code class="docutils literal notranslate"><span class="pre">CasePolicy</span></code> and <code class="docutils literal notranslate"><span class="pre">SpeechStrategy</span></code> are public typing aliases. <code class="docutils literal notranslate"><span class="pre">CasePolicy</span></code> is
+<code class="docutils literal notranslate"><span class="pre">&quot;fixed&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>; <code class="docutils literal notranslate"><span class="pre">SpeechStrategy</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;expand&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;spell_source&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;custom&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">AbbreviationEntry.spoken_form</span></code> stores an
+explicit non-empty lexical realization for the <code class="docutils literal notranslate"><span class="pre">custom</span></code> strategy while
+<code class="docutils literal notranslate"><span class="pre">expansion</span></code> remains the semantic form.</p>
+<p>The mutable expanders expose equivalent custom-entry builders:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;AAA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anti-aircraft artillery&quot;</span><span class="p">,</span>
+    <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+    <span class="n">spoken_form</span><span class="o">=</span><span class="s2">&quot;Triple A&quot;</span><span class="p">,</span>
+    <span class="n">aliases</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;A.A.A.&quot;</span><span class="p">,),</span>
+<span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add_custom_abbreviation</span><span class="p">(</span>
+    <span class="s2">&quot;Ref.&quot;</span><span class="p">,</span>
+    <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;referee&quot;</span><span class="p">},</span>
+    <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span>
+ <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">spell_source</span></code> uses the matched source spelling only when
+<code class="docutils literal notranslate"><span class="pre">registered_initialism_mode=&quot;spell&quot;</span></code> is selected. <code class="docutils literal notranslate"><span class="pre">custom</span></code> is independent of
+that mode and does not apply sentence casing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">Expander.add_many(entries,</span> <span class="pre">on_conflict=...)</span></code> accepts an iterable of
+<code class="docutils literal notranslate"><span class="pre">AbbreviationEntry</span></code> values and validates the full batch before committing it.
+The <code class="docutils literal notranslate"><span class="pre">on_conflict</span></code> values are <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;replace&quot;</span></code>. The result is a
+<code class="docutils literal notranslate"><span class="pre">BulkAddResult</span></code> with added and replaced counts and canonical names. The error
+case raises <code class="docutils literal notranslate"><span class="pre">AbbreviationConflictError</span></code>, whose immutable <code class="docutils literal notranslate"><span class="pre">conflicts</span></code> records
+identify the colliding key, incoming and existing abbreviations, and whether
+the conflict is a duplicate, canonical collision, or alias collision. Aliases
+participate in matching and conflict checks.</p>
+<p>The bulk operation and all custom registration methods are instance-local. Build
+and customize an isolated expander before sharing it for read-only expansion;
+concurrent mutation of one expander is not a supported synchronization model.
+This API remains lexical and does not provide profile serialization, web import,
+or date, time, number, URL, or general speech normalization.</p>
+</section>
 <section id="core-types">
 <h2>Core types</h2>
 <p>.. py:class:: TokenAnnotation(start, end, pos=None, tag=None)
@@ -971,7 +1012,7 @@ not amount or number grammar.</p>
 <p>Offsets use Python string indices: <code class="docutils literal notranslate"><span class="pre">text[start:end]</span></code>. <code class="docutils literal notranslate"><span class="pre">pos</span></code> is
 normally an uppercase coarse Universal POS label; <code class="docutils literal notranslate"><span class="pre">tag</span></code> may contain a
 provider-specific fine-grained tag.</p>
-<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’, preserve_sentence_final_period=True)
+<p>.. py:class:: AbbreviationEntry(abbreviation, expansion, context_expansions=None, variants=(), case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, boundary=’word’, left_boundary=None, right_boundary=None, origin=’bundled’, aliases=(), case_policy=’fixed’, speech_strategy=’expand’, preserve_sentence_final_period=True, spoken_form=None)
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationEntry</p>
 <p>A single abbreviation with its expansion(s).</p>
@@ -1083,20 +1124,24 @@ concerns remain with the consuming normalizer, including <code class="docutils l
 :module: abbr2words
 :canonical: abbr2words.core.AbbreviationExpander</p>
 <p>Abstract base class for language-specific abbreviation expanders.</p>
-<p>.. py:method:: AbbreviationExpander.add_abbreviation(entry)
+<p>.. py:method:: AbbreviationExpander.add(abbreviation, expansion, *, context_expansions=None, case_sensitive=False, description=’’, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, spoken_form=None, aliases=())
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add an abbreviation entry.
-
-  :param entry: The abbreviation entry to add
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Build and register a custom abbreviation entry.
 </pre></div>
 </div>
-<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, aliases=())
+<p>.. py:method:: AbbreviationExpander.add_abbreviation(entry)
 :module: abbr2words</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string context names and POS guards.
-
-  A single POS string is treated as one label, while a collection can
-  express several accepted or denied labels. Labels are normalized by
-  :class:`AbbreviationEntry`.
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an abbreviation entry.
+</pre></div>
+</div>
+<p>.. py:method:: AbbreviationExpander.add_custom_abbreviation(abbreviation, expansion, description=’’, case_sensitive=False, only_if_preceded_by=None, only_if_followed_by=None, only_if_pos=None, not_if_pos=None, case_policy=’fixed’, speech_strategy=’expand’, spoken_form=None, aliases=())
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Add or replace an entry using string-named context expansions.
+</pre></div>
+</div>
+<p>.. py:method:: AbbreviationExpander.add_many(entries, *, on_conflict=’error’)
+:module: abbr2words</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Atomically register a batch of abbreviation entries.
 </pre></div>
 </div>
 <p>.. py:method:: AbbreviationExpander.expand(text, *, annotations=None, protected_spans=None)

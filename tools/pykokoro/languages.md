@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/languages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "c9e7b992adaf00b8f0f69d59a6d3e7af01b8dadb"
+docs_ref: "v0.9.0"
+docs_commit: "c80ad91b56445cd3f3da9604741bb62748b4262b"
 search_enabled: true
 ---
 
@@ -545,6 +545,23 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>PyKokoro resolves omitted model settings from the requested language before creating the
 ONNX backend or G2P cache. Non-German runs retain the existing Hugging Face v1.0
 default; Chinese automatic selection retains the GitHub v1.1-zh policy.</p>
+<section id="runtime-model-discovery">
+<h2>Runtime model discovery</h2>
+<p>Applications that need to list available models should use the public metadata-only API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
+
+<span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">default_voice</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Discovery uses the canonical registry and reports normalized language codes,
+model-specific voices, qualities, frontend status, G2P backend, and verified named
+lexicons. It does not download weights, voice archives, or initialize ONNX Runtime. The
+default mode may use the network, <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> forbids it, and <code class="docutils literal notranslate"><span class="pre">refresh=True</span></code>
+refreshes registry metadata only. <code class="docutils literal notranslate"><span class="pre">available_model_releases()</span></code> serves a different
+purpose: it lists published release artifacts rather than runtime capabilities.</p>
+</section>
 <section id="german">
 <h2>German</h2>
 <p><code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-at</span></code>, and <code class="docutils literal notranslate"><span class="pre">de-ch</span></code> automatically select:</p>
@@ -555,26 +572,47 @@ default; Chinese automatic selection retains the GitHub v1.1-zh policy.</p>
 <li><p>voice: <code class="docutils literal notranslate"><span class="pre">martin</span></code></p></li>
 <li><p>vocabulary: built-in Kokoro v1.0</p></li>
 </ul>
-<p>The Martin profile is a single-speaker model. Its ONNX file is
-<code class="docutils literal notranslate"><span class="pre">kokoro-german-martin-v1.2.onnx</span></code>; its voice archive is <code class="docutils literal notranslate"><span class="pre">voices-german-martin-v1.2.bin</span></code>.
-Both downloads are checked with SHA-256 and the voice archive must contain <code class="docutils literal notranslate"><span class="pre">martin</span></code>. No
-model-specific config file is downloaded.</p>
-<p>The legacy Eva/Bernd profile remains explicit:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;df_eva&quot;</span><span class="p">,</span>
-    <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-    <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.1-de&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Automatic written-to-spoken preparation is owned by the compatible kokorog2p 0.8.x
-dependency across the language pipelines where kokorog2p supports it. This includes
-structured forms such as dates, times, decimal commas, measurements, ordinals,
-durations, currency amounts, and abbreviations before G2P. Sentence segmentation and
-source offsets continue to refer to the original document text. PyKokoro’s supported
-language and model list remains authoritative; kokorog2p support alone does not add a
-new synthesizer language.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Model</p></th>
+<th class="head"><p>Variant</p></th>
+<th class="head"><p>Voice</p></th>
+<th class="head"><p>Status</p></th>
+<th class="head"><p>Selection</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Martin</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">martin</span></code></p></td>
+<td><p>ready/default</p></td>
+<td><p>automatic for <code class="docutils literal notranslate"><span class="pre">lang=&quot;de&quot;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Kerstin / Crane</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">de-crane</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">default</span></code></p></td>
+<td><p>experimental</p></td>
+<td><p>explicit + <code class="docutils literal notranslate"><span class="pre">allow_experimental_frontend=True</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Thorsten</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">de-thorsten</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">thorsten</span></code></p></td>
+<td><p>ready</p></td>
+<td><p>explicit</p></td>
+</tr>
+</tbody>
+</table>
+<p>The document language is explicit in v0.9. Pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;de&quot;)</span></code> or
+<code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;de&quot;)</span></code>; voice and model profiles never infer it. Martin is the default
+German acoustic model when that language is selected. Kerstin/Crane and Thorsten are
+explicit alternative acoustic models; Crane currently requires experimental frontend
+opt-in. Compare them with the maintained examples <code class="docutils literal notranslate"><span class="pre">examples/german.py</span></code>,
+<code class="docutils literal notranslate"><span class="pre">examples/german2.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">examples/german3.py</span></code>.</p>
+<p>The integrated pipeline performs Spokenform preparation before sentence segmentation and
+G2P. Spokenform owns written-to-spoken forms such as dates, measurements, ordinals,
+currency amounts, and abbreviations. Explicit mixed-language text uses SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code>
+spans. Prepared segment offsets refer to the prepared document text and remain exact
+half-open slices.</p>
 <p>Managed Martin cache hits are checked against the pinned SHA-256 digests before use;
 invalid files are removed and downloaded again. Explicit custom paths are validated in
 place and are never replaced by managed downloads. The profile’s <code class="docutils literal notranslate"><span class="pre">suggested_speed</span></code>

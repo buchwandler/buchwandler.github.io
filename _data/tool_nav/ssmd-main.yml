@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: d6353ed0f64e42eea71993995508bf10e00d77a6
+source_commit: afca54273f80d27feb86c5de1c37e831f0bd4977
 source_url: https://github.com/buchwandler/ssmd/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ssmd
-release_tag: v0.8.4
-release_url: https://github.com/buchwandler/ssmd/releases/tag/v0.8.4
+release_tag: v0.8.6
+release_url: https://github.com/buchwandler/ssmd/releases/tag/v0.8.6
 versions:
 - name: release
   label: Latest release
-  ref: v0.8.4
+  ref: v0.8.6
   url: /tools/ssmd/
   current: false
 - name: main

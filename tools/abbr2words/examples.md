@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/examples/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.12"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_ref: "v0.2.13"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 
@@ -550,6 +550,16 @@ currencies, and unit conversion alone.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">examples/speech_numbers.py</span></code> is optional demonstration glue that composes
 abbreviation expansion with <code class="docutils literal notranslate"><span class="pre">num2words</span></code> for the supplied speech-text cases.</p></li>
 </ol>
+<section id="german-lexical-example">
+<h2>German lexical example</h2>
+<p>The German registry expands reviewed lexical abbreviations while leaving numbers and
+downstream pronunciation decisions to the next stage:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>vgl. Abschnitt 2; i.d.R. gilt das, u.U. auch für Geräte o.ä.
+</pre></div>
+</div>
+<p>This means <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> expands lexical abbreviations. Brand, foreign-word, and
+model-specific pronunciation remains downstream.</p>
+</section>
 <section id="install-and-run">
 <h2>Install and run</h2>
 <p>The abbreviation-only English and German examples need only the package:</p>
@@ -559,7 +569,42 @@ abbreviation expansion with <code class="docutils literal notranslate"><span cla
 <span class="go">python examples/replacements.py</span>
 </pre></div>
 </div>
-<p>Install the optional dependency for full speech text:</p>
+</section>
+<section id="specialist-glossary-example">
+<h2>Specialist glossary example</h2>
+<p>A downstream domain can compile a small typed glossary without changing the
+lexical API or introducing a profile format:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbbreviationEntry</span><span class="p">,</span> <span class="n">get_expander</span>
+
+<span class="n">expander</span> <span class="o">=</span> <span class="n">get_expander</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;spell&quot;</span><span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add_many</span><span class="p">(</span>
+    <span class="p">(</span>
+        <span class="n">AbbreviationEntry</span><span class="p">(</span><span class="s2">&quot;AAR&quot;</span><span class="p">,</span> <span class="s2">&quot;after-action review&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">),</span>
+        <span class="n">AbbreviationEntry</span><span class="p">(</span>
+            <span class="s2">&quot;AO&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;area of operations&quot;</span><span class="p">,</span>
+            <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;spell_source&quot;</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+        <span class="n">AbbreviationEntry</span><span class="p">(</span>
+            <span class="s2">&quot;AAA&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;anti-aircraft artillery&quot;</span><span class="p">,</span>
+            <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+            <span class="n">spoken_form</span><span class="o">=</span><span class="s2">&quot;Triple A&quot;</span><span class="p">,</span>
+            <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+        <span class="p">),</span>
+    <span class="p">),</span>
+    <span class="n">on_conflict</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">expander</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="s2">&quot;AAA enters the AO after the AAR.&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="p">(</span>
+    <span class="s2">&quot;Triple A enters the A O after the after-action review.&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The entries remain isolated to this expander. Profile serialization, domain
+selection, and number, date, or time normalization belong to the downstream
+speech application.
+Install the optional dependency for full speech text:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">python -m pip install &quot;abbr2words[examples]&quot;</span>
 <span class="go">python examples/german.py --full</span>
 <span class="go">python examples/full_text_demo.py --sample english</span>

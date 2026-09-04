@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,56 +542,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="russian-api">
 <h1>Russian API</h1>
-<p>Russian is provided by the native <code class="docutils literal notranslate"><span class="pre">RussianG2P</span></code> frontend. It targets the stock Kokoro 1.0
-vocabulary and keeps token offsets in the original source text.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
+<p>The Russian frontend provides stress, orthographic, and eSpeak-based phonological
+adaptation for prepared Russian text. Written semantic expansion and language detection
+are outside the frontend.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.ru</span><span class="w"> </span><span class="kn">import</span> <span class="n">RussianG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;ru&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Это русский текст.&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">RussianG2P</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Привет, мир&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>The default <code class="docutils literal notranslate"><span class="pre">accentuator=&quot;auto&quot;</span></code> uses RUAccent lazily for sentence-level stress, ё
-restoration, and contextual homographs. Install the optional extra first:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ru]&quot;</span>
-</pre></div>
-</div>
-<p>RUAccent and its model artifacts can be large. They are not imported or loaded by
-<code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">kokorog2p</span></code>, and model loading starts only when an instance is used. A missing
-installation produces an actionable optional-dependency error.</p>
-<section id="explicit-stress">
-<h2>Explicit stress</h2>
-<p>For text that already contains combining acute stress, bypass the contextual model with
-<code class="docutils literal notranslate"><span class="pre">phonemize_accented</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">explicit</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;ru&quot;</span><span class="p">,</span> <span class="n">accentuator</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">strict_stress</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">explicit</span><span class="o">.</span><span class="n">phonemize_accented</span><span class="p">(</span><span class="s2">&quot;за́мок&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The canonical annotation is U+0301 immediately after the stressed Cyrillic vowel. The
-legacy <code class="docutils literal notranslate"><span class="pre">+</span></code>-before-vowel form is accepted at this boundary and is normalized to combining
-acute.</p>
-</section>
-<section id="espeak-data">
-<h2>eSpeak data</h2>
-<p>Russian uses raw eSpeak IPA and verifies at runtime that the selected Russian data
-honors explicit combining-acute stress. A custom data directory can be provided through
-the factory:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;ru&quot;</span><span class="p">,</span> <span class="n">espeak_data</span><span class="o">=</span><span class="s2">&quot;/path/to/espeak-ng-data&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>If the capability probe fails in strict mode, configure a compatible eSpeak-ng
-installation rather than silently losing stress information. The compiled <code class="docutils literal notranslate"><span class="pre">espeak-data</span></code>
-from external Russian projects is not distributed by KokoroG2P.</p>
-</section>
-<section id="latin-and-punctuation">
-<h2>Latin and punctuation</h2>
-<p>Russian and punctuation tokens retain original text and offsets. The default
-<code class="docutils literal notranslate"><span class="pre">latin_policy=&quot;preserve&quot;</span></code> keeps Latin source tokens without pretending they are Russian
-phonemes. Use <code class="docutils literal notranslate"><span class="pre">latin_policy=&quot;drop&quot;</span></code> when a downstream pipeline explicitly wants them
-marked as dropped. Brackets are normalized through the shared punctuation pipeline and
-do not become phoneme vocabulary symbols.</p>
-<p>Russian-specific number and abbreviation expansion remains owned by the shared
-<code class="docutils literal notranslate"><span class="pre">spokenform</span></code> and <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> pipeline where supported.</p>
-</section>
+<p>Provide explicit language and annotations/overrides when routing a foreign span.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

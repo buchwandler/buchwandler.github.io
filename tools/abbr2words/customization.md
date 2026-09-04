@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/customization/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.12"
-docs_commit: "dcedefb7844d4dc02912f105ee1c78c1c6947214"
+docs_ref: "v0.2.13"
+docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
 search_enabled: true
 ---
 
@@ -577,6 +577,69 @@ after sentence-ending punctuation, including an opening quote or bracket that
 follows that boundary. A colon is not a sentence boundary. Dotted abbreviation
 matches preserve one final period when their consumed dot is sentence-final;
 commas, semicolons, and internal dots are not added or moved.</p>
+</section>
+<section id="per-entry-speech-strategies">
+<h2>Per-entry speech strategies</h2>
+<p>Custom entries keep their semantic expansion and can choose a lexical realization independently:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_expander</span>
+
+<span class="n">expander</span> <span class="o">=</span> <span class="n">get_expander</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">registered_initialism_mode</span><span class="o">=</span><span class="s2">&quot;spell&quot;</span><span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="s2">&quot;AAR&quot;</span><span class="p">,</span> <span class="s2">&quot;after-action review&quot;</span><span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;AO&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;area of operations&quot;</span><span class="p">,</span>
+    <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;spell_source&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">expander</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+    <span class="s2">&quot;AAA&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;anti-aircraft artillery&quot;</span><span class="p">,</span>
+    <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+    <span class="n">spoken_form</span><span class="o">=</span><span class="s2">&quot;Triple A&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">expander</span><span class="o">.</span><span class="n">expand</span><span class="p">(</span><span class="s2">&quot;AAR AO AAA&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;after-action review A O Triple A&quot;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">expand</span></code> uses the selected semantic expansion. <code class="docutils literal notranslate"><span class="pre">spell_source</span></code> spells the
+matched source form when <code class="docutils literal notranslate"><span class="pre">registered_initialism_mode=&quot;spell&quot;</span></code> is enabled.
+<code class="docutils literal notranslate"><span class="pre">custom</span></code> always uses its non-empty <code class="docutils literal notranslate"><span class="pre">spoken_form</span></code>, independently of the global
+registered spelling mode. Custom spoken forms are explicit and are not
+sentence-cased; <code class="docutils literal notranslate"><span class="pre">case_policy</span></code> applies to semantic expansions only.</p>
+<p>Aliases share the entry’s guards and strategy. Source spelling uses the actual
+matched alias, while custom realization uses the configured spoken form.
+<code class="docutils literal notranslate"><span class="pre">spoken_form</span></code> is required only for <code class="docutils literal notranslate"><span class="pre">custom</span></code> and is rejected for other strategies.</p>
+</section>
+<section id="bulk-glossary-registration">
+<h2>Bulk glossary registration</h2>
+<p>Large isolated glossaries can be loaded atomically from typed entries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">abbr2words</span><span class="w"> </span><span class="kn">import</span> <span class="n">AbbreviationEntry</span><span class="p">,</span> <span class="n">get_expander</span>
+
+<span class="n">entries</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">AbbreviationEntry</span><span class="p">(</span><span class="s2">&quot;AAR&quot;</span><span class="p">,</span> <span class="s2">&quot;after-action review&quot;</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">),</span>
+    <span class="n">AbbreviationEntry</span><span class="p">(</span>
+        <span class="s2">&quot;AAA&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;anti-aircraft artillery&quot;</span><span class="p">,</span>
+        <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+        <span class="n">spoken_form</span><span class="o">=</span><span class="s2">&quot;Triple A&quot;</span><span class="p">,</span>
+        <span class="n">origin</span><span class="o">=</span><span class="s2">&quot;custom&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">get_expander</span><span class="p">(</span><span class="s2">&quot;en&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">add_many</span><span class="p">(</span><span class="n">entries</span><span class="p">,</span> <span class="n">on_conflict</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">added</span> <span class="o">==</span> <span class="mi">2</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">add_many()</span></code> accepts an <code class="docutils literal notranslate"><span class="pre">Iterable[AbbreviationEntry]</span></code>. It validates the full
+batch before changing the registry. <code class="docutils literal notranslate"><span class="pre">on_conflict=&quot;error&quot;</span></code> reports canonical
+and alias collisions through <code class="docutils literal notranslate"><span class="pre">AbbreviationConflictError.conflicts</span></code>;
+<code class="docutils literal notranslate"><span class="pre">on_conflict=&quot;replace&quot;</span></code> preserves single-entry replacement behavior and
+reports replaced canonical entries. <code class="docutils literal notranslate"><span class="pre">get_expander()</span></code> and <code class="docutils literal notranslate"><span class="pre">Expander()</span></code> create
+isolated registries, so custom glossary entries do not affect shared or sibling
+expanders.</p>
+<p>Build and customize an isolated expander before sharing it for read-only
+expansion. Concurrent mutation of the same expander is not supported. This
+lexical API does not load profile files and does not normalize dates, times,
+numbers, URLs, or general speech text; those responsibilities belong to a
+downstream normalizer such as Spokenform.</p>
 </section>
 <section id="ambiguous-english-dotted-forms">
 <h2>Ambiguous English dotted forms</h2>

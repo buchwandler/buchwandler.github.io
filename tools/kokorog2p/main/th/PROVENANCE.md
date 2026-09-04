@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -563,12 +563,8 @@ token ID <code class="docutils literal notranslate"><span class="pre">7</span></
 <section id="dependencies-and-licenses">
 <h2>Dependencies and licenses</h2>
 <ul class="simple">
-<li><p>TLTK, version range selected by the package, is used as the optional Thai
-pronunciation engine. TLTK is distributed under the BSD 3-Clause license.</p></li>
-<li><p>PyThaiNLP, version range selected by the package, is used for optional Thai
-segmentation and recovery. PyThaiNLP is distributed under the Apache License 2.0. Its
-data and models may have separate CC0 or CC-BY terms, which remain subject to their
-individual notices.</p></li>
+<li><p>Lexphon provides the provisioned <code class="docutils literal notranslate"><span class="pre">th:lexhint</span></code> pronunciation dictionary. The asset is
+installed and verified outside this package and is not downloaded at runtime.</p></li>
 <li><p>The Wayu model repository is Apache-2.0 licensed. This implementation does not
 redistribute its weights or source.</p></li>
 </ul>
@@ -578,9 +574,10 @@ redistribute its weights or source.</p></li>
 <ul class="simple">
 <li><p>Latin runs use the existing <code class="docutils literal notranslate"><span class="pre">kokorog2p.en.EnglishG2P</span></code> lazily instead of a direct
 Misaki English dependency.</p></li>
-<li><p>No Rust TLTK port is included.</p></li>
-<li><p>No generated Thai-name respelling database, runtime Thai lexicon, license-plate
-acrophony, or model-training entity patch table is included.</p></li>
+<li><p>No external Thai runtime engine or generated Thai-name respelling database is
+included.</p></li>
+<li><p>No generated Thai-name respelling database, license-plate acrophony, or model-training
+entity patch table is included.</p></li>
 <li><p>Thai semantic normalization remains local to this package until a released
 <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> version advertises the required Thai semantics.</p></li>
 </ul>
@@ -588,7 +585,7 @@ acrophony, or model-training entity patch table is included.</p></li>
 <section id="fixture-policy">
 <h2>Fixture policy</h2>
 <p>Tests and benchmark cases are independently authored synthetic or reviewed cases.
-Expected Thai pronunciation may be recorded from the pinned TLTK release, the observed
+Expected Thai pronunciation may be recorded from the released LexHint data, the observed
 reference, or human review. Reference checkouts and network access are development-only
 inputs and are not runtime or normal CI dependencies.</p>
 </section>

@@ -5,8 +5,8 @@ permalink: /tools/spokenform/spacy/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.3"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_ref: "v0.3.6"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -543,6 +543,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="spacy-integration">
 <h1>spaCy integration</h1>
 <p>spaCy is optional. <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> uses it only to obtain source-aligned lexical annotations for POS-aware abbreviation rules.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prepare_language()</span></code> is the strict entry point for new callers. It requires the
+language selected by the orchestrator and still performs one language run only.
+<code class="docutils literal notranslate"><span class="pre">prepare()</span></code> keeps its English default solely for compatibility.</p>
 <section id="current-effect-with-the-released-abbr2words-structured-api">
 <h2>Current effect with the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured API</h2>
 <p><code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> accepts POS annotations, but its bundled language registries do not
@@ -604,7 +607,7 @@ selection, disabled components, and process-level caching.</p>
 <p><code class="docutils literal notranslate"><span class="pre">lang_</span></code> is retained as metadata only; <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> does not perform token-level language detection.</p>
 <p>A blank tokenizer such as <code class="docutils literal notranslate"><span class="pre">spacy.blank(&quot;en&quot;)</span></code> provides token boundaries but no
 statistical POS tags. Use a trained pipeline containing an appropriate tagging or
-morphological component when POS-aware rules are required. Annotations are remapped around protected spans so their offsets remain aligned with the internal text sent to <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
+component when POS-aware rules are required. Annotations are remapped around protected spans so their offsets remain aligned with the internal text sent to <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>. These annotations describe the source text only. If preparation replaces a token, its source POS, tag, lemma, or morphology must not be reused for the generated <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code>; run a fresh linguistic analysis downstream.</p>
 </section>
 <section id="error-behavior">
 <h2>Error behavior</h2>

@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/italian/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.8.2"
-docs_commit: "f8c0b3caf3cf0417ee367ca9d03d4f9a34ef370f"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -542,46 +542,15 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="italian-api">
 <h1>Italian API</h1>
-<p>Italian G2P provides rule-based phoneme conversion for Italian, designed for Kokoro TTS
-models.</p>
-<section id="semantic-preparation">
-<h2>Semantic preparation</h2>
-<p>Italian uses the shared per-language-run semantic-preparation path. <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>
-recognizes Italian abbreviations, units, and currency symbols; <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> verbalizes
-reviewed dates, quantities, temperatures, currencies, and ordinary numbers. kokorog2p
-keeps Italian typography, tokenization, contractions, stress, gemination, and phoneme
-generation downstream. Italian colon times remain caller-managed in this migration.</p>
-<p>This boundary does not make <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> responsible for language detection,
-mixed-language segmentation, markup parsing, or phoneme generation.</p>
-</section>
-<section id="main-class">
-<h2>Main Class</h2>
-</section>
-<section id="examples">
-<h2>Examples</h2>
+<p>The Italian frontend provides intrinsic Italian phonology for prepared text. Written
+semantic expansion and generic language segmentation are outside this module.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.it</span><span class="w"> </span><span class="kn">import</span> <span class="n">ItalianG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">ItalianG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;it-it&quot;</span><span class="p">)</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">g2p</span><span class="p">(</span><span class="s2">&quot;Ciao mondo!&quot;</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">ItalianG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;it&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Ciao mondo&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-</section>
-<section id="phonology-features">
-<h2>Phonology Features</h2>
-<p>Italian phonology includes:</p>
-<ul class="simple">
-<li><p>5 pure vowels (a, e, i, o, u) - always pronounced clearly</p></li>
-<li><p>No vowel reduction (unlike English)</p></li>
-<li><p>Predictable stress (usually penultimate syllable)</p></li>
-<li><p>Gemination (double consonants) is phonemically distinctive</p></li>
-<li><p>Palatals: gn [ɲ], gli [ʎ]</p></li>
-<li><p>Affricates: z [ʦ/ʣ], c/ci [ʧ], g/gi [ʤ]</p></li>
-<li><p>No diphthongs in standard Italian (consecutive vowels are separate syllables)</p></li>
-</ul>
-</section>
+<p>Pass prepared text and select the language explicitly through the public API.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

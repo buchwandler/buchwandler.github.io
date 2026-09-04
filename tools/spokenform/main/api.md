@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "882ad4dfc7be9b70831cdb91b418891d9ddb2ec7"
+docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
 search_enabled: true
 ---
 
@@ -614,7 +614,7 @@ false-positive risk.</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>For example, with <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;ABC</span> <span class="pre">TST&quot;,</span> <span class="pre">generic_acronym_mode=&quot;conservative_unknown&quot;)</span></code>
+<p>For example, with <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;ABC</span> <span class="pre">TST&quot;,</span> <span class="pre">language=&quot;en&quot;,</span> <span class="pre">generic_acronym_mode=&quot;conservative_unknown&quot;)</span></code>
 produces <code class="docutils literal notranslate"><span class="pre">&quot;A</span> <span class="pre">B</span> <span class="pre">C</span> <span class="pre">T</span> <span class="pre">S</span> <span class="pre">T&quot;</span></code> in the current English registry, while the default
 keeps the unknown <code class="docutils literal notranslate"><span class="pre">TST</span></code> unchanged. <code class="docutils literal notranslate"><span class="pre">generic_acronym_case=&quot;lower&quot;</span></code> changes only
 generic grapheme-spaced output (<code class="docutils literal notranslate"><span class="pre">&quot;a</span> <span class="pre">b</span> <span class="pre">c</span> <span class="pre">t</span> <span class="pre">s</span> <span class="pre">t&quot;</span></code> in that example); it does not
@@ -650,7 +650,7 @@ abbreviation registry.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PreparationConfig</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">long_number_mode</span><span class="o">=</span><span class="s2">&quot;contextual&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>For English, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;844361</span> <span class="pre">items&quot;,</span> <span class="pre">long_number_mode=&quot;preserve&quot;)</span></code> keeps the
+<p>For English, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;844361</span> <span class="pre">items&quot;,</span> <span class="pre">language=&quot;en&quot;,</span> <span class="pre">long_number_mode=&quot;preserve&quot;)</span></code> keeps the
 digits, while <code class="docutils literal notranslate"><span class="pre">&quot;contextual&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;cardinal&quot;</span></code> produce
 <code class="docutils literal notranslate"><span class="pre">&quot;eight</span> <span class="pre">hundred</span> <span class="pre">forty</span> <span class="pre">four</span> <span class="pre">thousand</span> <span class="pre">three</span> <span class="pre">hundred</span> <span class="pre">sixty</span> <span class="pre">one</span> <span class="pre">items&quot;</span></code>.</p>
 </section>
@@ -667,14 +667,21 @@ preserves run boundary whitespace. Pass caller-owned <code class="docutils liter
 semantic replacements; partial overlap is handled fail-closed by protecting the
 complete recognized quantity expression. Use <code class="docutils literal notranslate"><span class="pre">source_replacements</span></code> and the offset
 helpers to rebase downstream token and override coordinates.</p>
-<p>The preferred downstream surface is <code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p()</span></code>,
-<code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code>,
-<code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code>, and <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>. The lower-level mapping and stage
-helpers are advanced exports rather than requirements for a normal adapter.</p>
-</section>
-<section id="export-classification">
-<h2>Export classification</h2>
-<p>The stable application-facing surface is <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>,
+<p><code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_speech(language)</span></code> provides the generic one-language speech
+preset. It contains no TTS-engine policy. <code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p()</span></code> remain compatibility conveniences for that
+adapter and are not the architectural center of Spokenform.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PreparedText</span></code> mappings describe source and output coordinates, not a linguistic
+analysis of generated tokens. When normalization changes a token, source POS, tag,
+lemma, or morphology must not be reused for the generated text. Run a fresh
+linguistic analysis after preparation when downstream processing requires it.
+The preferred application surface is <code class="docutils literal notranslate"><span class="pre">prepare_language()</span></code> with
+<code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_speech(language)</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparedText.source_replacements</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">PreparedText.offset_map</span></code>. The KokoroG2P compatibility surface additionally
+uses <code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p()</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>. Lower-level mapping and stage helpers are advanced exports rather
+than requirements for a normal adapter.</p>
+<p>The stable application-facing surface is <code class="docutils literal notranslate"><span class="pre">prepare_language()</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>,
 <code class="docutils literal notranslate"><span class="pre">prepare_for_kokorog2p()</span></code>, <code class="docutils literal notranslate"><span class="pre">prepare_text</span></code>, <code class="docutils literal notranslate"><span class="pre">PreparationConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">NumberPolicy</span></code>,
 <code class="docutils literal notranslate"><span class="pre">PreparedText</span></code>, <code class="docutils literal notranslate"><span class="pre">ProtectedSpan</span></code>, <code class="docutils literal notranslate"><span class="pre">ProtectionError</span></code>, <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code>, and
 <code class="docutils literal notranslate"><span class="pre">__version__</span></code>. <code class="docutils literal notranslate"><span class="pre">number_policy_for_language()</span></code> and <code class="docutils literal notranslate"><span class="pre">normalize_numbers()</span></code> are
@@ -703,10 +710,11 @@ colon-time candidates remain unchanged for caller-managed handling.</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">disabled_domains={&quot;chemistry&quot;,</span> <span class="pre">...}</span></code> suppresses selected <code class="docutils literal notranslate"><span class="pre">RecognitionDomain</span></code> families before precedence resolution.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">allowed_domains={&quot;quantities&quot;,</span> <span class="pre">...}</span></code> permits only selected semantic families and fails closed for candidates without domain metadata. If a domain appears in both sets, configuration raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>.</p></li>
 </ul>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_language</span>
 
-<span class="n">prepare</span><span class="p">(</span>
+<span class="n">prepare_language</span><span class="p">(</span>
     <span class="s2">&quot;The sample contains H2O.&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
     <span class="n">interpretation_mode</span><span class="o">=</span><span class="s2">&quot;surface&quot;</span><span class="p">,</span>
     <span class="n">disabled_domains</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;chemistry&quot;</span><span class="p">},</span>
 <span class="p">)</span>

@@ -5,8 +5,8 @@ permalink: /tools/ssmd/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.4"
-docs_commit: "d6353ed0f64e42eea71993995508bf10e00d77a6"
+docs_ref: "v0.8.6"
+docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
 search_enabled: true
 ---
 
@@ -562,6 +562,22 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <p>🎨 <strong>Extensible</strong> - Custom extensions for platform-specific features</p>
 <p>🧪 <strong>Type-safe</strong> - Full mypy type checking support</p>
 </section>
+<section id="structure-only-downstream-parsing">
+<h2>Structure-only downstream parsing</h2>
+<p>For downstream TTS pipelines that own written-to-spoken normalization and sentence
+segmentation, use <code class="docutils literal notranslate"><span class="pre">ssmd.parse_structure()</span></code> to obtain clean text, annotation ranges,
+zero-width break/mark/paragraph events, and YAML front matter without invoking sentence
+detection:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SSMD parse_structure()
+    -&gt; caller-owned text normalization
+    -&gt; caller-owned sentence segmentation
+    -&gt; caller-owned TTS/G2P
+</pre></div>
+</div>
+<p>Annotations refer to ranges in <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>; structural event positions refer to
+boundaries in that text. SSMD removes its markup and preserves metadata, but does not
+perform general written-to-spoken language normalization.</p>
+</section>
 <section id="quick-example">
 <h2>Quick Example</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
@@ -609,6 +625,7 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-conversion">Basic Conversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#using-the-document-api">Using the Document API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#tts-streaming">TTS Streaming</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#tts-pipeline-integration">TTS pipeline integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#document-editing">Document Editing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#advanced-document-operations">Advanced Document Operations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#working-with-tts-engines">Working with TTS Engines</a></li>
@@ -634,6 +651,8 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="spans/">Spans</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="spans/#tts-pipeline-integration">TTS pipeline integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#structure-only-parsing">Structure-only parsing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#coordinate-system">Coordinate system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#examples">Examples</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#sentence-offsets">Sentence offsets</a></li>
@@ -646,6 +665,7 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ssml_conversion/">SSML to SSMD Conversion</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#tts-pipeline-integration">TTS pipeline integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#basic-conversion">Basic Conversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#supported-ssml-elements">Supported SSML Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#default-value-filtering">Default Value Filtering</a></li>
@@ -663,11 +683,13 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.4] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.3] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.2] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.0] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.6] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.5] - 2026-08-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.4] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.8.3] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.2] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>

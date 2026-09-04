@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "kokorog2p Multilang Preprocessing"
-permalink: /tools/kokorog2p/main/api/mixed/
-nav_tool: kokorog2p-main
+title: "kokorog2p Russian frontend"
+permalink: /tools/kokorog2p/ru/README/
+nav_tool: kokorog2p
 docs_project: "kokorog2p"
-docs_variant: "main"
-docs_ref: "main"
-docs_commit: "77d91cb50322d543bb2d63facec30011a077cb36"
+docs_variant: "release"
+docs_ref: "v0.9.2"
+docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
 search_enabled: true
 ---
 
@@ -540,67 +540,10 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="multilang-preprocessing">
-<h1>Multilang Preprocessing</h1>
-<p>The multilang preprocessor detects word-level languages with <code class="docutils literal notranslate"><span class="pre">lingua-language-detector</span></code>
-and returns <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> objects for language switching. It integrates with the
-span-based phonemization API.</p>
-<section id="api">
-<h2>API</h2>
-<dl class="py function">
-<dt class="sig sig-object py" id="kokorog2p.multilang.preprocess_multilang">
-<span class="sig-prename descclassname"><span class="pre">kokorog2p.multilang.</span></span><span class="sig-name descname"><span class="pre">preprocess_multilang</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_language</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'en-us'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_languages</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">confidence_threshold</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.7</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">phrase_overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.14)"><span class="pre">dict</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_token_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><span class="pre">OverrideSpan</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../../_modules/kokorog2p/multilang/#preprocess_multilang"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Detect word-level languages and return OverrideSpan objects.</p>
-<p>Returns OverrideSpan objects for language switching.</p>
-<dl class="simple">
-<dt>Args:</dt><dd><p>text: Input text to annotate.
-default_language: Base language for unmarked words.
-allowed_languages: Language codes to detect (must include default_language).
-confidence_threshold: Minimum confidence (0.0-1.0) to accept detection.
-phrase_overrides: Optional dict mapping exact phrases to language codes.
-min_token_length: Minimum token length for detection (default: 3).</p>
-</dd>
-<dt>Returns:</dt><dd><p>List of OverrideSpan objects with language overrides for detected words.</p>
-</dd>
-<dt>Raises:</dt><dd><p>ImportError: If lingua-language-detector is not installed.
-ValueError: If allowed_languages is missing or default_language not allowed.</p>
-</dd>
-</dl>
-</dd></dl>
-
-</section>
-<section id="examples">
-<h2>Examples</h2>
-<section id="basic-usage">
-<h3>Basic Usage</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Schöne World&quot;</span>
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;de&quot;</span><span class="p">],</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="confidence-tuning">
-<h3>Confidence Tuning</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.multilang</span><span class="w"> </span><span class="kn">import</span> <span class="n">preprocess_multilang</span>
-
-<span class="n">overrides</span> <span class="o">=</span> <span class="n">preprocess_multilang</span><span class="p">(</span>
-    <span class="s2">&quot;Bonjour World&quot;</span><span class="p">,</span>
-    <span class="n">default_language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">allowed_languages</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;fr&quot;</span><span class="p">],</span>
-    <span class="n">confidence_threshold</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
+<section id="russian-frontend">
+<h1>Russian frontend</h1>
+<p>See <a class="reference internal" href="../../api/russian/"><span class="std std-doc">the Russian API</span></a> and <a class="reference internal" href="../PROVENANCE/"><span class="std std-doc">the provenance record</span></a> for
+installation, stress behavior, source alignment, licensing, and clean-room boundaries.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>
