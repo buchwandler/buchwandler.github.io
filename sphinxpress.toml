@@ -62,7 +62,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio"]
 
 [pdf]
 builder = "weasyprint"
@@ -147,6 +147,18 @@ conf_dir = "../g2lex/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/g2lex"
 description = "Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "lexphon"
+title = "lexphon"
+docs_root = "../lexphon/docs"
+conf_dir = "../lexphon/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/lexphon"
+description = "Lexicon-driven phonemizer and CLI built on G2Lex."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

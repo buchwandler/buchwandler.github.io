@@ -22,6 +22,11 @@
   description: Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons.
   docs_url: /tools/g2lex/
   repo_url: https://github.com/buchwandler/g2lex
+- name: lexphon
+  description: Lexicon-driven phonemizer and CLI built on G2Lex.
+  docs_url: /tools/lexphon/
+  repo_url: https://github.com/buchwandler/lexphon
+  pypi_url: https://pypi.org/project/lexphon/
 - name: kokorog2p
   description: A unified multi-language G2P library for Kokoro TTS.
   docs_url: /tools/kokorog2p/

@@ -1,0 +1,197 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "lexphon",
+  "entries": [
+    {
+      "url": "/tools/lexphon/ARCHITECTURE/",
+      "title": "Lexphon architecture",
+      "snippet": "The runtime ownership chain is:\n\ng2lex-data -> G2Lex -> Lexphon -> application adapters\n\n\n\n\ng2lex-data is the producer and publisher. It obt …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Boundaries",
+          "text": "The runtime ownership chain is:\n\ng2lex-data -> G2Lex -> Lexphon -> application adapters\n\n\n\n\ng2lex-data is the producer and publisher. It obtains, transforms, validates, licenses, reproduces, and publishes immutable generic pronunciation data releases. G2Lex is the storage primitive that represents, packs, opens, and queries typed lexicon data. Lexphon is the generic runtime consumer. KokoroG2P is a downstream model adapter.\n\nLexphon owns catalog consumption, explicit verified installation, immutable local asset storage, language profiles, candidate generation, ordered layered lookup, selectors, pronunciation alphabet normalization, token provenance, CLI behavior, and optional generic pronunciation providers.\n\nLexphon owns generic pronunciation providers as well as lexicon pronunciation cl…",
+          "lower": "the runtime ownership chain is:\n\ng2lex-data -> g2lex -> lexphon -> application adapters\n\n\n\n\ng2lex-data is the producer and publisher. it obtains, transforms, validates, licenses, reproduces, and publishes immutable generic pronunciation data releases. g2lex is the storage primitive that represents, packs, opens, and queries typed lexicon data. lexphon is the generic runtime consumer. kokorog2p is a downstream model adapter.\n\nlexphon owns catalog consumption, explicit verified installation, immutable local asset storage, language profiles, candidate generation, ordered layered lookup, selectors, pronunciation alphabet normalization, token provenance, cli behavior, and optional generic pronunciation providers.\n\nlexphon owns generic pronunciation providers as well as lexicon pronunciation cl…"
+        },
+        {
+          "anchor": "",
+          "heading": "Catalog and installation",
+          "text": "Lexphon accepts catalog version 1 with runtime contract g2lex-data.catalog.v1. Every artifact has a validated logical ID, locale, kind, source encoding, data version, release tag, manifest reference, asset reference, hashes, and asset size. Pronunciation assets use IPA or ARPABET. Membership assets use none and are not pronunciation layers.\n\nDataStore.install() is the only asset download path and is an explicit network-capable provisioning operation. It downloads and verifies the manifest, validates manifest metadata against the catalog, downloads and verifies the asset, opens it with G2Lex, and moves a complete version into assets/<logical-id>__<name>/<data-version>/. A logical ID and data version are immutable. The index is updated atomically. Failed installations remove staging and nev…",
+          "lower": "lexphon accepts catalog version 1 with runtime contract g2lex-data.catalog.v1. every artifact has a validated logical id, locale, kind, source encoding, data version, release tag, manifest reference, asset reference, hashes, and asset size. pronunciation assets use ipa or arpabet. membership assets use none and are not pronunciation layers.\n\ndatastore.install() is the only asset download path and is an explicit network-capable provisioning operation. it downloads and verifies the manifest, validates manifest metadata against the catalog, downloads and verifies the asset, opens it with g2lex, and moves a complete version into assets/<logical-id>__<name>/<data-version>/. a logical id and data version are immutable. the index is updated atomically. failed installations remove staging and nev…"
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime rule",
+          "text": "Phonemizer(...) opens only already-installed pronunciation assets. A missing lexicon raises LexiconNotInstalledError with an install command. Construction, lookup, token phonemization, and rendering do not download data.\n\nSelected layers are searched in caller order. Within each layer, profile-ordered candidates are searched before moving to the next layer. Profiles provide generic Unicode normalization, apostrophe normalization, and exact, lower, casefold, or title candidates. German uses de and de-de aliases and defaults to de-de:gold. English continues to default to en-us:gold; CMUdict must be selected explicitly.\n\nThe public result alphabet is IPA and every non-null pronunciation is Unicode NFC. ARPABET is converted with deterministic phone and primary or secondary stress rules. Unkno…",
+          "lower": "phonemizer(...) opens only already-installed pronunciation assets. a missing lexicon raises lexiconnotinstallederror with an install command. construction, lookup, token phonemization, and rendering do not download data.\n\nselected layers are searched in caller order. within each layer, profile-ordered candidates are searched before moving to the next layer. profiles provide generic unicode normalization, apostrophe normalization, and exact, lower, casefold, or title candidates. german uses de and de-de aliases and defaults to de-de:gold. english continues to default to en-us:gold; cmudict must be selected explicitly.\n\nthe public result alphabet is ipa and every non-null pronunciation is unicode nfc. arpabet is converted with deterministic phone and primary or secondary stress rules. unkno…"
+        },
+        {
+          "anchor": "",
+          "heading": "KokoroG2P integration",
+          "text": "KokoroG2P should import the Lexphon Python API, not spawn the CLI:\n\nfrom lexphon import Phonemizer\n\nengine = Phonemizer(\n    \"de-DE\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"espeak\",\n)\n\nlexical = engine.lookup_lexicon(\"File\")\nactual = engine.lookup(\"File\")\n\n\n\n\nlexical is routing evidence. actual is the pronunciation result. A provider result has source=\"provider\", while a lexical result has source=\"lexicon\".\n\nKokoroG2P converts generic Lexphon IPA to its model vocabulary and applies model-specific ratings, stress, and compatibility policy. Lexphon remains independent of KokoroG2P and does not validate or rewrite the Kokoro inventory.",
+          "lower": "kokorog2p should import the lexphon python api, not spawn the cli:\n\nfrom lexphon import phonemizer\n\nengine = phonemizer(\n    \"de-de\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"espeak\",\n)\n\nlexical = engine.lookup_lexicon(\"file\")\nactual = engine.lookup(\"file\")\n\n\n\n\nlexical is routing evidence. actual is the pronunciation result. a provider result has source=\"provider\", while a lexical result has source=\"lexicon\".\n\nkokorog2p converts generic lexphon ipa to its model vocabulary and applies model-specific ratings, stress, and compatibility policy. lexphon remains independent of kokorog2p and does not validate or rewrite the kokoro inventory."
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexphon/KOKOROG2P_INTEGRATION/",
+      "title": "lexphon KokoroG2P integration",
+      "snippet": "The dependency direction is:\n\ng2lex-data -> G2Lex assets -> Lexphon -> KokoroG2P\n\n\n\n\nKokoroG2P should import Lexphon’s Python API. It should …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "KokoroG2P integration",
+          "text": "The dependency direction is:\n\ng2lex-data -> G2Lex assets -> Lexphon -> KokoroG2P\n\n\n\n\nKokoroG2P should import Lexphon’s Python API. It should not spawn the CLI in its normal runtime path and should provision data separately from runtime startup.",
+          "lower": "the dependency direction is:\n\ng2lex-data -> g2lex assets -> lexphon -> kokorog2p\n\n\n\n\nkokorog2p should import lexphon’s python api. it should not spawn the cli in its normal runtime path and should provision data separately from runtime startup."
+        },
+        {
+          "anchor": "",
+          "heading": "Provisioning and runtime",
+          "text": "Install the desired Lexphon assets explicitly before starting an offline application:\n\npython -m pip install \"lexphon>=0.2.0,<0.3\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nIf the application configures fallback=\"goruut\", install the optional adapter explicitly:\n\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nPygoruut may provision or start its own Goruut runtime. A pre-populated Lexphon data home removes Lexphon catalog and lexicon downloads, but it does not guarantee offline Goruut startup. Provision the optional provider runtime separately when fully offline startup is required.\n\nRuntime code should open an installed local store without downloading data:\n\nfrom lexphon import Phonemizer\n\nengine = Phonemizer(\n    \"de-DE\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"e…",
+          "lower": "install the desired lexphon assets explicitly before starting an offline application:\n\npython -m pip install \"lexphon>=0.2.0,<0.3\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nif the application configures fallback=\"goruut\", install the optional adapter explicitly:\n\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\npygoruut may provision or start its own goruut runtime. a pre-populated lexphon data home removes lexphon catalog and lexicon downloads, but it does not guarantee offline goruut startup. provision the optional provider runtime separately when fully offline startup is required.\n\nruntime code should open an installed local store without downloading data:\n\nfrom lexphon import phonemizer\n\nengine = phonemizer(\n    \"de-de\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"e…"
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime contract",
+          "text": "Lexphon exposes two lookup modes:\n\n\nlookup_lexicon(token, tag=...) searches only configured lexicon layers. Use this method for lexical evidence and language routing. A miss returns None and cannot invoke a provider.\n\n\nlookup(token, tag=...) first performs the lexicon lookup, then invokes the configured provider after a miss. With fallback=None, an unknown token returns None.\n\n\n\nKokoroG2P may configure Lexphon with fallback=\"espeak\", fallback=\"goruut\", or a custom PronunciationProvider. Provider output is never lexical evidence. Lexphon returns clean generic IPA, structured variants, provider provenance, and requested_language; KokoroG2P converts the pronunciation to its model vocabulary and applies model-specific policy.\n\nPreserve Kokoro-specific ratings, stress controls, punctuation han…",
+          "lower": "lexphon exposes two lookup modes:\n\n\nlookup_lexicon(token, tag=...) searches only configured lexicon layers. use this method for lexical evidence and language routing. a miss returns none and cannot invoke a provider.\n\n\nlookup(token, tag=...) first performs the lexicon lookup, then invokes the configured provider after a miss. with fallback=none, an unknown token returns none.\n\n\n\nkokorog2p may configure lexphon with fallback=\"espeak\", fallback=\"goruut\", or a custom pronunciationprovider. provider output is never lexical evidence. lexphon returns clean generic ipa, structured variants, provider provenance, and requested_language; kokorog2p converts the pronunciation to its model vocabulary and applies model-specific policy.\n\npreserve kokoro-specific ratings, stress controls, punctuation han…"
+        },
+        {
+          "anchor": "",
+          "heading": "German configuration",
+          "text": "German supports de and de-de aliases and defaults to de-de:gold. The application may preserve public names with an alias map:\n\nGERMAN_LEXPHON_IDS = {\n    \"gold\": \"de-de:gold\",\n    \"crane\": \"de-de:crane\",\n    \"espeak\": \"de-de:espeak\",\n    \"olaph\": \"de-de:olaph\",\n}\n\n\n\n\nKokoro’s existing German selector normalization remains an application concern. For example, an application can map its ART or PRON tags to the generic selector expected by G2Lex before calling engine.lookup(word, tag=tag). Lexphon does not know Kokoro or spaCy tag conventions. Caller-supplied lexicon order remains semantic.\n\nEnglish CMUdict is selected explicitly with en-us:cmudict; it does not replace the generic en-us:gold default.",
+          "lower": "german supports de and de-de aliases and defaults to de-de:gold. the application may preserve public names with an alias map:\n\ngerman_lexphon_ids = {\n    \"gold\": \"de-de:gold\",\n    \"crane\": \"de-de:crane\",\n    \"espeak\": \"de-de:espeak\",\n    \"olaph\": \"de-de:olaph\",\n}\n\n\n\n\nkokoro’s existing german selector normalization remains an application concern. for example, an application can map its art or pron tags to the generic selector expected by g2lex before calling engine.lookup(word, tag=tag). lexphon does not know kokoro or spacy tag conventions. caller-supplied lexicon order remains semantic.\n\nenglish cmudict is selected explicitly with en-us:cmudict; it does not replace the generic en-us:gold default."
+        },
+        {
+          "anchor": "",
+          "heading": "Ownership boundary",
+          "text": "g2lex-data obtains, transforms, validates, licenses, reproduces, and publishes generic pronunciation data. G2Lex stores and queries that data. Lexphon installs, verifies, selects, normalizes, and provides optional generic pronunciation providers for already-published assets. KokoroG2P owns text preparation, token spans, POS mapping, IPA-to-Kokoro conversion, model validation, stress, ratings, and model-specific policy.\n\nLexphon performs no catalog lookup or dictionary download during construction or phonemization. It does not import KokoroG2P, return Kokoro phonemes, validate the Kokoro inventory, apply model ratings, or decide model-specific stress and fallback behavior. Lexphon must never contain production dictionary source acquisition or G2Lex build recipes.",
+          "lower": "g2lex-data obtains, transforms, validates, licenses, reproduces, and publishes generic pronunciation data. g2lex stores and queries that data. lexphon installs, verifies, selects, normalizes, and provides optional generic pronunciation providers for already-published assets. kokorog2p owns text preparation, token spans, pos mapping, ipa-to-kokoro conversion, model validation, stress, ratings, and model-specific policy.\n\nlexphon performs no catalog lookup or dictionary download during construction or phonemization. it does not import kokorog2p, return kokoro phonemes, validate the kokoro inventory, apply model ratings, or decide model-specific stress and fallback behavior. lexphon must never contain production dictionary source acquisition or g2lex build recipes."
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexphon/MIGRATING_0_2/",
+      "title": "lexphon Migrating to Lexphon 0.2",
+      "snippet": "Lexphon 0.2 is a breaking API cleanup. The release makes provider behavior typed and explicit, exposes structured pronunciation variants, an …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Migrating to Lexphon 0.2",
+          "text": "Lexphon 0.2 is a breaking API cleanup. The release makes provider behavior typed and explicit, exposes structured pronunciation variants, and separates Lexphon lexicon provisioning from optional provider provisioning.",
+          "lower": "lexphon 0.2 is a breaking api cleanup. the release makes provider behavior typed and explicit, exposes structured pronunciation variants, and separates lexphon lexicon provisioning from optional provider provisioning."
+        },
+        {
+          "anchor": "",
+          "heading": "API mapping",
+          "text": "Lexphon 0.1 behavior\n\nLexphon 0.2 replacement\n\n\n\n\n\nLegacy fallback compatibility APIs\n\nStrict PronunciationProvider and typed ProviderError subclasses\n\n\n\nvariant_details\n\nStructured PronunciationToken.variants and PronunciationVariant\n\n\n\nalphabet\n\nsource_encoding at the provider or token boundary, with normalized IPA output\n\n\n\nDirect lookup miss with implicit fallback semantics\n\nNone for a genuine direct miss; providers are invoked only after lexicon misses\n\n\n\nLegacy CLI JSON output\n\nCLI JSON schema 2 with structured token and provenance fields\n\n\n\nScalar-only optional provider usage\n\nOptional BatchPronunciationProvider support through lookup_many()\n\n\n\nImplicit or ambiguous default lexicon configuration\n\nlexicons=None for profile defaults and lexicons=[] for provider-only construction",
+          "lower": "lexphon 0.1 behavior\n\nlexphon 0.2 replacement\n\n\n\n\n\nlegacy fallback compatibility apis\n\nstrict pronunciationprovider and typed providererror subclasses\n\n\n\nvariant_details\n\nstructured pronunciationtoken.variants and pronunciationvariant\n\n\n\nalphabet\n\nsource_encoding at the provider or token boundary, with normalized ipa output\n\n\n\ndirect lookup miss with implicit fallback semantics\n\nnone for a genuine direct miss; providers are invoked only after lexicon misses\n\n\n\nlegacy cli json output\n\ncli json schema 2 with structured token and provenance fields\n\n\n\nscalar-only optional provider usage\n\noptional batchpronunciationprovider support through lookup_many()\n\n\n\nimplicit or ambiguous default lexicon configuration\n\nlexicons=none for profile defaults and lexicons=[] for provider-only construction"
+        },
+        {
+          "anchor": "",
+          "heading": "Provider and lexicon configuration",
+          "text": "lexicons=None opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nProvider output is normalized at the Lexphon engine boundary. A provider may return str or None for scalar calls and a sequence of those values for batch calls. Malformed output raises ProviderOutputError; provider execution failures raise ProviderExecutionError.\n\nInstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe eSpeak extra does not install the sy…",
+          "lower": "lexicons=none opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nprovider output is normalized at the lexphon engine boundary. a provider may return str or none for scalar calls and a sequence of those values for batch calls. malformed output raises provideroutputerror; provider execution failures raise providerexecutionerror.\n\ninstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra does not install the sy…"
+        },
+        {
+          "anchor": "",
+          "heading": "KokoroG2P adapter example",
+          "text": "A 0.1 adapter commonly relied on implicit profile defaults and scalar provider calls:\n\nwith Phonemizer(\"de-DE\", fallback=\"espeak\") as engine:\n    token = engine.lookup(word)\n    if token is not None:\n        return convert_ipa_to_kokoro(token.pronunciation or \"\")\n\n\n\n\nIn 0.2, choose the lexicon behavior explicitly and preserve typed provider results at the adapter boundary:\n\nfrom lexphon import Phonemizer\nfrom lexphon.errors import ProviderError\n\nwith Phonemizer(\n    \"de-DE\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"espeak\",\n) as engine:\n    try:\n        token = engine.lookup(word)\n    except ProviderError as error:\n        raise LookupError(f\"Lexphon provider failed for {word!r}\") from error\n\nif token is None:\n    raise LookupError(f\"Lexphon miss for {word!r}\")\nreturn convert_ipa_to_kok…",
+          "lower": "a 0.1 adapter commonly relied on implicit profile defaults and scalar provider calls:\n\nwith phonemizer(\"de-de\", fallback=\"espeak\") as engine:\n    token = engine.lookup(word)\n    if token is not none:\n        return convert_ipa_to_kokoro(token.pronunciation or \"\")\n\n\n\n\nin 0.2, choose the lexicon behavior explicitly and preserve typed provider results at the adapter boundary:\n\nfrom lexphon import phonemizer\nfrom lexphon.errors import providererror\n\nwith phonemizer(\n    \"de-de\",\n    lexicons=[\"de-de:gold\"],\n    fallback=\"espeak\",\n) as engine:\n    try:\n        token = engine.lookup(word)\n    except providererror as error:\n        raise lookuperror(f\"lexphon provider failed for {word!r}\") from error\n\nif token is none:\n    raise lookuperror(f\"lexphon miss for {word!r}\")\nreturn convert_ipa_to_kok…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexphon/changelog/",
+      "title": "lexphon Changelog",
+      "snippet": "Added optional eSpeak and Goruut providers with pronunciation controls and docs\nBREAKING: Changed pronunciation APIs to structured variants …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added optional eSpeak and Goruut providers with pronunciation controls and docs",
+          "lower": "added optional espeak and goruut providers with pronunciation controls and docs"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "BREAKING: Changed pronunciation APIs to structured variants and provider errors; added batching and JSON schema 2",
+          "lower": "breaking: changed pronunciation apis to structured variants and provider errors; added batching and json schema 2"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed IPA marker normalization, structured provenance, and exact/prefix lookup parity",
+          "lower": "fixed ipa marker normalization, structured provenance, and exact/prefix lookup parity"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the Lexphon pronunciation metadata handoff for downstream adapters",
+          "lower": "documented the lexphon pronunciation metadata handoff for downstream adapters"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed support for lexicon implementations without a prefixes helper while preserving longest-prefix matching\n\n\nFixed version tag detection for tags with or without the v prefix",
+          "lower": "fixed support for lexicon implementations without a prefixes helper while preserving longest-prefix matching\n\n\nfixed version tag detection for tags with or without the v prefix"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added explicit CLI commands and structured diagnostics for unavailable pronunciation data\n\n\nAdded prefix matching and six additional language profiles",
+          "lower": "added explicit cli commands and structured diagnostics for unavailable pronunciation data\n\n\nadded prefix matching and six additional language profiles"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented package metadata and test coverage status in the project README",
+          "lower": "documented package metadata and test coverage status in the project readme"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added lexicon-first phonemization with layered lookup and normalized IPA output",
+          "lower": "added lexicon-first phonemization with layered lookup and normalized ipa output"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed pronunciation asset handling to validate before atomic offline activation",
+          "lower": "changed pronunciation asset handling to validate before atomic offline activation"
+        }
+      ]
+    },
+    {
+      "url": "/tools/lexphon/",
+      "title": "Lexphon",
+      "snippet": "Lexphon is a generic, lexicon-driven phonemizer and CLI built on G2Lex. It consumes released pronunciation assets and returns normalized IPA …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Lexphon",
+          "text": "Lexphon is a generic, lexicon-driven phonemizer and CLI built on G2Lex. It consumes released pronunciation assets and returns normalized IPA without producing Kokoro phonemes.\n\nLexphon provides:\n\n\nOrdered, layered lexicon lookup with language profiles and selectors.\n\n\nDeterministic IPA and ARPABET normalization.\n\n\nStructured token results with pronunciation and provenance metadata.\n\n\nExplicit, optional eSpeak and Goruut pronunciation providers.\n\n\nOffline runtime behavior after data has been provisioned.\n\n\n\n\n\nLexphon architecture\nBoundaries\n\nCatalog and installation\n\nRuntime rule\n\nKokoroG2P integration\n\n\n\n\nKokoroG2P integration\nProvisioning and runtime\n\nRuntime contract\n\nGerman configuration\n\nOwnership boundary\n\n\n\n\nMigrating to Lexphon 0.2\nAPI mapping\n\nProvider and lexicon configuration\n\nK…",
+          "lower": "lexphon is a generic, lexicon-driven phonemizer and cli built on g2lex. it consumes released pronunciation assets and returns normalized ipa without producing kokoro phonemes.\n\nlexphon provides:\n\n\nordered, layered lexicon lookup with language profiles and selectors.\n\n\ndeterministic ipa and arpabet normalization.\n\n\nstructured token results with pronunciation and provenance metadata.\n\n\nexplicit, optional espeak and goruut pronunciation providers.\n\n\noffline runtime behavior after data has been provisioned.\n\n\n\n\n\nlexphon architecture\nboundaries\n\ncatalog and installation\n\nruntime rule\n\nkokorog2p integration\n\n\n\n\nkokorog2p integration\nprovisioning and runtime\n\nruntime contract\n\ngerman configuration\n\nownership boundary\n\n\n\n\nmigrating to lexphon 0.2\napi mapping\n\nprovider and lexicon configuration\n\nk…"
+        },
+        {
+          "anchor": "",
+          "heading": "Install",
+          "text": "python -m pip install lexphon\n\n\n\n\nInstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe eSpeak extra expects an eSpeak or eSpeak-NG executable supplied by the operating system. Pygoruut may provision its own Goruut runtime.",
+          "lower": "python -m pip install lexphon\n\n\n\n\ninstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra expects an espeak or espeak-ng executable supplied by the operating system. pygoruut may provision its own goruut runtime."
+        },
+        {
+          "anchor": "",
+          "heading": "Quick start",
+          "text": "Provision a pronunciation asset before using profile defaults:\n\nlexphon data install de-de:gold\nlexphon phonemize --language de-DE \"Die Leute kommen.\"\n\n\n\n\nThe Python API exposes both lexical evidence and staged pronunciation lookup:\n\nfrom lexphon import Phonemizer\n\nwith Phonemizer(\n    \"de-DE\",\n    lexicons=[\"de-de:gold\"],\n    fallback=None,\n) as engine:\n    result = engine.phonemize_tokens(\"Die Leute\")\n    for token in result.tokens:\n        print(token.text, token.pronunciation, token.source)\n\n\n\n\nlookup_lexicon() searches only installed lexicons. lookup() searches lexicons first and invokes the configured provider only after a miss. Runtime commands do not download catalogs or lexicons implicitly.",
+          "lower": "provision a pronunciation asset before using profile defaults:\n\nlexphon data install de-de:gold\nlexphon phonemize --language de-de \"die leute kommen.\"\n\n\n\n\nthe python api exposes both lexical evidence and staged pronunciation lookup:\n\nfrom lexphon import phonemizer\n\nwith phonemizer(\n    \"de-de\",\n    lexicons=[\"de-de:gold\"],\n    fallback=none,\n) as engine:\n    result = engine.phonemize_tokens(\"die leute\")\n    for token in result.tokens:\n        print(token.text, token.pronunciation, token.source)\n\n\n\n\nlookup_lexicon() searches only installed lexicons. lookup() searches lexicons first and invokes the configured provider only after a miss. runtime commands do not download catalogs or lexicons implicitly."
+        },
+        {
+          "anchor": "",
+          "heading": "Data lifecycle",
+          "text": "Catalog access and downloads are explicit. DataStore.install() retrieves and verifies a manifest and asset, then activates the complete version atomically. list, info, verify, and remove inspect or manage local data without network access.\n\nData release versions and the Lexphon Python package version are independent. Pin both the Python dependency and the immutable data release used during provisioning.",
+          "lower": "catalog access and downloads are explicit. datastore.install() retrieves and verifies a manifest and asset, then activates the complete version atomically. list, info, verify, and remove inspect or manage local data without network access.\n\ndata release versions and the lexphon python package version are independent. pin both the python dependency and the immutable data release used during provisioning."
+        }
+      ]
+    }
+  ]
+}

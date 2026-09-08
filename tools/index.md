@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">15<span>focused tools</span></div>
+    <div class="hero-stat">16<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -85,6 +85,16 @@ permalink: /tools/
         <a href="/tools/g2lex/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/g2lex/releases/tag/v0.1.8" rel="external noopener">Latest release: v0.1.8 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/g2lex" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>lexphon</h3>
+      <p>Lexicon-driven phonemizer and CLI built on G2Lex.</p>
+      <div class="card-links">
+        <a href="/tools/lexphon/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexphon/releases/tag/v0.2.0" rel="external noopener">Latest release: v0.2.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexphon" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
     <article class="card tool-card">
