@@ -453,8 +453,14 @@
         {
           "anchor": "",
           "heading": "Prepared input",
-          "text": "Use phonemize_prepared when the caller has already converted written text to spoken\ntext. It retains kokorog2p tokenization, G2P, model punctuation handling, overrides,\nphoneme construction, and token IDs, but does not run written-to-spoken semantic\nexpansion again.\n\nAll canonical public entry points require the language to be supplied explicitly.\nphonemize, phonemize_prepared, and tokenize require language=...; the\nconvenience wrappers phonemes and phoneme_ids follow the same rule.\n\n\n\nkokorog2p.phonemize_prepared(text: str, language: str, overrides: Sequence[OverrideSpanLike] | None = None, annotations: Sequence[TokenAnnotationLike] | None = None, return_ids: bool = True, return_phonemes: bool = True, alignment: Literal['span', 'legacy'] = 'span', overlap: Literal['snap', 'strict'] = 'sn…",
-          "lower": "use phonemize_prepared when the caller has already converted written text to spoken\ntext. it retains kokorog2p tokenization, g2p, model punctuation handling, overrides,\nphoneme construction, and token ids, but does not run written-to-spoken semantic\nexpansion again.\n\nall canonical public entry points require the language to be supplied explicitly.\nphonemize, phonemize_prepared, and tokenize require language=...; the\nconvenience wrappers phonemes and phoneme_ids follow the same rule.\n\n\n\nkokorog2p.phonemize_prepared(text: str, language: str, overrides: sequence[overridespanlike] | none = none, annotations: sequence[tokenannotationlike] | none = none, return_ids: bool = true, return_phonemes: bool = true, alignment: literal['span', 'legacy'] = 'span', overlap: literal['snap', 'strict'] = 'sn…"
+          "text": "Use phonemize_prepared when the caller has already converted written text to spoken\ntext. It retains kokorog2p tokenization, G2P, model punctuation handling, overrides,\nphoneme construction, and token IDs, but does not run written-to-spoken semantic\nexpansion again.\n\nAll canonical public entry points require the language to be supplied explicitly.\nphonemize, phonemize_prepared, and tokenize require language=...; the\nconvenience wrappers phonemes and phoneme_ids follow the same rule.\n\n\n\nkokorog2p.phonemize_prepared(text: str, language: str, overrides: Sequence[OverrideSpanLike] | None = None, annotations: Sequence[TokenAnnotationLike] | None = None, return_ids: bool = True, return_phonemes: bool = True, alignment: Literal['span', 'legacy'] = 'span', overlap: Literal['snap', 'strict', 'spli…",
+          "lower": "use phonemize_prepared when the caller has already converted written text to spoken\ntext. it retains kokorog2p tokenization, g2p, model punctuation handling, overrides,\nphoneme construction, and token ids, but does not run written-to-spoken semantic\nexpansion again.\n\nall canonical public entry points require the language to be supplied explicitly.\nphonemize, phonemize_prepared, and tokenize require language=...; the\nconvenience wrappers phonemes and phoneme_ids follow the same rule.\n\n\n\nkokorog2p.phonemize_prepared(text: str, language: str, overrides: sequence[overridespanlike] | none = none, annotations: sequence[tokenannotationlike] | none = none, return_ids: bool = true, return_phonemes: bool = true, alignment: literal['span', 'legacy'] = 'span', overlap: literal['snap', 'strict', 'spli…"
+        },
+        {
+          "anchor": "",
+          "heading": "Routing and target-model options",
+          "text": "phonemize_prepared accepts these optional controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nThe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. Any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nLanguageRoutingConfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. Without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes the caller-supplied Kokoro vocab…",
+          "lower": "phonemize_prepared accepts these optional controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nthe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nlanguageroutingconfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes the caller-supplied kokoro vocab…"
         },
         {
           "anchor": "",
@@ -868,13 +874,25 @@
     {
       "url": "/tools/kokorog2p/main/changelog/",
       "title": "kokorog2p Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded opt-in Swedis …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded opt-in automa …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added opt-in automatic language routing with exact source-aligned sub-token spans and\nroute diagnostics\n\n\nAdded structured evidence for exact selected German and English lexicon hits\n\n\nAdded selected-lexicon evidence and provenance-aware routing across additional\nlanguage frontends",
+          "lower": "added opt-in automatic language routing with exact source-aligned sub-token spans and\nroute diagnostics\n\n\nadded structured evidence for exact selected german and english lexicon hits\n\n\nadded selected-lexicon evidence and provenance-aware routing across additional\nlanguage frontends"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed benchmark-found pronunciation and routing edge cases across Japanese, Kazakh,\nRussian, and Vietnamese frontends",
+          "lower": "fixed benchmark-found pronunciation and routing edge cases across japanese, kazakh,\nrussian, and vietnamese frontends"
         },
         {
           "anchor": "",
@@ -1085,24 +1103,6 @@
           "heading": "Quality",
           "text": "Added French fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests",
           "lower": "added french fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Add Spanish language grapheme-to-phoneme support\n\n\nAdded Italian language grapheme-to-phoneme support\n\n\nAdded Portuguese language grapheme-to-phoneme support\n\n\nAdded benchmark datasets for Korean, French, and Chinese languages\n\n\nAdded safe offline spaCy model loader to prevent network downloads in offline\nenvironments\n\n\nAdded factory language validation tests and offline optional dependency tests\n\n\nAdded release artifact checking script",
-          "lower": "add spanish language grapheme-to-phoneme support\n\n\nadded italian language grapheme-to-phoneme support\n\n\nadded portuguese language grapheme-to-phoneme support\n\n\nadded benchmark datasets for korean, french, and chinese languages\n\n\nadded safe offline spacy model loader to prevent network downloads in offline\nenvironments\n\n\nadded factory language validation tests and offline optional dependency tests\n\n\nadded release artifact checking script"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Updated pygoruut dependency to version 0.8.0\n\n\nChanged ruff to 0.15.0 and modernized linting configuration with isort sections and\nMcCabe complexity limits\n\n\nChanged GitHub Actions workflows for improved CI reliability\n\n\nChanged Korean grapheme-to-phoneme processing with updated g2pk module and numeral\nhandling\n\n\nChanged German phoneme generation and rebuilt phoneme data",
-          "lower": "updated pygoruut dependency to version 0.8.0\n\n\nchanged ruff to 0.15.0 and modernized linting configuration with isort sections and\nmccabe complexity limits\n\n\nchanged github actions workflows for improved ci reliability\n\n\nchanged korean grapheme-to-phoneme processing with updated g2pk module and numeral\nhandling\n\n\nchanged german phoneme generation and rebuilt phoneme data"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed mbrola voice availability detection for unavailable voices\n\n\nFixed French fallback and phoneme generation for espeak backend\n\n\nFixed test suite compatibility for Termux environment\n\n\nFixed spaCy model download commands in CI workflows",
-          "lower": "fixed mbrola voice availability detection for unavailable voices\n\n\nfixed french fallback and phoneme generation for espeak backend\n\n\nfixed test suite compatibility for termux environment\n\n\nfixed spacy model download commands in ci workflows"
         }
       ]
     },
@@ -1638,8 +1638,8 @@
         {
           "anchor": "",
           "heading": "Explicit language routing",
-          "text": "Language switching is explicit. Use OverrideSpan or annotation language metadata for\na foreign span. Generic automatic language detection and mixed-language segmentation are\napplication responsibilities and are not provided by the core package.",
-          "lower": "language switching is explicit. use overridespan or annotation language metadata for\na foreign span. generic automatic language detection and mixed-language segmentation are\napplication responsibilities and are not provided by the core package."
+          "text": "Language switching is explicit. Use OverrideSpan or annotation language metadata for\na foreign span. The core still requires an explicit document/default language and does\nnot automatically select that document language.\n\nOptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nThe candidate list is a hard allowlist. Lexicon collisions and ambiguity stay in the\ndefault language. Generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence.",
+          "lower": "language switching is explicit. use overridespan or annotation language metadata for\na foreign span. the core still requires an explicit document/default language and does\nnot automatically select that document language.\n\noptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nthe candidate list is a hard allowlist. lexicon collisions and ambiguity stay in the\ndefault language. generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence."
         },
         {
           "anchor": "",
@@ -1776,6 +1776,18 @@
           "heading": "OverrideSpan",
           "text": "Specifies a region of text to override during phonemization:\n\n@dataclass\nclass OverrideSpan:\n    char_start: int                 # Character offset start\n    char_end: int                   # Character offset end (exclusive)\n    attrs: dict[str, str]           # Override attributes\n\n\n\n\nCommon Attributes:\n\n\nph: Direct phoneme override (e.g., {\"ph\": \"həlˈO\"})\n\n\nlang: Language switch (e.g., {\"lang\": \"fr\"})\n\n\nCustom attributes for pipeline processing\n\n\n\nExample:\n\ntext = \"the cat the dog\"\noverrides = [\n    OverrideSpan(0, 3, {\"ph\": \"ðə\"}),   # First \"the\" → /ðə/\n    OverrideSpan(8, 11, {\"ph\": \"ði\"}),  # Second \"the\" → /ði/\n]",
           "lower": "specifies a region of text to override during phonemization:\n\n@dataclass\nclass overridespan:\n    char_start: int                 # character offset start\n    char_end: int                   # character offset end (exclusive)\n    attrs: dict[str, str]           # override attributes\n\n\n\n\ncommon attributes:\n\n\nph: direct phoneme override (e.g., {\"ph\": \"həlˈo\"})\n\n\nlang: language switch (e.g., {\"lang\": \"fr\"})\n\n\ncustom attributes for pipeline processing\n\n\n\nexample:\n\ntext = \"the cat the dog\"\noverrides = [\n    overridespan(0, 3, {\"ph\": \"ðə\"}),   # first \"the\" → /ðə/\n    overridespan(8, 11, {\"ph\": \"ði\"}),  # second \"the\" → /ði/\n]"
+        },
+        {
+          "anchor": "",
+          "heading": "Exact sub-token language spans",
+          "text": "The default overlap=\"snap\" behavior is unchanged. Opt into exact source-aligned\nfragments with overlap=\"split\":\n\nfrom kokorog2p import OverrideSpan, phonemize_prepared\n\nresult = phonemize_prepared(\n    \"Manpowerdiskussion\",\n    language=\"de\",\n    overlap=\"split\",\n    overrides=[OverrideSpan(0, 8, {\"lang\": \"en\"})],\n)\n\n\n\n\nEach fragment satisfies\nfragment.text == source[fragment.char_start:fragment.char_end]. Explicit ph and\nlang overrides take precedence over automatic routing.",
+          "lower": "the default overlap=\"snap\" behavior is unchanged. opt into exact source-aligned\nfragments with overlap=\"split\":\n\nfrom kokorog2p import overridespan, phonemize_prepared\n\nresult = phonemize_prepared(\n    \"manpowerdiskussion\",\n    language=\"de\",\n    overlap=\"split\",\n    overrides=[overridespan(0, 8, {\"lang\": \"en\"})],\n)\n\n\n\n\neach fragment satisfies\nfragment.text == source[fragment.char_start:fragment.char_end]. explicit ph and\nlang overrides take precedence over automatic routing."
+        },
+        {
+          "anchor": "",
+          "heading": "Automatic language routing",
+          "text": "Enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nRouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes LanguageRoute\nrecords in result.language_routes. A hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nEvidence-capable resources are:\n\n\nPackaged G2Lex: English US, English GB, and French.\n\n\nProvisioned Lexphon: German, Portuguese BR/PT, Russian, Thai, Vietnamese, Japanese,\nKorean, and Swedish when NST is explicitly selected.\n\n\n\nSpanish, Italian, Czech, Hebrew, Arabic, Chinese, and Kazakh still ph…",
+          "lower": "enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nrouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes languageroute\nrecords in result.language_routes. a hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nevidence-capable resources are:\n\n\npackaged g2lex: english us, english gb, and french.\n\n\nprovisioned lexphon: german, portuguese br/pt, russian, thai, vietnamese, japanese,\nkorean, and swedish when nst is explicitly selected.\n\n\n\nspanish, italian, czech, hebrew, arabic, chinese, and kazakh still ph…"
         },
         {
           "anchor": "",

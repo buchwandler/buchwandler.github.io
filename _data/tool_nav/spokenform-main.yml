@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 4e15baa192685b02d0992eb9cdeab3a5b44420a1
+source_commit: e5b009cd4e66768a9f5304eded1ad9b5158e9d59
 source_url: https://github.com/buchwandler/spokenform/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/spokenform
@@ -30,7 +30,7 @@ entries:
   title: spokenform Installation
   url: /tools/spokenform/main/installation/
 - slug: languages
-  title: spokenform Language support matrix
+  title: spokenform Complete runtime registry
   url: /tools/spokenform/main/languages/
 - slug: quickstart
   title: spokenform Quickstart

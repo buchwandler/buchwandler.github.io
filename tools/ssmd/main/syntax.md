@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
+docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
 search_enabled: true
 ---
 
@@ -577,6 +577,37 @@ and is not part of the portable document.</p>
 <p><code class="docutils literal notranslate"><span class="pre">pause_defaults</span></code> accepts non-negative <code class="docutils literal notranslate"><span class="pre">ms</span></code> or <code class="docutils literal notranslate"><span class="pre">s</span></code> durations. Explicit body break markers
 take precedence; defaults do not insert visible pause markers into SSMD source. PyYAML
 serialization is deterministic but does not preserve YAML comments.</p>
+</section>
+<section id="semantic-language-vs-pronunciation-language">
+<h2>Semantic language vs pronunciation language</h2>
+<p>Language annotations are semantic by default:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code> when the language should affect only pronunciation/G2P:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+[Manpower]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}diskussion
+ge[cancel]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}t
+[download]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}en
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">lang</span></code> and <code class="docutils literal notranslate"><span class="pre">language</span></code> input aliases are accepted; serialization uses canonical
+<code class="docutils literal notranslate"><span class="pre">lang</span></code>. Omitted scope means <code class="docutils literal notranslate"><span class="pre">semantic</span></code>, and valid scopes are only <code class="docutils literal notranslate"><span class="pre">semantic</span></code> and
+<code class="docutils literal notranslate"><span class="pre">pronunciation</span></code>. SSMD does not canonicalize BCP-47 values or perform language inference.</p>
+<section id="portable-language-detection-hint">
+<h3>Portable language-detection hint</h3>
+<p>A document may carry a consumer-facing routing hint in front matter:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">language_detection</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="w">  </span><span class="nt">languages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">de</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">en</span><span class="p p-Indicator">]</span>
+<span class="nn">---</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mode</span></code> is <code class="docutils literal notranslate"><span class="pre">off</span></code> or <code class="docutils literal notranslate"><span class="pre">auto</span></code>; <code class="docutils literal notranslate"><span class="pre">auto</span></code> requires at least two distinct language entries. SSMD
+validates and exposes this metadata, excludes it from clean text, and does not run
+detection itself. It is not a local authoring-config default.</p>
+</section>
 </section>
 <section id="text-and-emphasis">
 <h2>Text and Emphasis</h2>

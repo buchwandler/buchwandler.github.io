@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -760,43 +760,14 @@ ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span clas
 </section>
 <section id="mixed-language-support">
 <h2>Mixed-Language Support</h2>
-<p>For books containing multiple languages (e.g., German text with English technical
-terms), ttsforge can automatically detect and handle different languages:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert a book with German and English text</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
-
-<span class="c1"># Test with a sample</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span><span class="s2">&quot;Das ist ein deutscher Satz. This is an English sentence.&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
+<p>Mixed-language changes must be explicit SSMD spans. Generate or edit the chapter SSMD
+and annotate the foreign segment:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Das ist ein deutscher Satz. [This is an English sentence.]{lang=&quot;en-us&quot;}
 </pre></div>
 </div>
-<p><strong>Requirements</strong>: Install the language detector:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lingua-language-detector
-</pre></div>
-</div>
-<p><strong>Options</strong>:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> - Enable automatic language detection</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> - Primary/fallback language (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> - Comma-separated list of languages to detect</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> - Detection confidence threshold (0.0-1.0,
-default: 0.7)</p></li>
-</ul>
-<p><strong>Supported languages</strong>: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">tr</span></code>,
-<code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code>/<code class="docutils literal notranslate"><span class="pre">cmn</span></code></p>
-<p><strong>Configuration</strong>: Set defaults in config:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_mixed_language<span class="w"> </span><span class="nb">true</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_primary<span class="w"> </span>de
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_allowed<span class="w"> </span><span class="s2">&quot;[&#39;de&#39;, &#39;en-us&#39;]&quot;</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_confidence<span class="w"> </span><span class="m">0</span>.7
-</pre></div>
-</div>
+<p>TTSForge does not automatically detect language changes. The legacy
+<code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> option and related settings are rejected with migration guidance.
+The document language remains required for the overall synthesis pipeline.</p>
 </section>
 <section id="ssmd-editing">
 <h2>SSMD Editing</h2>
@@ -857,7 +828,7 @@ policy.</p>
 He **hated** the summer holidays. ...p
 </pre></div>
 </div>
-<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8</span></a>.</p>
+<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.6</span></a>.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
@@ -903,7 +874,7 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <section id="next-steps">
 <h2>Next Steps</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8</span></a> - SSMD editing and syntax reference</p></li>
+<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.6</span></a> - SSMD editing and syntax reference</p></li>
 <li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
 <li><p><a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> - Detailed voice information</p></li>
 <li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - All configuration options</p></li>

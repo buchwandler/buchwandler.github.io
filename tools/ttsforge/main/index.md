@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -553,7 +553,7 @@ ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#installing-ttsforge">Installing ttsforge</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#onnx-runtime-providers">ONNX Runtime Providers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#memory-diagnostics">Memory diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#mixed-language-support-optional">Mixed-Language Support (Optional)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#mixed-language-support">Mixed-Language Support</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#downloading-models">Downloading Models</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#troubleshooting">Troubleshooting</a></li>
@@ -593,7 +593,7 @@ ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="cli/#phonemes">phonemes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8.6</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#basic-workflow">Basic workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#portable-document-example">Portable document example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#syntax">Syntax</a></li>
@@ -641,18 +641,19 @@ ONNX TTS (Text-to-Speech).</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.7] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.3.3] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.3.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.3.1] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.0] - 2026-08-02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.2.0] - 2026-07-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.2] - 2026-02-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.1] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.1.0] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.3.7] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.3.6] - 2026-08-15</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.4] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.3.3] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.3.2] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.3.0] - 2026-08-02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.2.0] - 2026-07-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.1.2] - 2026-02-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.1.1] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.1.0] - 2026-02-01</a></li>
 </ul>
 </li>
 </ul>
@@ -673,7 +674,8 @@ ONNX TTS (Text-to-Speech).</p>
 <ul class="simple">
 <li><p><strong>EPUB to Audiobook Conversion</strong>: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS
 formats</p></li>
-<li><p><strong>50+ High-Quality Voices</strong>: Support for 9 languages with multiple voice options</p></li>
+<li><p><strong>PyKokoro metadata voices</strong>: Discover profile voices without a fixed TTSForge
+whitelist</p></li>
 <li><p><strong>SSMD Editing</strong>: Edit intermediate SSMD files to fine-tune pronunciation and pacing</p></li>
 <li><p><strong>Resumable Conversions</strong>: Long audiobook conversions can be interrupted and resumed</p></li>
 <li><p><strong>Phoneme Pre-tokenization</strong>: Pre-process text to phonemes for faster batch
@@ -682,7 +684,7 @@ conversions</p></li>
 <li><p><strong>Voice Blending</strong>: Mix multiple voices for custom narration styles</p></li>
 <li><p><strong>GPU Acceleration</strong>: Optional GPU support for faster processing</p></li>
 <li><p><strong>Chapter Selection</strong>: Convert specific chapters or chapter ranges</p></li>
-<li><p><strong>Metadata Support</strong>: Automatic language detection and metadata embedding</p></li>
+<li><p><strong>Explicit SSMD language spans</strong>: Mark mixed-language text with <code class="docutils literal notranslate"><span class="pre">lang</span></code> annotations</p></li>
 <li><p><strong>Streaming Read</strong>: Real-time playback with the <code class="docutils literal notranslate"><span class="pre">read</span></code> command (optional audio extra)</p></li>
 </ul>
 </section>
@@ -707,17 +709,18 @@ ttsforge<span class="w"> </span>voices
 </section>
 <section id="supported-languages">
 <h2>Supported Languages</h2>
-<p>ttsforge supports 9 languages with native TTS voices:</p>
+<p>ttsforge supports 10 languages with native TTS voices (including German):</p>
 <ul class="simple">
-<li><p><strong>American English</strong> (a) - 20 voices</p></li>
-<li><p><strong>British English</strong> (b) - 8 voices</p></li>
-<li><p><strong>Spanish</strong> (e) - 3 voices</p></li>
-<li><p><strong>French</strong> (f) - 1 voice</p></li>
-<li><p><strong>Hindi</strong> (h) - 4 voices</p></li>
-<li><p><strong>Italian</strong> (i) - 2 voices</p></li>
-<li><p><strong>Japanese</strong> (j) - 5 voices</p></li>
-<li><p><strong>Brazilian Portuguese</strong> (p) - 3 voices</p></li>
-<li><p><strong>Mandarin Chinese</strong> (z) - 8 voices</p></li>
+<li><p><strong>American English</strong> (a)</p></li>
+<li><p><strong>British English</strong> (b)</p></li>
+<li><p><strong>German</strong> (d)</p></li>
+<li><p><strong>Spanish</strong> (e)</p></li>
+<li><p><strong>French</strong> (f)</p></li>
+<li><p><strong>Hindi</strong> (h)</p></li>
+<li><p><strong>Italian</strong> (i)</p></li>
+<li><p><strong>Japanese</strong> (j)</p></li>
+<li><p><strong>Brazilian Portuguese</strong> (p)</p></li>
+<li><p><strong>Mandarin Chinese</strong> (z)</p></li>
 </ul>
 </section>
 <section id="requirements">
@@ -726,6 +729,7 @@ ttsforge<span class="w"> </span>voices
 <li><p>Python 3.10 or later</p></li>
 <li><p>ffmpeg (required for MP3/FLAC/OPUS/M4B output and chapter merging)</p></li>
 <li><p>espeak-ng (for phonemization)</p></li>
+<li><p>PyKokoro 0.9 with kokorog2p 0.9.2 and SSMD 0.8.6</p></li>
 <li><p>~330MB disk space for ONNX models (downloaded automatically)</p></li>
 <li><p>sounddevice (optional, for playback features)</p></li>
 </ul>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -574,7 +574,8 @@ the same directory.</p>
 <li><p>Single voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">am_adam</span></code>, etc.</p></li>
 <li><p>Voice blend: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code> (auto-detects blend format)</p></li>
 </ul>
-<p>See <a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> for available voices. Default: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>.</p>
+<p>See <a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> for PyKokoro metadata-discovered voices. Omit the option to use the
+profile default for the document language.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for TTS. Choices: <code class="docutils literal notranslate"><span class="pre">a</span></code> (American English), <code class="docutils literal notranslate"><span class="pre">b</span></code>
 (British English), <code class="docutils literal notranslate"><span class="pre">e</span></code> (Spanish), <code class="docutils literal notranslate"><span class="pre">f</span></code> (French), <code class="docutils literal notranslate"><span class="pre">h</span></code> (Hindi), <code class="docutils literal notranslate"><span class="pre">i</span></code> (Italian), <code class="docutils literal notranslate"><span class="pre">j</span></code>
 (Japanese), <code class="docutils literal notranslate"><span class="pre">p</span></code> (Brazilian Portuguese), <code class="docutils literal notranslate"><span class="pre">z</span></code> (Mandarin Chinese). Default: auto-detected
@@ -608,8 +609,8 @@ chapter content. Default: enabled.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code> : Author metadata for the audiobook. Defaults to EPUB author.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code> : Cover image for M4B format.</p>
 </section>
-<section id="ssmd-0-8-options">
-<h3>SSMD 0.8 options</h3>
+<section id="ssmd-0-8-6-options">
+<h3>SSMD 0.8.6 options</h3>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-header</span> <span class="pre">/</span> <span class="pre">--no-ssmd-header</span></code> : Parse or preserve an exact leading front-matter
 block.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-unknown-header</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">warn</span></code>, <code class="docutils literal notranslate"><span class="pre">error</span></code>, or <code class="docutils literal notranslate"><span class="pre">ignore</span></code> unknown header keys.</p>
@@ -685,15 +686,11 @@ auto-detect the blend format. Both methods work identically.</p>
 overrides.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
 (default: case-insensitive).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Enable mixed-language support (auto-detect multiple languages
-in text).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> : Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>,
-<code class="docutils literal notranslate"><span class="pre">en-us</span></code>). This language is used as the fallback when detection is uncertain.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> : Comma-separated list of allowed languages for
-detection (e.g., <code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>). Required when <code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> is enabled.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> : Detection confidence threshold for mixed-language
-mode (0.0-1.0). Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>. Higher values require more confidence for language
-switches.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Deprecated compatibility option. <code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected because
+TTSForge does not automatically detect language changes.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span></code>, <code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span></code> are deprecated compatibility options. Use explicit SSMD
+spans such as <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code> instead.</p>
 <p>Phoneme export exposes the same spaCy request options and stores the concrete sentence
 model in export metadata. Name extraction exposes <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>,
 and <code class="docutils literal notranslate"><span class="pre">--language</span></code>; it validates that the selected package supports PERSON NER (and POS
@@ -834,16 +831,12 @@ one-based like the resume summary.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly (also saves to file if <code class="docutils literal notranslate"><span class="pre">-o</span></code> specified).</p>
 <p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Enable mixed-language support (auto-detect multiple languages
-in text).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span> <span class="pre">LANG</span></code> : Primary language for mixed-language mode (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>,
-<code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span> <span class="pre">LANGS</span></code> : Comma-separated list of allowed languages (e.g.,
-<code class="docutils literal notranslate"><span class="pre">de,en-us</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span> <span class="pre">FLOAT</span></code> : Detection confidence threshold (0.0-1.0). Default:
-<code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file for pronunciation
-overrides.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Deprecated compatibility option. <code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected because
+automatic mixed-language detection is not provided.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span></code>, <code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span></code> are deprecated. Use explicit SSMD spans such as
+<code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>. <code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file
+for pronunciation overrides.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
 (default: case-insensitive).</p>
 </section>
@@ -857,13 +850,6 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 
 <span class="c1"># With voice and output options</span>
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Testing voice&quot;</span><span class="w"> </span>--voice<span class="w"> </span>am_adam<span class="w"> </span>-o<span class="w"> </span>test.wav
-
-<span class="c1"># Mixed-language sample</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span><span class="s2">&quot;Das ist ein Test. This is a test.&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">   </span>--mixed-language-allowed<span class="w"> </span>de,en-us
 </pre></div>
 </div>
 </section>

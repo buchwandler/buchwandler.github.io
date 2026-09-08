@@ -6,7 +6,7 @@ nav_tool: lexhint-main
 docs_project: "lexhint"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d0ba51271aaa45e310689bce18df35cfd7687f7c"
+docs_commit: "12a3452c4b6b161ce779856695202c3fba7bb2e2"
 search_enabled: true
 ---
 

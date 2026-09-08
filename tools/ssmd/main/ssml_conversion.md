@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
+docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
 search_enabled: true
 ---
 
@@ -636,6 +636,15 @@ abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect ex
 <span class="c1"># → [Hello]{lang=&quot;en-GB&quot;}</span>
 </pre></div>
 </div>
+<p>SSMD’s pronunciation scope is richer than generic SSML:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Segment.to_ssml()</span></code> retains the closest standard mapping, <code class="docutils literal notranslate"><span class="pre">&lt;lang</span> <span class="pre">xml:lang=&quot;...&quot;&gt;</span></code>,
+because SSML has no portable attribute meaning “pronunciation language only”. Generic
+engines may therefore change voice or model behavior. Consumers that need the stronger
+contract should use <code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> or <code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> and honor
+<code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code> themselves.</p>
 </section>
 <section id="phonemes">
 <h3>Phonemes</h3>

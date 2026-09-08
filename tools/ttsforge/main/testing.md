@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -562,8 +562,10 @@ hash and verifies that a saved prefix is not rendered again.</p>
 <h2>Minimum dependency contract</h2>
 <p>Release CI separately installs the exact lower-bound generation stack:</p>
 <ul class="simple">
-<li><p>PyKokoro 0.8.4</p></li>
-<li><p>kokorog2p 0.8.0</p></li>
+<li><p>PyKokoro 0.9.1</p></li>
+<li><p>kokorog2p 0.9.2</p></li>
+<li><p>phrasplit 0.3.7</p></li>
+<li><p>SSMD 0.8.6</p></li>
 </ul>
 <p>The minimum-dependency job proves that the package’s declared lower bounds install and
 that representative written-to-spoken source reaches the upstream preparation/G2P

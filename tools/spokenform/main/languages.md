@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "spokenform Language support matrix"
+title: "spokenform Complete runtime registry"
 permalink: /tools/spokenform/main/languages/
 nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
 search_enabled: true
 ---
 
@@ -540,6 +540,117 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
+<section id="complete-runtime-registry">
+<h1>Complete runtime registry</h1>
+<p>The generated capability matrix is maintained in <a class="reference internal" href="../language-coverage/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">language-coverage.md</span></code></span></a>. The public registry accepts these base families:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Canonical code</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">az</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">be</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">da</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eo</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fi</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hu</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">is</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kk</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mn</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">no</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ro</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sk</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sl</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tet</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tg</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uk</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The 17 exact overlays are <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>, <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code>.</p>
+</section>
 <section id="language-support-matrix">
 <h1>Language support matrix</h1>
 <p>| <code class="docutils literal notranslate"><span class="pre">ar</span></code> | <code class="docutils literal notranslate"><span class="pre">ara</span></code> | <code class="docutils literal notranslate"><span class="pre">ar_MSA</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">ar</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
@@ -755,9 +866,8 @@ minor-unit grammar use a safe exact decimal fallback or fail closed.</p>
 Plain numbers, reviewed quantities, Celsius and Fahrenheit temperatures, and
 Swedish krona amounts are supported. Swedish quantity grammar uses the reviewed
 <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> canonical unit identities and explicit singular and plural forms.</p>
-<p><code class="docutils literal notranslate"><span class="pre">sv-SE</span></code> and <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code> are normalized to the regional form and routed to the
-Swedish base language. <code class="docutils literal notranslate"><span class="pre">swe</span></code> is accepted as a compatibility alias, and
-<code class="docutils literal notranslate"><span class="pre">swe-SE</span></code> normalizes to <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sv-SE</span></code> and <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code> normalize to the registered base key <code class="docutils literal notranslate"><span class="pre">sv</span></code>. <code class="docutils literal notranslate"><span class="pre">swe</span></code> is accepted as a compatibility alias, and
+<code class="docutils literal notranslate"><span class="pre">swe-SE</span></code> also normalizes to <code class="docutils literal notranslate"><span class="pre">sv</span></code>.</p>
 <p>Swedish digital clock bodies and numeric dates remain caller-managed in this
 release, although valid shapes are protected from generic number rewriting.
 Arbitrary initialisms and unreviewed address, legal, phone, ISBN, music,

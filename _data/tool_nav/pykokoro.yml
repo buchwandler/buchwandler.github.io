@@ -4,17 +4,17 @@ nav_key: pykokoro
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.9.0
-source_commit: c80ad91b56445cd3f3da9604741bb62748b4262b
-source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.0
+source_ref: v0.9.1
+source_commit: 73674dd2ba1e957bd8421fab61f08b6d541af5c2
+source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.1
 is_default: true
 repo_url: https://github.com/buchwandler/pykokoro
-release_tag: v0.9.0
-release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.0
+release_tag: v0.9.1
+release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.9.0
+  ref: v0.9.1
   url: /tools/pykokoro/
   current: true
 - name: main

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -564,20 +564,19 @@ AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration 
 </section>
 <section id="pykokoro-kokorog2p-and-spacy-model-policy">
 <h3>PyKokoro, kokorog2p, and spaCy model policy</h3>
-<p>The package requires released PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.4,&lt;0.9</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.0,&lt;0.9</span></code>, SSMD
-<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.1,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4,&lt;0.4</span></code>. TTSForge directly owns the PyKokoro and
-kokorog2p runtime boundary; the ownership chain is
-<code class="docutils literal notranslate"><span class="pre">TTSForge</span> <span class="pre">-&gt;</span> <span class="pre">PyKokoro</span> <span class="pre">-&gt;</span> <span class="pre">kokorog2p</span> <span class="pre">-&gt;</span> <span class="pre">Spokenform/abbr2words</span></code>. These releases provide the
-public spaCy request/resolution and memory-ownership APIs used by TTSForge. TTSForge
-selects only already installed spaCy packages and never downloads them automatically.
-The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy selects the highest compatible local model and falls
-back to non-spaCy splitting when no compatible model is installed. <code class="docutils literal notranslate"><span class="pre">use_spacy=true</span></code>,
-<code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, an exact package, or an exact tier is strict; <code class="docutils literal notranslate"><span class="pre">use_spacy=false</span></code> and
-<code class="docutils literal notranslate"><span class="pre">--no-spacy</span></code> disable spaCy.</p>
+<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.1,&lt;0.10</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.2,&lt;1.0</span></code>, SSMD
+<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.6,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.7,&lt;0.4</span></code>. TTSForge forwards document language and
+ONNX provider through the PyKokoro 0.9 pipeline. Omitted model and voice values use
+PyKokoro metadata discovery; explicit profiles, custom model paths, and voice databases
+remain supported.</p>
+<p>PyKokoro owns written-form preparation and language-aware model selection.
+Mixed-language changes must be explicit SSMD spans such as <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>. TTSForge
+no longer provides automatic mixed-language detection, and the legacy mixed-language
+settings are rejected with migration guidance.</p>
+<p>The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy selects the highest compatible installed local model
+and falls back when none is installed; strict requests require a model.</p>
 <p>Users should not install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately for TTSForge. The compatible kokorog2p
-release owns its Spokenform and abbr2words constraints. The exact PyKokoro 0.8.4 and
-kokorog2p 0.8.0 releases must be available from the package index before installing the
-TTSForge 0.3.4 release.</p>
+release owns its Spokenform and abbr2words constraints.</p>
 <p>Install one or more compatible local spaCy packages when strict behavior or higher
 quality automatic selection is wanted:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg
@@ -737,26 +736,12 @@ result release, state saves, final merging, and converter cleanup. Native alloca
 retain pages at a high-water mark after audio release; this diagnostic does not claim a
 provider-native leak from RSS alone.</p>
 </section>
-<section id="mixed-language-support-optional">
-<h2>Mixed-Language Support (Optional)</h2>
-<p>For automatic detection and handling of multiple languages in text (e.g., German text
-with English technical terms):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>lingua-language-detector
-</pre></div>
-</div>
-<p>Then enable mixed-language mode:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_mixed_language<span class="w"> </span><span class="nb">true</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_primary<span class="w"> </span>de
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>mixed_language_allowed<span class="w"> </span><span class="s2">&quot;[&#39;de&#39;, &#39;en-us&#39;]&quot;</span>
-</pre></div>
-</div>
-<p>Or use the <code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> flag with commands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
-</pre></div>
-</div>
+<section id="mixed-language-support">
+<h2>Mixed-Language Support</h2>
+<p>Mixed-language changes must be explicit SSMD spans, for example <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>.
+TTSForge does not automatically detect language changes. The legacy
+<code class="docutils literal notranslate"><span class="pre">use_mixed_language=true</span></code> setting and related CLI options are rejected with migration
+guidance.</p>
 </section>
 <section id="downloading-models">
 <h2>Downloading Models</h2>

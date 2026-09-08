@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -542,25 +542,20 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="voices">
 <h1>Voices</h1>
-<p>ttsforge uses Kokoro TTS which provides 54 high-quality neural voices across 9
-languages.</p>
+<p>TTSForge queries PyKokoro 0.9.1 model metadata for available voices. The inventory may
+vary by selected model source and variant, so this document’s examples are not a
+TTSForge-owned global whitelist. Use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">voices</span></code> for the active metadata
+inventory.</p>
 <section id="voice-naming-convention">
 <h2>Voice Naming Convention</h2>
-<p>Voices follow a consistent naming pattern:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{language}{gender}_{name}
-</pre></div>
-</div>
-<p>Where:</p>
-<ul class="simple">
-<li><p><strong>Language</strong>: Two-letter code (<code class="docutils literal notranslate"><span class="pre">af</span></code>, <code class="docutils literal notranslate"><span class="pre">am</span></code>, <code class="docutils literal notranslate"><span class="pre">bf</span></code>, etc.)</p></li>
-<li><p><strong>Gender</strong>: <code class="docutils literal notranslate"><span class="pre">f</span></code> = female, <code class="docutils literal notranslate"><span class="pre">m</span></code> = male</p></li>
-<li><p><strong>Name</strong>: Voice identifier</p></li>
-</ul>
+<p>Legacy voices follow a <code class="docutils literal notranslate"><span class="pre">{language}{gender}_{name}</span></code> pattern (e.g., <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>,
+<code class="docutils literal notranslate"><span class="pre">bf_emma</span></code>). Modern profile voices may use different naming conventions (e.g., <code class="docutils literal notranslate"><span class="pre">martin</span></code>,
+<code class="docutils literal notranslate"><span class="pre">Alice</span></code>, <code class="docutils literal notranslate"><span class="pre">default</span></code>). Do not assume a fixed prefix scheme.</p>
 <p>For example:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">af_heart</span></code> = American English, Female, “Heart” voice</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">am_adam</span></code> = American English, Male, “Adam” voice</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">bf_emma</span></code> = British English, Female, “Emma” voice</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">af_heart</span></code> = American English, Female, “Heart” voice (legacy naming)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">martin</span></code> = German (v1.2-de-martin profile)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Alice</span></code> = Swedish (sv-joakim profile)</p></li>
 </ul>
 </section>
 <section id="listing-voices">
@@ -572,6 +567,7 @@ languages.</p>
 <p>List voices for a specific language:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>a<span class="w">  </span><span class="c1"># American English</span>
 ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>b<span class="w">  </span><span class="c1"># British English</span>
+ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>d<span class="w">  </span><span class="c1"># German</span>
 </pre></div>
 </div>
 </section>
@@ -769,6 +765,29 @@ ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span clas
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bm_lewis</span></code></p></td>
 <td><p>Modern British voice</p></td>
 <td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="german-d">
+<h3>German (d)</h3>
+<p>German uses the <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code> profile with the <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice.</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 50.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Voice</p></th>
+<th class="head"><p>Description</p></th>
+<th class="head"><p>Default</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">martin</span></code></p></td>
+<td><p>German male voice (v1.2-de-martin profile)</p></td>
+<td><p>Yes</p></td>
 </tr>
 </tbody>
 </table>

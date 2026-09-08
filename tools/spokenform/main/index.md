@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
 search_enabled: true
 ---
 
@@ -556,7 +556,8 @@ maps.</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#optional-lexhint-integration">Optional Lexhint integration</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="languages/">Language support matrix</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="languages/">Complete runtime registry</a></li>
+<li class="toctree-l1"><a class="reference internal" href="languages/#language-support-matrix">Language support matrix</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="languages/#german-scope">German scope</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#swedish-scope">Swedish scope</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#vietnamese-scope">Vietnamese scope</a></li>

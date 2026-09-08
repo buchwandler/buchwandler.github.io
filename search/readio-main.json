@@ -5,8 +5,32 @@
     {
       "url": "/tools/readio/main/changelog/",
       "title": "readio Changelog",
-      "snippet": "Added model-specific voice and quality discovery, validated language defaults, ordered lexicons, and frontend checks\nChanged PyKokoro integr …",
+      "snippet": "Added synthesis plan resolution system with explicit plan domain, resolution pipeline, and validation\n\n\nAdded manifest module for project me …",
       "sections": [
+        {
+          "anchor": "",
+          "heading": "Added¶",
+          "text": "Added synthesis plan resolution system with explicit plan domain, resolution pipeline, and validation\n\n\nAdded manifest module for project metadata and package information management",
+          "lower": "added synthesis plan resolution system with explicit plan domain, resolution pipeline, and validation\n\n\nadded manifest module for project metadata and package information management"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed¶",
+          "text": "Improved plan feature with enhanced CLI commands and validation",
+          "lower": "improved plan feature with enhanced cli commands and validation"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation¶",
+          "text": "Added comprehensive LLM guides for SSMD audio content creation including podcasts, stories, educational content, and more",
+          "lower": "added comprehensive llm guides for ssmd audio content creation including podcasts, stories, educational content, and more"
+        },
+        {
+          "anchor": "",
+          "heading": "Added¶",
+          "text": "Added positional file detection for speak, render, and Spotify publish with clear literal-text and missing-path handling",
+          "lower": "added positional file detection for speak, render, and spotify publish with clear literal-text and missing-path handling"
+        },
         {
           "anchor": "",
           "heading": "Added¶",
@@ -16,8 +40,8 @@
         {
           "anchor": "",
           "heading": "Changed¶",
-          "text": "Changed PyKokoro integration to the 0.9 public model registry and runtime contract\n\n\nImproved offline registry, runtime asset, and PyKokoro API/version diagnostics",
-          "lower": "changed pykokoro integration to the 0.9 public model registry and runtime contract\n\n\nimproved offline registry, runtime asset, and pykokoro api/version diagnostics"
+          "text": "Changed PyKokoro integration to the 0.9 public model registry and runtime contract\n\n\nImproved offline registry, runtime asset, and PyKokoro API/version diagnostics\n\n\nChanged model-source selection and model-scoped voice resolution to apply consistently across synthesis and SSMD",
+          "lower": "changed pykokoro integration to the 0.9 public model registry and runtime contract\n\n\nimproved offline registry, runtime asset, and pykokoro api/version diagnostics\n\n\nchanged model-source selection and model-scoped voice resolution to apply consistently across synthesis and ssmd"
         },
         {
           "anchor": "",
@@ -89,8 +113,20 @@
         {
           "anchor": "",
           "heading": "Input and rendering¶",
-          "text": "The speak, render, and spotify commands accept the same input forms:\n\n\nPositional text, joined with spaces.\n\n\n--file PATH for UTF-8 text or SSMD.\n\n\nStandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. Blank lines close live paragraphs.\n\n\n\nFor non-live input, --select can be all, last-paragraph, or paragraph:N. The default synthesis unit is controlled by reader.unit and can be overridden with --unit sentence or --unit paragraph.\n\nSynthesis options are available on all three commands:\n\n--voice VOICE       PyKokoro voice ID\n--lang LANGUAGE     language code, such as en-us\n--speed NUMBER      speech speed multiplier\n--pause-mode MODE   tts, manual, or auto\n--unit UNIT         sentence or paragraph\n\n\n\n\nRuntime discovery and…",
-          "lower": "the speak, render, and spotify commands accept the same input forms:\n\n\npositional text, joined with spaces.\n\n\n--file path for utf-8 text or ssmd.\n\n\nstandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. blank lines close live paragraphs.\n\n\n\nfor non-live input, --select can be all, last-paragraph, or paragraph:n. the default synthesis unit is controlled by reader.unit and can be overridden with --unit sentence or --unit paragraph.\n\nsynthesis options are available on all three commands:\n\n--voice voice       pykokoro voice id\n--lang language     language code, such as en-us\n--speed number      speech speed multiplier\n--pause-mode mode   tts, manual, or auto\n--unit unit         sentence or paragraph\n\n\n\n\nruntime discovery and…"
+          "text": "The speak, render, and spotify commands accept the same input forms:\n\n\nPositional text, joined with spaces; exactly one existing regular file token is loaded as a file.\n\n\n--file PATH for the unambiguous scripting form and UTF-8 text, Markdown, or SSMD.\n\n\nStandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. Blank lines close live paragraphs.\n\n\n\nA missing path-like positional token is an error rather than literal speech. Use --input-format text when an existing filename must be spoken literally; explicit Markdown and SSMD formats still support positional file detection.\n\nFor non-live input, --select can be all, last-paragraph, or paragraph:N. The default synthesis unit is controlled by reader.unit and can be overridden wi…",
+          "lower": "the speak, render, and spotify commands accept the same input forms:\n\n\npositional text, joined with spaces; exactly one existing regular file token is loaded as a file.\n\n\n--file path for the unambiguous scripting form and utf-8 text, markdown, or ssmd.\n\n\nstandard input when no positional text or file is provided.\n\n\n--live for incremental standard-input playback or rendering. blank lines close live paragraphs.\n\n\n\na missing path-like positional token is an error rather than literal speech. use --input-format text when an existing filename must be spoken literally; explicit markdown and ssmd formats still support positional file detection.\n\nfor non-live input, --select can be all, last-paragraph, or paragraph:n. the default synthesis unit is controlled by reader.unit and can be overridden wi…"
+        },
+        {
+          "anchor": "",
+          "heading": "Synthesis planning¶",
+          "text": "Non-live rendering is plan-first: readio render resolves one readio.plan.v1 synthesis plan and then executes exactly that plan. readio plan and readio render --dry-run display the same plan without loading TTS, so they show precisely what a subsequent render would do:\n\nreadio plan --file notes.md --lang de --format mp3 --json\nreadio render --file notes.md --dry-run\n\n\n\n\nKeep the layers separate:\n\n\nDiscovery (readio models, readio voices) enumerates what the installed PyKokoro runtime provides.\n\n\nDefaults (readio defaults) persist validated per-language preferences.\n\n\nPlanning (readio plan, render --dry-run) resolves one concrete request — model, source, quality, voice, lexicons, SSMD cast with per-reference bindings, output format/backend/path — and records a decision (winning source) for…",
+          "lower": "non-live rendering is plan-first: readio render resolves one readio.plan.v1 synthesis plan and then executes exactly that plan. readio plan and readio render --dry-run display the same plan without loading tts, so they show precisely what a subsequent render would do:\n\nreadio plan --file notes.md --lang de --format mp3 --json\nreadio render --file notes.md --dry-run\n\n\n\n\nkeep the layers separate:\n\n\ndiscovery (readio models, readio voices) enumerates what the installed pykokoro runtime provides.\n\n\ndefaults (readio defaults) persist validated per-language preferences.\n\n\nplanning (readio plan, render --dry-run) resolves one concrete request — model, source, quality, voice, lexicons, ssmd cast with per-reference bindings, output format/backend/path — and records a decision (winning source) for…"
+        },
+        {
+          "anchor": "",
+          "heading": "Durable render manifests¶",
+          "text": "Use --manifest when a bounded render produces an artifact that needs durable, machine-readable evidence:\n\nreadio plan --file notes.md --format mp3 --json\nreadio render --file notes.md --format mp3 --manifest\n\n\n\n\nThe successful render writes <audio>.readio.json beside the audio. Its readio.render-manifest.v1 payload embeds the exact executed readio.plan.v1, a canonical plan digest, the final encoded-file hash and byte count, RenderSummary audio facts, document metadata, and assembled marker offsets. Planning describes intended execution; the manifest describes the completed artifact.\n\nThe option is explicit and applies only to bounded render. It is rejected with --live and does not create manifests for speak, plan, dry runs, or publishing. Human output remains the audio path. JSON output r…",
+          "lower": "use --manifest when a bounded render produces an artifact that needs durable, machine-readable evidence:\n\nreadio plan --file notes.md --format mp3 --json\nreadio render --file notes.md --format mp3 --manifest\n\n\n\n\nthe successful render writes <audio>.readio.json beside the audio. its readio.render-manifest.v1 payload embeds the exact executed readio.plan.v1, a canonical plan digest, the final encoded-file hash and byte count, rendersummary audio facts, document metadata, and assembled marker offsets. planning describes intended execution; the manifest describes the completed artifact.\n\nthe option is explicit and applies only to bounded render. it is rejected with --live and does not create manifests for speak, plan, dry runs, or publishing. human output remains the audio path. json output r…"
         },
         {
           "anchor": "",
@@ -125,8 +161,8 @@
         {
           "anchor": "",
           "heading": "Diagnostics and development¶",
-          "text": "Run the offline environment check with:\n\nreadio doctor\n\n\n\n\nThe local doctor is human-readable by default and supports readio doctor --json. It reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use readio spotify doctor for the explicit external integration check.\n\nRun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nThe main execution path is readio/cli.py. Input normalization is in readio/document.py, configuration in readio/config.py, synthesis orchestration in readio/reader.py, audio sinks in readio/audio.py and readio/wave.py, and external Spotify integration in readio/spotify.py.",
-          "lower": "run the offline environment check with:\n\nreadio doctor\n\n\n\n\nthe local doctor is human-readable by default and supports readio doctor --json. it reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. use readio spotify doctor for the explicit external integration check.\n\nrun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nthe main execution path is readio/cli.py. input normalization is in readio/document.py, configuration in readio/config.py, synthesis orchestration in readio/reader.py, audio sinks in readio/audio.py and readio/wave.py, and external spotify integration in readio/spotify.py."
+          "text": "Run the offline environment check with:\n\nreadio doctor\n\n\n\n\nThe local doctor is human-readable by default and supports readio doctor --json. It reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use readio spotify doctor for the explicit external integration check.\nIf PyKokoro reports cannot import name 'discover_models' from 'pykokoro', run readio doctor --json first. It reports the exact imported module path, distribution metadata version, module version, and root discovery symbol status, which distinguishes stale/mismatched package contents from an unavailable cached registry.\n\nRun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nThe main execution pa…",
+          "lower": "run the offline environment check with:\n\nreadio doctor\n\n\n\n\nthe local doctor is human-readable by default and supports readio doctor --json. it reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. use readio spotify doctor for the explicit external integration check.\nif pykokoro reports cannot import name 'discover_models' from 'pykokoro', run readio doctor --json first. it reports the exact imported module path, distribution metadata version, module version, and root discovery symbol status, which distinguishes stale/mismatched package contents from an unavailable cached registry.\n\nrun the test suite and lint checks from a development checkout:\n\npytest\nruff check .\n\n\n\n\nthe main execution pa…"
         },
         {
           "anchor": "",

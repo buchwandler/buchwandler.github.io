@@ -5,8 +5,8 @@ permalink: /tools/lexhint/architecture/
 nav_tool: lexhint
 docs_project: "lexhint"
 docs_variant: "release"
-docs_ref: "v0.4.4"
-docs_commit: "8d7725f4c72249f660c6ce1ec41d2ef23ad378d5"
+docs_ref: "v0.4.5"
+docs_commit: "12a3452c4b6b161ce779856695202c3fba7bb2e2"
 search_enabled: true
 ---
 

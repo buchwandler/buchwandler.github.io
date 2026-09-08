@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: d0ba51271aaa45e310689bce18df35cfd7687f7c
+source_commit: 12a3452c4b6b161ce779856695202c3fba7bb2e2
 source_url: https://github.com/buchwandler/lexhint/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/lexhint
-release_tag: v0.4.4
-release_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.4
+release_tag: v0.4.5
+release_url: https://github.com/buchwandler/lexhint/releases/tag/v0.4.5
 versions:
 - name: release
   label: Latest release
-  ref: v0.4.4
+  ref: v0.4.5
   url: /tools/lexhint/
   current: false
 - name: main

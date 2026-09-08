@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.0"
-docs_commit: "c80ad91b56445cd3f3da9604741bb62748b4262b"
+docs_ref: "v0.9.1"
+docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
 search_enabled: true
 ---
 
@@ -598,6 +598,23 @@ generated single waveform.</p>
 </section>
 <section id="pipelineconfig">
 <h3>PipelineConfig</h3>
+</section>
+<section id="metadata-only-pipeline-resolution">
+<h3>Metadata-only pipeline resolution</h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">resolve_pipeline_config()</span></code> to resolve PyKokoro’s automatic model, source, quality,
+and voice choices before constructing a runtime pipeline:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">resolve_pipeline_config</span>
+
+<span class="n">requested</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">))</span>
+<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_pipeline_config</span><span class="p">(</span><span class="n">requested</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">model_variant</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">model_source</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">model_quality</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">voice</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is a metadata-only operation. It does not construct <code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code>, import ONNX
+Runtime, create an ONNX session, load model or voice assets, or synthesize audio. Use
+the separate <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> API when runtime capability and model inventory
+metadata is needed.</p>
 </section>
 <section id="generationconfig">
 <h3>GenerationConfig</h3>

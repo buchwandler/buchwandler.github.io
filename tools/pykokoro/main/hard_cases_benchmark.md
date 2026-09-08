@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "kokorog2p Kazakh provenance"
-permalink: /tools/kokorog2p/kk/PROVENANCE/
-nav_tool: kokorog2p
-docs_project: "kokorog2p"
-docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+title: "PyKokoro hard-cases benchmark"
+permalink: /tools/pykokoro/main/hard_cases_benchmark/
+nav_tool: pykokoro-main
+docs_project: "pykokoro"
+docs_variant: "main"
+docs_ref: "main"
+docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
 search_enabled: true
 ---
 
@@ -540,22 +540,64 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="kazakh-provenance">
-<h1>Kazakh provenance</h1>
+<section id="pykokoro-hard-cases-benchmark">
+<h1>PyKokoro hard-cases benchmark</h1>
+<p><code class="docutils literal notranslate"><span class="pre">benchmarks.hard_cases</span></code> is a first-party, deterministic regression suite for difficult
+English and German frontend cases. It deliberately has <strong>no human-reference audio</strong> and
+does not measure MOS, naturalness, speaker similarity, or human-likeness.</p>
+<section id="levels">
+<h2>Levels</h2>
 <ul class="simple">
-<li><p>kokorog2p does not copy eSpeak-NG Kazakh spelling rules into Python.</p></li>
-<li><p>eSpeak-NG is invoked as the external runtime pronunciation engine with voice <code class="docutils literal notranslate"><span class="pre">kk</span></code>.</p></li>
-<li><p>The upstream Kazakh language declaration, spelling rules, and letter/number list were
-inspected to establish supported scope.</p></li>
-<li><p>Misaki’s generic eSpeak architecture informed the raw-IPA compatibility design, but
-Misaki is not a runtime dependency.</p></li>
-<li><p>Epitran was researched as an optional differential benchmark reference only.</p></li>
-<li><p>The Kazakh Kokoro fine-tune model card was used as interoperability evidence that a
-Kokoro-derived model already uses eSpeak-NG for <code class="docutils literal notranslate"><span class="pre">kk</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">normalization</span></code>: Spokenform output, replacements, warnings, offsets, and language
+runs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phoneme</span></code>: PyKokoro’s real Spokenform/Phrasplit/KokoroG2P path with no-op downstream
+adapters; compares raw and semantic phonemes, tokens, edit distances, and critical
+spans.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plan</span></code>: segment offsets, sentence/clause boundaries, pauses, and SSMD-related
+metadata.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frontend</span></code>: the ordinary fast suite (normalization through phonemes).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">acoustic</span></code>: optional waveform health, timing, pause, duration, and runtime
+diagnostics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code>: runs all available levels.</p></li>
 </ul>
-<p>The upstream eSpeak-NG Kazakh voice currently reports status <code class="docutils literal notranslate"><span class="pre">testing</span></code>. The benchmark is
-therefore diagnostic and avoids treating one eSpeak release’s exact IPA output as a
-permanent gold standard.</p>
+<p>Acoustic results are labelled <strong>acoustic health</strong>, <strong>timing stability</strong>, and <strong>runtime
+performance</strong>. A passing result does not imply that speech sounds natural.</p>
+</section>
+<section id="running">
+<h2>Running</h2>
+<p>The built-in corpus is offline and packaged as JSONL:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--list-languages
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--list-locales
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>en<span class="w"> </span>--locale<span class="w"> </span>en-US<span class="w"> </span>--level<span class="w"> </span>frontend
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--locale<span class="w"> </span>de-DE<span class="w"> </span>--level<span class="w"> </span>frontend
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--case<span class="w"> </span>en_shared_001<span class="w"> </span>--show-details
+python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--level<span class="w"> </span>acoustic<span class="w"> </span>--model<span class="w"> </span>v1.2-de-martin<span class="w"> </span>--lexicon<span class="w"> </span>gold
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--category</span></code>, <code class="docutils literal notranslate"><span class="pre">--limit</span></code>, <code class="docutils literal notranslate"><span class="pre">--frontend-variant</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">--results-dir</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">--render-audio</span></code> to reproduce a focused case. Generated <code class="docutils literal notranslate"><span class="pre">summary.json</span></code>, <code class="docutils literal notranslate"><span class="pre">cases.jsonl</span></code>,
+<code class="docutils literal notranslate"><span class="pre">failures.jsonl</span></code>, <code class="docutils literal notranslate"><span class="pre">failures.md</span></code>, and <code class="docutils literal notranslate"><span class="pre">environment.json</span></code> belong under the requested
+results directory (or <code class="docutils literal notranslate"><span class="pre">.benchmarks/hard_cases/</span></code>) and should not be committed.</p>
+</section>
+<section id="corpus-and-ownership">
+<h2>Corpus and ownership</h2>
+<p>Rows use schema version 1 and include language, optional explicit locale, category,
+provenance, tags, and structured expectations. Shared rows use <code class="docutils literal notranslate"><span class="pre">locale:</span> <span class="pre">null</span></code>; they may
+be selected for any compatible locale. The initial corpus contains more than 100 cases
+per language and covers normalization, abbreviations, numbers, acronyms, names,
+homographs/heteronyms, German compounds/prefixes/Denglisch, punctuation, dirty text,
+SSMD, code-switching, and long-form interactions.</p>
+<p>Failures are attributed to the earliest failed contract: <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code>,
+<code class="docutils literal notranslate"><span class="pre">kokorog2p_or_spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">pykokoro_pipeline</span></code>, or <code class="docutils literal notranslate"><span class="pre">acoustic_model</span></code>. Baseline and
+quarantine records track known failures without hiding new regressions.</p>
+</section>
+<section id="ci-guidance">
+<h2>CI guidance</h2>
+<p>Pull requests should run schema/data/selection and the no-ONNX frontend subset.
+Scheduled jobs can run the complete frontend corpus. Acoustic model/voice/lexicon
+matrices are optional and should be isolated from normal unit tests so they never
+trigger downloads. PolyNorm remains a separate external normalization benchmark.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

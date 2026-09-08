@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
+docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
 search_enabled: true
 ---
 
@@ -561,6 +561,34 @@ abbreviations, infer a document language, phonemize text, or run sentence detect
 Annotation offsets refer to structural <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>; after normalization changes text
 length, the orchestrator remaps those offsets. Phoneme (<code class="docutils literal notranslate"><span class="pre">ph</span></code>/<code class="docutils literal notranslate"><span class="pre">ipa</span></code>) annotations expose
 exact source ranges that can be passed to the normalizer as protected spans.</p>
+</section>
+<section id="semantic-and-pronunciation-language-scopes">
+<h2>Semantic and pronunciation language scopes</h2>
+<p>An inline language annotation is semantic by default:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code> to mark a language run for pronunciation/G2P only:</p>
+<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+[Manpower]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}diskussion
+ge[cancel]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}t
+[download]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}en
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> and <code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> preserve the generic annotation attributes as
+<code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">scope</span></code>, and <code class="docutils literal notranslate"><span class="pre">tag=&quot;lang&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">AnnotationSpan.language_scope</span></code> defaults to
+<code class="docutils literal notranslate"><span class="pre">semantic</span></code>, and <code class="docutils literal notranslate"><span class="pre">is_pronunciation_language</span></code> identifies the stronger scope. SSMD does not
+infer language or enforce how a downstream consumer routes pronunciation.</p>
+<p>When normalization is enabled, source-adjacent inline pieces remain adjacent in clean
+text, so the first example yields <code class="docutils literal notranslate"><span class="pre">Manpowerdiskussion</span></code> and the annotated <code class="docutils literal notranslate"><span class="pre">Manpower</span></code> span
+remains <code class="docutils literal notranslate"><span class="pre">[0:8]</span></code>.</p>
+<p>A portable header can also provide a routing hint:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">language_detection</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">auto</span>
+<span class="w">  </span><span class="nt">languages</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">de</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">en</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>The header is returned separately and validated, but SSMD does not perform detection.</p>
 </section>
 <section id="structure-only-parsing">
 <h2>Structure-only parsing</h2>

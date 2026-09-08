@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.2"
-docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
+docs_ref: "v0.9.3"
+docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
 search_enabled: true
 ---
 
@@ -675,6 +675,8 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 <li class="toctree-l1"><a class="reference internal" href="spans/">Span-Based Phonemization Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="spans/#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#core-types">Core Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#exact-sub-token-language-spans">Exact sub-token language spans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#automatic-language-routing">Automatic language routing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#structured-stress-overrides">Structured stress overrides</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#prepared-phonemization">Prepared phonemization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#extended-text-layer">Extended Text Layer</a></li>

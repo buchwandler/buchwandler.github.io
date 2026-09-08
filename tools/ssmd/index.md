@@ -5,8 +5,8 @@ permalink: /tools/ssmd/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.6"
-docs_commit: "afca54273f80d27feb86c5de1c37e831f0bd4977"
+docs_ref: "v0.8.7"
+docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
 search_enabled: true
 ---
 
@@ -639,6 +639,7 @@ perform general written-to-spoken language normalization.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="syntax/">SSMD Syntax Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#yaml-front-matter">YAML front matter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax/#semantic-language-vs-pronunciation-language">Semantic language vs pronunciation language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#text-and-emphasis">Text and Emphasis</a></li>
 </ul>
 </li>
@@ -652,6 +653,7 @@ perform general written-to-spoken language normalization.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="spans/">Spans</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="spans/#tts-pipeline-integration">TTS pipeline integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="spans/#semantic-and-pronunciation-language-scopes">Semantic and pronunciation language scopes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#structure-only-parsing">Structure-only parsing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#coordinate-system">Coordinate system</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#examples">Examples</a></li>
@@ -683,13 +685,14 @@ perform general written-to-spoken language normalization.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.6] - 2026-09-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.5] - 2026-08-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.4] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.8.3] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.2] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.8.0] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.7] - 2026-09-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.6] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.5] - 2026-08-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.8.4] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.3] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.8.2] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>

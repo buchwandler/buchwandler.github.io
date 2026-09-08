@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
+docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
 search_enabled: true
 ---
 
@@ -617,6 +617,56 @@ removal)</p></li>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="exact-sub-token-language-spans">
+<h2>Exact sub-token language spans</h2>
+<p>The default <code class="docutils literal notranslate"><span class="pre">overlap=&quot;snap&quot;</span></code> behavior is unchanged. Opt into exact source-aligned
+fragments with <code class="docutils literal notranslate"><span class="pre">overlap=&quot;split&quot;</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">OverrideSpan</span><span class="p">,</span> <span class="n">phonemize_prepared</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Manpowerdiskussion&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">overlap</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">,</span>
+    <span class="n">overrides</span><span class="o">=</span><span class="p">[</span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;en&quot;</span><span class="p">})],</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Each fragment satisfies
+<code class="docutils literal notranslate"><span class="pre">fragment.text</span> <span class="pre">==</span> <span class="pre">source[fragment.char_start:fragment.char_end]</span></code>. Explicit <code class="docutils literal notranslate"><span class="pre">ph</span></code> and
+<code class="docutils literal notranslate"><span class="pre">lang</span></code> overrides take precedence over automatic routing.</p>
+</section>
+<section id="automatic-language-routing">
+<h2>Automatic language routing</h2>
+<p>Enable routing with an explicit candidate allowlist:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">language_routing</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;languages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en&quot;</span><span class="p">]},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Routing uses positive evidence from the effective selected lexical resources, keeps the
+explicit document language for collisions and ambiguity, and exposes <code class="docutils literal notranslate"><span class="pre">LanguageRoute</span></code>
+records in <code class="docutils literal notranslate"><span class="pre">result.language_routes</span></code>. A hit is not exclusive ownership, so a word present
+in multiple selected stacks stays in the default language.</p>
+<p>Evidence-capable resources are:</p>
+<ul class="simple">
+<li><p>Packaged G2Lex: English US, English GB, and French.</p></li>
+<li><p>Provisioned Lexphon: German, Portuguese BR/PT, Russian, Thai, Vietnamese, Japanese,
+Korean, and Swedish when NST is explicitly selected.</p></li>
+</ul>
+<p>Spanish, Italian, Czech, Hebrew, Arabic, Chinese, and Kazakh still phonemize normally,
+but they have no selected lexical evidence provider and cannot positively claim a
+foreign token. Generic pronunciation, rules, eSpeak, Goruut, pypinyin, Phonikud, g2pK,
+pyopenjtalk, and fallback paths are never used as evidence. Candidate frontends are lazy
+and may be supplied with <code class="docutils literal notranslate"><span class="pre">g2p_resolver</span></code>; default foreign frontends do not inherit
+default-language lexicon or language-specific options.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">target_model=&quot;1.0&quot;</span></code> to constrain every automatic candidate and the final token IDs
+to one fixed Kokoro vocabulary. If evidence exists but the routed pronunciation is
+incompatible, the route is rejected with a diagnostic and the default route is used.
+Routing changes only G2P frontend selection. It never selects an acoustic model.
+Explicit <code class="docutils literal notranslate"><span class="pre">ph</span></code>, <code class="docutils literal notranslate"><span class="pre">phonemes</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">language</span></code> overrides take precedence.</p>
 </section>
 <section id="structured-stress-overrides">
 <h2>Structured stress overrides</h2>

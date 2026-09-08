@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "783480748caad912ca6d4a8fd5338544c688da3b"
+docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
 search_enabled: true
 ---
 
@@ -577,8 +577,21 @@ configured spaCy model for that call.</p>
 <section id="explicit-language-routing">
 <h2>Explicit language routing</h2>
 <p>Language switching is explicit. Use <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> or annotation <code class="docutils literal notranslate"><span class="pre">language</span></code> metadata for
-a foreign span. Generic automatic language detection and mixed-language segmentation are
-application responsibilities and are not provided by the core package.</p>
+a foreign span. The core still requires an explicit document/default language and does
+not automatically select that document language.</p>
+<p>Optional automatic pronunciation-language routing can inspect selected lexical resources
+for individual words or exact sub-token fragments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span>
+    <span class="n">language_routing</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="s2">&quot;languages&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en&quot;</span><span class="p">]},</span>
+    <span class="n">overlap</span><span class="o">=</span><span class="s2">&quot;split&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The candidate list is a hard allowlist. Lexicon collisions and ambiguity stay in the
+default language. Generic pronunciation fallback is not language evidence, and explicit
+<code class="docutils literal notranslate"><span class="pre">ph</span></code>, <code class="docutils literal notranslate"><span class="pre">phonemes</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">language</span></code> overrides take precedence.</p>
 </section>
 <section id="migration-from-pre-v0-9">
 <h2>Migration from pre-v0.9</h2>

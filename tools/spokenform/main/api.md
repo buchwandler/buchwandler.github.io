@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
 search_enabled: true
 ---
 
@@ -553,25 +553,29 @@ caller-protected spans always take precedence.</p>
 </section>
 <section id="language-identifiers-and-number-backends">
 <h2>Language identifiers and number backends</h2>
-<p>Canonical runtime identifiers include <code class="docutils literal notranslate"><span class="pre">cs</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">sv</span></code>, <code class="docutils literal notranslate"><span class="pre">vi</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh</span></code>. Regional forms such as <code class="docutils literal notranslate"><span class="pre">ru-RU</span></code>, <code class="docutils literal notranslate"><span class="pre">ru_RU</span></code>, <code class="docutils literal notranslate"><span class="pre">sv-SE</span></code>, <code class="docutils literal notranslate"><span class="pre">vi-VN</span></code>, and <code class="docutils literal notranslate"><span class="pre">vi_VN</span></code> are normalized internally. <code class="docutils literal notranslate"><span class="pre">jp</span></code> aliases to <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">cn</span></code> aliases to <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, and <code class="docutils literal notranslate"><span class="pre">swe</span></code> and <code class="docutils literal notranslate"><span class="pre">rus</span></code> are compatibility aliases; <code class="docutils literal notranslate"><span class="pre">vn</span></code> and <code class="docutils literal notranslate"><span class="pre">kr</span></code> are not accepted.</p>
-<p>All existing supported languages use released <code class="docutils literal notranslate"><span class="pre">num2words</span></code> except Chinese, which uses released <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>. <code class="docutils literal notranslate"><span class="pre">number_backend_for_language()</span></code> reports this generic backend choice. Swedish resolves to <code class="docutils literal notranslate"><span class="pre">sv</span></code> for both numeric and abbreviation dependency calls, while <code class="docutils literal notranslate"><span class="pre">resolve_num2words_language()</span></code> remains a num2words-specific query and rejects Chinese. <code class="docutils literal notranslate"><span class="pre">resolve_abbr2words_language()</span></code> preserves exact regional overlays such as <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>.</p>
+<p>Canonical runtime identifiers include 49 base families and 17 exact dependency locale overlays. <code class="docutils literal notranslate"><span class="pre">supported_languages()</span></code> returns the base families; <code class="docutils literal notranslate"><span class="pre">supported_languages(include_locales=True)</span></code> returns all 66 public keys. Exact overlays are preserved for abbreviation routing, while unregistered regional forms fall back to their base language. <code class="docutils literal notranslate"><span class="pre">kk</span></code> is Spokenform’s Kazakh key and maps to dependency key <code class="docutils literal notranslate"><span class="pre">kz</span></code>.</p>
+<p>The installed <code class="docutils literal notranslate"><span class="pre">num2words</span></code> backend is capability-based. Chinese uses <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>; <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">hy</span></code>, and <code class="docutils literal notranslate"><span class="pre">mn</span></code> remain valid language inputs but preserve ordinary numeric source when the stable backend is unavailable. Reviewed decimal policies, structured locale grammar, sequence spelling, and KokoroG2P profiles are narrower capabilities and are not implied by global language support.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">language_support</span><span class="p">,</span>
     <span class="n">normalize_language</span><span class="p">,</span>
     <span class="n">resolve_abbr2words_language</span><span class="p">,</span>
     <span class="n">resolve_num2words_language</span><span class="p">,</span>
     <span class="n">supported_languages</span><span class="p">,</span>
+    <span class="n">supports_language</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="k">assert</span> <span class="s2">&quot;sv&quot;</span> <span class="ow">in</span> <span class="n">supported_languages</span><span class="p">()</span>
-<span class="k">assert</span> <span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;sv-SE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sv_SE&quot;</span>
-<span class="k">assert</span> <span class="n">resolve_num2words_language</span><span class="p">(</span><span class="s2">&quot;sv-SE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sv&quot;</span>
-<span class="k">assert</span> <span class="n">resolve_abbr2words_language</span><span class="p">(</span><span class="s2">&quot;sv-SE&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;sv&quot;</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">supported_languages</span><span class="p">())</span> <span class="o">==</span> <span class="mi">49</span>
+<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">supported_languages</span><span class="p">(</span><span class="n">include_locales</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span> <span class="o">==</span> <span class="mi">66</span>
+<span class="k">assert</span> <span class="s2">&quot;nl&quot;</span> <span class="ow">in</span> <span class="n">supported_languages</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;pt-BR&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;pt_BR&quot;</span>
+<span class="k">assert</span> <span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;fr_FR&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;fr&quot;</span>
+<span class="k">assert</span> <span class="n">normalize_language</span><span class="p">(</span><span class="s2">&quot;en-gb&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;en_GB&quot;</span>
+<span class="k">assert</span> <span class="n">resolve_abbr2words_language</span><span class="p">(</span><span class="s2">&quot;es-ni&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;es_NI&quot;</span>
+<span class="k">assert</span> <span class="n">resolve_num2words_language</span><span class="p">(</span><span class="s2">&quot;fr-FR&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;fr&quot;</span>
+<span class="k">assert</span> <span class="n">language_support</span><span class="p">(</span><span class="s2">&quot;hi&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">plain_cardinals</span> <span class="ow">is</span> <span class="kc">False</span>
+<span class="k">assert</span> <span class="n">supports_language</span><span class="p">(</span><span class="s2">&quot;eu&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">False</span>
 </pre></div>
 </div>
-<p>assert “vi” in supported_languages()
-assert normalize_language(“vi-VN”) == “vi_VN”
-assert resolve_num2words_language(“vi-VN”) == “vi”
-assert resolve_abbr2words_language(“vi-VN”) == “vi”</p>
 <p><code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;none&quot;</span></code> is the backward-compatible default and applies no general
 residual-symbol filter. <code class="docutils literal notranslate"><span class="pre">symbol_mode=&quot;remove&quot;</span></code> removes Unicode punctuation and
 symbol characters (<code class="docutils literal notranslate"><span class="pre">P*</span></code> and <code class="docutils literal notranslate"><span class="pre">S*</span></code>) left after semantic recognition. With

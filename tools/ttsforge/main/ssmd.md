@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge SSMD 0.8"
+title: "ttsforge SSMD 0.8.6"
 permalink: /tools/ttsforge/main/ssmd/
 nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
 search_enabled: true
 ---
 
@@ -540,11 +540,11 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ssmd-0-8">
-<h1>SSMD 0.8</h1>
-<p>ttsforge treats SSMD 0.8 as a document format, not as decorated plain text. Generated,
+<section id="ssmd-0-8-6">
+<h1>SSMD 0.8.6</h1>
+<p>ttsforge treats SSMD 0.8.6 as a document format, not as decorated plain text. Generated,
 edited, and direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> documents are validated with the public <code class="docutils literal notranslate"><span class="pre">ssmd</span></code> APIs and the
-pykokoro Kokoro profile before synthesis. Header metadata is never sent to speech.</p>
+PyKokoro 0.9 profile before synthesis. Header metadata is never sent to speech.</p>
 <section id="basic-workflow">
 <h2>Basic workflow</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--generate-ssmd
@@ -609,7 +609,7 @@ mode. Language, voice, prosody, say-as, substitution, phoneme, break, mark, para
 heading, and supported audio attributes are passed to the renderer.</p>
 <section id="automatic-written-to-spoken-preparation-vs-explicit-say-as">
 <h3>Automatic written-to-spoken preparation vs explicit say-as</h3>
-<p>Ordinary unannotated text flows through the PyKokoro/kokorog2p 0.8.x preparation
+<p>Ordinary unannotated text flows through the PyKokoro 0.9/kokorog2p 0.9.2 preparation
 boundary. For supported languages and forms, kokorog2p may prepare dates, times,
 measurements, currency, ordinals, and abbreviations as speakable text before G2P.
 TTSForge does not rewrite source SSMD into automatic annotations or duplicate that
