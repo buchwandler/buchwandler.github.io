@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/portuguese/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -558,11 +558,12 @@ for Kokoro TTS models.</p>
     <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2"> -&gt; </span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Known words are checked against the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">pt:lexhint</span></code> dictionary before
-productive dialect rules. Missing or invalid dictionary data uses the existing
-rule-based path; KokoroG2P never downloads the dictionary:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>pt:lexhint
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>pt:lexhint
+<p>Known words are checked against the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">pt:lexhint</span></code> dictionary for
+Brazilian Portuguese and <code class="docutils literal notranslate"><span class="pre">pt-pt:lexhint</span></code> for European Portuguese before productive
+dialect rules. Missing or invalid dictionary data uses the existing rule-based path;
+KokoroG2P never downloads the dictionaries:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>pt:lexhint<span class="w"> </span>pt-pt:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>pt:lexhint<span class="w"> </span>pt-pt:lexhint
 </pre></div>
 </div>
 </section>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -564,8 +564,8 @@ AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration 
 </section>
 <section id="pykokoro-kokorog2p-and-spacy-model-policy">
 <h3>PyKokoro, kokorog2p, and spaCy model policy</h3>
-<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.1,&lt;0.10</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.2,&lt;1.0</span></code>, SSMD
-<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.6,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.7,&lt;0.4</span></code>. TTSForge forwards document language and
+<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.4,&lt;0.10</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.5,&lt;1.0</span></code>, SSMD
+<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.7,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.7,&lt;0.4</span></code>. TTSForge forwards document language and
 ONNX provider through the PyKokoro 0.9 pipeline. Omitted model and voice values use
 PyKokoro metadata discovery; explicit profiles, custom model paths, and voice databases
 remain supported.</p>
@@ -655,18 +655,24 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
 </pre></div>
 </div>
-<p>The base installation includes the CPU ONNX Runtime provider. Provider-dependent modules
-are loaded only when audio rendering starts, so <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ttsforge</span></code>, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code>,
-and configuration/inspection commands work without model initialization.</p>
-<p>Optional extras:</p>
+<p>The base installation is provider-neutral. Install exactly one provider extra in the
+environment used for rendering. Provider-dependent modules are loaded only when audio
+rendering starts, so <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ttsforge</span></code>, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code>, and configuration/inspection
+commands work without model initialization.</p>
+<p>Provider extras (do not combine them in one environment):</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[cpu]&quot;</span><span class="w">       </span><span class="c1"># ONNX Runtime CPU</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span><span class="w">       </span><span class="c1"># ONNX Runtime CUDA</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[openvino]&quot;</span><span class="w">  </span><span class="c1"># ONNX Runtime OpenVINO</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[directml]&quot;</span><span class="w">  </span><span class="c1"># ONNX Runtime DirectML</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[coreml]&quot;</span><span class="w">    </span><span class="c1"># ONNX Runtime CoreML (macOS)</span>
+</pre></div>
+</div>
+<p>Optional non-provider extras:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Audio playback (required for --play and read)</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
 
 <span class="c1"># Bundled ffmpeg binaries</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
-
-<span class="c1"># CUDA provider support</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
 </pre></div>
 </div>
 </section>
@@ -690,23 +696,24 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 </section>
 <section id="onnx-runtime-providers">
 <h2>ONNX Runtime Providers</h2>
-<p>Select a provider with an alias or full runtime provider name. The legacy Boolean
-interface remains available for compatibility, but NNAPI and XNNPACK are execution
-providers rather than GPU modes:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cpu
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>xnnpack
+<p>Select a provider with an alias or full runtime provider name. Install the matching
+provider extra in a fresh environment, and do not install multiple provider extras
+together. NNAPI and XNNPACK are runtime providers exposed by platform-specific builds
+rather than TTSForge installation extras:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[cpu]&quot;</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>cpu
+ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>cpu
 </pre></div>
 </div>
 <p>For a desktop build exposing OpenVINO:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>openvino
-ttsforge<span class="w"> </span>config<span class="w"> </span>--show
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[openvino]&quot;</span>
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>openvino
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
 </pre></div>
 </div>
-<p>For the CUDA provider, install the GPU extra in a fresh environment so CPU and CUDA ONNX
-Runtime distributions are not installed together:</p>
+<p>For CUDA:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>cuda
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>cuda
 </pre></div>
 </div>
 <p>For Termux/Android, use the declared PyKokoro release with an ONNX Runtime build
@@ -721,12 +728,11 @@ ttsforge<span class="w"> </span>download
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> as a compatibility shortcut for <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> for
-<code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">cpu</span></code>. Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment
-override are handled by PyKokoro. With the required patched PyKokoro release, GitHub
-<code class="docutils literal notranslate"><span class="pre">v1.0</span></code> uses the embedded standard vocabulary and does not download Hugging Face
-<code class="docutils literal notranslate"><span class="pre">config.json</span></code>. NNAPI is not guaranteed; use a provider exposed by the installed Android
-ONNX Runtime build.</p>
+<p>Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override are
+handled by PyKokoro. With the required patched PyKokoro release, GitHub <code class="docutils literal notranslate"><span class="pre">v1.0</span></code> uses the
+embedded standard vocabulary and does not download Hugging Face <code class="docutils literal notranslate"><span class="pre">config.json</span></code>. NNAPI is
+not guaranteed; use a provider exposed by the installed Android ONNX Runtime build. Run
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code> to inspect the environment.</p>
 </section>
 <section id="memory-diagnostics">
 <h2>Memory diagnostics</h2>

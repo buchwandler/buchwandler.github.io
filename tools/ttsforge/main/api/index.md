@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -700,6 +700,37 @@ paragraph identity separately from chapter output-unit order. See
 <section id="module-ttsforge.constants">
 <span id="auto-generated-api-documentation"></span><h2>Auto-generated API Documentation</h2>
 <p>Constants for ttsforge - voices, languages, and formats.</p>
+<dl class="py function" id="module-ttsforge.chapter_selection">
+<dt class="sig sig-object py" id="ttsforge.chapter_selection.parse_chapter_selection">
+<span class="sig-prename descclassname"><span class="pre">ttsforge.chapter_selection.</span></span><span class="sig-name descname"><span class="pre">parse_chapter_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/ttsforge/chapter_selection/#parse_chapter_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Parse chapter selection string into list of 0-based chapter indices.</p>
+<p>Supports formats like:
+- “3” -&gt; [2] (single chapter, 1-based to 0-based)
+- “1-5” -&gt; [0, 1, 2, 3, 4] (range, inclusive)
+- “3,5,7” -&gt; [2, 4, 6] (comma-separated)
+- “1-3,7,9-10” -&gt; [0, 1, 2, 6, 8, 9] (mixed)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>selection</strong> – Chapter selection string (1-based indexing)</p></li>
+<li><p><strong>total_chapters</strong> – Total number of chapters available</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>List of 0-based chapter indices</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If selection format is invalid or chapters out of range</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="ttsforge.chapter_selection.resolve_chapter_selection">
+<span class="sig-prename descclassname"><span class="pre">ttsforge.chapter_selection.</span></span><span class="sig-name descname"><span class="pre">resolve_chapter_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/ttsforge/chapter_selection/#resolve_chapter_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Resolve included chapters after applying an optional skip selection.</p>
+</dd></dl>
+
 </section>
 </section>
 </div>

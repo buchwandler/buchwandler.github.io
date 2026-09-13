@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -543,7 +543,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="french-api">
 <h1>French API</h1>
 <p>The French frontend phonemizes prepared French text using its dictionary and optional
-spaCy/espeak controls. Numbers, currencies, dates, units, and abbreviations are not
+spaCy controls. Generic eSpeak/Goruut fallback execution is owned by Lexphon 0.2.
 expanded by KokoroG2P.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.fr</span><span class="w"> </span><span class="kn">import</span> <span class="n">FrenchG2P</span>
 

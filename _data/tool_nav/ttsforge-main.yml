@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 28e9812e82e5d3823d95c7ce3470a0d475385c4a
+source_commit: eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe
 source_url: https://github.com/buchwandler/ttsforge/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ttsforge
@@ -36,7 +36,7 @@ entries:
   title: ttsforge CLI Reference
   url: /tools/ttsforge/main/cli/
 - slug: ssmd
-  title: ttsforge SSMD 0.8.6
+  title: ttsforge SSMD 0.8.7
   url: /tools/ttsforge/main/ssmd/
 - slug: configuration
   title: ttsforge Configuration

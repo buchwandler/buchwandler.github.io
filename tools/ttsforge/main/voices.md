@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -542,7 +542,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="voices">
 <h1>Voices</h1>
-<p>TTSForge queries PyKokoro 0.9.1 model metadata for available voices. The inventory may
+<p>TTSForge queries PyKokoro 0.9.4 model metadata for available voices. The inventory may
 vary by selected model source and variant, so this document’s examples are not a
 TTSForge-owned global whitelist. Use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">voices</span></code> for the active metadata
 inventory.</p>

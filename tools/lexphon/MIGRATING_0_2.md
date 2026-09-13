@@ -5,8 +5,8 @@ permalink: /tools/lexphon/MIGRATING_0_2/
 nav_tool: lexphon
 docs_project: "lexphon"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "61b4bf9a5fbd8df1f6d661d962b1ae168637c231"
+docs_ref: "v0.2.3"
+docs_commit: "1a6a1395225c036ae618d9d33e773cc9f79890b8"
 search_enabled: true
 ---
 

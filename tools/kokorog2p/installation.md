@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/installation/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -542,55 +542,63 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation">
 <h1>Installation</h1>
-<p>Install the core package for the prepared-text G2P pipeline:</p>
+<section id="core-installation">
+<h2>Core installation</h2>
+<p>Install the prepared-text G2P pipeline:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
 </pre></div>
 </div>
-<p>The core package does not install or import a semantic text-preparation package. Written
-numbers, abbreviations, units, currencies, dates, URLs, and similar forms must be
-prepared by the calling application before phonemization.</p>
-<section id="language-extras">
-<h2>Language extras</h2>
-<p>Language and backend integrations are optional extras:</p>
+<p>KokoroG2P does not expand written semantics such as numbers, abbreviations, units,
+currencies, dates, or URLs. Prepare those forms in the calling application before
+phonemization.</p>
+<p>The default English and French dictionary layers are external Lexphon data. Provision
+them explicitly when dictionary lookup is needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+</pre></div>
+</div>
+<p>For fallback-only operation, pass <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> and no dictionary data is required.</p>
+</section>
+<section id="optional-language-and-backend-extras">
+<h2>Optional language and backend extras</h2>
+<p>Install only the integrations used by the application:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[en]&quot;</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[de]&quot;</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[fr]&quot;</span>
-
-German<span class="w"> </span>pronunciation<span class="w"> </span>dictionaries<span class="w"> </span>are<span class="w"> </span>not<span class="w"> </span>bundled<span class="w"> </span>with<span class="w"> </span>KokoroG2P.<span class="w"> </span>Install<span class="w"> </span>the<span class="w"> </span>default<span class="w"> </span>data<span class="w"> </span>explicitly<span class="w"> </span>through<span class="w"> </span>Lexphon:
-
-<span class="sb">```</span>bash
-lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ja]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[ko]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[espeak]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[hi]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[goruut]&quot;</span>
 </pre></div>
 </div>
-<p>Install optional named layers only when needed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph
-</pre></div>
-</div>
+<p>Optional spaCy models and system tools such as <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> are installed separately.
+Hindi uses the existing eSpeak-NG integration with the <code class="docutils literal notranslate"><span class="pre">hi</span></code> voice and preserves raw IPA
+for Kokoro v1.0. It does not require <code class="docutils literal notranslate"><span class="pre">lexphon</span> <span class="pre">data</span> <span class="pre">install</span> <span class="pre">...</span></code> because no Hindi runtime
+lexicon or automatic-routing evidence provider is included.</p>
+<p>KokoroG2P never downloads models or dictionary assets during construction or lookup.</p>
 </section>
-<section id="released-lexhint-data">
-<h2>Released LexHint data</h2>
-<p>Russian, Thai, Vietnamese, Japanese, Korean, and Portuguese pronunciation dictionaries
-are provisioned through Lexphon and are not bundled or downloaded by KokoroG2P:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint
+<section id="released-lexphon-dictionaries">
+<h2>Released Lexphon dictionaries</h2>
+<p>German named layers are external data:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph<span class="w"> </span>de-de:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph<span class="w"> </span>de-de:lexhint
 </pre></div>
 </div>
-<p>The corresponding language extras only install frontend dependencies. Provision these
-assets during image or container construction. German lookup is offline at runtime and
-performs no implicit download. python -m pip install “kokorog2p[ko]” python -m pip
-install “kokorog2p[ja]” python -m pip install “kokorog2p[espeak]”</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
-See `pyproject.toml` for the complete list of language extras. Optional spaCy models are
-never downloaded by KokoroG2P; install the model required by your application
-separately.
-
-## Optional semantic preparation
-
-If the application uses Spokenform, install and invoke it independently:
-
-```bash
-python -m pip install &quot;spokenform&gt;=0.3.5,&lt;0.4&quot;
+<p>Released LexHint layers for other frontends are provisioned in the same way:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint-native<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint<span class="w"> </span>pt-pt:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>ru:lexhint<span class="w"> </span>th:lexhint-native<span class="w"> </span>vi:lexhint<span class="w"> </span>ja:lexhint<span class="w"> </span>ko:lexhint<span class="w"> </span>pt:lexhint<span class="w"> </span>pt-pt:lexhint
+</pre></div>
+</div>
+<p>The Portuguese layers remain separate: <code class="docutils literal notranslate"><span class="pre">pt:lexhint</span></code> is Brazilian Portuguese evidence,
+and <code class="docutils literal notranslate"><span class="pre">pt-pt:lexhint</span></code> is European Portuguese evidence.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> when data must live in an isolated image or CI workspace.
+Integration tests additionally require <code class="docutils literal notranslate"><span class="pre">KOKOROG2P_EXTERNAL_LEXPHON_DATA=1</span></code>.</p>
+</section>
+<section id="optional-semantic-preparation">
+<h2>Optional semantic preparation</h2>
+<p>Spokenform is a separate package for applications that need semantic expansion:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;spokenform&gt;=0.3.5,&lt;0.4&quot;</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_kokorog2p</span>
@@ -600,15 +608,26 @@ python -m pip install &quot;spokenform&gt;=0.3.5,&lt;0.4&quot;
 <span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="n">prepared</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Spokenform is not a core or core-test dependency.</p>
 </section>
 <section id="development-installation">
 <h2>Development installation</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_prepared_core.py<span class="w"> </span>tests/test_dependency_contract.py
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[all,dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest
 </pre></div>
 </div>
-<p>For release and integration checks, consult the project workflow and keep optional
-cross-package tests separate from the Spokenform-free core suite.</p>
+<p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pytest</span></code> runs the complete suite, including integration, spaCy, slow, and
+resource-heavy tests. To run a deliberately reduced local selection, choose the marker
+expression explicitly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;not integration and not spacy and not slow and not resource_heavy&quot;</span>
+</pre></div>
+</div>
+<p>Full and integration tests require the released Lexphon assets listed above and the
+external-data flag:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">export</span><span class="w"> </span><span class="nv">KOKOROG2P_EXTERNAL_LEXPHON_DATA</span><span class="o">=</span><span class="m">1</span>
+</pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> when data must live in an isolated image or CI workspace.</p>
 </section>
 </section>
 </div>

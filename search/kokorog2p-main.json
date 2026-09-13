@@ -100,6 +100,12 @@
         },
         {
           "anchor": "",
+          "heading": "Lexphon provider fallback ownership",
+          "text": "Generic eSpeak and Goruut fallback flags configure Lexphon 0.2 providers for migrated\nnative frontends. The frontends still perform language-specific IPA normalization and\nKokoro vocabulary conversion. use_cli affects only the direct compatibility backends,\nnot Lexphon provider execution.\n\nProvider results carry structured provenance metadata and are excluded from lexical\nrouting evidence. Provider and Lexphon dictionary data are provisioned explicitly;\nKokoroG2P does not download or cache provider results.",
+          "lower": "generic espeak and goruut fallback flags configure lexphon 0.2 providers for migrated\nnative frontends. the frontends still perform language-specific ipa normalization and\nkokoro vocabulary conversion. use_cli affects only the direct compatibility backends,\nnot lexphon provider execution.\n\nprovider results carry structured provenance metadata and are excluded from lexical\nrouting evidence. provider and lexphon dictionary data are provisioned explicitly;\nkokorog2p does not download or cache provider results."
+        },
+        {
+          "anchor": "",
           "heading": "Tri-state spaCy model resolution",
           "text": "The factory distinguishes optional model discovery from required model selection:\n\n\nuse_spacy=None attempts the highest installed and loadable local model for the\nEnglish and French defaults, then falls back to native tokenization.\n\n\nuse_spacy=True requires a loadable local model and raises\nSpacyModelResolutionError when resolution fails.\n\n\nuse_spacy=False forces native tokenization. Model arguments are ignored with a\nwarning.\n\n\nA concrete spacy_model or exact spacy_model_size is always strict when spaCy is\nenabled.\n\n\n\nNo path downloads a model. The selected Boolean and concrete package are included in the\nG2P cache identity, so changing local model availability cannot reuse an instance with\nstale tokenization behavior. Per-span lang overrides create language-specific G2P\ninstances using…",
           "lower": "the factory distinguishes optional model discovery from required model selection:\n\n\nuse_spacy=none attempts the highest installed and loadable local model for the\nenglish and french defaults, then falls back to native tokenization.\n\n\nuse_spacy=true requires a loadable local model and raises\nspacymodelresolutionerror when resolution fails.\n\n\nuse_spacy=false forces native tokenization. model arguments are ignored with a\nwarning.\n\n\na concrete spacy_model or exact spacy_model_size is always strict when spacy is\nenabled.\n\n\n\nno path downloads a model. the selected boolean and concrete package are included in the\ng2p cache identity, so changing local model availability cannot reuse an instance with\nstale tokenization behavior. per-span lang overrides create language-specific g2p\ninstances using…"
@@ -107,14 +113,14 @@
         {
           "anchor": "",
           "heading": "Memory-Efficient Loading",
-          "text": "Control dictionary loading to optimize memory and initialization time:\n\nfrom kokorog2p import get_g2p\n\n# Default: Gold + Silver dictionaries (~365k entries, ~57 MB)\n# Provides maximum vocabulary coverage\ng2p = get_g2p(\"en-us\")\n\n# Memory-optimized: Gold dictionary only (~179k entries, ~35 MB)\n# Saves ~22-31 MB memory and ~400-470 ms initialization time\ng2p_fast = get_g2p(\"en-us\", load_silver=False)\n\n# Ultra-fast initialization: No dictionaries (~7 MB, espeak fallback only)\n# Saves ~50+ MB memory, fastest initialization\ng2p_minimal = get_g2p(\"en-us\", load_silver=False, load_gold=False)\n\n# Check dictionary size\nprint(f\"Gold entries: {len(g2p.lexicon.golds):,}\")\nprint(f\"Silver entries: {len(g2p.lexicon.silvers):,}\")\n\n\n\n\nDictionary loading configurations:\n\n\nload_gold=True, load_silver=True: Ma…",
-          "lower": "control dictionary loading to optimize memory and initialization time:\n\nfrom kokorog2p import get_g2p\n\n# default: gold + silver dictionaries (~365k entries, ~57 mb)\n# provides maximum vocabulary coverage\ng2p = get_g2p(\"en-us\")\n\n# memory-optimized: gold dictionary only (~179k entries, ~35 mb)\n# saves ~22-31 mb memory and ~400-470 ms initialization time\ng2p_fast = get_g2p(\"en-us\", load_silver=false)\n\n# ultra-fast initialization: no dictionaries (~7 mb, espeak fallback only)\n# saves ~50+ mb memory, fastest initialization\ng2p_minimal = get_g2p(\"en-us\", load_silver=false, load_gold=false)\n\n# check dictionary size\nprint(f\"gold entries: {len(g2p.lexicon.golds):,}\")\nprint(f\"silver entries: {len(g2p.lexicon.silvers):,}\")\n\n\n\n\ndictionary loading configurations:\n\n\nload_gold=true, load_silver=true: ma…"
+          "text": "get_g2p() keeps a bounded LRU cache of configured frontend instances. Reuse one\nfrontend when processing a batch instead of constructing one per text, and inspect its\npolicy with cache_info().\n\nfrom kokorog2p import cache_info, clear_cache, get_g2p\n\ng2p = get_g2p(\"de\", lexicons=(), use_spacy=False)\nfor text in (\"Hallo Welt\", \"Guten Tag\"):\n    print(g2p.phonemize(text))\n\nprint(cache_info())  # policy is \"bounded-lru\"\nclear_cache(deep=True)  # also release parsed lexicon resources\n\n\n\n\nSee examples/cache_and_batch.py for a runnable reuse\npattern.",
+          "lower": "get_g2p() keeps a bounded lru cache of configured frontend instances. reuse one\nfrontend when processing a batch instead of constructing one per text, and inspect its\npolicy with cache_info().\n\nfrom kokorog2p import cache_info, clear_cache, get_g2p\n\ng2p = get_g2p(\"de\", lexicons=(), use_spacy=false)\nfor text in (\"hallo welt\", \"guten tag\"):\n    print(g2p.phonemize(text))\n\nprint(cache_info())  # policy is \"bounded-lru\"\nclear_cache(deep=true)  # also release parsed lexicon resources\n\n\n\n\nsee examples/cache_and_batch.py for a runnable reuse\npattern."
         },
         {
           "anchor": "",
-          "heading": "Disabling Features",
-          "text": "You can disable specific features for better performance or control:\n\nfrom kokorog2p.en import EnglishG2P\n\n# Disable espeak fallback\ng2p = EnglishG2P(\n    language=\"en-us\",\n    use_espeak_fallback=False,  # Unknown words will have no phonemes\n    use_spacy=True,\n    spacy_model=\"en_core_web_md\",  # default\n)\n\n# Disable spaCy (faster but no POS tagging)\ng2p = EnglishG2P(\n    language=\"en-us\",\n    use_espeak_fallback=True,\n    use_spacy=False  # Faster tokenization\n)\n\n# Minimal configuration (fastest)\ng2p = EnglishG2P(\n    language=\"en-us\",\n    use_espeak_fallback=False,\n    use_spacy=False,\n    load_silver=False,\n    load_gold=False  # No dictionaries, ultra-fast\n)",
-          "lower": "you can disable specific features for better performance or control:\n\nfrom kokorog2p.en import englishg2p\n\n# disable espeak fallback\ng2p = englishg2p(\n    language=\"en-us\",\n    use_espeak_fallback=false,  # unknown words will have no phonemes\n    use_spacy=true,\n    spacy_model=\"en_core_web_md\",  # default\n)\n\n# disable spacy (faster but no pos tagging)\ng2p = englishg2p(\n    language=\"en-us\",\n    use_espeak_fallback=true,\n    use_spacy=false  # faster tokenization\n)\n\n# minimal configuration (fastest)\ng2p = englishg2p(\n    language=\"en-us\",\n    use_espeak_fallback=false,\n    use_spacy=false,\n    load_silver=false,\n    load_gold=false  # no dictionaries, ultra-fast\n)"
+          "heading": "External lexicon provisioning",
+          "text": "English and French dictionaries are installed outside KokoroG2P through Lexphon:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nThe default English and French constructors select the external gold asset. Use\nlexicons=() for a fallback-only instance. There is no English silver tier and no\nruntime API for loading or selecting producer-owned assets.\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")  # requires en-us:gold to be installed\nfallback_only = get_g2p(\"en-us\", lexicons=())\n\n\n\n\nRuntime lookup is offline. Construction does not fetch catalogs or invoke the Lexphon\nCLI. If selected data is missing, the error includes the install and verify commands.",
+          "lower": "english and french dictionaries are installed outside kokorog2p through lexphon:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nthe default english and french constructors select the external gold asset. use\nlexicons=() for a fallback-only instance. there is no english silver tier and no\nruntime api for loading or selecting producer-owned assets.\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")  # requires en-us:gold to be installed\nfallback_only = get_g2p(\"en-us\", lexicons=())\n\n\n\n\nruntime lookup is offline. construction does not fetch catalogs or invoke the lexphon\ncli. if selected data is missing, the error includes the install and verify commands."
         },
         {
           "anchor": "",
@@ -137,20 +143,20 @@
         {
           "anchor": "",
           "heading": "Rating System",
-          "text": "Tokens have a rating indicating the source of phonemes:\n\n\n5: User-provided (via OverrideSpan) or gold dictionary (highest quality)\n\n\n4: Punctuation\n\n\n3: Silver dictionary or rule-based conversion\n\n\n2: From espeak-ng fallback\n\n\n1: From goruut backend\n\n\n0: Unknown/failed\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\ntokens = g2p(\"Hello xyznotaword!\")\n\nfor token in tokens:\n    rating = token.get(\"rating\", 0)\n    if rating == 5:\n        print(f\"{token.text}: High quality (gold dictionary)\")\n    elif rating == 3:\n        print(f\"{token.text}: Silver dictionary\")\n    elif rating == 2:\n        print(f\"{token.text}: Fallback (espeak)\")\n    elif rating == 0:\n        print(f\"{token.text}: Unknown\")",
-          "lower": "tokens have a rating indicating the source of phonemes:\n\n\n5: user-provided (via overridespan) or gold dictionary (highest quality)\n\n\n4: punctuation\n\n\n3: silver dictionary or rule-based conversion\n\n\n2: from espeak-ng fallback\n\n\n1: from goruut backend\n\n\n0: unknown/failed\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\ntokens = g2p(\"hello xyznotaword!\")\n\nfor token in tokens:\n    rating = token.get(\"rating\", 0)\n    if rating == 5:\n        print(f\"{token.text}: high quality (gold dictionary)\")\n    elif rating == 3:\n        print(f\"{token.text}: silver dictionary\")\n    elif rating == 2:\n        print(f\"{token.text}: fallback (espeak)\")\n    elif rating == 0:\n        print(f\"{token.text}: unknown\")"
+          "text": "Tokens have a rating indicating the source of phonemes:\n\n\n5: User-provided (via OverrideSpan) or gold dictionary (highest quality)\n\n\n4: Punctuation\n\n\n3: Lexicon, provider fallback, or rule-based conversion\n\n\n2: Native language rule conversion (language-specific policy)\n\n\n1: Reserved for frontend-specific low-confidence output\n\n\n0: Unknown/failed\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\ntokens = g2p(\"Hello xyznotaword!\")\n\nfor token in tokens:\n    rating = token.get(\"rating\", 0)\n    if rating == 5:\n        print(f\"{token.text}: Lexicon quality tier\")\n    elif rating == 3:\n        print(f\"{token.text}: Lexicon, provider, or rule-based\")\n    elif rating == 2:\n        print(f\"{token.text}: Native rule conversion\")\n    elif rating == 0:\n        print(f\"{token.text}: Unknown\")",
+          "lower": "tokens have a rating indicating the source of phonemes:\n\n\n5: user-provided (via overridespan) or gold dictionary (highest quality)\n\n\n4: punctuation\n\n\n3: lexicon, provider fallback, or rule-based conversion\n\n\n2: native language rule conversion (language-specific policy)\n\n\n1: reserved for frontend-specific low-confidence output\n\n\n0: unknown/failed\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\ntokens = g2p(\"hello xyznotaword!\")\n\nfor token in tokens:\n    rating = token.get(\"rating\", 0)\n    if rating == 5:\n        print(f\"{token.text}: lexicon quality tier\")\n    elif rating == 3:\n        print(f\"{token.text}: lexicon, provider, or rule-based\")\n    elif rating == 2:\n        print(f\"{token.text}: native rule conversion\")\n    elif rating == 0:\n        print(f\"{token.text}: unknown\")"
         },
         {
           "anchor": "",
           "heading": "Dictionary Lookup",
-          "text": "Direct dictionary access:\n\nfrom kokorog2p.en import EnglishG2P\n\n# Load with or without silver dataset\ng2p_gold = EnglishG2P(language=\"en-us\", load_silver=False)\ng2p_full = EnglishG2P(language=\"en-us\", load_silver=True)\n\n# Simple lookup\nphonemes = g2p_gold.lexicon.lookup(\"hello\")\nprint(phonemes)  # həlˈO\n\n# Check if word is in dictionary\nif g2p_gold.lexicon.is_known(\"hello\"):\n    print(\"Word is in gold dictionary\")\n\n# Get dictionary sizes\nprint(f\"Gold: {len(g2p_gold.lexicon.golds):,} entries\")\nprint(f\"Silver: {len(g2p_full.lexicon.silvers):,} entries\")\n\n# POS-aware lookup\nphonemes_verb = g2p_gold.lexicon.lookup(\"read\", tag=\"VB\")   # ɹˈid (present)\nphonemes_past = g2p_gold.lexicon.lookup(\"read\", tag=\"VBD\")  # ɹˈɛd (past)",
-          "lower": "direct dictionary access:\n\nfrom kokorog2p.en import englishg2p\n\n# load with or without silver dataset\ng2p_gold = englishg2p(language=\"en-us\", load_silver=false)\ng2p_full = englishg2p(language=\"en-us\", load_silver=true)\n\n# simple lookup\nphonemes = g2p_gold.lexicon.lookup(\"hello\")\nprint(phonemes)  # həlˈo\n\n# check if word is in dictionary\nif g2p_gold.lexicon.is_known(\"hello\"):\n    print(\"word is in gold dictionary\")\n\n# get dictionary sizes\nprint(f\"gold: {len(g2p_gold.lexicon.golds):,} entries\")\nprint(f\"silver: {len(g2p_full.lexicon.silvers):,} entries\")\n\n# pos-aware lookup\nphonemes_verb = g2p_gold.lexicon.lookup(\"read\", tag=\"vb\")   # ɹˈid (present)\nphonemes_past = g2p_gold.lexicon.lookup(\"read\", tag=\"vbd\")  # ɹˈɛd (past)"
+          "text": "Direct dictionary access:\n\nfrom kokorog2p.en import EnglishG2P\n\ng2p = EnglishG2P(language=\"en-us\", lexicons=\"gold\")\nphonemes = g2p.lexicon.lookup(\"hello\")\nprint(phonemes)  # həlˈO\n\n# Check if word is in the externally installed dictionary\nif g2p.lexicon.is_known(\"hello\"):\n    print(\"Word is in the gold dictionary\")\n\n# POS-aware lookup\nphonemes_verb = g2p.lexicon.lookup(\"read\", tag=\"VB\")   # ɹˈid (present)\nphonemes_past = g2p.lexicon.lookup(\"read\", tag=\"VBD\")  # ɹˈɛd (past)",
+          "lower": "direct dictionary access:\n\nfrom kokorog2p.en import englishg2p\n\ng2p = englishg2p(language=\"en-us\", lexicons=\"gold\")\nphonemes = g2p.lexicon.lookup(\"hello\")\nprint(phonemes)  # həlˈo\n\n# check if word is in the externally installed dictionary\nif g2p.lexicon.is_known(\"hello\"):\n    print(\"word is in the gold dictionary\")\n\n# pos-aware lookup\nphonemes_verb = g2p.lexicon.lookup(\"read\", tag=\"vb\")   # ɹˈid (present)\nphonemes_past = g2p.lexicon.lookup(\"read\", tag=\"vbd\")  # ɹˈɛd (past)"
         },
         {
           "anchor": "",
           "heading": "German Lexicon",
-          "text": "German dictionaries are externally managed by g2lex-data and installed explicitly\nthrough Lexphon. KokoroG2P does not bundle or download German dictionary data.\n\npython -m pip install \"kokorog2p[de]\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"de\")\nprint(g2p.phonemize(\"Guten Tag\"))\n\n\n\n\nThe runtime uses the installed local store without network access. Install\nde-de:crane, de-de:espeak, or de-de:olaph before selecting those names.\nlexicons=\"espeak\" selects the static Lexphon dictionary and is distinct from\nuse_espeak_fallback=True. Use use_lexicon=False for fallback-only operation.",
-          "lower": "german dictionaries are externally managed by g2lex-data and installed explicitly\nthrough lexphon. kokorog2p does not bundle or download german dictionary data.\n\npython -m pip install \"kokorog2p[de]\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"de\")\nprint(g2p.phonemize(\"guten tag\"))\n\n\n\n\nthe runtime uses the installed local store without network access. install\nde-de:crane, de-de:espeak, or de-de:olaph before selecting those names.\nlexicons=\"espeak\" selects the static lexphon dictionary and is distinct from\nuse_espeak_fallback=true. use use_lexicon=false for fallback-only operation."
+          "text": "German dictionaries are externally managed by g2lex-data and installed explicitly\nthrough Lexphon. KokoroG2P does not bundle or download German dictionary data.\n\npython -m pip install \"kokorog2p[de]\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"de\")\nprint(g2p.phonemize(\"Guten Tag\"))\n\n\n\n\nThe runtime uses the installed local store without network access. Install\nde-de:crane, de-de:espeak, de-de:olaph, or de-de:lexhint before selecting those\nnames. lexicons=\"espeak\" selects the static Lexphon dictionary and is distinct from\nuse_espeak_fallback=True, which enables the dynamic provider after a lexicon miss. Use\nlexicons=() for operation without a selected dictionary layer.",
+          "lower": "german dictionaries are externally managed by g2lex-data and installed explicitly\nthrough lexphon. kokorog2p does not bundle or download german dictionary data.\n\npython -m pip install \"kokorog2p[de]\"\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nfrom kokorog2p import get_g2p\n\ng2p = get_g2p(\"de\")\nprint(g2p.phonemize(\"guten tag\"))\n\n\n\n\nthe runtime uses the installed local store without network access. install\nde-de:crane, de-de:espeak, de-de:olaph, or de-de:lexhint before selecting those\nnames. lexicons=\"espeak\" selects the static lexphon dictionary and is distinct from\nuse_espeak_fallback=true, which enables the dynamic provider after a lexicon miss. use\nlexicons=() for operation without a selected dictionary layer."
         },
         {
           "anchor": "",
@@ -233,8 +239,8 @@
         {
           "anchor": "",
           "heading": "Managing Cache",
-          "text": "from kokorog2p import get_g2p, clear_cache\n\n# G2P instances are cached by language and settings\ng2p1 = get_g2p(\"en-us\", use_spacy=True)\ng2p2 = get_g2p(\"en-us\", use_spacy=True)\nassert g2p1 is g2p2  # Same instance\n\n# Different settings = different cache entry\ng2p3 = get_g2p(\"en-us\", use_spacy=False)\nassert g2p1 is not g2p3  # Different instance\n\n# load_silver and load_gold also affect caching\ng2p4 = get_g2p(\"en-us\", load_silver=False)\nassert g2p1 is not g2p4  # Different instance (different silver setting)\n\ng2p5 = get_g2p(\"en-us\", load_gold=False)\nassert g2p1 is not g2p5  # Different instance (different gold setting)\n\n# Clear cache when needed\nclear_cache()",
-          "lower": "from kokorog2p import get_g2p, clear_cache\n\n# g2p instances are cached by language and settings\ng2p1 = get_g2p(\"en-us\", use_spacy=true)\ng2p2 = get_g2p(\"en-us\", use_spacy=true)\nassert g2p1 is g2p2  # same instance\n\n# different settings = different cache entry\ng2p3 = get_g2p(\"en-us\", use_spacy=false)\nassert g2p1 is not g2p3  # different instance\n\n# load_silver and load_gold also affect caching\ng2p4 = get_g2p(\"en-us\", load_silver=false)\nassert g2p1 is not g2p4  # different instance (different silver setting)\n\ng2p5 = get_g2p(\"en-us\", load_gold=false)\nassert g2p1 is not g2p5  # different instance (different gold setting)\n\n# clear cache when needed\nclear_cache()"
+          "text": "from kokorog2p import get_g2p, clear_cache\n\n# G2P instances are cached by language and settings\ng2p1 = get_g2p(\"en-us\", use_spacy=True)\ng2p2 = get_g2p(\"en-us\", use_spacy=True)\nassert g2p1 is g2p2  # Same instance\n\n# Different settings = different cache entry\ng2p3 = get_g2p(\"en-us\", use_spacy=False)\nassert g2p1 is not g2p3  # Different instance\n\n# Lexicon selection also affects caching\ng2p4 = get_g2p(\"en-us\", lexicons=())\nassert g2p1 is not g2p4  # Different instance (fallback-only mode)\n\ng2p5 = get_g2p(\"en-us\", lexicons=\"gold\")\nassert g2p1 is not g2p5  # Different explicit selection\n\n# Clear cache when needed\nclear_cache()",
+          "lower": "from kokorog2p import get_g2p, clear_cache\n\n# g2p instances are cached by language and settings\ng2p1 = get_g2p(\"en-us\", use_spacy=true)\ng2p2 = get_g2p(\"en-us\", use_spacy=true)\nassert g2p1 is g2p2  # same instance\n\n# different settings = different cache entry\ng2p3 = get_g2p(\"en-us\", use_spacy=false)\nassert g2p1 is not g2p3  # different instance\n\n# lexicon selection also affects caching\ng2p4 = get_g2p(\"en-us\", lexicons=())\nassert g2p1 is not g2p4  # different instance (fallback-only mode)\n\ng2p5 = get_g2p(\"en-us\", lexicons=\"gold\")\nassert g2p1 is not g2p5  # different explicit selection\n\n# clear cache when needed\nclear_cache()"
         },
         {
           "anchor": "",
@@ -293,8 +299,8 @@
         {
           "anchor": "",
           "heading": "Selecting named lexicons",
-          "text": "Use available_lexicons(language) to inspect registered names and pass lexicons to\nget_g2p or phonemize. A sequence is an ordered precedence stack, so\n(\"gold\", \"silver\") retains the compatibility default. The legacy load_gold and\nload_silver flags remain supported.\n\nFor German, available_lexicons(\"de\") returns (\"gold\", \"crane\", \"espeak\", \"olaph\").\ngold remains the implicit default; all three third-party dictionaries are opt-in.\nExplicit order controls collisions, German casing candidates are searched inside each\nlayer, and all runtime pronunciation selection is offline. espeak is a bundled static\nlexicon and is distinct from the optional use_espeak_fallback=True backend.\nUnsupported source IPA fails closed and may fall through to configured fallback. See\nGerman API for provenance and examp…",
-          "lower": "use available_lexicons(language) to inspect registered names and pass lexicons to\nget_g2p or phonemize. a sequence is an ordered precedence stack, so\n(\"gold\", \"silver\") retains the compatibility default. the legacy load_gold and\nload_silver flags remain supported.\n\nfor german, available_lexicons(\"de\") returns (\"gold\", \"crane\", \"espeak\", \"olaph\").\ngold remains the implicit default; all three third-party dictionaries are opt-in.\nexplicit order controls collisions, german casing candidates are searched inside each\nlayer, and all runtime pronunciation selection is offline. espeak is a bundled static\nlexicon and is distinct from the optional use_espeak_fallback=true backend.\nunsupported source ipa fails closed and may fall through to configured fallback. see\ngerman api for provenance and examp…"
+          "text": "Use available_lexicons(language) to inspect registered names and pass lexicons to\nget_g2p or phonemize. A sequence is an ordered precedence stack. English and French\nexpose only the external gold selection; lexicons=() disables dictionary lookup.\n\nFor German, available_lexicons(\"de\") returns\n(\"gold\", \"crane\", \"espeak\", \"olaph\", \"lexhint\"). gold remains the implicit default.\nExplicit order controls collisions, and runtime pronunciation selection is offline.\nespeak is a static Lexphon dictionary and is distinct from the optional\nuse_espeak_fallback=True backend. Unsupported source IPA fails closed and may fall\nthrough to configured fallback. See German API for provenance and examples.",
+          "lower": "use available_lexicons(language) to inspect registered names and pass lexicons to\nget_g2p or phonemize. a sequence is an ordered precedence stack. english and french\nexpose only the external gold selection; lexicons=() disables dictionary lookup.\n\nfor german, available_lexicons(\"de\") returns\n(\"gold\", \"crane\", \"espeak\", \"olaph\", \"lexhint\"). gold remains the implicit default.\nexplicit order controls collisions, and runtime pronunciation selection is offline.\nespeak is a static lexphon dictionary and is distinct from the optional\nuse_espeak_fallback=true backend. unsupported source ipa fails closed and may fall\nthrough to configured fallback. see german api for provenance and examples."
         }
       ]
     },
@@ -392,8 +398,8 @@
         {
           "anchor": "",
           "heading": "Main Class",
-          "text": "class kokorog2p.zh.ChineseG2P(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, load_silver: bool = True, load_gold: bool = True, **kwargs)[source]\nBases: G2PBase\n\nChinese G2P using pypinyin and IPA transcription.\n\nThis class converts Chinese text to IPA phonemes using:\n1. Jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. Custom pinyin-to-IPA mapping\n\n\nExample:>>> g2p = ChineseG2P()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, load_silver: bool = True, load_gold: bool = True, **kwargs) → None[so…",
-          "lower": "class kokorog2p.zh.chineseg2p(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, load_silver: bool = true, load_gold: bool = true, **kwargs)[source]\nbases: g2pbase\n\nchinese g2p using pypinyin and ipa transcription.\n\nthis class converts chinese text to ipa phonemes using:\n1. jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. custom pinyin-to-ipa mapping\n\n\nexample:>>> g2p = chineseg2p()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, load_silver: bool = true, load_gold: bool = true, **kwargs) → none[so…"
+          "text": "class kokorog2p.zh.ChineseG2P(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, **kwargs)[source]\nBases: G2PBase\n\nChinese G2P using pypinyin and IPA transcription.\n\nThis class converts Chinese text to IPA phonemes using:\n1. Jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. Custom pinyin-to-IPA mapping\n\n\nExample:>>> g2p = ChineseG2P()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = True, use_spacy: bool = False, spacy_model: str | None = None, version: str = '1.1', unk: str = '', en_callable=None, **kwargs) → None[source]\nInitialize the Chinese G2P.\n\n\nArgs:language: Language code (e.g., ‘zh’, ‘zh-cn’).\nuse_espeak_…",
+          "lower": "class kokorog2p.zh.chineseg2p(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, **kwargs)[source]\nbases: g2pbase\n\nchinese g2p using pypinyin and ipa transcription.\n\nthis class converts chinese text to ipa phonemes using:\n1. jieba for word segmentation\n2. pypinyin for pinyin extraction\n3. custom pinyin-to-ipa mapping\n\n\nexample:>>> g2p = chineseg2p()\n>>> tokens = g2p(\"你好世界\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'zh', use_espeak_fallback: bool = true, use_spacy: bool = false, spacy_model: str | none = none, version: str = '1.1', unk: str = '', en_callable=none, **kwargs) → none[source]\ninitialize the chinese g2p.\n\n\nargs:language: language code (e.g., ‘zh’, ‘zh-cn’).\nuse_espeak_…"
         },
         {
           "anchor": "",
@@ -459,8 +465,8 @@
         {
           "anchor": "",
           "heading": "Routing and target-model options",
-          "text": "phonemize_prepared accepts these optional controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nThe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. Any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nLanguageRoutingConfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. Without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes the caller-supplied Kokoro vocab…",
-          "lower": "phonemize_prepared accepts these optional controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nthe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nlanguageroutingconfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes the caller-supplied kokoro vocab…"
+          "text": "phonemize and phonemize_prepared accept the same routing and target-model controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nThe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. Any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nLanguageRoutingConfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. Without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes…",
+          "lower": "phonemize and phonemize_prepared accept the same routing and target-model controls:\n\n\noverlap=\"split\" applies partial language spans to exact source-aligned fragments.\nthe default \"snap\" behavior remains compatible.\n\n\nlanguage_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]} enables optional\npronunciation-language routing with a hard candidate allowlist. any supported factory\nlanguage, including pt-pt, may be listed; the allowlist is never expanded\nimplicitly.\n\n\nlanguageroutingconfig is also accepted.\n\n\ng2p_resolver(language) supplies and caches a configured frontend per canonical\nlanguage for one call. without a custom resolver, foreign frontends use their own\ndefaults and do not inherit the default frontend’s lexicons, version, or\nlanguage-specific kwargs.\n\n\ntarget_model=\"1.0\" makes…"
         },
         {
           "anchor": "",
@@ -471,8 +477,8 @@
         {
           "anchor": "",
           "heading": "G2PBase",
-          "text": "class kokorog2p.G2PBase(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True)[source]\nBases: ABC\n\nAbstract base class for grapheme-to-phoneme converters.\n\nSubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True) → None[source]\nInitialize the G2P converter.\n\n\nArgs:language: Language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: Whether to use espeak for OOV words.\nuse_goruut_fallback: Whether to use goruut for OOV words.\nuse_cli: If True, use CLI phonemizer instead of library bindings.\nstrict: If True, raise exceptions on errors. If F…",
-          "lower": "class kokorog2p.g2pbase(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true)[source]\nbases: abc\n\nabstract base class for grapheme-to-phoneme converters.\n\nsubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true) → none[source]\ninitialize the g2p converter.\n\n\nargs:language: language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: whether to use espeak for oov words.\nuse_goruut_fallback: whether to use goruut for oov words.\nuse_cli: if true, use cli phonemizer instead of library bindings.\nstrict: if true, raise exceptions on errors. if f…"
+          "text": "class kokorog2p.G2PBase(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True)[source]\nBases: ABC\n\nAbstract base class for grapheme-to-phoneme converters.\n\nSubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, use_cli: bool = False, strict: bool = True) → None[source]\nInitialize the G2P converter.\n\n\nArgs:language: Language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: Whether to use espeak for OOV words.\nuse_goruut_fallback: Whether to use goruut for OOV words.\nuse_cli: If True, use the CLI only for direct backend implementations.\nstrict: If True, raise exceptions on errors.…",
+          "lower": "class kokorog2p.g2pbase(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true)[source]\nbases: abc\n\nabstract base class for grapheme-to-phoneme converters.\n\nsubclasses must implement the __call__ method to convert text to phonemes.\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, use_cli: bool = false, strict: bool = true) → none[source]\ninitialize the g2p converter.\n\n\nargs:language: language code (e.g., ‘en-us’, ‘en-gb’).\nuse_espeak_fallback: whether to use espeak for oov words.\nuse_goruut_fallback: whether to use goruut for oov words.\nuse_cli: if true, use the cli only for direct backend implementations.\nstrict: if true, raise exceptions on errors.…"
         },
         {
           "anchor": "",
@@ -527,19 +533,13 @@
     {
       "url": "/tools/kokorog2p/main/api/czech/",
       "title": "kokorog2p Czech API",
-      "snippet": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.\nclass kokorog2p.cs.CzechG2P(language: str = 'cs-cz', …",
+      "snippet": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.\nfrom kokorog2p.cs import CzechG2P\n\ng2p = CzechG2P(la …",
       "sections": [
         {
           "anchor": "",
           "heading": "Czech API",
           "text": "Czech G2P provides rule-based phoneme conversion with comprehensive phonological rules.",
           "lower": "czech g2p provides rule-based phoneme conversion with comprehensive phonological rules."
-        },
-        {
-          "anchor": "",
-          "heading": "Main Class",
-          "text": "class kokorog2p.cs.CzechG2P(language: str = 'cs-cz', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, unk: str = '?', load_silver: bool = True, load_gold: bool = True, version: str = '1.0')[source]\nBases: G2PBase\n\nCzech G2P converter using rule-based phoneme conversion with fallback options.\n\nThis class provides grapheme-to-phoneme conversion for Czech text\nusing phonological rules for voicing assimilation, palatalization,\nand other Czech-specific features, with optional fallback to espeak or goruut.\n\n\nExample:>>> g2p = CzechG2P()\n>>> tokens = g2p(\"Dobrý den\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'cs-cz', use_espeak_fallback: bool = False, use_goruut_fallback: bool = False, unk: str = '?', load_s…",
-          "lower": "class kokorog2p.cs.czechg2p(language: str = 'cs-cz', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, unk: str = '?', load_silver: bool = true, load_gold: bool = true, version: str = '1.0')[source]\nbases: g2pbase\n\nczech g2p converter using rule-based phoneme conversion with fallback options.\n\nthis class provides grapheme-to-phoneme conversion for czech text\nusing phonological rules for voicing assimilation, palatalization,\nand other czech-specific features, with optional fallback to espeak or goruut.\n\n\nexample:>>> g2p = czechg2p()\n>>> tokens = g2p(\"dobrý den\")\n>>> for token in tokens:\n...     print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'cs-cz', use_espeak_fallback: bool = false, use_goruut_fallback: bool = false, unk: str = '?', load_s…"
         },
         {
           "anchor": "",
@@ -558,32 +558,32 @@
     {
       "url": "/tools/kokorog2p/main/api/english/",
       "title": "kokorog2p English API",
-      "snippet": "The English frontend phonemizes prepared English text with the shipped lexicons and\noptional backend/model controls. It does not expand numb …",
+      "snippet": "The English frontend phonemizes prepared English text with an externally provisioned\nLexphon dictionary and optional backend/model controls. …",
       "sections": [
         {
           "anchor": "",
           "heading": "English API",
-          "text": "The English frontend phonemizes prepared English text with the shipped lexicons and\noptional backend/model controls. It does not expand numbers, currencies, dates, units,\nor abbreviations.\n\nfrom kokorog2p.en import EnglishG2P\n\ng2p = EnglishG2P(language=\"en-us\", use_spacy=False)\nprint(g2p.phonemize(\"Hello world\"))\n\n\n\n\nUse get_g2p(\"en-us\") for factory construction. The frontend preserves supplied text\nand token offsets; semantic preparation belongs to the caller.",
-          "lower": "the english frontend phonemizes prepared english text with the shipped lexicons and\noptional backend/model controls. it does not expand numbers, currencies, dates, units,\nor abbreviations.\n\nfrom kokorog2p.en import englishg2p\n\ng2p = englishg2p(language=\"en-us\", use_spacy=false)\nprint(g2p.phonemize(\"hello world\"))\n\n\n\n\nuse get_g2p(\"en-us\") for factory construction. the frontend preserves supplied text\nand token offsets; semantic preparation belongs to the caller."
+          "text": "The English frontend phonemizes prepared English text with an externally provisioned\nLexphon dictionary and optional backend/model controls. It does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import EnglishG2P\n\ng2p = EnglishG2P(language=\"en-us\", lexicons=\"gold\", use_spacy=False)\nprint(g2p.phonemize(\"Hello world\"))\n\n\n\n\nInstall the selected asset before construction:\n\nlexphon data install en-us:gold en-gb:gold\nlexphon data verify en-us:gold en-gb:gold\n\n\n\n\nUse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. The frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller.",
+          "lower": "the english frontend phonemizes prepared english text with an externally provisioned\nlexphon dictionary and optional backend/model controls. it does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import englishg2p\n\ng2p = englishg2p(language=\"en-us\", lexicons=\"gold\", use_spacy=false)\nprint(g2p.phonemize(\"hello world\"))\n\n\n\n\ninstall the selected asset before construction:\n\nlexphon data install en-us:gold en-gb:gold\nlexphon data verify en-us:gold en-gb:gold\n\n\n\n\nuse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. the frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller."
         },
         {
           "anchor": "",
           "heading": "Lexicon controls",
-          "text": "load_gold and load_silver control the shipped dictionary tiers. use_spacy and\nexplicit local model settings control optional POS-aware tokenization. No semantic\npreparation package is imported by this frontend.",
-          "lower": "load_gold and load_silver control the shipped dictionary tiers. use_spacy and\nexplicit local model settings control optional pos-aware tokenization. no semantic\npreparation package is imported by this frontend."
+          "text": "English exposes one logical gold selection backed by an external Lexphon asset. Use\nlexicons=() for fallback-only operation. There is no English silver tier and no\nruntime API for loading or selecting packaged dictionaries. use_spacy and explicit\nlocal model settings control optional POS-aware tokenization.",
+          "lower": "english exposes one logical gold selection backed by an external lexphon asset. use\nlexicons=() for fallback-only operation. there is no english silver tier and no\nruntime api for loading or selecting packaged dictionaries. use_spacy and explicit\nlocal model settings control optional pos-aware tokenization."
         }
       ]
     },
     {
       "url": "/tools/kokorog2p/main/api/french/",
       "title": "kokorog2p French API",
-      "snippet": "The French frontend phonemizes prepared French text using its dictionary and optional\nspaCy/espeak controls. Numbers, currencies, dates, uni …",
+      "snippet": "The French frontend phonemizes prepared French text using its dictionary and optional\nspaCy controls. Generic eSpeak/Goruut fallback executi …",
       "sections": [
         {
           "anchor": "",
           "heading": "French API",
-          "text": "The French frontend phonemizes prepared French text using its dictionary and optional\nspaCy/espeak controls. Numbers, currencies, dates, units, and abbreviations are not\nexpanded by KokoroG2P.\n\nfrom kokorog2p.fr import FrenchG2P\n\ng2p = FrenchG2P(language=\"fr\", use_spacy=False)\nprint(g2p.phonemize(\"Bonjour le monde\"))\n\n\n\n\nSemantic preparation and language segmentation belong to the caller. The frontend keeps\nprepared source text and offsets stable.",
-          "lower": "the french frontend phonemizes prepared french text using its dictionary and optional\nspacy/espeak controls. numbers, currencies, dates, units, and abbreviations are not\nexpanded by kokorog2p.\n\nfrom kokorog2p.fr import frenchg2p\n\ng2p = frenchg2p(language=\"fr\", use_spacy=false)\nprint(g2p.phonemize(\"bonjour le monde\"))\n\n\n\n\nsemantic preparation and language segmentation belong to the caller. the frontend keeps\nprepared source text and offsets stable."
+          "text": "The French frontend phonemizes prepared French text using its dictionary and optional\nspaCy controls. Generic eSpeak/Goruut fallback execution is owned by Lexphon 0.2.\nexpanded by KokoroG2P.\n\nfrom kokorog2p.fr import FrenchG2P\n\ng2p = FrenchG2P(language=\"fr\", use_spacy=False)\nprint(g2p.phonemize(\"Bonjour le monde\"))\n\n\n\n\nSemantic preparation and language segmentation belong to the caller. The frontend keeps\nprepared source text and offsets stable.",
+          "lower": "the french frontend phonemizes prepared french text using its dictionary and optional\nspacy controls. generic espeak/goruut fallback execution is owned by lexphon 0.2.\nexpanded by kokorog2p.\n\nfrom kokorog2p.fr import frenchg2p\n\ng2p = frenchg2p(language=\"fr\", use_spacy=false)\nprint(g2p.phonemize(\"bonjour le monde\"))\n\n\n\n\nsemantic preparation and language segmentation belong to the caller. the frontend keeps\nprepared source text and offsets stable."
         }
       ]
     },
@@ -622,6 +622,43 @@
           "heading": "Implementation",
           "text": "The Hebrew G2P implementation uses the phonikud package which:\n\n\nHandles Hebrew text with diacritics (nikud)\n\n\nConverts Hebrew to IPA phoneme representation\n\n\nSupports both modern and biblical Hebrew\n\n\n\nReference: https://github.com/thewh1teagle/phonikud",
           "lower": "the hebrew g2p implementation uses the phonikud package which:\n\n\nhandles hebrew text with diacritics (nikud)\n\n\nconverts hebrew to ipa phoneme representation\n\n\nsupports both modern and biblical hebrew\n\n\n\nreference: https://github.com/thewh1teagle/phonikud"
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/api/hindi/",
+      "title": "kokorog2p Hindi G2P",
+      "snippet": "Hindi is a prepared-text eSpeak-NG frontend targeting the stock Kokoro v1.0 model.\npython -m pip install \"kokorog2p[hi]\"\n\n\n\n\nThe extra uses …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Hindi G2P",
+          "text": "Hindi is a prepared-text eSpeak-NG frontend targeting the stock Kokoro v1.0 model.",
+          "lower": "hindi is a prepared-text espeak-ng frontend targeting the stock kokoro v1.0 model."
+        },
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "python -m pip install \"kokorog2p[hi]\"\n\n\n\n\nThe extra uses the existing eSpeak integration. No Hindi Lexphon or G2Lex data is\nbundled or required.",
+          "lower": "python -m pip install \"kokorog2p[hi]\"\n\n\n\n\nthe extra uses the existing espeak integration. no hindi lexphon or g2lex data is\nbundled or required."
+        },
+        {
+          "anchor": "",
+          "heading": "Supported aliases",
+          "text": "The aliases hi, hi-in, hi_IN, hin, and hindi normalize to canonical language\nhi-in. All aliases share the same cached HindiG2P instance when factory options\nmatch.\n\nfrom kokorog2p import get_g2p, phonemize_prepared\n\ng2p = get_g2p(\"hi\")\nassert g2p is get_g2p(\"hindi\")\n\nresult = phonemize_prepared(\n    \"नमस्ते दुनिया!\",\n    language=\"hi\",\n    return_ids=True,\n)\nassert result.phonemes\nassert result.token_ids",
+          "lower": "the aliases hi, hi-in, hi_in, hin, and hindi normalize to canonical language\nhi-in. all aliases share the same cached hindig2p instance when factory options\nmatch.\n\nfrom kokorog2p import get_g2p, phonemize_prepared\n\ng2p = get_g2p(\"hi\")\nassert g2p is get_g2p(\"hindi\")\n\nresult = phonemize_prepared(\n    \"नमस्ते दुनिया!\",\n    language=\"hi\",\n    return_ids=true,\n)\nassert result.phonemes\nassert result.token_ids"
+        },
+        {
+          "anchor": "",
+          "heading": "Raw IPA and model compatibility",
+          "text": "HindiG2P uses the eSpeak-NG hi voice and requests raw IPA. It does not call the\nEnglish-oriented from_espeak() conversion because that conversion would alter Hindi\nvowel quality, length, nasalization, and consonant distinctions. The Hindi profile only\nstrips eSpeak language markers and tie controls and removes unsupported U+0329\nsyllabicity. The final output is validated against the Kokoro v1.0 vocabulary.\n\nstrict=True reports an unsupported symbol with the source token, raw IPA, and\nnormalized IPA. With strict=False, an invalid lexical token is returned without\nphonemes instead of emitting an invalid model input.",
+          "lower": "hindig2p uses the espeak-ng hi voice and requests raw ipa. it does not call the\nenglish-oriented from_espeak() conversion because that conversion would alter hindi\nvowel quality, length, nasalization, and consonant distinctions. the hindi profile only\nstrips espeak language markers and tie controls and removes unsupported u+0329\nsyllabicity. the final output is validated against the kokoro v1.0 vocabulary.\n\nstrict=true reports an unsupported symbol with the source token, raw ipa, and\nnormalized ipa. with strict=false, an invalid lexical token is returned without\nphonemes instead of emitting an invalid model input."
+        },
+        {
+          "anchor": "",
+          "heading": "Lazy initialization and routing",
+          "text": "Factory construction is lazy. Creating get_g2p(\"hi\") does not initialize eSpeak-NG;\nthe backend is created on first pronunciation. Explicit backend=\"espeak\" selects the\nsame Hindi-safe frontend.\n\nHindi has no runtime lexicon and does not provide positive automatic-routing evidence.\nIts eSpeak pronunciation is realization data only. Use explicit language or language\nspans when composing Hindi with other prepared languages.",
+          "lower": "factory construction is lazy. creating get_g2p(\"hi\") does not initialize espeak-ng;\nthe backend is created on first pronunciation. explicit backend=\"espeak\" selects the\nsame hindi-safe frontend.\n\nhindi has no runtime lexicon and does not provide positive automatic-routing evidence.\nits espeak pronunciation is realization data only. use explicit language or language\nspans when composing hindi with other prepared languages."
         }
       ]
     },
@@ -709,8 +746,8 @@
         {
           "anchor": "",
           "heading": "Examples",
-          "text": "from kokorog2p.pt import PortugueseG2P\n\ng2p = PortugueseG2P(language=\"pt-br\")\ntokens = g2p(\"Olá mundo!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nKnown words are checked against the provisioned Lexphon pt:lexhint dictionary before\nproductive dialect rules. Missing or invalid dictionary data uses the existing\nrule-based path; KokoroG2P never downloads the dictionary:\n\nlexphon data install pt:lexhint\nlexphon data verify pt:lexhint",
-          "lower": "from kokorog2p.pt import portugueseg2p\n\ng2p = portugueseg2p(language=\"pt-br\")\ntokens = g2p(\"olá mundo!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nknown words are checked against the provisioned lexphon pt:lexhint dictionary before\nproductive dialect rules. missing or invalid dictionary data uses the existing\nrule-based path; kokorog2p never downloads the dictionary:\n\nlexphon data install pt:lexhint\nlexphon data verify pt:lexhint"
+          "text": "from kokorog2p.pt import PortugueseG2P\n\ng2p = PortugueseG2P(language=\"pt-br\")\ntokens = g2p(\"Olá mundo!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nKnown words are checked against the provisioned Lexphon pt:lexhint dictionary for\nBrazilian Portuguese and pt-pt:lexhint for European Portuguese before productive\ndialect rules. Missing or invalid dictionary data uses the existing rule-based path;\nKokoroG2P never downloads the dictionaries:\n\nlexphon data install pt:lexhint pt-pt:lexhint\nlexphon data verify pt:lexhint pt-pt:lexhint",
+          "lower": "from kokorog2p.pt import portugueseg2p\n\ng2p = portugueseg2p(language=\"pt-br\")\ntokens = g2p(\"olá mundo!\")\n\nfor token in tokens:\n    print(f\"{token.text} -> {token.phonemes}\")\n\n\n\n\nknown words are checked against the provisioned lexphon pt:lexhint dictionary for\nbrazilian portuguese and pt-pt:lexhint for european portuguese before productive\ndialect rules. missing or invalid dictionary data uses the existing rule-based path;\nkokorog2p never downloads the dictionaries:\n\nlexphon data install pt:lexhint pt-pt:lexhint\nlexphon data verify pt:lexhint pt-pt:lexhint"
         },
         {
           "anchor": "",
@@ -754,8 +791,8 @@
         {
           "anchor": "",
           "heading": "Swedish G2P",
-          "text": "Swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"Hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nThe aliases sv, sv-se, swe, and swedish select the same native implementation.\nRuntime phonemization contains no Swedish pronunciation dictionary, network access, or\nneural model. eSpeak and Goruut are disabled by default and can be requested explicitly\nas fallback options.\n\nphonemize_word_raw() returns Swedish reference-style IPA. SwedishG2P then uses an\nexplicit adapter for phones not present in the selected Kokoro vocabulary. The external\nbenchmark compares only the raw result, not adapted Kokoro output.\n\nThis is a…",
-          "lower": "swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nthe aliases sv, sv-se, swe, and swedish select the same native implementation.\nruntime phonemization contains no swedish pronunciation dictionary, network access, or\nneural model. espeak and goruut are disabled by default and can be requested explicitly\nas fallback options.\n\nphonemize_word_raw() returns swedish reference-style ipa. swedishg2p then uses an\nexplicit adapter for phones not present in the selected kokoro vocabulary. the external\nbenchmark compares only the raw result, not adapted kokoro output.\n\nthis is a…"
+          "text": "Swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"Hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nThe aliases sv, sv-se, swe, and swedish select the same native implementation.\nRuntime phonemization contains no Swedish pronunciation dictionary, network access, or\nneural model. eSpeak and Goruut are disabled by default and can be requested explicitly\nas fallback options. The requested generic provider is invoked through Lexphon 0.2,\nwhich returns clean IPA before Swedish target conversion.\n\nphonemize_word_raw() returns Swedish reference-style IPA. SwedishG2P then uses an\nexplicit adapter for phones not present in t…",
+          "lower": "swedish is implemented as a native deterministic rule-based frontend.\n\nfrom kokorog2p import get_g2p, phonemize\nfrom kokorog2p.sv import phonemize_word_raw\n\ng2p = get_g2p(\"sv\")\nprint(phonemize(\"hej världen!\", language=\"sv\").phonemes)\nprint(phonemize_word_raw(\"sjuk\").ipa)\n\n\n\n\nthe aliases sv, sv-se, swe, and swedish select the same native implementation.\nruntime phonemization contains no swedish pronunciation dictionary, network access, or\nneural model. espeak and goruut are disabled by default and can be requested explicitly\nas fallback options. the requested generic provider is invoked through lexphon 0.2,\nwhich returns clean ipa before swedish target conversion.\n\nphonemize_word_raw() returns swedish reference-style ipa. swedishg2p then uses an\nexplicit adapter for phones not present in t…"
         }
       ]
     },
@@ -773,8 +810,8 @@
         {
           "anchor": "",
           "heading": "Behavior",
-          "text": "Thai runs use the provisioned Lexphon th:lexhint dictionary with dictionary-driven\nsegmentation and the existing Thai tone adaptation. Latin runs use the existing\nEnglishG2P lazily, so ordinary phrases such as text to speech are pronounced as\nEnglish rather than spelled as Thai letter names. Whitespace and supported punctuation\nremain source-aligned.\n\nThe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. That profile maps the Thai low-tone symbol ˩ to token ID 7 and is\nisolated from stock Kokoro and Nabra profiles. Do not combine this profile with another\nincompatible custom profile in one ID stream.",
-          "lower": "thai runs use the provisioned lexphon th:lexhint dictionary with dictionary-driven\nsegmentation and the existing thai tone adaptation. latin runs use the existing\nenglishg2p lazily, so ordinary phrases such as text to speech are pronounced as\nenglish rather than spelled as thai letter names. whitespace and supported punctuation\nremain source-aligned.\n\nthe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. that profile maps the thai low-tone symbol ˩ to token id 7 and is\nisolated from stock kokoro and nabra profiles. do not combine this profile with another\nincompatible custom profile in one id stream."
+          "text": "Thai runs use the provisioned Lexphon th:lexhint-native dictionary with\ndictionary-driven segmentation and the existing Thai tone adaptation. Latin runs use the\nexisting EnglishG2P lazily, so ordinary phrases such as text to speech are pronounced\nas English rather than spelled as Thai letter names. Whitespace and supported\npunctuation remain source-aligned.\n\nThe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. That profile maps the Thai low-tone symbol ˩ to token ID 7 and is\nisolated from stock Kokoro and Nabra profiles. Do not combine this profile with another\nincompatible custom profile in one ID stream.",
+          "lower": "thai runs use the provisioned lexphon th:lexhint-native dictionary with\ndictionary-driven segmentation and the existing thai tone adaptation. latin runs use the\nexisting englishg2p lazily, so ordinary phrases such as text to speech are pronounced\nas english rather than spelled as thai letter names. whitespace and supported\npunctuation remain source-aligned.\n\nthe frontend version is 1.0; its target model is the separate wayu-kokoro-thai-v1\nvocabulary profile. that profile maps the thai low-tone symbol ˩ to token id 7 and is\nisolated from stock kokoro and nabra profiles. do not combine this profile with another\nincompatible custom profile in one id stream."
         },
         {
           "anchor": "",
@@ -785,15 +822,15 @@
         {
           "anchor": "",
           "heading": "Strictness and diagnostics",
-          "text": "strict=True raises after a lexical Thai unit remains unrecovered or the frontend\nproduces an invalid model symbol. strict=False retains recovered material and places\ndiagnostic warnings on the frontend and public PhonemizeResult where available.\ninvalid model symbols, unsupported source symbols, and unrecovered Latin fallback runs.\n\nThai pronunciation data is provisioned through Lexphon and is not downloaded by\nKokoroG2P. Install and verify the released asset before Thai dictionary use:\n\nlexphon data install th:lexhint\nlexphon data verify th:lexhint\n\n\n\n\nThe pinned Wayu behavior baseline and clean-room deviations are documented in\nThai frontend provenance.",
-          "lower": "strict=true raises after a lexical thai unit remains unrecovered or the frontend\nproduces an invalid model symbol. strict=false retains recovered material and places\ndiagnostic warnings on the frontend and public phonemizeresult where available.\ninvalid model symbols, unsupported source symbols, and unrecovered latin fallback runs.\n\nthai pronunciation data is provisioned through lexphon and is not downloaded by\nkokorog2p. install and verify the released asset before thai dictionary use:\n\nlexphon data install th:lexhint\nlexphon data verify th:lexhint\n\n\n\n\nthe pinned wayu behavior baseline and clean-room deviations are documented in\nthai frontend provenance."
+          "text": "strict=True raises after a lexical Thai unit remains unrecovered or the frontend\nproduces an invalid model symbol. strict=False retains recovered material and places\ndiagnostic warnings on the frontend and public PhonemizeResult where available.\ninvalid model symbols, unsupported source symbols, and unrecovered Latin fallback runs.\n\nThai pronunciation data is provisioned through Lexphon and is not downloaded by\nKokoroG2P. Install and verify the released asset before Thai dictionary use:\n\nlexphon data install th:lexhint-native\nlexphon data verify th:lexhint-native\n\n\n\n\nThe pinned Wayu behavior baseline and clean-room deviations are documented in\nThai frontend provenance.",
+          "lower": "strict=true raises after a lexical thai unit remains unrecovered or the frontend\nproduces an invalid model symbol. strict=false retains recovered material and places\ndiagnostic warnings on the frontend and public phonemizeresult where available.\ninvalid model symbols, unsupported source symbols, and unrecovered latin fallback runs.\n\nthai pronunciation data is provisioned through lexphon and is not downloaded by\nkokorog2p. install and verify the released asset before thai dictionary use:\n\nlexphon data install th:lexhint-native\nlexphon data verify th:lexhint-native\n\n\n\n\nthe pinned wayu behavior baseline and clean-room deviations are documented in\nthai frontend provenance."
         }
       ]
     },
     {
       "url": "/tools/kokorog2p/main/api/utils/",
       "title": "kokorog2p Utilities API",
-      "snippet": "This page documents utility modules and helper functions.\nThe fallback module provides functionality for handling out-of-vocabulary words: …",
+      "snippet": "This page documents utility modules and helper functions.\nGeneric eSpeak and Goruut fallback ownership is provided by Lexphon 0.2 through th …",
       "sections": [
         {
           "anchor": "",
@@ -803,9 +840,9 @@
         },
         {
           "anchor": "",
-          "heading": "Fallback Handling",
-          "text": "The fallback module provides functionality for handling out-of-vocabulary words:\n\nFallback options for OOV words with IPA to Kokoro conversion.\n\n\n\nclass kokorog2p.en.fallback.EspeakFallback(british: bool = False, use_cli: bool = False)[source]\nBases: FallbackBase[EspeakBackend]\n\nFallback G2P using espeak-ng with Kokoro phoneme conversion.\n\n\n\ninstall_hint: str = 'Check that espeak-ng is properly installed.'\nExtra hint appended to backend-init error logs (RuntimeError).\n\n\n\n\n\nbackend_word_kokoro: bool = False\nIf True, pass convert_to_kokoro=True into backend.word_phonemes().\n\n\n\n\n\nbackend_text_kokoro: bool = True\nIf True, pass convert_to_kokoro=True into backend.phonemize().\n\n\n\n\n\n__init__(british: bool = False, use_cli: bool = False) → None[source]\nInitialize the espeak fallback.\n\n\nArgs:…",
-          "lower": "the fallback module provides functionality for handling out-of-vocabulary words:\n\nfallback options for oov words with ipa to kokoro conversion.\n\n\n\nclass kokorog2p.en.fallback.espeakfallback(british: bool = false, use_cli: bool = false)[source]\nbases: fallbackbase[espeakbackend]\n\nfallback g2p using espeak-ng with kokoro phoneme conversion.\n\n\n\ninstall_hint: str = 'check that espeak-ng is properly installed.'\nextra hint appended to backend-init error logs (runtimeerror).\n\n\n\n\n\nbackend_word_kokoro: bool = false\nif true, pass convert_to_kokoro=true into backend.word_phonemes().\n\n\n\n\n\nbackend_text_kokoro: bool = true\nif true, pass convert_to_kokoro=true into backend.phonemize().\n\n\n\n\n\n__init__(british: bool = false, use_cli: bool = false) → none[source]\ninitialize the espeak fallback.\n\n\nargs:…"
+          "heading": "Generic provider handling",
+          "text": "Generic eSpeak and Goruut fallback ownership is provided by Lexphon 0.2 through the\nshared LexphonBackend adapter. Native frontends retain target-language IPA\nnormalization, Kokoro conversion, ratings, and diagnostics. Provider results are not\nlexical routing evidence.\n\nDirect backend=\"espeak\" and backend=\"goruut\" remain documented in the backend API\nand are independent compatibility paths.",
+          "lower": "generic espeak and goruut fallback ownership is provided by lexphon 0.2 through the\nshared lexphonbackend adapter. native frontends retain target-language ipa\nnormalization, kokoro conversion, ratings, and diagnostics. provider results are not\nlexical routing evidence.\n\ndirect backend=\"espeak\" and backend=\"goruut\" remain documented in the backend api\nand are independent compatibility paths."
         },
         {
           "anchor": "",
@@ -874,7 +911,7 @@
     {
       "url": "/tools/kokorog2p/main/changelog/",
       "title": "kokorog2p Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded opt-in automa …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nFixed Russian LexHi …",
       "sections": [
         {
           "anchor": "",
@@ -884,9 +921,87 @@
         },
         {
           "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Russian LexHint OOV handling to use configured Lexphon fallback providers with\naccurate provenance",
+          "lower": "fixed russian lexhint oov handling to use configured lexphon fallback providers with\naccurate provenance"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added first-class Hindi Kokoro v1.0 phonemization through a lazy raw-IPA eSpeak-NG\nfrontend with Devanagari-safe tokenization",
+          "lower": "added first-class hindi kokoro v1.0 phonemization through a lazy raw-ipa espeak-ng\nfrontend with devanagari-safe tokenization"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Russian LexHint tie-bar affricates by normalizing them to stock Kokoro labels\nbefore vocabulary validation",
+          "lower": "fixed russian lexhint tie-bar affricates by normalizing them to stock kokoro labels\nbefore vocabulary validation"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added dialect-specific European Portuguese LexHint support with regional routing and\nlexicon provenance",
+          "lower": "added dialect-specific european portuguese lexhint support with regional routing and\nlexicon provenance"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented working PyPI download and Codecov coverage badges in the README",
+          "lower": "documented working pypi download and codecov coverage badges in the readme"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented PyPI package status with version, Python, and download badges in the README",
+          "lower": "documented pypi package status with version, python, and download badges in the readme"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed eSpeak shared-library discovery near PATH-installed executables\n\n\nFixed cross-platform eSpeak voice selection and updated Thai provisioning to the\nnative LexHint asset",
+          "lower": "fixed espeak shared-library discovery near path-installed executables\n\n\nfixed cross-platform espeak voice selection and updated thai provisioning to the\nnative lexhint asset"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved reference compatibility coverage with pinned corpora and provider goldens\n\n\nImproved reference compatibility evaluation with golden and live sources, suite\nreports, and regression verdicts",
+          "lower": "improved reference compatibility coverage with pinned corpora and provider goldens\n\n\nimproved reference compatibility evaluation with golden and live sources, suite\nreports, and regression verdicts"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added German LexHint dictionary selection and explicit provisioning support\n\n\nAdded marker-backed German-English loanword routing with exact source-aligned\nfragments and provenance diagnostics",
+          "lower": "added german lexhint dictionary selection and explicit provisioning support\n\n\nadded marker-backed german-english loanword routing with exact source-aligned\nfragments and provenance diagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed native frontend fallback execution to use shared Lexphon 0.2 providers and\nstandardized provider metadata\n\n\nChanged English and French dictionary ownership to externally provisioned Lexphon data",
+          "lower": "changed native frontend fallback execution to use shared lexphon 0.2 providers and\nstandardized provider metadata\n\n\nchanged english and french dictionary ownership to externally provisioned lexphon data"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed eSpeak marker normalization and German phoneme conversion edge cases\n\n\nFixed Lexphon download handling, eSpeak error reporting, and test resource cleanup",
+          "lower": "fixed espeak marker normalization and german phoneme conversion edge cases\n\n\nfixed lexphon download handling, espeak error reporting, and test resource cleanup"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved mixed-language station benchmark coverage and completed shared Lexphon\nprovider integration\n\n\nImproved platform test setup and executable validation for release checks",
+          "lower": "improved mixed-language station benchmark coverage and completed shared lexphon\nprovider integration\n\n\nimproved platform test setup and executable validation for release checks"
+        },
+        {
+          "anchor": "",
           "heading": "Added",
           "text": "Added opt-in automatic language routing with exact source-aligned sub-token spans and\nroute diagnostics\n\n\nAdded structured evidence for exact selected German and English lexicon hits\n\n\nAdded selected-lexicon evidence and provenance-aware routing across additional\nlanguage frontends",
           "lower": "added opt-in automatic language routing with exact source-aligned sub-token spans and\nroute diagnostics\n\n\nadded structured evidence for exact selected german and english lexicon hits\n\n\nadded selected-lexicon evidence and provenance-aware routing across additional\nlanguage frontends"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Use Lexphon 0.1.3 language markers for conservative German-English loanword routing",
+          "lower": "use lexphon 0.1.3 language markers for conservative german-english loanword routing"
         },
         {
           "anchor": "",
@@ -1019,90 +1134,6 @@
           "heading": "Fixed",
           "text": "Fixed contextual countdown boundaries through Kokoro model punctuation as two em-dash\nmarkers",
           "lower": "fixed contextual countdown boundaries through kokoro model punctuation as two em-dash\nmarkers"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented the Spokenform segment-boundary to Kokoro em-dash handoff and current\ndependency ownership contract",
-          "lower": "documented the spokenform segment-boundary to kokoro em-dash handoff and current\ndependency ownership contract"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added countdown, score, hyphen, range, alignment, and exact-floor CI regressions",
-          "lower": "added countdown, score, hyphen, range, alignment, and exact-floor ci regressions"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed punctuation token alignment when model-generated phoneme spans overlap adjacent\ntokens",
-          "lower": "fixed punctuation token alignment when model-generated phoneme spans overlap adjacent\ntokens"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added spaced ellipsis normalization and token realignment for model punctuation\ncollapses",
-          "lower": "added spaced ellipsis normalization and token realignment for model punctuation\ncollapses"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed German area, volume, hectare, and speed quantities to use the shared\nspokenform grammar\n\n\nChanged the reviewed seven-language pipeline to use shared written-to-spoken\npreparation\n\n\nChanged migrated-language written-to-spoken semantics to use Spokenform 0.2.6 and\nraised the abbr2words floor to 0.2.9\n\n\nAdded Spokenform diagnostics and provenance tracking for upstream warnings\n\n\nChanged migrated-language processing order so Spokenform receives source syntax before\nmodel-punctuation cleanup\n\n\nChanged Spokenform source replacement handling to preserve exact spans and retain\nprovenance in token metadata\n\n\nChanged dependency floors to abbr2words>=0.2.9 and spokenform>=0.2.6 with handoff\nregressions\n\n\nChanged English contextual N.0 release-label pronunciation through the spokenform\nprepar…",
-          "lower": "changed german area, volume, hectare, and speed quantities to use the shared\nspokenform grammar\n\n\nchanged the reviewed seven-language pipeline to use shared written-to-spoken\npreparation\n\n\nchanged migrated-language written-to-spoken semantics to use spokenform 0.2.6 and\nraised the abbr2words floor to 0.2.9\n\n\nadded spokenform diagnostics and provenance tracking for upstream warnings\n\n\nchanged migrated-language processing order so spokenform receives source syntax before\nmodel-punctuation cleanup\n\n\nchanged spokenform source replacement handling to preserve exact spans and retain\nprovenance in token metadata\n\n\nchanged dependency floors to abbr2words>=0.2.9 and spokenform>=0.2.6 with handoff\nregressions\n\n\nchanged english contextual n.0 release-label pronunciation through the spokenform\nprepar…"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed exact Spokenform replacement spans when sentence-final periods appear in\nstructured replacements\n\n\nFixed English abbreviation and core pipeline alignment compatibility with current\nSpokenform semantics",
-          "lower": "fixed exact spokenform replacement spans when sentence-final periods appear in\nstructured replacements\n\n\nfixed english abbreviation and core pipeline alignment compatibility with current\nspokenform semantics"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented English semantic ownership and the Portuguese migration boundary\n\n\nDocumented that accepted Spokenform semantics are preserved literally in the English\nAPI documentation\n\n\nDocumented the abbr2words-to-spokenform-to-kokorog2p ownership boundary and\nseven-language migration scope",
-          "lower": "documented english semantic ownership and the portuguese migration boundary\n\n\ndocumented that accepted spokenform semantics are preserved literally in the english\napi documentation\n\n\ndocumented the abbr2words-to-spokenform-to-kokorog2p ownership boundary and\nseven-language migration scope"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added runtime and parity fixture assets to portable Codecrate packs\n\n\nAdded compact Spokenform handoff regression tests covering special characters and\nsymbol preservation",
-          "lower": "added runtime and parity fixture assets to portable codecrate packs\n\n\nadded compact spokenform handoff regression tests covering special characters and\nsymbol preservation"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added dependency-free adapters for SSMD annotation spans and phrasplit-compatible\nsegment rebasing",
-          "lower": "added dependency-free adapters for ssmd annotation spans and phrasplit-compatible\nsegment rebasing"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed automatic spaCy model discovery to be optional while keeping explicit model\nrequests strict\n\n\nAdded valid German and French optional installation extras",
-          "lower": "changed automatic spacy model discovery to be optional while keeping explicit model\nrequests strict\n\n\nadded valid german and french optional installation extras"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented the SSMD-to-phrasplit-to-kokorog2p pipeline and shared clean-text\ncoordinate contract",
-          "lower": "documented the ssmd-to-phrasplit-to-kokorog2p pipeline and shared clean-text\ncoordinate contract"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added cross-package coordinate, normalization, and no-model integration coverage",
-          "lower": "added cross-package coordinate, normalization, and no-model integration coverage"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed French fallback voice resolution to prefer locale-specific fr-fr over bare fr,\navoiding unavailable MBROLA voices\n\n\nCorrected French gold lexicon nasal IPA mappings for dem̃ander, restaurant, and\nexcellent word families\n\n\nFixed French fallback to reject empty, whitespace-only, or placeholder phoneme results\ninstead of silently dropping OOV words",
-          "lower": "fixed french fallback voice resolution to prefer locale-specific fr-fr over bare fr,\navoiding unavailable mbrola voices\n\n\ncorrected french gold lexicon nasal ipa mappings for dem̃ander, restaurant, and\nexcellent word families\n\n\nfixed french fallback to reject empty, whitespace-only, or placeholder phoneme results\ninstead of silently dropping oov words"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added French fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests",
-          "lower": "added french fallback voice resolution, empty phoneme rejection, and gold lexicon\nregression tests"
         }
       ]
     },
@@ -1120,20 +1151,14 @@
         {
           "anchor": "",
           "heading": "Development Setup",
-          "text": "Clone the repository:\n\ngit clone https://github.com/buchwandler/kokorog2p.git\ncd kokorog2p\n\n\n\n\n\n\nCreate a virtual environment:\n\npython -m venv venv\nsource venv/bin/activate  # On Windows: venv\\Scripts\\activate\n\n\n\n\n\n\nInstall development dependencies:\n\npip install -e \".[dev]\"\n\n\n\n\n\n\nInstall pre-commit hooks:\n\npre-commit install",
-          "lower": "clone the repository:\n\ngit clone https://github.com/buchwandler/kokorog2p.git\ncd kokorog2p\n\n\n\n\n\n\ncreate a virtual environment:\n\npython -m venv venv\nsource venv/bin/activate  # on windows: venv\\scripts\\activate\n\n\n\n\n\n\ninstall development dependencies:\n\npip install -e \".[dev]\"\n\n\n\n\n\n\ninstall pre-commit hooks:\n\npre-commit install"
+          "text": "Clone the repository:\n\ngit clone https://github.com/buchwandler/kokorog2p.git\ncd kokorog2p\n\n\n\n\n\n\nCreate a virtual environment:\n\npython -m venv venv\nsource venv/bin/activate  # On Windows: venv\\Scripts\\activate\n\n\n\n\n\n\nInstall development dependencies:\n\npip install -e \".[all,dev]\"\n\n\n\n\n\n\nInstall pre-commit hooks:\n\npre-commit install",
+          "lower": "clone the repository:\n\ngit clone https://github.com/buchwandler/kokorog2p.git\ncd kokorog2p\n\n\n\n\n\n\ncreate a virtual environment:\n\npython -m venv venv\nsource venv/bin/activate  # on windows: venv\\scripts\\activate\n\n\n\n\n\n\ninstall development dependencies:\n\npip install -e \".[all,dev]\"\n\n\n\n\n\n\ninstall pre-commit hooks:\n\npre-commit install"
         },
         {
           "anchor": "",
           "heading": "Running Tests",
-          "text": "Run the complete suite with one fresh Python process per test module:\n\npython tools/run_test_suite.py\n\n\n\n\nThe isolated runner discovers every tests/test_*.py file in sorted order and runs the\nmodules sequentially. It is the canonical full-suite command on developer machines and\nin exhaustive CI. Use --list to inspect coverage, --fail-fast to stop after the\nfirst failing module, --start-at tests/test_en_g2p.py to resume from a module, and\n--match \"en|normalization\" to select matching modules. Pass pytest options with\n--pytest-arg=-vv or additional arguments after the runner options.\n\nRun targeted selections with plain pytest when process isolation is not needed:\n\npython -m pytest -q tests/test_en_g2p.py\npython -m pytest -m \"not spacy\"\npython -m pytest -q tests/test_attr_parser.py tests/tes…",
-          "lower": "run the complete suite with one fresh python process per test module:\n\npython tools/run_test_suite.py\n\n\n\n\nthe isolated runner discovers every tests/test_*.py file in sorted order and runs the\nmodules sequentially. it is the canonical full-suite command on developer machines and\nin exhaustive ci. use --list to inspect coverage, --fail-fast to stop after the\nfirst failing module, --start-at tests/test_en_g2p.py to resume from a module, and\n--match \"en|normalization\" to select matching modules. pass pytest options with\n--pytest-arg=-vv or additional arguments after the runner options.\n\nrun targeted selections with plain pytest when process isolation is not needed:\n\npython -m pytest -q tests/test_en_g2p.py\npython -m pytest -m \"not spacy\"\npython -m pytest -q tests/test_attr_parser.py tests/tes…"
-        },
-        {
-          "anchor": "",
-          "heading": "Running on memory-constrained machines",
-          "text": "The English and German dictionaries, optional spaCy models, and native backends can use\nsubstantial memory. Do not use pytest-xdist as the RAM fix. Concurrent workers can\neach load another interpreter, dictionary, or model. The isolated full-suite runner uses\nprocess exit as the hard memory boundary and keeps only one test module active.\n\nFocused peak RSS diagnostics can be run with the separate measurement tool:\n\npython tools/run_pytest_with_memory.py -q tests/test_en_g2p.py\npython tools/run_pytest_with_memory.py -q tests/test_normalization.py\npython tools/run_pytest_with_memory.py -q tests/test_tokenizer.py\npython tools/run_pytest_with_memory.py -q tests/test_ko_g2p.py\npython tools/run_pytest_with_memory.py --max-rss-mb 1500 -q tests/test_en_g2p.py\n\n\n\n\nThe spacy marker identifies tests…",
-          "lower": "the english and german dictionaries, optional spacy models, and native backends can use\nsubstantial memory. do not use pytest-xdist as the ram fix. concurrent workers can\neach load another interpreter, dictionary, or model. the isolated full-suite runner uses\nprocess exit as the hard memory boundary and keeps only one test module active.\n\nfocused peak rss diagnostics can be run with the separate measurement tool:\n\npython tools/run_pytest_with_memory.py -q tests/test_en_g2p.py\npython tools/run_pytest_with_memory.py -q tests/test_normalization.py\npython tools/run_pytest_with_memory.py -q tests/test_tokenizer.py\npython tools/run_pytest_with_memory.py -q tests/test_ko_g2p.py\npython tools/run_pytest_with_memory.py --max-rss-mb 1500 -q tests/test_en_g2p.py\n\n\n\n\nthe spacy marker identifies tests…"
+          "text": "Run the complete repository suite with plain pytest:\n\npython -m pytest\n\n\n\n\nThe default command includes tests marked integration, spacy, slow, and\nresource_heavy. For a deliberately reduced local run, select exclusions explicitly:\n\npython -m pytest -m \"not integration and not spacy and not slow and not resource_heavy\"\n\n\n\n\nThe full environment requires the project’s all/dev extras, eSpeak-ng, the cmudict\ncorpus, and the en_core_web_sm spaCy model. Released-data integration tests also\nrequire KOKOROG2P_EXTERNAL_LEXPHON_DATA=1 and the Lexphon assets documented in\ninstallation.",
+          "lower": "run the complete repository suite with plain pytest:\n\npython -m pytest\n\n\n\n\nthe default command includes tests marked integration, spacy, slow, and\nresource_heavy. for a deliberately reduced local run, select exclusions explicitly:\n\npython -m pytest -m \"not integration and not spacy and not slow and not resource_heavy\"\n\n\n\n\nthe full environment requires the project’s all/dev extras, espeak-ng, the cmudict\ncorpus, and the en_core_web_sm spacy model. released-data integration tests also\nrequire kokorog2p_external_lexphon_data=1 and the lexphon assets documented in\ninstallation."
         },
         {
           "anchor": "",
@@ -1199,39 +1224,45 @@
         {
           "anchor": "",
           "heading": "Quick start",
-          "text": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\"Hello world!\", language=\"en-us\")\nprint(result.phonemes)\n\n\n\n\nSee Quick Start, prepared phonemization,\nand the span guide for details.\n\n\nAPI Reference\n\n\nCore API\nMain Functions\n\nStructured stress overrides\n\nPrepared input\n\nPipeline integration adapters\n\nBase Classes\n\nPhoneme Utilities\n\nKokoro Vocabulary\n\nPunctuation\n\nWord Mismatch Detection\n\n\n\n\nEnglish API\nLexicon controls\n\n\n\n\nGerman API\n\nFrench API\n\nCzech API\nMain Class\n\nExamples\n\nPhonological Rules\n\n\n\n\nSpanish API\n\nItalian API\n\nPortuguese API\nMain Class\n\nExamples\n\nPhonology Features\n\n\n\n\nChinese API\nMain Class\n\nExamples\n\nModel Versions\n\nFeatures\n\n\n\n\nJapanese API\nMain Class\n\nExamples\n\nFeatures\n\nCutlet membership dictionary\n\n\n\n\nKorean API\n\nVietnamese API\n\nRussian API\n\nHeb…",
-          "lower": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\"hello world!\", language=\"en-us\")\nprint(result.phonemes)\n\n\n\n\nsee quick start, prepared phonemization,\nand the span guide for details.\n\n\napi reference\n\n\ncore api\nmain functions\n\nstructured stress overrides\n\nprepared input\n\npipeline integration adapters\n\nbase classes\n\nphoneme utilities\n\nkokoro vocabulary\n\npunctuation\n\nword mismatch detection\n\n\n\n\nenglish api\nlexicon controls\n\n\n\n\ngerman api\n\nfrench api\n\nczech api\nmain class\n\nexamples\n\nphonological rules\n\n\n\n\nspanish api\n\nitalian api\n\nportuguese api\nmain class\n\nexamples\n\nphonology features\n\n\n\n\nchinese api\nmain class\n\nexamples\n\nmodel versions\n\nfeatures\n\n\n\n\njapanese api\nmain class\n\nexamples\n\nfeatures\n\ncutlet membership dictionary\n\n\n\n\nkorean api\n\nvietnamese api\n\nrussian api\n\nheb…"
+          "text": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\n    \"Hello world!\", language=\"en-us\", lexicons=()\n)\nprint(result.phonemes)\n\n\n\n\nSee Quick Start, prepared phonemization,\nand the span guide for details.\n\n\nAPI Reference\n\n\nCore API\nMain Functions\n\nStructured stress overrides\n\nPrepared input\n\nPipeline integration adapters\n\nBase Classes\n\nPhoneme Utilities\n\nKokoro Vocabulary\n\nPunctuation\n\nWord Mismatch Detection\n\n\n\n\nEnglish API\nLexicon controls\n\n\n\n\nGerman API\n\nFrench API\n\nCzech API\nMain Class\n\nExamples\n\nPhonological Rules\n\n\n\n\nSpanish API\n\nItalian API\n\nPortuguese API\nMain Class\n\nExamples\n\nPhonology Features\n\n\n\n\nChinese API\nMain Class\n\nExamples\n\nModel Versions\n\nFeatures\n\n\n\n\nJapanese API\nMain Class\n\nExamples\n\nFeatures\n\nCutlet membership dictionary\n\n\n\n\nKorean API\n\nVietnamese AP…",
+          "lower": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\n    \"hello world!\", language=\"en-us\", lexicons=()\n)\nprint(result.phonemes)\n\n\n\n\nsee quick start, prepared phonemization,\nand the span guide for details.\n\n\napi reference\n\n\ncore api\nmain functions\n\nstructured stress overrides\n\nprepared input\n\npipeline integration adapters\n\nbase classes\n\nphoneme utilities\n\nkokoro vocabulary\n\npunctuation\n\nword mismatch detection\n\n\n\n\nenglish api\nlexicon controls\n\n\n\n\ngerman api\n\nfrench api\n\nczech api\nmain class\n\nexamples\n\nphonological rules\n\n\n\n\nspanish api\n\nitalian api\n\nportuguese api\nmain class\n\nexamples\n\nphonology features\n\n\n\n\nchinese api\nmain class\n\nexamples\n\nmodel versions\n\nfeatures\n\n\n\n\njapanese api\nmain class\n\nexamples\n\nfeatures\n\ncutlet membership dictionary\n\n\n\n\nkorean api\n\nvietnamese ap…"
         }
       ]
     },
     {
       "url": "/tools/kokorog2p/main/installation/",
       "title": "kokorog2p Installation",
-      "snippet": "Install the core package for the prepared-text G2P pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nThe core package does not install or impor …",
+      "snippet": "Install the prepared-text G2P pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nKokoroG2P does not expand written semantics such as numbers, ab …",
       "sections": [
         {
           "anchor": "",
-          "heading": "Installation",
-          "text": "Install the core package for the prepared-text G2P pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nThe core package does not install or import a semantic text-preparation package. Written\nnumbers, abbreviations, units, currencies, dates, URLs, and similar forms must be\nprepared by the calling application before phonemization.",
-          "lower": "install the core package for the prepared-text g2p pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nthe core package does not install or import a semantic text-preparation package. written\nnumbers, abbreviations, units, currencies, dates, urls, and similar forms must be\nprepared by the calling application before phonemization."
+          "heading": "Core installation",
+          "text": "Install the prepared-text G2P pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nKokoroG2P does not expand written semantics such as numbers, abbreviations, units,\ncurrencies, dates, or URLs. Prepare those forms in the calling application before\nphonemization.\n\nThe default English and French dictionary layers are external Lexphon data. Provision\nthem explicitly when dictionary lookup is needed:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nFor fallback-only operation, pass lexicons=() and no dictionary data is required.",
+          "lower": "install the prepared-text g2p pipeline:\n\npython -m pip install kokorog2p\n\n\n\n\nkokorog2p does not expand written semantics such as numbers, abbreviations, units,\ncurrencies, dates, or urls. prepare those forms in the calling application before\nphonemization.\n\nthe default english and french dictionary layers are external lexphon data. provision\nthem explicitly when dictionary lookup is needed:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nfor fallback-only operation, pass lexicons=() and no dictionary data is required."
         },
         {
           "anchor": "",
-          "heading": "Language extras",
-          "text": "Language and backend integrations are optional extras:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\n\nGerman pronunciation dictionaries are not bundled with KokoroG2P. Install the default data explicitly through Lexphon:\n\n```bash\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nInstall optional named layers only when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph",
-          "lower": "language and backend integrations are optional extras:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\n\ngerman pronunciation dictionaries are not bundled with kokorog2p. install the default data explicitly through lexphon:\n\n```bash\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\ninstall optional named layers only when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph"
+          "heading": "Optional language and backend extras",
+          "text": "Install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\"\n\n\n\n\nOptional spaCy models and system tools such as espeak-ng are installed separately.\nHindi uses the existing eSpeak-NG integration with the hi voice and preserves raw IPA\nfor Kokoro v1.0. It does not require lexphon data install ... because no Hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nKokoroG2P never downloads models or dictionary assets during construction or lookup.",
+          "lower": "install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\"\n\n\n\n\noptional spacy models and system tools such as espeak-ng are installed separately.\nhindi uses the existing espeak-ng integration with the hi voice and preserves raw ipa\nfor kokoro v1.0. it does not require lexphon data install ... because no hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nkokorog2p never downloads models or dictionary assets during construction or lookup."
         },
         {
           "anchor": "",
-          "heading": "Released LexHint data",
-          "text": "Russian, Thai, Vietnamese, Japanese, Korean, and Portuguese pronunciation dictionaries\nare provisioned through Lexphon and are not bundled or downloaded by KokoroG2P:\n\nlexphon data install ru:lexhint th:lexhint vi:lexhint ja:lexhint ko:lexhint pt:lexhint\nlexphon data verify ru:lexhint th:lexhint vi:lexhint ja:lexhint ko:lexhint pt:lexhint\n\n\n\n\nThe corresponding language extras only install frontend dependencies. Provision these\nassets during image or container construction. German lookup is offline at runtime and\nperforms no implicit download. python -m pip install “kokorog2p[ko]” python -m pip\ninstall “kokorog2p[ja]” python -m pip install “kokorog2p[espeak]”\n\n\nSee `pyproject.toml` for the complete list of language extras. Optional spaCy models are\nnever downloaded by KokoroG2P; install th…",
-          "lower": "russian, thai, vietnamese, japanese, korean, and portuguese pronunciation dictionaries\nare provisioned through lexphon and are not bundled or downloaded by kokorog2p:\n\nlexphon data install ru:lexhint th:lexhint vi:lexhint ja:lexhint ko:lexhint pt:lexhint\nlexphon data verify ru:lexhint th:lexhint vi:lexhint ja:lexhint ko:lexhint pt:lexhint\n\n\n\n\nthe corresponding language extras only install frontend dependencies. provision these\nassets during image or container construction. german lookup is offline at runtime and\nperforms no implicit download. python -m pip install “kokorog2p[ko]” python -m pip\ninstall “kokorog2p[ja]” python -m pip install “kokorog2p[espeak]”\n\n\nsee `pyproject.toml` for the complete list of language extras. optional spacy models are\nnever downloaded by kokorog2p; install th…"
+          "heading": "Released Lexphon dictionaries",
+          "text": "German named layers are external data:\n\nlexphon data install de-de:gold de-de:crane de-de:espeak de-de:olaph de-de:lexhint\nlexphon data verify de-de:gold de-de:crane de-de:espeak de-de:olaph de-de:lexhint\n\n\n\n\nReleased LexHint layers for other frontends are provisioned in the same way:\n\nlexphon data install ru:lexhint th:lexhint-native vi:lexhint ja:lexhint ko:lexhint pt:lexhint pt-pt:lexhint\nlexphon data verify ru:lexhint th:lexhint-native vi:lexhint ja:lexhint ko:lexhint pt:lexhint pt-pt:lexhint\n\n\n\n\nThe Portuguese layers remain separate: pt:lexhint is Brazilian Portuguese evidence,\nand pt-pt:lexhint is European Portuguese evidence.\n\nSet LEXPHON_DATA_HOME when data must live in an isolated image or CI workspace.\nIntegration tests additionally require KOKOROG2P_EXTERNAL_LEXPHON_DATA=1.",
+          "lower": "german named layers are external data:\n\nlexphon data install de-de:gold de-de:crane de-de:espeak de-de:olaph de-de:lexhint\nlexphon data verify de-de:gold de-de:crane de-de:espeak de-de:olaph de-de:lexhint\n\n\n\n\nreleased lexhint layers for other frontends are provisioned in the same way:\n\nlexphon data install ru:lexhint th:lexhint-native vi:lexhint ja:lexhint ko:lexhint pt:lexhint pt-pt:lexhint\nlexphon data verify ru:lexhint th:lexhint-native vi:lexhint ja:lexhint ko:lexhint pt:lexhint pt-pt:lexhint\n\n\n\n\nthe portuguese layers remain separate: pt:lexhint is brazilian portuguese evidence,\nand pt-pt:lexhint is european portuguese evidence.\n\nset lexphon_data_home when data must live in an isolated image or ci workspace.\nintegration tests additionally require kokorog2p_external_lexphon_data=1."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional semantic preparation",
+          "text": "Spokenform is a separate package for applications that need semantic expansion:\n\npython -m pip install \"spokenform>=0.3.5,<0.4\"\n\n\n\n\nfrom spokenform import prepare_for_kokorog2p\nfrom kokorog2p import phonemize_prepared\n\nprepared = prepare_for_kokorog2p(\"Read 2 kg\", language=\"en\").spoken_text\nresult = phonemize_prepared(prepared, language=\"en-us\")\n\n\n\n\nSpokenform is not a core or core-test dependency.",
+          "lower": "spokenform is a separate package for applications that need semantic expansion:\n\npython -m pip install \"spokenform>=0.3.5,<0.4\"\n\n\n\n\nfrom spokenform import prepare_for_kokorog2p\nfrom kokorog2p import phonemize_prepared\n\nprepared = prepare_for_kokorog2p(\"read 2 kg\", language=\"en\").spoken_text\nresult = phonemize_prepared(prepared, language=\"en-us\")\n\n\n\n\nspokenform is not a core or core-test dependency."
         },
         {
           "anchor": "",
           "heading": "Development installation",
-          "text": "python -m pip install -e \".[dev]\"\npython -m pytest -q tests/test_prepared_core.py tests/test_dependency_contract.py\n\n\n\n\nFor release and integration checks, consult the project workflow and keep optional\ncross-package tests separate from the Spokenform-free core suite.",
-          "lower": "python -m pip install -e \".[dev]\"\npython -m pytest -q tests/test_prepared_core.py tests/test_dependency_contract.py\n\n\n\n\nfor release and integration checks, consult the project workflow and keep optional\ncross-package tests separate from the spokenform-free core suite."
+          "text": "python -m pip install -e \".[all,dev]\"\npython -m pytest\n\n\n\n\npython -m pytest runs the complete suite, including integration, spaCy, slow, and\nresource-heavy tests. To run a deliberately reduced local selection, choose the marker\nexpression explicitly:\n\npython -m pytest -m \"not integration and not spacy and not slow and not resource_heavy\"\n\n\n\n\nFull and integration tests require the released Lexphon assets listed above and the\nexternal-data flag:\n\nexport KOKOROG2P_EXTERNAL_LEXPHON_DATA=1\n\n\n\n\nSet LEXPHON_DATA_HOME when data must live in an isolated image or CI workspace.",
+          "lower": "python -m pip install -e \".[all,dev]\"\npython -m pytest\n\n\n\n\npython -m pytest runs the complete suite, including integration, spacy, slow, and\nresource-heavy tests. to run a deliberately reduced local selection, choose the marker\nexpression explicitly:\n\npython -m pytest -m \"not integration and not spacy and not slow and not resource_heavy\"\n\n\n\n\nfull and integration tests require the released lexphon assets listed above and the\nexternal-data flag:\n\nexport kokorog2p_external_lexphon_data=1\n\n\n\n\nset lexphon_data_home when data must live in an isolated image or ci workspace."
         }
       ]
     },
@@ -1268,8 +1299,8 @@
         {
           "anchor": "",
           "heading": "Native and dictionary frontends",
-          "text": "Language\n\nCode\n\nFrontend\n\n\n\n\n\nEnglish (US/GB)\n\nen-us, en-gb\n\ndictionary and rule-based\n\n\n\nGerman\n\nde\n\ndictionary and rule-based\n\n\n\nFrench\n\nfr\n\ndictionary and rule-based\n\n\n\nSpanish\n\nes\n\nrule-based\n\n\n\nItalian\n\nit\n\nrule-based and lexicon\n\n\n\nPortuguese\n\npt-br, pt-pt\n\nrule-based\n\n\n\nCzech\n\ncs\n\nrule-based\n\n\n\nVietnamese\n\nvi, vi-vn\n\nnative rule-based\n\n\n\nSwedish\n\nsv-se\n\nnative rule-based\n\n\n\nRussian\n\nru\n\nLexHint with eSpeak fallback\n\n\n\nKazakh\n\nkk\n\neSpeak adapter\n\n\n\nHebrew\n\nhe\n\nPhonikud adapter\n\n\n\nArabic\n\nar\n\noptional diacritizer adapter\n\n\n\nChinese\n\nzh\n\npypinyin/Zhuyin frontend\n\n\n\nJapanese\n\nja\n\npyopenjtalk or Cutlet\n\n\n\nKorean\n\nko\n\nLexHint fast path plus g2pK\n\n\n\nThai\n\nth\n\nLexHint with native fallback\n\n\n\n\n\nInstall language-specific optional dependencies from the matching extras in\npyproject.toml, for e…",
-          "lower": "language\n\ncode\n\nfrontend\n\n\n\n\n\nenglish (us/gb)\n\nen-us, en-gb\n\ndictionary and rule-based\n\n\n\ngerman\n\nde\n\ndictionary and rule-based\n\n\n\nfrench\n\nfr\n\ndictionary and rule-based\n\n\n\nspanish\n\nes\n\nrule-based\n\n\n\nitalian\n\nit\n\nrule-based and lexicon\n\n\n\nportuguese\n\npt-br, pt-pt\n\nrule-based\n\n\n\nczech\n\ncs\n\nrule-based\n\n\n\nvietnamese\n\nvi, vi-vn\n\nnative rule-based\n\n\n\nswedish\n\nsv-se\n\nnative rule-based\n\n\n\nrussian\n\nru\n\nlexhint with espeak fallback\n\n\n\nkazakh\n\nkk\n\nespeak adapter\n\n\n\nhebrew\n\nhe\n\nphonikud adapter\n\n\n\narabic\n\nar\n\noptional diacritizer adapter\n\n\n\nchinese\n\nzh\n\npypinyin/zhuyin frontend\n\n\n\njapanese\n\nja\n\npyopenjtalk or cutlet\n\n\n\nkorean\n\nko\n\nlexhint fast path plus g2pk\n\n\n\nthai\n\nth\n\nlexhint with native fallback\n\n\n\n\n\ninstall language-specific optional dependencies from the matching extras in\npyproject.toml, for e…"
+          "text": "Language\n\nCode\n\nFrontend\n\n\n\n\n\nEnglish (US/GB)\n\nen-us, en-gb\n\ndictionary and rule-based\n\n\n\nGerman\n\nde\n\ndictionary and rule-based\n\n\n\nFrench\n\nfr\n\ndictionary and rule-based\n\n\n\nSpanish\n\nes\n\nrule-based\n\n\n\nItalian\n\nit\n\nrule-based and lexicon\n\n\n\nPortuguese\n\npt-br, pt-pt\n\nrule-based\n\n\n\nCzech\n\ncs\n\nrule-based\n\n\n\nVietnamese\n\nvi, vi-vn\n\nnative rule-based\n\n\n\nSwedish\n\nsv-se\n\nnative rule-based\n\n\n\nRussian\n\nru\n\nLexHint with eSpeak fallback\n\n\n\nKazakh\n\nkk\n\neSpeak adapter\n\n\n\nHindi\n\nhi, hi-in\n\neSpeak-NG raw-IPA adapter\n\n\n\nHebrew\n\nhe\n\nPhonikud adapter\n\n\n\nArabic\n\nar\n\noptional diacritizer adapter\n\n\n\nChinese\n\nzh\n\npypinyin/Zhuyin frontend\n\n\n\nJapanese\n\nja\n\npyopenjtalk or Cutlet\n\n\n\nKorean\n\nko\n\nLexHint fast path plus g2pK\n\n\n\nThai\n\nth\n\nLexHint with native fallback\n\n\n\n\n\nHindi accepts hi, hi-in, hi_IN, hin, and hindi, an…",
+          "lower": "language\n\ncode\n\nfrontend\n\n\n\n\n\nenglish (us/gb)\n\nen-us, en-gb\n\ndictionary and rule-based\n\n\n\ngerman\n\nde\n\ndictionary and rule-based\n\n\n\nfrench\n\nfr\n\ndictionary and rule-based\n\n\n\nspanish\n\nes\n\nrule-based\n\n\n\nitalian\n\nit\n\nrule-based and lexicon\n\n\n\nportuguese\n\npt-br, pt-pt\n\nrule-based\n\n\n\nczech\n\ncs\n\nrule-based\n\n\n\nvietnamese\n\nvi, vi-vn\n\nnative rule-based\n\n\n\nswedish\n\nsv-se\n\nnative rule-based\n\n\n\nrussian\n\nru\n\nlexhint with espeak fallback\n\n\n\nkazakh\n\nkk\n\nespeak adapter\n\n\n\nhindi\n\nhi, hi-in\n\nespeak-ng raw-ipa adapter\n\n\n\nhebrew\n\nhe\n\nphonikud adapter\n\n\n\narabic\n\nar\n\noptional diacritizer adapter\n\n\n\nchinese\n\nzh\n\npypinyin/zhuyin frontend\n\n\n\njapanese\n\nja\n\npyopenjtalk or cutlet\n\n\n\nkorean\n\nko\n\nlexhint fast path plus g2pk\n\n\n\nthai\n\nth\n\nlexhint with native fallback\n\n\n\n\n\nhindi accepts hi, hi-in, hi_in, hin, and hindi, an…"
         },
         {
           "anchor": "",
@@ -1287,38 +1318,38 @@
     },
     {
       "url": "/tools/kokorog2p/main/lexicons/",
-      "title": "kokorog2p Lexicon assets and release policy",
-      "snippet": "KokoroG2P packages only the generated G2Lex assets it still owns. Runtime code opens\nthose resources through importlib.resources; it never d …",
+      "title": "kokorog2p External lexicons and release policy",
+      "snippet": "KokoroG2P consumes lexicons provisioned by Lexphon. It does not ship source\ndictionaries, pack .g2lex assets, generate registries, or valida …",
       "sections": [
         {
           "anchor": "",
-          "heading": "Lexicon assets and release policy",
-          "text": "KokoroG2P packages only the generated G2Lex assets it still owns. Runtime code opens\nthose resources through importlib.resources; it never downloads or reads canonical\nsource files.",
-          "lower": "kokorog2p packages only the generated g2lex assets it still owns. runtime code opens\nthose resources through importlib.resources; it never downloads or reads canonical\nsource files."
+          "heading": "External lexicons and release policy",
+          "text": "KokoroG2P consumes lexicons provisioned by Lexphon. It does not ship source\ndictionaries, pack .g2lex assets, generate registries, or validate producer release\nfiles.",
+          "lower": "kokorog2p consumes lexicons provisioned by lexphon. it does not ship source\ndictionaries, pack .g2lex assets, generate registries, or validate producer release\nfiles."
+        },
+        {
+          "anchor": "",
+          "heading": "English and French",
+          "text": "English and French each expose one logical gold lexicon backed by an external asset:\n\n\n\nLanguage\n\nLexphon ID\n\n\n\n\n\nUS English\n\nen-us:gold\n\n\n\nGB English\n\nen-gb:gold\n\n\n\nFrench\n\nfr-fr:gold\n\n\n\n\n\nProvision released data before using the default English or French dictionary path:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nUse lexicons=() for fallback-only operation. silver is not an English runtime\noption.\n\nRuntime lookup is offline. KokoroG2P does not fetch catalogs, download assets, invoke\nthe Lexphon CLI, or rebuild source dictionaries during construction or lookup. Missing\ndata produces an installation and verification command in the error mess…",
+          "lower": "english and french each expose one logical gold lexicon backed by an external asset:\n\n\n\nlanguage\n\nlexphon id\n\n\n\n\n\nus english\n\nen-us:gold\n\n\n\ngb english\n\nen-gb:gold\n\n\n\nfrench\n\nfr-fr:gold\n\n\n\n\n\nprovision released data before using the default english or french dictionary path:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nuse lexicons=() for fallback-only operation. silver is not an english runtime\noption.\n\nruntime lookup is offline. kokorog2p does not fetch catalogs, download assets, invoke\nthe lexphon cli, or rebuild source dictionaries during construction or lookup. missing\ndata produces an installation and verification command in the error mess…"
         },
         {
           "anchor": "",
           "heading": "Named German lexicons",
-          "text": "German names are application-facing choices backed by externally managed Lexphon IDs:\n\n\n\nName\n\nLexphon ID\n\nDefault\n\n\n\n\n\ngold\n\nde-de:gold\n\nyes\n\n\n\ncrane\n\nde-de:crane\n\nno\n\n\n\nespeak\n\nde-de:espeak\n\nno\n\n\n\nolaph\n\nde-de:olaph\n\nno\n\n\n\n\n\nGerman datasets are produced and published by g2lex-data. KokoroG2P does not contain,\ngenerate, audit, or redistribute these dictionaries. Provision them explicitly before\nusing a named dictionary:\n\npython -m pip install kokorog2p\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nInstall optional layers explicitly when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph\nlexphon data verify de-de:crane de-de:espeak de-de:olaph\n\n\n\n\nRuntime lookup is offline. get_g2p() and ordinary German phonemization never fetch a\ncatalog, download an…",
-          "lower": "german names are application-facing choices backed by externally managed lexphon ids:\n\n\n\nname\n\nlexphon id\n\ndefault\n\n\n\n\n\ngold\n\nde-de:gold\n\nyes\n\n\n\ncrane\n\nde-de:crane\n\nno\n\n\n\nespeak\n\nde-de:espeak\n\nno\n\n\n\nolaph\n\nde-de:olaph\n\nno\n\n\n\n\n\ngerman datasets are produced and published by g2lex-data. kokorog2p does not contain,\ngenerate, audit, or redistribute these dictionaries. provision them explicitly before\nusing a named dictionary:\n\npython -m pip install kokorog2p\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\ninstall optional layers explicitly when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph\nlexphon data verify de-de:crane de-de:espeak de-de:olaph\n\n\n\n\nruntime lookup is offline. get_g2p() and ordinary german phonemization never fetch a\ncatalog, download an…"
-        },
-        {
-          "anchor": "",
-          "heading": "Packaged lexicons",
-          "text": "lexicons/manifest.toml and lexicons/lock.json describe only packaged assets owned by\nKokoroG2P. Regenerate and validate them with:\n\npython scripts/build_g2lex_assets.py --all\npython scripts/build_g2lex_assets.py --check\npython scripts/validate_g2lex_assets.py --all\n\n\n\n\nThe generated registry contains only packaged-resource specifications. German external\nspecifications are kept separate and are never passed to the packaged-resource opener.",
-          "lower": "lexicons/manifest.toml and lexicons/lock.json describe only packaged assets owned by\nkokorog2p. regenerate and validate them with:\n\npython scripts/build_g2lex_assets.py --all\npython scripts/build_g2lex_assets.py --check\npython scripts/validate_g2lex_assets.py --all\n\n\n\n\nthe generated registry contains only packaged-resource specifications. german external\nspecifications are kept separate and are never passed to the packaged-resource opener."
+          "text": "German names are application-facing choices backed by externally managed Lexphon IDs:\n\n\n\nName\n\nLexphon ID\n\nDefault\n\n\n\n\n\ngold\n\nde-de:gold\n\nyes\n\n\n\ncrane\n\nde-de:crane\n\nno\n\n\n\nespeak\n\nde-de:espeak\n\nno\n\n\n\nolaph\n\nde-de:olaph\n\nno\n\n\n\nlexhint\n\nde-de:lexhint\n\nno\n\n\n\n\n\nProvision them explicitly before using a named dictionary:\n\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\nOptional layers can be installed when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph de-de:lexhint\nlexphon data verify de-de:crane de-de:espeak de-de:olaph de-de:lexhint\n\n\n\n\nfrom kokorog2p import available_lexicons, get_g2p\n\navailable_lexicons(\"de\")  # (\"gold\", \"crane\", \"espeak\", \"olaph\", \"lexhint\")\ng2p = get_g2p(\"de\")\ng2p = get_g2p(\"de\", lexicons=\"crane\")\ng2p = get_g2p(\"de\", lexicons=(\"gold\"…",
+          "lower": "german names are application-facing choices backed by externally managed lexphon ids:\n\n\n\nname\n\nlexphon id\n\ndefault\n\n\n\n\n\ngold\n\nde-de:gold\n\nyes\n\n\n\ncrane\n\nde-de:crane\n\nno\n\n\n\nespeak\n\nde-de:espeak\n\nno\n\n\n\nolaph\n\nde-de:olaph\n\nno\n\n\n\nlexhint\n\nde-de:lexhint\n\nno\n\n\n\n\n\nprovision them explicitly before using a named dictionary:\n\nlexphon data install de-de:gold\nlexphon data verify de-de:gold\n\n\n\n\noptional layers can be installed when needed:\n\nlexphon data install de-de:crane de-de:espeak de-de:olaph de-de:lexhint\nlexphon data verify de-de:crane de-de:espeak de-de:olaph de-de:lexhint\n\n\n\n\nfrom kokorog2p import available_lexicons, get_g2p\n\navailable_lexicons(\"de\")  # (\"gold\", \"crane\", \"espeak\", \"olaph\", \"lexhint\")\ng2p = get_g2p(\"de\")\ng2p = get_g2p(\"de\", lexicons=\"crane\")\ng2p = get_g2p(\"de\", lexicons=(\"gold\"…"
         },
         {
           "anchor": "",
           "heading": "Distribution policy",
-          "text": "Wheels contain the remaining generated .g2lex assets and the third-party notice file.\nThey do not contain German dictionaries, German source data, or German producer audits.\nSource distributions exclude canonical lexicon sources. German data provenance and\nrelease metadata belong to g2lex-data and Lexphon.",
-          "lower": "wheels contain the remaining generated .g2lex assets and the third-party notice file.\nthey do not contain german dictionaries, german source data, or german producer audits.\nsource distributions exclude canonical lexicon sources. german data provenance and\nrelease metadata belong to g2lex-data and lexphon."
+          "text": "KokoroG2P wheels and source distributions contain no migrated .g2lex assets, source\nlexicons, manifests, generated registries, or lexicon notice bundles. Data provenance\nand release metadata belong to g2lex-data and Lexphon.",
+          "lower": "kokorog2p wheels and source distributions contain no migrated .g2lex assets, source\nlexicons, manifests, generated registries, or lexicon notice bundles. data provenance\nand release metadata belong to g2lex-data and lexphon."
         },
         {
           "anchor": "",
           "heading": "Swedish NST lexicon",
-          "text": "The Swedish NST lexicon is produced and published by g2lex-data and installed\nexplicitly through Lexphon. KokoroG2P does not package or redistribute the source TSV or\ngenerated G2Lex asset. Swedish rules remain the default.\n\nlexphon data install sv-se:nst\nlexphon data verify sv-se:nst\n\n\n\n\nFor direct lookup, use the installed Lexphon data explicitly:\n\nfrom lexphon import Phonemizer\n\nwith Phonemizer(\"sv\", lexicons=(\"sv-se:nst\",), fallback=None) as phonemizer:\n    pronunciation = phonemizer.lookup(\"hej\")",
-          "lower": "the swedish nst lexicon is produced and published by g2lex-data and installed\nexplicitly through lexphon. kokorog2p does not package or redistribute the source tsv or\ngenerated g2lex asset. swedish rules remain the default.\n\nlexphon data install sv-se:nst\nlexphon data verify sv-se:nst\n\n\n\n\nfor direct lookup, use the installed lexphon data explicitly:\n\nfrom lexphon import phonemizer\n\nwith phonemizer(\"sv\", lexicons=(\"sv-se:nst\",), fallback=none) as phonemizer:\n    pronunciation = phonemizer.lookup(\"hej\")"
+          "text": "The Swedish NST lexicon is produced and published by g2lex-data and installed\nexplicitly through Lexphon. Swedish rules remain the default.\n\nlexphon data install sv-se:nst\nlexphon data verify sv-se:nst",
+          "lower": "the swedish nst lexicon is produced and published by g2lex-data and installed\nexplicitly through lexphon. swedish rules remain the default.\n\nlexphon data install sv-se:nst\nlexphon data verify sv-se:nst"
         }
       ]
     },
@@ -1638,8 +1669,8 @@
         {
           "anchor": "",
           "heading": "Explicit language routing",
-          "text": "Language switching is explicit. Use OverrideSpan or annotation language metadata for\na foreign span. The core still requires an explicit document/default language and does\nnot automatically select that document language.\n\nOptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nThe candidate list is a hard allowlist. Lexicon collisions and ambiguity stay in the\ndefault language. Generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence.",
-          "lower": "language switching is explicit. use overridespan or annotation language metadata for\na foreign span. the core still requires an explicit document/default language and does\nnot automatically select that document language.\n\noptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nthe candidate list is a hard allowlist. lexicon collisions and ambiguity stay in the\ndefault language. generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence."
+          "text": "Language switching is explicit. Use OverrideSpan or annotation language metadata for\na foreign span. The core still requires an explicit document/default language and does\nnot automatically select that document language.\n\nOptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nThe candidate list is a hard allowlist. Lexicon collisions and ambiguity stay in the\ndefault language. Generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence.\n\nLexphon 0.1.3 supplies clean generic IPA and struct…",
+          "lower": "language switching is explicit. use overridespan or annotation language metadata for\na foreign span. the core still requires an explicit document/default language and does\nnot automatically select that document language.\n\noptional automatic pronunciation-language routing can inspect selected lexical resources\nfor individual words or exact sub-token fragments:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n    overlap=\"split\",\n)\n\n\n\n\nthe candidate list is a hard allowlist. lexicon collisions and ambiguity stay in the\ndefault language. generic pronunciation fallback is not language evidence, and explicit\nph, phonemes, lang, and language overrides take precedence.\n\nlexphon 0.1.3 supplies clean generic ipa and struct…"
         },
         {
           "anchor": "",
@@ -1663,8 +1694,8 @@
         {
           "anchor": "",
           "heading": "Basic usage",
-          "text": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\"Hello world!\", language=\"en-us\")\nprint(result.phonemes)\n\n\n\n\nphonemize() is the compatibility spelling for the same prepared-text operation. The\ninput text is preserved as the coordinate space for tokens and offsets.",
-          "lower": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\"hello world!\", language=\"en-us\")\nprint(result.phonemes)\n\n\n\n\nphonemize() is the compatibility spelling for the same prepared-text operation. the\ninput text is preserved as the coordinate space for tokens and offsets."
+          "text": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\n    \"Hello world!\", language=\"en-us\", lexicons=()\n)\nprint(result.phonemes)\n\n\n\n\nphonemize() is the compatibility spelling for the same prepared-text operation. The\ninput text is preserved as the coordinate space for tokens and offsets.",
+          "lower": "from kokorog2p import phonemize_prepared\n\nresult = phonemize_prepared(\n    \"hello world!\", language=\"en-us\", lexicons=()\n)\nprint(result.phonemes)\n\n\n\n\nphonemize() is the compatibility spelling for the same prepared-text operation. the\ninput text is preserved as the coordinate space for tokens and offsets."
         },
         {
           "anchor": "",
@@ -1689,6 +1720,43 @@
           "heading": "G2P instances",
           "text": "from kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\nfor token in g2p(\"The quick brown fox\"):\n    print(token.text, token.phonemes)\n\n\n\n\nUse get_g2p() for backend-specific controls. Semantic preparation flags and\nabbreviation registries are intentionally not part of the v0.9 API.",
           "lower": "from kokorog2p import get_g2p\n\ng2p = get_g2p(\"en-us\")\nfor token in g2p(\"the quick brown fox\"):\n    print(token.text, token.phonemes)\n\n\n\n\nuse get_g2p() for backend-specific controls. semantic preparation flags and\nabbreviation registries are intentionally not part of the v0.9 api."
+        }
+      ]
+    },
+    {
+      "url": "/tools/kokorog2p/main/reference_benchmark/",
+      "title": "kokorog2p Reference benchmark",
+      "snippet": "The reference benchmark checks the reviewed KokoroG2P compatibility corpus for the\npinned English US, English GB, and German reference profi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Reference benchmark",
+          "text": "The reference benchmark checks the reviewed KokoroG2P compatibility corpus for the\npinned English US, English GB, and German reference profiles.",
+          "lower": "the reference benchmark checks the reviewed kokorog2p compatibility corpus for the\npinned english us, english gb, and german reference profiles."
+        },
+        {
+          "anchor": "",
+          "heading": "Quick golden health check",
+          "text": "Use the committed goldens for routine checks. This path does not import or execute\nMisaki:\n\npython benchmarks/benchmark_reference.py --quick --suite core\n\n\n\n\nFor one profile, use --reference-source golden explicitly:\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source golden \\\n  --format summary \\\n  --fail-on regression\n\n\n\n\nThe process codes are 0 for PASS, 1 for a candidate or policy failure, and 2 for\ninvalid benchmark or reference infrastructure configuration.",
+          "lower": "use the committed goldens for routine checks. this path does not import or execute\nmisaki:\n\npython benchmarks/benchmark_reference.py --quick --suite core\n\n\n\n\nfor one profile, use --reference-source golden explicitly:\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source golden \\\n  --format summary \\\n  --fail-on regression\n\n\n\n\nthe process codes are 0 for pass, 1 for a candidate or policy failure, and 2 for\ninvalid benchmark or reference infrastructure configuration."
+        },
+        {
+          "anchor": "",
+          "heading": "Detailed output",
+          "text": "Use --format json for one complete machine-readable document or --format markdown\nfor decision-oriented diagnostics. --json and --markdown remain compatibility\naliases.\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source golden \\\n  --format markdown \\\n  --sample-limit 20\n\n\n\n\n--json-output and --markdown-output can be supplied together. The benchmark executes\nonce and renders both artifacts from the same report. --only-differences,\n--show-matches, and --baseline modify that report instead of appending a second\ndocument to stdout.",
+          "lower": "use --format json for one complete machine-readable document or --format markdown\nfor decision-oriented diagnostics. --json and --markdown remain compatibility\naliases.\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source golden \\\n  --format markdown \\\n  --sample-limit 20\n\n\n\n\n--json-output and --markdown-output can be supplied together. the benchmark executes\nonce and renders both artifacts from the same report. --only-differences,\n--show-matches, and --baseline modify that report instead of appending a second\ndocument to stdout."
+        },
+        {
+          "anchor": "",
+          "heading": "Live verification",
+          "text": "Live Misaki execution is explicit and is intended for reference verification or reviewed\ngolden refreshes:\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source live \\\n  --verify-reference-golden benchmarks/reference/goldens/hexgrad_en_us_v1.json \\\n  --strict-reference\n\n\n\n\nLive provider initialization is performed before candidate execution. Missing or invalid\nMisaki infrastructure is reported as ERROR rather than as a successful comparison\ncontaining only reference errors.",
+          "lower": "live misaki execution is explicit and is intended for reference verification or reviewed\ngolden refreshes:\n\npython benchmarks/benchmark_reference.py \\\n  --reference hexgrad-en-us-v1 \\\n  --candidate en-us-default \\\n  --reference-source live \\\n  --verify-reference-golden benchmarks/reference/goldens/hexgrad_en_us_v1.json \\\n  --strict-reference\n\n\n\n\nlive provider initialization is performed before candidate execution. missing or invalid\nmisaki infrastructure is reported as error rather than as a successful comparison\ncontaining only reference errors."
+        },
+        {
+          "anchor": "",
+          "heading": "Policies and schema",
+          "text": "Corpus cases use exact, normalized, model-id, model-valid, or diagnostic\npolicies. Diagnostic pronunciation differences are visible but non-gating. Candidate\nexceptions, invalid or lossy model encoding, public token-ID inconsistencies, and failed\ngating policies fail the health check.\n\nSerialized reports use schema version 2 and include the explicit verdict, source,\nbenchmark identity, execution metadata, aggregate policy counters, and detailed case\ndiagnostics.",
+          "lower": "corpus cases use exact, normalized, model-id, model-valid, or diagnostic\npolicies. diagnostic pronunciation differences are visible but non-gating. candidate\nexceptions, invalid or lossy model encoding, public token-id inconsistencies, and failed\ngating policies fail the health check.\n\nserialized reports use schema version 2 and include the explicit verdict, source,\nbenchmark identity, execution metadata, aggregate policy counters, and detailed case\ndiagnostics."
         }
       ]
     },
@@ -1786,8 +1854,8 @@
         {
           "anchor": "",
           "heading": "Automatic language routing",
-          "text": "Enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nRouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes LanguageRoute\nrecords in result.language_routes. A hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nEvidence-capable resources are:\n\n\nPackaged G2Lex: English US, English GB, and French.\n\n\nProvisioned Lexphon: German, Portuguese BR/PT, Russian, Thai, Vietnamese, Japanese,\nKorean, and Swedish when NST is explicitly selected.\n\n\n\nSpanish, Italian, Czech, Hebrew, Arabic, Chinese, and Kazakh still ph…",
-          "lower": "enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nrouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes languageroute\nrecords in result.language_routes. a hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nevidence-capable resources are:\n\n\npackaged g2lex: english us, english gb, and french.\n\n\nprovisioned lexphon: german, portuguese br/pt, russian, thai, vietnamese, japanese,\nkorean, and swedish when nst is explicitly selected.\n\n\n\nspanish, italian, czech, hebrew, arabic, chinese, and kazakh still ph…"
+          "text": "Enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nRouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes LanguageRoute\nrecords in result.language_routes. A hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nEvidence-capable resources are:\n\n\nExternally provisioned G2Lex: English US, GB English, and French.\n\n\nProvisioned Lexphon: German, Portuguese BR/PT, Russian, Thai, Vietnamese, Japanese,\nKorean, and Swedish when NST is explicitly selected.\n\n\n\nSpanish, Italian, Czech, Hebrew, Arabic, Chinese, Kazak…",
+          "lower": "enable routing with an explicit candidate allowlist:\n\nresult = phonemize_prepared(\n    text,\n    language=\"de\",\n    language_routing={\"mode\": \"auto\", \"languages\": [\"de\", \"en\"]},\n)\n\n\n\n\nrouting uses positive evidence from the effective selected lexical resources, keeps the\nexplicit document language for collisions and ambiguity, and exposes languageroute\nrecords in result.language_routes. a hit is not exclusive ownership, so a word present\nin multiple selected stacks stays in the default language.\n\nevidence-capable resources are:\n\n\nexternally provisioned g2lex: english us, gb english, and french.\n\n\nprovisioned lexphon: german, portuguese br/pt, russian, thai, vietnamese, japanese,\nkorean, and swedish when nst is explicitly selected.\n\n\n\nspanish, italian, czech, hebrew, arabic, chinese, kazak…"
         },
         {
           "anchor": "",
@@ -2010,8 +2078,8 @@
         {
           "anchor": "",
           "heading": "Dependencies and licenses",
-          "text": "Lexphon provides the provisioned th:lexhint pronunciation dictionary. The asset is\ninstalled and verified outside this package and is not downloaded at runtime.\n\n\nThe Wayu model repository is Apache-2.0 licensed. This implementation does not\nredistribute its weights or source.",
-          "lower": "lexphon provides the provisioned th:lexhint pronunciation dictionary. the asset is\ninstalled and verified outside this package and is not downloaded at runtime.\n\n\nthe wayu model repository is apache-2.0 licensed. this implementation does not\nredistribute its weights or source."
+          "text": "Lexphon provides the provisioned th:lexhint-native pronunciation dictionary. The\nasset is installed and verified outside this package and is not downloaded at runtime.\n\n\nThe Wayu model repository is Apache-2.0 licensed. This implementation does not\nredistribute its weights or source.",
+          "lower": "lexphon provides the provisioned th:lexhint-native pronunciation dictionary. the\nasset is installed and verified outside this package and is not downloaded at runtime.\n\n\nthe wayu model repository is apache-2.0 licensed. this implementation does not\nredistribute its weights or source."
         },
         {
           "anchor": "",

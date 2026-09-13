@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.1"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_ref: "v0.9.6"
+docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
 search_enabled: true
 ---
 
@@ -577,6 +577,26 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="first-run-model-downloads">
+<h3>First-run model downloads</h3>
+<p>Model and voice assets are downloaded lazily on the first synthesis that needs them. To
+make a cold-cache run visible, install the dependency-free console reporter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConsoleAssetProgress</span><span class="p">,</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
+    <span class="n">PipelineConfig</span><span class="p">(</span>
+        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
+        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
+        <span class="n">asset_progress</span><span class="o">=</span><span class="n">ConsoleAssetProgress</span><span class="p">(),</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The reporter shows each asset, its expected size, transfer progress when running in a
+terminal, and verification before the asset is ready. Warm-cache runs stay quiet.
+Library applications can provide their own callback to receive structured
+<code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values.</p>
 <p>That’s it! You’ve generated your first audio file.</p>
 </section>
 <section id="german-speech">

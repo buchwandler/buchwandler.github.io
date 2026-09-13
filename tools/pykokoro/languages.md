@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/languages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.1"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_ref: "v0.9.6"
+docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
 search_enabled: true
 ---
 
@@ -618,6 +618,25 @@ invalid files are removed and downloaded again. Explicit custom paths are valida
 place and are never replaced by managed downloads. The profile’s <code class="docutils literal notranslate"><span class="pre">suggested_speed</span></code>
 metadata is advisory only, so callers should set <code class="docutils literal notranslate"><span class="pre">GenerationConfig(speed=1.125)</span></code> when
 they want the demonstration speed.</p>
+</section>
+<section id="fixed-model-multilingual-pronunciation">
+<h2>Fixed-model multilingual pronunciation</h2>
+<p>Automatic routing is an optional G2P policy. Configure
+<code class="docutils literal notranslate"><span class="pre">LanguageDetectionConfig(mode=&quot;auto&quot;,</span> <span class="pre">languages=(&quot;de&quot;,</span> <span class="pre">&quot;en&quot;))</span></code> while keeping
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;de&quot;)</span></code> as the document and acoustic-model language. KokoroG2P
+supplies the lexical evidence and route diagnostics; PyKokoro reuses its existing
+per-language G2P instances and passes every route through the already selected model
+vocabulary.</p>
+<p>SSMD spans with <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code>, such as
+<code class="docutils literal notranslate"><span class="pre">[File]{lang=&quot;en&quot;</span> <span class="pre">scope=&quot;pronunciation&quot;}</span></code>, constrain only the pronunciation of that
+source range. They do not change Spokenform, spaCy analysis, Phrasplit, voice, model
+source, model variant, model quality, or ONNX session. Omit <code class="docutils literal notranslate"><span class="pre">scope</span></code> or use
+<code class="docutils literal notranslate"><span class="pre">scope=&quot;semantic&quot;</span></code> when the language should own the semantic pipeline run.</p>
+<p>The effective policy precedence is per-run override,
+<code class="docutils literal notranslate"><span class="pre">PipelineConfig.language_detection</span></code>, the SSMD <code class="docutils literal notranslate"><span class="pre">language_detection</span></code> header hint, then
+disabled. <code class="docutils literal notranslate"><span class="pre">is_phonemes=True</span></code> bypasses routing because the input already contains model
+phonemes. Route and alignment diagnostics are retained in document metadata and use
+clean-text offsets.</p>
 </section>
 </section>
 </div>

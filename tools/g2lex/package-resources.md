@@ -5,8 +5,8 @@ permalink: /tools/g2lex/package-resources/
 nav_tool: g2lex
 docs_project: "g2lex"
 docs_variant: "release"
-docs_ref: "v0.1.8"
-docs_commit: "c3e14313b2c40d4c3bd189101d30328eac6b9b98"
+docs_ref: "v0.1.9"
+docs_commit: "548be0d3bdae70dff14e405d7e5194f3a9aa4507"
 search_enabled: true
 ---
 

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -583,8 +583,6 @@ from EPUB metadata.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>). By
 default, language is determined from the voice.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed multiplier (0.5 to 2.0). Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut: <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">auto</span></code> and
-<code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
 <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name). Available on
 <code class="docutils literal notranslate"><span class="pre">convert</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span> <span class="pre">convert</span></code>.</p>
@@ -616,14 +614,11 @@ block.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-unknown-header</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">warn</span></code>, <code class="docutils literal notranslate"><span class="pre">error</span></code>, or <code class="docutils literal notranslate"><span class="pre">ignore</span></code> unknown header keys.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-missing-voice</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">error</span></code> or <code class="docutils literal notranslate"><span class="pre">use-default</span></code> for unresolved logical roles.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">INTEGER</span></code> : User-friendly audible strength: <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>,
-<code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, or <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Level 2 is the backward-compatible equivalent of
-<code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code>; omit the option to preserve saved resume settings.</p>
+<code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, or <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Level 2 is the normal emphasis approximation.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">MODE</span></code> : Advanced policy: <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code>.
 For normal audible strength use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code>. Approximation is gain-only; it does
 not change speech rate.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> : Deprecated compatibility flag equivalent to
-<code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">2</span></code>. It applies the current deterministic gain-only approximation to
-existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling
+<p>existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling
 should first be extracted into SSMD annotations. Choose only one emphasis control.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">[markdown|plain]</span></code> : Select structured chapter Markdown extraction
 (default) or the explicit legacy plain compatibility path.</p>
@@ -824,7 +819,6 @@ one-based like the resume summary.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
 <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode.</p>
@@ -870,7 +864,6 @@ stdin.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : TTS voice to use.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
 <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">MODE</span></code> : Content mode: <code class="docutils literal notranslate"><span class="pre">chapters</span></code> or <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
@@ -946,8 +939,6 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w">
 <p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICES</span></code> : Specific voices to include (comma-separated). Example:
 <code class="docutils literal notranslate"><span class="pre">af_heart,am_adam</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut: <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">auto</span></code> and
-<code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> maps to provider <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
 <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between voice samples in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
@@ -1062,8 +1053,6 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<spa
 ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>reset
 </pre></div>
 </div>
-<p>The former <code class="docutils literal notranslate"><span class="pre">short-sentence-advanced-config</span></code> root command remains available as a
-deprecated compatibility alias.</p>
 </section>
 </section>
 <section id="phonemes">
@@ -1123,7 +1112,6 @@ ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb"
 <p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS.</p>
 <p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--gpu</span> <span class="pre">/</span> <span class="pre">--no-gpu</span></code> : Compatibility shortcut mapping to <code class="docutils literal notranslate"><span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">cpu</span></code>.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
 <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
 <p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between chapters. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>

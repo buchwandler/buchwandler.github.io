@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -612,32 +612,41 @@ included.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">kk</span></code></p></td>
 <td><p>eSpeak adapter</p></td>
 </tr>
-<tr class="row-odd"><td><p>Hebrew</p></td>
+<tr class="row-odd"><td><p>Hindi</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">hi-in</span></code></p></td>
+<td><p>eSpeak-NG raw-IPA adapter</p></td>
+</tr>
+<tr class="row-even"><td><p>Hebrew</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
 <td><p>Phonikud adapter</p></td>
 </tr>
-<tr class="row-even"><td><p>Arabic</p></td>
+<tr class="row-odd"><td><p>Arabic</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
 <td><p>optional diacritizer adapter</p></td>
 </tr>
-<tr class="row-odd"><td><p>Chinese</p></td>
+<tr class="row-even"><td><p>Chinese</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
 <td><p>pypinyin/Zhuyin frontend</p></td>
 </tr>
-<tr class="row-even"><td><p>Japanese</p></td>
+<tr class="row-odd"><td><p>Japanese</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
 <td><p>pyopenjtalk or Cutlet</p></td>
 </tr>
-<tr class="row-odd"><td><p>Korean</p></td>
+<tr class="row-even"><td><p>Korean</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
 <td><p>LexHint fast path plus g2pK</p></td>
 </tr>
-<tr class="row-even"><td><p>Thai</p></td>
+<tr class="row-odd"><td><p>Thai</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
 <td><p>LexHint with native fallback</p></td>
 </tr>
 </tbody>
 </table>
+<p>Hindi accepts <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">hi-in</span></code>, <code class="docutils literal notranslate"><span class="pre">hi_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">hin</span></code>, and <code class="docutils literal notranslate"><span class="pre">hindi</span></code>, and uses the eSpeak-NG <code class="docutils literal notranslate"><span class="pre">hi</span></code>
+voice as a lazy raw-IPA adapter for stock Kokoro v1.0. The frontend preserves Hindi
+vowel length, nasalization, aspiration, retroflexion, and native vowel quality, then
+validates the result against the model vocabulary. Hindi is prepared-text only, has no
+bundled or downloaded runtime lexicon, and provides no automatic-routing evidence.</p>
 <p>Install language-specific optional dependencies from the matching extras in
 <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>, for example <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;kokorog2p[ja]&quot;</span></code>.</p>
 </section>

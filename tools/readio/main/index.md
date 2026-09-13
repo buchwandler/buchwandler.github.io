@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "abdd482f3a0a3cd6a14a77c53b4ddbe8095a8fe8"
+docs_commit: "9b264c5a7b09096c299b90d2f8fe6fb30a2a96d0"
 search_enabled: true
 ---
 
@@ -606,12 +606,19 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 <p>Synthesis options are available on all three commands:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--voice VOICE       PyKokoro voice ID
 --lang LANGUAGE     language code, such as en-us
+--lexicon NAME     named PyKokoro lexicon; repeat for ordered layers
+--no-lexicons      explicit provider-only pronunciation
+--auto-lexicons    restore automatic language-default lexicons
+--g2p-fallback MODE none, espeak, or goruut
+--lexicon-data-policy POLICY auto or installed-only
+--language-detection MODE off or auto
+--detect-language LANG repeatable pronunciation-routing language
 --speed NUMBER      speech speed multiplier
 --pause-mode MODE   tts, manual, or auto
 --unit UNIT         sentence or paragraph
 </pre></div>
 </div>
-<p>Runtime discovery and per-language defaults are separate from legacy provider role configuration. Readio 0.2.0 requires the PyKokoro 0.9.x public discovery contract:</p>
+<p>Runtime discovery and per-language defaults are separate from legacy provider role configuration. Readio v0.2.x uses the PyKokoro &gt;=0.9.2,&lt;0.10 public discovery and tokenizer contract. Readio v0.2.3 is tested with PyKokoro 0.9.4:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>models<span class="w"> </span>list<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--offline
 readio<span class="w"> </span>models<span class="w"> </span>show<span class="w"> </span>de-thorsten<span class="w"> </span>--offline
 readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--json
@@ -622,7 +629,7 @@ readio<span class="w"> </span>defaults<span class="w"> </span>show<span class="w
 readio<span class="w"> </span>render<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--file<span class="w"> </span>notes.md
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">models</span></code> reads PyKokoro’s lightweight registry and supports <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">--status</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>; it never loads model weights. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> updates metadata only and cannot be combined with <code class="docutils literal notranslate"><span class="pre">--offline</span></code>. Offline synthesis still needs cached model and voice assets. <code class="docutils literal notranslate"><span class="pre">defaults</span></code> stores validated user policy in schema 2. Exact locale profiles override base-language profiles, and <code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code> explicitly clears inherited lexicons. Repeated named lexicons retain their order for layered lookup.
+<p><code class="docutils literal notranslate"><span class="pre">models</span></code> reads PyKokoro’s lightweight registry and supports <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">--status</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>; it never loads model weights. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> updates metadata only and cannot be combined with <code class="docutils literal notranslate"><span class="pre">--offline</span></code>. Offline synthesis still needs cached model and voice assets. <code class="docutils literal notranslate"><span class="pre">--lexicon</span> <span class="pre">crane</span></code> selects a named lexicon; <code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code> is the downstream Lexphon asset ID, while <code class="docutils literal notranslate"><span class="pre">de-crane</span></code> is an acoustic model ID.
 <code class="docutils literal notranslate"><span class="pre">--model-source</span> <span class="pre">github|huggingface</span></code> drives both discovery and runtime selection. Voices are model-scoped. The legacy global <code class="docutils literal notranslate"><span class="pre">reader.voice</span></code> applies only to unchanged default-reader use; a language override such as <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">de</span></code> leaves voice selection to the active PyKokoro model unless explicitly set. SSMD preflight uses that same resolved model roster.</p>
 </section>
 <section id="synthesis-planning">
@@ -639,6 +646,7 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 <li><p><strong>Planning</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code>, <code class="docutils literal notranslate"><span class="pre">render</span> <span class="pre">--dry-run</span></code>) resolves one concrete request — model, source, quality, voice, lexicons, SSMD cast with per-reference bindings, output format/backend/path — and records a decision (winning source) for every effective value. Generated output paths are allocated once by the plan and reused by the render.</p></li>
 <li><p><strong>Render result</strong> executes the plan; a plan that fails validation (for example <code class="docutils literal notranslate"><span class="pre">model_language_incompatible</span></code>, <code class="docutils literal notranslate"><span class="pre">model_runtime_unavailable</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd_unresolved_voice</span></code>, <code class="docutils literal notranslate"><span class="pre">encoder_unavailable</span></code>) is printed with its diagnostics and no TTS model is loaded.</p></li>
 </ul>
+<p>Plans preserve the tokenizer tri-state: <code class="docutils literal notranslate"><span class="pre">lexicons:</span> <span class="pre">null</span></code> means PyKokoro language defaults, <code class="docutils literal notranslate"><span class="pre">lexicons:</span> <span class="pre">[]</span></code> means no static lexicon layers, and a non-empty list means ordered named layers. Fallback and lexicon data policy are also carried unchanged into <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>; SSMD <code class="docutils literal notranslate"><span class="pre">language_detection</span></code> hints are resolved into the plan before execution.</p>
 <p>Planning is deterministic: <code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is rejected during <code class="docutils literal notranslate"><span class="pre">plan</span></code>/<code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> in favor of <code class="docutils literal notranslate"><span class="pre">--voice-bind</span> <span class="pre">ROLE=VOICE_ID</span></code> or persisted roles, and <code class="docutils literal notranslate"><span class="pre">plan</span></code> supports <code class="docutils literal notranslate"><span class="pre">--force</span></code> to mirror render output requests.</p>
 </section>
 <section id="durable-render-manifests">
@@ -659,7 +667,16 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 </pre></div>
 </div>
 <p>Bounded renders show phases, completed/total units, percentage, elapsed time, approximate ETA, generated audio duration, and finalization. Live rendering shows elapsed time, cumulative units, and audio duration but no invented percentage or ETA.</p>
-<p>Playback-only options are <code class="docutils literal notranslate"><span class="pre">--queue-size</span></code> and <code class="docutils literal notranslate"><span class="pre">--device</span></code>. Audio rendering is streamed to an atomic output file through a bounded audio path rather than accumulated as one in-memory waveform.</p>
+</section>
+<section id="verbose-diagnostics">
+<h2>Verbose diagnostics</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">-v</span></code> for timestamped INFO lifecycle records and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> for DEBUG details from Readio and PyKokoro:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>-v<span class="w"> </span>speak<span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
+readio<span class="w"> </span>-vv<span class="w"> </span>render<span class="w"> </span>episode.ssmd<span class="w"> </span>-o<span class="w"> </span>episode.mp3
+</pre></div>
+</div>
+<p>The option is global and may appear before or after a command. Logs are written only to stderr. Human results and JSON remain on stdout, so <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">-v</span> <span class="pre">doctor</span> <span class="pre">--json</span></code> still emits valid JSON. <code class="docutils literal notranslate"><span class="pre">--progress</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> remain independent; verbose mode makes progress line-oriented on a TTY. Review paths, model names, and voice identifiers before sharing diagnostics. Complete document text, raw audio, Spotify credentials, and authorization responses are not logged.
+Playback-only options are <code class="docutils literal notranslate"><span class="pre">--queue-size</span></code> and <code class="docutils literal notranslate"><span class="pre">--device</span></code>. Audio rendering is streamed to an atomic output file through a bounded audio path rather than accumulated as one in-memory waveform.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
@@ -676,7 +693,8 @@ readio<span class="w"> </span>config<span class="w"> </span>validate
 <li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: the selected <code class="docutils literal notranslate"><span class="pre">voice_provider</span></code> and SSMD validation behavior.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;]</span></code>: concrete voice IDs and logical role mappings.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[languages.&lt;locale&gt;]</span></code>: validated model, source, quality, voice, ordered lexicons, and experimental opt-in defaults.
+<li><p><code class="docutils literal notranslate"><span class="pre">[languages.&lt;locale&gt;]</span></code>: validated model, source, quality, voice, ordered lexicons, <code class="docutils literal notranslate"><span class="pre">g2p_fallback</span></code>, and <code class="docutils literal notranslate"><span class="pre">lexicon_data_policy</span></code> defaults.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: optional <code class="docutils literal notranslate"><span class="pre">language_detection</span></code> mode and ordered <code class="docutils literal notranslate"><span class="pre">detect_languages</span></code> routing hints.
 Set values with dotted keys. Aliases <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed</span></code> target the corresponding reader settings:</p></li>
 </ul>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>bf_emma

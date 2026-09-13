@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/quickstart/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -550,7 +550,9 @@ the resulting text to <code class="docutils literal notranslate"><span class="pr
 <h2>Basic usage</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">()</span>
+<span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>

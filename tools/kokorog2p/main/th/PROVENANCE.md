@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -563,8 +563,8 @@ token ID <code class="docutils literal notranslate"><span class="pre">7</span></
 <section id="dependencies-and-licenses">
 <h2>Dependencies and licenses</h2>
 <ul class="simple">
-<li><p>Lexphon provides the provisioned <code class="docutils literal notranslate"><span class="pre">th:lexhint</span></code> pronunciation dictionary. The asset is
-installed and verified outside this package and is not downloaded at runtime.</p></li>
+<li><p>Lexphon provides the provisioned <code class="docutils literal notranslate"><span class="pre">th:lexhint-native</span></code> pronunciation dictionary. The
+asset is installed and verified outside this package and is not downloaded at runtime.</p></li>
 <li><p>The Wayu model repository is Apache-2.0 licensed. This implementation does not
 redistribute its weights or source.</p></li>
 </ul>

@@ -100,15 +100,9 @@
         },
         {
           "anchor": "",
-          "heading": "GenerationConfig",
-          "text": "class pykokoro.GenerationConfig(speed: float = 1.0, lang: str | None = None, is_phonemes: bool = False, pause_mode: Literal['tts', 'manual', 'auto'] = 'tts', pause_clause: float = 0.3, pause_sentence: float = 0.6, pause_paragraph: float = 1.0, pause_variance: float = 0.05, random_seed: int | None = None, enable_short_sentence: bool | None = None)[source]\nBases: object\n\nConfiguration for audio generation in the KokoroPipeline.\n\nGroups all generation-time parameters for easier reuse and documentation.\nInstances are immutable (frozen) to prevent accidental modification.\n\nThis config groups generation parameters into a reusable configuration object\nfor PipelineConfig. You can create a config once and reuse it across multiple\nruns, with the ability to override individual parameters using kwar…",
-          "lower": "class pykokoro.generationconfig(speed: float = 1.0, lang: str | none = none, is_phonemes: bool = false, pause_mode: literal['tts', 'manual', 'auto'] = 'tts', pause_clause: float = 0.3, pause_sentence: float = 0.6, pause_paragraph: float = 1.0, pause_variance: float = 0.05, random_seed: int | none = none, enable_short_sentence: bool | none = none)[source]\nbases: object\n\nconfiguration for audio generation in the kokoropipeline.\n\ngroups all generation-time parameters for easier reuse and documentation.\ninstances are immutable (frozen) to prevent accidental modification.\n\nthis config groups generation parameters into a reusable configuration object\nfor pipelineconfig. you can create a config once and reuse it across multiple\nruns, with the ability to override individual parameters using kwar…"
-        },
-        {
-          "anchor": "",
           "heading": "ProsodyConfig",
-          "text": "class pykokoro.ProsodyConfig(method: Literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'] = 'wsola', fallback_methods: tuple[Literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'], ...] = ('wsola', 'phase_vocoder'), strict: bool = False, clip: bool = False, n_fft: int = 2048, hop_length: int | None = None, filter_width: int = 32, rolloff: float = 0.945, boundary_blend_ms: float = 5.0)[source]\nBases: object\n\nConfiguration for post-synthesis SSMD prosody processing.\n\npsola is accepted as a user-facing alias for AudioSig’s td_psola.\n\n\n\nmethod: Literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'] = 'wsola'\n\n\n\n\nfallback_methods: tuple[Literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'], ...] = ('wsola', 'phase_vocoder')\n\n\n\n\nstrict: bool = False…",
-          "lower": "class pykokoro.prosodyconfig(method: literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'] = 'wsola', fallback_methods: tuple[literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'], ...] = ('wsola', 'phase_vocoder'), strict: bool = false, clip: bool = false, n_fft: int = 2048, hop_length: int | none = none, filter_width: int = 32, rolloff: float = 0.945, boundary_blend_ms: float = 5.0)[source]\nbases: object\n\nconfiguration for post-synthesis ssmd prosody processing.\n\npsola is accepted as a user-facing alias for audiosig’s td_psola.\n\n\n\nmethod: literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'] = 'wsola'\n\n\n\n\nfallback_methods: tuple[literal['phase_vocoder', 'wsola', 'esola', 'td_psola', 'psola'], ...] = ('wsola', 'phase_vocoder')\n\n\n\n\nstrict: bool = false…"
+          "text": "ProsodyConfig(method=\"wsola\") selects the production speech-oriented default. The\nsupported methods are wsola, experimental esola and td_psola, compatibility\nphase_vocoder, and the psola alias for td_psola. Strict mode prevents fallback;\nnon-strict mode follows fallback_methods. No method guarantees formant preservation.",
+          "lower": "prosodyconfig(method=\"wsola\") selects the production speech-oriented default. the\nsupported methods are wsola, experimental esola and td_psola, compatibility\nphase_vocoder, and the psola alias for td_psola. strict mode prevents fallback;\nnon-strict mode follows fallback_methods. no method guarantees formant preservation."
         },
         {
           "anchor": "",
@@ -210,8 +204,14 @@
         {
           "anchor": "",
           "heading": "Language Settings",
-          "text": "PyKokoro defaults language from the voice prefix, but you can override it:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\ngeneration = GenerationConfig(lang=\"fr\")\npipe = KokoroPipeline(PipelineConfig(voice=\"af_sarah\", generation=generation))\nresult = pipe.run(\"Bonjour le monde\")\n\n\n\n\nSupported languages: en-us, en-gb, es, fr, de, it, pt, hi, ja, zh",
-          "lower": "pykokoro defaults language from the voice prefix, but you can override it:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\ngeneration = generationconfig(lang=\"fr\")\npipe = kokoropipeline(pipelineconfig(voice=\"af_sarah\", generation=generation))\nresult = pipe.run(\"bonjour le monde\")\n\n\n\n\nsupported languages: en-us, en-gb, es, fr, de, it, pt, hi, ja, zh"
+          "text": "PyKokoro requires an explicit document language. Set it with GenerationConfig.lang;\nthe voice prefix does not select the language:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\ngeneration = GenerationConfig(lang=\"fr\")\npipe = KokoroPipeline(PipelineConfig(voice=\"af_sarah\", generation=generation))\nresult = pipe.run(\"Bonjour le monde\")\n\n\n\n\nSupported languages: en-us, en-gb, es, fr, de, it, pt, hi, ja, zh",
+          "lower": "pykokoro requires an explicit document language. set it with generationconfig.lang;\nthe voice prefix does not select the language:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\ngeneration = generationconfig(lang=\"fr\")\npipe = kokoropipeline(pipelineconfig(voice=\"af_sarah\", generation=generation))\nresult = pipe.run(\"bonjour le monde\")\n\n\n\n\nsupported languages: en-us, en-gb, es, fr, de, it, pt, hi, ja, zh"
+        },
+        {
+          "anchor": "",
+          "heading": "Automatic pronunciation routing",
+          "text": "Keep GenerationConfig.lang as the explicit semantic and acoustic-model language. To\nlet KokoroG2P route eligible words between selected pronunciation languages, configure\ncandidates explicitly:\n\nfrom pykokoro import GenerationConfig, LanguageDetectionConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    generation=GenerationConfig(lang=\"de\"),\n    language_detection=LanguageDetectionConfig(mode=\"auto\", languages=(\"de\", \"en\")),\n)\nresult = KokoroPipeline(config).run(\n    'Die [File]{lang=\"en\" scope=\"pronunciation\"} wird gecancelt.'\n)\n\n\n\n\nThe precedence is per-run override, pipeline configuration, SSMD language_detection\nheader, then disabled. Pronunciation-only SSMD spans and automatic routes affect G2P\nonly. They do not select a foreign voice, acoustic model, ONNX session, Sp…",
+          "lower": "keep generationconfig.lang as the explicit semantic and acoustic-model language. to\nlet kokorog2p route eligible words between selected pronunciation languages, configure\ncandidates explicitly:\n\nfrom pykokoro import generationconfig, languagedetectionconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    generation=generationconfig(lang=\"de\"),\n    language_detection=languagedetectionconfig(mode=\"auto\", languages=(\"de\", \"en\")),\n)\nresult = kokoropipeline(config).run(\n    'die [file]{lang=\"en\" scope=\"pronunciation\"} wird gecancelt.'\n)\n\n\n\n\nthe precedence is per-run override, pipeline configuration, ssmd language_detection\nheader, then disabled. pronunciation-only ssmd spans and automatic routes affect g2p\nonly. they do not select a foreign voice, acoustic model, onnx session, sp…"
         },
         {
           "anchor": "",
@@ -240,8 +240,8 @@
         {
           "anchor": "",
           "heading": "Automatic Natural Pauses",
-          "text": "For natural rhythm, let the pipeline insert pauses at boundaries:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\ntext = \"\"\"\nArtificial intelligence is transforming our world. Machine learning\nmodels are becoming more sophisticated and accessible.\n\nDeep learning uses neural networks with many layers.\n\"\"\"\n\ngeneration = GenerationConfig(\n    pause_mode=\"auto\",\n    pause_clause=0.25,\n    pause_sentence=0.5,\n    pause_paragraph=1.0,\n    pause_variance=0.05,\n    random_seed=42,\n)\npipe = KokoroPipeline(PipelineConfig(generation=GenerationConfig(lang=\"en-us\"), voice=\"af_sarah\", generation=generation))\nresult = pipe.run(text)",
-          "lower": "for natural rhythm, let the pipeline insert pauses at boundaries:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\ntext = \"\"\"\nartificial intelligence is transforming our world. machine learning\nmodels are becoming more sophisticated and accessible.\n\ndeep learning uses neural networks with many layers.\n\"\"\"\n\ngeneration = generationconfig(\n    pause_mode=\"auto\",\n    pause_clause=0.25,\n    pause_sentence=0.5,\n    pause_paragraph=1.0,\n    pause_variance=0.05,\n    random_seed=42,\n)\npipe = kokoropipeline(pipelineconfig(generation=generationconfig(lang=\"en-us\"), voice=\"af_sarah\", generation=generation))\nresult = pipe.run(text)"
+          "text": "For natural rhythm, let the pipeline insert pauses at boundaries:\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\ntext = \"\"\"\nArtificial intelligence is transforming our world. Machine learning\nmodels are becoming more sophisticated and accessible.\n\nDeep learning uses neural networks with many layers.\n\"\"\"\n\ngeneration = GenerationConfig(\n    pause_mode=\"auto\",\n    pause_clause=0.25,\n    pause_sentence=0.5,\n    pause_paragraph=1.0,\n    pause_variance=0.05,\n    random_seed=42,\n)\npipe = KokoroPipeline(PipelineConfig(generation=GenerationConfig(lang=\"en-us\"), voice=\"af_sarah\", generation=generation))\nresult = pipe.run(text)\n\n\n\n\nAutomatic clause pauses are limited to Phrasplit’s high-confidence clausal-comma signal.\nThey require an available dependency-capable linguistic…",
+          "lower": "for natural rhythm, let the pipeline insert pauses at boundaries:\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\ntext = \"\"\"\nartificial intelligence is transforming our world. machine learning\nmodels are becoming more sophisticated and accessible.\n\ndeep learning uses neural networks with many layers.\n\"\"\"\n\ngeneration = generationconfig(\n    pause_mode=\"auto\",\n    pause_clause=0.25,\n    pause_sentence=0.5,\n    pause_paragraph=1.0,\n    pause_variance=0.05,\n    random_seed=42,\n)\npipe = kokoropipeline(pipelineconfig(generation=generationconfig(lang=\"en-us\"), voice=\"af_sarah\", generation=generation))\nresult = pipe.run(text)\n\n\n\n\nautomatic clause pauses are limited to phrasplit’s high-confidence clausal-comma signal.\nthey require an available dependency-capable linguistic…"
         },
         {
           "anchor": "",
@@ -290,13 +290,61 @@
     {
       "url": "/tools/pykokoro/main/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded public resolv …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded GitHub-backed …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added GitHub-backed Russian model profiles with voice-aware model selection and\ncompatibility validation",
+          "lower": "added github-backed russian model profiles with voice-aware model selection and\ncompatibility validation"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed pipeline-owned stages to follow model variant changes while preserving custom\nstages after replacement failures\n\n\nChanged short-sentence defaults to use wrap mode without timestamps and warn on\nexplicit phrase-mode fallback\n\n\nChanged the kokorog2p compatibility floor to 0.9.9",
+          "lower": "changed pipeline-owned stages to follow model variant changes while preserving custom\nstages after replacement failures\n\n\nchanged short-sentence defaults to use wrap mode without timestamps and warn on\nexplicit phrase-mode fallback\n\n\nchanged the kokorog2p compatibility floor to 0.9.9"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed traced exceptions being replaced while still recording timing events and debug\nlogs",
+          "lower": "fixed traced exceptions being replaced while still recording timing events and debug\nlogs"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added observable lazy runtime asset downloads with byte-level progress callbacks and\nconsole reporting\n\n\nAdded per-voice metadata and an all-voices showcase for dynamic inventory and labeled\naudio generation\n\n\nAdded standard Python logging for backend, asset, synthesis-stage, and runtime\nlifecycle diagnostics\n\n\nAdded runtime-ready European Portuguese model support with regional pt-PT routing and\nasset provisioning",
+          "lower": "added observable lazy runtime asset downloads with byte-level progress callbacks and\nconsole reporting\n\n\nadded per-voice metadata and an all-voices showcase for dynamic inventory and labeled\naudio generation\n\n\nadded standard python logging for backend, asset, synthesis-stage, and runtime\nlifecycle diagnostics\n\n\nadded runtime-ready european portuguese model support with regional pt-pt routing and\nasset provisioning"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed release manifest resolution to select model assets by quality and validate\npackage dependency versions",
+          "lower": "changed release manifest resolution to select model assets by quality and validate\npackage dependency versions"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added runtime-ready German Anna model support with automatic discovery, asset\nresolution, and example coverage",
+          "lower": "added runtime-ready german anna model support with automatic discovery, asset\nresolution, and example coverage"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added automatic language-aware routing for mixed-language documents\n\n\nAdded explicit G2P fallback and named-lexicon controls",
+          "lower": "added automatic language-aware routing for mixed-language documents\n\n\nadded explicit g2p fallback and named-lexicon controls"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved mixed-language frontend selection and caching",
+          "lower": "improved mixed-language frontend selection and caching"
         },
         {
           "anchor": "",
@@ -453,60 +501,6 @@
           "heading": "Fixed",
           "text": "Fixed SSMD pause precedence for explicit zero durations and voice-change boundaries",
           "lower": "fixed ssmd pause precedence for explicit zero durations and voice-change boundaries"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added compact AudioResult retention controls and explicit audio-release methods\n\n\nAdded configurable AudioSig WSOLA, ESOLA, TD-PSOLA, and phase-vocoder prosody backends\nwith a strict comparison harness",
-          "lower": "added compact audioresult retention controls and explicit audio-release methods\n\n\nadded configurable audiosig wsola, esola, td-psola, and phase-vocoder prosody backends\nwith a strict comparison harness"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed pipeline result finalization to preserve markers while releasing optional\nsegment audio\n\n\nChanged Kokoro teardown to release dependent backend resources deterministically and\nidempotently\n\n\nChanged combined speech prosody processing to one AudioSig compositor pass with WSOLA\nas the default and configured fallback behavior",
-          "lower": "changed pipeline result finalization to preserve markers while releasing optional\nsegment audio\n\n\nchanged kokoro teardown to release dependent backend resources deterministically and\nidempotently\n\n\nchanged combined speech prosody processing to one audiosig compositor pass with wsola\nas the default and configured fallback behavior"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented compact result memory behavior, ownership, release semantics, and the\nlimits of non-streaming generation\n\n\nDocumented prosody backend constraints, experimental status, comparison workflow, and\nsegment-level speech-quality limitations",
-          "lower": "documented compact result memory behavior, ownership, release semantics, and the\nlimits of non-streaming generation\n\n\ndocumented prosody backend constraints, experimental status, comparison workflow, and\nsegment-level speech-quality limitations"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed SSMD emphasis to metadata-preserving by default with opt-in audio\napproximation\n\n\nAdded explicit SSMD emphasis policies and diagnostics for plain, approximate, warning,\nand error handling",
-          "lower": "changed ssmd emphasis to metadata-preserving by default with opt-in audio\napproximation\n\n\nadded explicit ssmd emphasis policies and diagnostics for plain, approximate, warning,\nand error handling"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Fixed the tokenizer configuration example in the basic usage documentation\n\n\nImproved user documentation examples and installation guidance across the supported\nworkflows",
-          "lower": "fixed the tokenizer configuration example in the basic usage documentation\n\n\nimproved user documentation examples and installation guidance across the supported\nworkflows"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added default-safe SSMD 0.8 front-matter parsing with title and document metadata\n\n\nAdded portable provider voice bindings, deterministic pause-default precedence, marker\noffsets, resolver-based audio annotations, and explicit capability diagnostics",
-          "lower": "added default-safe ssmd 0.8 front-matter parsing with title and document metadata\n\n\nadded portable provider voice bindings, deterministic pause-default precedence, marker\noffsets, resolver-based audio annotations, and explicit capability diagnostics"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Raised the SSMD dependency window to >=0.8.0,<0.9 and documented literal-header\nmigration",
-          "lower": "raised the ssmd dependency window to >=0.8.0,<0.9 and documented literal-header\nmigration"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added capability-driven ONNX execution-provider resolution for runtime-reported\nproviders including NNAPI and XNNPACK\n\n\nAdded source-, variant-, and quality-aware model asset inspection APIs",
-          "lower": "added capability-driven onnx execution-provider resolution for runtime-reported\nproviders including nnapi and xnnpack\n\n\nadded source-, variant-, and quality-aware model asset inspection apis"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed Kokoro downloads and status checks to use exact model, config, and voice archive\npaths",
-          "lower": "fixed kokoro downloads and status checks to use exact model, config, and voice archive\npaths"
         }
       ]
     },
@@ -550,6 +544,12 @@
           "heading": "Pause Markers Demo",
           "text": "Demonstrate different pause durations:\n\nimport soundfile as sf\n\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\ntext = \"\"\"\nThis is a sentence with a short pause ...c\nNow a medium pause ...s\nAnd finally a long pause ...p\nBack to normal.\n\"\"\"\n\ngeneration = GenerationConfig(pause_mode=\"manual\")\npipe = KokoroPipeline(PipelineConfig(generation=GenerationConfig(lang=\"en-us\"), voice=\"af_bella\", generation=generation))\nresult = pipe.run(text)\nsf.write(\"pauses_demo.wav\", result.audio, result.sample_rate)",
           "lower": "demonstrate different pause durations:\n\nimport soundfile as sf\n\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\ntext = \"\"\"\nthis is a sentence with a short pause ...c\nnow a medium pause ...s\nand finally a long pause ...p\nback to normal.\n\"\"\"\n\ngeneration = generationconfig(pause_mode=\"manual\")\npipe = kokoropipeline(pipelineconfig(generation=generationconfig(lang=\"en-us\"), voice=\"af_bella\", generation=generation))\nresult = pipe.run(text)\nsf.write(\"pauses_demo.wav\", result.audio, result.sample_rate)"
+        },
+        {
+          "anchor": "",
+          "heading": "All-voices showcase",
+          "text": "Discover every runnable registry voice and write one streamed identification WAV:\n\npython examples/all_voices.py\n\n\n\n\nTo inspect the dynamic inventory without downloading model assets or synthesizing audio:\n\npython examples/all_voices.py --list-only\n\n\n\n\nThe full showcase can download multiple model and voice assets on its first run and may\ntake substantial time on CPU. Runnable experimental frontends are included and labeled.\nModels classified as unavailable, restricted, or unsupported are listed separately and\nskipped. The registry determines the voice count, so it can change over time.",
+          "lower": "discover every runnable registry voice and write one streamed identification wav:\n\npython examples/all_voices.py\n\n\n\n\nto inspect the dynamic inventory without downloading model assets or synthesizing audio:\n\npython examples/all_voices.py --list-only\n\n\n\n\nthe full showcase can download multiple model and voice assets on its first run and may\ntake substantial time on cpu. runnable experimental frontends are included and labeled.\nmodels classified as unavailable, restricted, or unsupported are listed separately and\nskipped. the registry determines the voice count, so it can change over time."
         },
         {
           "anchor": "",
@@ -731,20 +731,32 @@
         {
           "anchor": "",
           "heading": "Other providers",
-          "text": "pip install \"pykokoro[gpu]\"       # NVIDIA CUDA\npip install \"pykokoro[openvino]\"  # OpenVINO Runtime\npip install \"pykokoro[directml]\"  # DirectML\n\n\n\n\nFor a custom ONNX Runtime distribution, install the base package and the provider\npackage separately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2",
-          "lower": "pip install \"pykokoro[gpu]\"       # nvidia cuda\npip install \"pykokoro[openvino]\"  # openvino runtime\npip install \"pykokoro[directml]\"  # directml\n\n\n\n\nfor a custom onnx runtime distribution, install the base package and the provider\npackage separately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2"
+          "text": "pip install \"pykokoro[gpu]\"       # NVIDIA CUDA\npip install \"pykokoro[openvino]\"  # OpenVINO Runtime\npip install \"pykokoro[directml]\"  # DirectML\n\n\n\n\nFor Lexphon Goruut provider fallback, install the supported extra:\n\npip install \"pykokoro[goruut]\"\n\n\n\n\nThis enables fallback=\"goruut\" for the native backend=\"kokorog2p\" path. It is\ndistinct from backend=\"goruut\", which selects Goruut as the primary backend. For a\ncustom ONNX Runtime distribution, install the base package and the provider package\nseparately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2",
+          "lower": "pip install \"pykokoro[gpu]\"       # nvidia cuda\npip install \"pykokoro[openvino]\"  # openvino runtime\npip install \"pykokoro[directml]\"  # directml\n\n\n\n\nfor lexphon goruut provider fallback, install the supported extra:\n\npip install \"pykokoro[goruut]\"\n\n\n\n\nthis enables fallback=\"goruut\" for the native backend=\"kokorog2p\" path. it is\ndistinct from backend=\"goruut\", which selects goruut as the primary backend. for a\ncustom onnx runtime distribution, install the base package and the provider package\nseparately:\n\npip install pykokoro\npip install onnxruntime-gpu==1.19.2"
         },
         {
           "anchor": "",
           "heading": "Dependencies and optional spaCy",
-          "text": "PyKokoro v0.9 requires kokorog2p[espeak,en]>=0.9.0,<1.0, phrasplit>=0.3.7,<0.4,\nssmd>=0.8.6,<0.9, and spokenform>=0.3.6,<0.4. The document language is explicit:\npass GenerationConfig(lang=\"en-us\") or run(..., lang=\"en-us\"). Voice and profile\nselection never supplies the document language. SSMD lang spans are the supported\nmechanism for explicit mixed-language documents.\n\nThe pipeline owns reusable spaCy resources for integrated Pass A and Pass B analysis:\n\n\nuse_spacy=False disables spaCy;\n\n\nuse_spacy=None selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=True, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\nInstall a model only when you want spaCy-aware splitting or G2P:\n\npip install spacy\np…",
-          "lower": "pykokoro v0.9 requires kokorog2p[espeak,en]>=0.9.0,<1.0, phrasplit>=0.3.7,<0.4,\nssmd>=0.8.6,<0.9, and spokenform>=0.3.6,<0.4. the document language is explicit:\npass generationconfig(lang=\"en-us\") or run(..., lang=\"en-us\"). voice and profile\nselection never supplies the document language. ssmd lang spans are the supported\nmechanism for explicit mixed-language documents.\n\nthe pipeline owns reusable spacy resources for integrated pass a and pass b analysis:\n\n\nuse_spacy=false disables spacy;\n\n\nuse_spacy=none selects the best compatible installed local model and falls back\nwithout downloading when none is available;\n\n\nuse_spacy=true, an explicit model, or an exact model size is strict and remains\noffline.\n\n\n\ninstall a model only when you want spacy-aware splitting or g2p:\n\npip install spacy\np…"
+          "text": "PyKokoro v0.9 requires kokorog2p[espeak,en]>=0.9.4,<1.0, lexphon>=0.2.3,<0.3,\nphrasplit>=0.3.8,<0.4, ssmd>=0.8.7,<0.9, and spokenform>=0.3.6,<0.4. The native\nKokoroG2P frontend uses named lexicons: lexicons=None selects KokoroG2P language\ndefaults, while lexicons=() disables static Lexphon layers. New code should use named\nlexicons rather than the legacy use_dictionary, load_gold, and load_silver\ncompatibility inputs.",
+          "lower": "pykokoro v0.9 requires kokorog2p[espeak,en]>=0.9.4,<1.0, lexphon>=0.2.3,<0.3,\nphrasplit>=0.3.8,<0.4, ssmd>=0.8.7,<0.9, and spokenform>=0.3.6,<0.4. the native\nkokorog2p frontend uses named lexicons: lexicons=none selects kokorog2p language\ndefaults, while lexicons=() disables static lexphon layers. new code should use named\nlexicons rather than the legacy use_dictionary, load_gold, and load_silver\ncompatibility inputs."
+        },
+        {
+          "anchor": "",
+          "heading": "Lexphon data provisioning",
+          "text": "Before native backend=\"kokorog2p\" construction, PyKokoro resolves the effective named\nlexicons for the routed language and checks the local Lexphon store. The default\nlexicon_data_policy=\"auto\" installs only missing Lexphon-backed assets. Warm runs do\nnot consult the catalog or network. Primary backend=\"espeak\" and backend=\"goruut\"\npaths never download static lexicons.\n\nUse lexicon_data_policy=\"installed-only\" for offline or pre-provisioned deployments.\nPyKokoro will not install or consult the catalog in that mode, and a missing asset\nraises Lexphon’s original installation error. Set LEXPHON_DATA_HOME for a persistent\nstore and LEXPHON_CATALOG_URL for a pinned local or remote catalog. The document\nlanguage is explicit: pass GenerationConfig(lang=\"en-us\") or run(..., lang=\"en-us\").\nVoice a…",
+          "lower": "before native backend=\"kokorog2p\" construction, pykokoro resolves the effective named\nlexicons for the routed language and checks the local lexphon store. the default\nlexicon_data_policy=\"auto\" installs only missing lexphon-backed assets. warm runs do\nnot consult the catalog or network. primary backend=\"espeak\" and backend=\"goruut\"\npaths never download static lexicons.\n\nuse lexicon_data_policy=\"installed-only\" for offline or pre-provisioned deployments.\npykokoro will not install or consult the catalog in that mode, and a missing asset\nraises lexphon’s original installation error. set lexphon_data_home for a persistent\nstore and lexphon_catalog_url for a pinned local or remote catalog. the document\nlanguage is explicit: pass generationconfig(lang=\"en-us\") or run(..., lang=\"en-us\").\nvoice a…"
         },
         {
           "anchor": "",
           "heading": "German Martin assets",
           "text": "German runs automatically select the single-speaker GitHub v1.2-de-martin profile when\nno model or voice is supplied. It provides only fp32 and downloads approximately 311\nMB for the ONNX model plus a 522,506-byte martin voice archive on first use. Both\nartifacts are checked against their published SHA-256 digests before being cached under\n~/.cache/pykokoro.\n\nCustom model_path and voices_path are never replaced by automatic selection; missing\ncustom files fail directly rather than triggering a download to the shared cache.\nManaged cache hits are checksum and structure checked before use. offline=True when a\nvalid managed cache is required. Interrupted GitHub transfers retain a temporary .part\nfile and resume with HTTP Range requests when the release host supports them; completed\nfiles are…",
           "lower": "german runs automatically select the single-speaker github v1.2-de-martin profile when\nno model or voice is supplied. it provides only fp32 and downloads approximately 311\nmb for the onnx model plus a 522,506-byte martin voice archive on first use. both\nartifacts are checked against their published sha-256 digests before being cached under\n~/.cache/pykokoro.\n\ncustom model_path and voices_path are never replaced by automatic selection; missing\ncustom files fail directly rather than triggering a download to the shared cache.\nmanaged cache hits are checksum and structure checked before use. offline=true when a\nvalid managed cache is required. interrupted github transfers retain a temporary .part\nfile and resume with http range requests when the release host supports them; completed\nfiles are…"
+        },
+        {
+          "anchor": "",
+          "heading": "Observing first-run downloads",
+          "text": "Managed runtime assets are provisioned lazily during the first synthesis. Pass\nasset_progress=ConsoleAssetProgress() to show cold-cache downloads, byte progress, and\nverification, or pass a callable to PipelineConfig.asset_progress to consume\nstructured AssetProgressEvent values. Valid cache hits remain quiet. Offline mode\nraises the existing cache error without emitting a download-start event.",
+          "lower": "managed runtime assets are provisioned lazily during the first synthesis. pass\nasset_progress=consoleassetprogress() to show cold-cache downloads, byte progress, and\nverification, or pass a callable to pipelineconfig.asset_progress to consume\nstructured assetprogressevent values. valid cache hits remain quiet. offline mode\nraises the existing cache error without emitting a download-start event."
         },
         {
           "anchor": "",
@@ -800,6 +812,12 @@
           "heading": "German",
           "text": "de, de-de, de-at, and de-ch automatically select:\n\n\nsource: GitHub\n\n\nvariant: v1.2-de-martin\n\n\nquality: fp32\n\n\nvoice: martin\n\n\nvocabulary: built-in Kokoro v1.0\n\n\n\n\n\nModel\n\nVariant\n\nVoice\n\nStatus\n\nSelection\n\n\n\n\n\nMartin\n\nv1.2-de-martin\n\nmartin\n\nready/default\n\nautomatic for lang=\"de\"\n\n\n\nKerstin / Crane\n\nde-crane\n\ndefault\n\nexperimental\n\nexplicit + allow_experimental_frontend=True\n\n\n\nThorsten\n\nde-thorsten\n\nthorsten\n\nready\n\nexplicit\n\n\n\n\n\nThe document language is explicit in v0.9. Pass GenerationConfig(lang=\"de\") or\nrun(..., lang=\"de\"); voice and model profiles never infer it. Martin is the default\nGerman acoustic model when that language is selected. Kerstin/Crane and Thorsten are\nexplicit alternative acoustic models; Crane currently requires experimental frontend\nopt-in. Compare them with the…",
           "lower": "de, de-de, de-at, and de-ch automatically select:\n\n\nsource: github\n\n\nvariant: v1.2-de-martin\n\n\nquality: fp32\n\n\nvoice: martin\n\n\nvocabulary: built-in kokoro v1.0\n\n\n\n\n\nmodel\n\nvariant\n\nvoice\n\nstatus\n\nselection\n\n\n\n\n\nmartin\n\nv1.2-de-martin\n\nmartin\n\nready/default\n\nautomatic for lang=\"de\"\n\n\n\nkerstin / crane\n\nde-crane\n\ndefault\n\nexperimental\n\nexplicit + allow_experimental_frontend=true\n\n\n\nthorsten\n\nde-thorsten\n\nthorsten\n\nready\n\nexplicit\n\n\n\n\n\nthe document language is explicit in v0.9. pass generationconfig(lang=\"de\") or\nrun(..., lang=\"de\"); voice and model profiles never infer it. martin is the default\ngerman acoustic model when that language is selected. kerstin/crane and thorsten are\nexplicit alternative acoustic models; crane currently requires experimental frontend\nopt-in. compare them with the…"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed-model multilingual pronunciation",
+          "text": "Automatic routing is an optional G2P policy. Configure\nLanguageDetectionConfig(mode=\"auto\", languages=(\"de\", \"en\")) while keeping\nGenerationConfig(lang=\"de\") as the document and acoustic-model language. KokoroG2P\nsupplies the lexical evidence and route diagnostics; PyKokoro reuses its existing\nper-language G2P instances and passes every route through the already selected model\nvocabulary.\n\nSSMD spans with scope=\"pronunciation\", such as\n[File]{lang=\"en\" scope=\"pronunciation\"}, constrain only the pronunciation of that\nsource range. They do not change Spokenform, spaCy analysis, Phrasplit, voice, model\nsource, model variant, model quality, or ONNX session. Omit scope or use\nscope=\"semantic\" when the language should own the semantic pipeline run.\n\nThe effective policy precedence is per-run ov…",
+          "lower": "automatic routing is an optional g2p policy. configure\nlanguagedetectionconfig(mode=\"auto\", languages=(\"de\", \"en\")) while keeping\ngenerationconfig(lang=\"de\") as the document and acoustic-model language. kokorog2p\nsupplies the lexical evidence and route diagnostics; pykokoro reuses its existing\nper-language g2p instances and passes every route through the already selected model\nvocabulary.\n\nssmd spans with scope=\"pronunciation\", such as\n[file]{lang=\"en\" scope=\"pronunciation\"}, constrain only the pronunciation of that\nsource range. they do not change spokenform, spacy analysis, phrasplit, voice, model\nsource, model variant, model quality, or onnx session. omit scope or use\nscope=\"semantic\" when the language should own the semantic pipeline run.\n\nthe effective policy precedence is per-run ov…"
         }
       ]
     },
@@ -859,8 +877,8 @@
         {
           "anchor": "",
           "heading": "GenerationConfig fields",
-          "text": "speed: Speech rate multiplier (1.0 is normal).\n\n\nlang: Default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: Treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand trims segment silence.\n\n\npause_clause: Default pause for SSMD ...c breaks (seconds).\n\n\npause_sentence: Default pause for SSMD ...s breaks (seconds).\n\n\npause_paragraph: Default pause for SSMD ...p breaks (seconds).\n\n\npause_variance: Stored for compatibility with the Kokoro API. The pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: Stored for compatibility with the Kokoro API. The pipeline stages do\nnot currently use the seed.\n\n\nena…",
-          "lower": "speed: speech rate multiplier (1.0 is normal).\n\n\nlang: default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand trims segment silence.\n\n\npause_clause: default pause for ssmd ...c breaks (seconds).\n\n\npause_sentence: default pause for ssmd ...s breaks (seconds).\n\n\npause_paragraph: default pause for ssmd ...p breaks (seconds).\n\n\npause_variance: stored for compatibility with the kokoro api. the pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: stored for compatibility with the kokoro api. the pipeline stages do\nnot currently use the seed.\n\n\nena…"
+          "text": "speed: Speech rate multiplier (1.0 is normal).\n\n\nlang: Default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: Treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand high-confidence clausal commas, then trims segment silence.\n\n\npause_clause: Default pause for SSMD ...c breaks (seconds).\n\n\npause_sentence: Default pause for SSMD ...s breaks (seconds).\n\n\npause_paragraph: Default pause for SSMD ...p breaks (seconds).\n\n\npause_variance: Stored for compatibility with the Kokoro API. The pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: Stored for compatibility with the Kokoro API. The pipeline stages…",
+          "lower": "speed: speech rate multiplier (1.0 is normal).\n\n\nlang: default language code for phonemization (\"en-us\" etc).\n\n\nis_phonemes: treat input text as phoneme strings instead of raw text.\n\n\npause_mode: \"tts\" keeps natural model pauses, \"manual\" trims segment silence and\npreserves explicit pauses, \"auto\" inserts pauses at sentence/paragraph boundaries\nand high-confidence clausal commas, then trims segment silence.\n\n\npause_clause: default pause for ssmd ...c breaks (seconds).\n\n\npause_sentence: default pause for ssmd ...s breaks (seconds).\n\n\npause_paragraph: default pause for ssmd ...p breaks (seconds).\n\n\npause_variance: stored for compatibility with the kokoro api. the pipeline stages\ndo not currently apply variance.\n\n\nrandom_seed: stored for compatibility with the kokoro api. the pipeline stages…"
         },
         {
           "anchor": "",
@@ -877,8 +895,8 @@
         {
           "anchor": "",
           "heading": "Plain text sentence splitting",
-          "text": "PlainTextDocumentParser uses PhraseSplit 0.3.7’s offset-preserving detailed split API\nfor sentence splitting. The returned diagnostics come from the same operation that\nproduced the segments, so sentence-model metadata does not require a separate\nmodel-resolution pass. When phrasplit is unavailable, it falls back to a single\nsegment. PhraseSplit may resolve once per hard range; PyKokoro does not claim one\nresolution for the whole document. The language model is derived from generation.lang\nusing spaCy package naming rules (for example en_core_web_sm for English). Split\nboundaries are forced at SSMD pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. Set PYKOKORO_DEBUG_SEGMENTS=1 to log\nsegment offsets.",
-          "lower": "plaintextdocumentparser uses phrasesplit 0.3.7’s offset-preserving detailed split api\nfor sentence splitting. the returned diagnostics come from the same operation that\nproduced the segments, so sentence-model metadata does not require a separate\nmodel-resolution pass. when phrasplit is unavailable, it falls back to a single\nsegment. phrasesplit may resolve once per hard range; pykokoro does not claim one\nresolution for the whole document. the language model is derived from generation.lang\nusing spacy package naming rules (for example en_core_web_sm for english). split\nboundaries are forced at ssmd pause boundaries and at spans that contain phoneme\noverrides so those overrides are kept intact. set pykokoro_debug_segments=1 to log\nsegment offsets."
+          "text": "PlainTextDocumentParser uses Phrasplit 0.3.8’s offset-preserving detailed split API\nfor sentence splitting. In automatic mode, the prepared linguistic analysis is also\npassed to Phrasplit’s high-confidence clausal-comma detector; list commas and\nshared-subject continuations are not treated as deterministic clause pauses. The\nreturned diagnostics come from the same operation that produced the segments, so\nsentence-model metadata does not require a separate model-resolution pass. When\nphrasplit is unavailable, it falls back to a single segment. PhraseSplit may resolve\nonce per hard range; PyKokoro does not claim one resolution for the whole document. The\nlanguage model is derived from generation.lang using spaCy package naming rules (for\nexample en_core_web_sm for English). Split boundaries…",
+          "lower": "plaintextdocumentparser uses phrasplit 0.3.8’s offset-preserving detailed split api\nfor sentence splitting. in automatic mode, the prepared linguistic analysis is also\npassed to phrasplit’s high-confidence clausal-comma detector; list commas and\nshared-subject continuations are not treated as deterministic clause pauses. the\nreturned diagnostics come from the same operation that produced the segments, so\nsentence-model metadata does not require a separate model-resolution pass. when\nphrasplit is unavailable, it falls back to a single segment. phrasesplit may resolve\nonce per hard range; pykokoro does not claim one resolution for the whole document. the\nlanguage model is derived from generation.lang using spacy package naming rules (for\nexample en_core_web_sm for english). split boundaries…"
         },
         {
           "anchor": "",
@@ -999,8 +1017,14 @@
         {
           "anchor": "",
           "heading": "Generate Your First Audio",
-          "text": "import soundfile as sf\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    voice=\"af_bella\",  # American Female voice\n    generation=GenerationConfig(lang=\"en-us\"),\n)\npipe = KokoroPipeline(config)\nresult = pipe.run(\"Hello! Welcome to PyKokoro text-to-speech.\")\n\n# Save to a WAV file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)\n\n\n\n\nThat’s it! You’ve generated your first audio file.",
-          "lower": "import soundfile as sf\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    voice=\"af_bella\",  # american female voice\n    generation=generationconfig(lang=\"en-us\"),\n)\npipe = kokoropipeline(config)\nresult = pipe.run(\"hello! welcome to pykokoro text-to-speech.\")\n\n# save to a wav file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)\n\n\n\n\nthat’s it! you’ve generated your first audio file."
+          "text": "import soundfile as sf\nfrom pykokoro import GenerationConfig, KokoroPipeline, PipelineConfig\n\nconfig = PipelineConfig(\n    voice=\"af_bella\",  # American Female voice\n    generation=GenerationConfig(lang=\"en-us\"),\n)\npipe = KokoroPipeline(config)\nresult = pipe.run(\"Hello! Welcome to PyKokoro text-to-speech.\")\n\n# Save to a WAV file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)",
+          "lower": "import soundfile as sf\nfrom pykokoro import generationconfig, kokoropipeline, pipelineconfig\n\nconfig = pipelineconfig(\n    voice=\"af_bella\",  # american female voice\n    generation=generationconfig(lang=\"en-us\"),\n)\npipe = kokoropipeline(config)\nresult = pipe.run(\"hello! welcome to pykokoro text-to-speech.\")\n\n# save to a wav file\nsf.write(\"hello.wav\", result.audio, result.sample_rate)"
+        },
+        {
+          "anchor": "",
+          "heading": "First-run model downloads",
+          "text": "Model and voice assets are downloaded lazily on the first synthesis that needs them. To\nmake a cold-cache run visible, install the dependency-free console reporter:\n\nfrom pykokoro import ConsoleAssetProgress, GenerationConfig, KokoroPipeline, PipelineConfig\n\npipe = KokoroPipeline(\n    PipelineConfig(\n        voice=\"af_bella\",\n        generation=GenerationConfig(lang=\"en-us\"),\n        asset_progress=ConsoleAssetProgress(),\n    )\n)\n\n\n\n\nThe reporter shows each asset, its expected size, transfer progress when running in a\nterminal, and verification before the asset is ready. Warm-cache runs stay quiet.\nLibrary applications can provide their own callback to receive structured\nAssetProgressEvent values.\n\nThat’s it! You’ve generated your first audio file.",
+          "lower": "model and voice assets are downloaded lazily on the first synthesis that needs them. to\nmake a cold-cache run visible, install the dependency-free console reporter:\n\nfrom pykokoro import consoleassetprogress, generationconfig, kokoropipeline, pipelineconfig\n\npipe = kokoropipeline(\n    pipelineconfig(\n        voice=\"af_bella\",\n        generation=generationconfig(lang=\"en-us\"),\n        asset_progress=consoleassetprogress(),\n    )\n)\n\n\n\n\nthe reporter shows each asset, its expected size, transfer progress when running in a\nterminal, and verification before the asset is ready. warm-cache runs stay quiet.\nlibrary applications can provide their own callback to receive structured\nassetprogressevent values.\n\nthat’s it! you’ve generated your first audio file."
         },
         {
           "anchor": "",

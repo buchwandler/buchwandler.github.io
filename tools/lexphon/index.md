@@ -5,8 +5,8 @@ permalink: /tools/lexphon/
 nav_tool: lexphon
 docs_project: "lexphon"
 docs_variant: "release"
-docs_ref: "v0.2.0"
-docs_commit: "61b4bf9a5fbd8df1f6d661d962b1ae168637c231"
+docs_ref: "v0.2.3"
+docs_commit: "1a6a1395225c036ae618d9d33e773cc9f79890b8"
 search_enabled: true
 ---
 
@@ -556,6 +556,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="ARCHITECTURE/">Lexphon architecture</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#boundaries">Boundaries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#catalog-and-installation">Catalog and installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#lexhint-source-variants">LexHint source variants</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#runtime-rule">Runtime rule</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#kokorog2p-integration">KokoroG2P integration</a></li>
 </ul>
@@ -563,6 +564,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l1"><a class="reference internal" href="KOKOROG2P_INTEGRATION/">KokoroG2P integration</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="KOKOROG2P_INTEGRATION/#provisioning-and-runtime">Provisioning and runtime</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KOKOROG2P_INTEGRATION/#runtime-contract">Runtime contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KOKOROG2P_INTEGRATION/#lexhint-source-variants">LexHint source variants</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KOKOROG2P_INTEGRATION/#german-configuration">German configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="KOKOROG2P_INTEGRATION/#ownership-boundary">Ownership boundary</a></li>
 </ul>
@@ -574,6 +576,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-3-2026-09-09">[v0.2.3] - 2026-09-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-2-2026-09-09">[v0.2.2] - 2026-09-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-09-09">[v0.2.1] - 2026-09-09</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-0-2026-09-08">[v0.2.0] - 2026-09-08</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-3-2026-09-08">[v0.1.3] - 2026-09-08</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-2-2026-09-04">[v0.1.2] - 2026-09-04</a></li>

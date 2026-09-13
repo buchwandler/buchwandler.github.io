@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -817,10 +817,9 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 </div>
 <p>The levels are <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>, <code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, and <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Persist the normal level
 with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">emphasis_level</span> <span class="pre">2</span></code>; subsequent conversions need no emphasis
-flag. The old <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> remains as a deprecated alias for level 2, while
-<code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code> remains an advanced policy control. Explicit SSMD prosody remains
-supported independently, and a resume with omitted emphasis options restores the saved
-policy.</p>
+flag. <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code> remains an advanced policy control. Explicit SSMD prosody
+remains supported independently, and a resume with omitted emphasis options restores the
+saved policy.</p>
 <p><strong>Example SSMD file</strong>:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
 
@@ -828,7 +827,7 @@ policy.</p>
 He **hated** the summer holidays. ...p
 </pre></div>
 </div>
-<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.6</span></a>.</p>
+<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.7</span></a>.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
@@ -846,11 +845,10 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="
 ttsforge<span class="w"> </span>config<span class="w"> </span>--show
 </pre></div>
 </div>
-<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full
-<code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> names are also accepted. The legacy <code class="docutils literal notranslate"><span class="pre">--gpu</span></code> and <code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code> flags
-map to <code class="docutils literal notranslate"><span class="pre">auto</span></code> and <code class="docutils literal notranslate"><span class="pre">cpu</span></code> respectively. Availability depends on the installed ONNX Runtime
-build, and PyKokoro may apply its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override.</p>
-<p>On a desktop build exposing OpenVINO, the equivalent persistent setup is:</p>
+<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full map to
+the canonical provider names. Availability depends on the installed ONNX Runtime build,
+and PyKokoro may apply its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override. On a desktop
+build exposing OpenVINO, the equivalent persistent setup is:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>openvino
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
 </pre></div>
@@ -874,7 +872,7 @@ ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&
 <section id="next-steps">
 <h2>Next Steps</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.6</span></a> - SSMD editing and syntax reference</p></li>
+<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.7</span></a> - SSMD editing and syntax reference</p></li>
 <li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
 <li><p><a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> - Detailed voice information</p></li>
 <li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - All configuration options</p></li>

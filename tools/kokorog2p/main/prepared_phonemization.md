@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -592,6 +592,12 @@ for individual words or exact sub-token fragments:</p>
 <p>The candidate list is a hard allowlist. Lexicon collisions and ambiguity stay in the
 default language. Generic pronunciation fallback is not language evidence, and explicit
 <code class="docutils literal notranslate"><span class="pre">ph</span></code>, <code class="docutils literal notranslate"><span class="pre">phonemes</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">language</span></code> overrides take precedence.</p>
+<p>Lexphon 0.1.3 supplies clean generic IPA and structured pronunciation language markers.
+For German-default DE/EN routing, a marker such as <code class="docutils literal notranslate"><span class="pre">en</span></code> is lexical evidence that can
+authorize a bounded pair-specific loanword route when the English candidate is unique
+and compatible. It does not globally override German ownership: unmarked whole-token
+collisions remain German/default. KokoroG2P uses the structured marker metadata and
+never parses raw <code class="docutils literal notranslate"><span class="pre">(en)</span></code> or <code class="docutils literal notranslate"><span class="pre">(de)</span></code> source syntax.</p>
 </section>
 <section id="migration-from-pre-v0-9">
 <h2>Migration from pre-v0.9</h2>

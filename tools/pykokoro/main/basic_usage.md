@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
 search_enabled: true
 ---
 
@@ -739,7 +739,8 @@ concatenated waveform is created.</p>
 </section>
 <section id="language-settings">
 <h2>Language Settings</h2>
-<p>PyKokoro defaults language from the voice prefix, but you can override it:</p>
+<p>PyKokoro requires an explicit document language. Set it with <code class="docutils literal notranslate"><span class="pre">GenerationConfig.lang</span></code>;
+the voice prefix does not select the language:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
 
 <span class="n">generation</span> <span class="o">=</span> <span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
@@ -748,6 +749,28 @@ concatenated waveform is created.</p>
 </pre></div>
 </div>
 <p>Supported languages: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code></p>
+<section id="automatic-pronunciation-routing">
+<h3>Automatic pronunciation routing</h3>
+<p>Keep <code class="docutils literal notranslate"><span class="pre">GenerationConfig.lang</span></code> as the explicit semantic and acoustic-model language. To
+let KokoroG2P route eligible words between selected pronunciation languages, configure
+candidates explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">LanguageDetectionConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),</span>
+    <span class="n">language_detection</span><span class="o">=</span><span class="n">LanguageDetectionConfig</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span> <span class="n">languages</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="s2">&quot;en&quot;</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span><span class="o">.</span><span class="n">run</span><span class="p">(</span>
+    <span class="s1">&#39;Die [File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;} wird gecancelt.&#39;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The precedence is per-run override, pipeline configuration, SSMD <code class="docutils literal notranslate"><span class="pre">language_detection</span></code>
+header, then disabled. Pronunciation-only SSMD spans and automatic routes affect G2P
+only. They do not select a foreign voice, acoustic model, ONNX session, Spokenform
+language, or linguistic-analysis language. Use <code class="docutils literal notranslate"><span class="pre">scope=&quot;semantic&quot;</span></code> (or omit <code class="docutils literal notranslate"><span class="pre">scope</span></code>) when
+a language span should affect the semantic pipeline.</p>
+</section>
 </section>
 <section id="language-aware-spacy-models">
 <h2>Language-Aware spaCy Models</h2>
@@ -874,6 +897,13 @@ scores.</p>
 <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Automatic clause pauses are limited to Phrasplit’s high-confidence clausal-comma signal.
+They require an available dependency-capable linguistic analysis; when automatic
+selection falls back because no compatible local spaCy model is installed, PyKokoro does
+not invent clause boundaries with regular-expression heuristics. Ordinary list commas
+and shared-subject continuations remain part of the same segment. For example,
+<code class="docutils literal notranslate"><span class="pre">It</span> <span class="pre">had</span> <span class="pre">picked</span> <span class="pre">up</span> <span class="pre">the</span> <span class="pre">sound</span> <span class="pre">of</span> <span class="pre">a</span> <span class="pre">explosion,</span> <span class="pre">direction</span> <span class="pre">suggested</span> <span class="pre">it</span> <span class="pre">was</span> <span class="pre">behind.</span></code> receives
+one clause pause after the detected comma.</p>
 </section>
 </section>
 <section id="text-normalization-say-as">

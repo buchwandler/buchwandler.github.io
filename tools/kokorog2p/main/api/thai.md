@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -557,11 +557,11 @@ with:</p>
 </div>
 <section id="behavior">
 <h2>Behavior</h2>
-<p>Thai runs use the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">th:lexhint</span></code> dictionary with dictionary-driven
-segmentation and the existing Thai tone adaptation. Latin runs use the existing
-EnglishG2P lazily, so ordinary phrases such as <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">to</span> <span class="pre">speech</span></code> are pronounced as
-English rather than spelled as Thai letter names. Whitespace and supported punctuation
-remain source-aligned.</p>
+<p>Thai runs use the provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">th:lexhint-native</span></code> dictionary with
+dictionary-driven segmentation and the existing Thai tone adaptation. Latin runs use the
+existing EnglishG2P lazily, so ordinary phrases such as <code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">to</span> <span class="pre">speech</span></code> are pronounced
+as English rather than spelled as Thai letter names. Whitespace and supported
+punctuation remain source-aligned.</p>
 <p>The frontend version is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>; its target model is the separate <code class="docutils literal notranslate"><span class="pre">wayu-kokoro-thai-v1</span></code>
 vocabulary profile. That profile maps the Thai low-tone symbol <code class="docutils literal notranslate"><span class="pre">˩</span></code> to token ID 7 and is
 isolated from stock Kokoro and Nabra profiles. Do not combine this profile with another
@@ -583,8 +583,8 @@ diagnostic warnings on the frontend and public <code class="docutils literal not
 invalid model symbols, unsupported source symbols, and unrecovered Latin fallback runs.</p>
 <p>Thai pronunciation data is provisioned through Lexphon and is not downloaded by
 KokoroG2P. Install and verify the released asset before Thai dictionary use:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>th:lexhint
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>th:lexhint
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>th:lexhint-native
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>th:lexhint-native
 </pre></div>
 </div>
 <p>The pinned Wayu behavior baseline and clean-room deviations are documented in

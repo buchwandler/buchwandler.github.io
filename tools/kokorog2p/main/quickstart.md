@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -550,7 +550,9 @@ the resulting text to <code class="docutils literal notranslate"><span class="pr
 <h2>Basic usage</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">()</span>
+<span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>

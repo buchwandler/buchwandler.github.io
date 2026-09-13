@@ -6,7 +6,7 @@ nav_tool: g2lex-main
 docs_project: "g2lex"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "1dea948ed9e7d35587d4ce2b2641772642b52210"
+docs_commit: "548be0d3bdae70dff14e405d7e5194f3a9aa4507"
 search_enabled: true
 ---
 
@@ -551,13 +551,19 @@ g2lex<span class="w"> </span>inspect<span class="w"> </span>ASSET
 g2lex<span class="w"> </span>verify<span class="w"> </span>SOURCE<span class="w"> </span>ASSET<span class="w"> </span>--format<span class="w"> </span>FORMAT
 g2lex<span class="w"> </span><span class="nb">export</span><span class="w"> </span>ASSET<span class="w"> </span>OUTPUT<span class="w"> </span>--format<span class="w"> </span>FORMAT
 g2lex<span class="w"> </span>diff<span class="w"> </span>FIRST<span class="w"> </span>SECOND
+g2lex<span class="w"> </span>convert<span class="w"> </span>SOURCE<span class="w"> </span>OUTPUT<span class="w"> </span>--input-format<span class="w"> </span>FORMAT<span class="w"> </span>--format<span class="w"> </span>FORMAT
 g2lex<span class="w"> </span>--version
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">pack</span></code> selects a source adapter and writes an exact <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> asset. <code class="docutils literal notranslate"><span class="pre">lookup</span></code>
 reads one value. <code class="docutils literal notranslate"><span class="pre">inspect</span></code> reports asset metadata. <code class="docutils literal notranslate"><span class="pre">verify</span></code> compares source and
 compiled content. <code class="docutils literal notranslate"><span class="pre">export</span></code> writes a supported source representation, and <code class="docutils literal notranslate"><span class="pre">diff</span></code>
-reports logical changes between assets.</p>
+reports logical changes between assets.
+<code class="docutils literal notranslate"><span class="pre">convert</span></code> is a stable source-to-source conversion command; its <code class="docutils literal notranslate"><span class="pre">--input-format</span></code> and <code class="docutils literal notranslate"><span class="pre">--format</span></code> names follow the adapter contracts in <code class="docutils literal notranslate"><span class="pre">source-formats.md</span></code>.</p>
+</section>
+<section id="compatibility-commands">
+<h2>Compatibility commands</h2>
+<p><code class="docutils literal notranslate"><span class="pre">restore</span></code> is retained as a legacy compatibility command. It materializes exact G2LX assets and can also read older reduction assets; use <code class="docutils literal notranslate"><span class="pre">export</span></code> for stable exact G2Lex v1 workflows.</p>
 <p>Commands return a non-zero status for invalid paths, formats, malformed input,
 incompatible assets, or failed exact comparisons. Error output is intended for
 humans and stable machine-facing report formats should be consumed through the

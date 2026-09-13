@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -556,7 +556,9 @@ calling <code class="docutils literal notranslate"><span class="pre">phonemize_p
 <h2>Quick start</h2>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Hello world!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">()</span>
+<span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -627,6 +629,13 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/kazakh/">Kazakh G2P</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/hindi/">Hindi G2P</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/hindi/#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/hindi/#supported-aliases">Supported aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/hindi/#raw-ipa-and-model-compatibility">Raw IPA and model compatibility</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/hindi/#lazy-initialization-and-routing">Lazy initialization and routing</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="api/arabic/">Arabic MSA</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/arabic/#construction">Construction</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/arabic/#diacritization">Diacritization</a></li>
@@ -642,7 +651,7 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api/utils/">Utilities API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/utils/#token-context">Token Context</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/utils/#fallback-handling">Fallback Handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/utils/#generic-provider-handling">Generic provider handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api/utils/#internal-utilities">Internal Utilities</a></li>
 </ul>
 </li>
@@ -672,6 +681,13 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 <li class="toctree-l2"><a class="reference internal" href="languages/#prepared-language-composition">Prepared-language composition</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="lexicons/">External lexicons and release policy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#english-and-french">English and French</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#named-german-lexicons">Named German lexicons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#distribution-policy">Distribution policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#swedish-nst-lexicon">Swedish NST lexicon</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="spans/">Span-Based Phonemization Guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="spans/#overview">Overview</a></li>
 <li class="toctree-l2"><a class="reference internal" href="spans/#core-types">Core Types</a></li>
@@ -694,6 +710,7 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#prepared-text-boundary">Prepared text boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#lexphon-provider-fallback-ownership">Lexphon provider fallback ownership</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#custom-g2p-configuration">Custom G2P Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#token-inspection">Token Inspection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#dictionary-lookup">Dictionary Lookup</a></li>
@@ -714,8 +731,10 @@ and the <a class="reference internal" href="spans/"><span class="std std-doc">sp
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#language-extras">Language extras</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#released-lexhint-data">Released LexHint data</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#core-installation">Core installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#optional-language-and-backend-extras">Optional language and backend extras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#released-lexphon-dictionaries">Released Lexphon dictionaries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#optional-semantic-preparation">Optional semantic preparation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development installation</a></li>
 </ul>
 </li>

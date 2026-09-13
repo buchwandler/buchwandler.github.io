@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
 search_enabled: true
 ---
 
@@ -664,7 +664,7 @@ caching.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">is_phonemes</span></code>: Treat input text as phoneme strings instead of raw text.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;tts&quot;</span></code> keeps natural model pauses, <code class="docutils literal notranslate"><span class="pre">&quot;manual&quot;</span></code> trims segment silence and
 preserves explicit pauses, <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> inserts pauses at sentence/paragraph boundaries
-and trims segment silence.</p></li>
+and high-confidence clausal commas, then trims segment silence.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pause_clause</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...c</span></code> breaks (seconds).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pause_sentence</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...s</span></code> breaks (seconds).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pause_paragraph</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...p</span></code> breaks (seconds).</p></li>
@@ -722,16 +722,22 @@ annotations override individual fields.</p>
 </section>
 <section id="plain-text-sentence-splitting">
 <h3>Plain text sentence splitting</h3>
-<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses PhraseSplit 0.3.7’s offset-preserving detailed split API
-for sentence splitting. The returned diagnostics come from the same operation that
-produced the segments, so sentence-model metadata does not require a separate
-model-resolution pass. When <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single
-segment. PhraseSplit may resolve once per hard range; PyKokoro does not claim one
-resolution for the whole document. The language model is derived from <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code>
-using spaCy package naming rules (for example <code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> for English). Split
-boundaries are forced at SSMD pause boundaries and at spans that contain phoneme
-overrides so those overrides are kept intact. Set <code class="docutils literal notranslate"><span class="pre">PYKOKORO_DEBUG_SEGMENTS=1</span></code> to log
-segment offsets.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses Phrasplit 0.3.8’s offset-preserving detailed split API
+for sentence splitting. In automatic mode, the prepared linguistic analysis is also
+passed to Phrasplit’s high-confidence clausal-comma detector; list commas and
+shared-subject continuations are not treated as deterministic clause pauses. The
+returned diagnostics come from the same operation that produced the segments, so
+sentence-model metadata does not require a separate model-resolution pass. When
+<code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single segment. PhraseSplit may resolve
+once per hard range; PyKokoro does not claim one resolution for the whole document. The
+language model is derived from <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code> using spaCy package naming rules (for
+example <code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> for English). Split boundaries are forced at SSMD pause
+boundaries and at spans that contain phoneme overrides so those overrides are kept
+intact. Set <code class="docutils literal notranslate"><span class="pre">PYKOKORO_DEBUG_SEGMENTS=1</span></code> to log segment offsets.</p>
+<p>The prepared-text flow is: prepared analysis -&gt; sentence segmentation -&gt; Phrasplit
+clausal-comma detection -&gt; structural refinement -&gt; deterministic boundary event -&gt; G2P
+pause propagation. Detection reuses the existing prepared document and does not run
+spaCy again.</p>
 </section>
 <section id="kokoro-g2p-adapter">
 <h3>Kokoro G2P adapter</h3>

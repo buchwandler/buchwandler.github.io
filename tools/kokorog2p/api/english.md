@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/english/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -542,22 +542,28 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="english-api">
 <h1>English API</h1>
-<p>The English frontend phonemizes prepared English text with the shipped lexicons and
-optional backend/model controls. It does not expand numbers, currencies, dates, units,
-or abbreviations.</p>
+<p>The English frontend phonemizes prepared English text with an externally provisioned
+Lexphon dictionary and optional backend/model controls. It does not expand numbers,
+currencies, dates, units, or abbreviations.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
 
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code> for factory construction. The frontend preserves supplied text
-and token offsets; semantic preparation belongs to the caller.</p>
+<p>Install the selected asset before construction:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-gb&quot;)</span></code> for factory construction. The frontend
+preserves supplied text and token offsets; semantic preparation belongs to the caller.</p>
 <section id="lexicon-controls">
 <h2>Lexicon controls</h2>
-<p><code class="docutils literal notranslate"><span class="pre">load_gold</span></code> and <code class="docutils literal notranslate"><span class="pre">load_silver</span></code> control the shipped dictionary tiers. <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> and
-explicit local model settings control optional POS-aware tokenization. No semantic
-preparation package is imported by this frontend.</p>
+<p>English exposes one logical <code class="docutils literal notranslate"><span class="pre">gold</span></code> selection backed by an external Lexphon asset. Use
+<code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only operation. There is no English silver tier and no
+runtime API for loading or selecting packaged dictionaries. <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> and explicit
+local model settings control optional POS-aware tokenization.</p>
 </section>
 </section>
 </div>

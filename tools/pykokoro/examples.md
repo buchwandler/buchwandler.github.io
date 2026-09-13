@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/examples/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.1"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_ref: "v0.9.6"
+docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
 search_enabled: true
 ---
 
@@ -622,6 +622,21 @@ without loading a synthesis model.</p>
 <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;pauses_demo.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="all-voices-showcase">
+<h2>All-voices showcase</h2>
+<p>Discover every runnable registry voice and write one streamed identification WAV:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/all_voices.py
+</pre></div>
+</div>
+<p>To inspect the dynamic inventory without downloading model assets or synthesizing audio:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/all_voices.py<span class="w"> </span>--list-only
+</pre></div>
+</div>
+<p>The full showcase can download multiple model and voice assets on its first run and may
+take substantial time on CPU. Runnable experimental frontends are included and labeled.
+Models classified as unavailable, restricted, or unsupported are listed separately and
+skipped. The registry determines the voice count, so it can change over time.</p>
 <section id="custom-pause-durations">
 <h3>Custom Pause Durations</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>

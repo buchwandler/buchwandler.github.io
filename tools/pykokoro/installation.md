@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.1"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_ref: "v0.9.6"
+docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
 search_enabled: true
 ---
 
@@ -593,8 +593,14 @@ pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[directml]&quot;</span><span class="w">  </span><span class="c1"># DirectML</span>
 </pre></div>
 </div>
-<p>For a custom ONNX Runtime distribution, install the base package and the provider
-package separately:</p>
+<p>For Lexphon Goruut provider fallback, install the supported extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[goruut]&quot;</span>
+</pre></div>
+</div>
+<p>This enables <code class="docutils literal notranslate"><span class="pre">fallback=&quot;goruut&quot;</span></code> for the native <code class="docutils literal notranslate"><span class="pre">backend=&quot;kokorog2p&quot;</span></code> path. It is
+distinct from <code class="docutils literal notranslate"><span class="pre">backend=&quot;goruut&quot;</span></code>, which selects Goruut as the primary backend. For a
+custom ONNX Runtime distribution, install the base package and the provider package
+separately:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
 pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2
 </pre></div>
@@ -602,11 +608,26 @@ pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span c
 </section>
 <section id="dependencies-and-optional-spacy">
 <h2>Dependencies and optional spaCy</h2>
-<p>PyKokoro v0.9 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.9.0,&lt;1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.7,&lt;0.4</span></code>,
-<code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.6,&lt;0.9</span></code>, and <code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.3.6,&lt;0.4</span></code>. The document language is explicit:
-pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;en-us&quot;)</span></code>. Voice and profile
-selection never supplies the document language. SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code> spans are the supported
-mechanism for explicit mixed-language documents.</p>
+<p>PyKokoro v0.9 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.9.4,&lt;1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">lexphon&gt;=0.2.3,&lt;0.3</span></code>,
+<code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.7,&lt;0.4</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.7,&lt;0.9</span></code>, and <code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.3.6,&lt;0.4</span></code>. The native
+KokoroG2P frontend uses named lexicons: <code class="docutils literal notranslate"><span class="pre">lexicons=None</span></code> selects KokoroG2P language
+defaults, while <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> disables static Lexphon layers. New code should use named
+lexicons rather than the legacy <code class="docutils literal notranslate"><span class="pre">use_dictionary</span></code>, <code class="docutils literal notranslate"><span class="pre">load_gold</span></code>, and <code class="docutils literal notranslate"><span class="pre">load_silver</span></code>
+compatibility inputs.</p>
+<section id="lexphon-data-provisioning">
+<h3>Lexphon data provisioning</h3>
+<p>Before native <code class="docutils literal notranslate"><span class="pre">backend=&quot;kokorog2p&quot;</span></code> construction, PyKokoro resolves the effective named
+lexicons for the routed language and checks the local Lexphon store. The default
+<code class="docutils literal notranslate"><span class="pre">lexicon_data_policy=&quot;auto&quot;</span></code> installs only missing Lexphon-backed assets. Warm runs do
+not consult the catalog or network. Primary <code class="docutils literal notranslate"><span class="pre">backend=&quot;espeak&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">backend=&quot;goruut&quot;</span></code>
+paths never download static lexicons.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">lexicon_data_policy=&quot;installed-only&quot;</span></code> for offline or pre-provisioned deployments.
+PyKokoro will not install or consult the catalog in that mode, and a missing asset
+raises Lexphon’s original installation error. Set <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> for a persistent
+store and <code class="docutils literal notranslate"><span class="pre">LEXPHON_CATALOG_URL</span></code> for a pinned local or remote catalog. The document
+language is explicit: pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;en-us&quot;)</span></code>.
+Voice and profile selection never supplies the document language. SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code> spans are
+the supported mechanism for explicit mixed-language documents.</p>
 <p>The pipeline owns reusable spaCy resources for integrated Pass A and Pass B analysis:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
@@ -623,6 +644,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <p>No spaCy model is downloaded automatically. The native kokorog2p backend supports the
 languages declared by <code class="docutils literal notranslate"><span class="pre">pykokoro.constants.SUPPORTED_LANGUAGES</span></code>; languages in
 <code class="docutils literal notranslate"><span class="pre">ESPEAK_ONLY_LANGUAGES</span></code> require an explicit fallback backend.</p>
+</section>
 </section>
 <section id="german-martin-assets">
 <h2>German Martin assets</h2>
@@ -643,6 +665,14 @@ cached files and replaces invalid artifacts individually. If a downloaded file r
 stale catalog metadata, the catalog is refreshed once without falling back to the stale
 cache, then asset resolution is retried. Offline mode never refreshes over the network,
 and manual deletion of the registry catalog or model directory is not required.</p>
+<section id="observing-first-run-downloads">
+<h3>Observing first-run downloads</h3>
+<p>Managed runtime assets are provisioned lazily during the first synthesis. Pass
+<code class="docutils literal notranslate"><span class="pre">asset_progress=ConsoleAssetProgress()</span></code> to show cold-cache downloads, byte progress, and
+verification, or pass a callable to <code class="docutils literal notranslate"><span class="pre">PipelineConfig.asset_progress</span></code> to consume
+structured <code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values. Valid cache hits remain quiet. Offline mode
+raises the existing cache error without emitting a download-start event.</p>
+</section>
 </section>
 <section id="model-capability-discovery">
 <h2>Model capability discovery</h2>

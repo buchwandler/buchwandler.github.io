@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
+docs_commit: "1980c788536c5f07db18decd0999af9c47f7cc62"
 search_enabled: true
 ---
 
@@ -710,6 +710,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 <li class="toctree-l2"><a class="reference internal" href="integration/#versioning-and-compatibility">Versioning and Compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#summary">Summary</a></li>
 <li class="toctree-l2"><a class="reference internal" href="integration/#prepared-text-spacy-integration">Prepared-text spaCy integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="integration/#syntactic-clausal-comma-boundaries">Syntactic clausal-comma boundaries</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="offsets/">Offset-Preserving Segmentation</a><ul>
@@ -739,6 +740,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-8-2026-09-13">[v0.3.8] - 2026-09-13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-7-2026-09-01">[v0.3.7] - 2026-09-01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-6-2026-08-25">[v0.3.6] - 2026-08-25</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-24">[v0.3.5] - 2026-08-24</a></li>

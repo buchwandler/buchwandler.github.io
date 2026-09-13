@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/hard_cases_benchmark/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.1"
-docs_commit: "73674dd2ba1e957bd8421fab61f08b6d541af5c2"
+docs_ref: "v0.9.6"
+docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
 search_enabled: true
 ---
 

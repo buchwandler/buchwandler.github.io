@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/spans/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -652,21 +652,28 @@ records in <code class="docutils literal notranslate"><span class="pre">result.l
 in multiple selected stacks stays in the default language.</p>
 <p>Evidence-capable resources are:</p>
 <ul class="simple">
-<li><p>Packaged G2Lex: English US, English GB, and French.</p></li>
+<li><p>Externally provisioned G2Lex: English US, GB English, and French.</p></li>
 <li><p>Provisioned Lexphon: German, Portuguese BR/PT, Russian, Thai, Vietnamese, Japanese,
 Korean, and Swedish when NST is explicitly selected.</p></li>
 </ul>
-<p>Spanish, Italian, Czech, Hebrew, Arabic, Chinese, and Kazakh still phonemize normally,
-but they have no selected lexical evidence provider and cannot positively claim a
-foreign token. Generic pronunciation, rules, eSpeak, Goruut, pypinyin, Phonikud, g2pK,
-pyopenjtalk, and fallback paths are never used as evidence. Candidate frontends are lazy
-and may be supplied with <code class="docutils literal notranslate"><span class="pre">g2p_resolver</span></code>; default foreign frontends do not inherit
-default-language lexicon or language-specific options.</p>
+<p>Spanish, Italian, Czech, Hebrew, Arabic, Chinese, Kazakh, and Hindi still phonemize
+normally, but they have no selected lexical evidence provider and cannot positively
+claim a foreign token. Generic pronunciation, rules, eSpeak, Goruut, pypinyin, Phonikud,
+g2pK, pyopenjtalk, and fallback paths are never used as evidence. Candidate frontends
+are lazy and may be supplied with <code class="docutils literal notranslate"><span class="pre">g2p_resolver</span></code>; default foreign frontends do not
+inherit default-language lexicon or language-specific options. Hindi eSpeak
+pronunciation is realization data, not lexical evidence for automatic routing.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">target_model=&quot;1.0&quot;</span></code> to constrain every automatic candidate and the final token IDs
 to one fixed Kokoro vocabulary. If evidence exists but the routed pronunciation is
 incompatible, the route is rejected with a diagnostic and the default route is used.
 Routing changes only G2P frontend selection. It never selects an acoustic model.
 Explicit <code class="docutils literal notranslate"><span class="pre">ph</span></code>, <code class="docutils literal notranslate"><span class="pre">phonemes</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, and <code class="docutils literal notranslate"><span class="pre">language</span></code> overrides take precedence.</p>
+<p>With Lexphon 0.1.3, German evidence also carries structured pronunciation language
+markers. The DE/EN analyzer uses those markers only for bounded, marker-backed loanword
+rules. Thus an exact German hit such as <code class="docutils literal notranslate"><span class="pre">starten</span></code> remains German when neither the whole
+word nor the candidate stem is marked as English, while marked forms such as <code class="docutils literal notranslate"><span class="pre">gecancelt</span></code>
+and <code class="docutils literal notranslate"><span class="pre">downloaden</span></code> can expose English fragments. Raw Lexphon source notation is
+producer-owned and is not parsed by KokoroG2P.</p>
 </section>
 <section id="structured-stress-overrides">
 <h2>Structured stress overrides</h2>

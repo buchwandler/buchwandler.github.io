@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -550,6 +550,16 @@ application or an optional cross-package tool, then pass the result to
 <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>. Core normalizers may apply only intrinsic typography and
 phonological normalization.</p>
 </section>
+<section id="lexphon-provider-fallback-ownership">
+<h2>Lexphon provider fallback ownership</h2>
+<p>Generic eSpeak and Goruut fallback flags configure Lexphon 0.2 providers for migrated
+native frontends. The frontends still perform language-specific IPA normalization and
+Kokoro vocabulary conversion. <code class="docutils literal notranslate"><span class="pre">use_cli</span></code> affects only the direct compatibility backends,
+not Lexphon provider execution.</p>
+<p>Provider results carry structured provenance metadata and are excluded from lexical
+routing evidence. Provider and Lexphon dictionary data are provisioned explicitly;
+KokoroG2P does not download or cache provider results.</p>
+</section>
 <section id="custom-g2p-configuration">
 <h2>Custom G2P Configuration</h2>
 <section id="tri-state-spacy-model-resolution">
@@ -572,79 +582,25 @@ instances using the same resolution rules.</p>
 </section>
 <section id="memory-efficient-loading">
 <h3>Memory-Efficient Loading</h3>
-<p>Control dictionary loading to optimize memory and initialization time:</p>
+</section>
+<section id="external-lexicon-provisioning">
+<h3>External lexicon provisioning</h3>
+<p>English and French dictionaries are installed outside KokoroG2P through Lexphon:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+</pre></div>
+</div>
+<p>The default English and French constructors select the external <code class="docutils literal notranslate"><span class="pre">gold</span></code> asset. Use
+<code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for a fallback-only instance. There is no English silver tier and no
+runtime API for loading or selecting producer-owned assets.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
-<span class="c1"># Default: Gold + Silver dictionaries (~365k entries, ~57 MB)</span>
-<span class="c1"># Provides maximum vocabulary coverage</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-
-<span class="c1"># Memory-optimized: Gold dictionary only (~179k entries, ~35 MB)</span>
-<span class="c1"># Saves ~22-31 MB memory and ~400-470 ms initialization time</span>
-<span class="n">g2p_fast</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># Ultra-fast initialization: No dictionaries (~7 MB, espeak fallback only)</span>
-<span class="c1"># Saves ~50+ MB memory, fastest initialization</span>
-<span class="n">g2p_minimal</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">load_gold</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-
-<span class="c1"># Check dictionary size</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gold entries: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">golds</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Silver entries: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">silvers</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>  <span class="c1"># requires en-us:gold to be installed</span>
+<span class="n">fallback_only</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">())</span>
 </pre></div>
 </div>
-<p><strong>Dictionary loading configurations:</strong></p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">load_gold=True,</span> <span class="pre">load_silver=True</span></code>: Maximum coverage (default, ~365k entries)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">load_gold=True,</span> <span class="pre">load_silver=False</span></code>: Common words only (~179k entries, -22-31 MB)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">load_gold=False,</span> <span class="pre">load_silver=True</span></code>: Extended vocabulary only (unusual, ~187k entries)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">load_gold=False,</span> <span class="pre">load_silver=False</span></code>: Ultra-fast (espeak only, -50+ MB)</p></li>
-</ul>
-<p><strong>When to disable dictionaries:</strong></p>
-<ul class="simple">
-<li><p><strong>Disable silver</strong> (<code class="docutils literal notranslate"><span class="pre">load_silver=False</span></code>): * Resource-constrained environments
-(limited memory) * Real-time applications (faster initialization) * You only need
-common vocabulary * Production deployments where performance is critical</p></li>
-<li><p><strong>Disable both</strong> (<code class="docutils literal notranslate"><span class="pre">load_gold=False,</span> <span class="pre">load_silver=False</span></code>): * Ultra-fast initialization
-is critical * You’re fine with espeak-only fallback * Minimal memory footprint
-required * Testing or prototyping</p></li>
-</ul>
-<p><strong>Default (both enabled) provides:</strong></p>
-<ul class="simple">
-<li><p>Maximum vocabulary coverage (~365k total entries)</p></li>
-<li><p>Best phoneme quality from curated dictionaries</p></li>
-<li><p>Backward compatibility with existing code</p></li>
-</ul>
-</section>
-<section id="disabling-features">
-<h3>Disabling Features</h3>
-<p>You can disable specific features for better performance or control:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
-
-<span class="c1"># Disable espeak fallback</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># Unknown words will have no phonemes</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">spacy_model</span><span class="o">=</span><span class="s2">&quot;en_core_web_md&quot;</span><span class="p">,</span>  <span class="c1"># default</span>
-<span class="p">)</span>
-
-<span class="c1"># Disable spaCy (faster but no POS tagging)</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># Faster tokenization</span>
-<span class="p">)</span>
-
-<span class="c1"># Minimal configuration (fastest)</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">use_espeak_fallback</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">load_gold</span><span class="o">=</span><span class="kc">False</span>  <span class="c1"># No dictionaries, ultra-fast</span>
-<span class="p">)</span>
-</pre></div>
-</div>
+<p>Runtime lookup is offline. Construction does not fetch catalogs or invoke the Lexphon
+CLI. If selected data is missing, the error includes the install and verify commands.</p>
 </section>
 <section id="spacy-model-selection-english">
 <h3>spaCy Model Selection (English)</h3>
@@ -713,9 +669,9 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <ul class="simple">
 <li><p><strong>5</strong>: User-provided (via OverrideSpan) or gold dictionary (highest quality)</p></li>
 <li><p><strong>4</strong>: Punctuation</p></li>
-<li><p><strong>3</strong>: Silver dictionary or rule-based conversion</p></li>
-<li><p><strong>2</strong>: From espeak-ng fallback</p></li>
-<li><p><strong>1</strong>: From goruut backend</p></li>
+<li><p><strong>3</strong>: Lexicon, provider fallback, or rule-based conversion</p></li>
+<li><p><strong>2</strong>: Native language rule conversion (language-specific policy)</p></li>
+<li><p><strong>1</strong>: Reserved for frontend-specific low-confidence output</p></li>
 <li><p><strong>0</strong>: Unknown/failed</p></li>
 </ul>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
@@ -726,11 +682,11 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tokens</span><span class="p">:</span>
     <span class="n">rating</span> <span class="o">=</span> <span class="n">token</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;rating&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">rating</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: High quality (gold dictionary)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Lexicon quality tier&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">rating</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Silver dictionary&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Lexicon, provider, or rule-based&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">rating</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Fallback (espeak)&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Native rule conversion&quot;</span><span class="p">)</span>
     <span class="k">elif</span> <span class="n">rating</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">token</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">: Unknown&quot;</span><span class="p">)</span>
 </pre></div>
@@ -742,25 +698,17 @@ homograph and heteronym disambiguation quality (for example, <code class="docuti
 <p>Direct dictionary access:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p.en</span><span class="w"> </span><span class="kn">import</span> <span class="n">EnglishG2P</span>
 
-<span class="c1"># Load with or without silver dataset</span>
-<span class="n">g2p_gold</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">g2p_full</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="c1"># Simple lookup</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">EnglishG2P</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span>
+<span class="n">phonemes</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>  <span class="c1"># həlˈO</span>
 
-<span class="c1"># Check if word is in dictionary</span>
-<span class="k">if</span> <span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">is_known</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Word is in gold dictionary&quot;</span><span class="p">)</span>
-
-<span class="c1"># Get dictionary sizes</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Gold: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">golds</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> entries&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Silver: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">g2p_full</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">silvers</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2"> entries&quot;</span><span class="p">)</span>
+<span class="c1"># Check if word is in the externally installed dictionary</span>
+<span class="k">if</span> <span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">is_known</span><span class="p">(</span><span class="s2">&quot;hello&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Word is in the gold dictionary&quot;</span><span class="p">)</span>
 
 <span class="c1"># POS-aware lookup</span>
-<span class="n">phonemes_verb</span> <span class="o">=</span> <span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VB&quot;</span><span class="p">)</span>   <span class="c1"># ɹˈid (present)</span>
-<span class="n">phonemes_past</span> <span class="o">=</span> <span class="n">g2p_gold</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VBD&quot;</span><span class="p">)</span>  <span class="c1"># ɹˈɛd (past)</span>
+<span class="n">phonemes_verb</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VB&quot;</span><span class="p">)</span>   <span class="c1"># ɹˈid (present)</span>
+<span class="n">phonemes_past</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">lexicon</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;read&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;VBD&quot;</span><span class="p">)</span>  <span class="c1"># ɹˈɛd (past)</span>
 </pre></div>
 </div>
 </section>
@@ -780,8 +728,8 @@ lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"
 </pre></div>
 </div>
 <p>The runtime uses the installed local store without network access. Install
-<code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code>, or <code class="docutils literal notranslate"><span class="pre">de-de:olaph</span></code> before selecting those names.
-<code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code> selects the static Lexphon dictionary and is distinct from
+<code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:olaph</span></code>, or <code class="docutils literal notranslate"><span class="pre">de-de:lexhint</span></code> before selecting those
+names. <code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code> selects the static Lexphon dictionary and is distinct from
 <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>. Use <code class="docutils literal notranslate"><span class="pre">use_lexicon=False</span></code> for fallback-only operation.</p>
 </section>
 <section id="phoneme-utilities">
@@ -1093,12 +1041,12 @@ the supplied text and applies only phonological/model normalization.</p>
 <span class="n">g2p3</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">g2p3</span>  <span class="c1"># Different instance</span>
 
-<span class="c1"># load_silver and load_gold also affect caching</span>
-<span class="n">g2p4</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_silver</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">g2p4</span>  <span class="c1"># Different instance (different silver setting)</span>
+<span class="c1"># Lexicon selection also affects caching</span>
+<span class="n">g2p4</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">())</span>
+<span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">g2p4</span>  <span class="c1"># Different instance (fallback-only mode)</span>
 
-<span class="n">g2p5</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">load_gold</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">g2p5</span>  <span class="c1"># Different instance (different gold setting)</span>
+<span class="n">g2p5</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="s2">&quot;gold&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">g2p1</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">g2p5</span>  <span class="c1"># Different explicit selection</span>
 
 <span class="c1"># Clear cache when needed</span>
 <span class="n">clear_cache</span><span class="p">()</span>
@@ -1288,16 +1236,14 @@ use <strong>lenient mode</strong> (<code class="docutils literal notranslate"><s
 <section id="selecting-named-lexicons">
 <h2>Selecting named lexicons</h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">available_lexicons(language)</span></code> to inspect registered names and pass <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> to
-<code class="docutils literal notranslate"><span class="pre">get_g2p</span></code> or <code class="docutils literal notranslate"><span class="pre">phonemize</span></code>. A sequence is an ordered precedence stack, so
-<code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;silver&quot;)</span></code> retains the compatibility default. The legacy <code class="docutils literal notranslate"><span class="pre">load_gold</span></code> and
-<code class="docutils literal notranslate"><span class="pre">load_silver</span></code> flags remain supported.</p>
+<code class="docutils literal notranslate"><span class="pre">get_g2p</span></code> or <code class="docutils literal notranslate"><span class="pre">phonemize</span></code>. A sequence is an ordered precedence stack. English and French
+expose only the external <code class="docutils literal notranslate"><span class="pre">gold</span></code> selection; <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> disables dictionary lookup.</p>
 <p>For German, <code class="docutils literal notranslate"><span class="pre">available_lexicons(&quot;de&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;crane&quot;,</span> <span class="pre">&quot;espeak&quot;,</span> <span class="pre">&quot;olaph&quot;)</span></code>.
-<code class="docutils literal notranslate"><span class="pre">gold</span></code> remains the implicit default; all three third-party dictionaries are opt-in.
-Explicit order controls collisions, German casing candidates are searched inside each
-layer, and all runtime pronunciation selection is offline. <code class="docutils literal notranslate"><span class="pre">espeak</span></code> is a bundled static
-lexicon and is distinct from the optional <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> backend.
-Unsupported source IPA fails closed and may fall through to configured fallback. See
-<a class="reference internal" href="../api/german/"><span class="doc">German API</span></a> for provenance and examples.</p>
+<code class="docutils literal notranslate"><span class="pre">gold</span></code> remains the implicit default. Explicit order controls collisions, and runtime
+pronunciation selection is offline. <code class="docutils literal notranslate"><span class="pre">espeak</span></code> is a static Lexphon dictionary and is
+distinct from the optional <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> backend. Unsupported source IPA
+fails closed and may fall through to configured fallback. See <a class="reference internal" href="../api/german/"><span class="doc">German API</span></a> for
+provenance and examples.</p>
 </section>
 </section>
 </div>

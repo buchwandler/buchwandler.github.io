@@ -6,7 +6,7 @@ nav_tool: lexphon-main
 docs_project: "lexphon"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "61b4bf9a5fbd8df1f6d661d962b1ae168637c231"
+docs_commit: "c4904d0bbc374dd1b663b51f0250057b71ea2ac0"
 search_enabled: true
 ---
 
@@ -588,6 +588,18 @@ lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"
 </div>
 <p>KokoroG2P consumes the clean <code class="docutils literal notranslate"><span class="pre">pronunciation</span></code> and may use <code class="docutils literal notranslate"><span class="pre">language_markers</span></code> as optional downstream evidence. It must not reparse <code class="docutils literal notranslate"><span class="pre">source_pronunciation</span></code> or search <code class="docutils literal notranslate"><span class="pre">pronunciation</span></code> for raw marker syntax such as <code class="docutils literal notranslate"><span class="pre">(en)</span></code> or <code class="docutils literal notranslate"><span class="pre">(de)</span></code>.</p>
 </section>
+<section id="lexhint-source-variants">
+<h2>LexHint source variants</h2>
+<p>LexHint logical IDs make source selection explicit. <code class="docutils literal notranslate"><span class="pre">*:lexhint</span></code> is the preferred/default asset and is normally English-Wiktionary-derived for non-English languages with both sources. <code class="docutils literal notranslate"><span class="pre">*:lexhint-native</span></code> is the explicit native-Wiktionary alternative. Native-only languages such as Thai use only the native suffix. English’s <code class="docutils literal notranslate"><span class="pre">en-us:lexhint</span></code> and <code class="docutils literal notranslate"><span class="pre">en-gb:lexhint</span></code> use native English Wiktionary.</p>
+<p>Provision the asset that matches the profile before relying on implicit defaults:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-gb:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>fr:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>th:lexhint-native
+</pre></div>
+</div>
+<p>Lexphon’s data layer may discover, install, and verify <code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code> assets, but the generic Phonemizer rejects them as unsupported layers. KokoroG2P owns Kokoro vocabulary conversion.</p>
+</section>
 <section id="german-configuration">
 <h2>German configuration</h2>
 <p>German supports <code class="docutils literal notranslate"><span class="pre">de</span></code> and <code class="docutils literal notranslate"><span class="pre">de-de</span></code> aliases and defaults to <code class="docutils literal notranslate"><span class="pre">de-de:gold</span></code>. The application may preserve public names with an alias map:</p>
@@ -600,7 +612,7 @@ lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"
 </pre></div>
 </div>
 <p>Kokoro’s existing German selector normalization remains an application concern. For example, an application can map its <code class="docutils literal notranslate"><span class="pre">ART</span></code> or <code class="docutils literal notranslate"><span class="pre">PRON</span></code> tags to the generic selector expected by G2Lex before calling <code class="docutils literal notranslate"><span class="pre">engine.lookup(word,</span> <span class="pre">tag=tag)</span></code>. Lexphon does not know Kokoro or spaCy tag conventions. Caller-supplied lexicon order remains semantic.</p>
-<p>English CMUdict is selected explicitly with <code class="docutils literal notranslate"><span class="pre">en-us:cmudict</span></code>; it does not replace the generic <code class="docutils literal notranslate"><span class="pre">en-us:gold</span></code> default.</p>
+<p>English CMUdict is selected explicitly with <code class="docutils literal notranslate"><span class="pre">en-us:cmudict</span></code>; it remains an ARPABET alternative rather than replacing the generic <code class="docutils literal notranslate"><span class="pre">en-us:lexhint</span></code> default.</p>
 </section>
 <section id="ownership-boundary">
 <h2>Ownership boundary</h2>

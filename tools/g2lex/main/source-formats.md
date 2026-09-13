@@ -6,7 +6,7 @@ nav_tool: g2lex-main
 docs_project: "g2lex"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "1dea948ed9e7d35587d4ce2b2641772642b52210"
+docs_commit: "548be0d3bdae70dff14e405d7e5194f3a9aa4507"
 search_enabled: true
 ---
 
@@ -553,7 +553,7 @@ features that their source format represents differently.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">json</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">json-map</span></code></p></td>
 <td><p>JSON object mapping words to values</p></td>
 <td><p>Typed values and deterministic key ordering are preserved.</p></td>
 </tr>
@@ -565,27 +565,31 @@ features that their source format represents differently.</p>
 <td><p>Word and pronunciation columns</p></td>
 <td><p>Empty required fields, malformed columns, and unsupported typed shapes are rejected.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cmudict</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipa-tsv</span></code></p></td>
+<td><p>Word and slash-delimited IPA columns</p></td>
+<td><p>One optional outer slash pair is removed; internal slashes are preserved.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cmudict</span></code></p></td>
 <td><p>CMUdict word plus phonemes</p></td>
 <td><p>Numbered variants such as <code class="docutils literal notranslate"><span class="pre">WORD(2)</span></code> become ordered variants.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mfa</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mfa</span></code></p></td>
 <td><p>Plain MFA dictionary rows</p></td>
 <td><p>Weighted or extra fields are rejected rather than discarded.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pls</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pls</span></code></p></td>
 <td><p>Strict single-language PLS subset</p></td>
 <td><p>One grapheme per lexeme, one alphabet, phoneme values, and optional role.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">gruut-sqlite</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">gruut-sqlite</span></code></p></td>
 <td><p>Gruut SQLite pronunciation table</p></td>
 <td><p>Required schema and fields are validated; rows retain deterministic ordering.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kokoro-json</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kokoro-json</span></code></p></td>
 <td><p>Kokoro JSON source</p></td>
 <td><p>Legacy consumer shape is handled by the compatibility adapter.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">words</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">words</span></code></p></td>
 <td><p>One word per line</p></td>
 <td><p>Blank lines and comments follow the word-list adapter contract.</p></td>
 </tr>
@@ -604,6 +608,8 @@ pronunciation tuple or the first pronunciation instead of the exact typed value.
 g2lex<span class="w"> </span>pack<span class="w"> </span>source.mfa<span class="w"> </span>dictionary.g2lex<span class="w"> </span>--format<span class="w"> </span>mfa
 g2lex<span class="w"> </span>pack<span class="w"> </span>source.pls<span class="w"> </span>dictionary.g2lex<span class="w"> </span>--format<span class="w"> </span>pls
 g2lex<span class="w"> </span>pack<span class="w"> </span>lexicon.sqlite<span class="w"> </span>dictionary.g2lex<span class="w"> </span>--format<span class="w"> </span>gruut-sqlite
+g2lex<span class="w"> </span>pack<span class="w"> </span>source.json<span class="w"> </span>dictionary.g2lex<span class="w"> </span>--format<span class="w"> </span>json-map
+g2lex<span class="w"> </span>pack<span class="w"> </span>source-ipa.tsv<span class="w"> </span>dictionary.g2lex<span class="w"> </span>--format<span class="w"> </span>ipa-tsv
 </pre></div>
 </div>
 <p>Invalid UTF-8, missing required fields, and unsupported source shapes fail with a

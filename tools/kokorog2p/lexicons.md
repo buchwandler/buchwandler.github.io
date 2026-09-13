@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "kokorog2p Lexicon assets and release policy"
+title: "kokorog2p External lexicons and release policy"
 permalink: /tools/kokorog2p/lexicons/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -540,11 +540,47 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="lexicon-assets-and-release-policy">
-<h1>Lexicon assets and release policy</h1>
-<p>KokoroG2P packages only the generated G2Lex assets it still owns. Runtime code opens
-those resources through <code class="docutils literal notranslate"><span class="pre">importlib.resources</span></code>; it never downloads or reads canonical
-source files.</p>
+<section id="external-lexicons-and-release-policy">
+<h1>External lexicons and release policy</h1>
+<p>KokoroG2P consumes lexicons provisioned by Lexphon. It does not ship source
+dictionaries, pack <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> assets, generate registries, or validate producer release
+files.</p>
+<section id="english-and-french">
+<h2>English and French</h2>
+<p>English and French each expose one logical <code class="docutils literal notranslate"><span class="pre">gold</span></code> lexicon backed by an external asset:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Language</p></th>
+<th class="head"><p>Lexphon ID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>US English</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en-us:gold</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>GB English</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en-gb:gold</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>French</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fr-fr:gold</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>Provision released data before using the default English or French dictionary path:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code>, <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-gb&quot;)</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;fr-fr&quot;)</span></code> select <code class="docutils literal notranslate"><span class="pre">gold</span></code> by default.
+Use <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only operation. <code class="docutils literal notranslate"><span class="pre">silver</span></code> is not an English runtime
+option.</p>
+<p>Runtime lookup is offline. KokoroG2P does not fetch catalogs, download assets, invoke
+the Lexphon CLI, or rebuild source dictionaries during construction or lookup. Missing
+data produces an installation and verification command in the error message.</p>
+<p>Released Lexphon catalog entries are the source of truth for these IDs. Install and
+verify the requested layers before integration or dictionary-backed release checks.
+KokoroG2P does not restore local copies when a catalog entry or asset is unavailable.</p>
+</section>
 <section id="named-german-lexicons">
 <h2>Named German lexicons</h2>
 <p>German names are application-facing choices backed by externally managed Lexphon IDs:</p>
@@ -572,75 +608,46 @@ source files.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">de-de:olaph</span></code></p></td>
 <td><p>no</p></td>
 </tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lexhint</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">de-de:lexhint</span></code></p></td>
+<td><p>no</p></td>
+</tr>
 </tbody>
 </table>
-<p>German datasets are produced and published by <code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code>. KokoroG2P does not contain,
-generate, audit, or redistribute these dictionaries. Provision them explicitly before
-using a named dictionary:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>kokorog2p
-lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
+<p>Provision them explicitly before using a named dictionary:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
 lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
 </pre></div>
 </div>
-<p>Install optional layers explicitly when needed:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph
+<p>Optional layers can be installed when needed:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph<span class="w"> </span>de-de:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:crane<span class="w"> </span>de-de:espeak<span class="w"> </span>de-de:olaph<span class="w"> </span>de-de:lexhint
 </pre></div>
 </div>
-<p>Runtime lookup is offline. <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> and ordinary German phonemization never fetch a
-catalog, download an asset, invoke the Lexphon CLI, or build a source dictionary.
-Missing selected data raises an actionable installation error. Use <code class="docutils literal notranslate"><span class="pre">use_lexicon=False</span></code>
-for fallback-only operation without German Lexphon data.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">available_lexicons</span><span class="p">,</span> <span class="n">get_g2p</span>
 
-<span class="n">available_lexicons</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>  <span class="c1"># (&quot;gold&quot;, &quot;crane&quot;, &quot;espeak&quot;, &quot;olaph&quot;)</span>
-<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>  <span class="c1"># logical default: gold</span>
+<span class="n">available_lexicons</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>  <span class="c1"># (&quot;gold&quot;, &quot;crane&quot;, &quot;espeak&quot;, &quot;olaph&quot;, &quot;lexhint&quot;)</span>
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">)</span>
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="s2">&quot;crane&quot;</span><span class="p">)</span>
 <span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;gold&quot;</span><span class="p">,</span> <span class="s2">&quot;olaph&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>For an explicit selection, the first layer containing a word wins. Caller order is not
-changed by provider, rating, coverage, or catalog order. <code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code> selects the
-static <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code> dictionary and is distinct from <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>, which
-is KokoroG2P’s dynamic fallback path.</p>
-<p>KokoroG2P retains German tag mapping, case handling, ordered primary variants, strict
-IPA-to-Kokoro conversion, stress controls, source/rating policy, and fallback behavior.
-The German adapter passes generic selectors such as <code class="docutils literal notranslate"><span class="pre">DET</span></code> and <code class="docutils literal notranslate"><span class="pre">PRON</span></code> to Lexphon;
-Kokoro’s spaCy <code class="docutils literal notranslate"><span class="pre">ART</span></code> mapping remains in KokoroG2P.</p>
-</section>
-<section id="packaged-lexicons">
-<h2>Packaged lexicons</h2>
-<p><code class="docutils literal notranslate"><span class="pre">lexicons/manifest.toml</span></code> and <code class="docutils literal notranslate"><span class="pre">lexicons/lock.json</span></code> describe only packaged assets owned by
-KokoroG2P. Regenerate and validate them with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/build_g2lex_assets.py<span class="w"> </span>--all
-python<span class="w"> </span>scripts/build_g2lex_assets.py<span class="w"> </span>--check
-python<span class="w"> </span>scripts/validate_g2lex_assets.py<span class="w"> </span>--all
-</pre></div>
-</div>
-<p>The generated registry contains only packaged-resource specifications. German external
-specifications are kept separate and are never passed to the packaged-resource opener.</p>
+<p>For an explicit selection, the first layer containing a word wins. <code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code>
+selects the static <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code> dictionary and is distinct from
+<code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>, which is KokoroG2P’s dynamic fallback path.</p>
 </section>
 <section id="distribution-policy">
 <h2>Distribution policy</h2>
-<p>Wheels contain the remaining generated <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> assets and the third-party notice file.
-They do not contain German dictionaries, German source data, or German producer audits.
-Source distributions exclude canonical lexicon sources. German data provenance and
-release metadata belong to <code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code> and Lexphon.</p>
+<p>KokoroG2P wheels and source distributions contain no migrated <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> assets, source
+lexicons, manifests, generated registries, or lexicon notice bundles. Data provenance
+and release metadata belong to <code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code> and Lexphon.</p>
 </section>
 <section id="swedish-nst-lexicon">
 <h2>Swedish NST lexicon</h2>
 <p>The Swedish NST lexicon is produced and published by <code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code> and installed
-explicitly through Lexphon. KokoroG2P does not package or redistribute the source TSV or
-generated G2Lex asset. Swedish rules remain the default.</p>
+explicitly through Lexphon. Swedish rules remain the default.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>sv-se:nst
 lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>sv-se:nst
-</pre></div>
-</div>
-<p>For direct lookup, use the installed Lexphon data explicitly:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">lexphon</span><span class="w"> </span><span class="kn">import</span> <span class="n">Phonemizer</span>
-
-<span class="k">with</span> <span class="n">Phonemizer</span><span class="p">(</span><span class="s2">&quot;sv&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;sv-se:nst&quot;</span><span class="p">,),</span> <span class="n">fallback</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span> <span class="k">as</span> <span class="n">phonemizer</span><span class="p">:</span>
-    <span class="n">pronunciation</span> <span class="o">=</span> <span class="n">phonemizer</span><span class="o">.</span><span class="n">lookup</span><span class="p">(</span><span class="s2">&quot;hej&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "28e9812e82e5d3823d95c7ce3470a0d475385c4a"
+docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
 search_enabled: true
 ---
 
@@ -593,7 +593,7 @@ ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="cli/#phonemes">phonemes</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8.6</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8.7</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#basic-workflow">Basic workflow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#portable-document-example">Portable document example</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssmd/#syntax">Syntax</a></li>
@@ -651,8 +651,9 @@ ONNX TTS (Text-to-Speech).</p>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.2] - 2026-02-03</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.1] - 2026-02-01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.1.0] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.3.7] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.3.6] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.4.0] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id34">[0.3.7] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id38">[0.3.6] - 2026-08-15</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
 </ul>
 </li>
@@ -729,7 +730,7 @@ ttsforge<span class="w"> </span>voices
 <li><p>Python 3.10 or later</p></li>
 <li><p>ffmpeg (required for MP3/FLAC/OPUS/M4B output and chapter merging)</p></li>
 <li><p>espeak-ng (for phonemization)</p></li>
-<li><p>PyKokoro 0.9 with kokorog2p 0.9.2 and SSMD 0.8.6</p></li>
+<li><p>PyKokoro 0.9.4 with kokorog2p 0.9.5 and SSMD 0.8.7</p></li>
 <li><p>~330MB disk space for ONNX models (downloaded automatically)</p></li>
 <li><p>sounddevice (optional, for playback features)</p></li>
 </ul>

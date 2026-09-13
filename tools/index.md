@@ -83,7 +83,7 @@ permalink: /tools/
       <p>Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons.</p>
       <div class="card-links">
         <a href="/tools/g2lex/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/g2lex/releases/tag/v0.1.8" rel="external noopener">Latest release: v0.1.8 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/g2lex/releases/tag/v0.1.9" rel="external noopener">Latest release: v0.1.9 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/g2lex" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -93,7 +93,7 @@ permalink: /tools/
       <p>Lexicon-driven phonemizer and CLI built on G2Lex.</p>
       <div class="card-links">
         <a href="/tools/lexphon/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/lexphon/releases/tag/v0.2.0" rel="external noopener">Latest release: v0.2.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexphon/releases/tag/v0.2.3" rel="external noopener">Latest release: v0.2.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/lexphon" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -103,7 +103,7 @@ permalink: /tools/
       <p>A unified multi-language G2P library for Kokoro TTS.</p>
       <div class="card-links">
         <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.3" rel="external noopener">Latest release: v0.9.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.9" rel="external noopener">Latest release: v0.9.9 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -113,7 +113,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.9.1" rel="external noopener">Latest release: v0.9.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.9.6" rel="external noopener">Latest release: v0.9.6 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -173,7 +173,7 @@ permalink: /tools/
       <p>Compact lexical and dictionary-derived context hints for text normalization.</p>
       <div class="card-links">
         <a href="/tools/lexhint/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.4.5" rel="external noopener">Latest release: v0.4.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.4.7" rel="external noopener">Latest release: v0.4.7 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/lexhint" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -183,7 +183,7 @@ permalink: /tools/
       <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
       <div class="card-links">
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.2.2" rel="external noopener">Latest release: v0.2.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.2.3" rel="external noopener">Latest release: v0.2.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

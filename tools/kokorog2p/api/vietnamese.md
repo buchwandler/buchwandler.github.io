@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/api/vietnamese/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.3"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_ref: "v0.9.9"
+docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
 search_enabled: true
 ---
 
@@ -562,7 +562,9 @@ vowel-quality marks are retained during tone extraction.</p>
 <p>Invalid Vietnamese spellings are not guessed. With <code class="docutils literal notranslate"><span class="pre">foreign_fallback=&quot;english&quot;</span></code> (the
 default), tokens that fail structural Vietnamese parsing use the existing lazy English
 frontend. <code class="docutils literal notranslate"><span class="pre">&quot;espeak&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> are also supported. Use <code class="docutils literal notranslate"><span class="pre">strict=True</span></code> to raise when no
-fallback pronunciation is available.</p>
+fallback pronunciation is available. For <code class="docutils literal notranslate"><span class="pre">foreign_fallback=&quot;espeak&quot;</span></code>, generic provider
+execution is owned by Lexphon 0.2; <code class="docutils literal notranslate"><span class="pre">foreign_fallback=&quot;english&quot;</span></code> continues to use the
+English frontend policy.</p>
 <p>The model profile uses Kokoro’s supported characters and tone arrows directly. The
 provisioned Lexphon <code class="docutils literal notranslate"><span class="pre">vi:lexhint</span></code> dictionary is consulted first for known words; invalid
 or missing LexHint output falls back to the native Vietnamese rules and configured

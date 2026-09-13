@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a0c9fb18547cf05c49f02a9b334eb761dd91c69"
+docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
 search_enabled: true
 ---
 
@@ -554,7 +554,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>The aliases <code class="docutils literal notranslate"><span class="pre">sv</span></code>, <code class="docutils literal notranslate"><span class="pre">sv-se</span></code>, <code class="docutils literal notranslate"><span class="pre">swe</span></code>, and <code class="docutils literal notranslate"><span class="pre">swedish</span></code> select the same native implementation.
 Runtime phonemization contains no Swedish pronunciation dictionary, network access, or
 neural model. eSpeak and Goruut are disabled by default and can be requested explicitly
-as fallback options.</p>
+as fallback options. The requested generic provider is invoked through Lexphon 0.2,
+which returns clean IPA before Swedish target conversion.</p>
 <p><code class="docutils literal notranslate"><span class="pre">phonemize_word_raw()</span></code> returns Swedish reference-style IPA. <code class="docutils literal notranslate"><span class="pre">SwedishG2P</span></code> then uses an
 explicit adapter for phones not present in the selected Kokoro vocabulary. The external
 benchmark compares only the raw result, not adapted Kokoro output.</p>

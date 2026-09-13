@@ -4,17 +4,17 @@ nav_key: g2lex
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.8
-source_commit: c3e14313b2c40d4c3bd189101d30328eac6b9b98
-source_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.8
+source_ref: v0.1.9
+source_commit: 548be0d3bdae70dff14e405d7e5194f3a9aa4507
+source_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.9
 is_default: true
 repo_url: https://github.com/buchwandler/g2lex
-release_tag: v0.1.8
-release_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.8
+release_tag: v0.1.9
+release_url: https://github.com/buchwandler/g2lex/releases/tag/v0.1.9
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.8
+  ref: v0.1.9
   url: /tools/g2lex/
   current: true
 - name: main
