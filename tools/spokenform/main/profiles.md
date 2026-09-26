@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -569,9 +569,7 @@ profile supplies user-owned speech data.</p>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
     <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
-    <span class="s2">&quot;Triple A enters the A O after the after-action review.&quot;</span>
-<span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;Triple A enters the A O after the after-action review.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The supported <code class="docutils literal notranslate"><span class="pre">read_as</span></code> values are:</p>
@@ -623,7 +621,7 @@ source coordinates and provenance.</p>
 <p>The v1 profile API intentionally has no JSON or YAML format, CLI profile loader, profile
 inheritance or merging, automatic ambiguity resolution, military time policy, SSML, or
 phoneme override support. These can be added after runtime profile semantics are stable.</p>
-<p>Spokenform requires <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code> for the isolated expander, bulk
+<p>Spokenform requires <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.16,&lt;0.3.0</span></code> for the language registry, isolated expander, bulk
 registration, speech strategies, custom spoken forms, and exact replacement APIs used by
 profiles.</p>
 </section>

@@ -5,8 +5,8 @@ permalink: /tools/ssmd/quickstart/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_ref: "v0.9.0"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -543,15 +543,35 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="quick-start">
 <h1>Quick Start</h1>
 <p>This guide will help you get started with SSMD quickly.</p>
+<section id="canonical-ssmd-0-9-input">
+<h2>Canonical SSMD 0.9 input</h2>
+<p>New standalone documents declare their dialect. Use canonical fenced directives and
+attribute names:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+ssmd_version: &quot;0.9&quot;
+---
+:::{voice=&quot;host&quot;}
+Hello *world*!
+:::
+
+[Bonjour]{lang=&quot;fr&quot;}
+[urgent]{volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;}
+</pre></div>
+</div>
+<p>Unversioned files retain legacy compatibility behavior. Run <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>
+for an explicit semantic-equivalence-checked upgrade.</p>
+</section>
 <section id="basic-conversion">
 <h2>Basic Conversion</h2>
-<p>For machine-driven authoring, use the root-level JSON interface and check both the
-process exit status and command-specific result fields:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>create<span class="w"> </span>draft.ssmd<span class="w"> </span>-o<span class="w"> </span>output.ssmd<span class="w"> </span>--fail-on-warn
-ssmd<span class="w"> </span>--json<span class="w"> </span>lint<span class="w"> </span>output.ssmd<span class="w"> </span>--roundtrip<span class="w"> </span>--fail-on-warn
-ssmd<span class="w"> </span>--json<span class="w"> </span>inspect<span class="w"> </span>output.ssmd<span class="w"> </span>--spans
-ssmd<span class="w"> </span>--json<span class="w"> </span>to-ssml<span class="w"> </span>output.ssmd<span class="w"> </span>-o<span class="w"> </span>output.ssml
-ssmd<span class="w"> </span>--json<span class="w"> </span>text<span class="w"> </span>output.ssmd
+<p>The convenience-function samples use short body fragments for clarity. Add the 0.9 front
+matter shown above when saving source as a standalone document. For machine-driven
+authoring, use the root-level JSON interface and check both the process exit status and
+command-specific result fields:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>create<span class="w"> </span>draft.ssmd.md<span class="w"> </span>-o<span class="w"> </span>output.ssmd.md<span class="w"> </span>--fail-on-warn
+ssmd<span class="w"> </span>--json<span class="w"> </span>lint<span class="w"> </span>output.ssmd.md<span class="w"> </span>--roundtrip<span class="w"> </span>--fail-on-warn
+ssmd<span class="w"> </span>--json<span class="w"> </span>inspect<span class="w"> </span>output.ssmd.md<span class="w"> </span>--spans
+ssmd<span class="w"> </span>--json<span class="w"> </span>to-ssml<span class="w"> </span>output.ssmd.md<span class="w"> </span>-o<span class="w"> </span>output.ssml
+ssmd<span class="w"> </span>--json<span class="w"> </span>text<span class="w"> </span>output.ssmd.md
 </pre></div>
 </div>
 <p>Creation is complete only when <code class="docutils literal notranslate"><span class="pre">result.created</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">bytes_written</span></code> is nonzero, and
@@ -595,7 +615,11 @@ the output exists; linting is complete only when <code class="docutils literal n
 <span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt; world&lt;/speak&gt;&#39;</span>
 <span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
-<span class="c1"># Output: *Hello* world</span>
+<span class="c1"># Default output is a complete SSMD 0.9 document:</span>
+<span class="c1"># ---</span>
+<span class="c1"># ssmd_version: &#39;0.9&#39;</span>
+<span class="c1"># ---</span>
+<span class="c1"># *Hello* world</span>
 </pre></div>
 </div>
 </section>
@@ -603,6 +627,11 @@ the output exists; linting is complete only when <code class="docutils literal n
 <section id="using-the-document-api">
 <h2>Using the Document API</h2>
 <p>For building and managing TTS content, use the Document class:</p>
+<p>Sentence/list operations such as <code class="docutils literal notranslate"><span class="pre">split()</span></code>, <code class="docutils literal notranslate"><span class="pre">sentences()</span></code>, indexing, and <code class="docutils literal notranslate"><span class="pre">len()</span></code> are
+legacy APIs for unversioned or SSMD 0.8 documents. SSMD 0.9 documents, including results
+from <code class="docutils literal notranslate"><span class="pre">Document.from_ssml()</span></code>, use a structural model and reject those sentence-level
+operations. Use <code class="docutils literal notranslate"><span class="pre">ssmd.parse_structure()</span></code> or <code class="docutils literal notranslate"><span class="pre">ssmd.parse_spans()</span></code> for 0.9 structure, and
+supply explicit sentence spans to conversion when needed.</p>
 <section id="creating-documents">
 <h3>Creating Documents</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
@@ -660,7 +689,8 @@ the output exists; linting is complete only when <code class="docutils literal n
 </section>
 <section id="tts-streaming">
 <h2>TTS Streaming</h2>
-<p>Iterate through documents sentence-by-sentence for TTS:</p>
+<p>Iterate through unversioned or SSMD 0.8 documents sentence-by-sentence for TTS. SSMD 0.9
+documents require structural parsing and explicit sentence spans instead:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
 <span class="c1"># Create document</span>
@@ -708,7 +738,8 @@ should be marked protected by the downstream normalizer.</p>
 </section>
 <section id="document-editing">
 <h2>Document Editing</h2>
-<p>Documents are mutable and support list-like operations:</p>
+<p>Documents support sentence/list editing methods for unversioned or SSMD 0.8 content.
+These methods are not available on SSMD 0.9 documents.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
 <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;First. Second. Third.&quot;</span><span class="p">)</span>
@@ -730,23 +761,23 @@ should be marked protected by the downstream normalizer.</p>
 </section>
 <section id="advanced-document-operations">
 <h2>Advanced Document Operations</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
-<span class="c1"># Load from SSML</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt;&lt;/speak&gt;&#39;</span><span class="p">)</span>
+<span class="c1"># SSML import creates a complete 0.9 document.</span>
+<span class="n">doc09</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt;&lt;/speak&gt;&#39;</span><span class="p">)</span>
+<span class="n">structure</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">parse_structure</span><span class="p">(</span><span class="n">doc09</span><span class="o">.</span><span class="n">ssmd</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">clean_text</span><span class="p">)</span>
 
-<span class="c1"># Merge documents</span>
-<span class="n">doc1</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;First document.&quot;</span><span class="p">)</span>
-<span class="n">doc2</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;Second document.&quot;</span><span class="p">)</span>
-<span class="n">doc1</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">doc2</span><span class="p">,</span> <span class="n">separator</span><span class="o">=</span><span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="c1"># Use the structural parser for 0.9 documents, not sentence/list methods.</span>
 
-<span class="c1"># Split into sentences</span>
-<span class="n">sentences</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>  <span class="c1"># Returns list of Document objects</span>
+<span class="c1"># Sentence-level operations remain available for unversioned legacy documents.</span>
+<span class="n">legacy_doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s2">&quot;First sentence. Second sentence.&quot;</span><span class="p">)</span>
+<span class="n">sentences</span> <span class="o">=</span> <span class="n">legacy_doc</span><span class="o">.</span><span class="n">split</span><span class="p">()</span>
 
-<span class="c1"># Iterate with Document objects</span>
-<span class="k">for</span> <span class="n">sent_doc</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">sent_doc</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
     <span class="n">ssml</span> <span class="o">=</span> <span class="n">sent_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-    <span class="n">ssmd</span> <span class="o">=</span> <span class="n">sent_doc</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">()</span>
+    <span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">sent_doc</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">()</span>
 </pre></div>
 </div>
 </section>
@@ -757,26 +788,27 @@ should be marked protected by the downstream normalizer.</p>
 <h3>Using Presets</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
-<span class="c1"># Use preset for eSpeak (limited SSML support)</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s1">&#39;*Hello* [world]{lang=&quot;fr&quot;}!&#39;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-<span class="c1"># eSpeak doesn&#39;t support emphasis or language switching</span>
-<span class="c1"># Output: &lt;speak&gt;Hello world!&lt;/speak&gt;</span>
+<span class="c1"># Adapt output using the provider&#39;s declared capability profile</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;---</span><span class="se">\n</span><span class="s1">ssmd_version: &quot;0.9&quot;</span><span class="se">\n</span><span class="s1">---</span><span class="se">\n</span><span class="s1">*Hello* [world]{lang=&quot;fr&quot;}!&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>  <span class="c1"># inspect any adaptations or losses</span>
 
-<span class="c1"># Use preset for Google TTS (full support)</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s1">&#39;*Hello* [world]{lang=&quot;fr&quot;}!&#39;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">)</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-<span class="c1"># Output: &lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt; &lt;lang xml:lang=&quot;fr-FR&quot;&gt;world&lt;/lang&gt;!&lt;/speak&gt;</span>
+<span class="c1"># A second provider preset applies its own capability profile</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
 </pre></div>
 </div>
 <p>Available presets:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">minimal</span></code> - Plain text only</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pyttsx3</span></code> - Basic prosody only</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak</span></code> - Moderate support (breaks, prosody, phonemes)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">google</span></code> / <code class="docutils literal notranslate"><span class="pre">azure</span></code> - Full SSML support</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">polly</span></code> / <code class="docutils literal notranslate"><span class="pre">amazon</span></code> - Full + Amazon extensions</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code> - All features enabled</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pyttsx3</span></code> - Limited prosody and paragraph support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">espeak</span></code> - Breaks, language, prosody, and phoneme support</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">polly</span></code> / <code class="docutils literal notranslate"><span class="pre">amazon</span></code> - Provider-specific feature profile</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">google</span></code> / <code class="docutils literal notranslate"><span class="pre">azure</span></code> - Provider-specific capability adaptation; feature support varies</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">full</span></code> - Enable all features implemented by SSMD; not a guarantee of universal SSML
+support</p></li>
 </ul>
 </section>
 <section id="custom-capabilities">

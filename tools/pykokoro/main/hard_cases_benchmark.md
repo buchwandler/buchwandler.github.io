@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "PyKokoro hard-cases benchmark"
+title: "pykokoro Hard-case benchmark status"
 permalink: /tools/pykokoro/main/hard_cases_benchmark/
 nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -540,64 +540,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="pykokoro-hard-cases-benchmark">
-<h1>PyKokoro hard-cases benchmark</h1>
-<p><code class="docutils literal notranslate"><span class="pre">benchmarks.hard_cases</span></code> is a first-party, deterministic regression suite for difficult
-English and German frontend cases. It deliberately has <strong>no human-reference audio</strong> and
-does not measure MOS, naturalness, speaker similarity, or human-likeness.</p>
-<section id="levels">
-<h2>Levels</h2>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">normalization</span></code>: Spokenform output, replacements, warnings, offsets, and language
-runs.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">phoneme</span></code>: PyKokoro’s real Spokenform/Phrasplit/KokoroG2P path with no-op downstream
-adapters; compares raw and semantic phonemes, tokens, edit distances, and critical
-spans.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan</span></code>: segment offsets, sentence/clause boundaries, pauses, and SSMD-related
-metadata.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">frontend</span></code>: the ordinary fast suite (normalization through phonemes).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">acoustic</span></code>: optional waveform health, timing, pause, duration, and runtime
-diagnostics.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code>: runs all available levels.</p></li>
-</ul>
-<p>Acoustic results are labelled <strong>acoustic health</strong>, <strong>timing stability</strong>, and <strong>runtime
-performance</strong>. A passing result does not imply that speech sounds natural.</p>
-</section>
-<section id="running">
-<h2>Running</h2>
-<p>The built-in corpus is offline and packaged as JSONL:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--list-languages
-python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--list-locales
-python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>en<span class="w"> </span>--locale<span class="w"> </span>en-US<span class="w"> </span>--level<span class="w"> </span>frontend
-python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--locale<span class="w"> </span>de-DE<span class="w"> </span>--level<span class="w"> </span>frontend
-python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--case<span class="w"> </span>en_shared_001<span class="w"> </span>--show-details
-python<span class="w"> </span>-m<span class="w"> </span>benchmarks.hard_cases<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--level<span class="w"> </span>acoustic<span class="w"> </span>--model<span class="w"> </span>v1.2-de-martin<span class="w"> </span>--lexicon<span class="w"> </span>gold
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--category</span></code>, <code class="docutils literal notranslate"><span class="pre">--limit</span></code>, <code class="docutils literal notranslate"><span class="pre">--frontend-variant</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">--results-dir</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">--render-audio</span></code> to reproduce a focused case. Generated <code class="docutils literal notranslate"><span class="pre">summary.json</span></code>, <code class="docutils literal notranslate"><span class="pre">cases.jsonl</span></code>,
-<code class="docutils literal notranslate"><span class="pre">failures.jsonl</span></code>, <code class="docutils literal notranslate"><span class="pre">failures.md</span></code>, and <code class="docutils literal notranslate"><span class="pre">environment.json</span></code> belong under the requested
-results directory (or <code class="docutils literal notranslate"><span class="pre">.benchmarks/hard_cases/</span></code>) and should not be committed.</p>
-</section>
-<section id="corpus-and-ownership">
-<h2>Corpus and ownership</h2>
-<p>Rows use schema version 1 and include language, optional explicit locale, category,
-provenance, tags, and structured expectations. Shared rows use <code class="docutils literal notranslate"><span class="pre">locale:</span> <span class="pre">null</span></code>; they may
-be selected for any compatible locale. The initial corpus contains more than 100 cases
-per language and covers normalization, abbreviations, numbers, acronyms, names,
-homographs/heteronyms, German compounds/prefixes/Denglisch, punctuation, dirty text,
-SSMD, code-switching, and long-form interactions.</p>
-<p>Failures are attributed to the earliest failed contract: <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code>,
-<code class="docutils literal notranslate"><span class="pre">kokorog2p_or_spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">pykokoro_pipeline</span></code>, or <code class="docutils literal notranslate"><span class="pre">acoustic_model</span></code>. Baseline and
-quarantine records track known failures without hiding new regressions.</p>
-</section>
-<section id="ci-guidance">
-<h2>CI guidance</h2>
-<p>Pull requests should run schema/data/selection and the no-ONNX frontend subset.
-Scheduled jobs can run the complete frontend corpus. Acoustic model/voice/lexicon
-matrices are optional and should be isolated from normal unit tests so they never
-trigger downloads. PolyNorm remains a separate external normalization benchmark.</p>
-</section>
+<section id="hard-case-benchmark-status">
+<h1>Hard-case benchmark status</h1>
+<p>This benchmark guide describes the former document-planning frontend and its SSMD-aware
+segment/plan diagnostics. Those are not part of PyKokoro’s request-centric synthesis
+API. The old harness has not been migrated to <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> and is not a supported
+benchmark entry point for the new engine boundary.</p>
+<p>The underlying short-sentence, KokoroG2P, inference, timing, and waveform behavior
+remains engine-owned and is covered by request-level tests. Use the
+<a class="reference internal" href="../pipeline_stages/"><span class="std std-doc">request lifecycle</span></a> and
+<a class="reference internal" href="../short_sentence_quality/"><span class="std std-doc">short-sentence synthesis</span></a> documentation for the supported
+runtime contract.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -5,8 +5,8 @@ permalink: /tools/spokenform/profiles/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_ref: "v0.4.5"
+docs_commit: "3da15861c766c2b4bb961aee0629f52562e1b314"
 search_enabled: true
 ---
 
@@ -569,9 +569,7 @@ profile supplies user-owned speech data.</p>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
     <span class="n">profile</span><span class="o">=</span><span class="n">profile</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
-    <span class="s2">&quot;Triple A enters the A O after the after-action review.&quot;</span>
-<span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;Triple A enters the A O after the after-action review.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>The supported <code class="docutils literal notranslate"><span class="pre">read_as</span></code> values are:</p>
@@ -623,7 +621,7 @@ source coordinates and provenance.</p>
 <p>The v1 profile API intentionally has no JSON or YAML format, CLI profile loader, profile
 inheritance or merging, automatic ambiguity resolution, military time policy, SSML, or
 phoneme override support. These can be added after runtime profile semantics are stable.</p>
-<p>Spokenform requires <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code> for the isolated expander, bulk
+<p>Spokenform requires <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.16,&lt;0.3.0</span></code> for the language registry, isolated expander, bulk
 registration, speech strategies, custom spoken forms, and exact replacement APIs used by
 profiles.</p>
 </section>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "spokenform Language support matrix"
+title: "spokenform Languages"
 permalink: /tools/spokenform/languages/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_ref: "v0.4.5"
+docs_commit: "3da15861c766c2b4bb961aee0629f52562e1b314"
 search_enabled: true
 ---
 
@@ -540,11 +540,152 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
+<section id="languages">
+<h1>Languages</h1>
+<section id="complete-runtime-registry">
+<h2>Complete runtime registry</h2>
+<p>The generated capability matrix is maintained in <a class="reference internal" href="../language-coverage/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">language-coverage.md</span></code></span></a>. The public registry accepts these base families:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Canonical code</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">am</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ar</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">az</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">be</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bg</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">da</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">el</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">eo</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">et</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eu</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">fi</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">he</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hi</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hu</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">hy</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">id</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">is</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kk</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ka</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ku</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lb</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mn</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ml</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nl</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ne</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">no</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pl</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ro</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sk</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sl</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sq</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sw</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tet</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tg</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tr</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uk</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ur</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The 18 exact overlays are <code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_IN</span></code>, <code class="docutils literal notranslate"><span class="pre">en_NG</span></code>, <code class="docutils literal notranslate"><span class="pre">en_US</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CO</span></code>, <code class="docutils literal notranslate"><span class="pre">es_CR</span></code>, <code class="docutils literal notranslate"><span class="pre">es_GT</span></code>, <code class="docutils literal notranslate"><span class="pre">es_MX</span></code>, <code class="docutils literal notranslate"><span class="pre">es_NI</span></code>, <code class="docutils literal notranslate"><span class="pre">es_VE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_BE</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_CH</span></code>, <code class="docutils literal notranslate"><span class="pre">fr_DZ</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_PT</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>, <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code>.</p>
+<p>The 13 foundation families <code class="docutils literal notranslate"><span class="pre">bg</span></code>, <code class="docutils literal notranslate"><span class="pre">el</span></code>, <code class="docutils literal notranslate"><span class="pre">et</span></code>, <code class="docutils literal notranslate"><span class="pre">eu</span></code>, <code class="docutils literal notranslate"><span class="pre">ka</span></code>, <code class="docutils literal notranslate"><span class="pre">ku</span></code>, <code class="docutils literal notranslate"><span class="pre">lb</span></code>, <code class="docutils literal notranslate"><span class="pre">ml</span></code>, <code class="docutils literal notranslate"><span class="pre">mr</span></code>, <code class="docutils literal notranslate"><span class="pre">ne</span></code>, <code class="docutils literal notranslate"><span class="pre">sq</span></code>, <code class="docutils literal notranslate"><span class="pre">sw</span></code>, and <code class="docutils literal notranslate"><span class="pre">ur</span></code> provide reviewed plain-number rendering and safe Abbr2words registration. Foundation registration does not imply a bundled abbreviation lexicon or structured-number support.</p>
+</section>
+</section>
 <section id="language-support-matrix">
 <h1>Language support matrix</h1>
-<p>| <code class="docutils literal notranslate"><span class="pre">ar</span></code> | <code class="docutils literal notranslate"><span class="pre">ara</span></code> | <code class="docutils literal notranslate"><span class="pre">ar_MSA</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">ar</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
-| <code class="docutils literal notranslate"><span class="pre">he</span></code> | <code class="docutils literal notranslate"><span class="pre">heb</span></code> | <code class="docutils literal notranslate"><span class="pre">he_IL</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">he</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
-| <code class="docutils literal notranslate"><span class="pre">kk</span></code> | <code class="docutils literal notranslate"><span class="pre">kaz</span></code> | <code class="docutils literal notranslate"><span class="pre">kk_KZ</span></code> | <code class="docutils literal notranslate"><span class="pre">num2words</span></code> | <code class="docutils literal notranslate"><span class="pre">kk</span></code> | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |</p>
+<p>| <code class="docutils literal notranslate"><span class="pre">ar</span></code> | <code class="docutils literal notranslate"><span class="pre">ara</span></code> | <code class="docutils literal notranslate"><span class="pre">ar_MSA</span></code> | <code class="docutils literal notranslate"><span class="pre">numeralform</span></code> | <code class="docutils literal notranslate"><span class="pre">ar</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
+| <code class="docutils literal notranslate"><span class="pre">he</span></code> | <code class="docutils literal notranslate"><span class="pre">heb</span></code> | <code class="docutils literal notranslate"><span class="pre">he_IL</span></code> | <code class="docutils literal notranslate"><span class="pre">numeralform</span></code> | <code class="docutils literal notranslate"><span class="pre">he</span></code> | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |
+| <code class="docutils literal notranslate"><span class="pre">kk</span></code> | <code class="docutils literal notranslate"><span class="pre">kaz</span></code> | <code class="docutils literal notranslate"><span class="pre">kk_KZ</span></code> | <code class="docutils literal notranslate"><span class="pre">numeralform</span></code> | <code class="docutils literal notranslate"><span class="pre">kk</span></code> | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |</p>
 <p>This page is the canonical runtime support matrix for <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>. It describes
 implemented capabilities, not full parity with PolyNorm, benchmarks, or
 kokorog2p.</p>
@@ -553,7 +694,7 @@ kokorog2p.</p>
 <tr class="row-odd"><th class="head"><p>Canonical code</p></th>
 <th class="head"><p>Accepted aliases</p></th>
 <th class="head"><p>Region forms</p></th>
-<th class="head"><p>Number backend</p></th>
+<th class="head"><p>Number renderer</p></th>
 <th class="head"><p>Abbreviation profile</p></th>
 <th class="head"><p>Plain numbers</p></th>
 <th class="head"><p>Decimals</p></th>
@@ -567,7 +708,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
 <td><p>none</p></td>
 <td><p>none</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
@@ -579,7 +720,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">de_DE</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
@@ -591,7 +732,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en_GB</span></code>, <code class="docutils literal notranslate"><span class="pre">en_US</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>point</p></td>
@@ -603,7 +744,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">es</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es_MX</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code>, exact <code class="docutils literal notranslate"><span class="pre">es_MX</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma or point by locale</p></td>
@@ -615,7 +756,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr_FR</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
@@ -627,7 +768,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">it_IT</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">it</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
@@ -639,7 +780,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">jp</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ja_JP</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ja</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>reviewed</p></td>
@@ -651,7 +792,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ko_KR</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>reviewed</p></td>
@@ -662,9 +803,9 @@ kokorog2p.</p>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code></p></td>
 <td><p>none</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">pt_BR</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pt_BR</span></code> / <code class="docutils literal notranslate"><span class="pre">pt_PT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pt_BR</span></code>, base fallback for <code class="docutils literal notranslate"><span class="pre">pt_PT</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
 <td><p>yes</p></td>
@@ -675,7 +816,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">swe</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sv_SE</span></code> / <code class="docutils literal notranslate"><span class="pre">sv-SE</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma</p></td>
@@ -687,7 +828,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">vi_VN</span></code> / <code class="docutils literal notranslate"><span class="pre">vi-VN</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma decimal; dot or space-family grouping</p></td>
@@ -699,7 +840,7 @@ kokorog2p.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
 <td><p>none</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">th_TH</span></code> / <code class="docutils literal notranslate"><span class="pre">th-TH</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">th</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>point decimal; comma or space-family grouping</p></td>
@@ -711,7 +852,7 @@ kokorog2p.</p>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">rus</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ru_RU</span></code> / <code class="docutils literal notranslate"><span class="pre">ru-RU</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">num2words</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">numeralform</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ru</span></code></p></td>
 <td><p>yes</p></td>
 <td><p>comma decimal; space/NBSP/NNBSP grouping</p></td>
@@ -748,6 +889,7 @@ precedence, protection, and recognition-domain policy. Ordinary abbreviations,
 including the reviewed <code class="docutils literal notranslate"><span class="pre">vgl.</span></code>, <code class="docutils literal notranslate"><span class="pre">i.d.R.</span></code>, <code class="docutils literal notranslate"><span class="pre">o.ä.</span></code>, and <code class="docutils literal notranslate"><span class="pre">u.U.</span></code> forms, remain owned by
 <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; they are not duplicated in this locale. Currencies without reviewed
 minor-unit grammar use a safe exact decimal fallback or fail closed.</p>
+<p>German also recognizes reviewed source-letter technical labels such as <code class="docutils literal notranslate"><span class="pre">IP</span></code>, <code class="docutils literal notranslate"><span class="pre">IBAN</span></code>, and <code class="docutils literal notranslate"><span class="pre">LTS</span></code> through <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>. With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, German URL, e-mail, and FTP promotion uses localized <code class="docutils literal notranslate"><span class="pre">Doppelpunkt</span></code>, <code class="docutils literal notranslate"><span class="pre">Schrägstrich</span></code>, and <code class="docutils literal notranslate"><span class="pre">Punkt</span></code> words, lexical hostname and path labels, and the reviewed <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">org</span></code>, <code class="docutils literal notranslate"><span class="pre">net</span></code>, and <code class="docutils literal notranslate"><span class="pre">com</span></code> TLD policy. Contextual Roman year and monarch forms, redundant century notation, explicit hour-minute durations, and semantic versions with preserved leading-zero components are handled by Spokenform’s structured recognizers.</p>
 </section>
 <section id="swedish-scope">
 <h2>Swedish scope</h2>
@@ -755,9 +897,8 @@ minor-unit grammar use a safe exact decimal fallback or fail closed.</p>
 Plain numbers, reviewed quantities, Celsius and Fahrenheit temperatures, and
 Swedish krona amounts are supported. Swedish quantity grammar uses the reviewed
 <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> canonical unit identities and explicit singular and plural forms.</p>
-<p><code class="docutils literal notranslate"><span class="pre">sv-SE</span></code> and <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code> are normalized to the regional form and routed to the
-Swedish base language. <code class="docutils literal notranslate"><span class="pre">swe</span></code> is accepted as a compatibility alias, and
-<code class="docutils literal notranslate"><span class="pre">swe-SE</span></code> normalizes to <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">sv-SE</span></code> and <code class="docutils literal notranslate"><span class="pre">sv_SE</span></code> normalize to the registered base key <code class="docutils literal notranslate"><span class="pre">sv</span></code>. <code class="docutils literal notranslate"><span class="pre">swe</span></code> is accepted as a compatibility alias, and
+<code class="docutils literal notranslate"><span class="pre">swe-SE</span></code> also normalizes to <code class="docutils literal notranslate"><span class="pre">sv</span></code>.</p>
 <p>Swedish digital clock bodies and numeric dates remain caller-managed in this
 release, although valid shapes are protected from generic number rewriting.
 Arbitrary initialisms and unreviewed address, legal, phone, ISBN, music,
@@ -767,16 +908,16 @@ renderer lacks a locale entry.</p>
 </section>
 <section id="vietnamese-scope">
 <h2>Vietnamese scope</h2>
-<p>Vietnamese uses comma decimal punctuation. Spokenform accepts CLDR-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. Reviewed quantities, temperatures, and VND/₫ identities come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>, while Spokenform owns numeric realization and source mapping. <code class="docutils literal notranslate"><span class="pre">vi-VN</span></code> and <code class="docutils literal notranslate"><span class="pre">vi_VN</span></code> normalize to the regional form and resolve to the Vietnamese base dependency registries. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.</p>
+<p>Vietnamese uses comma decimal punctuation. Spokenform accepts CLDR-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. Reviewed quantities, temperatures, and VND/₫ identities come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>, while Numeralform owns non-Chinese numeric realization and Spokenform owns source mapping. <code class="docutils literal notranslate"><span class="pre">vi-VN</span></code> and <code class="docutils literal notranslate"><span class="pre">vi_VN</span></code> normalize to the regional form and resolve to the Vietnamese Numeralform base locale. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.</p>
 </section>
 <section id="thai-scope">
 <h2>Thai scope</h2>
-<p>Thai accepts <code class="docutils literal notranslate"><span class="pre">th</span></code>, <code class="docutils literal notranslate"><span class="pre">th_TH</span></code>, and <code class="docutils literal notranslate"><span class="pre">th-TH</span></code>; regional forms route to the base <code class="docutils literal notranslate"><span class="pre">num2words</span></code> and <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> registries. No <code class="docutils literal notranslate"><span class="pre">tha</span></code> alias is claimed. The CLDR-style point decimal marker and comma, regular-space, NBSP, or NNBSP grouping are supported, with Latin digits as the default and Thai digits also accepted.</p>
+<p>Thai accepts <code class="docutils literal notranslate"><span class="pre">th</span></code>, <code class="docutils literal notranslate"><span class="pre">th_TH</span></code>, and <code class="docutils literal notranslate"><span class="pre">th-TH</span></code>; regional forms route to Numeralform and <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>. No <code class="docutils literal notranslate"><span class="pre">tha</span></code> alias is claimed. The CLDR-style point decimal marker and comma, regular-space, NBSP, or NNBSP grouping are supported, with Latin digits as the default and Thai digits also accepted.</p>
 <p>Reviewed quantities, temperatures, and THB/<code class="docutils literal notranslate"><span class="pre">฿</span></code> identities come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; Spokenform owns Thai numeric realization and source mapping. Reviewed titles, month and era abbreviations, and the <code class="docutils literal notranslate"><span class="pre">น.</span></code> clock marker may expand, but date and year bodies, digital times, numeric-only dates, and eras remain caller-managed. Thai ordinals, ranges, and unreviewed specialist sequences remain literal or fail closed, with no English semantic fallback.</p>
 </section>
 <section id="russian-scope">
 <h2>Russian scope</h2>
-<p>Russian accepts <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ru_RU</span></code>, and <code class="docutils literal notranslate"><span class="pre">ru-RU</span></code>; <code class="docutils literal notranslate"><span class="pre">rus</span></code>, <code class="docutils literal notranslate"><span class="pre">rus_RU</span></code>, and <code class="docutils literal notranslate"><span class="pre">rus-RU</span></code> are compatibility aliases. Regional forms route to the Russian <code class="docutils literal notranslate"><span class="pre">num2words</span></code> and <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> base registries.</p>
+<p>Russian accepts <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ru_RU</span></code>, and <code class="docutils literal notranslate"><span class="pre">ru-RU</span></code>; <code class="docutils literal notranslate"><span class="pre">rus</span></code>, <code class="docutils literal notranslate"><span class="pre">rus_RU</span></code>, and <code class="docutils literal notranslate"><span class="pre">rus-RU</span></code> are compatibility aliases. Regional forms route to the Russian Numeralform and <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> locales.</p>
 <p>Russian plain numbers use comma decimal punctuation, regular spaces, NBSP, or NNBSP grouping, with visible fractional digits spoken digitwise. Reviewed <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> canonical unit identities are rendered by Spokenform using explicit CLDR <code class="docutils literal notranslate"><span class="pre">one</span></code>, <code class="docutils literal notranslate"><span class="pre">few</span></code>, <code class="docutils literal notranslate"><span class="pre">many</span></code>, and <code class="docutils literal notranslate"><span class="pre">other</span></code> noun forms. Counted feminine units use gender-aware <code class="docutils literal notranslate"><span class="pre">одна</span></code> and <code class="docutils literal notranslate"><span class="pre">две</span></code> forms, and output is limited to nominative measurement phrases.</p>
 <p>Dates, digital times, year abbreviations, phone-number speech, and specialist sequences remain caller-managed or fail closed. Currency is caller-managed, including <code class="docutils literal notranslate"><span class="pre">RUB</span></code>, until <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> provides a reviewed Russian ruble identity. Unknown future Russian canonical unit IDs are preserved until a matching Spokenform grammar entry is reviewed.</p>
 <p>Spokenform does not use <code class="docutils literal notranslate"><span class="pre">vn</span></code> as a language alias.</p>

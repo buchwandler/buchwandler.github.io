@@ -4,17 +4,17 @@ nav_key: readio
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.2.3
-source_commit: 9b264c5a7b09096c299b90d2f8fe6fb30a2a96d0
-source_url: https://github.com/buchwandler/readio/releases/tag/v0.2.3
+source_ref: v0.3.1
+source_commit: 86a3aecedd9d31f8c36e2b85d8ec18aa833a2472
+source_url: https://github.com/buchwandler/readio/releases/tag/v0.3.1
 is_default: true
 repo_url: https://github.com/buchwandler/readio
-release_tag: v0.2.3
-release_url: https://github.com/buchwandler/readio/releases/tag/v0.2.3
+release_tag: v0.3.1
+release_url: https://github.com/buchwandler/readio/releases/tag/v0.3.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.2.3
+  ref: v0.3.1
   url: /tools/readio/
   current: true
 - name: main
@@ -26,6 +26,21 @@ entries:
 - slug: index
   title: Readio documentation
   url: /tools/readio/
+- slug: architecture
+  title: Readio architecture
+  url: /tools/readio/architecture/
+- slug: api
+  title: readio Python API
+  url: /tools/readio/api/
 - slug: changelog
   title: readio Changelog
   url: /tools/readio/changelog/
+- slug: cli
+  title: 'readio CLI reference: project pipeline'
+  url: /tools/readio/cli/
+- slug: incremental-rendering
+  title: readio Incremental rendering
+  url: /tools/readio/incremental-rendering/
+- slug: projects
+  title: Readio projects
+  url: /tools/readio/projects/

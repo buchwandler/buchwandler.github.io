@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/lexicons/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.9"
-docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
+docs_ref: "v0.9.15"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 
@@ -547,33 +547,53 @@ dictionaries, pack <code class="docutils literal notranslate"><span class="pre">
 files.</p>
 <section id="english-and-french">
 <h2>English and French</h2>
-<p>English and French each expose one logical <code class="docutils literal notranslate"><span class="pre">gold</span></code> lexicon backed by an external asset:</p>
+<p>English exposes a default <code class="docutils literal notranslate"><span class="pre">gold</span></code> lexicon and an explicit <code class="docutils literal notranslate"><span class="pre">lexhint</span></code> source backed by
+external assets: the two sources use different encodings but share the KokoroG2P English
+realization layer.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Language</p></th>
 <th class="head"><p>Lexphon ID</p></th>
+<th class="head"><p>Default</p></th>
+<th class="head"><p>Encoding</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>US English</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">en-us:gold</span></code></p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>US English</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en-us:lexhint</span></code></p></td>
+<td><p>no</p></td>
+<td><p>IPA</p></td>
+</tr>
+<tr class="row-even"><td><p>GB English</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en-gb:gold</span></code></p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>GB English</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">en-gb:gold</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">en-gb:lexhint</span></code></p></td>
+<td><p>no</p></td>
+<td><p>IPA</p></td>
 </tr>
 <tr class="row-even"><td><p>French</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">fr-fr:gold</span></code></p></td>
+<td><p>yes</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code></p></td>
 </tr>
 </tbody>
 </table>
 <p>Provision released data before using the default English or French dictionary path:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold<span class="w"> </span>fr-fr:gold
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-us:lexhint<span class="w"> </span>en-gb:gold<span class="w"> </span>en-gb:lexhint<span class="w"> </span>fr-fr:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-us:lexhint<span class="w"> </span>en-gb:gold<span class="w"> </span>en-gb:lexhint<span class="w"> </span>fr-fr:gold
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code>, <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-gb&quot;)</span></code>, and <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;fr-fr&quot;)</span></code> select <code class="docutils literal notranslate"><span class="pre">gold</span></code> by default.
-Use <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only operation. <code class="docutils literal notranslate"><span class="pre">silver</span></code> is not an English runtime
-option.</p>
+Use <code class="docutils literal notranslate"><span class="pre">lexicons=&quot;lexhint&quot;</span></code> for the IPA source and <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only
+operation. <code class="docutils literal notranslate"><span class="pre">silver</span></code> is not an English runtime option.</p>
 <p>Runtime lookup is offline. KokoroG2P does not fetch catalogs, download assets, invoke
 the Lexphon CLI, or rebuild source dictionaries during construction or lookup. Missing
 data produces an installation and verification command in the error message.</p>

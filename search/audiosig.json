@@ -21,6 +21,12 @@
         },
         {
           "anchor": "",
+          "heading": "Time-varying speech envelopes",
+          "text": "apply_speech_effects_envelope is available since AudioSig 0.1.5. It accepts only numeric control points and leaves higher-level meaning to calling applications. Rate values are positive playback factors; pitch values are semitones. Control-point times use output seconds, both curves interpolate linearly, the first point is at zero, and the final point is held. No repeated calls to static effects or chunk stitching are used.\n\nFor output time y, the rate map consumes source time x(y) = integral(0, y, r(u) du). Linear segments are integrated analytically in float64. AudioSig solves the inverse map at the input duration and rounds output_seconds * sample_rate once to determine the output frame count. speech_effects_output_frames exposes that same calculation for downstream timing prediction.…",
+          "lower": "apply_speech_effects_envelope is available since audiosig 0.1.5. it accepts only numeric control points and leaves higher-level meaning to calling applications. rate values are positive playback factors; pitch values are semitones. control-point times use output seconds, both curves interpolate linearly, the first point is at zero, and the final point is held. no repeated calls to static effects or chunk stitching are used.\n\nfor output time y, the rate map consumes source time x(y) = integral(0, y, r(u) du). linear segments are integrated analytically in float64. audiosig solves the inverse map at the input duration and rounds output_seconds * sample_rate once to determine the output frame count. speech_effects_output_frames exposes that same calculation for downstream timing prediction.…"
+        },
+        {
+          "anchor": "",
           "heading": "Resampling Internals",
           "text": "AudioSig uses windowed-sinc interpolation:\n\nfrom audiosig import resample\n\n# Control filter characteristics\nresult = resample(\n    audio,\n    source_rate=48000,\n    target_rate=16000,\n    filter_width=64,     # Wider = sharper cutoff, slower\n    rolloff=0.945,       # Anti-aliasing filter rolloff\n    length_mode='round', # Output length calculation\n)",
           "lower": "audiosig uses windowed-sinc interpolation:\n\nfrom audiosig import resample\n\n# control filter characteristics\nresult = resample(\n    audio,\n    source_rate=48000,\n    target_rate=16000,\n    filter_width=64,     # wider = sharper cutoff, slower\n    rolloff=0.945,       # anti-aliasing filter rolloff\n    length_mode='round', # output length calculation\n)"
@@ -33,6 +39,12 @@
         },
         {
           "anchor": "",
+          "heading": "Loudness measurement",
+          "text": "Loudness and peak metrics are deliberately separate from amplitude transforms. peak_normalize sets the largest discrete sample, RMS/short-time energy describes a chosen window, integrated loudness reports gated BS.1770-style LUFS, and true peak estimates inter-sample dBTP. Equal sample peaks do not imply equal perceived loudness.\n\nThe v1 meter accepts finite one-dimensional mono arrays and uses float64 calculation paths. It analyzes complete 400 ms blocks with a 100 ms hop, applies K-weighting, then uses the -70 LUFS absolute gate and -10 LU relative gate. It returns -math.inf for silence and for audio shorter than one complete block; it never pads, clips, limits, or automatically normalizes. The default true-peak oversampling factor is 4, configurable for callers that need a different co…",
+          "lower": "loudness and peak metrics are deliberately separate from amplitude transforms. peak_normalize sets the largest discrete sample, rms/short-time energy describes a chosen window, integrated loudness reports gated bs.1770-style lufs, and true peak estimates inter-sample dbtp. equal sample peaks do not imply equal perceived loudness.\n\nthe v1 meter accepts finite one-dimensional mono arrays and uses float64 calculation paths. it analyzes complete 400 ms blocks with a 100 ms hop, applies k-weighting, then uses the -70 lufs absolute gate and -10 lu relative gate. it returns -math.inf for silence and for audio shorter than one complete block; it never pads, clips, limits, or automatically normalizes. the default true-peak oversampling factor is 4, configurable for callers that need a different co…"
+        },
+        {
+          "anchor": "",
           "heading": "Normalized Energy VAD",
           "text": "The normalized energy VAD works by:\n\n\nFraming the audio into non-overlapping segments\n\n\nComputing RMS energy per frame\n\n\nNormalizing to [0, 1] range\n\n\nThresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# The algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=False,            # Discard trailing partial frame\n)",
           "lower": "the normalized energy vad works by:\n\n\nframing the audio into non-overlapping segments\n\n\ncomputing rms energy per frame\n\n\nnormalizing to [0, 1] range\n\n\nthresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# the algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=false,            # discard trailing partial frame\n)"
@@ -42,6 +54,12 @@
           "heading": "Relative dB VAD",
           "text": "The relative dB VAD works by:\n\n\nComputing short-time energy\n\n\nFinding peak energy\n\n\nSetting threshold relative to peak\n\n\nDetecting frames above threshold\n\n\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,  # 40 dB below peak\n)",
           "lower": "the relative db vad works by:\n\n\ncomputing short-time energy\n\n\nfinding peak energy\n\n\nsetting threshold relative to peak\n\n\ndetecting frames above threshold\n\n\n\nfrom audiosig import relative_db_vad\n\nactivity = relative_db_vad(\n    audio,\n    frame_length=2048,\n    hop_length=512,\n    threshold_db=40.0,  # 40 db below peak\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Smooth Cut-Point Selection",
+          "text": "find_smooth_cut_point is a bounded, sample-domain primitive for applications that already know a legal interval. It uses a cumulative-sum local RMS calculation plus endpoint amplitude, cross-boundary slope, and anchor-distance costs. The implementation allocates work proportional to the local search span, not candidate count times window length, and conservatively aggregates all non-sample lanes.\n\nThe function accepts float32 or float64 NumPy arrays, supports an explicit sample axis, never mutates input, and returns a legal index even when no quiet run exists. An empty array returns None only for the explicit start=0, end=0 contract. AudioShapeError and InvalidParameterError report invalid arrays and parameters.\n\nKeep semantic decisions outside AudioSig: callers choose the legal interval,…",
+          "lower": "find_smooth_cut_point is a bounded, sample-domain primitive for applications that already know a legal interval. it uses a cumulative-sum local rms calculation plus endpoint amplitude, cross-boundary slope, and anchor-distance costs. the implementation allocates work proportional to the local search span, not candidate count times window length, and conservatively aggregates all non-sample lanes.\n\nthe function accepts float32 or float64 numpy arrays, supports an explicit sample axis, never mutates input, and returns a legal index even when no quiet run exists. an empty array returns none only for the explicit start=0, end=0 contract. audioshapeerror and invalidparametererror report invalid arrays and parameters.\n\nkeep semantic decisions outside audiosig: callers choose the legal interval,…"
         },
         {
           "anchor": "",
@@ -172,6 +190,12 @@
         },
         {
           "anchor": "",
+          "heading": "apply_speech_effects_envelope(audio, *, sample_rate, rate_points=(), pitch_points=(), time_base='output', interpolation='linear', method='wsola', axis=-1)",
+          "text": "Apply continuously varying playback rate and pitch controls in one speech-processing operation. AudioSig 0.1.5 is the minimum version containing this API.\n\nControl points:\n\n\nrate_points: (output_seconds, rate_factor) pairs. Factors must be finite and positive. 1.0 is unchanged, values below 1.0 slow playback, and values above 1.0 speed it up.\n\n\npitch_points: (output_seconds, semitones) pairs. Values are finite semitone offsets, where 0.0 is unchanged and positive values raise pitch.\n\n\nAt least one curve must be non-empty. Omitted rate and pitch curves mean constant 1.0 and 0.0, respectively.\n\n\nEvery non-empty curve starts exactly at 0.0 seconds. Times increase strictly. interpolation='linear' interpolates rate factors and semitones; the last value is held after the final point.\n\n\ntime_bas…",
+          "lower": "apply continuously varying playback rate and pitch controls in one speech-processing operation. audiosig 0.1.5 is the minimum version containing this api.\n\ncontrol points:\n\n\nrate_points: (output_seconds, rate_factor) pairs. factors must be finite and positive. 1.0 is unchanged, values below 1.0 slow playback, and values above 1.0 speed it up.\n\n\npitch_points: (output_seconds, semitones) pairs. values are finite semitone offsets, where 0.0 is unchanged and positive values raise pitch.\n\n\nat least one curve must be non-empty. omitted rate and pitch curves mean constant 1.0 and 0.0, respectively.\n\n\nevery non-empty curve starts exactly at 0.0 seconds. times increase strictly. interpolation='linear' interpolates rate factors and semitones; the last value is held after the final point.\n\n\ntime_bas…"
+        },
+        {
+          "anchor": "",
           "heading": "resample(audio, *, source_rate, target_rate, axis=-1, filter_width=32, rolloff=0.945, length_mode='round')",
           "text": "Resample audio with a windowed-sinc anti-aliasing filter.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsource_rate (float): Source sample rate in Hz\n\n\ntarget_rate (float): Target sample rate in Hz\n\n\naxis (int): Sample axis (default: -1)\n\n\nfilter_width (int): Filter kernel width (default: 32)\n\n\nrolloff (float): Filter rolloff frequency (default: 0.945)\n\n\nlength_mode (str): Length calculation mode (‘round’ or ‘ceil’)\n\n\n\nReturns: np.ndarray - Resampled audio\n\nOutput Length:\n\n\nlength_mode='round': round(input_length * target_rate / source_rate)\n\n\nlength_mode='ceil': ceil(input_length * target_rate / source_rate)\n\n\n\nExample:\n\nfrom audiosig import resample\n\n# Downsample from 48kHz to 16kHz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# Upsample from 8kHz to…",
           "lower": "resample audio with a windowed-sinc anti-aliasing filter.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsource_rate (float): source sample rate in hz\n\n\ntarget_rate (float): target sample rate in hz\n\n\naxis (int): sample axis (default: -1)\n\n\nfilter_width (int): filter kernel width (default: 32)\n\n\nrolloff (float): filter rolloff frequency (default: 0.945)\n\n\nlength_mode (str): length calculation mode (‘round’ or ‘ceil’)\n\n\n\nreturns: np.ndarray - resampled audio\n\noutput length:\n\n\nlength_mode='round': round(input_length * target_rate / source_rate)\n\n\nlength_mode='ceil': ceil(input_length * target_rate / source_rate)\n\n\n\nexample:\n\nfrom audiosig import resample\n\n# downsample from 48khz to 16khz\ndownsampled = resample(audio_48k, source_rate=48000, target_rate=16000)\n\n# upsample from 8khz to…"
@@ -202,6 +226,30 @@
         },
         {
           "anchor": "",
+          "heading": "integrated_loudness(audio, *, sample_rate, axis=-1)",
+          "text": "Return BS.1770-style integrated programme loudness in LUFS. Audio is K-weighted, divided into complete 400 ms blocks with a 100 ms hop, then processed with the -70 LUFS absolute gate and -10 LU relative gate. Signals shorter than one complete block return -math.inf without invented padding. V1 accepts one-dimensional mono float32/float64 arrays; the mandatory sample rate is 24,000 Hz, and 44,100 and 48,000 Hz are also supported. Digital silence returns -math.inf.",
+          "lower": "return bs.1770-style integrated programme loudness in lufs. audio is k-weighted, divided into complete 400 ms blocks with a 100 ms hop, then processed with the -70 lufs absolute gate and -10 lu relative gate. signals shorter than one complete block return -math.inf without invented padding. v1 accepts one-dimensional mono float32/float64 arrays; the mandatory sample rate is 24,000 hz, and 44,100 and 48,000 hz are also supported. digital silence returns -math.inf."
+        },
+        {
+          "anchor": "",
+          "heading": "sample_peak_dbfs(audio, *, axis=-1)",
+          "text": "Return 20 * log10(max(abs(audio))) in dBFS. Digital silence returns -math.inf. This is a sample peak measurement, not a loudness normalization operation.",
+          "lower": "return 20 * log10(max(abs(audio))) in dbfs. digital silence returns -math.inf. this is a sample peak measurement, not a loudness normalization operation."
+        },
+        {
+          "anchor": "",
+          "heading": "true_peak_dbtp(audio, *, sample_rate, axis=-1, oversample=4)",
+          "text": "Estimate inter-sample peak in dBTP using AudioSig’s NumPy windowed-sinc resampler. oversample must be a positive integer; 1 is equivalent to sample peak. The function never clips, limits, or modifies the source audio. Digital silence returns -math.inf.",
+          "lower": "estimate inter-sample peak in dbtp using audiosig’s numpy windowed-sinc resampler. oversample must be a positive integer; 1 is equivalent to sample peak. the function never clips, limits, or modifies the source audio. digital silence returns -math.inf."
+        },
+        {
+          "anchor": "",
+          "heading": "LoudnessMetrics and measure_loudness(audio, *, sample_rate, axis=-1, true_peak_oversample=4)",
+          "text": "LoudnessMetrics is an immutable dataclass containing integrated_lufs, sample_peak_dbfs, and true_peak_dbtp. measure_loudness composes the three measurements without applying policy or changing the input. Stable imports are available from audiosig; the PyKokoro minimum release is 0.1.3.",
+          "lower": "loudnessmetrics is an immutable dataclass containing integrated_lufs, sample_peak_dbfs, and true_peak_dbtp. measure_loudness composes the three measurements without applying policy or changing the input. stable imports are available from audiosig; the pykokoro minimum release is 0.1.3."
+        },
+        {
+          "anchor": "",
           "heading": "normalized_energy_vad(audio, sample_rate, *, frame_duration_ms=5.0, energy_threshold=0.02, axis=-1, pad_end=False)",
           "text": "Detect voice activity using normalized RMS energy.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\nsample_rate (int): Audio sample rate in Hz\n\n\nframe_duration_ms (float): Frame duration in milliseconds (default: 5.0)\n\n\nenergy_threshold (float): Threshold in [0, 1] (default: 0.02)\n\n\naxis (int): Sample axis (default: -1)\n\n\npad_end (bool): Include trailing partial frame (default: False)\n\n\n\nReturns: np.ndarray - Boolean array indicating active frames\n\nExample:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)\n\n# Count active frames\nactive_frames = np.sum(activity)",
           "lower": "detect voice activity using normalized rms energy.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\nsample_rate (int): audio sample rate in hz\n\n\nframe_duration_ms (float): frame duration in milliseconds (default: 5.0)\n\n\nenergy_threshold (float): threshold in [0, 1] (default: 0.02)\n\n\naxis (int): sample axis (default: -1)\n\n\npad_end (bool): include trailing partial frame (default: false)\n\n\n\nreturns: np.ndarray - boolean array indicating active frames\n\nexample:\n\nfrom audiosig import normalized_energy_vad\n\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)\n\n# count active frames\nactive_frames = np.sum(activity)"
@@ -229,6 +277,12 @@
           "heading": "find_speech_bounds(audio, sample_rate=None, **kwargs)",
           "text": "Find speech start and end bounds.\n\nReturns: np.ndarray - [start, end] sample indices, or [0, 0] if no speech\n\nExample:\n\nfrom audiosig import find_speech_bounds\n\nbounds = find_speech_bounds(audio, sample_rate=24000)\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech = audio[start:end]",
           "lower": "find speech start and end bounds.\n\nreturns: np.ndarray - [start, end] sample indices, or [0, 0] if no speech\n\nexample:\n\nfrom audiosig import find_speech_bounds\n\nbounds = find_speech_bounds(audio, sample_rate=24000)\nif not np.array_equal(bounds, [0, 0]):\n    start, end = bounds\n    speech = audio[start:end]"
+        },
+        {
+          "anchor": "",
+          "heading": "find_smooth_cut_point(audio, *, start, end, anchor=None, window_length=120, axis=-1)",
+          "text": "Select a deterministic waveform boundary in the half-open sample interval [start, end). The candidate minimizes a fixed combination of local RMS, adjacent endpoint amplitude, cross-boundary slope, and distance from the preferred anchor. This is not a silence detector and returns a legal candidate for continuous voiced or noisy audio.\n\nParameters:\n\n\naudio (np.ndarray): Finite float32 or float64 audio array\n\n\nstart, end (int): Legal half-open search bounds with 0 <= start < end <= sample_count\n\n\nanchor (int, optional): Preferred sample index; defaults to the middle legal candidate and may lie outside the interval\n\n\nwindow_length (int): Local RMS analysis length in samples, at least 1\n\n\naxis (int): Sample axis, default -1; all other dimensions are conservatively aggregated\n\n\n\nReturns: int fo…",
+          "lower": "select a deterministic waveform boundary in the half-open sample interval [start, end). the candidate minimizes a fixed combination of local rms, adjacent endpoint amplitude, cross-boundary slope, and distance from the preferred anchor. this is not a silence detector and returns a legal candidate for continuous voiced or noisy audio.\n\nparameters:\n\n\naudio (np.ndarray): finite float32 or float64 audio array\n\n\nstart, end (int): legal half-open search bounds with 0 <= start < end <= sample_count\n\n\nanchor (int, optional): preferred sample index; defaults to the middle legal candidate and may lie outside the interval\n\n\nwindow_length (int): local rms analysis length in samples, at least 1\n\n\naxis (int): sample axis, default -1; all other dimensions are conservatively aggregated\n\n\n\nreturns: int fo…"
         },
         {
           "anchor": "",
@@ -307,55 +361,73 @@
           "heading": "median_filter_numpy(values, size=3, *, window_size=None, mode='edge')",
           "text": "Apply median filter along the final axis.\n\nParameters:\n\n\nmode (str): Boundary mode (‘edge’ or ‘truncate’)\n\n\n\nReturns: np.ndarray - Filtered values",
           "lower": "apply median filter along the final axis.\n\nparameters:\n\n\nmode (str): boundary mode (‘edge’ or ‘truncate’)\n\n\n\nreturns: np.ndarray - filtered values"
-        },
-        {
-          "anchor": "",
-          "heading": "non_silent_frames(audio, *, top_db=60.0, ref=np.max, frame_length=2048, hop_length=512, aggregate=np.max, axis=-1, center=True, pad_mode='constant')",
-          "text": "Return boolean mask of non-silent frames.\n\nReturns: np.ndarray - Boolean mask",
-          "lower": "return boolean mask of non-silent frames.\n\nreturns: np.ndarray - boolean mask"
-        },
-        {
-          "anchor": "",
-          "heading": "activity_to_intervals(activity, *, hop_length, sample_count, min_frames=1)",
-          "text": "Convert frame activity mask to clipped sample intervals. min_frames filters\nout active runs shorter than the requested number of frames.\n\nReturns: np.ndarray - Half-open [start, end) intervals",
-          "lower": "convert frame activity mask to clipped sample intervals. min_frames filters\nout active runs shorter than the requested number of frames.\n\nreturns: np.ndarray - half-open [start, end) intervals"
-        },
-        {
-          "anchor": "",
-          "heading": "AudioSignalError",
-          "text": "Base exception for all AudioSig operations.",
-          "lower": "base exception for all audiosig operations."
-        },
-        {
-          "anchor": "",
-          "heading": "InvalidParameterError(AudioSignalError, ValueError)",
-          "text": "Raised when a parameter is outside the supported domain.",
-          "lower": "raised when a parameter is outside the supported domain."
-        },
-        {
-          "anchor": "",
-          "heading": "AudioShapeError(AudioSignalError, ValueError)",
-          "text": "Raised when audio array shape or dtype is unsupported.",
-          "lower": "raised when audio array shape or dtype is unsupported."
-        },
-        {
-          "anchor": "",
-          "heading": "Type Annotations",
-          "text": "All public functions include full type annotations. The package is PEP 561 compatible with a py.typed marker.\n\nimport numpy as np\nfrom audiosig import time_stretch\n\n# Type checking works with mypy/pyright\nresult: np.ndarray = time_stretch(audio, rate=1.1)",
-          "lower": "all public functions include full type annotations. the package is pep 561 compatible with a py.typed marker.\n\nimport numpy as np\nfrom audiosig import time_stretch\n\n# type checking works with mypy/pyright\nresult: np.ndarray = time_stretch(audio, rate=1.1)"
         }
       ]
     },
     {
       "url": "/tools/audiosig/changelog/",
       "title": "audiosig Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded NumPy-only si …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded time-varying …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added time-varying speech rate and pitch envelope APIs with exact output-frame prediction",
+          "lower": "added time-varying speech rate and pitch envelope apis with exact output-frame prediction"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented envelope controls, timing semantics, backend behavior, and perceptual limitations",
+          "lower": "documented envelope controls, timing semantics, backend behavior, and perceptual limitations"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved regression coverage and local evaluation tools for envelope timing, trajectories, and transitions",
+          "lower": "improved regression coverage and local evaluation tools for envelope timing, trajectories, and transitions"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added BS.1770-style integrated loudness and dBFS/dBTP peak measurement APIs",
+          "lower": "added bs.1770-style integrated loudness and dbfs/dbtp peak measurement apis"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented loudness, peak, RMS, normalization, and downstream import boundaries",
+          "lower": "documented loudness, peak, rms, normalization, and downstream import boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved loudness and true-peak conformance coverage",
+          "lower": "improved loudness and true-peak conformance coverage"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added deterministic NumPy-only smooth waveform cut-point selection within caller-provided sample intervals",
+          "lower": "added deterministic numpy-only smooth waveform cut-point selection within caller-provided sample intervals"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented smooth cut-point semantics, complexity, examples, and downstream policy boundaries",
+          "lower": "documented smooth cut-point semantics, complexity, examples, and downstream policy boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved boundary quality coverage across validation, downstream contracts, packaging, axes, and dtypes",
+          "lower": "improved boundary quality coverage across validation, downstream contracts, packaging, axes, and dtypes"
         },
         {
           "anchor": "",
@@ -372,14 +444,14 @@
         {
           "anchor": "",
           "heading": "Added",
-          "text": "Phase-vocoder time stretching with configurable window size and overlap\n\n\nNumPy-only WSOLA speech backend with explicit backend selection\n\n\nExperimental NumPy-only ESOLA speech backend with exact-length synthesis,\nepoch alignment, and explicit moderate-rate validation\n\n\nExperimental NumPy-only direct TD-PSOLA speech pitch/prosody backend with\nbounded pitch tracking, voiced-grain synthesis, and WSOLA unvoiced fallback\n\n\nSingle-pass pitch/rate compositor planner and deterministic quality harness\n\n\nWindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\nPitch shifting via resample-then-stretch that preserves exact input length\n\n\nNormalized-energy and relative-dB voice activity detection algorithms\n\n\nRMS amplitude normalization and peak amplitude u…",
-          "lower": "phase-vocoder time stretching with configurable window size and overlap\n\n\nnumpy-only wsola speech backend with explicit backend selection\n\n\nexperimental numpy-only esola speech backend with exact-length synthesis,\nepoch alignment, and explicit moderate-rate validation\n\n\nexperimental numpy-only direct td-psola speech pitch/prosody backend with\nbounded pitch tracking, voiced-grain synthesis, and wsola unvoiced fallback\n\n\nsingle-pass pitch/rate compositor planner and deterministic quality harness\n\n\nwindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\npitch shifting via resample-then-stretch that preserves exact input length\n\n\nnormalized-energy and relative-db voice activity detection algorithms\n\n\nrms amplitude normalization and peak amplitude u…"
+          "text": "Phase-vocoder time stretching with configurable window size and overlap\n\n\nWindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\nPitch shifting via resample-then-stretch that preserves exact input length\n\n\nNormalized-energy and relative-dB voice activity detection algorithms\n\n\nRMS amplitude normalization and peak amplitude utilities\n\n\nSilence trimming and audio splitting with configurable frame parameters\n\n\nAudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\nTyped AudioSignalError exceptions for invalid arrays and parameters\n\n\nNumPy-only dependency with no native extensions required\n\n\nNumPy-only WSOLA speech backend with explicit backend selection\n\n\nExperimental NumPy-only ESOLA speech backend with exact-length…",
+          "lower": "phase-vocoder time stretching with configurable window size and overlap\n\n\nwindowed-sinc resampler with rounded output sizing and an optional librosa-compatible ceiling mode\n\n\npitch shifting via resample-then-stretch that preserves exact input length\n\n\nnormalized-energy and relative-db voice activity detection algorithms\n\n\nrms amplitude normalization and peak amplitude utilities\n\n\nsilence trimming and audio splitting with configurable frame parameters\n\n\naudio framing, short-time energy, zero-crossing rate, and spectral flux utilities\n\n\ntyped audiosignalerror exceptions for invalid arrays and parameters\n\n\nnumpy-only dependency with no native extensions required\n\n\nnumpy-only wsola speech backend with explicit backend selection\n\n\nexperimental numpy-only esola speech backend with exact-length…"
         },
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "README overview plus detailed API, getting-started, advanced, and examples documentation\n\n\nBackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nESOLA speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\nTD-PSOLA experimental scope, conservative limits, fallback behavior, and\nreal-speech listening-evaluation gate",
-          "lower": "readme overview plus detailed api, getting-started, advanced, and examples documentation\n\n\nbackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nesola speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\ntd-psola experimental scope, conservative limits, fallback behavior, and\nreal-speech listening-evaluation gate"
+          "text": "README overview plus detailed API, getting-started, advanced, and examples documentation\n\n\nBackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nESOLA speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\nTD-PSOLA experimental scope, conservative limits, fallback behavior, and real-speech listening-evaluation gate",
+          "lower": "readme overview plus detailed api, getting-started, advanced, and examples documentation\n\n\nbackend trade-offs, exact-length semantics, rolloff propagation, and native formant limitations\n\n\nesola speech-only scope, rate limits, independent-lane behavior, and listening-evaluation gate\n\n\ntd-psola experimental scope, conservative limits, fallback behavior, and real-speech listening-evaluation gate"
         },
         {
           "anchor": "",
@@ -423,6 +495,43 @@
           "heading": "Agent rules",
           "text": "Inspect affected or selected source units before editing docs.\n\n\nRewrite only the selected sections unless broader consistency requires more.\n\n\nDo not invent behavior.\n\n\nRun the configured validation commands when they exist.\n\n\nRun docledger mark-fresh --doc DOC --section SECTION --reason \"Docs updated after scan version VERSION.\" only after docs are updated and validated.",
           "lower": "inspect affected or selected source units before editing docs.\n\n\nrewrite only the selected sections unless broader consistency requires more.\n\n\ndo not invent behavior.\n\n\nrun the configured validation commands when they exist.\n\n\nrun docledger mark-fresh --doc doc --section section --reason \"docs updated after scan version version.\" only after docs are updated and validated."
+        }
+      ]
+    },
+    {
+      "url": "/tools/audiosig/envelope-listening-evaluation/",
+      "title": "audiosig Speech envelope listening evaluation",
+      "snippet": "Corrected user listening result received. After redoing all comparisons, the user could not hear a clear difference and considered the stati …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Status",
+          "text": "Corrected user listening result received. After redoing all comparisons, the user could not hear a clear difference and considered the static and envelope renders the same. This is a subjective result from one listener and one source, not a general claim of equivalence. The user-provided source and renders remain local and are not included in release materials. AudioSig 0.1.5 is the minimum version containing the envelope API.",
+          "lower": "corrected user listening result received. after redoing all comparisons, the user could not hear a clear difference and considered the static and envelope renders the same. this is a subjective result from one listener and one source, not a general claim of equivalence. the user-provided source and renders remain local and are not included in release materials. audiosig 0.1.5 is the minimum version containing the envelope api."
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare A/B renders",
+          "text": "Use a PCM WAV that you have permission to process. Record its license or consent basis, sample rate, channel count, and source identifier. Do not commit private speech recordings or renders without permission.\n\nFor a focused comparison at rate 0.9 and pitch +2 semitones, run:\n\npython scripts/compare_speech_effects.py INPUT.wav OUTPUT_DIR \\\n  --rates 0.9 --semitones 2 --envelopes\n\n\n\n\nThe relevant static and envelope pairs are:\n\n\n\nEffect\n\nStatic render\n\nEnvelope render\n\nControl points\n\n\n\n\n\nRate\n\nwsola_rate-0p9.wav\n\nenvelope_rate-0p9.wav\n\nrate 1.0 at 0 s to 0.9 at 0.45 output s\n\n\n\nPitch\n\ntd_psola_pitch-2st.wav\n\nenvelope_pitch-2st.wav\n\npitch 0 at 0 s to +2 semitones at 0.30 output s\n\n\n\nCombined\n\ncombined_td_psola_rate-0p9_pitch-2st.wav\n\nenvelope_combined_rate-0p9_pitch-2st.wav\n\nboth curves ab…",
+          "lower": "use a pcm wav that you have permission to process. record its license or consent basis, sample rate, channel count, and source identifier. do not commit private speech recordings or renders without permission.\n\nfor a focused comparison at rate 0.9 and pitch +2 semitones, run:\n\npython scripts/compare_speech_effects.py input.wav output_dir \\\n  --rates 0.9 --semitones 2 --envelopes\n\n\n\n\nthe relevant static and envelope pairs are:\n\n\n\neffect\n\nstatic render\n\nenvelope render\n\ncontrol points\n\n\n\n\n\nrate\n\nwsola_rate-0p9.wav\n\nenvelope_rate-0p9.wav\n\nrate 1.0 at 0 s to 0.9 at 0.45 output s\n\n\n\npitch\n\ntd_psola_pitch-2st.wav\n\nenvelope_pitch-2st.wav\n\npitch 0 at 0 s to +2 semitones at 0.30 output s\n\n\n\ncombined\n\ncombined_td_psola_rate-0p9_pitch-2st.wav\n\nenvelope_combined_rate-0p9_pitch-2st.wav\n\nboth curves ab…"
+        },
+        {
+          "anchor": "",
+          "heading": "Listening checklist",
+          "text": "Listen to the unmodified source and each pair at a comfortable, consistent playback level. Note clicks at transitions, pitch wobble, phasiness or warbling, metallic/buzzy quality, transient smearing, changes to breath or fricatives, timbre/formant shifts, rhythm discontinuities, and intelligibility. Include the timestamps and the affected output where possible.",
+          "lower": "listen to the unmodified source and each pair at a comfortable, consistent playback level. note clicks at transitions, pitch wobble, phasiness or warbling, metallic/buzzy quality, transient smearing, changes to breath or fricatives, timbre/formant shifts, rhythm discontinuities, and intelligibility. include the timestamps and the affected output where possible."
+        },
+        {
+          "anchor": "",
+          "heading": "User-reported result",
+          "text": "Evaluation date: Not provided\n\n\nListener: User\n\n\nSource: User-created audio.wav, 24 kHz, mono, 16-bit PCM, 60.288 seconds\n\n\nRender command: python scripts/compare_speech_effects.py audio.wav /tmp/audiosig-envelope-ab --rates 0.9 --semitones 2 --envelopes\n\n\nRender directory: /tmp/audiosig-envelope-ab\n\n\nTechnical metrics: all 10 WAV renders were finite and had zero frame-count error.\n\n\n\n\n\nComparison\n\nUser findings\n\nPreference\n\n\n\n\n\nRate\n\nOn repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nEqual\n\n\n\nPitch\n\nOn repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nEqual\n\n\n\nCombined\n\nOn repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nEqual…",
+          "lower": "evaluation date: not provided\n\n\nlistener: user\n\n\nsource: user-created audio.wav, 24 khz, mono, 16-bit pcm, 60.288 seconds\n\n\nrender command: python scripts/compare_speech_effects.py audio.wav /tmp/audiosig-envelope-ab --rates 0.9 --semitones 2 --envelopes\n\n\nrender directory: /tmp/audiosig-envelope-ab\n\n\ntechnical metrics: all 10 wav renders were finite and had zero frame-count error.\n\n\n\n\n\ncomparison\n\nuser findings\n\npreference\n\n\n\n\n\nrate\n\non repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nequal\n\n\n\npitch\n\non repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nequal\n\n\n\ncombined\n\non repeat listening, no clear difference; the user considered the static and envelope renders the same.\n\nequal…"
+        },
+        {
+          "anchor": "",
+          "heading": "Reusable evaluation template",
+          "text": "Use this template for any additional listeners or sources. Record one result for every listener and comparison.\n\n\nEvaluation date:\n\n\nListener identifier:\n\n\nSource identifier and permission basis:\n\n\nSample rate and channels:\n\n\nCommand and AudioSig version:\n\n\nOutput directory or retained artifact identifiers:\n\n\n\n\n\nComparison\n\nNaturalness (1 to 5)\n\nIntelligibility (1 to 5)\n\nTiming/pitch accuracy (1 to 5)\n\nArtifact severity (1 to 5)\n\nPreference (static/envelope/equal)\n\nNotes and timestamps\n\n\n\n\n\nRate\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nPitch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCombined\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nSevere artifact heard (yes/no):\n\n\nOverall findings:\n\n\nRecommendation and rationale:\n\n\n\nThe corrected listening report is recorded. The user heard no clear difference across these three pairs and judged the envelope versions equivalent…",
+          "lower": "use this template for any additional listeners or sources. record one result for every listener and comparison.\n\n\nevaluation date:\n\n\nlistener identifier:\n\n\nsource identifier and permission basis:\n\n\nsample rate and channels:\n\n\ncommand and audiosig version:\n\n\noutput directory or retained artifact identifiers:\n\n\n\n\n\ncomparison\n\nnaturalness (1 to 5)\n\nintelligibility (1 to 5)\n\ntiming/pitch accuracy (1 to 5)\n\nartifact severity (1 to 5)\n\npreference (static/envelope/equal)\n\nnotes and timestamps\n\n\n\n\n\nrate\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\npitch\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\ncombined\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nsevere artifact heard (yes/no):\n\n\noverall findings:\n\n\nrecommendation and rationale:\n\n\n\nthe corrected listening report is recorded. the user heard no clear difference across these three pairs and judged the envelope versions equivalent…"
         }
       ]
     },
@@ -488,9 +597,21 @@
         },
         {
           "anchor": "",
+          "heading": "Time-varying Speech Effects",
+          "text": "Available since AudioSig 0.1.5, apply_speech_effects_envelope accepts numeric curves in output seconds. Rate is a positive playback factor; pitch is a semitone offset. Both curves interpolate linearly and hold their final values.\n\nfrom audiosig import apply_speech_effects_envelope, speech_effects_output_frames\n\nout = apply_speech_effects_envelope(\n    audio,\n    sample_rate=24_000,\n    rate_points=[(0.0, 1.0), (0.45, 0.85)],\n    pitch_points=[(0.0, 0.0), (0.30, 2.0)],\n)\nframes = speech_effects_output_frames(\n    audio.shape[-1],\n    sample_rate=24_000,\n    rate_points=[(0.0, 1.0), (0.45, 0.85)],\n)\nassert out.shape[-1] == frames\n\n\n\n\nControl-point times are measured on the transformed output timeline. Omit either curve to use its neutral value, rate 1.0 or pitch 0.0. A short clip does not c…",
+          "lower": "available since audiosig 0.1.5, apply_speech_effects_envelope accepts numeric curves in output seconds. rate is a positive playback factor; pitch is a semitone offset. both curves interpolate linearly and hold their final values.\n\nfrom audiosig import apply_speech_effects_envelope, speech_effects_output_frames\n\nout = apply_speech_effects_envelope(\n    audio,\n    sample_rate=24_000,\n    rate_points=[(0.0, 1.0), (0.45, 0.85)],\n    pitch_points=[(0.0, 0.0), (0.30, 2.0)],\n)\nframes = speech_effects_output_frames(\n    audio.shape[-1],\n    sample_rate=24_000,\n    rate_points=[(0.0, 1.0), (0.45, 0.85)],\n)\nassert out.shape[-1] == frames\n\n\n\n\ncontrol-point times are measured on the transformed output timeline. omit either curve to use its neutral value, rate 1.0 or pitch 0.0. a short clip does not c…"
+        },
+        {
+          "anchor": "",
           "heading": "Resampling Examples",
           "text": "from audiosig import resample, resample_speed, resample_to_length\n\n# Create audio at 48kHz\naudio_48k = create_sine_wave(440, duration=1.0, sample_rate=48000)\n\n# Downsample to 16kHz\naudio_16k = resample(audio_48k, source_rate=48000, target_rate=16000)\nprint(f\"48kHz: {len(audio_48k)} samples\")\nprint(f\"16kHz: {len(audio_16k)} samples\")  # 1/3 of original\n\n# Upsample to 96kHz\naudio_96k = resample(audio_48k, source_rate=48000, target_rate=96000)\nprint(f\"96kHz: {len(audio_96k)} samples\")  # 2x original\n\n# Exact sample-count and playback-speed operations\nexact = resample_to_length(audio_48k, 12_000)\nfaster_playback = resample_speed(audio_48k, speed=1.25)",
           "lower": "from audiosig import resample, resample_speed, resample_to_length\n\n# create audio at 48khz\naudio_48k = create_sine_wave(440, duration=1.0, sample_rate=48000)\n\n# downsample to 16khz\naudio_16k = resample(audio_48k, source_rate=48000, target_rate=16000)\nprint(f\"48khz: {len(audio_48k)} samples\")\nprint(f\"16khz: {len(audio_16k)} samples\")  # 1/3 of original\n\n# upsample to 96khz\naudio_96k = resample(audio_48k, source_rate=48000, target_rate=96000)\nprint(f\"96khz: {len(audio_96k)} samples\")  # 2x original\n\n# exact sample-count and playback-speed operations\nexact = resample_to_length(audio_48k, 12_000)\nfaster_playback = resample_speed(audio_48k, speed=1.25)"
+        },
+        {
+          "anchor": "",
+          "heading": "Smooth Cut-Point Selection",
+          "text": "This numeric example searches a synthetic waveform near a preferred sample. The result is deterministic and remains inside the caller’s legal interval:\n\nimport numpy as np\nfrom audiosig import find_smooth_cut_point\n\nsample_rate = 24_000\ntime = np.arange(sample_rate, dtype=np.float32) / sample_rate\naudio = np.sin(2.0 * np.pi * 220.0 * time)\ncandidate = find_smooth_cut_point(\n    audio, start=10_000, end=14_000, anchor=12_000, window_length=120\n )\nassert 10_000 <= candidate < 14_000\n\n\n\n\nAudioSig does not decide whether the interval is semantically legal or whether an application should retry. It only selects a numeric waveform boundary.",
+          "lower": "this numeric example searches a synthetic waveform near a preferred sample. the result is deterministic and remains inside the caller’s legal interval:\n\nimport numpy as np\nfrom audiosig import find_smooth_cut_point\n\nsample_rate = 24_000\ntime = np.arange(sample_rate, dtype=np.float32) / sample_rate\naudio = np.sin(2.0 * np.pi * 220.0 * time)\ncandidate = find_smooth_cut_point(\n    audio, start=10_000, end=14_000, anchor=12_000, window_length=120\n )\nassert 10_000 <= candidate < 14_000\n\n\n\n\naudiosig does not decide whether the interval is semantically legal or whether an application should retry. it only selects a numeric waveform boundary."
         },
         {
           "anchor": "",
@@ -609,6 +730,12 @@
         },
         {
           "anchor": "",
+          "heading": "Smooth Cut-Point Selection",
+          "text": "When an application already has a legal numeric interval, it can choose a low-disruption waveform boundary without changing the audio:\n\nfrom audiosig import find_smooth_cut_point\n\ncandidate = find_smooth_cut_point(\n    audio,\n    start=search_start,\n    end=search_end,\n    anchor=preferred_index,\n    window_length=120,\n )\n\n\n\n\nThe interval is half-open, the anchor is only a preference, and the function always returns a legal candidate for a non-empty interval. It is not a silence detector. Invalid arrays or parameters raise typed AudioSig exceptions. The application must decide whether the interval is semantically legal and whether a failed downstream policy should retry.",
+          "lower": "when an application already has a legal numeric interval, it can choose a low-disruption waveform boundary without changing the audio:\n\nfrom audiosig import find_smooth_cut_point\n\ncandidate = find_smooth_cut_point(\n    audio,\n    start=search_start,\n    end=search_end,\n    anchor=preferred_index,\n    window_length=120,\n )\n\n\n\n\nthe interval is half-open, the anchor is only a preference, and the function always returns a legal candidate for a non-empty interval. it is not a silence detector. invalid arrays or parameters raise typed audiosig exceptions. the application must decide whether the interval is semantically legal and whether a failed downstream policy should retry."
+        },
+        {
+          "anchor": "",
           "heading": "Silence Detection and Trimming",
           "text": "from audiosig import trim, split, normalized_energy_vad\n\n# Trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# Split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# Voice Activity Detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)",
           "lower": "from audiosig import trim, split, normalized_energy_vad\n\n# trim silence from beginning and end\ntrimmed, interval = trim(audio, top_db=40.0)\n\n# split audio into non-silent segments\nintervals = split(audio, top_db=40.0)\n\n# voice activity detection\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate,\n    frame_duration_ms=10,\n    energy_threshold=0.15,\n)"
@@ -618,6 +745,12 @@
           "heading": "Amplitude Processing",
           "text": "from audiosig import apply_gain_db, peak_normalize\n\n# Apply gain in decibels\nlouder = apply_gain_db(audio, db=6.0)\n\n# Normalize to peak amplitude\nnormalized = peak_normalize(audio, peak=0.9)",
           "lower": "from audiosig import apply_gain_db, peak_normalize\n\n# apply gain in decibels\nlouder = apply_gain_db(audio, db=6.0)\n\n# normalize to peak amplitude\nnormalized = peak_normalize(audio, peak=0.9)"
+        },
+        {
+          "anchor": "",
+          "heading": "Loudness Measurement",
+          "text": "Use integrated loudness when comparing perceived programme level, rather than treating peak normalization or full-file RMS as a loudness meter:\n\nimport audiosig\n\nmetrics = audiosig.measure_loudness(audio, sample_rate=24_000)\nprint(metrics.integrated_lufs, metrics.sample_peak_dbfs, metrics.true_peak_dbtp)\n\nbefore = audiosig.integrated_loudness(audio, sample_rate=24_000)\nafter = audiosig.integrated_loudness(\n    audiosig.apply_gain_db(audio, 3.0), sample_rate=24_000\n)\nassert abs((after - before) - 3.0) < 0.05\n\n\n\n\nintegrated_loudness follows BS.1770-style K-weighting and gated 400 ms blocks. sample_peak_dbfs is the discrete sample maximum; true_peak_dbtp uses configurable oversampling (4x by default) to estimate inter-sample overshoot. These functions measure only: they do not clip, limit, o…",
+          "lower": "use integrated loudness when comparing perceived programme level, rather than treating peak normalization or full-file rms as a loudness meter:\n\nimport audiosig\n\nmetrics = audiosig.measure_loudness(audio, sample_rate=24_000)\nprint(metrics.integrated_lufs, metrics.sample_peak_dbfs, metrics.true_peak_dbtp)\n\nbefore = audiosig.integrated_loudness(audio, sample_rate=24_000)\nafter = audiosig.integrated_loudness(\n    audiosig.apply_gain_db(audio, 3.0), sample_rate=24_000\n)\nassert abs((after - before) - 3.0) < 0.05\n\n\n\n\nintegrated_loudness follows bs.1770-style k-weighting and gated 400 ms blocks. sample_peak_dbfs is the discrete sample maximum; true_peak_dbtp uses configurable oversampling (4x by default) to estimate inter-sample overshoot. these functions measure only: they do not clip, limit, o…"
         },
         {
           "anchor": "",
@@ -719,8 +852,8 @@
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nResampling Internals\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDebugging and Profiling",
-          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\nresampling internals\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\ndebugging and profiling"
+          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSmooth Cut-Point Selection\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nTime-varying speech envelopes\n\nResampling Internals\n\nLoudness measurement\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDe…",
+          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsmooth cut-point selection\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\ntime-varying speech envelopes\n\nresampling internals\n\nloudness measurement\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\nde…"
         },
         {
           "anchor": "",
@@ -744,8 +877,14 @@
         {
           "anchor": "",
           "heading": "Local comparison harness",
-          "text": "The no-network harness reads PCM WAV with the Python standard library and\nwrites deterministic 16-bit WAV renders plus CSV and JSON diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nIt renders the basic phase-vocoder, WSOLA, and ESOLA rate paths, then supported\ncombined WSOLA, ESOLA, and TD-PSOLA pitch/rate cases. CSV/JSON records include\nruntime, real-time factor, peak, RMS, exact-length error, and continuity\ndiagnostics. Use --rates and --semitones to narrow a run. The harness does not install,\ninvoke, or require Rubber Band, SoundTouch, WORLD, or another external backend.\n\nThe required performance and robustness matrix is reproducible with:\n\npython scripts/benchmark_td_psola.py --output td-psola-benchmark.json\n\n\n\n\nThe TD-PSOLA benchmark covers deter…",
-          "lower": "the no-network harness reads pcm wav with the python standard library and\nwrites deterministic 16-bit wav renders plus csv and json diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nit renders the basic phase-vocoder, wsola, and esola rate paths, then supported\ncombined wsola, esola, and td-psola pitch/rate cases. csv/json records include\nruntime, real-time factor, peak, rms, exact-length error, and continuity\ndiagnostics. use --rates and --semitones to narrow a run. the harness does not install,\ninvoke, or require rubber band, soundtouch, world, or another external backend.\n\nthe required performance and robustness matrix is reproducible with:\n\npython scripts/benchmark_td_psola.py --output td-psola-benchmark.json\n\n\n\n\nthe td-psola benchmark covers deter…"
+          "text": "The no-network harness reads PCM WAV with the Python standard library and\nwrites deterministic 16-bit WAV renders plus CSV and JSON diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nIt renders the basic phase-vocoder, WSOLA, and ESOLA rate paths, then supported\ncombined WSOLA, ESOLA, and TD-PSOLA pitch/rate cases. CSV/JSON records include\nruntime, real-time factor, peak, RMS, exact-length error, and continuity\ndiagnostics. Use --rates and --semitones to narrow a run. The harness does not install,\ninvoke, or require Rubber Band, SoundTouch, WORLD, or another external backend.\n\nFor envelope A/B renders, add --envelopes. It adds rate transitions from 1.0 to each requested rate over 0.45 output seconds, pitch transitions from 0.0 to each requested semitone…",
+          "lower": "the no-network harness reads pcm wav with the python standard library and\nwrites deterministic 16-bit wav renders plus csv and json diagnostics:\n\npython scripts/compare_speech_effects.py input.wav comparison-output\n\n\n\n\nit renders the basic phase-vocoder, wsola, and esola rate paths, then supported\ncombined wsola, esola, and td-psola pitch/rate cases. csv/json records include\nruntime, real-time factor, peak, rms, exact-length error, and continuity\ndiagnostics. use --rates and --semitones to narrow a run. the harness does not install,\ninvoke, or require rubber band, soundtouch, world, or another external backend.\n\nfor envelope a/b renders, add --envelopes. it adds rate transitions from 1.0 to each requested rate over 0.45 output seconds, pitch transitions from 0.0 to each requested semitone…"
+        },
+        {
+          "anchor": "",
+          "heading": "Time-varying envelope evaluation",
+          "text": "The envelope regression tests live in tests/test_automation.py, tests/test_speech_envelope.py, and tests/test_speech_envelope_quality.py. They cover analytical integration and inverse-map round trips, exact output sizing, amplitude-coded source landmarks, local pitch trajectories, combined automation, voiced/unvoiced fallback, output-knot jumps, and high-frequency burst guards. These objective tests are diagnostics, not a substitute for listening.\n\nReproduce the 1, 10, and 60 second envelope benchmark with:\n\npython scripts/benchmark_speech_envelopes.py --output /tmp/speech-envelope-benchmark.json\n\n\n\n\nThe script runs static rate, static pitch, static combined, variable-rate, variable-pitch, and combined-variable cases on a deterministic 16 kHz harmonic fixture. Constant-rate baselines are…",
+          "lower": "the envelope regression tests live in tests/test_automation.py, tests/test_speech_envelope.py, and tests/test_speech_envelope_quality.py. they cover analytical integration and inverse-map round trips, exact output sizing, amplitude-coded source landmarks, local pitch trajectories, combined automation, voiced/unvoiced fallback, output-knot jumps, and high-frequency burst guards. these objective tests are diagnostics, not a substitute for listening.\n\nreproduce the 1, 10, and 60 second envelope benchmark with:\n\npython scripts/benchmark_speech_envelopes.py --output /tmp/speech-envelope-benchmark.json\n\n\n\n\nthe script runs static rate, static pitch, static combined, variable-rate, variable-pitch, and combined-variable cases on a deterministic 16 khz harmonic fixture. constant-rate baselines are…"
         },
         {
           "anchor": "",

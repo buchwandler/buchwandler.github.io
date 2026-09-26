@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -583,9 +583,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span>
     <span class="s2">&quot;TP. Hà Nội có 2 kg hàng với giá 1000 VND.&quot;</span><span class="p">,</span>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
-    <span class="s2">&quot;thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.&quot;</span>
-<span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Vietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and VND/₫ amounts, and guarded dependency abbreviations. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed.</p>

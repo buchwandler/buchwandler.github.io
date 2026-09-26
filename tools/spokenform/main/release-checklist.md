@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -543,7 +543,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="release-checklist">
 <h1>Release checklist</h1>
 <ol class="arabic simple">
-<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code> prerequisite containing the source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.</p></li>
+<li><p>Ensure the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.16,&lt;0.3.0</span></code> prerequisite containing the language registry, source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.</p></li>
 </ol>
 <ul class="simple">
 <li><p>Confirm the released Lexhint versions allowed by the <code class="docutils literal notranslate"><span class="pre">spokenform[lexhint]</span></code> extra pass the real provider contract test.</p></li>
@@ -562,15 +562,42 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li><p>Build docs with <code class="docutils literal notranslate"><span class="pre">sphinx-build</span> <span class="pre">-W</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">docs</span> <span class="pre">docs/_build/html</span></code>.</p></li>
 <li><p>Test wheel installation, one deterministic normalization example, and the <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> console command in a fresh environment.</p></li>
 <li><p>Confirm the release workflow uses a PyPI trusted publisher when repository OIDC is configured; otherwise verify the configured API token without changing authentication on release day.</p></li>
+</ol>
+<section id="spokenform-gold-benchmark-consumption">
+<h2>Spokenform Gold benchmark consumption</h2>
+<p>The Gold release workflow is operator-triggered and serializes one candidate per release tag. It plans the next version, builds and verifies deterministic candidate bytes, runs the real Spokenform consumer gate, compares an existing tag by manifest and archive SHA-256 values, publishes only equivalent or absent releases, and re-downloads the public zip for verification.</p>
+<p>For a first dispatch, confirm that <code class="docutils literal notranslate"><span class="pre">../spokenform/benchmarks/spokenform_gold_release.json</span></code> points to a published immutable asset. Its archive and manifest hashes must be real values, not placeholders. The consumer must be able to run with <code class="docutils literal notranslate"><span class="pre">--offline</span></code> after one successful online cache fill. Do not replace the pin with a branch, a latest-release lookup, or a source checkout.</p>
+<p>For the current pin, verify <code class="docutils literal notranslate"><span class="pre">v0.1.0-exp.2</span></code>, public release count <code class="docutils literal notranslate"><span class="pre">20,037</span></code>, embedded count <code class="docutils literal notranslate"><span class="pre">18,059</span></code>, and external-reference count <code class="docutils literal notranslate"><span class="pre">1,978</span></code>. A full consumer run must use:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.spokenform_gold<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--split<span class="w"> </span>corpus<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--accept-upstream-licenses<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--report<span class="w"> </span>html
+</pre></div>
+</div>
+<p>When updating the pin:</p>
+<ol class="arabic simple">
+<li><p>Inspect the intended release by tag, including prereleases.</p></li>
+<li><p>Copy the release ZIP SHA-256 and manifest SHA-256.</p></li>
+<li><p>Copy the release target commit.</p></li>
+<li><p>Update <code class="docutils literal notranslate"><span class="pre">benchmarks/spokenform_gold_release.json</span></code>.</p></li>
+<li><p>Run focused pin, cache, and release-consumer tests.</p></li>
+<li><p>Populate the cache with the online full benchmark.</p></li>
+<li><p>Verify all 20,037 records and the generated report metadata.</p></li>
+<li><p>Rerun the same command with <code class="docutils literal notranslate"><span class="pre">--offline</span></code> and compare release identity, manifest hash, source revisions, counts, and results.</p></li>
 <li><p>Publish the GitHub release only after all required checks pass.</p></li>
 <li><p>Before a downstream kokorog2p release raises its spokenform minimum, publish
 the spokenform release and verify the real <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, and <code class="docutils literal notranslate"><span class="pre">fr</span></code> integration
 gates against released packages.</p></li>
 </ol>
+<ul class="simple">
+<li><p>Before publishing Spokenform 0.4.0, verify the candidate checkout against the released PiperG2P package with <code class="docutils literal notranslate"><span class="pre">tests/test_real_piperg2p_integration.py</span></code>.</p></li>
+<li><p>After 0.4.0 is published, enable or verify the released Spokenform and released PiperG2P stack gate. Do not require a released Spokenform install for this API before 0.4.0 publication.</p></li>
+</ul>
 <p>The publish workflow deliberately remains operator-triggered by a published
 GitHub release. PyPI Trusted Publishing/OIDC is the preferred future mechanism
 because it avoids long-lived API tokens, but migrating credentials is a separate
 operational change that must be tested before a release is cut.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

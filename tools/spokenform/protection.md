@@ -5,8 +5,8 @@ permalink: /tools/spokenform/protection/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_ref: "v0.4.5"
+docs_commit: "3da15861c766c2b4bb961aee0629f52562e1b314"
 search_enabled: true
 ---
 
@@ -542,13 +542,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="protected-text">
 <h1>Protected text</h1>
-<p>Automatic protection covers URLs, email addresses, and semantic-version-like
+<p>Automatic protection covers HTTP(S), FTP, <code class="docutils literal notranslate"><span class="pre">www</span></code> URLs, email addresses, and semantic-version-like
 strings. Caller-defined spans can protect additional source ranges. High-
 confidence literal promotion is opt-in:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;See https://example.org/a2 and v1.2.3&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">normalize_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, structured URL, e-mail, version, and contextual
+<p>The default profile keeps these literals unchanged. Literal promotion is opt-in, and the German promoted renderer uses localized URL and e-mail punctuation and the reviewed FTP scheme policy.
+With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, structured URL, e-mail, version, and contextual
 Roman candidates are rendered before generic stages. Caller-defined spans are
 still absolute and always win over promotion.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedSpan</span><span class="p">,</span> <span class="n">prepare</span>

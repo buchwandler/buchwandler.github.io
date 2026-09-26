@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -542,48 +542,52 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="tts-engine-capabilities">
 <h1>TTS Engine Capabilities</h1>
-<p>SSMD can automatically filter SSML features based on your TTS engine’s capabilities.
-This ensures compatibility by converting unsupported features to plain text.</p>
+<p>Capability presets describe which features SSMD’s renderer can emit for a target. They
+do not guarantee that a particular service, voice, or endpoint accepts every SSML
+feature. For strict 0.9 documents, select <code class="docutils literal notranslate"><span class="pre">target=&quot;provider&quot;</span></code> and an explicit
+<code class="docutils literal notranslate"><span class="pre">loss_policy</span></code>; unsupported semantics produce diagnostics or fail according to that
+policy.</p>
 <section id="why-capabilities-matter">
 <h2>Why Capabilities Matter</h2>
-<p>Different TTS engines support different SSML features:</p>
+<p>TTS services differ in their supported SSML subsets and provider extensions:</p>
 <ul class="simple">
-<li><p><strong>Basic engines</strong> (pyttsx3, eSpeak) support limited SSML</p></li>
-<li><p><strong>Cloud services</strong> (Google, Azure, Amazon Polly) support full SSML</p></li>
-<li><p><strong>Custom engines</strong> may have unique limitations</p></li>
+<li><p>Basic engines often support only a small subset.</p></li>
+<li><p>Cloud services support broader but service- and voice-dependent subsets.</p></li>
+<li><p>Custom engines may have unique limitations.</p></li>
 </ul>
-<p>Without capability filtering, unsupported SSML tags could:</p>
-<ul class="simple">
-<li><p>Be ignored silently</p></li>
-<li><p>Cause errors</p></li>
-<li><p>Be spoken as literal text</p></li>
-<li><p>Break TTS playback</p></li>
-</ul>
-<p>SSMD solves this by automatically stripping unsupported features.</p>
+<p>A provider rendering can adapt unsupported features only under a non-error loss policy.
+Review <code class="docutils literal notranslate"><span class="pre">Document.render_diagnostics</span></code> before sending output to the engine.</p>
 </section>
 <section id="using-capability-presets">
 <h2>Using Capability Presets</h2>
-<p>The easiest way is to use a built-in preset:</p>
+<p>The preset selects a renderer capability profile. For a strict 0.9 document, pass an
+explicit provider target and loss policy, then inspect the reported diagnostics:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
-<span class="c1"># Configure for your TTS engine</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="s1">&#39;*Hello* [world]{lang=&quot;fr&quot;}!&#39;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
-
-<span class="c1"># Unsupported features are automatically removed</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-<span class="c1"># eSpeak doesn&#39;t support emphasis or language</span>
-<span class="c1"># Output: &lt;speak&gt;Hello world!&lt;/speak&gt;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;---</span>
+<span class="s1">ssmd_version: &quot;0.9&quot;</span>
+<span class="s1">---</span>
+<span class="s1">*Hello* [world]{lang=&quot;fr&quot;}!&#39;&#39;&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
 </pre></div>
 </div>
 <section id="available-presets">
 <h3>Available Presets</h3>
+<p>The lists describe built-in preset flags, not universal service guarantees. They affect
+output only when the <code class="docutils literal notranslate"><span class="pre">provider</span></code> target is selected; generic rendering uses portable
+mappings. Use an explicit loss policy and inspect diagnostics when provider adaptation
+is requested.</p>
 <section id="minimal">
 <h4>minimal</h4>
-<p>Plain text only, no SSML features:</p>
+<p>No optional renderer feature flags are enabled:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;minimal&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Supported:</strong> None (all stripped to text)</p>
+<p><strong>Supported:</strong> No optional feature flags. With the default <code class="docutils literal notranslate"><span class="pre">loss_policy=&quot;error&quot;</span></code>,
+unsupported semantics fail conversion; explicit <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">drop</span></code> policies are required
+for lossy reduction.</p>
 </section>
 <section id="pyttsx3">
 <h4>pyttsx3</h4>
@@ -632,13 +636,15 @@ This ensures compatibility by converting unsupported features to plain text.</p>
 </section>
 <section id="google-azure-microsoft">
 <h4>google / azure / microsoft</h4>
-<p>For cloud TTS services with full SSML support:</p>
+<p>The built-in cloud presets cover common features. Actual service, endpoint, region, and
+voice support varies, so check the vendor’s SSML documentation:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">)</span>
 <span class="c1"># or</span>
 <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;azure&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Supported:</strong> All standard SSML features</p>
+<p><strong>Enabled by these built-in presets:</strong> commonly supported standard SSML features. This
+is not a guarantee that every service or voice supports every mapping.</p>
 <ul class="simple">
 <li><p>Emphasis</p></li>
 <li><p>Breaks</p></li>
@@ -662,20 +668,18 @@ This ensures compatibility by converting unsupported features to plain text.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;polly&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>Supported:</strong> All features including:</p>
-<ul class="simple">
-<li><p>All standard SSML</p></li>
-<li><p>Amazon extensions (whisper, DRC)</p></li>
-<li><p>Audio files</p></li>
-</ul>
+<p>The <code class="docutils literal notranslate"><span class="pre">polly</span></code> preset enables the renderer’s configured Amazon mappings and extensions.
+Verify actual support against the selected Polly engine and voice; this preset is not a
+universal feature guarantee.</p>
 </section>
 <section id="full">
 <h4>full</h4>
-<p>All features enabled (no filtering):</p>
+<p>All renderer capability flags are enabled, so this preset performs no capability
+filtering. It does not imply that an external TTS engine supports every emitted feature:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;full&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Use this when you know your engine supports everything or want to test.</p>
+<p>Use this only when the target is known to support all emitted features or for testing.</p>
 </section>
 </section>
 </section>
@@ -687,7 +691,11 @@ Use them to validate input before conversion:</p>
 
 <span class="n">profiles</span> <span class="o">=</span> <span class="n">list_profiles</span><span class="p">()</span>
 <span class="n">profile</span> <span class="o">=</span> <span class="n">get_profile</span><span class="p">(</span><span class="s2">&quot;ssmd-core&quot;</span><span class="p">)</span>
-<span class="n">issues</span> <span class="o">=</span> <span class="n">lint</span><span class="p">(</span><span class="s2">&quot;[Hello]{ext=&#39;whisper&#39;}&quot;</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;kokoro&quot;</span><span class="p">)</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;---</span>
+<span class="s1">ssmd_version: &quot;0.9&quot;</span>
+<span class="s1">---</span>
+<span class="s1">[Hello]{volume=&quot;loud&quot;}&#39;&#39;&#39;</span>
+<span class="n">issues</span> <span class="o">=</span> <span class="n">lint</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">profile</span><span class="o">=</span><span class="s2">&quot;ssmd-core&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Profiles are separate from runtime <code class="docutils literal notranslate"><span class="pre">TTSCapabilities</span></code> presets.</p>
@@ -730,11 +738,13 @@ Use them to validate input before conversion:</p>
     <span class="p">)</span>
 <span class="p">)</span>
 
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="n">caps</span><span class="p">)</span>
-
-<span class="c1"># Pitch will be stripped, but volume and rate preserved</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[text]{volume=&quot;5&quot; rate=&quot;4&quot; pitch=&quot;5&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;prosody volume=&quot;x-loud&quot; rate=&quot;fast&quot;&gt;text&lt;/prosody&gt;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;---</span>
+<span class="s1">ssmd_version: &quot;0.9&quot;</span>
+<span class="s1">---</span>
+<span class="s1">[text]{volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;}&#39;&#39;&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="n">caps</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
 </pre></div>
 </div>
 </section>
@@ -748,26 +758,94 @@ Use them to validate input before conversion:</p>
     <span class="p">}</span>
 <span class="p">)</span>
 
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="n">caps</span><span class="p">)</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;---</span>
+<span class="s1">ssmd_version: &quot;0.9&quot;</span>
+<span class="s1">---</span>
+<span class="s1">[secret]{ext=&quot;whisper&quot;}&#39;&#39;&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="n">caps</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="provider-adaptation">
+<h2>Provider Adaptation</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">target=&quot;provider&quot;</span></code> to apply a capability preset. Provider adaptation is explicit;
+unsupported semantics fail by default. Choose <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">drop</span></code> only when lossy output is
+acceptable, and inspect the returned diagnostics.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[secret]{ext=&quot;whisper&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;amazon:effect name=&quot;whispered&quot;&gt;secret&lt;/amazon:effect&gt;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s1">&#39;&#39;&#39;---</span>
+<span class="s1">ssmd_version: &quot;0.9&quot;</span>
+<span class="s1">---</span>
+<span class="s1"># Welcome</span>
+<span class="s1">*Hello* world! ...500ms</span>
+<span class="s1">[Bonjour]{lang=&quot;fr&quot;} everyone!</span>
+<span class="s1">This is [loud]{volume=&quot;loud&quot;}.&#39;&#39;&#39;</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">target=&quot;generic&quot;</span></code> emits portable SSML and does not apply provider-specific capability
+adaptation. It may still reject semantics that cannot be represented by the selected
+rendering contract.</p>
+</section>
+<section id="streaming-with-capabilities">
+<h2>Streaming with Capabilities</h2>
+<p>Apply the target and loss policy to each streamed document, then inspect its diagnostics
+before sending it to the TTS engine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">sentence_doc</span> <span class="ow">in</span> <span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+    <span class="n">ssml</span> <span class="o">=</span> <span class="n">sentence_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+    <span class="n">diagnostics</span> <span class="o">=</span> <span class="n">sentence_doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
+    <span class="n">tts_engine</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-</section>
-<section id="capability-comparison">
-<h2>Capability Comparison</h2>
-<p>Same input with different engines:</p>
-<section id="input">
-<h3>Input</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s1">&#39;*Hello* world... [this is loud]{volume=&quot;5&quot;}!&#39;</span>
+<section id="comparing-capability-presets">
+<h2>Comparing Capability Presets</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">preset</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;minimal&quot;</span><span class="p">,</span> <span class="s2">&quot;pyttsx3&quot;</span><span class="p">,</span> <span class="s2">&quot;espeak&quot;</span><span class="p">,</span> <span class="s2">&quot;google&quot;</span><span class="p">,</span> <span class="s2">&quot;polly&quot;</span><span class="p">):</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="n">preset</span><span class="p">)</span>
+    <span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;warn&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">preset</span><span class="p">,</span> <span class="n">ssml</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The output and diagnostics depend on the preset. Check them against the selected
+service, region, and voice; a preset is not a guarantee that the external endpoint
+accepts every feature.</p>
 </section>
-<section id="output-by-engine">
-<h3>Output by Engine</h3>
+<section id="loss-policies">
+<h2>Loss Policies</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">error</span></code> (the default) refuses a conversion when provider adaptation would lose
+semantics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warn</span></code> returns adapted SSML with warning diagnostics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">drop</span></code> returns adapted SSML with informational diagnostics.</p></li>
+</ul>
+<p>Text and nested markup are handled according to the selected policy. Do not treat
+stripped markup as a successful conversion unless the associated diagnostics are
+reviewed.</p>
 </section>
+<section id="best-practices">
+<h2>Best Practices</h2>
+<ol class="arabic simple">
+<li><p>Select the SSML target explicitly when its contract matters.</p></li>
+<li><p>Use the capability preset for the intended provider and inspect diagnostics.</p></li>
+<li><p>Verify generated SSML against the actual service and voice.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">error</span></code> unless the application explicitly accepts lossy adaptation.</p></li>
+<li><p>Keep a generic rendering path when portable SSML is required.</p></li>
+</ol>
+</section>
+<section id="integration-example">
+<h2>Integration Example</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">render_for_provider</span><span class="p">(</span><span class="n">source</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">provider</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">list</span><span class="p">]:</span>
+    <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="n">provider</span><span class="p">)</span>
+    <span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="s2">&quot;provider&quot;</span><span class="p">,</span> <span class="n">loss_policy</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">ssml</span><span class="p">,</span> <span class="n">doc</span><span class="o">.</span><span class="n">render_diagnostics</span>
+</pre></div>
+</div>
 </section>
 </section>
 </div>

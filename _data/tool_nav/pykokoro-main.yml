@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 9d36442a35f40d932f8999be8fe33c5e20ae8a66
+source_commit: 335188ed2d0c8aaf96438789171f79a8609dc16c
 source_url: https://github.com/buchwandler/pykokoro/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/pykokoro
-release_tag: v0.9.6
-release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.6
+release_tag: v0.10.0
+release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.9.6
+  ref: v0.10.0
   url: /tools/pykokoro/
   current: false
 - name: main
@@ -27,29 +27,32 @@ entries:
   title: PyKokoro Documentation
   url: /tools/pykokoro/main/
 - slug: quickstart
-  title: pykokoro Quick Start Guide
+  title: pykokoro Quick start
   url: /tools/pykokoro/main/quickstart/
 - slug: installation
-  title: pykokoro Installation Guide
+  title: pykokoro Installation
   url: /tools/pykokoro/main/installation/
 - slug: basic_usage
-  title: pykokoro Basic Usage
+  title: pykokoro Basic usage
   url: /tools/pykokoro/main/basic_usage/
 - slug: advanced_features
-  title: pykokoro Advanced Features
+  title: pykokoro Advanced request features
   url: /tools/pykokoro/main/advanced_features/
 - slug: pipeline_stages
-  title: pykokoro Pipeline Usage and Stages
+  title: pykokoro Request lifecycle
   url: /tools/pykokoro/main/pipeline_stages/
 - slug: api_reference
-  title: pykokoro API Reference
+  title: pykokoro API reference
   url: /tools/pykokoro/main/api_reference/
 - slug: examples
   title: pykokoro Examples
   url: /tools/pykokoro/main/examples/
-- slug: polynorm_benchmark
-  title: pykokoro PolyNorm benchmark
-  url: /tools/pykokoro/main/polynorm_benchmark/
+- slug: languages
+  title: pykokoro Languages and model profiles
+  url: /tools/pykokoro/main/languages/
+- slug: breaking-change-0.10.0
+  title: 'pykokoro Breaking change: request-centric synthesis (v0.10.0)'
+  url: /tools/pykokoro/main/breaking-change-0.10.0/
 - slug: changelog
   title: pykokoro Changelog
   url: /tools/pykokoro/main/changelog/

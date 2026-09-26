@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/cli/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.7"
-docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
+docs_ref: "v0.3.9"
+docs_commit: "57d2cf1a6017e0fbc48999decb81e6c630c8e90d"
 search_enabled: true
 ---
 

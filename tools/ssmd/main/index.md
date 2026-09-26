@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -554,13 +554,29 @@ maintainable. See <code class="docutils literal notranslate"><span class="pre">S
 <section id="features">
 <h2>Features</h2>
 <p>✨ <strong>Markdown-like syntax</strong> - More intuitive than raw SSML</p>
-<p>🎯 <strong>Full SSML support</strong> - All major SSML features covered</p>
-<p>🔄 <strong>Bidirectional</strong> - Convert SSMD↔SSML or strip to plain text</p>
+<p>🎯 <strong>Scoped SSML output</strong> - Generic, SSML 1.1, and provider-adapted targets with
+explicit loss policies 🔄 <strong>Bidirectional</strong> - Convert SSMD↔SSML or strip to plain text</p>
 <p>📊 <strong>Parser API</strong> - Extract structured data for custom TTS pipelines</p>
 <p>📝 <strong>TTS streaming</strong> - Iterate through sentences for real-time TTS</p>
-<p>🎛️ <strong>TTS capabilities</strong> - Auto-filter features based on engine support</p>
-<p>🎨 <strong>Extensible</strong> - Custom extensions for platform-specific features</p>
+<p>🛠️ <strong>TTS capabilities</strong> - Provider-aware rendering with explicit loss policies 🎨
+<strong>Extensible</strong> - Custom extensions for platform-specific features</p>
 <p>🧪 <strong>Type-safe</strong> - Full mypy type checking support</p>
+</section>
+<section id="canonical-ssmd-0-9">
+<h2>Canonical SSMD 0.9</h2>
+<p>New documents declare <code class="docutils literal notranslate"><span class="pre">ssmd_version:</span> <span class="pre">&quot;0.9&quot;</span></code> and use fenced directive blocks instead of
+raw XML:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+ssmd_version: &quot;0.9&quot;
+---
+:::{voice=&quot;host&quot;}
+Hello *world*!
+:::
+</pre></div>
+</div>
+<p>SSML conversion covers explicit supported semantics. Use <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">generic</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">ssml-1.1</span></code>, or <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">provider</span></code> and choose a loss policy rather than
+assuming universal SSML support.</p>
 </section>
 <section id="structure-only-downstream-parsing">
 <h2>Structure-only downstream parsing</h2>
@@ -580,6 +596,8 @@ perform general written-to-spoken language normalization.</p>
 </section>
 <section id="quick-example">
 <h2>Quick Example</h2>
+<p>This quick API example uses body fragments for brevity; standalone files should use the
+versioned 0.9 document shown above.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
 
 <span class="c1"># Convert SSMD to SSML</span>
@@ -588,7 +606,11 @@ perform general written-to-spoken language normalization.</p>
 
 <span class="c1"># Convert SSML back to SSMD</span>
 <span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt;&lt;/speak&gt;&#39;</span><span class="p">)</span>
-<span class="c1"># → *Hello*</span>
+<span class="c1"># Complete SSMD 0.9 document, starting with a version header:</span>
+<span class="c1"># ---</span>
+<span class="c1"># ssmd_version: &#39;0.9&#39;</span>
+<span class="c1"># ---</span>
+<span class="c1"># *Hello*</span>
 
 <span class="c1"># Strip markup for plain text</span>
 <span class="n">plain</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">to_text</span><span class="p">(</span><span class="s2">&quot;Hello *world* @marker!&quot;</span><span class="p">)</span>
@@ -622,6 +644,7 @@ perform general written-to-spoken language normalization.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#canonical-ssmd-0-9-input">Canonical SSMD 0.9 input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-conversion">Basic Conversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#using-the-document-api">Using the Document API</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#tts-streaming">TTS Streaming</a></li>
@@ -635,12 +658,25 @@ perform general written-to-spoken language normalization.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command Line Interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cli/#exit-codes">Exit codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#machine-readable-output">Machine-readable output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#config-and-voices"><code class="docutils literal notranslate"><span class="pre">config</span></code> and <code class="docutils literal notranslate"><span class="pre">voices</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#lint-check"><code class="docutils literal notranslate"><span class="pre">lint</span></code> / <code class="docutils literal notranslate"><span class="pre">check</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#create"><code class="docutils literal notranslate"><span class="pre">create</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#convert"><code class="docutils literal notranslate"><span class="pre">convert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#to-ssml-from-ssml-text"><code class="docutils literal notranslate"><span class="pre">to-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">from-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">text</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#fmt"><code class="docutils literal notranslate"><span class="pre">fmt</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#migrate"><code class="docutils literal notranslate"><span class="pre">migrate</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#profiles"><code class="docutils literal notranslate"><span class="pre">profiles</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#inspect-json"><code class="docutils literal notranslate"><span class="pre">inspect</span></code> (JSON)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#version"><code class="docutils literal notranslate"><span class="pre">version</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="syntax/">SSMD Syntax Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#yaml-front-matter">YAML front matter</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax/#document-versions-and-dialects">Document versions and dialects</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#semantic-language-vs-pronunciation-language">Semantic language vs pronunciation language</a></li>
 <li class="toctree-l2"><a class="reference internal" href="syntax/#text-and-emphasis">Text and Emphasis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="syntax/#breaks-and-pauses">Breaks and Pauses</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="capabilities/">TTS Engine Capabilities</a><ul>
@@ -648,7 +684,12 @@ perform general written-to-spoken language normalization.</p>
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#using-capability-presets">Using Capability Presets</a></li>
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#capability-profiles-and-linting">Capability Profiles and Linting</a></li>
 <li class="toctree-l2"><a class="reference internal" href="capabilities/#custom-capabilities">Custom Capabilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="capabilities/#capability-comparison">Capability Comparison</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#provider-adaptation">Provider Adaptation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#streaming-with-capabilities">Streaming with Capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#comparing-capability-presets">Comparing Capability Presets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#loss-policies">Loss Policies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#best-practices">Best Practices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="capabilities/#integration-example">Integration Example</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="spans/">Spans</a><ul>
@@ -661,15 +702,14 @@ perform general written-to-spoken language normalization.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="parser/">Parser API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="parser/#when-to-use-the-parser">When to Use the Parser</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser/#overview">Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="parser/#parser-functions">Parser Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser/#strict-ssmd-0-9-structural-parser">Strict SSMD 0.9 structural parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser/#legacy-0-8-sentence-and-segment-apis">Legacy 0.8 sentence and segment APIs</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ssml_conversion/">SSML to SSMD Conversion</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#tts-pipeline-integration">TTS pipeline integration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#basic-conversion">Basic Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#supported-ssml-elements">Supported SSML Elements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#commonly-representable-ssml-elements">Commonly Representable SSML Elements</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#default-value-filtering">Default Value Filtering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#round-trip-conversion">Round-Trip Conversion</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#complex-examples">Complex Examples</a></li>
@@ -678,21 +718,26 @@ perform general written-to-spoken language normalization.</p>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#configuration-options">Configuration Options</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#use-cases">Use Cases</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssml_conversion/#voice-defaults-and-transition-metadata">Voice Defaults and Transition Metadata</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/#basic-tts-integration">Basic TTS Integration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#canonical-ssmd-0-9-document">Canonical SSMD 0.9 document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#parse-strict-0-9-structure">Parse strict 0.9 structure</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#render-for-a-tts-target">Render for a TTS target</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#legacy-0-8-sentence-parser-compatibility">Legacy 0.8 sentence-parser compatibility</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.9.0] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.7] - 2026-09-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.8.6] - 2026-09-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.8.5] - 2026-08-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.8.4] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.3] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.8.2] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.8.0] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.8.6] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.8.5] - 2026-08-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.8.4] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.8.3] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.8.2] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>
@@ -702,6 +747,11 @@ perform general written-to-spoken language normalization.</p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="api/#core-classes">Core Classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#convenience-functions">Convenience Functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#parser-data-structures">Parser Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#structure-data-types">Structure Data Types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#capability-presets">Capability Presets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#internal-modules">Internal Modules</a></li>
 </ul>
 </li>
 </ul>

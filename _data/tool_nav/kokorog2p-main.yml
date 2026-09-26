@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 7f0953db165da0406e1f4fad1246db26ee6e62f6
+source_commit: 69a0620b62f083be4b7533827c5e9c6458886c7a
 source_url: https://github.com/buchwandler/kokorog2p/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/kokorog2p
-release_tag: v0.9.9
-release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.9
+release_tag: v0.9.15
+release_url: https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.15
 versions:
 - name: release
   label: Latest release
-  ref: v0.9.9
+  ref: v0.9.15
   url: /tools/kokorog2p/
   current: false
 - name: main

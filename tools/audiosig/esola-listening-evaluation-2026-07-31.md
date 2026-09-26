@@ -5,8 +5,8 @@ permalink: /tools/audiosig/esola-listening-evaluation-2026-07-31/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_ref: "v0.1.5"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 

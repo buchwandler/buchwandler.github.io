@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">16<span>focused tools</span></div>
+    <div class="hero-stat">17<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -185,6 +185,15 @@ permalink: /tools/
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio/releases/tag/v0.2.3" rel="external noopener">Latest release: v0.2.3 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>phonodist</h3>
+      <p>Language-aware, explainable distance metrics for IPA pronunciations.</p>
+      <div class="card-links">
+        <a href="/tools/phonodist/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/phonodist" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>

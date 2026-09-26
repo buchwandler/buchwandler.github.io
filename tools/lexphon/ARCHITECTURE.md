@@ -5,8 +5,8 @@ permalink: /tools/lexphon/ARCHITECTURE/
 nav_tool: lexphon
 docs_project: "lexphon"
 docs_variant: "release"
-docs_ref: "v0.2.3"
-docs_commit: "1a6a1395225c036ae618d9d33e773cc9f79890b8"
+docs_ref: "v0.2.5"
+docs_commit: "6eaaf5d0ec408497d042a2baaa59048aac1e08ae"
 search_enabled: true
 ---
 
@@ -551,6 +551,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p><code class="docutils literal notranslate"><span class="pre">g2lex-data</span></code> is the producer and publisher. It obtains, transforms, validates, licenses, reproduces, and publishes immutable generic pronunciation data releases. G2Lex is the storage primitive that represents, packs, opens, and queries typed lexicon data. Lexphon is the generic runtime consumer. KokoroG2P is a downstream model adapter.</p>
 <p>Lexphon owns catalog consumption, explicit verified installation, immutable local asset storage, language profiles, candidate generation, ordered layered lookup, selectors, pronunciation alphabet normalization, token provenance, CLI behavior, and optional generic pronunciation providers.</p>
 <p>Lexphon owns generic pronunciation providers as well as lexicon pronunciation cleanup. eSpeak and Goruut return raw source pronunciation; Lexphon normalizes it once into clean IPA and structured provenance, including provider, requested provider language, raw source pronunciation, and removed language-control markers. No Kokoro vocabulary conversion or model-specific normalization occurs here.</p>
+<p>The eSpeak provider delegates runtime discovery, native/CLI selection, voice resolution, execution, batching, version diagnostics, and cleanup to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. Lexphon retains provider policy, language normalization, U+200D tied IPA selection, raw-output normalization, typed errors, and provenance.</p>
 <p><code class="docutils literal notranslate"><span class="pre">Phonemizer.lookup_lexicon()</span></code> is the lexicon-evidence operation and never invokes a provider. <code class="docutils literal notranslate"><span class="pre">Phonemizer.lookup()</span></code> is the staged pronunciation operation: it first calls <code class="docutils literal notranslate"><span class="pre">lookup_lexicon()</span></code>, then invokes the configured provider only after a lexicon miss. Provider results use <code class="docutils literal notranslate"><span class="pre">source=&quot;provider&quot;</span></code> and identify the provider separately.
 Lexphon does not own source acquisition, dataset transformations, licensing transformations, production dictionary build recipes, Kokoro vocabulary, Kokoro stress or rating policy, or hidden downloads. Lexphon must never contain source acquisition or G2Lex build recipes for production dictionaries.</p>
 </section>

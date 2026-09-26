@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -650,6 +650,39 @@ TD-PSOLA supports <code class="docutils literal notranslate"><span class="pre">0
 guarantee vocal-formant preservation. This compositor does not parse SSMD strings and raises typed
 AudioSig exceptions for invalid input or parameters.</p>
 </section>
+<section id="apply-speech-effects-envelope-audio-sample-rate-rate-points-pitch-points-time-base-output-interpolation-linear-method-wsola-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">apply_speech_effects_envelope(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">rate_points=(),</span> <span class="pre">pitch_points=(),</span> <span class="pre">time_base='output',</span> <span class="pre">interpolation='linear',</span> <span class="pre">method='wsola',</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Apply continuously varying playback rate and pitch controls in one speech-processing operation. AudioSig 0.1.5 is the minimum version containing this API.</p>
+<p><strong>Control points:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rate_points</span></code>: <code class="docutils literal notranslate"><span class="pre">(output_seconds,</span> <span class="pre">rate_factor)</span></code> pairs. Factors must be finite and positive. <code class="docutils literal notranslate"><span class="pre">1.0</span></code> is unchanged, values below <code class="docutils literal notranslate"><span class="pre">1.0</span></code> slow playback, and values above <code class="docutils literal notranslate"><span class="pre">1.0</span></code> speed it up.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pitch_points</span></code>: <code class="docutils literal notranslate"><span class="pre">(output_seconds,</span> <span class="pre">semitones)</span></code> pairs. Values are finite semitone offsets, where <code class="docutils literal notranslate"><span class="pre">0.0</span></code> is unchanged and positive values raise pitch.</p></li>
+<li><p>At least one curve must be non-empty. Omitted rate and pitch curves mean constant <code class="docutils literal notranslate"><span class="pre">1.0</span></code> and <code class="docutils literal notranslate"><span class="pre">0.0</span></code>, respectively.</p></li>
+<li><p>Every non-empty curve starts exactly at <code class="docutils literal notranslate"><span class="pre">0.0</span></code> seconds. Times increase strictly. <code class="docutils literal notranslate"><span class="pre">interpolation='linear'</span></code> interpolates rate factors and semitones; the last value is held after the final point.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">time_base='output'</span></code> is the supported time base. Point times refer to the transformed output, so a transition ending at <code class="docutils literal notranslate"><span class="pre">0.3</span></code> seconds lasts 0.3 seconds in the result regardless of rate changes.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">method</span></code> accepts <code class="docutils literal notranslate"><span class="pre">'wsola'</span></code> or <code class="docutils literal notranslate"><span class="pre">'td_psola'</span></code>. For nonconstant rate with neutral pitch, WSOLA selects mapped WSOLA and TD-PSOLA selects voiced pulse synthesis with mapped WSOLA fallback. Any nonconstant pitch uses the coordinated TD-PSOLA voiced path and mapped WSOLA fallback for unvoiced spans.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">axis</span></code> selects the sample dimension. Every channel uses the same timing curves and frame count.</p></li>
+</ul>
+<p>The rate map integrates <code class="docutils literal notranslate"><span class="pre">r(y)</span></code> to obtain source time <code class="docutils literal notranslate"><span class="pre">x(y)</span></code>. The output duration is the inverse-map time satisfying <code class="docutils literal notranslate"><span class="pre">x(y)</span> <span class="pre">=</span> <span class="pre">input_frames</span> <span class="pre">/</span> <span class="pre">sample_rate</span></code>, and the returned frame count is <code class="docutils literal notranslate"><span class="pre">round(y</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code> using float64 timing calculations. Pitch-only automation preserves the input frame count. A short clip evaluates only the portion of each curve reached by its output; AudioSig does not compress the curve to force its final value.</p>
+<p>Constant curves agree with <code class="docutils literal notranslate"><span class="pre">apply_speech_effects</span></code>. Identity curves return an independent copy. Silence remains zero. The operation is deterministic for the same input and AudioSig version, but exact PCM is not promised across versions.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_speech_effects_envelope</span><span class="p">,</span> <span class="n">speech_effects_output_frames</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">apply_speech_effects_envelope</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">rate_points</span><span class="o">=</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">)),</span>
+    <span class="n">pitch_points</span><span class="o">=</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="n">predicted_frames</span> <span class="o">=</span> <span class="n">speech_effects_output_frames</span><span class="p">(</span>
+    <span class="n">audio</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">rate_points</span><span class="o">=</span><span class="p">((</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">)),</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">predicted_frames</span>
+</pre></div>
+</div>
+<p>Malformed points, unsupported method/options, and invalid sample rates raise <code class="docutils literal notranslate"><span class="pre">InvalidParameterError</span></code>; malformed audio shapes use <code class="docutils literal notranslate"><span class="pre">AudioShapeError</span></code>.</p>
+</section>
 </section>
 <hr class="docutils" />
 <section id="resampling">
@@ -749,8 +782,27 @@ higher pitched; values below one make it longer and lower pitched. Use
 </div>
 </section>
 </section>
-</section>
 <hr class="docutils" />
+<section id="loudness-measurement">
+<h3>Loudness Measurement</h3>
+<section id="integrated-loudness-audio-sample-rate-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">integrated_loudness(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Return BS.1770-style integrated programme loudness in LUFS. Audio is K-weighted, divided into complete 400 ms blocks with a 100 ms hop, then processed with the -70 LUFS absolute gate and -10 LU relative gate. Signals shorter than one complete block return <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code> without invented padding. V1 accepts one-dimensional mono <code class="docutils literal notranslate"><span class="pre">float32</span></code>/<code class="docutils literal notranslate"><span class="pre">float64</span></code> arrays; the mandatory sample rate is 24,000 Hz, and 44,100 and 48,000 Hz are also supported. Digital silence returns <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code>.</p>
+</section>
+<section id="sample-peak-dbfs-audio-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">sample_peak_dbfs(audio,</span> <span class="pre">*,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Return <code class="docutils literal notranslate"><span class="pre">20</span> <span class="pre">*</span> <span class="pre">log10(max(abs(audio)))</span></code> in dBFS. Digital silence returns <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code>. This is a sample peak measurement, not a loudness normalization operation.</p>
+</section>
+<section id="true-peak-dbtp-audio-sample-rate-axis-1-oversample-4">
+<h4><code class="docutils literal notranslate"><span class="pre">true_peak_dbtp(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">axis=-1,</span> <span class="pre">oversample=4)</span></code></h4>
+<p>Estimate inter-sample peak in dBTP using AudioSig’s NumPy windowed-sinc resampler. <code class="docutils literal notranslate"><span class="pre">oversample</span></code> must be a positive integer; <code class="docutils literal notranslate"><span class="pre">1</span></code> is equivalent to sample peak. The function never clips, limits, or modifies the source audio. Digital silence returns <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code>.</p>
+</section>
+<section id="loudnessmetrics-and-measure-loudness-audio-sample-rate-axis-1-true-peak-oversample-4">
+<h4><code class="docutils literal notranslate"><span class="pre">LoudnessMetrics</span></code> and <code class="docutils literal notranslate"><span class="pre">measure_loudness(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">axis=-1,</span> <span class="pre">true_peak_oversample=4)</span></code></h4>
+<p><code class="docutils literal notranslate"><span class="pre">LoudnessMetrics</span></code> is an immutable dataclass containing <code class="docutils literal notranslate"><span class="pre">integrated_lufs</span></code>, <code class="docutils literal notranslate"><span class="pre">sample_peak_dbfs</span></code>, and <code class="docutils literal notranslate"><span class="pre">true_peak_dbtp</span></code>. <code class="docutils literal notranslate"><span class="pre">measure_loudness</span></code> composes the three measurements without applying policy or changing the input. Stable imports are available from <code class="docutils literal notranslate"><span class="pre">audiosig</span></code>; the PyKokoro minimum release is <code class="docutils literal notranslate"><span class="pre">0.1.3</span></code>.</p>
+</section>
+</section>
+</section>
 <section id="silence-detection">
 <h2>Silence Detection</h2>
 <section id="voice-activity-detection">
@@ -833,6 +885,24 @@ higher pitched; values below one make it longer and lower pitched. Use
     <span class="n">speech</span> <span class="o">=</span> <span class="n">audio</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span>
 </pre></div>
 </div>
+</section>
+</section>
+<hr class="docutils" />
+<section id="smooth-cut-point-selection">
+<h3>Smooth Cut-Point Selection</h3>
+<section id="find-smooth-cut-point-audio-start-end-anchor-none-window-length-120-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">find_smooth_cut_point(audio,</span> <span class="pre">*,</span> <span class="pre">start,</span> <span class="pre">end,</span> <span class="pre">anchor=None,</span> <span class="pre">window_length=120,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Select a deterministic waveform boundary in the half-open sample interval <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code>. The candidate minimizes a fixed combination of local RMS, adjacent endpoint amplitude, cross-boundary slope, and distance from the preferred anchor. This is not a silence detector and returns a legal candidate for continuous voiced or noisy audio.</p>
+<p><strong>Parameters:</strong></p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">audio</span></code> (np.ndarray): Finite float32 or float64 audio array</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">start</span></code>, <code class="docutils literal notranslate"><span class="pre">end</span></code> (int): Legal half-open search bounds with <code class="docutils literal notranslate"><span class="pre">0</span> <span class="pre">&lt;=</span> <span class="pre">start</span> <span class="pre">&lt;</span> <span class="pre">end</span> <span class="pre">&lt;=</span> <span class="pre">sample_count</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">anchor</span></code> (int, optional): Preferred sample index; defaults to the middle legal candidate and may lie outside the interval</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">window_length</span></code> (int): Local RMS analysis length in samples, at least 1</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">axis</span></code> (int): Sample axis, default <code class="docutils literal notranslate"><span class="pre">-1</span></code>; all other dimensions are conservatively aggregated</p></li>
+</ul>
+<p><strong>Returns:</strong> <code class="docutils literal notranslate"><span class="pre">int</span></code> for a legal candidate, or <code class="docutils literal notranslate"><span class="pre">None</span></code> only for the explicit empty case <code class="docutils literal notranslate"><span class="pre">start=0,</span> <span class="pre">end=0</span></code> on empty audio.</p>
+<p>Invalid arrays, axes, bounds, anchors, and parameters raise <code class="docutils literal notranslate"><span class="pre">AudioShapeError</span></code> or <code class="docutils literal notranslate"><span class="pre">InvalidParameterError</span></code>. Ties are resolved by total score, anchor distance, then lower sample index. The caller remains responsible for semantic interval legality and retry policy.</p>
 </section>
 </section>
 <hr class="docutils" />

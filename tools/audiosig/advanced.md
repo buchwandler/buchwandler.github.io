@@ -5,8 +5,8 @@ permalink: /tools/audiosig/advanced/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_ref: "v0.1.5"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -618,6 +618,13 @@ or polyphonic pitch-shifting backend.</p>
 listening gates pass. See the <a class="reference internal" href="../td-psola-listening-evaluation-2026-07-31/"><span class="std std-doc">evaluation protocol</span></a>.</p>
 </section>
 </section>
+<section id="time-varying-speech-envelopes">
+<h2>Time-varying speech envelopes</h2>
+<p><code class="docutils literal notranslate"><span class="pre">apply_speech_effects_envelope</span></code> is available since AudioSig 0.1.5. It accepts only numeric control points and leaves higher-level meaning to calling applications. Rate values are positive playback factors; pitch values are semitones. Control-point times use output seconds, both curves interpolate linearly, the first point is at zero, and the final point is held. No repeated calls to static effects or chunk stitching are used.</p>
+<p>For output time <code class="docutils literal notranslate"><span class="pre">y</span></code>, the rate map consumes source time <code class="docutils literal notranslate"><span class="pre">x(y)</span> <span class="pre">=</span> <span class="pre">integral(0,</span> <span class="pre">y,</span> <span class="pre">r(u)</span> <span class="pre">du)</span></code>. Linear segments are integrated analytically in float64. AudioSig solves the inverse map at the input duration and rounds <code class="docutils literal notranslate"><span class="pre">output_seconds</span> <span class="pre">*</span> <span class="pre">sample_rate</span></code> once to determine the output frame count. <code class="docutils literal notranslate"><span class="pre">speech_effects_output_frames</span></code> exposes that same calculation for downstream timing prediction. Pitch-only envelopes preserve exact input length.</p>
+<p>Variable rate-only processing defaults to mapped WSOLA, where each expected source frame is computed from the absolute integrated map and overlap search remains local and deterministic. Selecting <code class="docutils literal notranslate"><span class="pre">method=&quot;td_psola&quot;</span></code> uses voiced pulse synthesis with mapped WSOLA fallback for rate-only curves. When pitch varies, TD-PSOLA controls voiced pulse spacing from output-time semitone values, while unvoiced spans use the same mapped WSOLA rate trajectory. This coordinated path is speech-oriented and does not claim vocal-formant preservation.</p>
+<p>Omitted rate and pitch curves mean <code class="docutils literal notranslate"><span class="pre">1.0</span></code> and <code class="docutils literal notranslate"><span class="pre">0.0</span></code>. Clips shorter than the requested transition duration evaluate only the output-time portion that exists; they do not compress the curve. Digital silence remains digital silence. The same timing map and control points apply to all channels. Identical inputs and parameters are deterministic within an AudioSig version, but bit-identical output across versions is not promised.</p>
+</section>
 <section id="resampling-internals">
 <h2>Resampling Internals</h2>
 <p>AudioSig uses windowed-sinc interpolation:</p>
@@ -651,6 +658,20 @@ listening gates pass. See the <a class="reference internal" href="../td-psola-li
 </pre></div>
 </div>
 </section>
+</section>
+<section id="loudness-measurement">
+<h2>Loudness measurement</h2>
+<p>Loudness and peak metrics are deliberately separate from amplitude transforms. <code class="docutils literal notranslate"><span class="pre">peak_normalize</span></code> sets the largest discrete sample, RMS/short-time energy describes a chosen window, integrated loudness reports gated BS.1770-style LUFS, and true peak estimates inter-sample dBTP. Equal sample peaks do not imply equal perceived loudness.</p>
+<p>The v1 meter accepts finite one-dimensional mono arrays and uses float64 calculation paths. It analyzes complete 400 ms blocks with a 100 ms hop, applies K-weighting, then uses the -70 LUFS absolute gate and -10 LU relative gate. It returns <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code> for silence and for audio shorter than one complete block; it never pads, clips, limits, or automatically normalizes. The default true-peak oversampling factor is 4, configurable for callers that need a different cost/accuracy trade-off.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">audiosig</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">audiosig</span><span class="o">.</span><span class="n">measure_loudness</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">integrated_lufs</span><span class="p">)</span>  <span class="c1"># LUFS</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">sample_peak_dbfs</span><span class="p">)</span>  <span class="c1"># dBFS</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">true_peak_dbtp</span><span class="p">)</span>   <span class="c1"># dBTP</span>
+</pre></div>
+</div>
+<p>The stable release contract for downstream PyKokoro code is <code class="docutils literal notranslate"><span class="pre">audiosig&gt;=0.1.3</span></code> for <code class="docutils literal notranslate"><span class="pre">LoudnessMetrics</span></code>, <code class="docutils literal notranslate"><span class="pre">integrated_loudness</span></code>, <code class="docutils literal notranslate"><span class="pre">sample_peak_dbfs</span></code>, <code class="docutils literal notranslate"><span class="pre">true_peak_dbtp</span></code>, and <code class="docutils literal notranslate"><span class="pre">measure_loudness</span></code>, plus the existing <code class="docutils literal notranslate"><span class="pre">apply_gain_db</span></code>. AudioSig supplies measurements and generic gain only; target LUFS and voice calibration remain application policy.</p>
 </section>
 <section id="vad-algorithm-details">
 <h2>VAD Algorithm Details</h2>
@@ -695,6 +716,12 @@ listening gates pass. See the <a class="reference internal" href="../td-psola-li
 <span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="smooth-cut-point-selection">
+<h3>Smooth Cut-Point Selection</h3>
+<p><code class="docutils literal notranslate"><span class="pre">find_smooth_cut_point</span></code> is a bounded, sample-domain primitive for applications that already know a legal interval. It uses a cumulative-sum local RMS calculation plus endpoint amplitude, cross-boundary slope, and anchor-distance costs. The implementation allocates work proportional to the local search span, not candidate count times window length, and conservatively aggregates all non-sample lanes.</p>
+<p>The function accepts float32 or float64 NumPy arrays, supports an explicit sample axis, never mutates input, and returns a legal index even when no quiet run exists. An empty array returns <code class="docutils literal notranslate"><span class="pre">None</span></code> only for the explicit <code class="docutils literal notranslate"><span class="pre">start=0,</span> <span class="pre">end=0</span></code> contract. <code class="docutils literal notranslate"><span class="pre">AudioShapeError</span></code> and <code class="docutils literal notranslate"><span class="pre">InvalidParameterError</span></code> report invalid arrays and parameters.</p>
+<p>Keep semantic decisions outside AudioSig: callers choose the legal interval, interpret timestamps or application metadata, and decide whether to retry. Scoring weights are intentionally internal and are not public tuning parameters.</p>
 </section>
 </section>
 <section id="edge-cases-and-special-handling">

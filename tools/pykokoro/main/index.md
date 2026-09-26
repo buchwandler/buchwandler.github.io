@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -542,230 +542,158 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="pykokoro-documentation">
 <h1>PyKokoro Documentation</h1>
-<p>PyKokoro is a Python library for text-to-speech synthesis using the Kokoro TTS model. It
-provides high-quality, natural-sounding speech generation with support for multiple
-languages, voices, and advanced features like pause control and text splitting.</p>
+<p>PyKokoro is a request-centric Kokoro speech-synthesis engine. It accepts prepared speech
+requests and returns independent rendered waveforms. Parsing, speech planning, document
+semantics, timeline composition, and final-output mastering belong to the calling
+application and its other tools.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#first-steps">First Steps</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-usage">Basic Usage</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#portable-ssmd-0-8-headers">Portable SSMD 0.8 headers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#synthesize-one-string">Synthesize one string</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#render-longer-text">Render longer text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#submit-a-prepared-request">Submit a prepared request</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#independent-requests">Independent requests</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next steps</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="installation/">Installation Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#android-termux-providers">Android/Termux providers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#other-providers">Other providers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#dependencies-and-optional-spacy">Dependencies and optional spaCy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#german-martin-assets">German Martin assets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#model-capability-discovery">Model capability discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#system-requirements">System requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#verify-installation">Verify installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="installation/#optional-playback">Optional playback</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#frontends-and-lexicons">Frontends and lexicons</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#model-assets-and-discovery">Model assets and discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#development-install">Development install</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#dependency-boundary">Dependency boundary</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="basic_usage/">Basic Usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#initializing-the-pipeline">Initializing the Pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#generating-speech">Generating Speech</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#low-latency-streaming-playback">Low-latency streaming playback</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#voice-selection">Voice Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#language-settings">Language Settings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#language-aware-spacy-models">Language-Aware spaCy Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#speech-speed-control">Speech Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#prosody-backend-selection">Prosody Backend Selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#pause-control">Pause Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#text-normalization-say-as">Text Normalization (Say-As)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#error-handling">Error Handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#batch-processing">Batch Processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#ssmd-0-8-portable-metadata">SSMD 0.8 portable metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#word-timings">Word timings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="basic_usage/#next-steps">Next Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="basic_usage/">Basic usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#configure-and-reuse-the-synthesizer">Configure and reuse the synthesizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#configure-a-model">Configure a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#render-longer-text">Render longer text</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#per-request-voice-and-independent-batch-output">Per-request voice and independent batch output</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#save-and-play">Save and play</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#configuration-ownership">Configuration ownership</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="advanced_features/">Advanced Features</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#unit-wise-rendering">Unit-wise rendering</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#ssmd-0-8-metadata">SSMD 0.8 metadata</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#generation-and-pauses">Generation and pauses</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#voice-blending">Voice blending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#composable-stages">Composable stages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#word-timings">Word timings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#spacy-policy">spaCy policy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#migration-from-the-removed-api">Migration from the removed API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced_features/">Advanced request features</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#source-aligned-pronunciation-overrides">Source-aligned pronunciation overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#caller-provided-linguistic-annotations">Caller-provided linguistic annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#automatic-pronunciation-language-routing">Automatic pronunciation-language routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#explicit-short-sentence-handling">Explicit short-sentence handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#tracing-and-voice-calibration">Tracing and voice calibration</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="pipeline_stages/">Pipeline Usage and Stages</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#pipeline-overview">Pipeline overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#quick-start">Quick start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#configuration">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#runtime-overrides">Runtime overrides</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#stage-behavior">Stage behavior</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#customizing-the-pipeline">Customizing the pipeline</a></li>
-<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#local-model-files-and-providers">Local model files and providers</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pipeline_stages/">Request lifecycle</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#prepared-text-g2p">Prepared-text G2P</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#model-and-voice-preparation">Model and voice preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#atomic-inference-and-capacity">Atomic inference and capacity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipeline_stages/#result">Result</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api_reference/">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#main-classes">Main Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#pipeline-helpers">Pipeline Helpers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#result-and-data-classes">Result and Data Classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#voice-blending">Voice Blending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#tokenizer">Tokenizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#model-and-voice-utilities">Model and Voice Utilities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#configuration-helpers">Configuration Helpers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#ssmd-0-8-api">SSMD 0.8 API</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#see-also">See Also</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api_reference/">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#synthesizer">Synthesizer</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#request-and-result-types">Request and result types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#configuration">Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#voice-blends-and-discovery">Voice blends and discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#frontend-configuration-and-model-asset-progress">Frontend configuration and model asset progress</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/#pipeline-stage-showcase">Pipeline Stage Showcase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#spoken-form-normalization">Spoken-Form Normalization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#hello-world">Hello World</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#multi-voice-demo">Multi-Voice Demo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#pause-markers-demo">Pause Markers Demo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#all-voices-showcase">All-voices showcase</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#voice-blending">Voice Blending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#multi-language-support">Multi-Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#long-text-processing">Long Text Processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#prosody-backend-comparison">Prosody Backend Comparison</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#batch-processing">Batch Processing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#portable-ssmd-0-8-podcast">Portable SSMD 0.8 podcast</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#see-also">See Also</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#simple-synthesis">Simple synthesis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#independent-request-batches">Independent request batches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#pronunciation-and-linguistic-context">Pronunciation and linguistic context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#model-inventory">Model inventory</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="polynorm_benchmark/">PolyNorm benchmark</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#license-and-pinned-corpus">License and pinned corpus</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#reproducing-a-single-case">Reproducing a single case</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#metrics">Metrics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#reports">Reports</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#baseline-and-strict-modes">Baseline and strict modes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#fault-attribution">Fault attribution</a></li>
-<li class="toctree-l2"><a class="reference internal" href="polynorm_benchmark/#limitations">Limitations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="languages/">Languages and model profiles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="languages/#prepared-text-languages">Prepared-text languages</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#pronunciation-language-spans">Pronunciation-language spans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#automatic-pronunciation-routing">Automatic pronunciation routing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#model-and-voice-discovery">Model and voice discovery</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="breaking-change-0.10.0/">Breaking change: request-centric synthesis (v0.10.0)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="breaking-change-0.10.0/#responsibility-change">Responsibility change</a></li>
+<li class="toctree-l2"><a class="reference internal" href="breaking-change-0.10.0/#api-mapping">API mapping</a></li>
+<li class="toctree-l2"><a class="reference internal" href="breaking-change-0.10.0/#deliberate-compatibility-aliases">Deliberate compatibility aliases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="breaking-change-0.10.0/#behavior-and-configuration-changes">Behavior and configuration changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="breaking-change-0.10.0/#dependency-changes">Dependency changes</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.9.6] - 2026-09-13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.9.5] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.9.4] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.9.3] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.9.2] - 2026-09-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.9.1] - 2026-09-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.9.0] - 2026-09-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.8.8] - 2026-09-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.8.7] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.8.6] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.8.5] - 2026-08-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id31">[0.8.4] - 2026-08-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.8.3] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id37">[0.8.2] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id40">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id44">[0.8.0] - 2026-08-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id48">[0.7.4] - 2026-07-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id51">[0.7.2] - 2026-07-29</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id54">[0.7.1] - 2026-07-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id58">[0.7.0] - 2026-07-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id63">[0.6.5] - 2026-02-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id65">[0.6.4] - 2026-01-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id68">[0.6.3] - 2026-01-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id70">[0.6.2] - 2026-01-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id73">[0.6.1] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id75">[0.6.0] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id79">[0.5.1] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id82">[0.5.0] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id86">[0.4.0] - 2026-01-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id90">[0.3.0] - 2026-01-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id93">[0.2.0] - 2026-01-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id96">[0.1.0] - 2026-01-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.10.0] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.9.10] - 2026-09-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.9.9] - 2026-09-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.9.8] - 2026-09-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.9.7] - 2026-09-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.9.6] - 2026-09-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.9.5] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.9.4] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.9.3] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.9.2] - 2026-09-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.9.1] - 2026-09-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.9.0] - 2026-09-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id34">[0.8.8] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id38">[0.8.7] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id43">[0.8.6] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id47">[0.8.5] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id50">[0.8.4] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id52">[0.8.3] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id56">[0.8.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id59">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id63">[0.8.0] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id67">[0.7.4] - 2026-07-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id70">[0.7.2] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id73">[0.7.1] - 2026-07-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id77">[0.7.0] - 2026-07-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id82">[0.6.5] - 2026-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id84">[0.6.4] - 2026-01-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id87">[0.6.3] - 2026-01-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id89">[0.6.2] - 2026-01-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id92">[0.6.1] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id94">[0.6.0] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id98">[0.5.1] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id101">[0.5.0] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id105">[0.4.0] - 2026-01-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id109">[0.3.0] - 2026-01-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id112">[0.2.0] - 2026-01-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id115">[0.1.0] - 2026-01-07</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<section id="features">
-<h2>Features</h2>
+<section id="engine-responsibilities">
+<h2>Engine responsibilities</h2>
 <ul class="simple">
-<li><p><strong>High-Quality TTS</strong>: Natural-sounding speech synthesis using the Kokoro model</p></li>
-<li><p><strong>Multiple Languages</strong>: Support for English (US/GB), Spanish, French, German, Italian,
-Portuguese, Hindi, Japanese, Korean, and Chinese</p></li>
-<li><p><strong>Voice Selection</strong>: Choose from 54 voices (v1.0) or 103 voices (v1.1-zh) with various
-styles and accents</p></li>
-<li><p><strong>Voice Blending</strong>: Create custom voice styles by blending multiple voices</p></li>
-<li><p><strong>Text Normalization</strong>: Automatic say-as support for numbers, dates, phone numbers,
-and more using SSMD markup</p></li>
-<li><p><strong>Pause Control</strong>: Add precise pauses using SSMD break syntax: <code class="docutils literal notranslate"><span class="pre">...c</span></code>, <code class="docutils literal notranslate"><span class="pre">...s</span></code>, <code class="docutils literal notranslate"><span class="pre">...p</span></code>,
-<code class="docutils literal notranslate"><span class="pre">...500ms</span></code></p></li>
-<li><p><strong>Smart Text Splitting</strong>: Automatically split long text at sentence, paragraph, or
-clause boundaries</p></li>
-<li><p><strong>Language-Aware spaCy Models</strong>: Auto-resolve spaCy package names from language + size</p></li>
-<li><p><strong>Phoneme-Based Generation</strong>: Generate speech directly from phonemes for precise
-control</p></li>
-<li><p><strong>GPU Acceleration</strong>: Optional GPU support for faster generation</p></li>
-<li><p><strong>Flexible Audio Processing</strong>: Trim silence, adjust speed, and more</p></li>
-<li><p><strong>Composable Pipeline Stages</strong>: Swap doc parsing, splitting, g2p, and audio stages</p></li>
+<li><p>KokoroG2P prepared-text integration with explicit pronunciation languages,
+source-aligned overrides, and linguistic annotations</p></li>
+<li><p>Kokoro voice, model, and style selection, including blends</p></li>
+<li><p>Model token-capacity validation and opt-in sentence-level splitting for oversized
+requests, plus ONNX inference</p></li>
+<li><p>Request-local timing reconstruction, waveform validation, tracing, and optional voice
+calibration</p></li>
+<li><p>Independent <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> results and standalone WAV writing</p></li>
 </ul>
+<p>PyKokoro does not parse SSMD or YAML, create UtterPlans or AudioJobs, compose separate
+caller requests, insert cross-request silence, or apply document-level effects. The
+v0.10.0 breaking boundary and migration examples are described in the
+<a class="reference internal" href="breaking-change-0.10.0/"><span class="std std-doc">release note</span></a>.</p>
 </section>
 <section id="quick-example">
-<h2>Quick Example</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<h2>Quick example</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroSynthesizer</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello, world! This is a test.&quot;</span><span class="p">)</span>
-
-<span class="c1"># Save to file</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_text</span><span class="p">(</span><span class="s2">&quot;Hello, world.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+<span class="n">result</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="s2">&quot;hello.wav&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>See the <span class="xref myst">maintained examples</span> for requests with pronunciation
+context, annotations, and independent batch results.</p>
 </section>
-<section id="installation">
-<h2>Installation</h2>
-<p>Install via pip:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-</pre></div>
-</div>
-<p>Or with GPU support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro<span class="o">[</span>gpu<span class="o">]</span>
-</pre></div>
-</div>
-</section>
-<section id="requirements">
-<h2>Requirements</h2>
-<ul class="simple">
-<li><p>Python 3.9 or higher</p></li>
-<li><p>NumPy</p></li>
-<li><p>ONNX Runtime</p></li>
-<li><p>espeak-ng (for phonemization)</p></li>
-<li><p>Optional: GPU with CUDA/ROCm for acceleration</p></li>
-</ul>
-</section>
-<section id="getting-help">
-<h2>Getting Help</h2>
-<ul class="simple">
-<li><p><strong>GitHub Issues</strong>: <a class="reference external" href="https://github.com/remixer-dec/pykokoro/issues">https://github.com/remixer-dec/pykokoro/issues</a></p></li>
-<li><p><strong>Documentation</strong>: <a class="reference external" href="https://pykokoro.readthedocs.io">https://pykokoro.readthedocs.io</a></p></li>
-<li><p><strong>Examples</strong>: See the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory in the repository</p></li>
-</ul>
-</section>
-<section id="license">
-<h2>License</h2>
-<p>PyKokoro is released under the MIT License. The Kokoro model itself is subject to its
-own license terms.</p>
-</section>
-</section>
-<section id="indices-and-tables">
-<h1>Indices and tables</h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex/"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex/"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search/"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

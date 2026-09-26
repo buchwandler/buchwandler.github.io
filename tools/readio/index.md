@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.2.3"
-docs_commit: "9b264c5a7b09096c299b90d2f8fe6fb30a2a96d0"
+docs_ref: "v0.3.1"
+docs_commit: "86a3aecedd9d31f8c36e2b85d8ec18aa833a2472"
 search_enabled: true
 ---
 
@@ -542,12 +542,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="readio-documentation">
 <h1>Readio documentation</h1>
-<p>Readio is a terminal text-to-speech tool. It reads plain text or SSMD documents with PyKokoro, plays speech locally, renders WAV, MP3, M4A, or OGG files, and can publish completed audio through <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
+<p>Readio is a terminal text-to-speech tool. It reads plain text or SSMD, resolves neutral synthesis requests through registered engines, composes audio timelines with AudioCompose, and publishes completed audio through <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code>.</p>
 <section id="documentation-map">
 <h2>Documentation map</h2>
 <div class="toctree-wrapper compound">
 <ul>
+<li class="toctree-l1"><a class="reference internal" href="architecture/">Readio architecture</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/">Python API</a></li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">CLI reference: project pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="incremental-rendering/">Incremental rendering</a></li>
+<li class="toctree-l1"><a class="reference internal" href="projects/">Readio projects</a></li>
 </ul>
 </div>
 <ul class="simple">
@@ -565,7 +570,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[gpu]&quot;</span>
 </pre></div>
 </div>
-<p>PyKokoro may download model and voice assets the first time it is used. Spotify publishing additionally requires the separately installed and authenticated <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> executable.</p>
+<p>Engine packages may download model, voice, or bundle assets on first use. Spotify publishing additionally requires the separately installed and authenticated <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> executable.</p>
 </section>
 <section id="quick-start">
 <h2>Quick start</h2>
@@ -582,15 +587,30 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>ogg
 </pre></div>
 </div>
-<p>WAV is the default. An output suffix selects the encoder, while <code class="docutils literal notranslate"><span class="pre">--format</span></code> selects the automatic output suffix or can be combined with a matching explicit suffix. Extensionless output is normalized to the selected format. M4A requires an <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> executable on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>; MP3 and OGG require matching SoundFile/libsndfile codec support.</p>
+<p>Render also supports PCM16 FLAC and Opus; <code class="docutils literal notranslate"><span class="pre">.ogg</span></code> is Ogg/Vorbis and <code class="docutils literal notranslate"><span class="pre">.opus</span></code> is separate:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.flac
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.opus
+</pre></div>
+</div>
+<p>WAV is the default. An output suffix selects the encoder, while <code class="docutils literal notranslate"><span class="pre">--format</span></code> selects the automatic output suffix or can be combined with a matching explicit suffix. Extensionless output is normalized to the selected format. M4A and Opus require an <code class="docutils literal notranslate"><span class="pre">ffmpeg</span></code> executable on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>; WAV/FLAC use PCM16, while MP3 and Ogg/Vorbis require matching SoundFile/libsndfile codec support.</p>
 <p>With no explicit output path, Readio writes a uniquely named file below the configured output directory. Existing files are not overwritten unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied for an explicit path.</p>
-<p>Markdown is a first-class input format. Files ending in <code class="docutils literal notranslate"><span class="pre">.md</span></code>, <code class="docutils literal notranslate"><span class="pre">.markdown</span></code>, <code class="docutils literal notranslate"><span class="pre">.mdown</span></code>, or <code class="docutils literal notranslate"><span class="pre">.mkd</span></code> are parsed before synthesis; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">markdown</span></code> for Markdown from stdin or literal text:</p>
+</section>
+<section id="persistent-project-exports">
+<h2>Persistent project exports</h2>
+<p>Generic project export supports WAV, FLAC, MP3, M4A, Ogg/Vorbis, and Opus. <code class="docutils literal notranslate"><span class="pre">.ogg</span></code> stays Vorbis; <code class="docutils literal notranslate"><span class="pre">.opus</span></code> is a separate format. Readio defaults M4A to 192k and Opus to 96k; those are Readio defaults and do not assert TTSForge parity.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>flac
+readio<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>opus<span class="w"> </span>--bitrate<span class="w"> </span>96k
+readio<span class="w"> </span>audiobook<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>m4b<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
+</pre></div>
+</div>
+<p>M4B is available only for audiobook projects through <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">audiobook</span> <span class="pre">export</span></code>. It muxes AAC audio and embedded chapters; title/author default from project metadata and cover art is explicit-only (JPEG/PNG). Readio’s M4B AAC default is 192k.</p>
+<p>Markdown is a first-class input format. Files ending in <code class="docutils literal notranslate"><span class="pre">.md</span></code>, <code class="docutils literal notranslate"><span class="pre">.markdown</span></code>, <code class="docutils literal notranslate"><span class="pre">.mdown</span></code>, or <code class="docutils literal notranslate"><span class="pre">.mkd</span></code> are parsed before synthesis; <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> is detected as SSMD before its <code class="docutils literal notranslate"><span class="pre">.md</span></code> suffix. Use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">markdown</span></code> for Markdown from stdin or literal text:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>speak<span class="w"> </span>--file<span class="w"> </span>README.md
 readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>docs/design.md
 cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</span><span class="w"> </span>readio<span class="w"> </span>speak<span class="w"> </span>--input-format<span class="w"> </span>markdown
 </pre></div>
 </div>
-<p>Headings, lists, links, images, code blocks, block quotes, tables, task lists, HTML text, and front matter become speech-friendly text. Markdown styling does not create SSMD prosody. Use <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> for explicit voices, rate, volume, pitch, breaks, or markers; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">text</span></code> to force literal reading of a Markdown-looking file.</p>
+<p>Headings, lists, links, images, code blocks, block quotes, tables, task lists, HTML text, and front matter become speech-friendly text. Markdown styling does not create SSMD prosody. Use <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> for explicit voices, rate, volume, pitch, breaks, or markers; use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">text</span></code> to force literal reading of a Markdown-looking file.</p>
 </section>
 <section id="input-and-rendering">
 <h2>Input and rendering</h2>
@@ -604,59 +624,82 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 <p>A missing path-like positional token is an error rather than literal speech. Use <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">text</span></code> when an existing filename must be spoken literally; explicit Markdown and SSMD formats still support positional file detection.</p>
 <p>For non-live input, <code class="docutils literal notranslate"><span class="pre">--select</span></code> can be <code class="docutils literal notranslate"><span class="pre">all</span></code>, <code class="docutils literal notranslate"><span class="pre">last-paragraph</span></code>, or <code class="docutils literal notranslate"><span class="pre">paragraph:N</span></code>. The default synthesis unit is controlled by <code class="docutils literal notranslate"><span class="pre">reader.unit</span></code> and can be overridden with <code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">sentence</span></code> or <code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">paragraph</span></code>.</p>
 <p>Synthesis options are available on all three commands:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--voice VOICE       PyKokoro voice ID
---lang LANGUAGE     language code, such as en-us
---lexicon NAME     named PyKokoro lexicon; repeat for ordered layers
---no-lexicons      explicit provider-only pronunciation
---auto-lexicons    restore automatic language-default lexicons
---g2p-fallback MODE none, espeak, or goruut
---lexicon-data-policy POLICY auto or installed-only
---language-detection MODE off or auto
---detect-language LANG repeatable pronunciation-routing language
---speed NUMBER      speech speed multiplier
---pause-mode MODE   tts, manual, or auto
---unit UNIT         sentence or paragraph
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--voice VOICE             engine voice ID
+--voice-file PATH         PocketSynth reference WAV
+--engine ENGINE           pykokoro, piper, or pocket
+--model TARGET            model ID, Piper voice bundle, or Pocket bundle
+--precision int8|fp32     PocketSynth bundle precision
+--temperature FLOAT       PocketSynth generation temperature
+--lsd-steps INT           PocketSynth latent diffusion steps
+--max-frames INT          PocketSynth maximum generated frames
+--frames-after-eos INT    PocketSynth frames after end of sequence
+--lang LANGUAGE           language code, such as en-us
+--lexicon NAME            named lexicon when supported by the engine
+--no-lexicons             disable engine lexicons when supported
+--auto-lexicons            use automatic engine lexicons when supported
+--g2p-fallback MODE       none, espeak, or goruut where supported
+--lexicon-data-policy     auto or installed-only where supported
+--language-detection      off or auto where supported
+--detect-language LANG    repeatable pronunciation-routing hint
+--speed NUMBER            speech speed multiplier
+--voice-level MODE       off or calibrated voice-level handling
+--spacy MODE              linguistic analysis policy
+--short-sentence MODE     short-sentence handling policy
+--pause-mode MODE         auto, tts, or manual
+--unit UNIT               sentence or paragraph
+
+Readio requires SSMD &gt;=0.9,&lt;0.10 and UtterPlan &gt;=0.3,&lt;0.4, persisting linguistic artifacts as UtterPlan schema v3 inside `readio.plan.v2`. Supported optional engine floors are PyKokoro &gt;=0.10.0,&lt;0.11, PiperSynth &gt;=0.2.0,&lt;0.3, and PocketSynth &gt;=0.2.0,&lt;0.3. The `kokoro`, `piper`, and `pocket` extras install these runtimes. `readio doctor` checks their strict request APIs; incompatible packages do not trigger fallback to retired pipeline paths.
+Readio&#39;s built-in `pause_mode` is `auto`; an explicit `[reader] pause_mode` setting or `--pause-mode tts|manual|auto` override takes precedence.
+
+Speed is an engine synthesis multiplier, not a composition tempo. PyKokoro receives the value directly, PiperSynth uses its reciprocal as `length_scale`, and PocketSynth rejects explicit values other than `1.0`.
+
+Readio, not the engine adapter, owns text-capacity fitting and exact-text subdivision. Adapters synthesize one strict request at a time and do not call native splitters. Readio preserves legal linguistic and pronunciation boundaries and fails when an oversized request has no legal split.
+
+```bash
+readio models list --language de --offline
+readio models show de-thorsten --offline
+readio voices list --model de-thorsten --json
+readio models list --preference huggingface --json
+readio models show de-thorsten --preference github --json
+readio defaults set de --model de-thorsten --lexicon crane --offline
+readio defaults show de-at --json
+readio render --lang de --file notes.md
+readio lexicons list --lang de --offline --json
+readio lexicons show crane --lang de --offline --json
 </pre></div>
 </div>
-<p>Runtime discovery and per-language defaults are separate from legacy provider role configuration. Readio v0.2.x uses the PyKokoro &gt;=0.9.2,&lt;0.10 public discovery and tokenizer contract. Readio v0.2.3 is tested with PyKokoro 0.9.4:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>models<span class="w"> </span>list<span class="w"> </span>--language<span class="w"> </span>de<span class="w"> </span>--offline
-readio<span class="w"> </span>models<span class="w"> </span>show<span class="w"> </span>de-thorsten<span class="w"> </span>--offline
-readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--json
-readio<span class="w"> </span>models<span class="w"> </span>list<span class="w"> </span>--preference<span class="w"> </span>huggingface<span class="w"> </span>--json
-readio<span class="w"> </span>models<span class="w"> </span>show<span class="w"> </span>de-thorsten<span class="w"> </span>--preference<span class="w"> </span>github<span class="w"> </span>--json
-readio<span class="w"> </span>defaults<span class="w"> </span><span class="nb">set</span><span class="w"> </span>de<span class="w"> </span>--model<span class="w"> </span>de-thorsten<span class="w"> </span>--lexicon<span class="w"> </span>crane<span class="w"> </span>--offline
-readio<span class="w"> </span>defaults<span class="w"> </span>show<span class="w"> </span>de-at<span class="w"> </span>--json
-readio<span class="w"> </span>render<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--file<span class="w"> </span>notes.md
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">models</span></code> reads PyKokoro’s lightweight registry and supports <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">--status</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>; it never loads model weights. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> updates metadata only and cannot be combined with <code class="docutils literal notranslate"><span class="pre">--offline</span></code>. Offline synthesis still needs cached model and voice assets. <code class="docutils literal notranslate"><span class="pre">--lexicon</span> <span class="pre">crane</span></code> selects a named lexicon; <code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code> is the downstream Lexphon asset ID, while <code class="docutils literal notranslate"><span class="pre">de-crane</span></code> is an acoustic model ID.
-<code class="docutils literal notranslate"><span class="pre">--model-source</span> <span class="pre">github|huggingface</span></code> drives both discovery and runtime selection. Voices are model-scoped. The legacy global <code class="docutils literal notranslate"><span class="pre">reader.voice</span></code> applies only to unchanged default-reader use; a language override such as <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">de</span></code> leaves voice selection to the active PyKokoro model unless explicitly set. SSMD preflight uses that same resolved model roster.</p>
+<p><code class="docutils literal notranslate"><span class="pre">models</span></code>, <code class="docutils literal notranslate"><span class="pre">voices</span></code>, and <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> enumerate targets from the unified engine registry. They are metadata-only and do not load model weights or instantiate ONNX runtimes. Offline mode uses cached catalogs; refresh updates catalog metadata only.
+<code class="docutils literal notranslate"><span class="pre">--model-source</span></code> applies only to engines that advertise distribution-source selection. Voice rosters are target-scoped where the engine exposes them, and lexicons are listed only for engines that support lexicon discovery. SSMD preflight validates role targets against the selected engine catalog.
+Readio uses <code class="docutils literal notranslate"><span class="pre">readio.engines</span></code> as its sole engine registry. The registered engines are <code class="docutils literal notranslate"><span class="pre">pykokoro</span></code>, <code class="docutils literal notranslate"><span class="pre">piper</span></code>, and <code class="docutils literal notranslate"><span class="pre">pocket</span></code>; aliases are normalized before target resolution. Lexicon operations reject engines that do not advertise lexicon support.</p>
 </section>
 <section id="synthesis-planning">
 <h2>Synthesis planning</h2>
-<p>Non-live rendering is plan-first: <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span></code> resolves one <code class="docutils literal notranslate"><span class="pre">readio.plan.v1</span></code> synthesis plan and then executes exactly that plan. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code> and <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span> <span class="pre">--dry-run</span></code> display the same plan without loading TTS, so they show precisely what a subsequent render would do:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--json
+<p>Non-live rendering is plan-first: <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span></code> resolves one <code class="docutils literal notranslate"><span class="pre">readio.plan.v2</span></code> execution plan and then executes exactly that plan. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span> <span class="pre">--dry-run</span></code> to display the one-shot plan without loading TTS:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--dry-run<span class="w"> </span>--json
 readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--dry-run
 </pre></div>
 </div>
 <p>Keep the layers separate:</p>
 <ul class="simple">
-<li><p><strong>Discovery</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">models</span></code>, <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span></code>) enumerates what the installed PyKokoro runtime provides.</p></li>
+<li><p><strong>Discovery</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">models</span></code>, <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span></code>, <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">lexicons</span></code>) enumerates what engines registered in <code class="docutils literal notranslate"><span class="pre">readio.engines</span></code> provide.</p></li>
 <li><p><strong>Defaults</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">defaults</span></code>) persist validated per-language preferences.</p></li>
-<li><p><strong>Planning</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code>, <code class="docutils literal notranslate"><span class="pre">render</span> <span class="pre">--dry-run</span></code>) resolves one concrete request — model, source, quality, voice, lexicons, SSMD cast with per-reference bindings, output format/backend/path — and records a decision (winning source) for every effective value. Generated output paths are allocated once by the plan and reused by the render.</p></li>
+<li><p><strong>Planning</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span> <span class="pre">--dry-run</span></code>) resolves one concrete request, including engine, target, source, quality, voice, lexicons, SSMD role bindings, output format/backend/path, and provenance. Generated output paths are allocated once by the plan and reused by the render.</p></li>
+<li><p><strong>Project planning</strong> (<code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code>) builds engine-free semantic Utterplan artifacts and manages project-local SSMD roles. It does not resolve one-shot engine, model, or output choices.</p></li>
 <li><p><strong>Render result</strong> executes the plan; a plan that fails validation (for example <code class="docutils literal notranslate"><span class="pre">model_language_incompatible</span></code>, <code class="docutils literal notranslate"><span class="pre">model_runtime_unavailable</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd_unresolved_voice</span></code>, <code class="docutils literal notranslate"><span class="pre">encoder_unavailable</span></code>) is printed with its diagnostics and no TTS model is loaded.</p></li>
 </ul>
-<p>Plans preserve the tokenizer tri-state: <code class="docutils literal notranslate"><span class="pre">lexicons:</span> <span class="pre">null</span></code> means PyKokoro language defaults, <code class="docutils literal notranslate"><span class="pre">lexicons:</span> <span class="pre">[]</span></code> means no static lexicon layers, and a non-empty list means ordered named layers. Fallback and lexicon data policy are also carried unchanged into <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>; SSMD <code class="docutils literal notranslate"><span class="pre">language_detection</span></code> hints are resolved into the plan before execution.</p>
-<p>Planning is deterministic: <code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is rejected during <code class="docutils literal notranslate"><span class="pre">plan</span></code>/<code class="docutils literal notranslate"><span class="pre">--dry-run</span></code> in favor of <code class="docutils literal notranslate"><span class="pre">--voice-bind</span> <span class="pre">ROLE=VOICE_ID</span></code> or persisted roles, and <code class="docutils literal notranslate"><span class="pre">plan</span></code> supports <code class="docutils literal notranslate"><span class="pre">--force</span></code> to mirror render output requests.</p>
+<p>Plans preserve engine-neutral render targets, request options, SSMD role bindings, and pronunciation-routing hints. Lexicon behavior is supplied only by engines that advertise lexicon support; unsupported explicit pronunciation semantics produce diagnostics before runtime startup.</p>
+<p>Planning policy stores UtterPlan linguistic options separately from engine render controls. Readio compiles one semantic plan, lowers its segments to requests, then delegates acoustic synthesis to the selected engine without passing the UtterPlan object to adapters.
+UtterPlan receives <code class="docutils literal notranslate"><span class="pre">synthesis.spacy</span></code> and <code class="docutils literal notranslate"><span class="pre">synthesis.short_sentence</span></code> as typed linguistic policy. Readio records those settings in the semantic plan; an engine adapter maps them only when the selected published engine API supports them.</p>
+<p>One-shot planning is deterministic: <code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is rejected by <code class="docutils literal notranslate"><span class="pre">render</span> <span class="pre">--dry-run</span></code>; use <code class="docutils literal notranslate"><span class="pre">--voice-bind</span> <span class="pre">ROLE=VOICE_ID</span></code> for an invocation or <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">bind</span> <span class="pre">ROLE</span> <span class="pre">VOICE</span></code> for a project setting.</p>
 </section>
 <section id="durable-render-manifests">
 <h2>Durable render manifests</h2>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--manifest</span></code> when a bounded render produces an artifact that needs durable, machine-readable evidence:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--dry-run<span class="w"> </span>--json
 readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>notes.md<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--manifest
 </pre></div>
 </div>
-<p>The successful render writes <code class="docutils literal notranslate"><span class="pre">&lt;audio&gt;.readio.json</span></code> beside the audio. Its <code class="docutils literal notranslate"><span class="pre">readio.render-manifest.v1</span></code> payload embeds the exact executed <code class="docutils literal notranslate"><span class="pre">readio.plan.v1</span></code>, a canonical plan digest, the final encoded-file hash and byte count, <code class="docutils literal notranslate"><span class="pre">RenderSummary</span></code> audio facts, document metadata, and assembled marker offsets. Planning describes intended execution; the manifest describes the completed artifact.</p>
+<p>The successful render writes <code class="docutils literal notranslate"><span class="pre">&lt;audio&gt;.readio.json</span></code> beside the audio. Its <code class="docutils literal notranslate"><span class="pre">readio.render-manifest.v1</span></code> payload embeds the exact executed <code class="docutils literal notranslate"><span class="pre">readio.plan.v2</span></code>, a canonical plan digest, the final encoded-file hash and byte count, <code class="docutils literal notranslate"><span class="pre">RenderSummary</span></code> audio facts, document metadata, and assembled marker offsets. Planning describes intended execution; the manifest describes the completed artifact.</p>
 <p>The option is explicit and applies only to bounded <code class="docutils literal notranslate"><span class="pre">render</span></code>. It is rejected with <code class="docutils literal notranslate"><span class="pre">--live</span></code> and does not create manifests for <code class="docutils literal notranslate"><span class="pre">speak</span></code>, <code class="docutils literal notranslate"><span class="pre">plan</span></code>, dry runs, or publishing. Human output remains the audio path. JSON output remains one object and adds <code class="docutils literal notranslate"><span class="pre">manifest</span></code> with the sidecar path, or <code class="docutils literal notranslate"><span class="pre">null</span></code> without the option.</p>
 </section>
 <section id="render-progress">
@@ -670,7 +713,7 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 </section>
 <section id="verbose-diagnostics">
 <h2>Verbose diagnostics</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">-v</span></code> for timestamped INFO lifecycle records and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> for DEBUG details from Readio and PyKokoro:</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">-v</span></code> for timestamped INFO lifecycle records and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> for DEBUG details from Readio and the selected engine:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>-v<span class="w"> </span>speak<span class="w"> </span><span class="s2">&quot;Hello&quot;</span>
 readio<span class="w"> </span>-vv<span class="w"> </span>render<span class="w"> </span>episode.ssmd<span class="w"> </span>-o<span class="w"> </span>episode.mp3
 </pre></div>
@@ -685,11 +728,12 @@ Playback-only options are <code class="docutils literal notranslate"><span class
 readio<span class="w"> </span>config<span class="w"> </span>path
 readio<span class="w"> </span>config<span class="w"> </span>show
 readio<span class="w"> </span>config<span class="w"> </span>validate
+readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.pause_mode<span class="w"> </span>auto
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML with schema 2; schema-0/1 files remain readable and are upgraded when saved. The main sections are:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">queue_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">device</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: <code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">queue_size</span></code>, <code class="docutils literal notranslate"><span class="pre">device</span></code>, <code class="docutils literal notranslate"><span class="pre">spacy</span></code>, and <code class="docutils literal notranslate"><span class="pre">short_sentence</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: the selected <code class="docutils literal notranslate"><span class="pre">voice_provider</span></code> and SSMD validation behavior.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;]</span></code>: concrete voice IDs and logical role mappings.</p></li>
@@ -725,7 +769,7 @@ readio<span class="w"> </span>ingest<span class="w"> </span>list
 </section>
 <section id="ssmd-documents">
 <h2>SSMD documents</h2>
-<p>Files ending in <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> are parsed as SSMD. Readio runs consumer preflight before rendering when <code class="docutils literal notranslate"><span class="pre">ssmd.validate_before_render</span></code> is enabled:</p>
+<p>Files ending in <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> are parsed as SSMD. Readio runs consumer preflight before rendering when <code class="docutils literal notranslate"><span class="pre">ssmd.validate_before_render</span></code> is enabled:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd
 readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd<span class="w"> </span>--json
 readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd<span class="w"> </span>--roundtrip
@@ -755,24 +799,26 @@ readio<span class="w"> </span>spotify<span class="w"> </span>doctor<span class="
 </pre></div>
 </div>
 <p>The local doctor is human-readable by default and supports <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code>. It reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">spotify</span> <span class="pre">doctor</span></code> for the explicit external integration check.
-If PyKokoro reports <code class="docutils literal notranslate"><span class="pre">cannot</span> <span class="pre">import</span> <span class="pre">name</span> <span class="pre">'discover_models'</span> <span class="pre">from</span> <span class="pre">'pykokoro'</span></code>, run <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code> first. It reports the exact imported module path, distribution metadata version, module version, and root discovery symbol status, which distinguishes stale/mismatched package contents from an unavailable cached registry.</p>
+If an engine reports <code class="docutils literal notranslate"><span class="pre">request</span> <span class="pre">API</span> <span class="pre">compatible:</span> <span class="pre">no</span></code>, run <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code> to inspect the installed package version and adapter status. The runtime does not fall back to a legacy pipeline when the published API is incompatible.</p>
 <p>Run the test suite and lint checks from a development checkout:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
 ruff<span class="w"> </span>check<span class="w"> </span>.
 </pre></div>
 </div>
-<p>The main execution path is <code class="docutils literal notranslate"><span class="pre">readio/cli.py</span></code>. Input normalization is in <code class="docutils literal notranslate"><span class="pre">readio/document.py</span></code>, configuration in <code class="docutils literal notranslate"><span class="pre">readio/config.py</span></code>, synthesis orchestration in <code class="docutils literal notranslate"><span class="pre">readio/reader.py</span></code>, audio sinks in <code class="docutils literal notranslate"><span class="pre">readio/audio.py</span></code> and <code class="docutils literal notranslate"><span class="pre">readio/wave.py</span></code>, and external Spotify integration in <code class="docutils literal notranslate"><span class="pre">readio/spotify.py</span></code>.</p>
+<p>The main execution path is <code class="docutils literal notranslate"><span class="pre">readio/cli.py</span></code>. Project SSMD role discovery and binding settings live in <code class="docutils literal notranslate"><span class="pre">readio/project_roles.py</span></code> and <code class="docutils literal notranslate"><span class="pre">readio/project_settings.py</span></code>; project synthesis orchestration is in <code class="docutils literal notranslate"><span class="pre">readio/stages/synthesis.py</span></code>. Input normalization is in <code class="docutils literal notranslate"><span class="pre">readio/document.py</span></code>, configuration in <code class="docutils literal notranslate"><span class="pre">readio/config.py</span></code>, audio sinks in <code class="docutils literal notranslate"><span class="pre">readio/audio.py</span></code> and <code class="docutils literal notranslate"><span class="pre">readio/wave.py</span></code>, and external Spotify integration in <code class="docutils literal notranslate"><span class="pre">readio/spotify.py</span></code>.</p>
 </section>
 <section id="ssmd-voice-resolution">
 <h2>SSMD voice resolution</h2>
 <p>SSMD document bindings use <code class="docutils literal notranslate"><span class="pre">voice_bindings.PROVIDER.ROLE:</span> <span class="pre">CONCRETE_VOICE_ID</span></code> and remain authoritative. Inspect configured voices and persisted role mappings with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--provider<span class="w"> </span>kokoro<span class="w"> </span>--json
-readio<span class="w"> </span>voices<span class="w"> </span>roles<span class="w"> </span>--provider<span class="w"> </span>kokoro
-</pre></div>
-</div>
-<p>For a selected model, inspect concrete voices with <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">list</span> <span class="pre">--model</span> <span class="pre">MODEL</span> <span class="pre">--language</span> <span class="pre">LANG</span> <span class="pre">--json</span></code>. Document bindings take precedence over invocation bindings, which take precedence over configured portable roles. Readio rejects a concrete target outside the active model roster and lists the valid voices.
-Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">bind</span> <span class="pre">ROLE</span> <span class="pre">VOICE_ID</span></code> for an explicit persistent mapping. For automation, pass missing logical roles only for one invocation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span><span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--lang<span class="w"> </span>de<span class="w"> </span>--json
+readio<span class="w"> </span>voices<span class="w"> </span>show<span class="w"> </span>de-ko-3<span class="w"> </span>--json
+readio<span class="w"> </span>roles<span class="w"> </span>list<span class="w"> </span>--provider<span class="w"> </span>kokoro
+
+For<span class="w"> </span>a<span class="w"> </span>selected<span class="w"> </span>model,<span class="w"> </span>inspect<span class="w"> </span>concrete<span class="w"> </span>voices<span class="w"> </span>with<span class="w"> </span><span class="sb">`</span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--lang<span class="w"> </span>LANG<span class="w"> </span>--json<span class="sb">`</span><span class="p">;</span><span class="w"> </span>stable<span class="w"> </span>selectors<span class="w"> </span>are<span class="w"> </span>engine-qualified<span class="w"> </span>lookup<span class="w"> </span>aliases<span class="w"> </span><span class="o">(</span><span class="sb">`</span>en_us-ko-4<span class="sb">`</span><span class="w"> </span>-&gt;<span class="w"> </span><span class="sb">`</span>af_heart<span class="sb">`</span><span class="w"> </span>on<span class="w"> </span>Kokoro<span class="w"> </span>v1.0,<span class="w"> </span><span class="sb">`</span>de-ko-3<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>de-pi-9<span class="sb">`</span><span class="o">)</span>,<span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="sb">`</span>--lang<span class="w"> </span>en-us<span class="sb">`</span><span class="w"> </span>is<span class="w"> </span>a<span class="w"> </span>locale<span class="w"> </span>filter<span class="w"> </span>and<span class="w"> </span>bindings<span class="w"> </span>remain<span class="w"> </span>canonical<span class="w"> </span>concrete<span class="w"> </span>voice<span class="w"> </span>IDs.<span class="w"> </span>Selector<span class="w"> </span>identities<span class="w"> </span>come<span class="w"> </span>from<span class="w"> </span>the<span class="w"> </span>authoritative<span class="w"> </span>registry<span class="w"> </span>rather<span class="w"> </span>than<span class="w"> </span>Readio-owned<span class="w"> </span>numbering.<span class="w"> </span>Document<span class="w"> </span>bindings<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>invocation<span class="w"> </span>bindings,<span class="w"> </span>which<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>configured<span class="w"> </span>portable<span class="w"> </span>roles.<span class="w"> </span>Readio<span class="w"> </span>rejects<span class="w"> </span>a<span class="w"> </span>concrete<span class="w"> </span>target<span class="w"> </span>outside<span class="w"> </span>the<span class="w"> </span>active<span class="w"> </span>model<span class="w"> </span>roster<span class="w"> </span>and<span class="w"> </span>lists<span class="w"> </span>the<span class="w"> </span>valid<span class="w"> </span>voices.
+Use<span class="w"> </span><span class="sb">`</span>readio<span class="w"> </span>roles<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>ROLE<span class="w"> </span>VOICE_ID<span class="sb">`</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>an<span class="w"> </span>explicit<span class="w"> </span>persistent<span class="w"> </span>mapping.<span class="w"> </span>For<span class="w"> </span>automation,<span class="w"> </span>pass<span class="w"> </span>missing<span class="w"> </span>logical<span class="w"> </span>roles<span class="w"> </span>only<span class="w"> </span><span class="k">for</span><span class="w"> </span>one<span class="w"> </span>invocation:
+
+<span class="sb">```</span>bash
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>episode.ssmd<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">moderator</span><span class="o">=</span>af_sarah<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">architect</span><span class="o">=</span>am_michael
 </pre></div>

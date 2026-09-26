@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 
@@ -1040,6 +1040,15 @@ the supplied text and applies only phonological/model normalization.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">EspeakBackend</span></code> is a Kokoro policy adapter over <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. It keeps runtime
+creation lazy, uses native-to-CLI fallback by default, and forces CLI when
+<code class="docutils literal notranslate"><span class="pre">use_cli=True</span></code>. After use, <code class="docutils literal notranslate"><span class="pre">backend.runtime_info</span></code> reports the selected implementation,
+fallback diagnostics, discovery source, version, and capability metadata. A bundled
+native runtime does not provide an executable for explicit CLI mode.</p>
+<p>Legacy configuration variables remain supported: <code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_EXECUTABLE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_DATA</span></code>. New applications can use the
+neutral <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_*</span></code> variables instead. These direct-backend settings are
+separate from Lexphon’s <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> provider path.</p>
 </section>
 </section>
 <section id="caching-and-performance">

@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -559,6 +559,11 @@ combined WSOLA, ESOLA, and TD-PSOLA pitch/rate cases. CSV/JSON records include
 runtime, real-time factor, peak, RMS, exact-length error, and continuity
 diagnostics. Use <code class="docutils literal notranslate"><span class="pre">--rates</span></code> and <code class="docutils literal notranslate"><span class="pre">--semitones</span></code> to narrow a run. The harness does not install,
 invoke, or require Rubber Band, SoundTouch, WORLD, or another external backend.</p>
+<p>For envelope A/B renders, add <code class="docutils literal notranslate"><span class="pre">--envelopes</span></code>. It adds rate transitions from <code class="docutils literal notranslate"><span class="pre">1.0</span></code> to each requested rate over 0.45 output seconds, pitch transitions from <code class="docutils literal notranslate"><span class="pre">0.0</span></code> to each requested semitone target over 0.30 seconds, and combined transitions. For a focused run on a permitted speech WAV:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/compare_speech_effects.py<span class="w"> </span>input.wav<span class="w"> </span>comparison-output<span class="w"> </span>--rates<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span>--semitones<span class="w"> </span><span class="m">2</span><span class="w"> </span>--envelopes
+</pre></div>
+</div>
+<p>The generated <code class="docutils literal notranslate"><span class="pre">envelope_*.wav</span></code> files and metrics record the numeric control points and exact expected frame count. No speech recording is distributed with AudioSig.</p>
 <p>The required performance and robustness matrix is reproducible with:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/benchmark_td_psola.py<span class="w"> </span>--output<span class="w"> </span>td-psola-benchmark.json
 </pre></div>
@@ -574,6 +579,46 @@ known-tone ZFR comparison is available with:</p>
 trend-window behavior, approximately-two-period TD-PSOLA grains, local-F0
 pitch marks, fallback behavior, and exact output contracts. They do not replace
 the real-speech listening protocol below.</p>
+</section>
+<section id="time-varying-envelope-evaluation">
+<h2>Time-varying envelope evaluation</h2>
+<p>The envelope regression tests live in <code class="docutils literal notranslate"><span class="pre">tests/test_automation.py</span></code>, <code class="docutils literal notranslate"><span class="pre">tests/test_speech_envelope.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">tests/test_speech_envelope_quality.py</span></code>. They cover analytical integration and inverse-map round trips, exact output sizing, amplitude-coded source landmarks, local pitch trajectories, combined automation, voiced/unvoiced fallback, output-knot jumps, and high-frequency burst guards. These objective tests are diagnostics, not a substitute for listening.</p>
+<p>Reproduce the 1, 10, and 60 second envelope benchmark with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>scripts/benchmark_speech_envelopes.py<span class="w"> </span>--output<span class="w"> </span>/tmp/speech-envelope-benchmark.json
+</pre></div>
+</div>
+<p>The script runs static rate, static pitch, static combined, variable-rate, variable-pitch, and combined-variable cases on a deterministic 16 kHz harmonic fixture. Constant-rate baselines are chosen to match the variable-rate output frame count. It records runtime, real-time factor, expected/output frames, length error, finite status, environment, and variable/static runtime ratio. A ratio above <code class="docutils literal notranslate"><span class="pre">1.0</span></code> means the envelope case took longer. This is a single sequential run without warm-up, so treat timings as indicative rather than a performance guarantee.</p>
+<p>Recorded on Python 3.13.14, NumPy 2.5.3, AudioSig working-tree metadata 0.1.4, Linux 6.18.33.2 under WSL2, Intel Core Ultra 7 355, 8 logical CPUs. All 18 outputs were finite and had zero frame error. Relative elapsed-time ratios were:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head text-right"><p>Input</p></th>
+<th class="head text-right"><p>Variable rate / static rate</p></th>
+<th class="head text-right"><p>Variable pitch / static pitch</p></th>
+<th class="head text-right"><p>Combined variable / static combined</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td class="text-right"><p>1 s</p></td>
+<td class="text-right"><p>1.277</p></td>
+<td class="text-right"><p>1.054</p></td>
+<td class="text-right"><p>0.948</p></td>
+</tr>
+<tr class="row-odd"><td class="text-right"><p>10 s</p></td>
+<td class="text-right"><p>1.205</p></td>
+<td class="text-right"><p>1.133</p></td>
+<td class="text-right"><p>0.929</p></td>
+</tr>
+<tr class="row-even"><td class="text-right"><p>60 s</p></td>
+<td class="text-right"><p>0.950</p></td>
+<td class="text-right"><p>0.866</p></td>
+<td class="text-right"><p>0.968</p></td>
+</tr>
+</tbody>
+</table>
+<p>The fixture is synthetic and fully voiced. These timings do not establish perceptual quality or predict every speech input.</p>
+<p>The feature is available since AudioSig 0.1.5. After redoing all three A/B comparisons on a permitted user-created PCM WAV, the user could not hear a clear difference and considered the static and envelope renders the same. This is one listener’s subjective result for this source and these settings, not a general claim of equivalence. Findings are in the <a class="reference internal" href="../envelope-listening-evaluation/"><span class="std std-doc">listening report</span></a>. The source and rendered files remain local and are not part of release materials.</p>
+<p>Variable-rate-only runs use the absolute integrated rate map with WSOLA. Any variable pitch uses TD-PSOLA on voiced regions and mapped WSOLA for unvoiced fallback; the speech path is not formant-preserving and larger shifts can sound more artifact-prone. Results are deterministic within an AudioSig version but are not promised to be bit-identical across versions.</p>
+<p>The listening report records the corrected result and can capture further listeners or samples. This listening step is complete for the current sample; overall release acceptance still depends on remaining technical validation.</p>
 </section>
 <section id="listening-protocol">
 <h2>Listening protocol</h2>

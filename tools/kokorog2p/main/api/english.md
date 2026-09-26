@@ -6,7 +6,7 @@ nav_tool: kokorog2p-main
 docs_project: "kokorog2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "7f0953db165da0406e1f4fad1246db26ee6e62f6"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 
@@ -552,18 +552,19 @@ currencies, dates, units, or abbreviations.</p>
 </pre></div>
 </div>
 <p>Install the selected asset before construction:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold
-lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-gb:gold
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>en-us:gold<span class="w"> </span>en-us:lexhint<span class="w"> </span>en-gb:gold<span class="w"> </span>en-gb:lexhint
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>en-us:gold<span class="w"> </span>en-us:lexhint<span class="w"> </span>en-gb:gold<span class="w"> </span>en-gb:lexhint
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">get_g2p(&quot;en-gb&quot;)</span></code> for factory construction. The frontend
 preserves supplied text and token offsets; semantic preparation belongs to the caller.</p>
 <section id="lexicon-controls">
 <h2>Lexicon controls</h2>
-<p>English exposes one logical <code class="docutils literal notranslate"><span class="pre">gold</span></code> selection backed by an external Lexphon asset. Use
-<code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only operation. There is no English silver tier and no
-runtime API for loading or selecting packaged dictionaries. <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code> and explicit
-local model settings control optional POS-aware tokenization.</p>
+<p>English exposes <code class="docutils literal notranslate"><span class="pre">gold</span></code> and an explicitly selected <code class="docutils literal notranslate"><span class="pre">lexhint</span></code> source. Gold values use the
+<code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code> encoding; LexHint values use IPA and pass through the same English
+realization profile after decoding. Use <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for fallback-only operation. There
+is no English silver tier or runtime API for loading packaged dictionaries. <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code>
+and explicit local model settings control optional POS-aware tokenization.</p>
 </section>
 </section>
 </div>

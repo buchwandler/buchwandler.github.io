@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/installation/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.9"
-docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
+docs_ref: "v0.9.15"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 
@@ -572,11 +572,22 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[goruut]&quot;</span>
 </pre></div>
 </div>
+<section id="direct-espeak-runtime">
+<h3>Direct eSpeak runtime</h3>
+<p><code class="docutils literal notranslate"><span class="pre">backend=&quot;espeak&quot;</span></code> uses the core <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> adapter. Install
+<code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak-direct]</span></code> for the runtime’s bundled native loader:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;kokorog2p[espeak-direct]&quot;</span>
+</pre></div>
+</div>
+<p>The bundled native loader does not install an eSpeak executable. Explicit CLI mode
+(<code class="docutils literal notranslate"><span class="pre">use_cli=True</span></code>) requires <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> or <code class="docutils literal notranslate"><span class="pre">espeak</span></code> on <code class="docutils literal notranslate"><span class="pre">PATH</span></code>, or a configured executable.
+The <code class="docutils literal notranslate"><span class="pre">espeak</span></code> extra above remains the separate Lexphon eSpeak fallback provider path.</p>
 <p>Optional spaCy models and system tools such as <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> are installed separately.
 Hindi uses the existing eSpeak-NG integration with the <code class="docutils literal notranslate"><span class="pre">hi</span></code> voice and preserves raw IPA
 for Kokoro v1.0. It does not require <code class="docutils literal notranslate"><span class="pre">lexphon</span> <span class="pre">data</span> <span class="pre">install</span> <span class="pre">...</span></code> because no Hindi runtime
 lexicon or automatic-routing evidence provider is included.</p>
 <p>KokoroG2P never downloads models or dictionary assets during construction or lookup.</p>
+</section>
 </section>
 <section id="released-lexphon-dictionaries">
 <h2>Released Lexphon dictionaries</h2>

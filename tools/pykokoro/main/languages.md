@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Language and model profiles"
+title: "pykokoro Languages and model profiles"
 permalink: /tools/pykokoro/main/languages/
 nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -540,103 +540,76 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="language-and-model-profiles">
-<h1>Language and model profiles</h1>
-<p>PyKokoro resolves omitted model settings from the requested language before creating the
-ONNX backend or G2P cache. Non-German runs retain the existing Hugging Face v1.0
-default; Chinese automatic selection retains the GitHub v1.1-zh policy.</p>
-<section id="runtime-model-discovery">
-<h2>Runtime model discovery</h2>
-<p>Applications that need to list available models should use the public metadata-only API:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
+<section id="languages-and-model-profiles">
+<h1>Languages and model profiles</h1>
+<p>Every <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> supplies an explicit pronunciation language.
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig.lang</span></code> can provide the default for <code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code>, but a voice
+name does not select language and PyKokoro does not inspect document headers or markup
+for it.</p>
+<section id="prepared-text-languages">
+<h2>Prepared-text languages</h2>
+<p>The native KokoroG2P path supports these language codes and aliases:</p>
+<ul class="simple">
+<li><p>English: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, and <code class="docutils literal notranslate"><span class="pre">en</span></code></p></li>
+<li><p>Spanish: <code class="docutils literal notranslate"><span class="pre">es</span></code></p></li>
+<li><p>French: <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code></p></li>
+<li><p>German: <code class="docutils literal notranslate"><span class="pre">de</span></code></p></li>
+<li><p>Italian: <code class="docutils literal notranslate"><span class="pre">it</span></code></p></li>
+<li><p>Portuguese: <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pt-pt</span></code></p></li>
+<li><p>Korean: <code class="docutils literal notranslate"><span class="pre">ko</span></code></p></li>
+<li><p>Japanese: <code class="docutils literal notranslate"><span class="pre">ja</span></code></p></li>
+<li><p>Chinese: <code class="docutils literal notranslate"><span class="pre">zh</span></code>, <code class="docutils literal notranslate"><span class="pre">cmn</span></code></p></li>
+<li><p>Arabic: <code class="docutils literal notranslate"><span class="pre">ar</span></code></p></li>
+<li><p>Hebrew: <code class="docutils literal notranslate"><span class="pre">he</span></code></p></li>
+<li><p>Kazakh: <code class="docutils literal notranslate"><span class="pre">kk</span></code></p></li>
+<li><p>Swedish: <code class="docutils literal notranslate"><span class="pre">sv</span></code></p></li>
+<li><p>Thai: <code class="docutils literal notranslate"><span class="pre">th</span></code></p></li>
+<li><p>Vietnamese: <code class="docutils literal notranslate"><span class="pre">vi</span></code></p></li>
+</ul>
+<p>Additional G2P languages may be available when the caller explicitly selects an
+appropriate frontend backend, for example eSpeak or Goruut. The acoustic model must
+still be compatible with the requested language and voice.</p>
+</section>
+<section id="pronunciation-language-spans">
+<h2>Pronunciation-language spans</h2>
+<p>Use source-aligned overrides when one prepared string contains pronunciation material
+that should use another language:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">PronunciationOverride</span><span class="p">,</span> <span class="n">SynthesisSegment</span>
 
-<span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">default_voice</span><span class="p">)</span>
+<span class="n">request</span> <span class="o">=</span> <span class="n">SynthesisSegment</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;mixed&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello Welt.&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
+    <span class="n">pronunciation_overrides</span><span class="o">=</span><span class="p">(</span><span class="n">PronunciationOverride</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),),</span>
+<span class="p">)</span>
 </pre></div>
 </div>
-<p>Discovery uses the canonical registry and reports normalized language codes,
-model-specific voices, qualities, frontend status, G2P backend, and verified named
-lexicons. It does not download weights, voice archives, or initialize ONNX Runtime. The
-default mode may use the network, <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> forbids it, and <code class="docutils literal notranslate"><span class="pre">refresh=True</span></code>
-refreshes registry metadata only. <code class="docutils literal notranslate"><span class="pre">available_model_releases()</span></code> serves a different
-purpose: it lists published release artifacts rather than runtime capabilities.</p>
+<p>This affects G2P for the indicated text range. It does not switch the acoustic model or
+voice. For complete multilingual utterances that need different acoustic profiles,
+submit separate requests and let the caller manage any composition.</p>
 </section>
-<section id="german">
-<h2>German</h2>
-<p><code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de</span></code>, <code class="docutils literal notranslate"><span class="pre">de-at</span></code>, and <code class="docutils literal notranslate"><span class="pre">de-ch</span></code> automatically select:</p>
-<ul class="simple">
-<li><p>source: GitHub</p></li>
-<li><p>variant: <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code></p></li>
-<li><p>quality: <code class="docutils literal notranslate"><span class="pre">fp32</span></code></p></li>
-<li><p>voice: <code class="docutils literal notranslate"><span class="pre">martin</span></code></p></li>
-<li><p>vocabulary: built-in Kokoro v1.0</p></li>
-</ul>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Model</p></th>
-<th class="head"><p>Variant</p></th>
-<th class="head"><p>Voice</p></th>
-<th class="head"><p>Status</p></th>
-<th class="head"><p>Selection</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>Martin</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">martin</span></code></p></td>
-<td><p>ready/default</p></td>
-<td><p>automatic for <code class="docutils literal notranslate"><span class="pre">lang=&quot;de&quot;</span></code></p></td>
-</tr>
-<tr class="row-odd"><td><p>Kerstin / Crane</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">de-crane</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">default</span></code></p></td>
-<td><p>experimental</p></td>
-<td><p>explicit + <code class="docutils literal notranslate"><span class="pre">allow_experimental_frontend=True</span></code></p></td>
-</tr>
-<tr class="row-even"><td><p>Thorsten</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">de-thorsten</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">thorsten</span></code></p></td>
-<td><p>ready</p></td>
-<td><p>explicit</p></td>
-</tr>
-</tbody>
-</table>
-<p>The document language is explicit in v0.9. Pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;de&quot;)</span></code> or
-<code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;de&quot;)</span></code>; voice and model profiles never infer it. Martin is the default
-German acoustic model when that language is selected. Kerstin/Crane and Thorsten are
-explicit alternative acoustic models; Crane currently requires experimental frontend
-opt-in. Compare them with the maintained examples <code class="docutils literal notranslate"><span class="pre">examples/german.py</span></code>,
-<code class="docutils literal notranslate"><span class="pre">examples/german2.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">examples/german3.py</span></code>.</p>
-<p>The integrated pipeline performs Spokenform preparation before sentence segmentation and
-G2P. Spokenform owns written-to-spoken forms such as dates, measurements, ordinals,
-currency amounts, and abbreviations. Explicit mixed-language text uses SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code>
-spans. Prepared segment offsets refer to the prepared document text and remain exact
-half-open slices.</p>
-<p>Managed Martin cache hits are checked against the pinned SHA-256 digests before use;
-invalid files are removed and downloaded again. Explicit custom paths are validated in
-place and are never replaced by managed downloads. The profile’s <code class="docutils literal notranslate"><span class="pre">suggested_speed</span></code>
-metadata is advisory only, so callers should set <code class="docutils literal notranslate"><span class="pre">GenerationConfig(speed=1.125)</span></code> when
-they want the demonstration speed.</p>
+<section id="automatic-pronunciation-routing">
+<h2>Automatic pronunciation routing</h2>
+<p><code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig(mode=&quot;auto&quot;,</span> <span class="pre">languages=(...))</span></code> lets KokoroG2P consider an
+explicit candidate set while the request retains its required main language. Routing is
+optional; it is not document-language detection, voice inference, or an acoustic-model
+switch. Explicit source-aligned language information remains attached to the request.</p>
 </section>
-<section id="fixed-model-multilingual-pronunciation">
-<h2>Fixed-model multilingual pronunciation</h2>
-<p>Automatic routing is an optional G2P policy. Configure
-<code class="docutils literal notranslate"><span class="pre">LanguageDetectionConfig(mode=&quot;auto&quot;,</span> <span class="pre">languages=(&quot;de&quot;,</span> <span class="pre">&quot;en&quot;))</span></code> while keeping
-<code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;de&quot;)</span></code> as the document and acoustic-model language. KokoroG2P
-supplies the lexical evidence and route diagnostics; PyKokoro reuses its existing
-per-language G2P instances and passes every route through the already selected model
-vocabulary.</p>
-<p>SSMD spans with <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code>, such as
-<code class="docutils literal notranslate"><span class="pre">[File]{lang=&quot;en&quot;</span> <span class="pre">scope=&quot;pronunciation&quot;}</span></code>, constrain only the pronunciation of that
-source range. They do not change Spokenform, spaCy analysis, Phrasplit, voice, model
-source, model variant, model quality, or ONNX session. Omit <code class="docutils literal notranslate"><span class="pre">scope</span></code> or use
-<code class="docutils literal notranslate"><span class="pre">scope=&quot;semantic&quot;</span></code> when the language should own the semantic pipeline run.</p>
-<p>The effective policy precedence is per-run override,
-<code class="docutils literal notranslate"><span class="pre">PipelineConfig.language_detection</span></code>, the SSMD <code class="docutils literal notranslate"><span class="pre">language_detection</span></code> header hint, then
-disabled. <code class="docutils literal notranslate"><span class="pre">is_phonemes=True</span></code> bypasses routing because the input already contains model
-phonemes. Route and alignment diagnostics are retained in document metadata and use
-clean-text offsets.</p>
+<section id="model-and-voice-discovery">
+<h2>Model and voice discovery</h2>
+<p>Model defaults are resolved from the request’s language and selected voice. To inspect
+available profiles before synthesis, use the metadata-only discovery API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
+
+<span class="k">for</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The inventory reports runtime status, voices, languages, qualities, frontend
+information, and distribution metadata without loading model weights. See the
+<a class="reference download internal" download="" href="../_downloads/41c29e50a3c7ae275d8549488df9835e/models_and_languages.py"><span class="xref download myst">model discovery example</span></a> for optional synthesis of
+a selected model.</p>
 </section>
 </section>
 </div>

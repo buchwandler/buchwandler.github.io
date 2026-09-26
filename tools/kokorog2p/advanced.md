@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/advanced/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.9"
-docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
+docs_ref: "v0.9.15"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 
@@ -582,6 +582,21 @@ instances using the same resolution rules.</p>
 </section>
 <section id="memory-efficient-loading">
 <h3>Memory-Efficient Loading</h3>
+<p><code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> keeps a bounded LRU cache of configured frontend instances. Reuse one
+frontend when processing a batch instead of constructing one per text, and inspect its
+policy with <code class="docutils literal notranslate"><span class="pre">cache_info()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">cache_info</span><span class="p">,</span> <span class="n">clear_cache</span><span class="p">,</span> <span class="n">get_g2p</span>
+
+<span class="n">g2p</span> <span class="o">=</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">lexicons</span><span class="o">=</span><span class="p">(),</span> <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">text</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;Hallo Welt&quot;</span><span class="p">,</span> <span class="s2">&quot;Guten Tag&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">g2p</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">cache_info</span><span class="p">())</span>  <span class="c1"># policy is &quot;bounded-lru&quot;</span>
+<span class="n">clear_cache</span><span class="p">(</span><span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>  <span class="c1"># also release parsed lexicon resources</span>
+</pre></div>
+</div>
+<p>See <a class="reference download internal" download="" href="../_downloads/ef413ae515dc691d3d58c0f8571efb76/cache_and_batch.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/cache_and_batch.py</span></code></span></a> for a runnable reuse
+pattern.</p>
 </section>
 <section id="external-lexicon-provisioning">
 <h3>External lexicon provisioning</h3>
@@ -730,7 +745,8 @@ lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"
 <p>The runtime uses the installed local store without network access. Install
 <code class="docutils literal notranslate"><span class="pre">de-de:crane</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:espeak</span></code>, <code class="docutils literal notranslate"><span class="pre">de-de:olaph</span></code>, or <code class="docutils literal notranslate"><span class="pre">de-de:lexhint</span></code> before selecting those
 names. <code class="docutils literal notranslate"><span class="pre">lexicons=&quot;espeak&quot;</span></code> selects the static Lexphon dictionary and is distinct from
-<code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>. Use <code class="docutils literal notranslate"><span class="pre">use_lexicon=False</span></code> for fallback-only operation.</p>
+<code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code>, which enables the dynamic provider after a lexicon miss. Use
+<code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> for operation without a selected dictionary layer.</p>
 </section>
 <section id="phoneme-utilities">
 <h2>Phoneme Utilities</h2>
@@ -1024,6 +1040,15 @@ the supplied text and applies only phonological/model normalization.</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">EspeakBackend</span></code> is a Kokoro policy adapter over <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. It keeps runtime
+creation lazy, uses native-to-CLI fallback by default, and forces CLI when
+<code class="docutils literal notranslate"><span class="pre">use_cli=True</span></code>. After use, <code class="docutils literal notranslate"><span class="pre">backend.runtime_info</span></code> reports the selected implementation,
+fallback diagnostics, discovery source, version, and capability metadata. A bundled
+native runtime does not provide an executable for explicit CLI mode.</p>
+<p>Legacy configuration variables remain supported: <code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_EXECUTABLE</span></code>,
+<code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">KOKOROG2P_ESPEAK_DATA</span></code>. New applications can use the
+neutral <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_*</span></code> variables instead. These direct-backend settings are
+separate from Lexphon’s <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> provider path.</p>
 </section>
 </section>
 <section id="caching-and-performance">
@@ -1238,12 +1263,12 @@ use <strong>lenient mode</strong> (<code class="docutils literal notranslate"><s
 <p>Use <code class="docutils literal notranslate"><span class="pre">available_lexicons(language)</span></code> to inspect registered names and pass <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> to
 <code class="docutils literal notranslate"><span class="pre">get_g2p</span></code> or <code class="docutils literal notranslate"><span class="pre">phonemize</span></code>. A sequence is an ordered precedence stack. English and French
 expose only the external <code class="docutils literal notranslate"><span class="pre">gold</span></code> selection; <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> disables dictionary lookup.</p>
-<p>For German, <code class="docutils literal notranslate"><span class="pre">available_lexicons(&quot;de&quot;)</span></code> returns <code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;crane&quot;,</span> <span class="pre">&quot;espeak&quot;,</span> <span class="pre">&quot;olaph&quot;)</span></code>.
-<code class="docutils literal notranslate"><span class="pre">gold</span></code> remains the implicit default. Explicit order controls collisions, and runtime
-pronunciation selection is offline. <code class="docutils literal notranslate"><span class="pre">espeak</span></code> is a static Lexphon dictionary and is
-distinct from the optional <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> backend. Unsupported source IPA
-fails closed and may fall through to configured fallback. See <a class="reference internal" href="../api/german/"><span class="doc">German API</span></a> for
-provenance and examples.</p>
+<p>For German, <code class="docutils literal notranslate"><span class="pre">available_lexicons(&quot;de&quot;)</span></code> returns
+<code class="docutils literal notranslate"><span class="pre">(&quot;gold&quot;,</span> <span class="pre">&quot;crane&quot;,</span> <span class="pre">&quot;espeak&quot;,</span> <span class="pre">&quot;olaph&quot;,</span> <span class="pre">&quot;lexhint&quot;)</span></code>. <code class="docutils literal notranslate"><span class="pre">gold</span></code> remains the implicit default.
+Explicit order controls collisions, and runtime pronunciation selection is offline.
+<code class="docutils literal notranslate"><span class="pre">espeak</span></code> is a static Lexphon dictionary and is distinct from the optional
+<code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=True</span></code> backend. Unsupported source IPA fails closed and may fall
+through to configured fallback. See <a class="reference internal" href="../api/german/"><span class="doc">German API</span></a> for provenance and examples.</p>
 </section>
 </section>
 </div>

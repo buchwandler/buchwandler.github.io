@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -653,6 +653,28 @@ opt in explicitly:</p>
 <p>TD-PSOLA does not guarantee formant preservation, does not pitch unvoiced
 regions, and is not intended for music or polyphonic material.</p>
 </section>
+<section id="time-varying-speech-effects">
+<h3>Time-varying Speech Effects</h3>
+<p>Available since AudioSig 0.1.5, <code class="docutils literal notranslate"><span class="pre">apply_speech_effects_envelope</span></code> accepts numeric curves in output seconds. Rate is a positive playback factor; pitch is a semitone offset. Both curves interpolate linearly and hold their final values.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_speech_effects_envelope</span><span class="p">,</span> <span class="n">speech_effects_output_frames</span>
+
+<span class="n">out</span> <span class="o">=</span> <span class="n">apply_speech_effects_envelope</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">rate_points</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">)],</span>
+    <span class="n">pitch_points</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.30</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)],</span>
+<span class="p">)</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="n">speech_effects_output_frames</span><span class="p">(</span>
+    <span class="n">audio</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span>
+    <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">rate_points</span><span class="o">=</span><span class="p">[(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.45</span><span class="p">,</span> <span class="mf">0.85</span><span class="p">)],</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">out</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">frames</span>
+</pre></div>
+</div>
+<p>Control-point times are measured on the transformed output timeline. Omit either curve to use its neutral value, rate <code class="docutils literal notranslate"><span class="pre">1.0</span></code> or pitch <code class="docutils literal notranslate"><span class="pre">0.0</span></code>. A short clip does not compress the requested envelope. Variable pitch uses TD-PSOLA on voiced material and WSOLA rate mapping for unvoiced fallback; it is intended for speech, not general music or formant-preserving pitch shifting.</p>
+<p>Envelope output is deterministic for identical input and parameters within one AudioSig version. Exact PCM is not promised across versions.</p>
+</section>
 <section id="resampling-examples">
 <h3>Resampling Examples</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample</span><span class="p">,</span> <span class="n">resample_speed</span><span class="p">,</span> <span class="n">resample_to_length</span>
@@ -675,6 +697,23 @@ regions, and is not intended for music or polyphonic material.</p>
 </pre></div>
 </div>
 </section>
+</section>
+<section id="smooth-cut-point-selection">
+<h2>Smooth Cut-Point Selection</h2>
+<p>This numeric example searches a synthetic waveform near a preferred sample. The result is deterministic and remains inside the caller’s legal interval:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_smooth_cut_point</span>
+
+<span class="n">sample_rate</span> <span class="o">=</span> <span class="mi">24_000</span>
+<span class="n">time</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span> <span class="o">/</span> <span class="n">sample_rate</span>
+<span class="n">audio</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="mf">220.0</span> <span class="o">*</span> <span class="n">time</span><span class="p">)</span>
+<span class="n">candidate</span> <span class="o">=</span> <span class="n">find_smooth_cut_point</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">10_000</span><span class="p">,</span> <span class="n">end</span><span class="o">=</span><span class="mi">14_000</span><span class="p">,</span> <span class="n">anchor</span><span class="o">=</span><span class="mi">12_000</span><span class="p">,</span> <span class="n">window_length</span><span class="o">=</span><span class="mi">120</span>
+ <span class="p">)</span>
+<span class="k">assert</span> <span class="mi">10_000</span> <span class="o">&lt;=</span> <span class="n">candidate</span> <span class="o">&lt;</span> <span class="mi">14_000</span>
+</pre></div>
+</div>
+<p>AudioSig does not decide whether the interval is semantically legal or whether an application should retry. It only selects a numeric waveform boundary.</p>
 </section>
 <section id="silence-detection-and-vad">
 <h2>Silence Detection and VAD</h2>

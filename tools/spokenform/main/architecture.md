@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -616,16 +616,16 @@ vocabularies, with Chinese routed through <code class="docutils literal notransl
 numbers, reviewed quantities, temperatures, SEK grammar, and canonical
 <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> unit identities. Swedish dates, digital times, arbitrary initialisms,
 and unreviewed specialist sequence domains remain caller-managed or fail closed.
-Vietnamese owns comma-decimal numbers, exact fractional precision, reviewed quantities, temperatures, VND/₫ currency, and canonical <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> unit identities. <code class="docutils literal notranslate"><span class="pre">num2words</span></code> owns generic Vietnamese cardinals, while <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Vietnamese abbreviation, unit, currency recognition, and labels. Vietnamese dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.
-Thai follows the same small-locale architecture: <code class="docutils literal notranslate"><span class="pre">num2words</span></code> owns generic Thai cardinals, <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Thai abbreviation, unit, and baht identities, and Spokenform owns compact digitwise numeric realization and source mapping. Thai calendar protection is applied after abbreviation expansion and before the plain number pass, so structured values -&gt; abbreviation expansion -&gt; plain number pass preserves date, era, and time bodies. Thai unsupported ranges and specialist sequences fail closed without English vocabulary.
+Vietnamese owns comma-decimal numbers, exact fractional precision, reviewed quantities, temperatures, VND/₫ currency, and canonical <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> unit identities. Numeralform owns generic Vietnamese cardinals, while <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Vietnamese abbreviation, unit, currency recognition, and labels. Vietnamese dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.
+Thai follows the same small-locale architecture: Numeralform owns generic Thai cardinals, <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> owns reviewed Thai abbreviation, unit, and baht identities, and Spokenform owns compact digitwise numeric realization and source mapping. Thai calendar protection is applied after abbreviation expansion and before the plain number pass, so structured values -&gt; abbreviation expansion -&gt; plain number pass preserves date, era, and time bodies. Thai unsupported ranges and specialist sequences fail closed without English vocabulary.
 Every locale replacement retains exact source spans and composed source/output
 mapping. Supported languages never borrow English fallback words merely because a
 shared renderer lacks a locale entry. All reviewed quantity and currency symbols
 continue to come from <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>.</p>
 <p>The dependency direction is:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>abbr2words ──────────┐
-num2words (ja/ko/sv/vi) ──┼─&gt; spokenform
-cn2an (zh) ─────────┘
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>abbr2words ───────────────┐
+Numeralform (non-zh) ────┼─&gt; spokenform
+cn2an (zh) ──────────────┘
 </pre></div>
 </div>
 <p>Full-width numeric compatibility forms are folded in a dedicated mapped stage after NFC and only inside numeric-looking spans. Compatibility symbols such as <code class="docutils literal notranslate"><span class="pre">㈱</span></code> remain available to <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code>; global NFKC is not used.

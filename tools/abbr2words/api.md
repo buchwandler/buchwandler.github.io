@@ -5,8 +5,8 @@ permalink: /tools/abbr2words/api/
 nav_tool: abbr2words
 docs_project: "abbr2words"
 docs_variant: "release"
-docs_ref: "v0.2.13"
-docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
+docs_ref: "v0.2.16"
+docs_commit: "eaf83dd428f02fc882dc5bb9ebc106ea5c7399c7"
 search_enabled: true
 ---
 
@@ -983,7 +983,7 @@ explicit non-empty lexical realization for the <code class="docutils literal not
     <span class="s2">&quot;Ref.&quot;</span><span class="p">,</span>
     <span class="p">{</span><span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="s2">&quot;reference&quot;</span><span class="p">,</span> <span class="s2">&quot;title&quot;</span><span class="p">:</span> <span class="s2">&quot;referee&quot;</span><span class="p">},</span>
     <span class="n">speech_strategy</span><span class="o">=</span><span class="s2">&quot;expand&quot;</span><span class="p">,</span>
- <span class="p">)</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">spell_source</span></code> uses the matched source spelling only when

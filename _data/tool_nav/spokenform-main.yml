@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: e5b009cd4e66768a9f5304eded1ad9b5158e9d59
+source_commit: b85de41a66f7918f01b8cd63448e529c81b1ddc2
 source_url: https://github.com/buchwandler/spokenform/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/spokenform
-release_tag: v0.3.6
-release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.3.6
+release_tag: v0.4.5
+release_url: https://github.com/buchwandler/spokenform/releases/tag/v0.4.5
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.6
+  ref: v0.4.5
   url: /tools/spokenform/
   current: false
 - name: main
@@ -30,8 +30,11 @@ entries:
   title: spokenform Installation
   url: /tools/spokenform/main/installation/
 - slug: languages
-  title: spokenform Complete runtime registry
+  title: spokenform Languages
   url: /tools/spokenform/main/languages/
+- slug: language-coverage
+  title: spokenform Generated language coverage
+  url: /tools/spokenform/main/language-coverage/
 - slug: quickstart
   title: spokenform Quickstart
   url: /tools/spokenform/main/quickstart/
@@ -47,6 +50,9 @@ entries:
 - slug: migration-kokorog2p
   title: spokenform kokorog2p migration boundary
   url: /tools/spokenform/main/migration-kokorog2p/
+- slug: migration-piperg2p
+  title: spokenform PiperG2P integration boundary
+  url: /tools/spokenform/main/migration-piperg2p/
 - slug: cli
   title: spokenform Command-line interface
   url: /tools/spokenform/main/cli/

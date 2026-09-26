@@ -6,7 +6,7 @@ nav_tool: lexphon-main
 docs_project: "lexphon"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c4904d0bbc374dd1b663b51f0250057b71ea2ac0"
+docs_commit: "9c82295126df453fe3db5f9adafda8ce8e32537e"
 search_enabled: true
 ---
 
@@ -585,7 +585,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;lexphon[goruut]&quot;</span>
 </pre></div>
 </div>
-<p>The eSpeak extra does not install the system executable. Pygoruut may provision its own Goruut runtime. A pre-populated <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> only removes Lexphon catalog and lexicon downloads; it does not guarantee offline startup of an optional provider.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">espeak</span></code> extra installs <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>, which uses available system eSpeak or eSpeak-NG runtimes. <code class="docutils literal notranslate"><span class="pre">lexphon[espeak-bundled]</span></code> additionally installs the runtime’s bundled native loader. The explicit <code class="docutils literal notranslate"><span class="pre">EspeakProvider(executable=...)</span></code> compatibility path remains CLI-oriented; applications can request <code class="docutils literal notranslate"><span class="pre">mode=&quot;auto&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">mode=&quot;native&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">mode=&quot;cli&quot;</span></code> directly.</p>
 </section>
 <section id="kokorog2p-adapter-example">
 <h2>KokoroG2P adapter example</h2>

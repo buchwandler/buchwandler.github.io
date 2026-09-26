@@ -16,8 +16,8 @@
         {
           "anchor": "",
           "heading": "Language identifiers and number backends",
-          "text": "Canonical runtime identifiers include 49 base families and 17 exact dependency locale overlays. supported_languages() returns the base families; supported_languages(include_locales=True) returns all 66 public keys. Exact overlays are preserved for abbreviation routing, while unregistered regional forms fall back to their base language. kk is Spokenform’s Kazakh key and maps to dependency key kz.\n\nThe installed num2words backend is capability-based. Chinese uses cn2an; hi, hy, and mn remain valid language inputs but preserve ordinary numeric source when the stable backend is unavailable. Reviewed decimal policies, structured locale grammar, sequence spelling, and KokoroG2P profiles are narrower capabilities and are not implied by global language support.\n\nfrom spokenform import (\n    langu…",
-          "lower": "canonical runtime identifiers include 49 base families and 17 exact dependency locale overlays. supported_languages() returns the base families; supported_languages(include_locales=true) returns all 66 public keys. exact overlays are preserved for abbreviation routing, while unregistered regional forms fall back to their base language. kk is spokenform’s kazakh key and maps to dependency key kz.\n\nthe installed num2words backend is capability-based. chinese uses cn2an; hi, hy, and mn remain valid language inputs but preserve ordinary numeric source when the stable backend is unavailable. reviewed decimal policies, structured locale grammar, sequence spelling, and kokorog2p profiles are narrower capabilities and are not implied by global language support.\n\nfrom spokenform import (\n    langu…"
+          "text": "Canonical runtime identifiers include 49 base families and 18 exact public locale overlays. supported_languages() returns the base families; supported_languages(include_locales=True) returns all 67 public keys. Exact overlays are preserved for abbreviation routing, while unregistered regional forms fall back to their base language. kk is Spokenform’s Kazakh key, maps to kz for abbr2words, and maps to kk for Numeralform.\n\nThe installed Numeralform renderer is capability-based. Chinese uses cn2an; Numeralform availability is reported separately from automatic plain-cardinal ownership, so hi, hy, and mn remain valid language inputs while preserving ordinary numeric source until their normalization ownership is reviewed. Reviewed decimal policies, structured locale grammar, sequence spelling,…",
+          "lower": "canonical runtime identifiers include 49 base families and 18 exact public locale overlays. supported_languages() returns the base families; supported_languages(include_locales=true) returns all 67 public keys. exact overlays are preserved for abbreviation routing, while unregistered regional forms fall back to their base language. kk is spokenform’s kazakh key, maps to kz for abbr2words, and maps to kk for numeralform.\n\nthe installed numeralform renderer is capability-based. chinese uses cn2an; numeralform availability is reported separately from automatic plain-cardinal ownership, so hi, hy, and mn remain valid language inputs while preserving ordinary numeric source until their normalization ownership is reviewed. reviewed decimal policies, structured locale grammar, sequence spelling,…"
         },
         {
           "anchor": "",
@@ -46,8 +46,8 @@
         {
           "anchor": "",
           "heading": "Result models",
-          "text": "All public source offsets refer to the original string passed to prepare();\nfinal offsets refer to PreparedText.spoken_text; stage-local offsets remain\navailable only under each PreparationStage. PreparedText.to_adapter_dict()\nis the stable JSON-ready projection for a kokorog2p adapter.\n\nprepare_for_kokorog2p() requires an explicit language and performs no language\ndetection, tokenization, G2P, or model-punctuation rewriting. Its default profile\npreserves run boundary whitespace. Pass caller-owned protected_spans to prevent\nsemantic replacements; partial overlap is handled fail-closed by protecting the\ncomplete recognized quantity expression. Use source_replacements and the offset\nhelpers to rebase downstream token and override coordinates.\n\nPreparationConfig.for_speech(language) provides…",
-          "lower": "all public source offsets refer to the original string passed to prepare();\nfinal offsets refer to preparedtext.spoken_text; stage-local offsets remain\navailable only under each preparationstage. preparedtext.to_adapter_dict()\nis the stable json-ready projection for a kokorog2p adapter.\n\nprepare_for_kokorog2p() requires an explicit language and performs no language\ndetection, tokenization, g2p, or model-punctuation rewriting. its default profile\npreserves run boundary whitespace. pass caller-owned protected_spans to prevent\nsemantic replacements; partial overlap is handled fail-closed by protecting the\ncomplete recognized quantity expression. use source_replacements and the offset\nhelpers to rebase downstream token and override coordinates.\n\npreparationconfig.for_speech(language) provides…"
+          "text": "All public source offsets refer to the original string passed to prepare();\nfinal offsets refer to PreparedText.spoken_text; stage-local offsets remain\navailable only under each PreparationStage. PreparedText.to_adapter_dict()\nis the stable JSON-ready projection for downstream adapters.\n\nprepare_for_kokorog2p() requires an explicit language and performs no language\ndetection, tokenization, G2P, or model-punctuation rewriting. Its default profile\npreserves run boundary whitespace. Pass caller-owned protected_spans to prevent\nsemantic replacements; partial overlap is handled fail-closed by protecting the\ncomplete recognized quantity expression. Use source_replacements and the offset\nhelpers to rebase downstream token and override coordinates.\n\nPreparationConfig.for_speech(language) provides…",
+          "lower": "all public source offsets refer to the original string passed to prepare();\nfinal offsets refer to preparedtext.spoken_text; stage-local offsets remain\navailable only under each preparationstage. preparedtext.to_adapter_dict()\nis the stable json-ready projection for downstream adapters.\n\nprepare_for_kokorog2p() requires an explicit language and performs no language\ndetection, tokenization, g2p, or model-punctuation rewriting. its default profile\npreserves run boundary whitespace. pass caller-owned protected_spans to prevent\nsemantic replacements; partial overlap is handled fail-closed by protecting the\ncomplete recognized quantity expression. use source_replacements and the offset\nhelpers to rebase downstream token and override coordinates.\n\npreparationconfig.for_speech(language) provides…"
         },
         {
           "anchor": "",
@@ -193,8 +193,8 @@
         {
           "anchor": "",
           "heading": "Spokenform Gold",
-          "text": "Run the pinned Gold diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold\n\n\n\n\nThe adapter caches the exact reviewed source commit ba55d631a45a0fe8b3d87ad58beef2843c617151 and its verified experimental 0.1.0-exp release under .cache/spokenform-gold/<commit>/. The default evaluates the test split and writes results under benchmark-results/spokenform-gold/<run-id>/, including summary.json, rows.jsonl, Gold JSONL/Markdown artifacts, and a self-contained report.html.\n\nUse --offline after the cache is populated, --refresh to rebuild it, --download-only to populate without evaluation, --cache-dir to relocate the cache, --gold-root for an explicit local release, --split dev|test|all, --mode canonical|accepted, and --report none to disable HTML. Gold remains diagnostic and does not auto…",
-          "lower": "run the pinned gold diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold\n\n\n\n\nthe adapter caches the exact reviewed source commit ba55d631a45a0fe8b3d87ad58beef2843c617151 and its verified experimental 0.1.0-exp release under .cache/spokenform-gold/<commit>/. the default evaluates the test split and writes results under benchmark-results/spokenform-gold/<run-id>/, including summary.json, rows.jsonl, gold jsonl/markdown artifacts, and a self-contained report.html.\n\nuse --offline after the cache is populated, --refresh to rebuild it, --download-only to populate without evaluation, --cache-dir to relocate the cache, --gold-root for an explicit local release, --split dev|test|all, --mode canonical|accepted, and --report none to disable html. gold remains diagnostic and does not auto…"
+          "text": "Run the pinned Gold release diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold \\\n  --split corpus \\\n  --accept-upstream-licenses \\\n  --report html\n\n\n\n\nThe consumer reads the exact v0.1.0-exp.2 release asset pinned in\nbenchmarks/spokenform_gold_release.json. It never rebuilds Gold data from a\nsource checkout and never selects the latest GitHub release dynamically. The\npin contains the release tag, asset SHA-256, manifest SHA-256, target commit,\nand matching runtime source ref. The first online run downloads and verifies the\nrelease zip and matching runtime source under .cache/spokenform-gold/. The\nv2 corpus is unsplit and contains 20,037 public release records, including 1,978\nexternal-reference records and 18,059 embedded records.\n\nUse --offline after the cache is populated,…",
+          "lower": "run the pinned gold release diagnostic benchmark with:\n\npython -m benchmarks.spokenform_gold \\\n  --split corpus \\\n  --accept-upstream-licenses \\\n  --report html\n\n\n\n\nthe consumer reads the exact v0.1.0-exp.2 release asset pinned in\nbenchmarks/spokenform_gold_release.json. it never rebuilds gold data from a\nsource checkout and never selects the latest github release dynamically. the\npin contains the release tag, asset sha-256, manifest sha-256, target commit,\nand matching runtime source ref. the first online run downloads and verifies the\nrelease zip and matching runtime source under .cache/spokenform-gold/. the\nv2 corpus is unsplit and contains 20,037 public release records, including 1,978\nexternal-reference records and 18,059 embedded records.\n\nuse --offline after the cache is populated,…"
         },
         {
           "anchor": "",
@@ -207,13 +207,91 @@
     {
       "url": "/tools/spokenform/main/changelog/",
       "title": "spokenform Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded explicit lang …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded 13 foundation …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added 13 foundation language families with reviewed plain-cardinal rendering and explicit capability boundaries",
+          "lower": "added 13 foundation language families with reviewed plain-cardinal rendering and explicit capability boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved Spokenform Gold benchmark validation with release provenance and complete-corpus checks\n\n\nChanged dependency floors to abbr2words 0.2.16 and numeralform 0.1.9 with matching CI coverage",
+          "lower": "improved spokenform gold benchmark validation with release provenance and complete-corpus checks\n\n\nchanged dependency floors to abbr2words 0.2.16 and numeralform 0.1.9 with matching ci coverage"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Spanish ordinal normalization to fail closed outside the reviewed range",
+          "lower": "fixed spanish ordinal normalization to fail closed outside the reviewed range"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added deterministic Spokenform Gold benchmark consumption with immutable release-asset and runtime-source verification\n\n\nAdded contextual Spanish month/day date recognition without a year",
+          "lower": "added deterministic spokenform gold benchmark consumption with immutable release-asset and runtime-source verification\n\n\nadded contextual spanish month/day date recognition without a year"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved German comma-separated number and short social-identifier rendering",
+          "lower": "improved german comma-separated number and short social-identifier rendering"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed French coordinate recognition for dot and comma decimal separators while preserving fail-closed quantity parsing\n\n\nFixed URL-like literals being treated as math and made unsupported math locales fail closed\n\n\nFixed malformed locale-mismatched currency amounts being rewritten while preserving valid currency normalization",
+          "lower": "fixed french coordinate recognition for dot and comma decimal separators while preserving fail-closed quantity parsing\n\n\nfixed url-like literals being treated as math and made unsupported math locales fail closed\n\n\nfixed malformed locale-mismatched currency amounts being rewritten while preserving valid currency normalization"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved German speech normalization for technical sequences, mathematical expressions, contextual Roman forms, durations, and semantic versions\n\n\nAdded opt-in German URL, e-mail, and FTP literal promotion with localized punctuation while preserving default literal protection\n\n\nAdded reviewed German source-letter expansion for IBAN through the dependency registry",
+          "lower": "improved german speech normalization for technical sequences, mathematical expressions, contextual roman forms, durations, and semantic versions\n\n\nadded opt-in german url, e-mail, and ftp literal promotion with localized punctuation while preserving default literal protection\n\n\nadded reviewed german source-letter expansion for iban through the dependency registry"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed German IBAN precedence and sentence-final IPv4 recognition without weakening literal protection",
+          "lower": "fixed german iban precedence and sentence-final ipv4 recognition without weakening literal protection"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added locale-aware currency and exchange-rate speech rendering for English, German, and Spanish",
+          "lower": "added locale-aware currency and exchange-rate speech rendering for english, german, and spanish"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved locale-aware numeric, currency, identifier, emergency-number, and German reference normalization",
+          "lower": "improved locale-aware numeric, currency, identifier, emergency-number, and german reference normalization"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "BREAKING: Changed numeric runtime dependency from upstream num2words to Numeralform 0.1.4\n\n\nBREAKING: Changed the public numeric locale resolver and documented independent routing",
+          "lower": "breaking: changed numeric runtime dependency from upstream num2words to numeralform 0.1.4\n\n\nbreaking: changed the public numeric locale resolver and documented independent routing"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved release hardening for the Numeralform 0.1.4 dependency boundary",
+          "lower": "improved release hardening for the numeralform 0.1.4 dependency boundary"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added registry-backed language and locale support with capability-aware numeric and sequence policies",
+          "lower": "added registry-backed language and locale support with capability-aware numeric and sequence policies"
         },
         {
           "anchor": "",
@@ -346,102 +424,6 @@
           "heading": "Documentation",
           "text": "Documented recognition evidence, domain ownership, fallback, and punctuation responsibilities",
           "lower": "documented recognition evidence, domain ownership, fallback, and punctuation responsibilities"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added multilingual mapping coverage, recognizer extraction, and release validation evidence",
-          "lower": "added multilingual mapping coverage, recognizer extraction, and release validation evidence"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added Async TN benchmark suite with deterministic evaluation, data management, and HTML reporting\n\n\nAdded candidate oracle for measuring structured-candidate selection headroom across benchmarks\n\n\nAdded extended currency symbol recognition for Spanish with labeled amounts and feminine agreement\n\n\nAdded hyphenated date recognition for Spanish and Italian (e.g., 15-julio-2026, 3-marzo-25)\n\n\nAdded Spanish time period recognition for bare hour-period patterns (e.g., 3 pm)\n\n\nAdded Italian dotted-time ambiguity guard to prevent false time recognition on decimals and units\n\n\nAdded failure reporting module with risk tiers, ownership mapping, and diagnostic aggregates",
-          "lower": "added async tn benchmark suite with deterministic evaluation, data management, and html reporting\n\n\nadded candidate oracle for measuring structured-candidate selection headroom across benchmarks\n\n\nadded extended currency symbol recognition for spanish with labeled amounts and feminine agreement\n\n\nadded hyphenated date recognition for spanish and italian (e.g., 15-julio-2026, 3-marzo-25)\n\n\nadded spanish time period recognition for bare hour-period patterns (e.g., 3 pm)\n\n\nadded italian dotted-time ambiguity guard to prevent false time recognition on decimals and units\n\n\nadded failure reporting module with risk tiers, ownership mapping, and diagnostic aggregates"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Improved Spanish ordinal rendering with feminine compound forms, quince special case, and duodécimo for twelve\n\n\nImproved Spanish fraction rendering with natural forms for halves (media, medio) and feminine agreement\n\n\nImproved English fraction rendering to use fourths instead of quarters\n\n\nImproved French and Italian slash-fraction rendering with locale-specific natural forms (moitié, metà, centième)\n\n\nImproved sports and score recognition with broader multilingual context keywords and higher value ranges\n\n\nExpanded software version recognition to include macOS and WordPress\n\n\nImproved ISBN rendering for Spanish, Italian, and French with locale-specific separator words\n\n\nRefactored structured module to separate candidate collection from conflict resolution for reuse\n\n\nAdded sentence-star…",
-          "lower": "improved spanish ordinal rendering with feminine compound forms, quince special case, and duodécimo for twelve\n\n\nimproved spanish fraction rendering with natural forms for halves (media, medio) and feminine agreement\n\n\nimproved english fraction rendering to use fourths instead of quarters\n\n\nimproved french and italian slash-fraction rendering with locale-specific natural forms (moitié, metà, centième)\n\n\nimproved sports and score recognition with broader multilingual context keywords and higher value ranges\n\n\nexpanded software version recognition to include macos and wordpress\n\n\nimproved isbn rendering for spanish, italian, and french with locale-specific separator words\n\n\nrefactored structured module to separate candidate collection from conflict resolution for reuse\n\n\nadded sentence-star…"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed plural initialisms such as IDs, PCs, and ICs being misclassified as chemical formulas\n\n\nFixed French and Italian two-digit year date rendering to use two-digit expansion\n\n\nFixed Spanish currency grouping to accept comma-grouped decimals with three-digit tails\n\n\nFixed coordinate sequence priority and phone sequence priority to use correct precedence levels\n\n\nRestricted bare-dot ordinal detection to German to prevent false ordinals in other locales\n\n\nFixed English date context detection to exclude pieces and diluted as non-date right-context",
-          "lower": "fixed plural initialisms such as ids, pcs, and ics being misclassified as chemical formulas\n\n\nfixed french and italian two-digit year date rendering to use two-digit expansion\n\n\nfixed spanish currency grouping to accept comma-grouped decimals with three-digit tails\n\n\nfixed coordinate sequence priority and phone sequence priority to use correct precedence levels\n\n\nrestricted bare-dot ordinal detection to german to prevent false ordinals in other locales\n\n\nfixed english date context detection to exclude pieces and diluted as non-date right-context"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nImproved Polynorm and Proteno benchmark evaluation with numeric lexeme and sequence coverage",
-          "lower": "added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nimproved polynorm and proteno benchmark evaluation with numeric lexeme and sequence coverage"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added Russian runtime support for locale-aware numbers and reviewed measurement quantities",
-          "lower": "added russian runtime support for locale-aware numbers and reviewed measurement quantities"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed direct prepare() keyword validation to match PreparationConfig\n\n\nRemoved stale package manifest metadata and added distribution-content checks\n\n\nFixed plural initialism shapes such as IDs being misclassified as chemical formulas\n\n\nFixed explicit English leading-decimal signs and digit-wise precision for readings such as .3 and .02",
-          "lower": "fixed direct prepare() keyword validation to match preparationconfig\n\n\nremoved stale package manifest metadata and added distribution-content checks\n\n\nfixed plural initialism shapes such as ids being misclassified as chemical formulas\n\n\nfixed explicit english leading-decimal signs and digit-wise precision for readings such as .3 and .02"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented the abbr2words 0.2.9 release boundary and configuration policy modes\n\n\nDocumented Russian identifiers, morphology boundaries, dependency ownership, and caller-managed currency",
-          "lower": "documented the abbr2words 0.2.9 release boundary and configuration policy modes\n\n\ndocumented russian identifiers, morphology boundaries, dependency ownership, and caller-managed currency"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nImproved maintainability with shared date validation and dead-code cleanup\n\n\nAdded Russian regression coverage for grammar boundaries, protections, mapping, and fail-closed domains",
-          "lower": "added explicit coverage, documentation, artifact, wheel, and downstream release gates\n\n\nimproved maintainability with shared date validation and dead-code cleanup\n\n\nadded russian regression coverage for grammar boundaries, protections, mapping, and fail-closed domains"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added conservative acronym mode for context-aware initialism handling\n\n\nAdded contextual long-number mode for intelligent verbalization of 4+ digit numbers\n\n\nAdded registered acronym mode for controlling registered initialism expansion\n\n\nAdded bibliographic citation and reference sequence recognizers\n\n\nAdded decade rendering with natural English ordinal decade forms\n\n\nAdded duration recognition for HH:MM:SS timestamp formats\n\n\nAdded score recognition for sports results with contextual plausibility checks\n\n\nAdded chained score recognition for multi-set or multi-game results\n\n\nAdded software version recognition for named software packages\n\n\nAdded spaced ISBN label recognition for OCR or speech-recognized text\n\n\nAdded German Roman numeral title rendering for monarchs and popes\n\n\nAdded parent…",
-          "lower": "added conservative acronym mode for context-aware initialism handling\n\n\nadded contextual long-number mode for intelligent verbalization of 4+ digit numbers\n\n\nadded registered acronym mode for controlling registered initialism expansion\n\n\nadded bibliographic citation and reference sequence recognizers\n\n\nadded decade rendering with natural english ordinal decade forms\n\n\nadded duration recognition for hh:mm:ss timestamp formats\n\n\nadded score recognition for sports results with contextual plausibility checks\n\n\nadded chained score recognition for multi-set or multi-game results\n\n\nadded software version recognition for named software packages\n\n\nadded spaced isbn label recognition for ocr or speech-recognized text\n\n\nadded german roman numeral title rendering for monarchs and popes\n\n\nadded parent…"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Improved year detection with expanded temporal keyword context and bibliographic patterns\n\n\nImproved formula recognition with balanced parenthesis context checking\n\n\nImproved product code recognition with stronger label evidence requirements\n\n\nImproved Roman numeral recognition with expanded context keywords for articles, acts, and scenes\n\n\nChanged structured semantic precedence from regex iteration order to centralized precedence module",
-          "lower": "improved year detection with expanded temporal keyword context and bibliographic patterns\n\n\nimproved formula recognition with balanced parenthesis context checking\n\n\nimproved product code recognition with stronger label evidence requirements\n\n\nimproved roman numeral recognition with expanded context keywords for articles, acts, and scenes\n\n\nchanged structured semantic precedence from regex iteration order to centralized precedence module"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed fraction rendering to use natural word forms for fifths and sixths instead of Unicode fallback\n\n\nFixed formula recognition to reject fragments from unmatched parenthesized spans\n\n\nFixed slash fraction rendering to skip incomplete numerator or denominator matches\n\n\nFixed identifier separator handling to accept empty marker values\n\n\nFixed version literal detection to skip bare v-prefixed versions without contextual evidence\n\n\nFixed biology recognition to exclude temporal prepositions as false species markers\n\n\nFixed code recognition to classify vehicle-shaped codes with appropriate digit policies",
-          "lower": "fixed fraction rendering to use natural word forms for fifths and sixths instead of unicode fallback\n\n\nfixed formula recognition to reject fragments from unmatched parenthesized spans\n\n\nfixed slash fraction rendering to skip incomplete numerator or denominator matches\n\n\nfixed identifier separator handling to accept empty marker values\n\n\nfixed version literal detection to skip bare v-prefixed versions without contextual evidence\n\n\nfixed biology recognition to exclude temporal prepositions as false species markers\n\n\nfixed code recognition to classify vehicle-shaped codes with appropriate digit policies"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added Proteno diagnostic aggregates by rule, phase, ownership, and ambiguity family\n\n\nAdded PolyNorm ownership table documentation for comparison compatibility and quarantine policy",
-          "lower": "added proteno diagnostic aggregates by rule, phase, ownership, and ambiguity family\n\n\nadded polynorm ownership table documentation for comparison compatibility and quarantine policy"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added Proteno benchmark suite with WER evaluation and data utilities\n\n\nAdded speech WER threshold configuration for benchmark evaluation\n\n\nAdded symbol handling parameters for configurable acronym and symbol processing\n\n\nAdded improved English date rendering with source-order preservation and decade support\n\n\nAdded Binder example with interactive Jupyter notebook",
-          "lower": "added proteno benchmark suite with wer evaluation and data utilities\n\n\nadded speech wer threshold configuration for benchmark evaluation\n\n\nadded symbol handling parameters for configurable acronym and symbol processing\n\n\nadded improved english date rendering with source-order preservation and decade support\n\n\nadded binder example with interactive jupyter notebook"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Improved number detection in sequences and structured text normalization",
-          "lower": "improved number detection in sequences and structured text normalization"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Added contextual English single-dot release-label pronunciation while preserving ordinary decimal precision and multi-dot protection",
-          "lower": "added contextual english single-dot release-label pronunciation while preserving ordinary decimal precision and multi-dot protection"
         }
       ]
     },
@@ -528,8 +510,8 @@
         {
           "anchor": "",
           "heading": "spokenform",
-          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\nOptional Lexhint integration\n\n\n\n\nComplete runtime registry\n\nLanguage support matrix\nGerman scope\n\nSwedish scope\n\nVietnamese scope\n\nThai scope\n\nRussian scope\n\nIdentifier rules\n\nOwnership and safety\n\n\n\n\nQuickstart\nJapanese, Korean, and Chinese\n\nSwedish\n\nVietnamese\n\nThai\n\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\nRecognition policy boundary\n\nOptional Lexhint boundary\n\nSemantic segment boundaries\n\n\n\n\nAPI reference\nPreparation\n\nLanguage i…",
-          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\noptional lexhint integration\n\n\n\n\ncomplete runtime registry\n\nlanguage support matrix\ngerman scope\n\nswedish scope\n\nvietnamese scope\n\nthai scope\n\nrussian scope\n\nidentifier rules\n\nownership and safety\n\n\n\n\nquickstart\njapanese, korean, and chinese\n\nswedish\n\nvietnamese\n\nthai\n\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\nrecognition policy boundary\n\noptional lexhint boundary\n\nsemantic segment boundaries\n\n\n\n\napi reference\npreparation\n\nlanguage i…"
+          "text": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. It expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\nDocumentation\n\n\nInstallation\nRuntime\n\nOptional spaCy support\n\nDocumentation\n\nOptional Lexhint integration\n\n\n\n\nLanguages\nComplete runtime registry\n\n\n\n\nLanguage support matrix\nGerman scope\n\nSwedish scope\n\nVietnamese scope\n\nThai scope\n\nRussian scope\n\nIdentifier rules\n\nOwnership and safety\n\n\n\n\nGenerated language coverage\n\nQuickstart\nJapanese, Korean, and Chinese\n\nSwedish\n\nVietnamese\n\nThai\n\nConfiguration object\n\n\n\n\nArchitecture\nOwnership boundary\n\nStructured precedence\n\nRecognition policy boundary\n\nOptional Lexhint boundary\n\nSemantic segment boundaries…",
+          "lower": "spokenform is a single-language written-to-spoken text normalizer for speech\napplications. it expands abbreviations and units, verbalizes structured numeric\nforms, protects literal ranges, and records stage-by-stage provenance and offset\nmaps.\n\n\ndocumentation\n\n\ninstallation\nruntime\n\noptional spacy support\n\ndocumentation\n\noptional lexhint integration\n\n\n\n\nlanguages\ncomplete runtime registry\n\n\n\n\nlanguage support matrix\ngerman scope\n\nswedish scope\n\nvietnamese scope\n\nthai scope\n\nrussian scope\n\nidentifier rules\n\nownership and safety\n\n\n\n\ngenerated language coverage\n\nquickstart\njapanese, korean, and chinese\n\nswedish\n\nvietnamese\n\nthai\n\nconfiguration object\n\n\n\n\narchitecture\nownership boundary\n\nstructured precedence\n\nrecognition policy boundary\n\noptional lexhint boundary\n\nsemantic segment boundaries…"
         },
         {
           "anchor": "",
@@ -586,32 +568,32 @@
     {
       "url": "/tools/spokenform/main/language-coverage/",
       "title": "spokenform Generated language coverage",
-      "snippet": "Spokenform accepts 49 base families and 17 explicit dependency locale overlays.\nSpecialist capabilities remain independent from global langu …",
+      "snippet": "Spokenform accepts 62 base families and 18 explicit dependency locale overlays.\nSpecialist capabilities remain independent from global langu …",
       "sections": [
         {
           "anchor": "",
           "heading": "Generated language coverage",
-          "text": "Spokenform accepts 49 base families and 17 explicit dependency locale overlays.\nSpecialist capabilities remain independent from global language acceptance.\n\n\n\nSpokenform key\n\nDependency key\n\nExact locale\n\nAbbreviations\n\nNumber backend\n\nDecimal policy\n\nStructured\n\nSequence policy\n\nKokoroG2P\n\nTier\n\n\n\n\n\nam\n\nam\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nar\n\nar\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nyes\n\nyes\n\nconservative_integration\n\n\n\naz\n\naz\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbe\n\nbe\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbn\n\nbn\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nca\n\nca\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nce\n\nce\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\ncs\n\ncs\n\nno\n\nyes\n\nnum2words\n\nno\n\nyes\n\nyes\n\nyes\n\nreviewed_structured\n\n\n\ncy\n\nc…",
-          "lower": "spokenform accepts 49 base families and 17 explicit dependency locale overlays.\nspecialist capabilities remain independent from global language acceptance.\n\n\n\nspokenform key\n\ndependency key\n\nexact locale\n\nabbreviations\n\nnumber backend\n\ndecimal policy\n\nstructured\n\nsequence policy\n\nkokorog2p\n\ntier\n\n\n\n\n\nam\n\nam\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nar\n\nar\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nyes\n\nyes\n\nconservative_integration\n\n\n\naz\n\naz\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbe\n\nbe\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbn\n\nbn\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nca\n\nca\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nce\n\nce\n\nno\n\nyes\n\nnum2words\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\ncs\n\ncs\n\nno\n\nyes\n\nnum2words\n\nno\n\nyes\n\nyes\n\nyes\n\nreviewed_structured\n\n\n\ncy\n\nc…"
+          "text": "Spokenform accepts 62 base families and 18 explicit dependency locale overlays.\nSpecialist capabilities remain independent from global language acceptance.\n\n\n\nSpokenform key\n\nAbbr2words locale\n\nNumeralform locale\n\nExact locale\n\nAbbr2words registered\n\nBundled abbreviation lexicon\n\nNumber renderer\n\nRenderer available\n\nPlain cardinals\n\nDecimal policy\n\nStructured\n\nSequence policy\n\nKokoroG2P\n\nTier\n\n\n\n\n\nam\n\nam\n\nam\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nar\n\nar\n\nar\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nyes\n\nyes\n\nconservative_integration\n\n\n\naz\n\naz\n\naz\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbe\n\nbe\n\nbe\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbg\n\nbg\n\nbg\n\nno\n\nyes\n\nno\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfo…",
+          "lower": "spokenform accepts 62 base families and 18 explicit dependency locale overlays.\nspecialist capabilities remain independent from global language acceptance.\n\n\n\nspokenform key\n\nabbr2words locale\n\nnumeralform locale\n\nexact locale\n\nabbr2words registered\n\nbundled abbreviation lexicon\n\nnumber renderer\n\nrenderer available\n\nplain cardinals\n\ndecimal policy\n\nstructured\n\nsequence policy\n\nkokorog2p\n\ntier\n\n\n\n\n\nam\n\nam\n\nam\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nar\n\nar\n\nar\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nyes\n\nyes\n\nconservative_integration\n\n\n\naz\n\naz\n\naz\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbe\n\nbe\n\nbe\n\nno\n\nyes\n\nyes\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfoundation\n\n\n\nbg\n\nbg\n\nbg\n\nno\n\nyes\n\nno\n\nnumeralform\n\nyes\n\nyes\n\nno\n\nno\n\nno\n\nno\n\nfo…"
         }
       ]
     },
     {
       "url": "/tools/spokenform/main/languages/",
-      "title": "spokenform Complete runtime registry",
+      "title": "spokenform Languages",
       "snippet": "The generated capability matrix is maintained in language-coverage.md. The public registry accepts these base families:\n\n\n\nCanonical code …",
       "sections": [
         {
           "anchor": "",
           "heading": "Complete runtime registry",
-          "text": "The generated capability matrix is maintained in language-coverage.md. The public registry accepts these base families:\n\n\n\nCanonical code\n\n\n\n\n\nam\n\n\n\nar\n\n\n\naz\n\n\n\nbe\n\n\n\nbn\n\n\n\nca\n\n\n\nce\n\n\n\ncs\n\n\n\ncy\n\n\n\nda\n\n\n\nde\n\n\n\nen\n\n\n\neo\n\n\n\nes\n\n\n\nfa\n\n\n\nfi\n\n\n\nfr\n\n\n\nhe\n\n\n\nhi\n\n\n\nhu\n\n\n\nhy\n\n\n\nid\n\n\n\nis\n\n\n\nit\n\n\n\nja\n\n\n\nkk\n\n\n\nkn\n\n\n\nko\n\n\n\nlt\n\n\n\nlv\n\n\n\nmn\n\n\n\nnl\n\n\n\nno\n\n\n\npl\n\n\n\npt\n\n\n\nro\n\n\n\nru\n\n\n\nsk\n\n\n\nsl\n\n\n\nsr\n\n\n\nsv\n\n\n\nte\n\n\n\ntet\n\n\n\ntg\n\n\n\nth\n\n\n\ntr\n\n\n\nuk\n\n\n\nvi\n\n\n\nzh\n\n\n\n\n\nThe 17 exact overlays are en_GB, en_IN, en_NG, en_US, es_CO, es_CR, es_GT, es_MX, es_NI, es_VE, fr_BE, fr_CH, fr_DZ, pt_BR, zh_CN, zh_HK, and zh_TW.",
-          "lower": "the generated capability matrix is maintained in language-coverage.md. the public registry accepts these base families:\n\n\n\ncanonical code\n\n\n\n\n\nam\n\n\n\nar\n\n\n\naz\n\n\n\nbe\n\n\n\nbn\n\n\n\nca\n\n\n\nce\n\n\n\ncs\n\n\n\ncy\n\n\n\nda\n\n\n\nde\n\n\n\nen\n\n\n\neo\n\n\n\nes\n\n\n\nfa\n\n\n\nfi\n\n\n\nfr\n\n\n\nhe\n\n\n\nhi\n\n\n\nhu\n\n\n\nhy\n\n\n\nid\n\n\n\nis\n\n\n\nit\n\n\n\nja\n\n\n\nkk\n\n\n\nkn\n\n\n\nko\n\n\n\nlt\n\n\n\nlv\n\n\n\nmn\n\n\n\nnl\n\n\n\nno\n\n\n\npl\n\n\n\npt\n\n\n\nro\n\n\n\nru\n\n\n\nsk\n\n\n\nsl\n\n\n\nsr\n\n\n\nsv\n\n\n\nte\n\n\n\ntet\n\n\n\ntg\n\n\n\nth\n\n\n\ntr\n\n\n\nuk\n\n\n\nvi\n\n\n\nzh\n\n\n\n\n\nthe 17 exact overlays are en_gb, en_in, en_ng, en_us, es_co, es_cr, es_gt, es_mx, es_ni, es_ve, fr_be, fr_ch, fr_dz, pt_br, zh_cn, zh_hk, and zh_tw."
+          "text": "The generated capability matrix is maintained in language-coverage.md. The public registry accepts these base families:\n\n\n\nCanonical code\n\n\n\n\n\nam\n\n\n\nar\n\n\n\naz\n\n\n\nbe\n\n\n\nbg\n\n\n\nbn\n\n\n\nca\n\n\n\nce\n\n\n\ncs\n\n\n\ncy\n\n\n\nda\n\n\n\nde\n\n\n\nel\n\n\n\nen\n\n\n\neo\n\n\n\nes\n\n\n\net\n\n\n\neu\n\n\n\nfa\n\n\n\nfi\n\n\n\nfr\n\n\n\nhe\n\n\n\nhi\n\n\n\nhu\n\n\n\nhy\n\n\n\nid\n\n\n\nis\n\n\n\nit\n\n\n\nja\n\n\n\nkk\n\n\n\nkn\n\n\n\nko\n\n\n\nka\n\n\n\nlt\n\n\n\nku\n\n\n\nlv\n\n\n\nlb\n\n\n\nmn\n\n\n\nml\n\n\n\nmr\n\n\n\nnl\n\n\n\nne\n\n\n\nno\n\n\n\npl\n\n\n\npt\n\n\n\nro\n\n\n\nru\n\n\n\nsk\n\n\n\nsl\n\n\n\nsq\n\n\n\nsr\n\n\n\nsv\n\n\n\nsw\n\n\n\nte\n\n\n\ntet\n\n\n\ntg\n\n\n\nth\n\n\n\ntr\n\n\n\nuk\n\n\n\nur\n\n\n\nvi\n\n\n\nzh\n\n\n\n\n\nThe 18 exact overlays are en_GB, en_IN, en_NG, en_US, es_CO, es_CR, es_GT, es_MX, es_NI, es_VE, fr_BE, fr_CH, fr_DZ, pt_BR, pt_PT, zh_CN, zh_HK, and zh_TW.\n\nThe 13 foundation families bg, el, et, eu, ka, ku, lb, ml, mr, ne, sq, sw, and ur provide reviewed plain-number rendering an…",
+          "lower": "the generated capability matrix is maintained in language-coverage.md. the public registry accepts these base families:\n\n\n\ncanonical code\n\n\n\n\n\nam\n\n\n\nar\n\n\n\naz\n\n\n\nbe\n\n\n\nbg\n\n\n\nbn\n\n\n\nca\n\n\n\nce\n\n\n\ncs\n\n\n\ncy\n\n\n\nda\n\n\n\nde\n\n\n\nel\n\n\n\nen\n\n\n\neo\n\n\n\nes\n\n\n\net\n\n\n\neu\n\n\n\nfa\n\n\n\nfi\n\n\n\nfr\n\n\n\nhe\n\n\n\nhi\n\n\n\nhu\n\n\n\nhy\n\n\n\nid\n\n\n\nis\n\n\n\nit\n\n\n\nja\n\n\n\nkk\n\n\n\nkn\n\n\n\nko\n\n\n\nka\n\n\n\nlt\n\n\n\nku\n\n\n\nlv\n\n\n\nlb\n\n\n\nmn\n\n\n\nml\n\n\n\nmr\n\n\n\nnl\n\n\n\nne\n\n\n\nno\n\n\n\npl\n\n\n\npt\n\n\n\nro\n\n\n\nru\n\n\n\nsk\n\n\n\nsl\n\n\n\nsq\n\n\n\nsr\n\n\n\nsv\n\n\n\nsw\n\n\n\nte\n\n\n\ntet\n\n\n\ntg\n\n\n\nth\n\n\n\ntr\n\n\n\nuk\n\n\n\nur\n\n\n\nvi\n\n\n\nzh\n\n\n\n\n\nthe 18 exact overlays are en_gb, en_in, en_ng, en_us, es_co, es_cr, es_gt, es_mx, es_ni, es_ve, fr_be, fr_ch, fr_dz, pt_br, pt_pt, zh_cn, zh_hk, and zh_tw.\n\nthe 13 foundation families bg, el, et, eu, ka, ku, lb, ml, mr, ne, sq, sw, and ur provide reviewed plain-number rendering an…"
         },
         {
           "anchor": "",
           "heading": "Language support matrix",
-          "text": "| ar | ara | ar_MSA | num2words | ar | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| he | heb | he_IL | num2words | he | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| kk | kaz | kk_KZ | num2words | kk | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n\nThis page is the canonical runtime support matrix for spokenform. It describes\nimplemented capabilities, not full parity with PolyNorm, benchmarks, or\nkokorog2p.\n\n\n\nCanonical code\n\nAccepted aliases\n\nRegion forms\n\nNumber backend\n\nAbbreviation profile\n\nPlain numbers\n\nDecimals\n\nQuantities\n\nCurrencies\n\nDates and times\n\nShared specialist sequences\n\n\n\n\n\ncs\n\nnone\n\nnone\n\nnum2words\n\ncs\n\nyes\n\nco…",
-          "lower": "| ar | ara | ar_msa | num2words | ar | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| he | heb | he_il | num2words | he | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| kk | kaz | kk_kz | num2words | kk | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n\nthis page is the canonical runtime support matrix for spokenform. it describes\nimplemented capabilities, not full parity with polynorm, benchmarks, or\nkokorog2p.\n\n\n\ncanonical code\n\naccepted aliases\n\nregion forms\n\nnumber backend\n\nabbreviation profile\n\nplain numbers\n\ndecimals\n\nquantities\n\ncurrencies\n\ndates and times\n\nshared specialist sequences\n\n\n\n\n\ncs\n\nnone\n\nnone\n\nnum2words\n\ncs\n\nyes\n\nco…"
+          "text": "| ar | ara | ar_MSA | numeralform | ar | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| he | heb | he_IL | numeralform | he | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| kk | kaz | kk_KZ | numeralform | kk | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n\nThis page is the canonical runtime support matrix for spokenform. It describes\nimplemented capabilities, not full parity with PolyNorm, benchmarks, or\nkokorog2p.\n\n\n\nCanonical code\n\nAccepted aliases\n\nRegion forms\n\nNumber renderer\n\nAbbreviation profile\n\nPlain numbers\n\nDecimals\n\nQuantities\n\nCurrencies\n\nDates and times\n\nShared specialist sequences\n\n\n\n\n\ncs\n\nnone\n\nnone\n\nnumeralform\n\ncs…",
+          "lower": "| ar | ara | ar_msa | numeralform | ar | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| he | heb | he_il | numeralform | he | yes | reviewed | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n| kk | kaz | kk_kz | numeralform | kk | yes | conservative | conservative | reviewed | caller-managed | fail closed for unreviewed domains |\n\nthis page is the canonical runtime support matrix for spokenform. it describes\nimplemented capabilities, not full parity with polynorm, benchmarks, or\nkokorog2p.\n\n\n\ncanonical code\n\naccepted aliases\n\nregion forms\n\nnumber renderer\n\nabbreviation profile\n\nplain numbers\n\ndecimals\n\nquantities\n\ncurrencies\n\ndates and times\n\nshared specialist sequences\n\n\n\n\n\ncs\n\nnone\n\nnone\n\nnumeralform\n\ncs…"
         },
         {
           "anchor": "",
@@ -628,20 +610,20 @@
         {
           "anchor": "",
           "heading": "Vietnamese scope",
-          "text": "Vietnamese uses comma decimal punctuation. Spokenform accepts CLDR-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. Reviewed quantities, temperatures, and VND/₫ identities come from abbr2words, while Spokenform owns numeric realization and source mapping. vi-VN and vi_VN normalize to the regional form and resolve to the Vietnamese base dependency registries. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.",
-          "lower": "vietnamese uses comma decimal punctuation. spokenform accepts cldr-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. reviewed quantities, temperatures, and vnd/₫ identities come from abbr2words, while spokenform owns numeric realization and source mapping. vi-vn and vi_vn normalize to the regional form and resolve to the vietnamese base dependency registries. dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed."
+          "text": "Vietnamese uses comma decimal punctuation. Spokenform accepts CLDR-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. Reviewed quantities, temperatures, and VND/₫ identities come from abbr2words, while Numeralform owns non-Chinese numeric realization and Spokenform owns source mapping. vi-VN and vi_VN normalize to the regional form and resolve to the Vietnamese Numeralform base locale. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed.",
+          "lower": "vietnamese uses comma decimal punctuation. spokenform accepts cldr-style dot grouping and regular, non-breaking, or narrow non-breaking space grouping; fractional digits are rendered digitwise to preserve written precision. reviewed quantities, temperatures, and vnd/₫ identities come from abbr2words, while numeralform owns non-chinese numeric realization and spokenform owns source mapping. vi-vn and vi_vn normalize to the regional form and resolve to the vietnamese numeralform base locale. dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist sequence domains remain caller-managed or fail closed."
         },
         {
           "anchor": "",
           "heading": "Thai scope",
-          "text": "Thai accepts th, th_TH, and th-TH; regional forms route to the base num2words and abbr2words registries. No tha alias is claimed. The CLDR-style point decimal marker and comma, regular-space, NBSP, or NNBSP grouping are supported, with Latin digits as the default and Thai digits also accepted.\n\nReviewed quantities, temperatures, and THB/฿ identities come from abbr2words; Spokenform owns Thai numeric realization and source mapping. Reviewed titles, month and era abbreviations, and the น. clock marker may expand, but date and year bodies, digital times, numeric-only dates, and eras remain caller-managed. Thai ordinals, ranges, and unreviewed specialist sequences remain literal or fail closed, with no English semantic fallback.",
-          "lower": "thai accepts th, th_th, and th-th; regional forms route to the base num2words and abbr2words registries. no tha alias is claimed. the cldr-style point decimal marker and comma, regular-space, nbsp, or nnbsp grouping are supported, with latin digits as the default and thai digits also accepted.\n\nreviewed quantities, temperatures, and thb/฿ identities come from abbr2words; spokenform owns thai numeric realization and source mapping. reviewed titles, month and era abbreviations, and the น. clock marker may expand, but date and year bodies, digital times, numeric-only dates, and eras remain caller-managed. thai ordinals, ranges, and unreviewed specialist sequences remain literal or fail closed, with no english semantic fallback."
+          "text": "Thai accepts th, th_TH, and th-TH; regional forms route to Numeralform and abbr2words. No tha alias is claimed. The CLDR-style point decimal marker and comma, regular-space, NBSP, or NNBSP grouping are supported, with Latin digits as the default and Thai digits also accepted.\n\nReviewed quantities, temperatures, and THB/฿ identities come from abbr2words; Spokenform owns Thai numeric realization and source mapping. Reviewed titles, month and era abbreviations, and the น. clock marker may expand, but date and year bodies, digital times, numeric-only dates, and eras remain caller-managed. Thai ordinals, ranges, and unreviewed specialist sequences remain literal or fail closed, with no English semantic fallback.",
+          "lower": "thai accepts th, th_th, and th-th; regional forms route to numeralform and abbr2words. no tha alias is claimed. the cldr-style point decimal marker and comma, regular-space, nbsp, or nnbsp grouping are supported, with latin digits as the default and thai digits also accepted.\n\nreviewed quantities, temperatures, and thb/฿ identities come from abbr2words; spokenform owns thai numeric realization and source mapping. reviewed titles, month and era abbreviations, and the น. clock marker may expand, but date and year bodies, digital times, numeric-only dates, and eras remain caller-managed. thai ordinals, ranges, and unreviewed specialist sequences remain literal or fail closed, with no english semantic fallback."
         },
         {
           "anchor": "",
           "heading": "Russian scope",
-          "text": "Russian accepts ru, ru_RU, and ru-RU; rus, rus_RU, and rus-RU are compatibility aliases. Regional forms route to the Russian num2words and abbr2words base registries.\n\nRussian plain numbers use comma decimal punctuation, regular spaces, NBSP, or NNBSP grouping, with visible fractional digits spoken digitwise. Reviewed abbr2words canonical unit identities are rendered by Spokenform using explicit CLDR one, few, many, and other noun forms. Counted feminine units use gender-aware одна and две forms, and output is limited to nominative measurement phrases.\n\nDates, digital times, year abbreviations, phone-number speech, and specialist sequences remain caller-managed or fail closed. Currency is caller-managed, including RUB, until abbr2words provides a reviewed Russian ruble identity. Unknown f…",
-          "lower": "russian accepts ru, ru_ru, and ru-ru; rus, rus_ru, and rus-ru are compatibility aliases. regional forms route to the russian num2words and abbr2words base registries.\n\nrussian plain numbers use comma decimal punctuation, regular spaces, nbsp, or nnbsp grouping, with visible fractional digits spoken digitwise. reviewed abbr2words canonical unit identities are rendered by spokenform using explicit cldr one, few, many, and other noun forms. counted feminine units use gender-aware одна and две forms, and output is limited to nominative measurement phrases.\n\ndates, digital times, year abbreviations, phone-number speech, and specialist sequences remain caller-managed or fail closed. currency is caller-managed, including rub, until abbr2words provides a reviewed russian ruble identity. unknown f…"
+          "text": "Russian accepts ru, ru_RU, and ru-RU; rus, rus_RU, and rus-RU are compatibility aliases. Regional forms route to the Russian Numeralform and abbr2words locales.\n\nRussian plain numbers use comma decimal punctuation, regular spaces, NBSP, or NNBSP grouping, with visible fractional digits spoken digitwise. Reviewed abbr2words canonical unit identities are rendered by Spokenform using explicit CLDR one, few, many, and other noun forms. Counted feminine units use gender-aware одна and две forms, and output is limited to nominative measurement phrases.\n\nDates, digital times, year abbreviations, phone-number speech, and specialist sequences remain caller-managed or fail closed. Currency is caller-managed, including RUB, until abbr2words provides a reviewed Russian ruble identity. Unknown future…",
+          "lower": "russian accepts ru, ru_ru, and ru-ru; rus, rus_ru, and rus-ru are compatibility aliases. regional forms route to the russian numeralform and abbr2words locales.\n\nrussian plain numbers use comma decimal punctuation, regular spaces, nbsp, or nnbsp grouping, with visible fractional digits spoken digitwise. reviewed abbr2words canonical unit identities are rendered by spokenform using explicit cldr one, few, many, and other noun forms. counted feminine units use gender-aware одна and две forms, and output is limited to nominative measurement phrases.\n\ndates, digital times, year abbreviations, phone-number speech, and specialist sequences remain caller-managed or fail closed. currency is caller-managed, including rub, until abbr2words provides a reviewed russian ruble identity. unknown future…"
         },
         {
           "anchor": "",
@@ -733,6 +715,67 @@
       ]
     },
     {
+      "url": "/tools/spokenform/main/migration-piperg2p/",
+      "title": "spokenform PiperG2P integration boundary",
+      "snippet": "Spokenform prepares written text for semantic speech handoff. PiperG2P remains the owner of voice configuration, tokenization, phonemization …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "PiperG2P integration boundary",
+          "text": "Spokenform prepares written text for semantic speech handoff. PiperG2P remains the owner of voice configuration, tokenization, phonemization, phoneme IDs, lexicon overlays, raw Piper and eSpeak phoneme blocks, and backend compatibility. Spokenform does not import PiperG2P or add it as a runtime dependency.",
+          "lower": "spokenform prepares written text for semantic speech handoff. piperg2p remains the owner of voice configuration, tokenization, phonemization, phoneme ids, lexicon overlays, raw piper and espeak phoneme blocks, and backend compatibility. spokenform does not import piperg2p or add it as a runtime dependency."
+        },
+        {
+          "anchor": "",
+          "heading": "Prepared text",
+          "text": "Use the dedicated profile and pass its output to PiperG2P:\n\nfrom piperg2p import phonemize_prepared\nfrom spokenform import prepare_for_piperg2p\n\nprepared = prepare_for_piperg2p(\n    \"Pay $12.50 for 2 kg.\",\n    language=\"en\",\n)\nresult = phonemize_prepared(\n    prepared.spoken_text,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\n\n\n\nprepare_for_piperg2p() does not detect language, load Piper configuration, tokenize, phonemize, or encode model IDs. The semantic Spokenform language and Piper voice identifier are separate explicit choices.",
+          "lower": "use the dedicated profile and pass its output to piperg2p:\n\nfrom piperg2p import phonemize_prepared\nfrom spokenform import prepare_for_piperg2p\n\nprepared = prepare_for_piperg2p(\n    \"pay $12.50 for 2 kg.\",\n    language=\"en\",\n)\nresult = phonemize_prepared(\n    prepared.spoken_text,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\n\n\n\nprepare_for_piperg2p() does not detect language, load piper configuration, tokenize, phonemize, or encode model ids. the semantic spokenform language and piper voice identifier are separate explicit choices."
+        },
+        {
+          "anchor": "",
+          "heading": "Number ownership",
+          "text": "The Piper profile uses Spokenform’s generic reviewed numeric capability model because PiperG2P consumes already-prepared text. Reviewed structured languages use STRUCTURED_AND_PLAIN, released plain-cardinal languages use PLAIN, and caller-managed families remain NONE. This differs from the Kokoro profile’s historical handoff policy. The compatibility alias number_policy_for_language() remains the Kokoro policy.",
+          "lower": "the piper profile uses spokenform’s generic reviewed numeric capability model because piperg2p consumes already-prepared text. reviewed structured languages use structured_and_plain, released plain-cardinal languages use plain, and caller-managed families remain none. this differs from the kokoro profile’s historical handoff policy. the compatibility alias number_policy_for_language() remains the kokoro policy."
+        },
+        {
+          "anchor": "",
+          "heading": "Raw phoneme blocks",
+          "text": "PiperG2P owns parsing of raw [[ ... ]] blocks. Parse them with PiperG2P, convert the returned source coordinates to ProtectedSpan, and let Spokenform normalize only the surrounding text:\n\nfrom piperg2p import RawPhonemeSegment, parse_raw_blocks\nfrom spokenform import ProtectedSpan, prepare_for_piperg2p\n\nsource = \"Use 2 kg [[ tɛst ]] today.\"\nprotected = [\n    ProtectedSpan(\n        segment.source_start,\n        segment.source_end,\n        kind=\"piperg2p-raw-phonemes\",\n    )\n    for segment in parse_raw_blocks(source)\n    if isinstance(segment, RawPhonemeSegment)\n]\nprepared = prepare_for_piperg2p(\n    source,\n    language=\"en\",\n    protected_spans=protected,\n)\n\n\n\n\nSpokenform does not parse, interpret, or rewrite the raw block. The caller passes the resulting spoken_text to the Piper path th…",
+          "lower": "piperg2p owns parsing of raw [[ ... ]] blocks. parse them with piperg2p, convert the returned source coordinates to protectedspan, and let spokenform normalize only the surrounding text:\n\nfrom piperg2p import rawphonemesegment, parse_raw_blocks\nfrom spokenform import protectedspan, prepare_for_piperg2p\n\nsource = \"use 2 kg [[ tɛst ]] today.\"\nprotected = [\n    protectedspan(\n        segment.source_start,\n        segment.source_end,\n        kind=\"piperg2p-raw-phonemes\",\n    )\n    for segment in parse_raw_blocks(source)\n    if isinstance(segment, rawphonemesegment)\n]\nprepared = prepare_for_piperg2p(\n    source,\n    language=\"en\",\n    protected_spans=protected,\n)\n\n\n\n\nspokenform does not parse, interpret, or rewrite the raw block. the caller passes the resulting spoken_text to the piper path th…"
+        },
+        {
+          "anchor": "",
+          "heading": "Piper overrides and coordinates",
+          "text": "Spokenform source coordinates refer to the original source. Piper overrides use half-open coordinates in prepared text. Protect a caller-owned source span, prepare the text, then map it before constructing the Piper override:\n\noutput_start, output_end = prepared.map_source_span(source_start, source_end)\n\n\n\n\nUse the mapped pair for the downstream override. PreparedText.source_replacements and PreparedText.offset_map retain exact provenance for semantic replacements.",
+          "lower": "spokenform source coordinates refer to the original source. piper overrides use half-open coordinates in prepared text. protect a caller-owned source span, prepare the text, then map it before constructing the piper override:\n\noutput_start, output_end = prepared.map_source_span(source_start, source_end)\n\n\n\n\nuse the mapped pair for the downstream override. preparedtext.source_replacements and preparedtext.offset_map retain exact provenance for semantic replacements."
+        },
+        {
+          "anchor": "",
+          "heading": "Annotations",
+          "text": "Source POS, tag, and lemma data must not be copied across a semantic replacement. If Piper lexicon selection needs annotations for generated words, rerun linguistic analysis on prepared.spoken_text, or annotate only unchanged spans whose lexical identity remains valid. Spokenform does not automatically convert its annotations into Piper TokenAnnotation values.",
+          "lower": "source pos, tag, and lemma data must not be copied across a semantic replacement. if piper lexicon selection needs annotations for generated words, rerun linguistic analysis on prepared.spoken_text, or annotate only unchanged spans whose lexical identity remains valid. spokenform does not automatically convert its annotations into piper tokenannotation values."
+        },
+        {
+          "anchor": "",
+          "heading": "CI contract",
+          "text": "tests/test_real_piperg2p_integration.py exercises the PiperG2P source pinned by the candidate CI workflow with a synthetic minimal text voice configuration. It checks prepared text, source replacements, offset provenance, Piper token offsets, phoneme IDs, and raw-block protection through PiperG2P’s parser. The candidate gate does not install system eSpeak or download voice assets.\n\nUntil PiperG2P is published as an installable release, CI uses the pinned GitHub source for the candidate compatibility gate. After publication, the workflow can switch to the released distribution and a released Spokenform plus released PiperG2P gate can become the persistent released-stack check.",
+          "lower": "tests/test_real_piperg2p_integration.py exercises the piperg2p source pinned by the candidate ci workflow with a synthetic minimal text voice configuration. it checks prepared text, source replacements, offset provenance, piper token offsets, phoneme ids, and raw-block protection through piperg2p’s parser. the candidate gate does not install system espeak or download voice assets.\n\nuntil piperg2p is published as an installable release, ci uses the pinned github source for the candidate compatibility gate. after publication, the workflow can switch to the released distribution and a released spokenform plus released piperg2p gate can become the persistent released-stack check."
+        },
+        {
+          "anchor": "",
+          "heading": "Dependency direction",
+          "text": "abbr2words, cn2an, numeralform ──> spokenform ──┐\n                                                 ├──> application / TTS orchestration\npiperg2p ────────────────────────────────────────┘\n\n\n\n\nThe application composes the independent packages. PiperG2P is not a Spokenform runtime dependency.",
+          "lower": "abbr2words, cn2an, numeralform ──> spokenform ──┐\n                                                 ├──> application / tts orchestration\npiperg2p ────────────────────────────────────────┘\n\n\n\n\nthe application composes the independent packages. piperg2p is not a spokenform runtime dependency."
+        },
+        {
+          "anchor": "",
+          "heading": "Non-goals",
+          "text": "Spokenform does not load Piper models or voice configurations.\n\n\nSpokenform does not derive Piper voice IDs from semantic language identifiers.\n\n\nSpokenform does not generate phonemes or token IDs.\n\n\nSpokenform does not parse Piper raw blocks.\n\n\nSpokenform does not transfer source linguistic annotations across generated text.\n\n\nPiper profile support does not promise a Piper voice or backend for every language.",
+          "lower": "spokenform does not load piper models or voice configurations.\n\n\nspokenform does not derive piper voice ids from semantic language identifiers.\n\n\nspokenform does not generate phonemes or token ids.\n\n\nspokenform does not parse piper raw blocks.\n\n\nspokenform does not transfer source linguistic annotations across generated text.\n\n\npiper profile support does not promise a piper voice or backend for every language."
+        }
+      ]
+    },
+    {
       "url": "/tools/spokenform/main/polynorm/",
       "title": "spokenform PolyNorm diagnostic benchmark",
       "snippet": "Spokenform’s PolyNorm adapter evaluates the overlap between the external\nApple PolyNorm-Bench corpus and the seven base languages supported …",
@@ -771,8 +814,8 @@
         {
           "anchor": "",
           "heading": "Basic usage",
-          "text": "from spokenform import GlossaryEntry, SpeechProfile, prepare_language\n\nprofile = SpeechProfile(\n    name=\"operations\",\n    language=\"en\",\n    glossary=(\n        GlossaryEntry(\"AAR\", \"after-action review\"),\n        GlossaryEntry(\"AO\", \"area of operations\", read_as=\"letters\"),\n        GlossaryEntry(\n            \"AAA\",\n            \"anti-aircraft artillery\",\n            read_as=\"custom\",\n            spoken_form=\"Triple A\",\n        ),\n    ),\n)\n\nresult = prepare_language(\n    \"AAA enters the AO after the AAR.\",\n    language=\"en\",\n    profile=profile,\n)\nassert result.spoken_text == (\n    \"Triple A enters the A O after the after-action review.\"\n)\n\n\n\n\nThe supported read_as values are:\n\n\nlong_form, the default, expands to long_form.\n\n\nletters, spells the matched source surface, such as AO to A O.…",
-          "lower": "from spokenform import glossaryentry, speechprofile, prepare_language\n\nprofile = speechprofile(\n    name=\"operations\",\n    language=\"en\",\n    glossary=(\n        glossaryentry(\"aar\", \"after-action review\"),\n        glossaryentry(\"ao\", \"area of operations\", read_as=\"letters\"),\n        glossaryentry(\n            \"aaa\",\n            \"anti-aircraft artillery\",\n            read_as=\"custom\",\n            spoken_form=\"triple a\",\n        ),\n    ),\n)\n\nresult = prepare_language(\n    \"aaa enters the ao after the aar.\",\n    language=\"en\",\n    profile=profile,\n)\nassert result.spoken_text == (\n    \"triple a enters the a o after the after-action review.\"\n)\n\n\n\n\nthe supported read_as values are:\n\n\nlong_form, the default, expands to long_form.\n\n\nletters, spells the matched source surface, such as ao to a o.…"
+          "text": "from spokenform import GlossaryEntry, SpeechProfile, prepare_language\n\nprofile = SpeechProfile(\n    name=\"operations\",\n    language=\"en\",\n    glossary=(\n        GlossaryEntry(\"AAR\", \"after-action review\"),\n        GlossaryEntry(\"AO\", \"area of operations\", read_as=\"letters\"),\n        GlossaryEntry(\n            \"AAA\",\n            \"anti-aircraft artillery\",\n            read_as=\"custom\",\n            spoken_form=\"Triple A\",\n        ),\n    ),\n)\n\nresult = prepare_language(\n    \"AAA enters the AO after the AAR.\",\n    language=\"en\",\n    profile=profile,\n)\nassert result.spoken_text == (\"Triple A enters the A O after the after-action review.\")\n\n\n\n\nThe supported read_as values are:\n\n\nlong_form, the default, expands to long_form.\n\n\nletters, spells the matched source surface, such as AO to A O.\n\n\ncusto…",
+          "lower": "from spokenform import glossaryentry, speechprofile, prepare_language\n\nprofile = speechprofile(\n    name=\"operations\",\n    language=\"en\",\n    glossary=(\n        glossaryentry(\"aar\", \"after-action review\"),\n        glossaryentry(\"ao\", \"area of operations\", read_as=\"letters\"),\n        glossaryentry(\n            \"aaa\",\n            \"anti-aircraft artillery\",\n            read_as=\"custom\",\n            spoken_form=\"triple a\",\n        ),\n    ),\n)\n\nresult = prepare_language(\n    \"aaa enters the ao after the aar.\",\n    language=\"en\",\n    profile=profile,\n)\nassert result.spoken_text == (\"triple a enters the a o after the after-action review.\")\n\n\n\n\nthe supported read_as values are:\n\n\nlong_form, the default, expands to long_form.\n\n\nletters, spells the matched source surface, such as ao to a o.\n\n\ncusto…"
         },
         {
           "anchor": "",
@@ -783,21 +826,21 @@
         {
           "anchor": "",
           "heading": "Current boundaries",
-          "text": "The v1 profile API intentionally has no JSON or YAML format, CLI profile loader, profile\ninheritance or merging, automatic ambiguity resolution, military time policy, SSML, or\nphoneme override support. These can be added after runtime profile semantics are stable.\n\nSpokenform requires abbr2words>=0.2.13,<0.3.0 for the isolated expander, bulk\nregistration, speech strategies, custom spoken forms, and exact replacement APIs used by\nprofiles.",
-          "lower": "the v1 profile api intentionally has no json or yaml format, cli profile loader, profile\ninheritance or merging, automatic ambiguity resolution, military time policy, ssml, or\nphoneme override support. these can be added after runtime profile semantics are stable.\n\nspokenform requires abbr2words>=0.2.13,<0.3.0 for the isolated expander, bulk\nregistration, speech strategies, custom spoken forms, and exact replacement apis used by\nprofiles."
+          "text": "The v1 profile API intentionally has no JSON or YAML format, CLI profile loader, profile\ninheritance or merging, automatic ambiguity resolution, military time policy, SSML, or\nphoneme override support. These can be added after runtime profile semantics are stable.\n\nSpokenform requires abbr2words>=0.2.16,<0.3.0 for the language registry, isolated expander, bulk\nregistration, speech strategies, custom spoken forms, and exact replacement APIs used by\nprofiles.",
+          "lower": "the v1 profile api intentionally has no json or yaml format, cli profile loader, profile\ninheritance or merging, automatic ambiguity resolution, military time policy, ssml, or\nphoneme override support. these can be added after runtime profile semantics are stable.\n\nspokenform requires abbr2words>=0.2.16,<0.3.0 for the language registry, isolated expander, bulk\nregistration, speech strategies, custom spoken forms, and exact replacement apis used by\nprofiles."
         }
       ]
     },
     {
       "url": "/tools/spokenform/main/protection/",
       "title": "spokenform Protected text",
-      "snippet": "Automatic protection covers URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect additional source ran …",
+      "snippet": "Automatic protection covers HTTP(S), FTP, www URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect add …",
       "sections": [
         {
           "anchor": "",
           "heading": "Protected text",
-          "text": "Automatic protection covers URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect additional source ranges. High-\nconfidence literal promotion is opt-in:\n\nresult = prepare(\"See https://example.org/a2 and v1.2.3\", language=\"en\", normalize_literals=True)\n\n\n\n\nWith normalize_literals=True, structured URL, e-mail, version, and contextual\nRoman candidates are rendered before generic stages. Caller-defined spans are\nstill absolute and always win over promotion.\n\nfrom spokenform import ProtectedSpan, prepare\n\ntext = \"Keep Dr. literal, but verbalize 12.\"\nstart = text.index(\"Dr.\")\nresult = prepare(\n    text,\n    language=\"en\",\n    protected_spans=[ProtectedSpan(start, start + 3)],\n)\n\n\n\n\nTuple pairs such as (start, end) are also accepted. Ranges use Python string…",
-          "lower": "automatic protection covers urls, email addresses, and semantic-version-like\nstrings. caller-defined spans can protect additional source ranges. high-\nconfidence literal promotion is opt-in:\n\nresult = prepare(\"see https://example.org/a2 and v1.2.3\", language=\"en\", normalize_literals=true)\n\n\n\n\nwith normalize_literals=true, structured url, e-mail, version, and contextual\nroman candidates are rendered before generic stages. caller-defined spans are\nstill absolute and always win over promotion.\n\nfrom spokenform import protectedspan, prepare\n\ntext = \"keep dr. literal, but verbalize 12.\"\nstart = text.index(\"dr.\")\nresult = prepare(\n    text,\n    language=\"en\",\n    protected_spans=[protectedspan(start, start + 3)],\n)\n\n\n\n\ntuple pairs such as (start, end) are also accepted. ranges use python string…"
+          "text": "Automatic protection covers HTTP(S), FTP, www URLs, email addresses, and semantic-version-like\nstrings. Caller-defined spans can protect additional source ranges. High-\nconfidence literal promotion is opt-in:\n\nresult = prepare(\"See https://example.org/a2 and v1.2.3\", language=\"en\", normalize_literals=True)\n\n\n\n\nThe default profile keeps these literals unchanged. Literal promotion is opt-in, and the German promoted renderer uses localized URL and e-mail punctuation and the reviewed FTP scheme policy.\nWith normalize_literals=True, structured URL, e-mail, version, and contextual\nRoman candidates are rendered before generic stages. Caller-defined spans are\nstill absolute and always win over promotion.\n\nfrom spokenform import ProtectedSpan, prepare\n\ntext = \"Keep Dr. literal, but verbalize 12.\"…",
+          "lower": "automatic protection covers http(s), ftp, www urls, email addresses, and semantic-version-like\nstrings. caller-defined spans can protect additional source ranges. high-\nconfidence literal promotion is opt-in:\n\nresult = prepare(\"see https://example.org/a2 and v1.2.3\", language=\"en\", normalize_literals=true)\n\n\n\n\nthe default profile keeps these literals unchanged. literal promotion is opt-in, and the german promoted renderer uses localized url and e-mail punctuation and the reviewed ftp scheme policy.\nwith normalize_literals=true, structured url, e-mail, version, and contextual\nroman candidates are rendered before generic stages. caller-defined spans are\nstill absolute and always win over promotion.\n\nfrom spokenform import protectedspan, prepare\n\ntext = \"keep dr. literal, but verbalize 12.\"…"
         }
       ]
     },
@@ -864,8 +907,8 @@
         {
           "anchor": "",
           "heading": "Vietnamese",
-          "text": "assert prepare(\n    \"TP. Hà Nội có 2 kg hàng với giá 1000 VND.\",\n    language=\"vi\",\n).spoken_text == (\n    \"thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.\"\n)\n\n\n\n\nVietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and VND/₫ amounts, and guarded dependency abbreviations. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed.",
-          "lower": "assert prepare(\n    \"tp. hà nội có 2 kg hàng với giá 1000 vnd.\",\n    language=\"vi\",\n).spoken_text == (\n    \"thành phố hà nội có hai kilôgam hàng với giá một nghìn đồng việt nam.\"\n)\n\n\n\n\nvietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and vnd/₫ amounts, and guarded dependency abbreviations. dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed."
+          "text": "assert prepare(\n    \"TP. Hà Nội có 2 kg hàng với giá 1000 VND.\",\n    language=\"vi\",\n).spoken_text == (\"thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.\")\n\n\n\n\nVietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and VND/₫ amounts, and guarded dependency abbreviations. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed.",
+          "lower": "assert prepare(\n    \"tp. hà nội có 2 kg hàng với giá 1000 vnd.\",\n    language=\"vi\",\n).spoken_text == (\"thành phố hà nội có hai kilôgam hàng với giá một nghìn đồng việt nam.\")\n\n\n\n\nvietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and vnd/₫ amounts, and guarded dependency abbreviations. dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed."
         },
         {
           "anchor": "",
@@ -884,13 +927,19 @@
     {
       "url": "/tools/spokenform/main/release-checklist/",
       "title": "spokenform Release checklist",
-      "snippet": "Ensure the released abbr2words>=0.2.13,<0.3.0 prerequisite containing the source-aligned replacement contract, reviewed structured identitie …",
+      "snippet": "Ensure the released abbr2words>=0.2.16,<0.3.0 prerequisite containing the language registry, source-aligned replacement contract, reviewed s …",
       "sections": [
         {
           "anchor": "",
           "heading": "Release checklist",
-          "text": "Ensure the released abbr2words>=0.2.13,<0.3.0 prerequisite containing the source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.\n\n\n\n\nConfirm the released Lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nFor Lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nRun the URL, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\nCreate an annotated Git tag for the target release, for example vX.Y.Z, only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nRun python…",
-          "lower": "ensure the released abbr2words>=0.2.13,<0.3.0 prerequisite containing the source-aligned replacement contract, reviewed structured identities, cjk inventories, and initialism policy is available from the target package index.\n\n\n\n\nconfirm the released lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nfor lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nrun the url, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\ncreate an annotated git tag for the target release, for example vx.y.z, only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirements.txt.\n\n\nrun python…"
+          "text": "Ensure the released abbr2words>=0.2.16,<0.3.0 prerequisite containing the language registry, source-aligned replacement contract, reviewed structured identities, CJK inventories, and initialism policy is available from the target package index.\n\n\n\n\nConfirm the released Lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nFor Lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nRun the URL, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\nCreate an annotated Git tag for the target release, for example vX.Y.Z, only after all release gates pass.\n\n\nInstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirement…",
+          "lower": "ensure the released abbr2words>=0.2.16,<0.3.0 prerequisite containing the language registry, source-aligned replacement contract, reviewed structured identities, cjk inventories, and initialism policy is available from the target package index.\n\n\n\n\nconfirm the released lexhint versions allowed by the spokenform[lexhint] extra pass the real provider contract test.\n\n\nfor lexhint 0.2.x, confirm a compatible schema-8 runtime dataset is published and installable.\n\n\nrun the url, computing-context, and sports-context smoke tests with the installed schema-8 runtime artifact.\n\n\n\n\ncreate an annotated git tag for the target release, for example vx.y.z, only after all release gates pass.\n\n\ninstall a clean environment with python -m pip install -e \".[dev]\" and python -m pip install -r docs/requirement…"
+        },
+        {
+          "anchor": "",
+          "heading": "Spokenform Gold benchmark consumption",
+          "text": "The Gold release workflow is operator-triggered and serializes one candidate per release tag. It plans the next version, builds and verifies deterministic candidate bytes, runs the real Spokenform consumer gate, compares an existing tag by manifest and archive SHA-256 values, publishes only equivalent or absent releases, and re-downloads the public zip for verification.\n\nFor a first dispatch, confirm that ../spokenform/benchmarks/spokenform_gold_release.json points to a published immutable asset. Its archive and manifest hashes must be real values, not placeholders. The consumer must be able to run with --offline after one successful online cache fill. Do not replace the pin with a branch, a latest-release lookup, or a source checkout.\n\nFor the current pin, verify v0.1.0-exp.2, public rel…",
+          "lower": "the gold release workflow is operator-triggered and serializes one candidate per release tag. it plans the next version, builds and verifies deterministic candidate bytes, runs the real spokenform consumer gate, compares an existing tag by manifest and archive sha-256 values, publishes only equivalent or absent releases, and re-downloads the public zip for verification.\n\nfor a first dispatch, confirm that ../spokenform/benchmarks/spokenform_gold_release.json points to a published immutable asset. its archive and manifest hashes must be real values, not placeholders. the consumer must be able to run with --offline after one successful online cache fill. do not replace the pin with a branch, a latest-release lookup, or a source checkout.\n\nfor the current pin, verify v0.1.0-exp.2, public rel…"
         }
       ]
     },

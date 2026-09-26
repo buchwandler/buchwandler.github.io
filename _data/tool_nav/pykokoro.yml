@@ -4,17 +4,17 @@ nav_key: pykokoro
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.9.6
-source_commit: bf9a13c9b28987205f509dda0bede6f9f88a9b75
-source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.6
+source_ref: v0.10.0
+source_commit: 3c53e5d768d0465bde0a92e69f3e05d297a2d2da
+source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.0
 is_default: true
 repo_url: https://github.com/buchwandler/pykokoro
-release_tag: v0.9.6
-release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.9.6
+release_tag: v0.10.0
+release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.9.6
+  ref: v0.10.0
   url: /tools/pykokoro/
   current: true
 - name: main
@@ -27,29 +27,32 @@ entries:
   title: PyKokoro Documentation
   url: /tools/pykokoro/
 - slug: quickstart
-  title: pykokoro Quick Start Guide
+  title: pykokoro Quick start
   url: /tools/pykokoro/quickstart/
 - slug: installation
-  title: pykokoro Installation Guide
+  title: pykokoro Installation
   url: /tools/pykokoro/installation/
 - slug: basic_usage
-  title: pykokoro Basic Usage
+  title: pykokoro Basic usage
   url: /tools/pykokoro/basic_usage/
 - slug: advanced_features
-  title: pykokoro Advanced Features
+  title: pykokoro Advanced request features
   url: /tools/pykokoro/advanced_features/
 - slug: pipeline_stages
-  title: pykokoro Pipeline Usage and Stages
+  title: pykokoro Request lifecycle
   url: /tools/pykokoro/pipeline_stages/
 - slug: api_reference
-  title: pykokoro API Reference
+  title: pykokoro API reference
   url: /tools/pykokoro/api_reference/
 - slug: examples
   title: pykokoro Examples
   url: /tools/pykokoro/examples/
-- slug: polynorm_benchmark
-  title: pykokoro PolyNorm benchmark
-  url: /tools/pykokoro/polynorm_benchmark/
+- slug: languages
+  title: pykokoro Languages and model profiles
+  url: /tools/pykokoro/languages/
+- slug: breaking-change-0.10.0
+  title: 'pykokoro Breaking change: request-centric synthesis (v0.10.0)'
+  url: /tools/pykokoro/breaking-change-0.10.0/
 - slug: changelog
   title: pykokoro Changelog
   url: /tools/pykokoro/changelog/

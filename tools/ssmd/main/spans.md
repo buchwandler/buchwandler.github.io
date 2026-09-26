@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -565,11 +565,11 @@ exact source ranges that can be passed to the normalizer as protected spans.</p>
 <section id="semantic-and-pronunciation-language-scopes">
 <h2>Semantic and pronunciation language scopes</h2>
 <p>An inline language annotation is semantic by default:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code> to mark a language run for pronunciation/G2P only:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
 [Manpower]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}diskussion
 ge[cancel]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}t
 [download]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}en
@@ -614,8 +614,9 @@ downstream consumer.</p>
 <h2>Coordinate system</h2>
 <ul class="simple">
 <li><p>Offsets refer to character indices in <code class="docutils literal notranslate"><span class="pre">clean_text</span></code> only.</p></li>
-<li><p>Markup like <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">[text]{...}</span></code>, and <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">...&gt;</span></code> is removed before offsets are
-computed.</p></li>
+<li><p>Markup like <code class="docutils literal notranslate"><span class="pre">*</span></code>, <code class="docutils literal notranslate"><span class="pre">[text]{...}</span></code>, and canonical <code class="docutils literal notranslate"><span class="pre">:::</span></code> voice directives is removed before
+offsets are computed. Legacy raw <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> voice blocks are also recognized in
+compatibility mode.</p></li>
 <li><p>Escaping via <code class="docutils literal notranslate"><span class="pre">escape_ssmd_syntax()</span></code> is reversible but not length-preserving; do not
 use offsets from escaped text.</p></li>
 </ul>

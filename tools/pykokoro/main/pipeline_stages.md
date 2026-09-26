@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Pipeline Usage and Stages"
+title: "pykokoro Request lifecycle"
 permalink: /tools/pykokoro/main/pipeline_stages/
 nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -540,319 +540,72 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="pipeline-usage-and-stages">
-<h1>Pipeline Usage and Stages</h1>
-<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code> is the configurable engine behind the high-level <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> class. Use it
-when you want to swap parsing/segmentation stages, run custom G2P logic, or control
-model loading at a lower level.</p>
-<section id="pipeline-overview">
-<h2>Pipeline overview</h2>
-<p>The default pipeline wiring is:</p>
-<p><code class="docutils literal notranslate"><span class="pre">doc_parser</span> <span class="pre">-&gt;</span> <span class="pre">g2p</span> <span class="pre">-&gt;</span> <span class="pre">phoneme_processing</span> <span class="pre">-&gt;</span> <span class="pre">audio_generation</span> <span class="pre">-&gt;</span> <span class="pre">audio_postprocessing</span></code></p>
-<p>Default stage classes:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">SsmdDocumentParser</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">KokoroG2PAdapter</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OnnxPhonemeProcessorAdapter</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OnnxAudioGenerationAdapter</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">OnnxAudioPostprocessingAdapter</span></code></p></li>
-</ul>
-<p>If any of the audio stages are omitted, the pipeline builds a <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> ONNX backend and
-wires the missing adapters automatically.</p>
-</section>
-<section id="quick-start">
-<h2>Quick start</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello from the pipeline.&quot;</span><span class="p">)</span>
-<span class="n">result</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">)</span>
-
-<span class="c1"># Inspect intermediates</span>
-<span class="n">segments</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">segments</span>
-<span class="n">phoneme_segments</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">phoneme_segments</span>
-
-<span class="c1"># Enable trace details when needed</span>
-<span class="n">traced</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">return_trace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">traced</span><span class="o">.</span><span class="n">trace</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">traced</span><span class="o">.</span><span class="n">trace</span><span class="o">.</span><span class="n">warnings</span><span class="p">)</span>
+<section id="request-lifecycle">
+<h1>Request lifecycle</h1>
+<p>The renderer operates on one prepared <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> and produces one
+<code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code>:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SynthesisSegment
+      |
+      v
+prepared-text KokoroG2P
+      |
+      v
+model-specific phoneme/token preparation
+      |
+      v
+voice/style resolution and ONNX inference
+      |
+      v
+request-local postprocessing and timing reconstruction
+      |
+      v
+RenderedSegment
 </pre></div>
 </div>
+<section id="prepared-text-g2p">
+<h2>Prepared-text G2P</h2>
+<p>PyKokoro forwards the request’s exact text, explicit language, pronunciation overrides,
+and linguistic annotations, including morphology, to KokoroG2P. Supplied tokens take
+precedence and prevent internal spaCy analysis. It does not parse a document, build a
+plan, or interpret markup.</p>
 </section>
-<section id="configuration">
-<h2>Configuration</h2>
-<p><code class="docutils literal notranslate"><span class="pre">PipelineConfig</span></code> and <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> are frozen dataclasses. Use
-<code class="docutils literal notranslate"><span class="pre">dataclasses.replace</span></code> when you want a modified copy.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="n">faster_cfg</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span><span class="n">cfg</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">replace</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.2</span><span class="p">))</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">faster_cfg</span><span class="p">)</span>
-</pre></div>
-</div>
-<section id="pipelineconfig-fields">
-<h3>PipelineConfig fields</h3>
-<section id="core">
-<h4>Core</h4>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">voice</span></code>: Default voice name (<code class="docutils literal notranslate"><span class="pre">str</span></code>) or <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> used unless SSMD metadata
-overrides the voice per segment.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">generation</span></code>: <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> instance with speed, language, pause handling, and
-phoneme controls.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">prosody</span></code>: <code class="docutils literal notranslate"><span class="pre">ProsodyConfig</span></code> selecting the AudioSig speech-effects backend. WSOLA is the
-default; <code class="docutils literal notranslate"><span class="pre">esola</span></code> and <code class="docutils literal notranslate"><span class="pre">td_psola</span></code> are experimental, and <code class="docutils literal notranslate"><span class="pre">psola</span></code> aliases <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>.</p></li>
-</ul>
+<section id="model-and-voice-preparation">
+<h2>Model and voice preparation</h2>
+<p>The resolved request configuration selects a compatible model profile and voice/style. A
+voice on <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> overrides the configured default; a <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> can be
+supplied as the request voice. The engine prepares model-ready style data and sends
+token IDs, speed, and a seed when supported to OnnxVoice.</p>
 </section>
-<section id="model-and-provider">
-<h4>Model and provider</h4>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">model_quality</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;fp32&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;fp16&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;fp16-gpu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;q8&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;q8f16&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;q4&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;q4f16&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;uint8&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;uint8f16&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">None</span></code> uses the backend default.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">model_source</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;huggingface&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;github&quot;</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">model_variant</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;v1.0&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;v1.1-zh&quot;</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">model_path</span></code>: Path to a local ONNX model file. Overrides model download.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">voices_path</span></code>: Path to a local voices file. Overrides voice download.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">provider</span></code>: ONNX provider name (<code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;cpu&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;cuda&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;openvino&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;directml&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;coreml&quot;</span></code>).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">provider_options</span></code>: Dict of provider/session options passed to ONNX Runtime.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">session_options</span></code>: Pre-built <code class="docutils literal notranslate"><span class="pre">onnxruntime.SessionOptions</span></code> (advanced use).</p></li>
-</ul>
+<section id="atomic-inference-and-capacity">
+<h2>Atomic inference and capacity</h2>
+<p>One public synthesis request always returns one <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code>. After G2P, PyKokoro
+checks the model-token count against the resolved profile. By default,
+<code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;none&quot;</span></code> raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> when the request exceeds
+capacity and does not import PhraseSplit.</p>
+<p>Set <code class="docutils literal notranslate"><span class="pre">SynthesisConfig.long_text_split=&quot;sentence&quot;</span></code> to enable internal splitting only for
+oversized requests. PhraseSplit loads lazily and packs source-aligned sentence spans
+into model-safe chunks, falling back to clauses and safe word boundaries for an
+oversized sentence. The chunks are rendered in order and joined into the same request
+result. A single word that cannot fit safely still raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code>.
+<code class="docutils literal notranslate"><span class="pre">long_text_use_spacy=False</span></code> selects PhraseSplit’s simple mode; <code class="docutils literal notranslate"><span class="pre">None</span></code> permits a
+compatible local spaCy model with regex fallback, and <code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a
+compatible model. Caller-owned composition still applies between separate synthesis
+requests. Short-sentence handling is also explicit and disabled when no short-sentence
+configuration or enable override is supplied. Callers can opt in with
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig(enable_short_sentence=True)</span></code> or <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>. It may use
+context and retry inference internally, but returned text, phonemes, and timings remain
+request-local. <code class="docutils literal notranslate"><span class="pre">RenderedSegment.short_sentence_mode</span></code> reports the mode actually used
+without exposing generated context text.</p>
 </section>
-<section id="tokenizer-and-phoneme-handling">
-<h4>Tokenizer and phoneme handling</h4>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config</span></code>: <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code> used by SSMD parsing and <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model</span></code>: explicit spaCy package name, or unset. <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> is
-accepted as a compatibility alias for unset.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config.spacy_model_size</span></code>: exact package tier (<code class="docutils literal notranslate"><span class="pre">&quot;sm&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;md&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;lg&quot;</span></code>,
-<code class="docutils literal notranslate"><span class="pre">&quot;trf&quot;</span></code>), or unset. With both values unset, each backend selects its highest installed
-compatible model (<code class="docutils literal notranslate"><span class="pre">trf</span> <span class="pre">&gt;</span> <span class="pre">lg</span> <span class="pre">&gt;</span> <span class="pre">md</span> <span class="pre">&gt;</span> <span class="pre">sm</span></code>) without downloading.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">espeak_config</span></code>: Deprecated espeak configuration. Prefer <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">short_sentence_config</span></code>: <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> for short-sentence handling.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">overlap_mode</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;snap&quot;</span></code> clips overlapping SSMD spans to segment bounds, <code class="docutils literal notranslate"><span class="pre">&quot;strict&quot;</span></code>
-drops partial spans and emits trace warnings.</p></li>
-</ul>
-<p>Helper for an exact spaCy model request:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">with_spacy_model</span>
-
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)(</span><span class="n">cfg</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="other">
-<h4>Other</h4>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">return_trace</span></code>: Include <code class="docutils literal notranslate"><span class="pre">Trace</span></code> in <code class="docutils literal notranslate"><span class="pre">AudioResult</span></code> with timings/warnings.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enable_deprecation_warnings</span></code>: Reserved for compatibility warnings.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>: Directory for the G2P disk cache (JSON files). Set <code class="docutils literal notranslate"><span class="pre">None</span></code> to disable
-caching.</p></li>
-</ul>
-</section>
-</section>
-<section id="generationconfig-fields">
-<h3>GenerationConfig fields</h3>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">speed</span></code>: Speech rate multiplier (<code class="docutils literal notranslate"><span class="pre">1.0</span></code> is normal).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">lang</span></code>: Default language code for phonemization (<code class="docutils literal notranslate"><span class="pre">&quot;en-us&quot;</span></code> etc).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">is_phonemes</span></code>: Treat input text as phoneme strings instead of raw text.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_mode</span></code>: <code class="docutils literal notranslate"><span class="pre">&quot;tts&quot;</span></code> keeps natural model pauses, <code class="docutils literal notranslate"><span class="pre">&quot;manual&quot;</span></code> trims segment silence and
-preserves explicit pauses, <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> inserts pauses at sentence/paragraph boundaries
-and high-confidence clausal commas, then trims segment silence.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_clause</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...c</span></code> breaks (seconds).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_sentence</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...s</span></code> breaks (seconds).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_paragraph</span></code>: Default pause for SSMD <code class="docutils literal notranslate"><span class="pre">...p</span></code> breaks (seconds).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_variance</span></code>: Stored for compatibility with the <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> API. The pipeline stages
-do not currently apply variance.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">random_seed</span></code>: Stored for compatibility with the <code class="docutils literal notranslate"><span class="pre">Kokoro</span></code> API. The pipeline stages do
-not currently use the seed.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">enable_short_sentence</span></code>: Override short sentence handling for the run.</p></li>
-</ul>
-</section>
-</section>
-<section id="runtime-overrides">
-<h2>Runtime overrides</h2>
-<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline.run</span></code> accepts overrides for any <code class="docutils literal notranslate"><span class="pre">PipelineConfig</span></code> field. The <code class="docutils literal notranslate"><span class="pre">lang</span></code>
-keyword is special-cased to update <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code> for convenience.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">dataclasses</span><span class="w"> </span><span class="kn">import</span> <span class="n">replace</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span>
-
-<span class="c1"># Override just the language</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">)</span>
-
-<span class="c1"># Override generation settings per call</span>
-<span class="n">manual</span> <span class="o">=</span> <span class="n">replace</span><span class="p">(</span>
-    <span class="n">pipeline</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">generation</span><span class="p">,</span>
-    <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;manual&quot;</span><span class="p">,</span>
-    <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello...s world&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">manual</span><span class="p">)</span>
-
-<span class="c1"># Override model settings per call</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Quick test&quot;</span><span class="p">,</span> <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;q8&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="stage-behavior">
-<h2>Stage behavior</h2>
-<section id="ssmd-document-parser">
-<h3>SSMD document parser</h3>
-<p><code class="docutils literal notranslate"><span class="pre">SsmdDocumentParser</span></code> uses the SSMD 0.8 public front-matter parser and body-only
-segmentation to turn SSMD markup into clean text plus metadata spans, pause boundaries,
-and sentence/paragraph segments. Explicit break durations retain their processor
-mapping; implicit document defaults are reduced before G2P.</p>
-<p>Supported SSMD features include:</p>
-<ul class="simple">
-<li><p>Break markers: <code class="docutils literal notranslate"><span class="pre">...c</span></code>, <code class="docutils literal notranslate"><span class="pre">...s</span></code>, <code class="docutils literal notranslate"><span class="pre">...p</span></code>, <code class="docutils literal notranslate"><span class="pre">...500ms</span></code></p></li>
-<li><p>Language overrides: <code class="docutils literal notranslate"><span class="pre">[Bonjour]{lang=&quot;fr&quot;}</span></code></p></li>
-<li><p>IPA phoneme overrides: <code class="docutils literal notranslate"><span class="pre">[tomato]{ipa=&quot;təˈmeɪtoʊ&quot;}</span></code></p></li>
-<li><p>Prosody annotations: <code class="docutils literal notranslate"><span class="pre">[text]{rate=&quot;fast&quot;</span> <span class="pre">pitch=&quot;high&quot;</span> <span class="pre">volume=&quot;loud&quot;}</span></code></p></li>
-<li><p>Inline voice annotations and <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;af_sarah&quot;&gt;</span></code> directives</p></li>
-</ul>
-<p>The parser attaches SSMD metadata to annotation spans so later stages can select
-per-segment language, voices, phonemes, and prosody. Sentence-level <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> language,
-voice, and prosody directives are inherited by contained segments, while inline
-annotations override individual fields.</p>
-</section>
-<section id="plain-text-sentence-splitting">
-<h3>Plain text sentence splitting</h3>
-<p><code class="docutils literal notranslate"><span class="pre">PlainTextDocumentParser</span></code> uses Phrasplit 0.3.8’s offset-preserving detailed split API
-for sentence splitting. In automatic mode, the prepared linguistic analysis is also
-passed to Phrasplit’s high-confidence clausal-comma detector; list commas and
-shared-subject continuations are not treated as deterministic clause pauses. The
-returned diagnostics come from the same operation that produced the segments, so
-sentence-model metadata does not require a separate model-resolution pass. When
-<code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> is unavailable, it falls back to a single segment. PhraseSplit may resolve
-once per hard range; PyKokoro does not claim one resolution for the whole document. The
-language model is derived from <code class="docutils literal notranslate"><span class="pre">generation.lang</span></code> using spaCy package naming rules (for
-example <code class="docutils literal notranslate"><span class="pre">en_core_web_sm</span></code> for English). Split boundaries are forced at SSMD pause
-boundaries and at spans that contain phoneme overrides so those overrides are kept
-intact. Set <code class="docutils literal notranslate"><span class="pre">PYKOKORO_DEBUG_SEGMENTS=1</span></code> to log segment offsets.</p>
-<p>The prepared-text flow is: prepared analysis -&gt; sentence segmentation -&gt; Phrasplit
-clausal-comma detection -&gt; structural refinement -&gt; deterministic boundary event -&gt; G2P
-pause propagation. Detection reuses the existing prepared document and does not run
-spaCy again.</p>
-</section>
-<section id="kokoro-g2p-adapter">
-<h3>Kokoro G2P adapter</h3>
-<p><code class="docutils literal notranslate"><span class="pre">KokoroG2PAdapter</span></code> uses the <code class="docutils literal notranslate"><span class="pre">kokorog2p</span></code> package to produce phonemes and token IDs.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">generation.lang</span></code> selects the G2P language.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">generation.is_phonemes</span></code> treats input as phonemes and skips text G2P.</p></li>
-<li><p>SSMD <code class="docutils literal notranslate"><span class="pre">ph</span></code>/<code class="docutils literal notranslate"><span class="pre">phonemes</span></code> spans override phonemes for that segment.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config</span></code> is forwarded to <code class="docutils literal notranslate"><span class="pre">kokorog2p.get_g2p</span></code>.</p></li>
-<li><p>Unset <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> and <code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> resolve independently per effective
-language; the selected concrete packages are exposed in result metadata.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cache_dir</span></code> enables on-disk caching of phonemes/tokens.</p></li>
-<li><p>Long phoneme token sequences are split into batches of <code class="docutils literal notranslate"><span class="pre">MAX_PHONEME_LENGTH</span></code>.</p></li>
-</ul>
-</section>
-<section id="onnx-phoneme-processing">
-<h3>Onnx phoneme processing</h3>
-<p><code class="docutils literal notranslate"><span class="pre">OnnxPhonemeProcessorAdapter</span></code> calls the ONNX backend to normalize tokens, skip empty
-segments, and apply short-sentence handling.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">short_sentence_config</span></code> controls defaults for short sentence handling.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">generation.enable_short_sentence</span></code> can override the config per run.</p></li>
-</ul>
-</section>
-<section id="onnx-audio-generation">
-<h3>Onnx audio generation</h3>
-<p><code class="docutils literal notranslate"><span class="pre">OnnxAudioGenerationAdapter</span></code> generates raw audio per phoneme segment.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">voice</span></code> provides the default voice style.</p></li>
-<li><p>SSMD voice metadata (<code class="docutils literal notranslate"><span class="pre">voice</span></code>/<code class="docutils literal notranslate"><span class="pre">voice_name</span></code>) overrides the voice per segment.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">generation.speed</span></code> controls synthesis speed.</p></li>
-</ul>
-</section>
-<section id="onnx-audio-postprocessing">
-<h3>Onnx audio postprocessing</h3>
-<p><code class="docutils literal notranslate"><span class="pre">OnnxAudioPostprocessingAdapter</span></code> trims silence and concatenates segments.</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">generation.pause_mode&quot;</span></code> set to <code class="docutils literal notranslate"><span class="pre">&quot;manual&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code> enables silence trimming before
-inserting explicit pauses.</p></li>
-<li><p>SSMD prosody metadata (rate/pitch/volume) is applied to each segment through one
-AudioSig compositor pass. Configured fallbacks are used only in non-strict mode.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">pause_before</span></code>/<code class="docutils literal notranslate"><span class="pre">pause_after</span></code> values from G2P are inserted between segments.</p></li>
-</ul>
-<p>WSOLA is the production default. ESOLA’s computed backend rate must be <code class="docutils literal notranslate"><span class="pre">0.5..2.0</span></code>, and
-current TD-PSOLA limits are rate <code class="docutils literal notranslate"><span class="pre">0.75..1.5</span></code> and pitch <code class="docutils literal notranslate"><span class="pre">-6..+6</span> <span class="pre">st</span></code>. No backend
-guarantees formant preservation; quality depends on the voice and utterance. Because
-segments are processed independently, this stage cannot restore sentence-level
-coarticulation or pitch continuity.</p>
-</section>
-</section>
-<section id="customizing-the-pipeline">
-<h2>Customizing the pipeline</h2>
-<p>You can replace individual stages or use the provided no-op adapters. The showcase
-script demonstrates multiple wiring styles:</p>
-<p><code class="docutils literal notranslate"><span class="pre">examples/pipeline_stage_showcase.py</span></code></p>
-<p>Example with explicit stage wiring:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">build_pipeline</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_generation.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopAudioGenerationAdapter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.audio_postprocessing.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopAudioPostprocessingAdapter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.doc_parsers.ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">SsmdDocumentParser</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.g2p.kokorog2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroG2PAdapter</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.stages.phoneme_processing.noop</span><span class="w"> </span><span class="kn">import</span> <span class="n">NoopPhonemeProcessorAdapter</span>
-
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-<span class="p">)</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">build_pipeline</span><span class="p">(</span>
-    <span class="n">config</span><span class="o">=</span><span class="n">cfg</span><span class="p">,</span>
-    <span class="n">doc_parser</span><span class="o">=</span><span class="n">SsmdDocumentParser</span><span class="p">(),</span>
-    <span class="n">g2p</span><span class="o">=</span><span class="n">KokoroG2PAdapter</span><span class="p">(),</span>
-    <span class="n">phoneme_processing</span><span class="o">=</span><span class="n">NoopPhonemeProcessorAdapter</span><span class="p">(),</span>
-    <span class="n">audio_generation</span><span class="o">=</span><span class="n">NoopAudioGenerationAdapter</span><span class="p">(),</span>
-    <span class="n">audio_postprocessing</span><span class="o">=</span><span class="n">NoopAudioPostprocessingAdapter</span><span class="p">(),</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<section id="ssmd-0-8-document-controls">
-<h3>SSMD 0.8 document controls</h3>
-<p><code class="docutils literal notranslate"><span class="pre">PipelineConfig.ssmd</span></code> controls header parsing, provider-scoped API binding overrides,
-unknown-header strictness, missing-voice behavior, pause-default overrides, emphasis
-policy and gain scaling, and the explicit audio source resolver. Header bindings
-override direct logical references, while API bindings override header bindings.
-Document pause defaults are reduced before G2P; explicit breaks take precedence and
-simultaneous implicit defaults use the maximum duration. <code class="docutils literal notranslate"><span class="pre">DocumentResult.header</span></code>/<code class="docutils literal notranslate"><span class="pre">body</span></code>
-and <code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> expose copied metadata.</p>
-<p>Emphasis capability policy is evaluated after phoneme processing and before
-<code class="docutils literal notranslate"><span class="pre">audio_generation</span></code>. <code class="docutils literal notranslate"><span class="pre">plain</span></code> preserves metadata without modifying audio, <code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one
-diagnostic per logical source segment, <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects before inference, and
-<code class="docutils literal notranslate"><span class="pre">approximate</span></code> adds deterministic gain metadata (<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>,
-<code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>) at <code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=1.0</span></code>. The scale accepts finite values from
-<code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code> and changes only automatic gain; semantic emphasis remains intact.
-<code class="docutils literal notranslate"><span class="pre">none</span></code> is ordinary speech in every mode. Explicit <code class="docutils literal notranslate"><span class="pre">volume</span></code> metadata is retained with
-precedence over approximation, and no automatic rate or pitch metadata is added.</p>
-</section>
-</section>
-<section id="local-model-files-and-providers">
-<h2>Local model files and providers</h2>
-<p>To load local ONNX artifacts, set <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>. You can also select a
-specific execution provider.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-    <span class="n">model_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/models/kokoro.onnx&quot;</span><span class="p">),</span>
-    <span class="n">voices_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;/models/voices.bin&quot;</span><span class="p">),</span>
-    <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;cuda&quot;</span><span class="p">,</span>
-    <span class="n">provider_options</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;device_id&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
-<span class="p">)</span>
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello from local files.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<section id="result">
+<h2>Result</h2>
+<p><code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> contains the request ID, mono float32 audio, sample rate, exact
+request text, language, resolved voice name when applicable, phonemes, token IDs,
+diagnostics, and word timings. Timings use source-text character ranges and ordered
+sample offsets inside the returned waveform. <code class="docutils literal notranslate"><span class="pre">synthesis_identity</span></code> exposes stable
+output-affecting settings; <code class="docutils literal notranslate"><span class="pre">voice_level_applications</span></code> records calibration mode, gain,
+source, and missing-custom-voice outcomes. The caller owns cross-request playback order,
+pause policy, resampling, and composition.</p>
 </section>
 </section>
 </div>

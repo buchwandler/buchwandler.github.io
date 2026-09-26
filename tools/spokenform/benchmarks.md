@@ -5,8 +5,8 @@ permalink: /tools/spokenform/benchmarks/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_ref: "v0.4.5"
+docs_commit: "3da15861c766c2b4bb961aee0629f52562e1b314"
 search_enabled: true
 ---
 
@@ -573,12 +573,32 @@ be used to measure selector headroom before attempting any learned ranking or
 selection project.</p>
 <section id="spokenform-gold">
 <h2>Spokenform Gold</h2>
-<p>Run the pinned Gold diagnostic benchmark with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.spokenform_gold
+<p>Run the pinned Gold release diagnostic benchmark with:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.spokenform_gold<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--split<span class="w"> </span>corpus<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--accept-upstream-licenses<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--report<span class="w"> </span>html
 </pre></div>
 </div>
-<p>The adapter caches the exact reviewed source commit <code class="docutils literal notranslate"><span class="pre">ba55d631a45a0fe8b3d87ad58beef2843c617151</span></code> and its verified experimental <code class="docutils literal notranslate"><span class="pre">0.1.0-exp</span></code> release under <code class="docutils literal notranslate"><span class="pre">.cache/spokenform-gold/&lt;commit&gt;/</span></code>. The default evaluates the <code class="docutils literal notranslate"><span class="pre">test</span></code> split and writes results under <code class="docutils literal notranslate"><span class="pre">benchmark-results/spokenform-gold/&lt;run-id&gt;/</span></code>, including <code class="docutils literal notranslate"><span class="pre">summary.json</span></code>, <code class="docutils literal notranslate"><span class="pre">rows.jsonl</span></code>, Gold JSONL/Markdown artifacts, and a self-contained <code class="docutils literal notranslate"><span class="pre">report.html</span></code>.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--offline</span></code> after the cache is populated, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> to rebuild it, <code class="docutils literal notranslate"><span class="pre">--download-only</span></code> to populate without evaluation, <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> to relocate the cache, <code class="docutils literal notranslate"><span class="pre">--gold-root</span></code> for an explicit local release, <code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">dev|test|all</span></code>, <code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">canonical|accepted</span></code>, and <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">none</span></code> to disable HTML. Gold remains diagnostic and does not automatically hydrate restricted PolyNorm or Proteno source references.</p>
+<p>The consumer reads the exact <code class="docutils literal notranslate"><span class="pre">v0.1.0-exp.2</span></code> release asset pinned in
+<code class="docutils literal notranslate"><span class="pre">benchmarks/spokenform_gold_release.json</span></code>. It never rebuilds Gold data from a
+source checkout and never selects the latest GitHub release dynamically. The
+pin contains the release tag, asset SHA-256, manifest SHA-256, target commit,
+and matching runtime source ref. The first online run downloads and verifies the
+release zip and matching runtime source under <code class="docutils literal notranslate"><span class="pre">.cache/spokenform-gold/</span></code>. The
+v2 corpus is unsplit and contains 20,037 public release records, including 1,978
+external-reference records and 18,059 embedded records.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--offline</span></code> after the cache is populated, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> only after an intentional
+pin update, <code class="docutils literal notranslate"><span class="pre">--download-only</span></code> to populate without evaluation, <code class="docutils literal notranslate"><span class="pre">--cache-dir</span></code> or
+<code class="docutils literal notranslate"><span class="pre">--source-cache-dir</span></code> to relocate release or external-source caches, <code class="docutils literal notranslate"><span class="pre">--gold-root</span></code>
+for an extracted release directory containing <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, <code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">corpus</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">canonical|accepted</span></code>, and <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">none</span></code> to disable HTML. Passing a source
+checkout to <code class="docutils literal notranslate"><span class="pre">--gold-root</span></code> is rejected with a targeted diagnostic.</p>
+<p>Full corpus runs require <code class="docutils literal notranslate"><span class="pre">--accept-upstream-licenses</span></code> before source hydration. The
+benchmark fails before scoring if the flag is absent, evaluates all 20,037 release
+records, and records release identity and coverage in <code class="docutils literal notranslate"><span class="pre">summary.json</span></code> and the
+self-contained <code class="docutils literal notranslate"><span class="pre">report.html</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--offline</span></code> to guarantee that source hydration
+performs no network access.</p>
 </section>
 <section id="lexhint-a-b-comparison">
 <h2>Lexhint A/B comparison</h2>

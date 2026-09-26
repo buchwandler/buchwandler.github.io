@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/configuration/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.7"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_ref: "v0.4.0"
+docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
 search_enabled: true
 ---
 
@@ -544,6 +544,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>Configuration</h1>
 <p>ttsforge stores its configuration in a JSON file and provides a CLI interface for
 managing settings.</p>
+<p>The active generation stack targets PyKokoro 0.9.4 with kokorog2p 0.9.5, phrasplit
+0.3.7, and SSMD 0.8.7. Omitted model and voice settings remain <code class="docutils literal notranslate"><span class="pre">None</span></code> so PyKokoro can
+select language-aware metadata defaults.</p>
 <section id="configuration-file-location">
 <h2>Configuration File Location</h2>
 <p>The configuration file is stored at:</p>
@@ -577,8 +580,6 @@ ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<spa
 ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>reset
 </pre></div>
 </div>
-<p>The former <code class="docutils literal notranslate"><span class="pre">short-sentence-advanced-config</span></code> root command remains available as a
-deprecated compatibility alias.</p>
 </section>
 <section id="configuration-options">
 <h2>Configuration Options</h2>
@@ -633,8 +634,8 @@ preserved rather than silently replaced.</p>
 <code class="docutils literal notranslate"><span class="pre">--language</span></code>; its output metadata records the concrete NER-capable package. Existing
 configurations without these keys migrate to automatic selection.</p>
 </section>
-<section id="ssmd-0-8-policies">
-<h3>SSMD 0.8 policies</h3>
+<section id="ssmd-0-8-6-policies">
+<h3>SSMD 0.8.6 policies</h3>
 <p>The following keys configure SSMD rendering. Persistent configuration is lower
 precedence than a document header; explicit CLI/API values are higher precedence. Do not
 use persistent <code class="docutils literal notranslate"><span class="pre">pause_sentence</span></code> or <code class="docutils literal notranslate"><span class="pre">pause_paragraph</span></code> values as SSMD header overrides.</p>
@@ -696,81 +697,64 @@ local/HTTPS audio annotation resolution. Remote audio is opt-in.</p>
 </section>
 <section id="voice-and-language-settings">
 <h3>Voice and Language Settings</h3>
-<p><code class="docutils literal notranslate"><span class="pre">default_voice</span></code> : Default TTS voice to use.</p>
-<ul class="simple">
-<li><p>Type: string</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_voice</span> <span class="pre">am_adam</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">default_language</span></code> : Default language code.</p>
-<ul class="simple">
-<li><p>Type: string</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">a</span></code> (American English)</p></li>
-<li><p>Choices: <code class="docutils literal notranslate"><span class="pre">a</span></code>, <code class="docutils literal notranslate"><span class="pre">b</span></code>, <code class="docutils literal notranslate"><span class="pre">e</span></code>, <code class="docutils literal notranslate"><span class="pre">f</span></code>, <code class="docutils literal notranslate"><span class="pre">h</span></code>, <code class="docutils literal notranslate"><span class="pre">i</span></code>, <code class="docutils literal notranslate"><span class="pre">j</span></code>, <code class="docutils literal notranslate"><span class="pre">p</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_language</span> <span class="pre">b</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">phonemization_lang</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">tts.voice</span></code> : Optional default TTS voice. When <code class="docutils literal notranslate"><span class="pre">None</span></code>, PyKokoro selects the profile
+default for the document language from metadata.</p>
 <ul class="simple">
 <li><p>Type: string or null</p></li>
 <li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">phonemization_lang</span> <span class="pre">de</span></code></p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">set</span> <span class="pre">tts.voice</span> <span class="pre">am_adam</span></code></p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">default_speed</span></code> : Default speech speed multiplier.</p>
+<p><code class="docutils literal notranslate"><span class="pre">tts.language</span></code> : Canonical BCP-47 document language, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
+<ul class="simple">
+<li><p>Type: string</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code></p></li>
+<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">tts.speed</span></code> : Default speech speed multiplier.</p>
 <ul class="simple">
 <li><p>Type: float</p></li>
 <li><p>Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
 <li><p>Range: <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to <code class="docutils literal notranslate"><span class="pre">2.0</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_speed</span> <span class="pre">1.1</span></code></p></li>
 </ul>
 </section>
 <section id="output-settings">
 <h3>Output Settings</h3>
-<p><code class="docutils literal notranslate"><span class="pre">default_format</span></code> : Default output audio format.</p>
+<p><code class="docutils literal notranslate"><span class="pre">audio.format</span></code> : Default output audio format.</p>
 <ul class="simple">
 <li><p>Type: string</p></li>
 <li><p>Default: <code class="docutils literal notranslate"><span class="pre">m4b</span></code></p></li>
 <li><p>Choices: <code class="docutils literal notranslate"><span class="pre">wav</span></code>, <code class="docutils literal notranslate"><span class="pre">mp3</span></code>, <code class="docutils literal notranslate"><span class="pre">flac</span></code>, <code class="docutils literal notranslate"><span class="pre">opus</span></code>, <code class="docutils literal notranslate"><span class="pre">m4b</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">default_format</span> <span class="pre">mp3</span></code></p></li>
 </ul>
 </section>
 <section id="processing-settings">
 <h3>Processing Settings</h3>
-<p><code class="docutils literal notranslate"><span class="pre">onnx_provider</span></code> : ONNX Runtime execution provider used for synthesis. Use <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">cuda</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">directml</span></code>/<code class="docutils literal notranslate"><span class="pre">dml</span></code>, <code class="docutils literal notranslate"><span class="pre">coreml</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full
-<code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name. TTSForge validates the syntax and PyKokoro validates runtime
-availability.</p>
+<p><code class="docutils literal notranslate"><span class="pre">runtime.provider</span></code> : ONNX Runtime execution provider used for synthesis. Use <code class="docutils literal notranslate"><span class="pre">auto</span></code>,
+<code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">cuda</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">directml</span></code>/<code class="docutils literal notranslate"><span class="pre">dml</span></code>, <code class="docutils literal notranslate"><span class="pre">coreml</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full
+<code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name.</p>
 <ul class="simple">
 <li><p>Type: string</p></li>
 <li><p>Default: <code class="docutils literal notranslate"><span class="pre">cpu</span></code></p></li>
-<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">onnx_provider</span> <span class="pre">nnapi</span></code> and
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">onnx_provider</span> <span class="pre">NnapiExecutionProvider</span></code></p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">set</span> <span class="pre">runtime.provider</span> <span class="pre">nnapi</span></code></p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">use_gpu</span></code> : Legacy compatibility setting. <code class="docutils literal notranslate"><span class="pre">true</span></code> maps to <code class="docutils literal notranslate"><span class="pre">onnx_provider=auto</span></code> and
-<code class="docutils literal notranslate"><span class="pre">false</span></code> maps to <code class="docutils literal notranslate"><span class="pre">onnx_provider=cpu</span></code> when no provider is configured.</p>
+<p><code class="docutils literal notranslate"><span class="pre">model.quality</span></code> : Optional ONNX model quality/quantization. When <code class="docutils literal notranslate"><span class="pre">None</span></code>, PyKokoro
+resolves the profile-supported default quality.</p>
 <ul class="simple">
-<li><p>Type: boolean</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">use_gpu</span> <span class="pre">true</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">model_quality</span></code> : ONNX model quality/quantization.</p>
-<ul class="simple">
-<li><p>Type: string</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">fp32</span></code></p></li>
+<li><p>Type: string or null</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
 <li><p>Choices: <code class="docutils literal notranslate"><span class="pre">fp32</span></code>, <code class="docutils literal notranslate"><span class="pre">fp16</span></code>, <code class="docutils literal notranslate"><span class="pre">q8</span></code>, <code class="docutils literal notranslate"><span class="pre">q8f16</span></code>, <code class="docutils literal notranslate"><span class="pre">q4</span></code>, <code class="docutils literal notranslate"><span class="pre">q4f16</span></code>, <code class="docutils literal notranslate"><span class="pre">uint8</span></code>, <code class="docutils literal notranslate"><span class="pre">uint8f16</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">model_quality</span> <span class="pre">fp16</span></code></p></li>
+<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">set</span> <span class="pre">model.quality</span> <span class="pre">fp16</span></code></p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">model_variant</span></code> : Model variant to download.</p>
+<p><code class="docutils literal notranslate"><span class="pre">model.source</span></code> : Optional model source. Omit it for PyKokoro metadata-driven selection.</p>
 <ul class="simple">
-<li><p>Type: string</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code></p></li>
-<li><p>Choices: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">v1.1-zh</span></code>, <code class="docutils literal notranslate"><span class="pre">v1.1-de</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">model_variant</span> <span class="pre">v1.1-de</span></code></p></li>
+<li><p>Type: string or null</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p>Choices: <code class="docutils literal notranslate"><span class="pre">github</span></code>, <code class="docutils literal notranslate"><span class="pre">huggingface</span></code></p></li>
 </ul>
-<p><code class="docutils literal notranslate"><span class="pre">auto_detect_language</span></code> : Automatically detect language from EPUB metadata.</p>
+<p><code class="docutils literal notranslate"><span class="pre">model.id</span></code> : Optional model profile variant. Omit it for automatic selection.</p>
 <ul class="simple">
-<li><p>Type: boolean</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">true</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">auto_detect_language</span> <span class="pre">false</span></code></p></li>
+<li><p>Type: string or null</p></li>
+<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
+<li><p>Examples: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code> and <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code> (voice <code class="docutils literal notranslate"><span class="pre">martin</span></code>)</p></li>
 </ul>
 <p><code class="docutils literal notranslate"><span class="pre">default_split_mode</span></code> : Default text splitting mode for processing.</p>
 <ul class="simple">
@@ -801,38 +785,13 @@ saved choice is restored on resume and cannot be changed without <code class="do
 </section>
 <section id="mixed-language-settings">
 <h3>Mixed-Language Settings</h3>
-<p><code class="docutils literal notranslate"><span class="pre">use_mixed_language</span></code> : Enable automatic detection and handling of multiple languages in
-text.</p>
-<ul class="simple">
-<li><p>Type: boolean</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">false</span></code></p></li>
-<li><p>Requires: <code class="docutils literal notranslate"><span class="pre">lingua-language-detector</span></code> package (<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">lingua-language-detector</span></code>)</p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">use_mixed_language</span> <span class="pre">true</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">mixed_language_primary</span></code> : Primary/fallback language for mixed-language mode.</p>
-<ul class="simple">
-<li><p>Type: string or null</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p>Supported: <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>, <code class="docutils literal notranslate"><span class="pre">pt</span></code>, <code class="docutils literal notranslate"><span class="pre">pl</span></code>, <code class="docutils literal notranslate"><span class="pre">tr</span></code>, <code class="docutils literal notranslate"><span class="pre">ru</span></code>, <code class="docutils literal notranslate"><span class="pre">ko</span></code>,
-<code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">zh</span></code>/<code class="docutils literal notranslate"><span class="pre">cmn</span></code></p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">mixed_language_primary</span> <span class="pre">de</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">mixed_language_allowed</span></code> : List of languages allowed for auto-detection in
-mixed-language mode.</p>
-<ul class="simple">
-<li><p>Type: list of strings or null</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">None</span></code></p></li>
-<li><p>Required when <code class="docutils literal notranslate"><span class="pre">use_mixed_language</span></code> is enabled</p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">mixed_language_allowed</span> <span class="pre">&quot;['de',</span> <span class="pre">'en-us']&quot;</span></code></p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">mixed_language_confidence</span></code> : Confidence threshold for language detection (0.0-1.0).</p>
-<ul class="simple">
-<li><p>Type: float</p></li>
-<li><p>Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code></p></li>
-<li><p>Range: <code class="docutils literal notranslate"><span class="pre">0.0</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></li>
-<li><p>Higher values require more confidence before switching languages</p></li>
-<li><p>Example: <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">mixed_language_confidence</span> <span class="pre">0.8</span></code></p></li>
-</ul>
+<p>TTSForge does not automatically detect language changes. Mark each change explicitly in
+SSMD, for example <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>. The document language is still required for the
+overall pipeline and model selection.</p>
+<p><code class="docutils literal notranslate"><span class="pre">use_mixed_language</span></code> is a deprecated compatibility setting. <code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected with
+migration guidance, and <code class="docutils literal notranslate"><span class="pre">false</span></code> is accepted only as a transitional value.
+<code class="docutils literal notranslate"><span class="pre">mixed_language_primary</span></code>, <code class="docutils literal notranslate"><span class="pre">mixed_language_allowed</span></code>, and <code class="docutils literal notranslate"><span class="pre">mixed_language_confidence</span></code> are
+obsolete and non-default values are rejected.</p>
 </section>
 <section id="audio-timing-settings">
 <h3>Audio Timing Settings</h3>
@@ -957,155 +916,140 @@ details.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">af_heart</span></code></p></td>
 <td><p>Default TTS voice</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_language</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tts.language</span></code></p></td>
 <td><p>string</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">a</span></code></p></td>
-<td><p>Default language code</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+<td><p>Canonical BCP-47 document language</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default_speed</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tts.speed</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">1.0</span></code></p></td>
 <td><p>Speech speed multiplier</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_format</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">audio.format</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">m4b</span></code></p></td>
 <td><p>Output audio format</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_gpu</span></code></p></td>
-<td><p>boolean</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
-<td><p>Legacy provider compatibility shortcut</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">onnx_provider</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">runtime.provider</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">cpu</span></code></p></td>
 <td><p>ONNX Runtime provider alias or full name</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model_quality</span></code></p></td>
-<td><p>string</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">fp32</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model.quality</span></code></p></td>
+<td><p>string or null</p></td>
+<td><p>automatic</p></td>
 <td><p>Model quality/quantization</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">model_variant</span></code></p></td>
-<td><p>string</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">v1.0</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">model.id</span></code></p></td>
+<td><p>string or null</p></td>
+<td><p>automatic</p></td>
 <td><p>Model variant</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">silence_between_chapters</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">silence_between_chapters</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">2.0</span></code></p></td>
 <td><p>Silence between chapters (seconds)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pause_clause</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pause_clause</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.5</span></code></p></td>
 <td><p>Clause pause (seconds)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pause_sentence</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pause_sentence</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.7</span></code></p></td>
 <td><p>Sentence pause (seconds)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pause_paragraph</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pause_paragraph</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.9</span></code></p></td>
 <td><p>Paragraph pause (seconds)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pause_variance</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pause_variance</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">0.05</span></code></p></td>
 <td><p>Pause variance (seconds)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pause_mode</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pause_mode</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
 <td><p>Pause mode (tts/manual/auto)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">announce_chapters</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">announce_chapters</span></code></p></td>
 <td><p>boolean</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
 <td><p>Speak chapter titles</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chapter_pause_after_title</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chapter_pause_after_title</span></code></p></td>
 <td><p>float</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">2.0</span></code></p></td>
 <td><p>Pause after chapter titles (seconds)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">save_chapters_separately</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">save_chapters_separately</span></code></p></td>
 <td><p>boolean</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
 <td><p>Keep chapter audio files</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">merge_at_end</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">merge_at_end</span></code></p></td>
 <td><p>boolean</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
 <td><p>Merge chapters into final file</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">auto_detect_language</span></code></p></td>
-<td><p>boolean</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
-<td><p>Auto-detect language from EPUB</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">phonemization_lang</span></code></p></td>
-<td><p>string/null</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Override phonemization language</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default_split_mode</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_split_mode</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
 <td><p>Text splitting mode</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_content_mode</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default_content_mode</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">chapters</span></code></p></td>
 <td><p>Default read mode (chapters/pages)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default_page_size</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_page_size</span></code></p></td>
 <td><p>integer</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">2000</span></code></p></td>
 <td><p>Page size for read pages mode</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">output_filename_template</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output_filename_template</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p></td>
 <td><p>Output filename template</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">chapter_filename_template</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">chapter_filename_template</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{chapter_num:03d}_...</span></code></p></td>
 <td><p>Chapter filename template</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">phoneme_export_template</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">phoneme_export_template</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">{book_title}</span></code></p></td>
 <td><p>Phoneme export template</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">default_title</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">default_title</span></code></p></td>
 <td><p>string</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">Untitled</span></code></p></td>
 <td><p>Fallback title</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">use_mixed_language</span></code></p></td>
-<td><p>boolean</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">use_mixed_language</span></code></p></td>
+<td><p>boolean (deprecated compatibility setting)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
-<td><p>Enable mixed-language mode</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected; use explicit SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code> spans</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_primary</span></code></p></td>
-<td><p>string/null</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Primary language for mixed mode</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_primary</span></code></p></td>
+<td><p>deprecated/obsolete</p></td>
+<td><p>—</p></td>
+<td><p>Not used for automatic detection</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_allowed</span></code></p></td>
-<td><p>list/null</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">None</span></code></p></td>
-<td><p>Allowed languages list</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_allowed</span></code></p></td>
+<td><p>deprecated/obsolete</p></td>
+<td><p>—</p></td>
+<td><p>Not used for automatic detection</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_confidence</span></code></p></td>
-<td><p>float</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">0.7</span></code></p></td>
-<td><p>Language detection threshold</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mixed_language_confidence</span></code></p></td>
+<td><p>deprecated/obsolete</p></td>
+<td><p>—</p></td>
+<td><p>Not used for automatic detection</p></td>
 </tr>
 </tbody>
 </table>
@@ -1119,8 +1063,9 @@ details.</p>
 <span class="w">  </span><span class="nt">&quot;default_speed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">1.1</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;default_format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;m4b&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;onnx_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;model_quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;model_variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_quality&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_source&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;model_variant&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;silence_between_chapters&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">2.5</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;pause_clause&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;pause_sentence&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.7</span><span class="p">,</span>
@@ -1163,9 +1108,9 @@ ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span cl
 ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>xnnpack
 </pre></div>
 </div>
-<p>Provider precedence is explicit <code class="docutils literal notranslate"><span class="pre">--provider</span></code>, then <code class="docutils literal notranslate"><span class="pre">--gpu</span></code>/<code class="docutils literal notranslate"><span class="pre">--no-gpu</span></code>, then
-<code class="docutils literal notranslate"><span class="pre">onnx_provider</span></code>, then legacy <code class="docutils literal notranslate"><span class="pre">use_gpu</span></code>, then CPU. PyKokoro may apply its documented
-<code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override during runtime provider resolution.</p>
+<p>Provider resolution uses explicit <code class="docutils literal notranslate"><span class="pre">--provider</span></code>, then <code class="docutils literal notranslate"><span class="pre">runtime.provider</span></code>, then the CPU
+default. PyKokoro may apply its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override during
+runtime provider resolution.</p>
 </section>
 <section id="environment-variables">
 <h2>Environment Variables</h2>
@@ -1178,13 +1123,13 @@ provider around runner initialization, chapter synthesis, WAV writing, result re
 state saves, final merging, and converter cleanup. RSS may remain elevated because
 native allocators retain high-water pages; that alone is not evidence of a provider
 leak.</p>
-<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.4,&lt;0.9</span></code>, uses compact segment results, and releases
+<p>TTSForge requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.4,&lt;0.10</span></code>, uses compact segment results, and releases
 completed chapter audio before the next chapter synthesis. Whole-chapter synthesis
 remains buffered and streaming is future work.</p>
 </section>
 <section id="model-source-status">
 <h2>Model source status</h2>
-<p>Set <code class="docutils literal notranslate"><span class="pre">model_source</span></code> to <code class="docutils literal notranslate"><span class="pre">github</span></code> when using the GitHub asset set. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code>
+<p>Set <code class="docutils literal notranslate"><span class="pre">model.source</span></code> to <code class="docutils literal notranslate"><span class="pre">github</span></code> when using the GitHub asset set. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">show</span></code>
 uses PyKokoro’s source/variant/quality-aware asset paths and reports missing assets. If
 the configured set is incomplete but the alternate supported source is complete, the
 command reports that alternate and gives an activation command without silently

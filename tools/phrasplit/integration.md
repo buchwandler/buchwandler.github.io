@@ -5,8 +5,8 @@ permalink: /tools/phrasplit/integration/
 nav_tool: phrasplit
 docs_project: "phrasplit"
 docs_variant: "release"
-docs_ref: "v0.3.7"
-docs_commit: "44f3f3ff6cd30d3ef01b1eeb7527140f4c529e06"
+docs_ref: "v0.3.9"
+docs_commit: "57d2cf1a6017e0fbc48999decb81e6c630c8e90d"
 search_enabled: true
 ---
 
@@ -898,6 +898,28 @@ between phrasplit and pronunciation processing:</p>
 language-specific abbreviation handling. Supplied documents and pipelines are
 caller-owned. Phrasplit does not mutate or retain them, and a supplied document must
 have exactly the same <code class="docutils literal notranslate"><span class="pre">.text</span></code> as the input.</p>
+</section>
+<section id="syntactic-clausal-comma-boundaries">
+<h2>Syntactic clausal-comma boundaries</h2>
+<p>For deterministic TTS pauses, <code class="docutils literal notranslate"><span class="pre">detect_clause_boundaries()</span></code> is narrower than the generic
+comma segmentation API. <code class="docutils literal notranslate"><span class="pre">split_clauses()</span></code> returns all comma-separated chunks; the
+detector returns only high-confidence <code class="docutils literal notranslate"><span class="pre">clausal_comma</span></code> boundaries with exact offsets.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prepared</span> <span class="o">=</span> <span class="n">spokenform</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">raw_text</span><span class="p">)</span>
+<span class="n">doc</span> <span class="o">=</span> <span class="n">nlp</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">)</span>
+
+<span class="n">segments</span> <span class="o">=</span> <span class="n">split_with_offsets</span><span class="p">(</span>
+    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span>
+ <span class="p">)</span>
+<span class="n">boundaries</span> <span class="o">=</span> <span class="n">detect_clause_boundaries</span><span class="p">(</span>
+    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">doc</span><span class="o">=</span><span class="n">doc</span>
+ <span class="p">)</span>
+</pre></div>
+</div>
+<p>The same caller-owned <code class="docutils literal notranslate"><span class="pre">doc</span></code> can be reused by both calls; phrasplit does not invoke the
+pipeline again for the detector. Each boundary’s <code class="docutils literal notranslate"><span class="pre">text</span></code> is exactly
+<code class="docutils literal notranslate"><span class="pre">prepared.spoken_text[char_start:char_end]</span></code>. The detector requires explicit local
+subjects and finite predicate evidence on both sides, so list commas and shared-subject
+sequences are not reported.</p>
 </section>
 </section>
 </div>

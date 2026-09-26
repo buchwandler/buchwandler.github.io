@@ -5,8 +5,8 @@ permalink: /tools/ssmd/ssml_conversion/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_ref: "v0.9.0"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -545,6 +545,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>SSMD supports bidirectional conversion: you can convert SSML back to SSMD format. This
 is useful for editing existing SSML, migrating from other tools, or creating round-trip
 workflows.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ssmd.from_ssml()</span></code> returns a complete document with <code class="docutils literal notranslate"><span class="pre">ssmd_version:</span> <span class="pre">&quot;0.9&quot;</span></code> by default.
+Set <code class="docutils literal notranslate"><span class="pre">complete_document=False</span></code> when a body fragment is required. Unrepresentable SSML
+semantics raise <code class="docutils literal notranslate"><span class="pre">SSMLConversionError</span></code> by default. Use <code class="docutils literal notranslate"><span class="pre">SSMLParser</span></code> with
+<code class="docutils literal notranslate"><span class="pre">loss_policy=&quot;warn&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;drop&quot;</span></code> to opt into conversion losses and inspect its
+<code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> property. The feature examples below request fragments where their
+expected output shows only the body.</p>
 <section id="tts-pipeline-integration">
 <h2>TTS pipeline integration</h2>
 <p>Use structural parsing when sentence boundaries must be computed after semantic
@@ -573,7 +579,11 @@ abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect ex
 <span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt; world&lt;/speak&gt;&#39;</span>
 <span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
-<span class="c1"># Output: *Hello* world</span>
+<span class="c1"># Complete SSMD 0.9 document beginning with:</span>
+<span class="c1"># ---</span>
+<span class="c1"># ssmd_version: &#39;0.9&#39;</span>
+<span class="c1"># ---</span>
+<span class="c1"># *Hello* world</span>
 </pre></div>
 </div>
 </section>
@@ -590,16 +600,16 @@ abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect ex
 </div>
 </section>
 </section>
-<section id="supported-ssml-elements">
-<h2>Supported SSML Elements</h2>
+<section id="commonly-representable-ssml-elements">
+<h2>Commonly Representable SSML Elements</h2>
 <section id="emphasis">
 <h3>Emphasis</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Moderate emphasis</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;emphasis&gt;text&lt;/emphasis&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;emphasis&gt;text&lt;/emphasis&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → *text*</span>
 
 <span class="c1"># Strong emphasis</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;emphasis level=&quot;strong&quot;&gt;text&lt;/emphasis&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;emphasis level=&quot;strong&quot;&gt;text&lt;/emphasis&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → **text**</span>
 </pre></div>
 </div>
@@ -607,20 +617,20 @@ abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect ex
 <section id="breaks">
 <h3>Breaks</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Time-based breaks</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break time=&quot;500ms&quot;/&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break time=&quot;500ms&quot;/&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → ...500ms</span>
 
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break time=&quot;2s&quot;/&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break time=&quot;2s&quot;/&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → ...2s</span>
 
 <span class="c1"># Strength-based breaks</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;weak&quot;/&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;weak&quot;/&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → ...w</span>
 
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;medium&quot;/&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;medium&quot;/&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → ...c</span>
 
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;strong&quot;/&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;break strength=&quot;strong&quot;/&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → ...s</span>
 </pre></div>
 </div>
@@ -628,16 +638,16 @@ abbreviations, infer a primary language, or integrate Spokenform/G2P. Protect ex
 <section id="language">
 <h3>Language</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Full locale</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;lang xml:lang=&quot;fr-FR&quot;&gt;Bonjour&lt;/lang&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;lang xml:lang=&quot;fr-FR&quot;&gt;Bonjour&lt;/lang&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [Bonjour]{lang=&quot;fr&quot;}</span>
 
 <span class="c1"># Non-standard locales preserved</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;lang xml:lang=&quot;en-GB&quot;&gt;Hello&lt;/lang&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;lang xml:lang=&quot;en-GB&quot;&gt;Hello&lt;/lang&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [Hello]{lang=&quot;en-GB&quot;}</span>
 </pre></div>
 </div>
 <p>SSMD’s pronunciation scope is richer than generic SSML:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">Segment.to_ssml()</span></code> retains the closest standard mapping, <code class="docutils literal notranslate"><span class="pre">&lt;lang</span> <span class="pre">xml:lang=&quot;...&quot;&gt;</span></code>,
@@ -649,11 +659,15 @@ contract should use <code class="docutils literal notranslate"><span class="pre"
 <section id="phonemes">
 <h3>Phonemes</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># IPA notation</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;phoneme alphabet=&quot;ipa&quot; ph=&quot;təˈmeɪtoʊ&quot;&gt;tomato&lt;/phoneme&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span>
+    <span class="s1">&#39;&lt;phoneme alphabet=&quot;ipa&quot; ph=&quot;təˈmeɪtoʊ&quot;&gt;tomato&lt;/phoneme&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 <span class="c1"># → [tomato]{ph=&quot;təˈmeɪtoʊ&quot; alphabet=&quot;ipa&quot;}</span>
 
 <span class="c1"># X-SAMPA notation</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;phoneme alphabet=&quot;x-sampa&quot; ph=&quot;t@meIt@U&quot;&gt;tomato&lt;/phoneme&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span>
+    <span class="s1">&#39;&lt;phoneme alphabet=&quot;x-sampa&quot; ph=&quot;t@meIt@U&quot;&gt;tomato&lt;/phoneme&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 <span class="c1"># → [tomato]{ph=&quot;t@meIt@U&quot; alphabet=&quot;x-sampa&quot;}</span>
 </pre></div>
 </div>
@@ -661,45 +675,51 @@ contract should use <code class="docutils literal notranslate"><span class="pre"
 <section id="prosody">
 <h3>Prosody</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Volume</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody volume=&quot;loud&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody volume=&quot;loud&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [text]{volume=&quot;loud&quot;}</span>
 
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody volume=&quot;x-loud&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody volume=&quot;x-loud&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [text]{volume=&quot;x-loud&quot;}</span>
 
 <span class="c1"># Rate</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody rate=&quot;fast&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody rate=&quot;fast&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [text]{rate=&quot;fast&quot;}</span>
 
 <span class="c1"># Pitch</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody pitch=&quot;high&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody pitch=&quot;high&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [text]{pitch=&quot;high&quot;}</span>
 
 <span class="c1"># Multiple attributes</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;prosody volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span>
+    <span class="s1">&#39;&lt;prosody volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;&gt;text&lt;/prosody&gt;&#39;</span><span class="p">,</span>
+    <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+<span class="p">)</span>
 <span class="c1"># → [text]{volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;}</span>
 </pre></div>
 </div>
-<p>Symbolic shorthand and compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code> syntax are accepted as SSMD input aliases, but
-SSML-to-SSMD conversion remains explicit and unambiguous. Semantic formatting likewise
-canonicalizes them to named <code class="docutils literal notranslate"><span class="pre">volume</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>, and <code class="docutils literal notranslate"><span class="pre">pitch</span></code> attributes; it does not
-preserve the original source delimiter or packed spelling.</p>
+<p>Symbolic shorthand and compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code> are compatibility-only SSMD input forms. Strict 0.9
+documents use named <code class="docutils literal notranslate"><span class="pre">volume</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>, and <code class="docutils literal notranslate"><span class="pre">pitch</span></code> attributes; migration converts legacy
+values when their semantics can be verified.</p>
 </section>
 <section id="say-as">
 <h3>Say-As</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic say-as</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;say-as interpret-as=&quot;telephone&quot;&gt;+1-555-1234&lt;/say-as&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span>
+    <span class="s1">&#39;&lt;say-as interpret-as=&quot;telephone&quot;&gt;+1-555-1234&lt;/say-as&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 <span class="c1"># → [+1-555-1234]{as=&quot;telephone&quot;}</span>
 
 <span class="c1"># With format attribute</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;say-as interpret-as=&quot;date&quot; format=&quot;mdy&quot;&gt;12/31/2024&lt;/say-as&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span>
+    <span class="s1">&#39;&lt;say-as interpret-as=&quot;date&quot; format=&quot;mdy&quot;&gt;12/31/2024&lt;/say-as&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
 <span class="c1"># → [12/31/2024]{as=&quot;date&quot; format=&quot;mdy&quot;}</span>
 </pre></div>
 </div>
 </section>
 <section id="substitution">
 <h3>Substitution</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;sub alias=&quot;World Wide Web&quot;&gt;WWW&lt;/sub&gt;&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;sub alias=&quot;World Wide Web&quot;&gt;WWW&lt;/sub&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [WWW]{sub=&quot;World Wide Web&quot;}</span>
 </pre></div>
 </div>
@@ -707,22 +727,22 @@ preserve the original source delimiter or packed spelling.</p>
 <section id="audio">
 <h3>Audio</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># With description</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;sound.mp3&quot;&gt;Alternative text&lt;/audio&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;sound.mp3&quot;&gt;Alternative text&lt;/audio&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [Alternative text]{src=&quot;sound.mp3&quot;}</span>
 
 <span class="c1"># With desc tag</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;bell.mp3&quot;&gt;&lt;desc&gt;doorbell&lt;/desc&gt;&lt;/audio&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;bell.mp3&quot;&gt;&lt;desc&gt;doorbell&lt;/desc&gt;&lt;/audio&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [doorbell]{src=&quot;bell.mp3&quot;}</span>
 
 <span class="c1"># No description</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;beep.mp3&quot;&gt;&lt;/audio&gt;&#39;</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;audio src=&quot;beep.mp3&quot;&gt;&lt;/audio&gt;&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → []{src=&quot;beep.mp3&quot;}</span>
 </pre></div>
 </div>
 </section>
 <section id="marks">
 <h3>Marks</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;Text &lt;mark name=&quot;here&quot;/&gt; more text&#39;</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;Text &lt;mark name=&quot;here&quot;/&gt; more text&#39;</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → Text @here more text</span>
 </pre></div>
 </div>
@@ -734,7 +754,7 @@ preserve the original source delimiter or packed spelling.</p>
 <span class="s1">&lt;p&gt;Second paragraph.&lt;/p&gt;</span>
 <span class="s1">&lt;/speak&gt;&#39;&#39;&#39;</span>
 
-<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Output:</span>
 <span class="c1"># First paragraph.</span>
 <span class="c1">#</span>
@@ -745,8 +765,11 @@ preserve the original source delimiter or packed spelling.</p>
 <section id="platform-extensions">
 <h3>Platform Extensions</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Amazon whisper effect</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;amazon:effect name=&quot;whispered&quot;&gt;secret&lt;/amazon:effect&gt;&#39;</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssml</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s1">&#39;&lt;speak xmlns:amazon=&quot;https://amazon.com/ssml&quot;&gt;&#39;</span>
+    <span class="s1">&#39;&lt;amazon:effect name=&quot;whispered&quot;&gt;secret&lt;/amazon:effect&gt;&lt;/speak&gt;&#39;</span>
+<span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [secret]{ext=&quot;whisper&quot;}</span>
 </pre></div>
 </div>
@@ -757,12 +780,12 @@ preserve the original source delimiter or packed spelling.</p>
 <p>SSMD automatically removes default/medium values to keep output clean:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Medium values are filtered out</span>
 <span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;prosody volume=&quot;medium&quot; rate=&quot;medium&quot; pitch=&quot;medium&quot;&gt;text&lt;/prosody&gt;&#39;</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → text  (not [text]{volume=&quot;medium&quot; rate=&quot;medium&quot; pitch=&quot;medium&quot;})</span>
 
 <span class="c1"># Only non-default values are included</span>
 <span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;prosody volume=&quot;loud&quot; rate=&quot;medium&quot; pitch=&quot;medium&quot;&gt;text&lt;/prosody&gt;&#39;</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → [text]{volume=&quot;loud&quot;}</span>
 </pre></div>
 </div>
@@ -782,19 +805,24 @@ preserve the original source delimiter or packed spelling.</p>
 <span class="c1">#  &lt;break time=&quot;500ms&quot;/&gt; &lt;prosody volume=&quot;loud&quot;&gt;loud&lt;/prosody&gt;&lt;/speak&gt;</span>
 
 <span class="c1"># Convert back to SSMD</span>
-<span class="n">restored</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">restored</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">restored</span><span class="p">)</span>
 <span class="c1"># *Hello* [world]{lang=&quot;fr&quot;} ...500ms [loud]{volume=&quot;loud&quot;}</span>
 
 <span class="c1"># Semantically equivalent, even if syntax differs slightly</span>
 </pre></div>
 </div>
-<p>Voice block boundaries are preserved across this conversion. Single-line and multiline
-<code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;...&quot;&gt;</span></code> forms are equivalent, and nested emphasis or other supported SSMD
-markup is reconstructed in a block form when inline annotation syntax would make it
-literal text. Round-trip checks compare semantic text, voice context, annotations,
-breaks, marks, paragraph structure, and front matter; formatting-only whitespace changes
-are allowed.</p>
+<p>Voice block boundaries are preserved across this conversion. Canonical 0.9 source uses
+fenced <code class="docutils literal notranslate"><span class="pre">:::</span></code> directives. Raw <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;...&quot;&gt;</span></code> forms are accepted only for legacy
+compatibility. Nested emphasis or other supported SSMD markup is reconstructed in a
+block form when inline annotation syntax would make it literal text. Round-trip checks
+compare semantic text, voice context, annotations, breaks, marks, paragraph structure,
+and front matter; formatting-only whitespace changes are allowed.</p>
+<p>For paragraph-crossing legacy <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> scopes, migration keeps paragraph boundaries
+outside inline annotations. A scope may become separate paragraph-local annotations
+rather than a fenced directive when that preserves legacy paragraph structure. Before
+writing, migration verifies clean text, effective annotation coverage, structural
+events, and front matter, and writes only when equivalence is established.</p>
 </section>
 <section id="complex-examples">
 <h2>Complex Examples</h2>
@@ -809,7 +837,7 @@ are allowed.</p>
 <span class="s1">&lt;/p&gt;</span>
 <span class="s1">&lt;/speak&gt;&#39;&#39;&#39;</span>
 
-<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Output: *Important:* [Bonjour]{lang=&quot;fr&quot; volume=&quot;loud&quot;}</span>
 </pre></div>
 </div>
@@ -823,7 +851,7 @@ are allowed.</p>
 <span class="s1">&lt;p&gt;Goodbye&lt;/p&gt;</span>
 <span class="s1">&lt;/speak&gt;&#39;&#39;&#39;</span>
 
-<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># Output:</span>
 <span class="c1"># *Hello* world</span>
 <span class="c1">#</span>
@@ -847,47 +875,55 @@ are allowed.</p>
 <span class="s1">  world</span>
 <span class="s1">&lt;/speak&gt;&#39;&#39;&#39;</span>
 
-<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
+<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 <span class="c1"># → *Hello* world  (whitespace normalized)</span>
 </pre></div>
 </div>
 </section>
 <section id="error-handling">
 <h2>Error Handling</h2>
-<section id="invalid-ssml">
-<h3>Invalid SSML</h3>
+<section id="unsupported-ssml-semantics">
+<h3>Unsupported SSML semantics</h3>
+<p>Unrepresentable elements raise <code class="docutils literal notranslate"><span class="pre">SSMLConversionError</span></code> by default. Callers can opt into
+warnings or dropping the unsupported wrapper, and must inspect the diagnostics:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">ssmd</span>
 
+<span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;speak&gt;Hello &lt;custom&gt;there&lt;/custom&gt;&lt;/speak&gt;&#39;</span>
 <span class="k">try</span><span class="p">:</span>
-    <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;speak&gt;&lt;invalid&gt;text&lt;/invalid&gt;&lt;/speak&gt;&#39;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="k">except</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">SSMLConversionError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">diagnostics</span><span class="p">)</span>
 
-<span class="c1"># Invalid/unknown tags are treated as plain text</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">ssmd</span><span class="o">.</span><span class="n">SSMLParser</span><span class="p">({</span><span class="s2">&quot;loss_policy&quot;</span><span class="p">:</span> <span class="s2">&quot;warn&quot;</span><span class="p">})</span>
+<span class="n">fragment</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">complete_document</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">diagnostics</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">diagnostics</span>  <span class="c1"># warning-severity conversion loss</span>
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">loss_policy=&quot;drop&quot;</span></code> also flattens unsupported wrapper elements while retaining child
+text; its diagnostics have informational severity. Neither policy silently hides the
+conversion loss.</p>
 </section>
 <section id="malformed-xml">
 <h3>Malformed XML</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
     <span class="n">ssmd</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;unclosed&lt;/speak&gt;&#39;</span><span class="p">)</span>
-<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;XML Parse Error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">ValueError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;XML parse error: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
 </section>
 <section id="configuration-options">
 <h2>Configuration Options</h2>
+<p>Pass a capability profile to <code class="docutils literal notranslate"><span class="pre">Document.from_ssml()</span></code> only when the conversion should be
+adapted to that renderer’s feature subset. Without a profile, recognized SSML semantics
+are preserved where SSMD can represent them. See the <a class="reference internal" href="../capabilities/"><span class="std std-doc">capability guide</span></a>
+for target-specific rendering</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
 
-<span class="n">parser</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
-
-<span class="c1"># SSML features not supported by eSpeak will be simplified</span>
 <span class="n">ssml</span> <span class="o">=</span> <span class="s1">&#39;&lt;speak&gt;&lt;emphasis&gt;Hello&lt;/emphasis&gt;&lt;/speak&gt;&#39;</span>
 <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;espeak&#39;</span><span class="p">)</span>
-<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">()</span>
-<span class="c1"># eSpeak doesn&#39;t support emphasis, so output is just: Hello</span>
+<span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">()</span>  <span class="c1"># the eSpeak profile omits unsupported emphasis</span>
 </pre></div>
 </div>
 </section>
@@ -905,7 +941,7 @@ are allowed.</p>
 <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="o">.</span><span class="n">from_ssml</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
 <span class="n">ssmd_text</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssmd</span><span class="p">()</span>
 
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;new_ssmd.txt&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;new_ssmd.ssmd.md&#39;</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
     <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -951,10 +987,41 @@ are allowed.</p>
 <li><p><strong>Syntax differences</strong>: Round-trip conversion is semantically equivalent but may
 normalize attribute order or quoting in annotations</p></li>
 <li><p><strong>Comments lost</strong>: XML comments are not preserved</p></li>
-<li><p><strong>Unknown elements</strong>: Custom SSML elements are converted to plain text</p></li>
+<li><p><strong>Unknown elements</strong>: Conversion rejects unrepresentable semantics by default;
+explicit <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">drop</span></code> policies return diagnostics</p></li>
 <li><p><strong>Attribute order</strong>: Attribute order may change but semantics are preserved</p></li>
 <li><p><strong>Whitespace</strong>: Whitespace is normalized for readability</p></li>
 </ol>
+</section>
+<section id="voice-defaults-and-transition-metadata">
+<h2>Voice Defaults and Transition Metadata</h2>
+<p><code class="docutils literal notranslate"><span class="pre">Document.to_ssml()</span></code> resolves <code class="docutils literal notranslate"><span class="pre">voice_defaults</span></code> before rendering. For example:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">ssmd_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span>
+<span class="nt">voice_defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">guest</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="nn">---</span>
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>:::{voice=&quot;guest&quot;}
+Hello.
+:::
+</pre></div>
+</div>
+<p>renders the effective pitch as a numeric SSML value such as <code class="docutils literal notranslate"><span class="pre">&lt;prosody</span> <span class="pre">pitch=&quot;+12%&quot;&gt;</span></code>.
+The SSMD source remains concise because inherited values are not written back into the
+block. <code class="docutils literal notranslate"><span class="pre">Document.to_ssmd(include_header=True)</span></code> preserves the header and declared body
+attributes.</p>
+<p>Natural rate and pitch names are deterministic SSMD authoring levels. They compile to
+numeric percentages: rate <code class="docutils literal notranslate"><span class="pre">very-slow</span></code> through <code class="docutils literal notranslate"><span class="pre">very-fast</span></code> maps to <code class="docutils literal notranslate"><span class="pre">65%</span></code>, <code class="docutils literal notranslate"><span class="pre">80%</span></code>, <code class="docutils literal notranslate"><span class="pre">90%</span></code>,
+<code class="docutils literal notranslate"><span class="pre">100%</span></code>, <code class="docutils literal notranslate"><span class="pre">110%</span></code>, <code class="docutils literal notranslate"><span class="pre">125%</span></code>, <code class="docutils literal notranslate"><span class="pre">150%</span></code>; pitch <code class="docutils literal notranslate"><span class="pre">very-low</span></code> through <code class="docutils literal notranslate"><span class="pre">very-high</span></code> maps to <code class="docutils literal notranslate"><span class="pre">-20%</span></code>,
+<code class="docutils literal notranslate"><span class="pre">-12%</span></code>, <code class="docutils literal notranslate"><span class="pre">-6%</span></code>, <code class="docutils literal notranslate"><span class="pre">+0%</span></code>, <code class="docutils literal notranslate"><span class="pre">+6%</span></code>, <code class="docutils literal notranslate"><span class="pre">+12%</span></code>, <code class="docutils literal notranslate"><span class="pre">+20%</span></code>. Explicit numeric values continue to pass
+through.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prosody_transitions</span></code> is preserved as document metadata and is available through
+<code class="docutils literal notranslate"><span class="pre">Document.prosody_transitions</span></code>. It is not emitted as an invented SSML rate-ramp element.
+Standard SSML has no portable speaking-rate contour, so a downstream renderer must apply
+any requested transition using its own capabilities.</p>
 </section>
 </section>
 </div>

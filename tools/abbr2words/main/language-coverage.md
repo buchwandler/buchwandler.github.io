@@ -6,7 +6,7 @@ nav_tool: abbr2words-main
 docs_project: "abbr2words"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea8c4e7e97588da838169e25acf689995961c6c"
+docs_commit: "eaf83dd428f02fc882dc5bb9ebc106ea5c7399c7"
 search_enabled: true
 ---
 
@@ -592,7 +592,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">bg</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bg</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">bn</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -601,7 +610,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ca</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -610,7 +619,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ce</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -619,7 +628,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">cs</span></code> / base</p></td>
 <td class="text-right"><p>65</p></td>
 <td class="text-right"><p>0</p></td>
@@ -628,7 +637,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">cy</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -637,7 +646,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">da</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">da</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">da</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -646,13 +655,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">de</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">de</span></code> / base</p></td>
-<td class="text-right"><p>91</p></td>
+<td class="text-right"><p>101</p></td>
 <td class="text-right"><p>2</p></td>
-<td class="text-right"><p>72</p></td>
+<td class="text-right"><p>74</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">el</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">el</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">en</span></code></p></td>
@@ -713,7 +731,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / base</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>71</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -722,7 +740,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>72</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -731,7 +749,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>72</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -740,7 +758,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>72</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -749,7 +767,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>69</p></td>
+<td class="text-right"><p>71</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -758,7 +776,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>72</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
@@ -767,9 +785,27 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p><code class="docutils literal notranslate"><span class="pre">es</span></code> / locale</p></td>
 <td class="text-right"><p>98</p></td>
 <td class="text-right"><p>0</p></td>
-<td class="text-right"><p>70</p></td>
+<td class="text-right"><p>72</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">et</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">et</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">eu</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">eu</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fa</span></code></p></td>
@@ -898,7 +934,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ka</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ka</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">kn</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -907,12 +952,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ko</span></code> / base</p></td>
 <td class="text-right"><p>10</p></td>
 <td class="text-right"><p>0</p></td>
 <td class="text-right"><p>39</p></td>
 <td class="text-right"><p>38</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ku</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ku</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -925,7 +979,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lb</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lb</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">lt</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -934,12 +997,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">lv</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
 <td class="text-right"><p>38</p></td>
 <td class="text-right"><p>4</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ml</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ml</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -949,6 +1021,24 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td class="text-right"><p>0</p></td>
 <td class="text-right"><p>38</p></td>
 <td class="text-right"><p>4</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mr</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mr</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ne</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ne</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
@@ -1033,7 +1123,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sq</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sq</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sr</span></code> / base</p></td>
 <td class="text-right"><p>3</p></td>
 <td class="text-right"><p>0</p></td>
@@ -1042,13 +1141,22 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">sv</span></code> / base</p></td>
 <td class="text-right"><p>53</p></td>
 <td class="text-right"><p>0</p></td>
 <td class="text-right"><p>65</p></td>
 <td class="text-right"><p>38</p></td>
 <td><p>reviewed extended</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sw</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sw</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">te</span></code></p></td>
@@ -1105,7 +1213,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ur</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ur</span></code> / base</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>0</p></td>
+<td class="text-right"><p>38</p></td>
+<td class="text-right"><p>0</p></td>
+<td><p>reviewed baseline</p></td>
+<td><p>neutral labels; source ledger applies</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">vi</span></code> / base</p></td>
 <td class="text-right"><p>8</p></td>
 <td class="text-right"><p>0</p></td>
@@ -1114,7 +1231,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / base</p></td>
 <td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>
@@ -1123,7 +1240,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>reviewed baseline</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_CN</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
 <td class="text-right"><p>10</p></td>
 <td class="text-right"><p>0</p></td>
@@ -1132,7 +1249,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>locale overlay</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_HK</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_HK</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
 <td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>
@@ -1141,7 +1258,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <td><p>locale overlay</p></td>
 <td><p>neutral labels; source ledger applies</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zh_TW</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zh_TW</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">zh</span></code> / locale</p></td>
 <td class="text-right"><p>1</p></td>
 <td class="text-right"><p>0</p></td>

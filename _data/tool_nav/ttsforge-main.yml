@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe
+source_commit: 8d25d2e006f226b0c98fe5704587c0e59081d30e
 source_url: https://github.com/buchwandler/ttsforge/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ttsforge
-release_tag: v0.3.7
-release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.3.7
+release_tag: v0.4.0
+release_url: https://github.com/buchwandler/ttsforge/releases/tag/v0.4.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.7
+  ref: v0.4.0
   url: /tools/ttsforge/
   current: false
 - name: main
@@ -24,31 +24,40 @@ versions:
   current: true
 entries:
 - slug: index
-  title: ttsforge Documentation
+  title: TTSForge documentation
   url: /tools/ttsforge/main/
 - slug: installation
   title: ttsforge Installation
   url: /tools/ttsforge/main/installation/
+- slug: migration-readio
+  title: ttsforge Migrating to the Readio-backed TTSForge
+  url: /tools/ttsforge/main/migration-readio/
+- slug: migration-v0.4
+  title: ttsforge Historical TTSForge 0.4 migration notes
+  url: /tools/ttsforge/main/migration-v0.4/
 - slug: quickstart
-  title: ttsforge Quick Start Guide
+  title: ttsforge Quick start
   url: /tools/ttsforge/main/quickstart/
 - slug: cli
-  title: ttsforge CLI Reference
+  title: ttsforge CLI reference
   url: /tools/ttsforge/main/cli/
-- slug: ssmd
-  title: ttsforge SSMD 0.8.7
-  url: /tools/ttsforge/main/ssmd/
+- slug: projects
+  title: ttsforge Projects and outputs
+  url: /tools/ttsforge/main/projects/
 - slug: configuration
   title: ttsforge Configuration
   url: /tools/ttsforge/main/configuration/
-- slug: filename_templates
-  title: ttsforge Filename Templates
-  url: /tools/ttsforge/main/filename_templates/
 - slug: voices
-  title: ttsforge Voices
+  title: ttsforge Voices and discovery
   url: /tools/ttsforge/main/voices/
+- slug: ssmd
+  title: ttsforge SSMD tools
+  url: /tools/ttsforge/main/ssmd/
+- slug: filename_templates
+  title: ttsforge Output paths (formerly filename templates)
+  url: /tools/ttsforge/main/filename_templates/
 - slug: testing
-  title: ttsforge Testing and Coverage
+  title: ttsforge Testing and release checks
   url: /tools/ttsforge/main/testing/
 - slug: changelog
   title: ttsforge Changelog

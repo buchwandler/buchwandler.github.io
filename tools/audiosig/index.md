@@ -5,8 +5,8 @@ permalink: /tools/audiosig/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.2"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_ref: "v0.1.5"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -583,6 +583,7 @@ audit status.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">AudioSig Examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="examples/#basic-audio-processing">Basic Audio Processing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#smooth-cut-point-selection">Smooth Cut-Point Selection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#silence-detection-and-vad">Silence Detection and VAD</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#silence-trimming">Silence Trimming</a></li>
 <li class="toctree-l2"><a class="reference internal" href="examples/#amplitude-processing">Amplitude Processing</a></li>
@@ -593,7 +594,9 @@ audit status.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced/">Advanced Topics</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#choosing-a-time-stretch-backend">Choosing a time-stretch backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#time-varying-speech-envelopes">Time-varying speech envelopes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#resampling-internals">Resampling Internals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#loudness-measurement">Loudness measurement</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#vad-algorithm-details">VAD Algorithm Details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#edge-cases-and-special-handling">Edge Cases and Special Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#multi-channel-and-batch-processing">Multi-Channel and Batch Processing</a></li>

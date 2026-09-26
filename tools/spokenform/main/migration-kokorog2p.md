@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -622,7 +622,7 @@ downstream in kokorog2p; the adapter does not claim those categories.</p>
 language orchestration, lexicon lookup, phoneme suffix rules, token IDs, or model
 specific quote/dash behavior into spokenform. French, Spanish, Italian, and
 Portuguese are
-ready for downstream handoff only with the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.13,&lt;0.3.0</span></code>
+ready for downstream handoff only with the released <code class="docutils literal notranslate"><span class="pre">abbr2words&gt;=0.2.16,&lt;0.3.0</span></code>
 prerequisite and their real parity gates; package publication remains the release
 workflow boundary. Spanish, Italian, Portuguese, and Czech time ownership is
 intentionally deferred until reviewed time corpora exist. English semantic

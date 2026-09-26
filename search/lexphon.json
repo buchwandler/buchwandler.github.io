@@ -102,8 +102,8 @@
         {
           "anchor": "",
           "heading": "Provider and lexicon configuration",
-          "text": "lexicons=None opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nProvider output is normalized at the Lexphon engine boundary. A provider may return str or None for scalar calls and a sequence of those values for batch calls. Malformed output raises ProviderOutputError; provider execution failures raise ProviderExecutionError.\n\nInstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe eSpeak extra does not install the sy…",
-          "lower": "lexicons=none opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nprovider output is normalized at the lexphon engine boundary. a provider may return str or none for scalar calls and a sequence of those values for batch calls. malformed output raises provideroutputerror; provider execution failures raise providerexecutionerror.\n\ninstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra does not install the sy…"
+          "text": "lexicons=None opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nProvider output is normalized at the Lexphon engine boundary. A provider may return str or None for scalar calls and a sequence of those values for batch calls. Malformed output raises ProviderOutputError; provider execution failures raise ProviderExecutionError.\n\nInstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe espeak extra installs espeakng-runti…",
+          "lower": "lexicons=none opens the language profile’s default lexicons and requires those assets to be installed. lexicons=[] opens no lexicon layers and is the explicit provider-only configuration. lookup_many() checks configured lexicons first, sends only misses to a batch provider when available, preserves input order, and requires one output per submitted miss.\n\nprovider output is normalized at the lexphon engine boundary. a provider may return str or none for scalar calls and a sequence of those values for batch calls. malformed output raises provideroutputerror; provider execution failures raise providerexecutionerror.\n\ninstall optional provider dependencies explicitly:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra installs espeakng-runti…"
         },
         {
           "anchor": "",
@@ -116,8 +116,26 @@
     {
       "url": "/tools/lexphon/changelog/",
       "title": "lexphon Changelog",
-      "snippet": "Changed package version reporting to use installed metadata and setuptools-scm\nChanged catalog handling for kokoro-v1 assets and corrected L …",
+      "snippet": "Added phoneme validation with provider parity tests and IPA assertions\n\n\nAdded provider diagnostics for runtime debugging and validation\n\n\nA …",
       "sections": [
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added phoneme validation with provider parity tests and IPA assertions\n\n\nAdded provider diagnostics for runtime debugging and validation\n\n\nAdded provider parity benchmark with Phonodist classification support",
+          "lower": "added phoneme validation with provider parity tests and ipa assertions\n\n\nadded provider diagnostics for runtime debugging and validation\n\n\nadded provider parity benchmark with phonodist classification support"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed eSpeak integration to use optional espeakng-runtime with native auto selection and CLI compatibility\n\n\nChanged fallback calls to preserve U+200D tied IPA output and typed provider errors\n\n\nChanged benchmark version reporting to use runtime diagnostics and close reference providers",
+          "lower": "changed espeak integration to use optional espeakng-runtime with native auto selection and cli compatibility\n\n\nchanged fallback calls to preserve u+200d tied ipa output and typed provider errors\n\n\nchanged benchmark version reporting to use runtime diagnostics and close reference providers"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented system and bundled eSpeak runtime installation and ownership boundaries",
+          "lower": "documented system and bundled espeak runtime installation and ownership boundaries"
+        },
         {
           "anchor": "",
           "heading": "Changed",
@@ -206,8 +224,8 @@
         {
           "anchor": "",
           "heading": "Install",
-          "text": "python -m pip install lexphon\n\n\n\n\nInstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe eSpeak extra expects an eSpeak or eSpeak-NG executable supplied by the operating system. Pygoruut may provision its own Goruut runtime.",
-          "lower": "python -m pip install lexphon\n\n\n\n\ninstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra expects an espeak or espeak-ng executable supplied by the operating system. pygoruut may provision its own goruut runtime."
+          "text": "python -m pip install lexphon\n\n\n\n\nInstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nThe espeak extra installs espeakng-runtime and uses an available system eSpeak or eSpeak-NG runtime. Install lexphon[espeak-bundled] when the runtime’s bundled native loader is desired. Pygoruut may provision its own Goruut runtime.",
+          "lower": "python -m pip install lexphon\n\n\n\n\ninstall optional providers separately when needed:\n\npython -m pip install \"lexphon[espeak]\"\npython -m pip install \"lexphon[goruut]\"\n\n\n\n\nthe espeak extra installs espeakng-runtime and uses an available system espeak or espeak-ng runtime. install lexphon[espeak-bundled] when the runtime’s bundled native loader is desired. pygoruut may provision its own goruut runtime."
         },
         {
           "anchor": "",

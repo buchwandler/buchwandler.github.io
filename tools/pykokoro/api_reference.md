@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro API Reference"
+title: "pykokoro API reference"
 permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.6"
-docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
+docs_ref: "v0.10.0"
+docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
 search_enabled: true
 ---
 
@@ -541,216 +541,94 @@ html[data-theme="dark"] .sphinxpress-doc {
 
 <div class="sphinxpress-doc">
 <section id="api-reference">
-<h1>API Reference</h1>
-<p>This page provides API documentation for the supported pipeline-first interface.</p>
-<section id="main-classes">
-<h2>Main Classes</h2>
-<section id="kokoropipeline">
-<h3>KokoroPipeline</h3>
-<p><strong>Basic Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="unit-streaming">
-<h3>Unit streaming</h3>
-<p><code class="docutils literal notranslate"><span class="pre">AudioUnitResult.word_timings</span></code> uses sample offsets relative to that unit’s <code class="docutils literal notranslate"><span class="pre">audio</span></code>;
-<code class="docutils literal notranslate"><span class="pre">AudioResult.word_timings</span></code> uses offsets relative to the complete result waveform.
-<code class="docutils literal notranslate"><span class="pre">char_start</span></code> and <code class="docutils literal notranslate"><span class="pre">char_end</span></code> refer to <code class="docutils literal notranslate"><span class="pre">document.clean_text</span></code>, not SSMD markup. Timings are
-derived only from named model duration outputs (<code class="docutils literal notranslate"><span class="pre">pred_dur</span></code>, <code class="docutils literal notranslate"><span class="pre">pred_duration</span></code>, or
-<code class="docutils literal notranslate"><span class="pre">durations</span></code>); waveform-only or incomplete-duration models return <code class="docutils literal notranslate"><span class="pre">[]</span></code> rather than
-estimates. The timings follow the exact final waveform after phrase fallback, trimming,
-prosody, pauses, and unit concatenation, and timing lists are preserved by
-<code class="docutils literal notranslate"><span class="pre">release_audio()</span></code>. <code class="docutils literal notranslate"><span class="pre">AudioUnitKind</span></code> supports <code class="docutils literal notranslate"><span class="pre">&quot;paragraph&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code>; paragraph
-remains the default for <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> and <code class="docutils literal notranslate"><span class="pre">iter_units()</span></code>. <code class="docutils literal notranslate"><span class="pre">unit_kind</span></code> and
-<code class="docutils literal notranslate"><span class="pre">sentence_idx</span></code> identify the selected grouping on each descriptor. Preparation parses,
-phonemizes, and preprocesses the complete document once, then defers audio generation
-until a selected unit is rendered. Generated waveform memory is bounded by the selected
-unit size and the playback queue, while document metadata remains global.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">pipe</span><span class="o">.</span><span class="n">prepare_units</span><span class="p">(</span><span class="n">script</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="s2">&quot;sentence&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">prepared</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">prepared</span><span class="o">.</span><span class="n">render</span><span class="p">(</span><span class="n">skip_indices</span><span class="o">=</span><span class="n">completed_indices</span><span class="p">):</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">consume</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-        <span class="k">finally</span><span class="p">:</span>
-            <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="streaming-playback">
-<h3>Streaming playback</h3>
-<p><code class="docutils literal notranslate"><span class="pre">KokoroPipeline.play_streaming(text,</span> <span class="pre">unit=&quot;sentence&quot;,</span> <span class="pre">device=None,</span> <span class="pre">queue_size=2)</span></code> uses
-one persistent <code class="docutils literal notranslate"><span class="pre">SoundDevicePlayer</span></code>. It begins playback after the first rendered unit,
-queues copied waveforms with bounded backpressure, and blocks until the final queued
-unit has finished. It creates no temporary WAV and does not concatenate a final
-waveform. The queue capacity is pending waveform capacity in addition to the actively
-written waveform, not an exact startup prebuffer count. Empty input opens no device.</p>
-<p><code class="docutils literal notranslate"><span class="pre">play_prepared_units()</span></code> is the lower-level helper for callers that already own a
-prepared unit lifecycle. <code class="docutils literal notranslate"><span class="pre">SoundDevicePlayer</span></code> is also available for custom consumers; its
-<code class="docutils literal notranslate"><span class="pre">submit()</span></code> copy makes releasing a source <code class="docutils literal notranslate"><span class="pre">AudioUnitResult</span></code> after submission safe.
-Synthesis remains sequential on the caller thread; playback is the only worker-thread
-operation.</p>
-<p><code class="docutils literal notranslate"><span class="pre">AudioResult.play()</span></code> and <code class="docutils literal notranslate"><span class="pre">AudioUnitResult.play()</span></code> remain blocking helpers for an already
-generated single waveform.</p>
-</section>
-<section id="pipelineconfig">
-<h3>PipelineConfig</h3>
-</section>
-<section id="metadata-only-pipeline-resolution">
-<h3>Metadata-only pipeline resolution</h3>
-<p>Use <code class="docutils literal notranslate"><span class="pre">resolve_pipeline_config()</span></code> to resolve PyKokoro’s automatic model, source, quality,
-and voice choices before constructing a runtime pipeline:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">PipelineConfig</span><span class="p">,</span> <span class="n">resolve_pipeline_config</span>
-
-<span class="n">requested</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">))</span>
-<span class="n">resolved</span> <span class="o">=</span> <span class="n">resolve_pipeline_config</span><span class="p">(</span><span class="n">requested</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">model_variant</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">model_source</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">resolved</span><span class="o">.</span><span class="n">model_quality</span><span class="p">,</span> <span class="n">resolved</span><span class="o">.</span><span class="n">voice</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>This is a metadata-only operation. It does not construct <code class="docutils literal notranslate"><span class="pre">KokoroPipeline</span></code>, import ONNX
-Runtime, create an ONNX session, load model or voice assets, or synthesize audio. Use
-the separate <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> API when runtime capability and model inventory
-metadata is needed.</p>
-</section>
-<section id="generationconfig">
-<h3>GenerationConfig</h3>
-</section>
-<section id="prosodyconfig">
-<h3>ProsodyConfig</h3>
-<p><code class="docutils literal notranslate"><span class="pre">ProsodyConfig(method=&quot;wsola&quot;)</span></code> selects the production speech-oriented default. The
-supported methods are <code class="docutils literal notranslate"><span class="pre">wsola</span></code>, experimental <code class="docutils literal notranslate"><span class="pre">esola</span></code> and <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>, compatibility
-<code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code>, and the <code class="docutils literal notranslate"><span class="pre">psola</span></code> alias for <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>. Strict mode prevents fallback;
-non-strict mode follows <code class="docutils literal notranslate"><span class="pre">fallback_methods</span></code>. No method guarantees formant preservation.</p>
-</section>
-</section>
-<section id="pipeline-helpers">
-<h2>Pipeline Helpers</h2>
-</section>
-<section id="result-and-data-classes">
-<h2>Result and Data Classes</h2>
-<section id="audioresult">
-<h3>AudioResult</h3>
-<p><code class="docutils literal notranslate"><span class="pre">AudioResult</span></code> owns references to its final waveform and any raw or processed per-segment
-waveforms. <code class="docutils literal notranslate"><span class="pre">AudioResult.release_segment_audio()</span></code> destructively and idempotently releases
-only segment arrays, while <code class="docutils literal notranslate"><span class="pre">AudioResult.release_audio()</span></code> also replaces the final
-waveform with an empty array of the same dtype. Metadata, markers, trace data, segments,
-and sample rate remain available. Callers should copy or retain <code class="docutils literal notranslate"><span class="pre">result.audio</span></code>
-separately before releasing it if they need that array afterward.</p>
-<p><code class="docutils literal notranslate"><span class="pre">AudioResult.play()</span></code> and <code class="docutils literal notranslate"><span class="pre">AudioUnitResult.play()</span></code> provide optional direct system
-playback. They import <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> lazily, block until playback completes, accept an
-optional <code class="docutils literal notranslate"><span class="pre">device=</span></code> selector, and never create a temporary file. Install playback support
-with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pykokoro[playback]&quot;</span></code>; Linux-like systems may also require PortAudio.
-Calling either method after <code class="docutils literal notranslate"><span class="pre">release_audio()</span></code> raises a clear empty/released-audio error.</p>
-<p>Set <code class="docutils literal notranslate"><span class="pre">PipelineConfig(retain_segment_audio=False)</span></code> for compact results when segment
-waveforms are not needed. This reduces retained memory after generation, but
-whole-result concatenation still occurs and peak memory remains dependent on input
-duration. <code class="docutils literal notranslate"><span class="pre">run()</span></code> retains whole-result concatenation semantics; use <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> or
-<code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> when generated waveform memory should remain bounded to the selected unit
-size plus the bounded playback queue.</p>
-<p>Prepared unit descriptor hashes use the <code class="docutils literal notranslate"><span class="pre">pykokoro-audio-unit-v1</span></code> schema. Store the
-schema alongside each hash for resumable exporters. Indices are zero-based source order,
-hashes include audio-semantic configuration, and advancing a render iterator releases
-the previous result’s waveform unless the caller copied or persisted it first.</p>
-</section>
-<section id="segment">
-<h3>Segment</h3>
-</section>
-<section id="phonemesegment">
-<h3>PhonemeSegment</h3>
-</section>
-<section id="trace">
-<h3>Trace</h3>
-</section>
-</section>
-<section id="voice-blending">
-<h2>Voice Blending</h2>
-<section id="voiceblend">
-<h3>VoiceBlend</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.onnx_backend</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceBlend</span>
-
-<span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_bella:60,af_sarah:40&quot;</span><span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="n">blend</span><span class="p">))</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Blended voice example&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="tokenizer">
-<h2>Tokenizer</h2>
-<section id="id1">
-<h3>Tokenizer</h3>
-</section>
-<section id="tokenizerconfig">
-<h3>TokenizerConfig</h3>
-</section>
-<section id="phonemeresult">
-<h3>PhonemeResult</h3>
-<p><strong>Tokenizer Example:</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span>
-
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="model-and-voice-utilities">
-<h2>Model and Voice Utilities</h2>
-<p>These utilities live in <code class="docutils literal notranslate"><span class="pre">pykokoro.onnx_backend</span></code> and are used for model and voice
-management.</p>
-<p>HuggingFace is the default model source. For Termux/Android installations where
-HuggingFace downloads are unavailable, select GitHub v1.0 explicitly:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
-        <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-        <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-        <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>GitHub v1.0 uses the embedded standard v1.0 vocabulary and does not require a
-HuggingFace <code class="docutils literal notranslate"><span class="pre">config.json</span></code>. Model sources are never silently switched. Explicit
-<code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> files remain validated in place, and Android ONNX Runtime
-warnings are independent of model asset selection.</p>
-</section>
-<section id="configuration-helpers">
-<h2>Configuration Helpers</h2>
-</section>
-<section id="ssmd-0-8-api">
-<h2>SSMD 0.8 API</h2>
-<p>The public renderer configuration is <code class="docutils literal notranslate"><span class="pre">pykokoro.ssmd_config.SSMDRenderConfig</span></code> with
-<code class="docutils literal notranslate"><span class="pre">SSMDPauseOverrides</span></code>. <code class="docutils literal notranslate"><span class="pre">PipelineConfig(ssmd=...)</span></code> sets defaults, and <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">ssmd=...)</span></code>
-accepts a per-render replacement. <code class="docutils literal notranslate"><span class="pre">AudioResult.document_metadata</span></code> contains copied title,
-binding, and pause metadata; <code class="docutils literal notranslate"><span class="pre">AudioResult.markers</span></code> contains structured marker sample
-offsets. Audio annotations require an explicit resolver and fall back to <code class="docutils literal notranslate"><span class="pre">alt</span></code> text;
-Kokoro extensions are rejected by profile validation.</p>
-<p><code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig.emphasis_mode</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;plain&quot;</span></code>, preserving emphasis metadata
-without changing generated audio. <code class="docutils literal notranslate"><span class="pre">&quot;approximate&quot;</span></code> applies core gain-only mappings
-(<code class="docutils literal notranslate"><span class="pre">strong</span></code> <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, <code class="docutils literal notranslate"><span class="pre">moderate</span></code> <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, <code class="docutils literal notranslate"><span class="pre">reduced</span></code> <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>) at <code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=1.0</span></code>. The
-scale accepts finite values from <code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code>; <code class="docutils literal notranslate"><span class="pre">0.5</span></code> halves automatic gain and
-<code class="docutils literal notranslate"><span class="pre">1.5</span></code> makes it 50% stronger without changing semantic emphasis. Explicit <code class="docutils literal notranslate"><span class="pre">volume</span></code> values
-win. <code class="docutils literal notranslate"><span class="pre">&quot;warn&quot;</span></code> preserves audio and adds one <code class="docutils literal notranslate"><span class="pre">ssmd.emphasis_unsupported</span></code> warning per
-logical source segment, while <code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> rejects effectful emphasis before inference. The
-<code class="docutils literal notranslate"><span class="pre">none</span></code> level is always a silent no-op. Scaling is gain-only: it adds no automatic <code class="docutils literal notranslate"><span class="pre">rate</span></code>
-or <code class="docutils literal notranslate"><span class="pre">pitch</span></code> fields. Explicit SSMD prosody remains independent and no prosody extra is
-required.</p>
-</section>
-<section id="see-also">
-<h2>See Also</h2>
+<h1>API reference</h1>
+<p>The supported public API represents one prepared synthesis request and one independent
+rendered result. Document planning and composition APIs are intentionally not part of
+the package.</p>
+<section id="synthesizer">
+<h2>Synthesizer</h2>
+<p>The main methods are:</p>
 <ul class="simple">
-<li><p><a class="reference internal" href="../basic_usage/"><span class="doc">Basic Usage</span></a> - Fundamental usage patterns</p></li>
-<li><p><a class="reference internal" href="../examples/"><span class="doc">Examples</span></a> - Practical pipeline examples</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synthesize(request)</span></code> renders one <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> (<code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> remains a
+compatibility alias).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synthesize_text(text,</span> <span class="pre">language=...,</span> <span class="pre">voice=...)</span></code> creates and renders one plain
+prepared text request.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">synthesize_segments(segments)</span></code> yields independent results in input order.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prepare(segment)</span></code> returns model-ready Kokoro frontend data for diagnostics and
+advanced integrations.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> releases the owned renderer resources.</p></li>
 </ul>
+</section>
+<section id="request-and-result-types">
+<h2>Request and result types</h2>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> offsets are half-open Python character ranges into its exact <code class="docutils literal notranslate"><span class="pre">text</span></code>.
+<code class="docutils literal notranslate"><span class="pre">RenderedSegment.audio</span></code> is one-dimensional float32 audio, <code class="docutils literal notranslate"><span class="pre">sample_rate</span></code> is positive, and
+word timings are local to that result. <code class="docutils literal notranslate"><span class="pre">save_wav(path)</span></code> writes mono float32 WAV audio.</p>
+</section>
+<section id="configuration">
+<h2>Configuration</h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pykokoro.exceptions.SynthesisInputTooLongError">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykokoro.exceptions.</span></span><span class="sig-name descname"><span class="pre">SynthesisInputTooLongError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pykokoro/exceptions/#SynthesisInputTooLongError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SynthesisError</span></code>, <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
+<p>Tokenized request exceeds model capacity.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykokoro.generation_config.</span></span><span class="sig-name descname"><span class="pre">GenerationConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_short_sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pykokoro/generation_config/#GenerationConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Acoustic speed, default language, and short-sentence inference settings.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.speed">
+<span class="sig-name descname"><span class="pre">speed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.lang">
+<span class="sig-name descname"><span class="pre">lang</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.random_seed">
+<span class="sig-name descname"><span class="pre">random_seed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.enable_short_sentence">
+<span class="sig-name descname"><span class="pre">enable_short_sentence</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<p>Each call returns one <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code>, even when a single request is internally split.
+G2P tokenization is checked against the selected model capacity. With the default
+<code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;none&quot;</span></code>, oversized input raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code>. Set
+<code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;sentence&quot;</span></code> to enable lazy PhraseSplit-based splitting only for
+oversized requests. It packs source spans into model-safe chunks, falling back from
+sentences to clauses and then safe word boundaries when needed. Chunk audio is joined
+into the one request result, while request text and source-aligned context remain
+intact. A word that cannot fit safely still raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">long_text_use_spacy=False</span></code> selects PhraseSplit’s simple mode without spaCy. <code class="docutils literal notranslate"><span class="pre">None</span></code>
+permits a compatible local spaCy model with regex fallback; <code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a
+compatible model. Separate synthesis requests still produce separate results.
+<code class="docutils literal notranslate"><span class="pre">RenderedSegment.synthesis_identity</span></code> and <code class="docutils literal notranslate"><span class="pre">voice_level_applications</span></code> expose resolved
+output identity and calibration outcomes. <code class="docutils literal notranslate"><span class="pre">GenerationConfig.speed</span></code> is the acoustic
+inference speed passed to Kokoro, not an application-level playback-rate effect.
+<code class="docutils literal notranslate"><span class="pre">SynthesisConfig.voice_level</span></code> is engine-local voice calibration rather than whole-output
+mastering.</p>
+</section>
+<section id="voice-blends-and-discovery">
+<h2>Voice blends and discovery</h2>
+<p><code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> describes runtime capabilities without initializing ONNX inference
+or downloading model weights. <code class="docutils literal notranslate"><span class="pre">discover_lexicons()</span></code> describes available named G2P
+lexicons.</p>
+</section>
+<section id="frontend-configuration-and-model-asset-progress">
+<h2>Frontend configuration and model asset progress</h2>
+<p>For installation, request examples, and the breaking migration boundary, see the
+<a class="reference internal" href="../quickstart/"><span class="std std-doc">quickstart</span></a>, <a class="reference internal" href="../advanced_features/"><span class="std std-doc">advanced features</span></a>, and
+<a class="reference internal" href="../breaking-change-0.10.0/"><span class="std std-doc">release note</span></a>.</p>
 </section>
 </section>
 </div>

@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "1980c788536c5f07db18decd0999af9c47f7cc62"
+docs_commit: "57d2cf1a6017e0fbc48999decb81e6c630c8e90d"
 search_enabled: true
 ---
 

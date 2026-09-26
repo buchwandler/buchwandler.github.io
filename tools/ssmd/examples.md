@@ -5,8 +5,8 @@ permalink: /tools/ssmd/examples/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_ref: "v0.9.0"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -542,737 +542,136 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="examples">
 <h1>Examples</h1>
-<p>This page provides practical examples of using SSMD in real-world scenarios.</p>
-<section id="basic-tts-integration">
-<h2>Basic TTS Integration</h2>
-<section id="pyttsx3-offline-tts">
-<h3>pyttsx3 (Offline TTS)</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<p>Use the strict SSMD 0.9 examples below for new documents. Complete documents declare
+<code class="docutils literal notranslate"><span class="pre">ssmd_version:</span> <span class="pre">'0.9'</span></code>, use canonical long-form attributes and fenced <code class="docutils literal notranslate"><span class="pre">:::</span></code> directives
+for block-aligned scopes. Runnable examples live in the
+<a class="reference external" href="https://github.com/buchwandler/ssmd/tree/main/examples">examples directory on GitHub</a>.</p>
+<section id="canonical-ssmd-0-9-document">
+<h2>Canonical SSMD 0.9 document</h2>
+<p>Save complete documents with an <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> filename when an SSMD-specific suffix is
+useful. This example covers front matter, paragraphs, emphasis, pauses, language, voice,
+marks, and prosody:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
+ssmd_version: &#39;0.9&#39;
+title: Welcome
+---
+# Welcome
 
-<span class="c1"># Initialize TTS engine</span>
-<span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+*Hello* and **welcome** to SSMD ...500ms.
 
-<span class="c1"># Create content with SSMD</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># Welcome Message</span>
-<span class="s2">*Hello* and welcome!</span>
-<span class="s2">Please ...500ms listen carefully.</span>
-<span class="s2">This is [very fast]{rate=&quot;x-fast&quot;}.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+[Bonjour]{lang=&quot;fr-FR&quot;} tout le monde!
 
-<span class="c1"># Create document with pyttsx3 capabilities</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;pyttsx3&#39;</span><span class="p">)</span>
+:::{voice=&quot;host&quot; voice-languages=&quot;en-US&quot;}
+Welcome to the show.
+:::
+:::{voice=&quot;guest&quot; voice-languages=&quot;en-US&quot;}
+Thanks for having me.
+:::
 
-<span class="c1"># Convert to SSML</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
+:::{volume=&quot;loud&quot; rate=&quot;fast&quot; pitch=&quot;high&quot;}
+This passage is loud, fast, and high-pitched.
+:::
 
-<span class="c1"># Speak (pyttsx3 handles SSML natively)</span>
-<span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
-<span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
+I always wanted a @marker cat as a pet.
+</pre></div>
+</div>
+<p>Adjacent fenced directives with no blank line between them belong to the same semantic
+paragraph. Their clean text receives ordinary inline separation and no paragraph event.
+A blank line between sibling directives creates a paragraph boundary; canonical
+formatting preserves this distinction. A voice change does not by itself create a
+paragraph pause.</p>
+<p>Use inline voice annotations for genuinely short, mixed-flow spans:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>The host said [hello]{voice=&quot;host&quot;}, then the guest replied.
 </pre></div>
 </div>
 </section>
-<section id="google-text-to-speech">
-<h3>Google Text-to-Speech</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">google.cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">texttospeech</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
+<section id="parse-strict-0-9-structure">
+<h2>Parse strict 0.9 structure</h2>
+<p><code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> is the sentence-neutral API for strict 0.9 documents. It returns
+clean text, annotation ranges, structural events, front matter, and source-aware
+diagnostics without running sentence detection:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
-<span class="c1"># Initialize Google TTS client</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">TextToSpeechClient</span><span class="p">()</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">lint</span><span class="p">,</span> <span class="n">parse_structure</span>
 
-<span class="c1"># Create content</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">*Welcome* to our service.</span>
-<span class="s2">[Bonjour]{lang=&quot;fr&quot;} to our French users!</span>
-<span class="s2">Please wait ...1s for the next message.</span>
-<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;story.ssmd.md&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">&quot;utf-8&quot;</span><span class="p">)</span>
+<span class="n">structure</span> <span class="o">=</span> <span class="n">parse_structure</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
+<span class="n">issues</span> <span class="o">=</span> <span class="n">lint</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
 
-<span class="c1"># Create document with Google capabilities</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">)</span>
-
-<span class="c1"># Convert to SSML</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-
-<span class="c1"># Prepare TTS request</span>
-<span class="n">synthesis_input</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">SynthesisInput</span><span class="p">(</span><span class="n">ssml</span><span class="o">=</span><span class="n">ssml</span><span class="p">)</span>
-<span class="n">voice</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">VoiceSelectionParams</span><span class="p">(</span>
-    <span class="n">language_code</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;en-US-Neural2-J&quot;</span>
-<span class="p">)</span>
-<span class="n">audio_config</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">AudioConfig</span><span class="p">(</span>
-    <span class="n">audio_encoding</span><span class="o">=</span><span class="n">texttospeech</span><span class="o">.</span><span class="n">AudioEncoding</span><span class="o">.</span><span class="n">MP3</span>
-<span class="p">)</span>
-
-<span class="c1"># Generate speech</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">synthesize_speech</span><span class="p">(</span>
-    <span class="nb">input</span><span class="o">=</span><span class="n">synthesis_input</span><span class="p">,</span>
-    <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
-    <span class="n">audio_config</span><span class="o">=</span><span class="n">audio_config</span>
-<span class="p">)</span>
-
-<span class="c1"># Save to file</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;output.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">audio_content</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">clean_text</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">issues</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="google-tts-with-speaking-styles">
-<h4>Google TTS with Speaking Styles</h4>
-<p>Google Cloud TTS supports speaking styles for Neural2 and Studio voices:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">google.cloud</span><span class="w"> </span><span class="kn">import</span> <span class="n">texttospeech</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-
-<span class="c1"># Configure Google TTS styles as extensions</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="p">{</span>
-    <span class="s1">&#39;extensions&#39;</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">&#39;cheerful&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&lt;google:style name=&quot;cheerful&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/google:style&gt;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;calm&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&lt;google:style name=&quot;calm&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/google:style&gt;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;empathetic&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&lt;google:style name=&quot;empathetic&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/google:style&gt;&#39;</span><span class="p">,</span>
-        <span class="s1">&#39;apologetic&#39;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">text</span><span class="p">:</span> <span class="sa">f</span><span class="s1">&#39;&lt;google:style name=&quot;apologetic&quot;&gt;</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s1">&lt;/google:style&gt;&#39;</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">})</span>
-
-<span class="c1"># Build content with speaking styles</span>
-<span class="n">doc</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="s2">&quot;[Welcome to our customer service!]{ext=</span><span class="se">\&quot;</span><span class="s2">cheerful</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="p">)</span>
-<span class="n">doc</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="s2">&quot;[We understand this must be frustrating.]{ext=</span><span class="se">\&quot;</span><span class="s2">empathetic</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="p">)</span>
-<span class="n">doc</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="s2">&quot;[We sincerely apologize for the inconvenience.]{ext=</span><span class="se">\&quot;</span><span class="s2">apologetic</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="p">)</span>
-<span class="n">doc</span><span class="o">.</span><span class="n">add_sentence</span><span class="p">(</span><span class="s2">&quot;[Please take a moment to breathe.]{ext=</span><span class="se">\&quot;</span><span class="s2">calm</span><span class="se">\&quot;</span><span class="s2">}&quot;</span><span class="p">)</span>
-
-<span class="c1"># Generate SSML</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-
-<span class="c1"># Initialize Google TTS client</span>
-<span class="n">client</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">TextToSpeechClient</span><span class="p">()</span>
-
-<span class="c1"># Use a voice that supports styles (Neural2 or Studio)</span>
-<span class="n">synthesis_input</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">SynthesisInput</span><span class="p">(</span><span class="n">ssml</span><span class="o">=</span><span class="n">ssml</span><span class="p">)</span>
-<span class="n">voice</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">VoiceSelectionParams</span><span class="p">(</span>
-    <span class="n">language_code</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">,</span>
-    <span class="n">name</span><span class="o">=</span><span class="s2">&quot;en-US-Neural2-F&quot;</span>  <span class="c1"># Neural2 voices support styles</span>
-<span class="p">)</span>
-<span class="n">audio_config</span> <span class="o">=</span> <span class="n">texttospeech</span><span class="o">.</span><span class="n">AudioConfig</span><span class="p">(</span>
-    <span class="n">audio_encoding</span><span class="o">=</span><span class="n">texttospeech</span><span class="o">.</span><span class="n">AudioEncoding</span><span class="o">.</span><span class="n">MP3</span>
-<span class="p">)</span>
-
-<span class="n">response</span> <span class="o">=</span> <span class="n">client</span><span class="o">.</span><span class="n">synthesize_speech</span><span class="p">(</span>
-    <span class="nb">input</span><span class="o">=</span><span class="n">synthesis_input</span><span class="p">,</span>
-    <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
-    <span class="n">audio_config</span><span class="o">=</span><span class="n">audio_config</span>
-<span class="p">)</span>
-
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s2">&quot;styled_output.mp3&quot;</span><span class="p">,</span> <span class="s2">&quot;wb&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">audio_content</span><span class="p">)</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>Speaking styles are only supported by specific Google Cloud TTS voices
-(Neural2 and Studio voices). See the complete example in
-<code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code>. :::</p>
-<p class="rubric" id="amazon-polly">Amazon Polly</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">boto3</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-
-<span class="c1"># Initialize Polly client</span>
-<span class="n">polly</span> <span class="o">=</span> <span class="n">boto3</span><span class="o">.</span><span class="n">client</span><span class="p">(</span><span class="s1">&#39;polly&#39;</span><span class="p">)</span>
-
-<span class="c1"># Create content with Amazon extensions</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">*Welcome* to our podcast.</span>
-<span class="s2">Now for the [secret message]{ext=&quot;whisper&quot;}.</span>
-<span class="s2">Back to normal voice.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="c1"># Create document with Polly capabilities</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;polly&#39;</span><span class="p">)</span>
-
-<span class="c1"># Convert to SSML</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-
-<span class="c1"># Generate speech</span>
-<span class="n">response</span> <span class="o">=</span> <span class="n">polly</span><span class="o">.</span><span class="n">synthesize_speech</span><span class="p">(</span>
-    <span class="n">Text</span><span class="o">=</span><span class="n">ssml</span><span class="p">,</span>
-    <span class="n">TextType</span><span class="o">=</span><span class="s1">&#39;ssml&#39;</span><span class="p">,</span>
-    <span class="n">OutputFormat</span><span class="o">=</span><span class="s1">&#39;mp3&#39;</span><span class="p">,</span>
-    <span class="n">VoiceId</span><span class="o">=</span><span class="s1">&#39;Joanna&#39;</span>
-<span class="p">)</span>
-
-<span class="c1"># Save audio</span>
-<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="s1">&#39;output.mp3&#39;</span><span class="p">,</span> <span class="s1">&#39;wb&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
-    <span class="n">f</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">response</span><span class="p">[</span><span class="s1">&#39;AudioStream&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
-</pre></div>
-</div>
-<p class="rubric" id="streaming-tts">Streaming TTS</p>
-<p class="rubric" id="sentence-by-sentence-processing">Sentence-by-Sentence Processing</p>
+<p>Annotation ranges are half-open offsets into <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>. Break, mark, heading, and
+paragraph events use clean-text boundary positions. Paragraph events represent document
+structure; they do not prescribe a pause duration. A downstream TTS pipeline may
+normalize the clean text and then supply explicit sentence spans to rendering.</p>
+</section>
+<section id="render-for-a-tts-target">
+<h2>Render for a TTS target</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">Document</span></code> for complete-document rendering and capability adaptation. Do not use its
+sentence/list APIs for strict 0.9 documents; those are compatibility APIs for legacy
+input.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
-<span class="c1"># Mock TTS engine for demonstration</span>
-<span class="k">class</span><span class="w"> </span><span class="nc">TTSEngine</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssml</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speaking: </span><span class="si">{</span><span class="n">ssml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>  <span class="c1"># Simulate speech duration</span>
+<span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">---</span>
+<span class="s2">ssmd_version: &#39;0.9&#39;</span>
+<span class="s2">---</span>
+<span class="s2"># Announcement</span>
 
-<span class="n">engine</span> <span class="o">=</span> <span class="n">TTSEngine</span><span class="p">()</span>
-
-<span class="c1"># Long document</span>
-<span class="n">document_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># Chapter 1: The Beginning</span>
-
-<span class="s2">It was a dark and stormy night.</span>
-<span class="s2">The rain fell in torrents.</span>
-<span class="s2">Lightning flashed across the sky.</span>
-
-<span class="s2"># Chapter 2: The Discovery</span>
-
-<span class="s2">Suddenly, a sound echoed through the halls.</span>
-<span class="s2">What could it be?</span>
+<span class="s2">Hello *world*! [Bonjour]{lang=&quot;fr&quot;} everyone ...300ms.</span>
 <span class="s2">&quot;&quot;&quot;</span>
-
-<span class="c1"># Create document with automatic sentence splitting</span>
-<span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">document_text</span><span class="p">,</span> <span class="n">auto_sentence_tags</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-<span class="n">sentence_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">()))</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total sentences: </span><span class="si">{</span><span class="n">sentence_count</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Stream sentences</span>
-<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sentence_doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">sentence_count</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-    <span class="n">engine</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">sentence_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">())</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Playback complete!&quot;</span><span class="p">)</span>
+<span class="n">document</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;dialect&quot;</span><span class="p">:</span> <span class="s2">&quot;0.9&quot;</span><span class="p">},</span> <span class="n">capabilities</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">to_text</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">())</span>
 </pre></div>
 </div>
-<p class="rubric" id="async-tts-streaming">Async TTS Streaming</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">asyncio</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">AsyncTTSEngine</span><span class="p">:</span>
-    <span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssml</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Speaking: </span><span class="si">{</span><span class="n">ssml</span><span class="p">[:</span><span class="mi">50</span><span class="p">]</span><span class="si">}</span><span class="s2">...&quot;</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">stream_document</span><span class="p">(</span><span class="n">doc</span><span class="p">):</span>
-    <span class="n">engine</span> <span class="o">=</span> <span class="n">AsyncTTSEngine</span><span class="p">()</span>
-    <span class="n">sentence_count</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">()))</span>
-
-    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">sentence_doc</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span> <span class="mi">1</span><span class="p">):</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[Sentence </span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="n">sentence_count</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-        <span class="k">await</span> <span class="n">engine</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">sentence_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">())</span>
-
-<span class="k">async</span> <span class="k">def</span><span class="w"> </span><span class="nf">main</span><span class="p">():</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">    Welcome to async TTS.</span>
-<span class="s2">    Each sentence is processed independently.</span>
-<span class="s2">    This allows for smooth streaming.</span>
-<span class="s2">    &quot;&quot;&quot;</span>
-
-    <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">auto_sentence_tags</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-    <span class="k">await</span> <span class="n">stream_document</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
-
-<span class="c1"># Run</span>
-<span class="n">asyncio</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">main</span><span class="p">())</span>
-</pre></div>
-</div>
-<p class="rubric" id="interactive-story-reader">Interactive Story Reader</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyttsx3</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">StoryReader</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tts_engine</span><span class="o">=</span><span class="s1">&#39;pyttsx3&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span> <span class="o">=</span> <span class="n">tts_engine</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">engine</span> <span class="o">=</span> <span class="n">pyttsx3</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">load_story</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Load a story from SSMD text.&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span>
-            <span class="n">ssmd_text</span><span class="p">,</span>
-            <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">,</span>
-            <span class="n">auto_sentence_tags</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">=</span> <span class="mi">0</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">play</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Play from current position.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;No story loaded&quot;</span><span class="p">)</span>
-            <span class="k">return</span>
-
-        <span class="n">sentences</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">(</span><span class="n">as_documents</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
-
-        <span class="k">while</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">):</span>
-            <span class="n">sentence_doc</span> <span class="o">=</span> <span class="n">sentences</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span><span class="p">]</span>
-            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">[</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">sentences</span><span class="p">)</span><span class="si">}</span><span class="s2">]&quot;</span><span class="p">)</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">say</span><span class="p">(</span><span class="n">sentence_doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">())</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">engine</span><span class="o">.</span><span class="n">runAndWait</span><span class="p">()</span>
-
-            <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">+=</span> <span class="mi">1</span>
-
-            <span class="c1"># Interactive control</span>
-            <span class="n">cmd</span> <span class="o">=</span> <span class="nb">input</span><span class="p">(</span><span class="s2">&quot;(n)ext, (p)rev, (q)uit: &quot;</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-            <span class="k">if</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;q&#39;</span><span class="p">:</span>
-                <span class="k">break</span>
-            <span class="k">elif</span> <span class="n">cmd</span> <span class="o">==</span> <span class="s1">&#39;p&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">-=</span> <span class="mi">2</span>  <span class="c1"># Go back two, play one forward</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_progress</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get reading progress.&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span><span class="p">:</span>
-            <span class="k">return</span> <span class="mi">0</span>
-        <span class="n">total_sentences</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_doc</span><span class="o">.</span><span class="n">sentences</span><span class="p">()))</span>
-        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_index</span> <span class="o">/</span> <span class="n">total_sentences</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span> <span class="k">if</span> <span class="n">total_sentences</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">0</span>
-
-<span class="c1"># Usage</span>
-<span class="n">story</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># The Adventure Begins</span>
-
-<span class="s2">[Once upon a time]{volume=&quot;2&quot; rate=&quot;2&quot;}, in a land far away.</span>
-<span class="s2">There lived a brave *knight* named Sir Galahad.</span>
-<span class="s2">He faced many challenges ...1s but never gave up.</span>
-
-<span class="s2"># The Quest</span>
-
-<span class="s2">One day, the king summoned him.</span>
-<span class="s2">[Go forth]{volume=&quot;x-loud&quot;} said the king, [and save our kingdom]{volume=&quot;x-loud&quot;}!</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">reader</span> <span class="o">=</span> <span class="n">StoryReader</span><span class="p">()</span>
-<span class="n">reader</span><span class="o">.</span><span class="n">load_story</span><span class="p">(</span><span class="n">story</span><span class="p">)</span>
-<span class="n">reader</span><span class="o">.</span><span class="n">play</span><span class="p">()</span>
-</pre></div>
-</div>
-<p class="rubric" id="content-management-system">Content Management System</p>
-<p class="rubric" id="ssmd-cms-with-database">SSMD CMS with Database</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">to_ssml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sqlite3</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">datetime</span><span class="w"> </span><span class="kn">import</span> <span class="n">datetime</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SSMDContentManager</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">db_path</span><span class="o">=</span><span class="s1">&#39;content.db&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span> <span class="o">=</span> <span class="n">sqlite3</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="n">db_path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_setup_db</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">_setup_db</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            CREATE TABLE IF NOT EXISTS content (</span>
-<span class="s1">                id INTEGER PRIMARY KEY,</span>
-<span class="s1">                title TEXT,</span>
-<span class="s1">                ssmd_text TEXT,</span>
-<span class="s1">                ssml_cache TEXT,</span>
-<span class="s1">                created_at TIMESTAMP,</span>
-<span class="s1">                updated_at TIMESTAMP</span>
-<span class="s1">            )</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">create</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create new content.&quot;&quot;&quot;</span>
-        <span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            INSERT INTO content (title, ssmd_text, ssml_cache, created_at, updated_at)</span>
-<span class="s1">            VALUES (?, ?, ?, ?, ?)</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">,</span> <span class="n">ssml</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">now</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">update</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_id</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Update existing content.&quot;&quot;&quot;</span>
-        <span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
-        <span class="n">now</span> <span class="o">=</span> <span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s1">&#39;&#39;&#39;</span>
-<span class="s1">            UPDATE content</span>
-<span class="s1">            SET ssmd_text = ?, ssml_cache = ?, updated_at = ?</span>
-<span class="s1">            WHERE id = ?</span>
-<span class="s1">        &#39;&#39;&#39;</span><span class="p">,</span> <span class="p">(</span><span class="n">ssmd_text</span><span class="p">,</span> <span class="n">ssml</span><span class="p">,</span> <span class="n">now</span><span class="p">,</span> <span class="n">content_id</span><span class="p">))</span>
-
-        <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_ssml</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get cached SSML for content.&quot;&quot;&quot;</span>
-        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s1">&#39;SELECT ssml_cache FROM content WHERE id = ?&#39;</span><span class="p">,</span>
-            <span class="p">(</span><span class="n">content_id</span><span class="p">,)</span>
-        <span class="p">)</span>
-        <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="kc">None</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">get_ssmd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">content_id</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get SSMD source.&quot;&quot;&quot;</span>
-        <span class="n">cursor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">db</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span>
-            <span class="s1">&#39;SELECT ssmd_text FROM content WHERE id = ?&#39;</span><span class="p">,</span>
-            <span class="p">(</span><span class="n">content_id</span><span class="p">,)</span>
-        <span class="p">)</span>
-        <span class="n">row</span> <span class="o">=</span> <span class="n">cursor</span><span class="o">.</span><span class="n">fetchone</span><span class="p">()</span>
-        <span class="k">return</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="k">if</span> <span class="n">row</span> <span class="k">else</span> <span class="kc">None</span>
-
-<span class="c1"># Usage</span>
-<span class="n">cms</span> <span class="o">=</span> <span class="n">SSMDContentManager</span><span class="p">()</span>
-
-<span class="c1"># Create content</span>
-<span class="n">cms</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="s2">&quot;Welcome Message&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"># Welcome to Our Service</span>
-<span class="s2">*Thank you* for joining us today!</span>
-<span class="s2">&quot;&quot;&quot;</span><span class="p">)</span>
-
-<span class="c1"># Get SSML for TTS</span>
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">cms</span><span class="o">.</span><span class="n">get_ssml</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="multi-language-support">Multi-Language Support</p>
-<p class="rubric" id="language-aware-tts">Language-Aware TTS</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span><span class="p">,</span> <span class="n">to_ssml</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">MultilingualTTS</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span> <span class="o">=</span> <span class="s1">&#39;google&#39;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">create_multilingual_content</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Create content with multiple languages.&quot;&quot;&quot;</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="k">for</span> <span class="n">lang</span><span class="p">,</span> <span class="n">text</span> <span class="ow">in</span> <span class="n">messages</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">lang</span> <span class="o">==</span> <span class="s1">&#39;en&#39;</span><span class="p">:</span>
-                <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-             <span class="k">else</span><span class="p">:</span>
-                 <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">]</span><span class="se">{{</span><span class="s2">lang=</span><span class="se">\&quot;</span><span class="si">{</span><span class="n">lang</span><span class="si">}</span><span class="se">\&quot;}}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-
-        <span class="k">return</span> <span class="s2">&quot; &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">speak_multilingual</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">messages</span><span class="p">):</span>
-        <span class="n">ssmd_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_multilingual_content</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-        <span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">ssml</span>
-
-<span class="c1"># Usage</span>
-<span class="n">tts</span> <span class="o">=</span> <span class="n">MultilingualTTS</span><span class="p">()</span>
-
-<span class="n">messages</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="p">(</span><span class="s1">&#39;en&#39;</span><span class="p">,</span> <span class="s1">&#39;*Welcome* to our global service.&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;fr&#39;</span><span class="p">,</span> <span class="s1">&#39;Bienvenue à notre service mondial.&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;de&#39;</span><span class="p">,</span> <span class="s1">&#39;Willkommen zu unserem globalen Service.&#39;</span><span class="p">),</span>
-    <span class="p">(</span><span class="s1">&#39;es&#39;</span><span class="p">,</span> <span class="s1">&#39;Bienvenido a nuestro servicio global.&#39;</span><span class="p">),</span>
-<span class="p">]</span>
-
-<span class="n">ssml</span> <span class="o">=</span> <span class="n">tts</span><span class="o">.</span><span class="n">speak_multilingual</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="podcast-generator">Podcast Generator</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">Document</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">PodcastGenerator</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">output_dir</span><span class="o">=</span><span class="s1">&#39;podcasts&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate_episode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">episode_number</span><span class="p">,</span> <span class="n">script</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate podcast episode.&quot;&quot;&quot;</span>
-        <span class="c1"># Add production elements</span>
-        <span class="n">enhanced_script</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        # Episode </span><span class="si">{</span><span class="n">episode_number</span><span class="si">}</span>
-
-<span class="s2">         [Podcast intro music]</span><span class="si">{</span><span class="n">src</span><span class="o">=</span><span class="s2">&quot;@intro_music.mp3&quot;</span><span class="si">}</span>
-
-
-<span class="s2">        ...1s</span>
-
-<span class="s2">        </span><span class="si">{</span><span class="n">script</span><span class="si">}</span>
-
-<span class="s2">        ...2s</span>
-
-<span class="s2">         [Outro music]</span><span class="si">{</span><span class="n">src</span><span class="o">=</span><span class="s2">&quot;@outro_music.mp3&quot;</span><span class="si">}</span>
-
-<span class="s2">        &quot;&quot;&quot;</span>
-
-        <span class="c1"># Create document with Polly capabilities</span>
-        <span class="n">doc</span> <span class="o">=</span> <span class="n">Document</span><span class="p">(</span>
-            <span class="n">enhanced_script</span><span class="p">,</span>
-            <span class="n">capabilities</span><span class="o">=</span><span class="s1">&#39;polly&#39;</span><span class="p">,</span>
-            <span class="n">auto_sentence_tags</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
-            <span class="n">pretty_print</span><span class="o">=</span><span class="kc">True</span>
-        <span class="p">)</span>
-
-        <span class="c1"># Convert to SSML</span>
-        <span class="n">ssml</span> <span class="o">=</span> <span class="n">doc</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">()</span>
-
-        <span class="c1"># Save SSML</span>
-        <span class="n">output_file</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;episode_</span><span class="si">{</span><span class="n">episode_number</span><span class="si">}</span><span class="s2">.ssml&quot;</span>
-        <span class="n">output_file</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">ssml</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">output_file</span>
-
-<span class="c1"># Usage</span>
-<span class="n">podcast</span> <span class="o">=</span> <span class="n">PodcastGenerator</span><span class="p">()</span>
-
-<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">*Welcome* to Tech Talks!</span>
-<span class="s2">Today we&#39;re discussing artificial intelligence.</span>
-
-<span class="s2">Our guest is Dr. Smith, an expert in machine learning.</span>
-<span class="s2">[Welcome to the show]{volume=&quot;4&quot;}, Doctor Smith!</span>
-
-<span class="s2">...500ms</span>
-
-<span class="s2">Thank you for having me.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">ssml_file</span> <span class="o">=</span> <span class="n">podcast</span><span class="o">.</span><span class="n">generate_episode</span><span class="p">(</span><span class="mi">42</span><span class="p">,</span> <span class="n">script</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated: </span><span class="si">{</span><span class="n">ssml_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="testing-and-validation">Testing and Validation</p>
-<p class="rubric" id="ssmd-linter">SSMD Linter</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">SSMDLinter</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">lint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">ssmd_text</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Validate SSMD and provide feedback.&quot;&quot;&quot;</span>
-        <span class="n">issues</span> <span class="o">=</span> <span class="p">[]</span>
-
-        <span class="c1"># Try to convert</span>
-        <span class="k">try</span><span class="p">:</span>
-            <span class="n">ssml</span> <span class="o">=</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">ssmd_text</span><span class="p">)</span>
-        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Conversion error: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">issues</span>
-
-        <span class="c1"># Check for common issues</span>
-        <span class="k">if</span> <span class="s1">&#39;*&#39;</span> <span class="ow">in</span> <span class="n">ssmd_text</span> <span class="ow">and</span> <span class="s1">&#39;**&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">ssmd_text</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">ssmd_text</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s1">&#39;*&#39;</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Unmatched asterisks for emphasis&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Check for very long pauses</span>
-        <span class="k">if</span> <span class="s1">&#39;...10s&#39;</span> <span class="ow">in</span> <span class="n">ssmd_text</span> <span class="ow">or</span> <span class="s1">&#39;...10000ms&#39;</span> <span class="ow">in</span> <span class="n">ssmd_text</span><span class="p">:</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;Warning: Very long pause detected&quot;</span><span class="p">)</span>
-
-        <span class="c1"># Success</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">issues</span><span class="p">:</span>
-            <span class="n">issues</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">&quot;✓ No issues found&quot;</span><span class="p">)</span>
-
-        <span class="k">return</span> <span class="n">issues</span>
-
-<span class="c1"># Usage</span>
-<span class="n">linter</span> <span class="o">=</span> <span class="n">SSMDLinter</span><span class="p">()</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">*Hello world</span>
-<span class="s2">This has an unclosed emphasis tag.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">issues</span> <span class="o">=</span> <span class="n">linter</span><span class="o">.</span><span class="n">lint</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-<span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issues</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="complete-application-example">Complete Application Example</p>
-<p class="rubric" id="voice-assistant-with-ssmd">Voice Assistant with SSMD</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">to_ssml</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">random</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">VoiceAssistant</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Assistant&quot;</span><span class="p">,</span> <span class="n">tts_engine</span><span class="o">=</span><span class="s1">&#39;google&#39;</span><span class="p">):</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span> <span class="o">=</span> <span class="n">tts_engine</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">greet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">user_name</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
-        <span class="n">greetings</span> <span class="o">=</span> <span class="p">[</span>
-            <span class="s2">&quot;*Hello*!&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;Good day!&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;*Welcome* back!&quot;</span><span class="p">,</span>
-        <span class="p">]</span>
-
-        <span class="n">greeting</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="n">greetings</span><span class="p">)</span>
-
-        <span class="k">if</span> <span class="n">user_name</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">greeting</span><span class="si">}</span><span class="s2"> </span><span class="si">{</span><span class="n">user_name</span><span class="si">}</span><span class="s2">.&quot;</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">message</span> <span class="o">=</span> <span class="n">greeting</span>
-
-        <span class="k">return</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">message</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">error</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">to_ssml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;--Sorry-- ...300ms </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">success</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">to_ssml</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;*Great*! </span><span class="si">{</span><span class="n">message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">thinking</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;...500ms Let me think ...500ms&quot;</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">announce</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">title</span><span class="p">,</span> <span class="n">message</span><span class="p">):</span>
-        <span class="n">ssmd</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">        # </span><span class="si">{</span><span class="n">title</span><span class="si">}</span>
-
-<span class="s2">        ...300ms</span>
-
-<span class="s2">        </span><span class="si">{</span><span class="n">message</span><span class="si">}</span>
-<span class="s2">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">to_ssml</span><span class="p">(</span><span class="n">ssmd</span><span class="p">,</span> <span class="n">capabilities</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">capabilities</span><span class="p">)</span>
-
-<span class="c1"># Usage</span>
-<span class="n">assistant</span> <span class="o">=</span> <span class="n">VoiceAssistant</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;Jarvis&quot;</span><span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">greet</span><span class="p">(</span><span class="s2">&quot;John&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">thinking</span><span class="p">())</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">success</span><span class="p">(</span><span class="s2">&quot;Task completed successfully&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="s2">&quot;I couldn&#39;t find that file&quot;</span><span class="p">))</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assistant</span><span class="o">.</span><span class="n">announce</span><span class="p">(</span><span class="s2">&quot;Weather Update&quot;</span><span class="p">,</span> <span class="s2">&quot;It&#39;s sunny with a high of 72 degrees&quot;</span><span class="p">))</span>
-</pre></div>
-</div>
-<p class="rubric" id="parser-api-examples">Parser API Examples</p>
-<p>The Parser API extracts structured data from SSMD instead of generating SSML. This is
-useful for building custom TTS pipelines.</p>
-<p class="rubric" id="basic-segment-extraction">Basic Segment Extraction</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_segments</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello *world*! This is ...500ms great.&quot;</span>
-<span class="n">segments</span> <span class="o">=</span> <span class="n">parse_segments</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Text: </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">emphasis</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;  - Has emphasis&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">brk</span> <span class="ow">in</span> <span class="n">seg</span><span class="o">.</span><span class="n">breaks_after</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  - Break: </span><span class="si">{</span><span class="n">brk</span><span class="o">.</span><span class="n">time</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="multi-voice-dialogue-processing">Multi-Voice Dialogue Processing</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
-
-<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">&lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2">Welcome to the show!</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice=&quot;michael&quot;&gt;</span>
-<span class="s2">Thanks Sarah! Great to be here.</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2">Let&#39;s get started!</span>
-<span class="s2">&lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">script</span><span class="p">):</span>
-    <span class="n">voice_name</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice_name</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="n">compact_script</span> <span class="o">=</span> <span class="s1">&#39;&lt;div voice=&quot;sarah&quot;&gt;Welcome.&lt;/div&gt;&#39;</span>
-<span class="k">assert</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">compact_script</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="s2">&quot;sarah&quot;</span>
-</pre></div>
-</div>
-<p>Compact voice blocks are also supported and have the same parsing and reference
-behavior.</p>
-<p class="rubric" id="custom-tts-pipeline">Custom TTS Pipeline</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
-
-<span class="k">class</span><span class="w"> </span><span class="nc">CustomTTS</span><span class="p">:</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">process_script</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">script</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Process SSMD script with custom handling.&quot;&quot;&quot;</span>
-        <span class="n">sentences</span> <span class="o">=</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-
-        <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">sentences</span><span class="p">:</span>
-            <span class="c1"># Configure voice</span>
-            <span class="n">voice</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
-
-            <span class="c1"># Build text with transformations</span>
-            <span class="n">full_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-            <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
-                <span class="c1"># Handle say-as</span>
-                <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="o">.</span><span class="n">interpret_as</span> <span class="o">==</span> <span class="s2">&quot;telephone&quot;</span><span class="p">:</span>
-                        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_phone</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                    <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="o">.</span><span class="n">interpret_as</span> <span class="o">==</span> <span class="s2">&quot;date&quot;</span><span class="p">:</span>
-                        <span class="n">text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">format_date</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">)</span>
-                    <span class="k">else</span><span class="p">:</span>
-                        <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>
-                <span class="c1"># Handle substitution</span>
-                <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span><span class="p">:</span>
-                    <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span>
-                <span class="c1"># Handle phoneme</span>
-                <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">phoneme</span><span class="p">:</span>
-                    <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>  <span class="c1"># Use phoneme data</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>
-
-                <span class="n">full_text</span> <span class="o">+=</span> <span class="n">text</span>
-
-            <span class="c1"># Speak with custom TTS</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">full_text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">)</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">format_phone</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">number</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom phone number formatting.&quot;&quot;&quot;</span>
-        <span class="c1"># Remove non-digits and format</span>
-        <span class="n">digits</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">number</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">isdigit</span><span class="p">())</span>
-        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">digits</span><span class="p">[:</span><span class="mi">3</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">digits</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">digits</span><span class="p">[</span><span class="mi">6</span><span class="p">:]</span><span class="si">}</span><span class="s2">&quot;</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">format_date</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date_str</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Custom date formatting.&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">date_str</span>  <span class="c1"># Add custom date parsing</span>
-
-    <span class="k">def</span><span class="w"> </span><span class="nf">speak</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;default&quot;</span><span class="p">):</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Mock TTS speak method.&quot;&quot;&quot;</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
- <span class="c1"># Usage</span>
- <span class="n">tts</span> <span class="o">=</span> <span class="n">CustomTTS</span><span class="p">()</span>
- <span class="n">tts</span><span class="o">.</span><span class="n">process_script</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"> &lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2"> Call [+1-555-0123]{as=&quot;telephone&quot;} today!</span>
-<span class="s2"> &lt;/div&gt;</span>
-<span class="s2"> &quot;&quot;&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p class="rubric" id="text-transformation-example">Text Transformation Example</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_segments</span>
-
- <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"> Call [+1-555-0123]{as=&quot;telephone&quot;} for info.</span>
-<span class="s2"> [H2O]{sub=&quot;water&quot;} is important.</span>
-<span class="s2"> Say [tomato]{ipa=&quot;təˈmeɪtoʊ&quot;} correctly.</span>
-<span class="s2"> &quot;&quot;&quot;</span>
-
-<span class="n">segments</span> <span class="o">=</span> <span class="n">parse_segments</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-<span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">segments</span><span class="p">:</span>
-    <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Say-as: </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">!r}</span><span class="s2"> as </span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="o">.</span><span class="n">interpret_as</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Substitute: &#39;</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&#39; → &#39;</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">substitution</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
-    <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">phoneme</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phoneme: &#39;</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="si">}</span><span class="s2">&#39; → /</span><span class="si">{</span><span class="n">seg</span><span class="o">.</span><span class="n">phoneme</span><span class="o">.</span><span class="n">ph</span><span class="si">}</span><span class="s2">/&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For a complete parser demonstration, see <code class="docutils literal notranslate"><span class="pre">examples/parser_demo.py</span></code>.</p>
-<p class="rubric" id="see-also">See Also</p>
+<p>For runnable structural, story-rendering, capability, and provider-extension examples,
+see:</p>
 <ul class="simple">
-<li><p>Check the <code class="docutils literal notranslate"><span class="pre">examples/</span></code> directory in the repository for more runnable examples:</p>
-<ul>
-<li><p><code class="docutils literal notranslate"><span class="pre">examples/parser_demo.py</span></code> - Complete parser API demonstration</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">examples/story_reader_demo.py</span></code> - Interactive story reader</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">examples/tts_with_capabilities.py</span></code> - TTS engine capability filtering</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">examples/tts_container_demo.py</span></code> - Container-based TTS demo</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code> - Google Cloud TTS speaking styles</p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/12be70253bb8be340e49b54b788cfe4e/parser_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/parser_demo.py</span></code></span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/23f6800a6a90eff51b3cb75b9d3d186c/tts_rich_parser_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/tts_rich_parser_demo.py</span></code></span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/0da4d75547b685d9ced36c60c34df09d/story_reader_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/story_reader_demo.py</span></code></span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/a1cafd420315762a535f7f8049a7e735/tts_container_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/tts_container_demo.py</span></code></span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/81393d2540b216b1ba2b247f7700e529/tts_with_capabilities.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/tts_with_capabilities.py</span></code></span></a></p></li>
+<li><p><a class="reference download internal" download="" href="../_downloads/2a412bf65d4e410c938d9f238318da25/google_tts_styles.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/google_tts_styles.py</span></code></span></a></p></li>
 </ul>
-</li>
-<li><p>Visit <a class="reference internal" href="../api/"><span class="doc">API Reference</span></a> for complete API documentation</p></li>
-<li><p>See <a class="reference internal" href="../parser/"><span class="doc">Parser API</span></a> for the Parser API guide</p></li>
-<li><p>See <a class="reference internal" href="../capabilities/"><span class="doc">TTS Engine Capabilities</span></a> for TTS engine integration details</p></li>
-</ul>
+<p>Google style annotations require explicitly registered trusted extension handlers; they
+are provider-specific, not part of the portable all-features example.</p>
+</section>
+<section id="legacy-0-8-sentence-parser-compatibility">
+<h2>Legacy 0.8 sentence-parser compatibility</h2>
+<p>The following snippet intentionally demonstrates an unversioned legacy 0.8 input and the
+sentence-oriented compatibility API. It is not a strict 0.9 authoring example. New
+documents should use fenced directives and <code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> instead.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
+
+<span class="n">legacy_script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">&lt;div voice=&quot;host&quot;&gt;</span>
+<span class="s2">Welcome to the show.</span>
+<span class="s2">&lt;/div&gt;</span>
+
+<span class="s2">&lt;div voice=&quot;guest&quot;&gt;</span>
+<span class="s2">Thanks for having me.</span>
+<span class="s2">&lt;/div&gt;</span>
+<span class="s2">&quot;&quot;&quot;</span>
+
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">legacy_script</span><span class="p">):</span>
+    <span class="n">voice</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="w"> </span><span class="k">for</span><span class="w"> </span><span class="n">segment</span><span class="w"> </span><span class="ow">in</span><span class="w"> </span><span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
 </div>
-</section>
-</section>
+<p>For conversion of existing files, use the semantic migration command and review any
+manual actions before replacing the source:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>migrate<span class="w"> </span>legacy.ssmd<span class="w"> </span>--to<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span>-o<span class="w"> </span>story-09.ssmd.md
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../syntax/"><span class="std std-doc">syntax reference</span></a>, <a class="reference internal" href="../parser/"><span class="std std-doc">parser API</span></a>, and <a class="reference internal" href="../spans/"><span class="std std-doc">span API</span></a>
+for more detail.</p>
 </section>
 </section>
 </div>

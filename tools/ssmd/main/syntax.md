@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -550,6 +550,7 @@ exactly <code class="docutils literal notranslate"><span class="pre">---</span><
 hyphens are ordinary content. Front matter is metadata, not spoken text, and the YAML
 root must be a mapping.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">ssmd_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span>
 <span class="nt">voice_bindings</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">kokoro</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">moderator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">af_sarah</span>
@@ -564,6 +565,7 @@ root must be a mapping.</p>
 and is preserved by formatting and authoring commands, but it is never spoken or
 included in plain-text or SSML speech output.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">ssmd_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span>
 <span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Review podcast</span>
 <span class="nn">---</span>
 <span class="l l-Scalar l-Scalar-Plain">Hello world.</span>
@@ -578,22 +580,43 @@ and is not part of the portable document.</p>
 take precedence; defaults do not insert visible pause markers into SSMD source. PyYAML
 serialization is deterministic but does not preserve YAML comments.</p>
 </section>
+<section id="document-versions-and-dialects">
+<h2>Document versions and dialects</h2>
+<p>An optional <code class="docutils literal notranslate"><span class="pre">ssmd_version</span></code> front-matter field selects the document dialect. Unversioned
+documents retain the legacy compatibility behavior; <code class="docutils literal notranslate"><span class="pre">&quot;0.8&quot;</span></code> identifies the legacy
+dialect, and <code class="docutils literal notranslate"><span class="pre">&quot;0.9&quot;</span></code> selects the strict SSMD 0.9 grammar and canonical structure.
+Version values are preserved by formatting and migration writes <code class="docutils literal notranslate"><span class="pre">&quot;0.9&quot;</span></code> only after
+checking semantic equivalence.</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">ssmd_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span>
+<span class="nn">---</span>
+<span class="l l-Scalar l-Scalar-Plain">Hello [world]{lang=&quot;en&quot;}.</span>
+</pre></div>
+</div>
+<p>The CLI accepts <code class="docutils literal notranslate"><span class="pre">--dialect</span> <span class="pre">auto|0.8|0.9</span></code> on lint and SSMD-to-SSML conversion commands.
+<code class="docutils literal notranslate"><span class="pre">auto</span></code> uses the declared version and preserves the unversioned compatibility default.
+Rendering targets are selected separately: <code class="docutils literal notranslate"><span class="pre">generic</span></code> for portable SSML, <code class="docutils literal notranslate"><span class="pre">ssml-1.1</span></code> for
+standard SSML 1.1, or <code class="docutils literal notranslate"><span class="pre">provider</span></code> for capability-specific adaptation.
+<code class="docutils literal notranslate"><span class="pre">--loss-policy</span> <span class="pre">error|warn|drop</span></code> makes losses explicit: reject them, report them, or
+allow them with informational diagnostics.</p>
+</section>
 <section id="semantic-language-vs-pronunciation-language">
 <h2>Semantic language vs pronunciation language</h2>
 <p>Language annotations are semantic by default:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Bonjour]{lang=&quot;fr&quot;}
 </pre></div>
 </div>
 <p>Use <code class="docutils literal notranslate"><span class="pre">scope=&quot;pronunciation&quot;</span></code> when the language should affect only pronunciation/G2P:</p>
-<div class="highlight-ssmd notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[File]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}
 [Manpower]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}diskussion
 ge[cancel]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}t
 [download]{lang=&quot;en&quot; scope=&quot;pronunciation&quot;}en
 </pre></div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">lang</span></code> and <code class="docutils literal notranslate"><span class="pre">language</span></code> input aliases are accepted; serialization uses canonical
-<code class="docutils literal notranslate"><span class="pre">lang</span></code>. Omitted scope means <code class="docutils literal notranslate"><span class="pre">semantic</span></code>, and valid scopes are only <code class="docutils literal notranslate"><span class="pre">semantic</span></code> and
-<code class="docutils literal notranslate"><span class="pre">pronunciation</span></code>. SSMD does not canonicalize BCP-47 values or perform language inference.</p>
+<p>The canonical 0.9 spelling is <code class="docutils literal notranslate"><span class="pre">lang</span></code>; legacy <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">voice-lang</span></code> aliases are
+compatibility-only and should be converted with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span></code>. Omitted scope means
+<code class="docutils literal notranslate"><span class="pre">semantic</span></code>, and the valid scopes are <code class="docutils literal notranslate"><span class="pre">semantic</span></code> and <code class="docutils literal notranslate"><span class="pre">pronunciation</span></code>. SSMD validates
+BCP-47 tags but does not infer a document language.</p>
 <section id="portable-language-detection-hint">
 <h3>Portable language-detection hint</h3>
 <p>A document may carry a consumer-facing routing hint in front matter:</p>
@@ -611,8 +634,8 @@ detection itself. It is not a local authoring-config default.</p>
 </section>
 <section id="text-and-emphasis">
 <h2>Text and Emphasis</h2>
-<p>SSMD supports all four SSML emphasis levels for fine-grained control over speech
-emphasis.</p>
+<p>SSMD 0.9 supports moderate, strong, and reduced emphasis using canonical Markdown-like
+syntax.</p>
 <section id="moderate-emphasis">
 <h3>Moderate Emphasis</h3>
 <p>Use single asterisks for moderate (default) emphasis:</p>
@@ -631,26 +654,19 @@ emphasis.</p>
 </section>
 <section id="reduced-emphasis">
 <h3>Reduced Emphasis</h3>
-<p>Use single underscores for reduced (subtle) emphasis:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;This is _less important_&quot;</span><span class="p">)</span>
+<p>Use double tildes for reduced (subtle) emphasis:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;This is ~~less important~~&quot;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;This is &lt;emphasis level=&quot;reduced&quot;&gt;less important&lt;/emphasis&gt;&lt;/speak&gt;</span>
 </pre></div>
 </div>
+<p>Plain, unannotated text is already spoken without added emphasis; no explicit
+<code class="docutils literal notranslate"><span class="pre">emphasis=&quot;none&quot;</span></code> annotation is needed in canonical 0.9.</p>
 </section>
-<section id="no-emphasis">
-<h3>No Emphasis</h3>
-<p>Use explicit annotation syntax for no emphasis (rarely used):</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[monotone reading]{emphasis=&quot;none&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;&lt;emphasis level=&quot;none&quot;&gt;monotone reading&lt;/emphasis&gt;&lt;/speak&gt;</span>
-</pre></div>
-</div>
-<div class="admonition note">
-<p class="admonition-title">Note</p>
-<p>The “none” emphasis level is rarely needed in practice. It explicitly
-instructs the TTS engine to speak without any emphasis, which can be useful for robotic
-or monotone speech effects. :::</p>
-<p class="rubric" id="breaks-and-pauses">Breaks and Pauses</p>
-<p class="rubric" id="time-based-breaks">Time-Based Breaks</p>
+</section>
+<section id="breaks-and-pauses">
+<h2>Breaks and Pauses</h2>
+<section id="time-based-breaks">
+<h3>Time-Based Breaks</h3>
 <p>Specify duration in milliseconds or seconds using <code class="docutils literal notranslate"><span class="pre">...</span></code> followed by a time value:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s2">&quot;Wait ...500ms please&quot;</span><span class="p">)</span>
 <span class="c1"># → &lt;speak&gt;Wait &lt;break time=&quot;500ms&quot;/&gt; please&lt;/speak&gt;</span>
@@ -743,110 +759,32 @@ will be preserved as literal ellipsis in your text. :::</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">ru</span></code> → ru-RU</p></li>
 </ul>
 <p class="rubric" id="voice-selection">Voice Selection</p>
-<p>SSMD supports two ways to specify voices: <strong>inline annotations</strong> for short phrases and
-<strong>block directives</strong> for longer passages (ideal for dialogue and scripts).</p>
-<p>A voice block may be compact when its content fits on the same line:
-<code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;host&quot;&gt;Hello.&lt;/div&gt;</span></code>. Compact and multiline blocks are equivalent for
-parsing, reference discovery, materialization, and round-trip validation. Voice
-references may be logical roles resolved through <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> or concrete provider
-IDs.</p>
-<p class="rubric" id="inline-voice-annotations">Inline Voice Annotations</p>
-<p>Perfect for short voice changes within a sentence:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simple voice name</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Hello]{voice=&quot;Joanna&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;&lt;voice name=&quot;Joanna&quot;&gt;Hello&lt;/voice&gt;&lt;/speak&gt;</span>
+<p>Use inline annotations for short selections and fenced directives for sustained
+dialogue. <code class="docutils literal notranslate"><span class="pre">voice</span></code> names a logical or concrete voice; feature selectors use <code class="docutils literal notranslate"><span class="pre">voice-name</span></code>,
+<code class="docutils literal notranslate"><span class="pre">voice-languages</span></code>, <code class="docutils literal notranslate"><span class="pre">gender</span></code>, <code class="docutils literal notranslate"><span class="pre">age</span></code>, and <code class="docutils literal notranslate"><span class="pre">variant</span></code>.</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[Hello]{voice=&quot;host&quot;}
+[Bonjour]{voice-languages=&quot;fr-FR&quot; gender=&quot;female&quot;}
+[Hello]{voice-name=&quot;en-US-Wavenet-A&quot; voice-languages=&quot;en-US&quot;}
 
-<span class="c1"># Cloud TTS voice (e.g., Google Wavenet, AWS Polly)</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Hello]{voice=&quot;en-US-Wavenet-A&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;&lt;voice name=&quot;en-US-Wavenet-A&quot;&gt;Hello&lt;/voice&gt;&lt;/speak&gt;</span>
-
-<span class="c1"># Language and gender attributes</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Bonjour]{voice-lang=&quot;fr-FR&quot; gender=&quot;female&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;&lt;voice language=&quot;fr-FR&quot; gender=&quot;female&quot;&gt;Bonjour&lt;/voice&gt;&lt;/speak&gt;</span>
-
-<span class="c1"># All attributes (language, gender, variant)</span>
-<span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[Text]{voice-lang=&quot;en-GB&quot; gender=&quot;male&quot; variant=&quot;1&quot;}&#39;</span><span class="p">)</span>
-<span class="c1"># → &lt;speak&gt;&lt;voice language=&quot;en-GB&quot; gender=&quot;male&quot; variant=&quot;1&quot;&gt;Text&lt;/voice&gt;&lt;/speak&gt;</span>
+:::{voice=&quot;host&quot;}
+Welcome to Tech Talk. This entire block uses the host voice.
+:::
+:::{voice=&quot;guest&quot;}
+Thanks for having me.
+:::
 </pre></div>
 </div>
-<p>Voice attributes:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">voice=&quot;NAME&quot;</span></code> - Voice name (e.g., Joanna, en-US-Wavenet-A)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">voice-lang=&quot;LANG&quot;</span></code> - Language code (e.g., en-GB)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">gender=&quot;GENDER&quot;</span></code> - male, female, or neutral</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">variant=&quot;NUMBER&quot;</span></code> - Variant number for tiebreaking</p></li>
-</ul>
-<p class="rubric" id="voice-directives-block-syntax">Voice Directives (Block Syntax)</p>
-<p>Perfect for dialogue, podcasts, and scripts with multiple speakers:</p>
-<blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">&lt;div voice=&quot;af_sarah&quot;&gt;</span>
-<span class="s2">Welcome to Tech Talk! I&#39;m Sarah, and today we&#39;re diving into the</span>
-<span class="s2">fascinating world of text-to-speech technology.</span>
-<span class="s2">...s</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice=&quot;am_michael&quot;&gt;</span>
-<span class="s2">And I&#39;m Michael! We&#39;ve got an amazing episode lined up. The advances</span>
-<span class="s2">in neural TTS have been incredible lately.</span>
-<span class="s2">...s</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice=&quot;af_sarah&quot;&gt;</span>
-<span class="s2">So what are we covering today?</span>
-<span class="s2">&lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-<span class="c1"># Each voice directive creates a separate voice block in SSML</span>
-</pre></div>
-</div>
-</div></blockquote>
-<p>Voice directives support all voice attributes:</p>
-<blockquote>
-<div><div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Language and gender</span>
-<span class="n">multilingual</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">&lt;div voice-lang=&quot;fr-FR&quot; gender=&quot;female&quot;&gt;</span>
-<span class="s2">Bonjour! Comment allez-vous aujourd&#39;hui?</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice-lang=&quot;en-GB&quot; gender=&quot;male&quot;&gt;</span>
-<span class="s2">Hello there! Lovely weather we&#39;re having.</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice-lang=&quot;es-ES&quot; gender=&quot;female&quot; variant=&quot;1&quot;&gt;</span>
-<span class="s2">¡Hola! ¿Cómo estás?</span>
-<span class="s2">&lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-</pre></div>
-</div>
-<p>Voice directive features:</p>
-<ul class="simple">
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">&lt;div</span> <span class="pre">voice=&quot;name&quot;&gt;</span></code> block syntax</p></li>
-<li><p>Supports all attributes: language, gender, variant</p></li>
-<li><p>Applies to all text until the next directive or paragraph break</p></li>
-<li><p>Automatically detected on SSML→SSMD conversion for long voice blocks</p></li>
-<li><p>Much more readable than inline annotations for dialogue</p></li>
-</ul>
-</div></blockquote>
-<blockquote>
-<div><p>Generated front-matter bindings are defaults. An empty <code class="docutils literal notranslate"><span class="pre">voice_bindings:</span> <span class="pre">{}</span></code> mapping
-may be populated, missing provider or role entries may be added recursively, and
-explicit nested bindings always take precedence.</p>
-<p>Mixing inline and directive syntax:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Block directive for main speaker, inline for interruptions</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">&lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2">Hello everyone, [but wait!]{voice=&quot;michael&quot;} Michael interrupts...</span>
-<span class="s2">&lt;/div&gt;</span>
-
-<span class="s2">&lt;div voice=&quot;michael&quot;&gt;</span>
-<span class="s2">Sorry, I had to jump in there!</span>
-<span class="s2">&lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-</pre></div>
-</div>
-</div></blockquote>
+<p>Logical references may be resolved through the portable <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> front-matter
+key or local trusted configuration. Voice selectors are independent of provider
+inventory data. Supported feature selectors are preserved when rendering or reported as
+losses if the selected target cannot represent them.</p>
+<p>Adjacent sibling fenced directives with no blank line between remain in the same
+semantic paragraph: their clean text receives ordinary inline separation and no
+paragraph event. A blank line between the directives creates a paragraph boundary.
+Canonical formatting preserves this difference; a voice change alone does not add a
+paragraph pause.</p>
+<p>Raw <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> voice blocks and <code class="docutils literal notranslate"><span class="pre">voice-lang</span></code> are compatibility-only 0.8 syntax. New 0.9
+documents use canonical <code class="docutils literal notranslate"><span class="pre">:::</span></code> directives and <code class="docutils literal notranslate"><span class="pre">voice-languages</span></code>.</p>
 <p class="rubric" id="phonetic-pronunciation">Phonetic Pronunciation</p>
 <p class="rubric" id="ipa-international-phonetic-alphabet">IPA (International Phonetic Alphabet)</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[tomato]{ph=&quot;təˈmeɪtoʊ&quot;}&#39;</span><span class="p">)</span>
@@ -939,22 +877,12 @@ values generally provide more detailed pronunciation.</p>
 <li><p>Rate: 1=x-slow, 2=slow, 3=medium, 4=fast, 5=x-fast</p></li>
 <li><p>Pitch: 1=x-low, 2=low, 3=medium, 4=high, 5=x-high</p></li>
 </ul>
-<p class="rubric" id="compact-vrp-syntax">Compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code> syntax</p>
-<p>Pack volume, rate, and pitch into exactly three digits in V/R/P order:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[text]{vrp=&quot;555&quot;}&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The valid shape is <code class="docutils literal notranslate"><span class="pre">[0-5][1-5][1-5]</span></code>: volume accepts <code class="docutils literal notranslate"><span class="pre">0-5</span></code>, and rate/pitch accept <code class="docutils literal notranslate"><span class="pre">1-5</span></code>.
-Surrounding whitespace is allowed; embedded separators are not. Explicit long names
-override short aliases, which override the corresponding packed component. The same
-compact syntax is supported on <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> directives.</p>
-<p class="rubric" id="symbolic-shorthand">Symbolic shorthand</p>
-<p>The required aliases are <code class="docutils literal notranslate"><span class="pre">++text++</span></code> (x-loud volume), <code class="docutils literal notranslate"><span class="pre">&gt;&gt;text&gt;&gt;</span></code> (x-fast rate), and
-<code class="docutils literal notranslate"><span class="pre">^^text^^</span></code> (x-high pitch). The non-conflicting compatible forms are also supported:
-<code class="docutils literal notranslate"><span class="pre">~text~</span></code>, <code class="docutils literal notranslate"><span class="pre">--text--</span></code>, <code class="docutils literal notranslate"><span class="pre">-text-</span></code>, <code class="docutils literal notranslate"><span class="pre">+text+</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;&lt;text&lt;&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;text&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;text&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">__text__</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">^text^</span></code>. The existing <code class="docutils literal notranslate"><span class="pre">_text_</span></code> syntax remains reduced emphasis, not low pitch, for
-compatibility. All aliases normalize to canonical explicit prosody attributes when
-semantically formatted.</p>
+<p class="rubric" id="compatibility-only-prosody-aliases">Compatibility-only prosody aliases</p>
+<p>The following forms are accepted only in legacy/unversioned compatibility mode and are
+not canonical SSMD 0.9 syntax: compact <code class="docutils literal notranslate"><span class="pre">vrp</span></code>, short <code class="docutils literal notranslate"><span class="pre">v</span></code>/<code class="docutils literal notranslate"><span class="pre">r</span></code>/<code class="docutils literal notranslate"><span class="pre">p</span></code> keys, punctuation
+prosody, and symbolic delimiters such as <code class="docutils literal notranslate"><span class="pre">++text++</span></code>. Strict 0.9 parsing diagnoses these
+forms. Use explicit <code class="docutils literal notranslate"><span class="pre">volume</span></code>, <code class="docutils literal notranslate"><span class="pre">rate</span></code>, and <code class="docutils literal notranslate"><span class="pre">pitch</span></code> attributes in new documents. Run
+<code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code> for a semantics-checked conversion of legacy input.</p>
 <p class="rubric" id="relative-values">Relative Values</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Decibels for volume</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[louder]{volume=&quot;+6dB&quot;}&#39;</span><span class="p">)</span>
@@ -1167,10 +1095,52 @@ tags</p></li>
 <span class="c1"># → &lt;speak&gt;* list item&lt;/speak&gt;</span>
 </pre></div>
 </div>
+<p class="rubric" id="voice-defaults-and-natural-prosody">Voice Defaults and Natural Prosody</p>
+<p>Use front matter to keep identity-defining prosody with a logical voice:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nn">---</span>
+<span class="nt">ssmd_version</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0.9&quot;</span>
+<span class="nt">voice_defaults</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">guest</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">high</span>
+<span class="w">    </span><span class="nt">rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">normal</span>
+<span class="nt">prosody_transitions</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enabled</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">same_voice_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">450ms</span>
+<span class="w">  </span><span class="nt">pitch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300ms</span>
+<span class="nn">---</span>
+</pre></div>
+</div>
+<p>A block or inline voice reference inherits these values without changing the formatted
+source:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>:::{voice=&quot;guest&quot;}
+Hello.
+</pre></div>
 </div>
 </div>
 </div>
 </div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+A local attribute overrides only that field. For example, `rate=&quot;slow&quot;` keeps the guest
+pitch default. Inline annotations and voice blocks use the same logical voice lookup.
+Provider bindings do not change the key used by `voice_defaults`.
+
+The natural rate values are `very-slow`, `slow`, `moderate`, `normal`, `brisk`, `fast`,
+and `very-fast`, mapped respectively to `65%`, `80%`, `90%`, `100%`, `110%`, `125%`, and
+`150%`. Natural pitch values are `very-low`, `low`, `moderate-low`, `normal`,
+`moderate-high`, `high`, and `very-high`, mapped to `-20%`, `-12%`, `-6%`, `+0%`, `+6%`,
+`+12%`, and `+20%`. Explicit percentages are supported; compact `vrp` is
+compatibility-only.
+
+Formatting preserves declared attributes and does not materialize inherited defaults.
+Use inspection to view both forms:
+
+```bash
+ssmd --json inspect episode.ssmd.md --sentences
+</pre></div>
+</div>
+<p>The JSON sentence view includes <code class="docutils literal notranslate"><span class="pre">declared_prosody</span></code>, <code class="docutils literal notranslate"><span class="pre">effective_prosody</span></code>, and per-field
+<code class="docutils literal notranslate"><span class="pre">sources</span></code>.</p>
 </section>
 </section>
 </section>

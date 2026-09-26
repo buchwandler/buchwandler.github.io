@@ -5,8 +5,8 @@ permalink: /tools/kokorog2p/quickstart/
 nav_tool: kokorog2p
 docs_project: "kokorog2p"
 docs_variant: "release"
-docs_ref: "v0.9.9"
-docs_commit: "42cd6e70b06945fefa78374e3c3712521c07ed8a"
+docs_ref: "v0.9.15"
+docs_commit: "69a0620b62f083be4b7533827c5e9c6458886c7a"
 search_enabled: true
 ---
 

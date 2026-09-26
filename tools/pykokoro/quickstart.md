@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Quick Start Guide"
+title: "pykokoro Quick start"
 permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.9.6"
-docs_commit: "bf9a13c9b28987205f509dda0bede6f9f88a9b75"
+docs_ref: "v0.10.0"
+docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
 search_enabled: true
 ---
 
@@ -540,302 +540,107 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="quick-start-guide">
-<h1>Quick Start Guide</h1>
-<p>This guide will get you up and running with PyKokoro in just a few minutes.</p>
-<section id="first-steps">
-<h2>First Steps</h2>
-<ol class="arabic">
-<li><p><strong>Install PyKokoro</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
+<section id="quick-start">
+<h1>Quick start</h1>
+<p>PyKokoro needs Python 3.10 or newer. Install the package with one supported ONNX Runtime
+provider, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
 </pre></div>
 </div>
-</li>
-<li><p><strong>Verify Installation</strong></p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-</pre></div>
-</div>
-</li>
-</ol>
-</section>
-<section id="basic-usage">
-<h2>Basic Usage</h2>
-<section id="generate-your-first-audio">
-<h3>Generate Your First Audio</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
+<section id="synthesize-one-string">
+<h2>Synthesize one string</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroSynthesizer</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>  <span class="c1"># American Female voice</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello! Welcome to PyKokoro text-to-speech.&quot;</span><span class="p">)</span>
-
-<span class="c1"># Save to a WAV file</span>
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;hello.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="first-run-model-downloads">
-<h3>First-run model downloads</h3>
-<p>Model and voice assets are downloaded lazily on the first synthesis that needs them. To
-make a cold-cache run visible, install the dependency-free console reporter:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConsoleAssetProgress</span><span class="p">,</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="n">rendered</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_text</span><span class="p">(</span>
+        <span class="s2">&quot;Hello, world.&quot;</span><span class="p">,</span>
+        <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
         <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-        <span class="n">asset_progress</span><span class="o">=</span><span class="n">ConsoleAssetProgress</span><span class="p">(),</span>
     <span class="p">)</span>
-<span class="p">)</span>
+
+<span class="n">rendered</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="s2">&quot;hello.wav&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">rendered</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">,</span> <span class="n">rendered</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The reporter shows each asset, its expected size, transfer progress when running in a
-terminal, and verification before the asset is ready. Warm-cache runs stay quiet.
-Library applications can provide their own callback to receive structured
-<code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values.</p>
-<p>That’s it! You’ve generated your first audio file.</p>
+<p>The default renderer loads model assets lazily. A cached model is reused by the renderer
+for requests with the same model configuration. <code class="docutils literal notranslate"><span class="pre">RenderedSegment.save_wav()</span></code> writes mono
+float32 WAV audio through <code class="docutils literal notranslate"><span class="pre">soundfile</span></code>.</p>
 </section>
-<section id="german-speech">
-<h3>German speech</h3>
-<p>German selects the Martin v1.2 GitHub model automatically when model and voice fields
-are omitted:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.125</span><span class="p">))</span>
-<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">pipe</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Zum 14.05.2026 um 18:20 Uhr ist das Abendessen geplant.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>The profile is fp32-only and uses the <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice. For explicit reproducibility, set
-<code class="docutils literal notranslate"><span class="pre">model_source=&quot;github&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">model_variant=&quot;v1.2-de-martin&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">model_quality=&quot;fp32&quot;</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">voice=&quot;martin&quot;</span></code>. Downloads are SHA-256 verified and cached locally. The profile’s
-suggested speed (<code class="docutils literal notranslate"><span class="pre">1.125</span></code>) is advisory and is not applied unless set in
-<code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code>. A standalone <code class="docutils literal notranslate"><span class="pre">voice=&quot;martin&quot;</span></code> also infers German; custom voice
-archives can provide additional names when <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> is supplied.</p>
+<section id="render-longer-text">
+<h2>Render longer text</h2>
+<p>The default <code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;none&quot;</span></code> mode raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> when a
+request exceeds the model capacity. Set <code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;sentence&quot;</span></code> to enable lazy,
+model-safe PhraseSplit chunking for oversized text. The chunks produce one
+<code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code>; spaCy is not required by default. See
+<a class="reference internal" href="../basic_usage/#render-longer-text"><span class="std std-ref">long-text configuration</span></a>.</p>
 </section>
-<section id="choosing-a-voice">
-<h3>Choosing a Voice</h3>
-<p>PyKokoro comes with 54 voices (v1.0) or 103 voices (v1.1-zh). Here are some popular
-ones:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="c1"># American English</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="n">audio1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;American female voice&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_adam&quot;</span><span class="p">))</span>
-<span class="n">audio2</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;American male voice&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-
-<span class="c1"># British English</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;bf_emma&quot;</span><span class="p">))</span>
-<span class="n">audio3</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;British female voice&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;bm_george&quot;</span><span class="p">))</span>
-<span class="n">audio4</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;British male voice&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-
-<span class="c1"># Other languages</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_nicole&quot;</span><span class="p">,</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;es&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-<span class="n">audio5</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hola, mundo&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;fr&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-<span class="n">audio6</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Bonjour le monde&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-</pre></div>
-</div>
-<p>To see all available voices, check the README or use the voice listing examples in
-<code class="docutils literal notranslate"><span class="pre">examples/voices.py</span></code>.</p>
-</section>
-<section id="adjusting-speech-speed">
-<h3>Adjusting Speech Speed</h3>
-<p>Control how fast or slow the speech is:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="c1"># Normal speed (default)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)))</span>
-<span class="n">audio1</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Normal speed&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-
-<span class="c1"># Slower (0.5x)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)))</span>
-<span class="n">audio2</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Slower speech&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-
-<span class="c1"># Faster (1.5x)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="mf">1.5</span><span class="p">)))</span>
-<span class="n">audio3</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Faster speech&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">audio</span>
-</pre></div>
-</div>
-</section>
-<section id="adding-pauses">
-<h3>Adding Pauses</h3>
-<p>Add natural pauses in your speech using SSMD break syntax:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Welcome to the tutorial ...c</span>
-<span class="s2">This is a short pause ...s</span>
-<span class="s2">And this is a longer pause ...p</span>
-<span class="s2">These pauses make speech sound more natural.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;with_pauses.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>Pause syntax (SSMD breaks): * <code class="docutils literal notranslate"><span class="pre">...c</span></code> - Short/comma pause (0.3 seconds, default) *
-<code class="docutils literal notranslate"><span class="pre">...s</span></code> - Medium/sentence pause (0.6 seconds, default) * <code class="docutils literal notranslate"><span class="pre">...p</span></code> - Long/paragraph pause
-(1.0 seconds, default) * <code class="docutils literal notranslate"><span class="pre">...500ms</span></code> - Custom duration pause (e.g., 500 milliseconds)</p>
-</section>
-<section id="reusing-the-pipeline">
-<h3>Reusing the Pipeline</h3>
-<p>Reuse a pipeline instance for multiple runs:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="s2">&quot;How are you?&quot;</span><span class="p">,</span> <span class="s2">&quot;Goodbye!&quot;</span><span class="p">]:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">sentence</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="choosing-spacy-model-size-auto">
-<h3>Choosing spaCy Model Size (Auto)</h3>
-<p>If you use spaCy-based tokenization/splitting, unset settings select the highest
-installed compatible model per language. You can request an exact tier:</p>
+<section id="submit-a-prepared-request">
+<h2>Submit a prepared request</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> when the caller already has an ID, resolved voice, or
+pronunciation context. Offsets are half-open Python character ranges into the exact
+request text:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GenerationConfig</span><span class="p">,</span>
-    <span class="n">KokoroPipeline</span><span class="p">,</span>
-    <span class="n">PipelineConfig</span><span class="p">,</span>
-    <span class="n">with_spacy_model</span><span class="p">,</span>
+    <span class="n">KokoroSynthesizer</span><span class="p">,</span>
+    <span class="n">LinguisticToken</span><span class="p">,</span>
+    <span class="n">PronunciationOverride</span><span class="p">,</span>
+    <span class="n">SynthesisConfig</span><span class="p">,</span>
+    <span class="n">SynthesisSegment</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="n">base</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
+<span class="n">request</span> <span class="o">=</span> <span class="n">SynthesisSegment</span><span class="p">(</span>
+    <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;line-001&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello Welt.&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;fr-fr&quot;</span><span class="p">),</span>
+    <span class="n">pronunciation_overrides</span><span class="o">=</span><span class="p">(</span><span class="n">PronunciationOverride</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),),</span>
+    <span class="n">annotations</span><span class="o">=</span><span class="p">(</span><span class="n">LinguisticToken</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;INTJ&quot;</span><span class="p">),),</span>
 <span class="p">)</span>
-<span class="n">cfg</span> <span class="o">=</span> <span class="n">with_spacy_model</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="s2">&quot;lg&quot;</span><span class="p">)(</span><span class="n">base</span><span class="p">)</span>
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">cfg</span><span class="p">)</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Bonjour&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>No spaCy model is downloaded automatically. The concrete sentence and G2P selections are
-available in <code class="docutils literal notranslate"><span class="pre">result.document_metadata[&quot;spacy_models&quot;]</span></code>. Larger <code class="docutils literal notranslate"><span class="pre">lg</span></code>/<code class="docutils literal notranslate"><span class="pre">trf</span></code> models can
-improve linguistic quality at higher memory and startup cost.</p>
-</section>
-<section id="processing-long-text">
-<h3>Processing Long Text</h3>
-<p>For long text, PyKokoro automatically handles splitting at natural boundaries:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">long_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">This is a long passage of text. It has multiple sentences.</span>
-<span class="s2">The text will be processed intelligently.</span>
-
-<span class="s2">This is a new paragraph. It will be processed efficiently.</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">))</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">long_text</span><span class="p">)</span>
-
-<span class="c1"># Or let PyKokoro insert boundary pauses</span>
-<span class="n">auto_pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
+    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
+    <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">auto_result</span> <span class="o">=</span> <span class="n">auto_pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">long_text</span><span class="p">)</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-
-<span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;long_text.wav&quot;</span><span class="p">,</span> <span class="n">auto_result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">auto_result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="n">rendered</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>A caller can pass source-aligned context extracted elsewhere without passing planner,
+parser, or spaCy objects to PyKokoro.</p>
 </section>
-</section>
-<section id="complete-example">
-<h2>Complete Example</h2>
-<p>Here’s a complete example putting it all together:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">output_file</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert text to speech and save to file.&quot;&quot;&quot;</span>
-    <span class="n">config</span> <span class="o">=</span> <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-        <span class="n">voice</span><span class="o">=</span><span class="n">voice</span><span class="p">,</span>
-        <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">speed</span><span class="o">=</span><span class="n">speed</span><span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">pipe</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">pipe</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
-    <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">output_file</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Saved audio to </span><span class="si">{</span><span class="n">output_file</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># Example usage</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2">Welcome to PyKokoro! ...s</span>
-
-<span class="s2">This library makes text-to-speech generation simple ...c</span>
-<span class="s2">You can control voice, speed, and add natural pauses ...s</span>
-
-<span class="s2">Enjoy creating audio content!</span>
-<span class="s2">&quot;&quot;&quot;</span>
-
-<span class="n">text_to_speech</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="s2">&quot;welcome.wav&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+<section id="independent-requests">
+<h2>Independent requests</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GenerationConfig</span><span class="p">,</span>
+    <span class="n">KokoroSynthesizer</span><span class="p">,</span>
+    <span class="n">SynthesisConfig</span><span class="p">,</span>
+    <span class="n">SynthesisSegment</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
+<span class="n">requests</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">SynthesisSegment</span><span class="p">(</span><span class="s2">&quot;one&quot;</span><span class="p">,</span> <span class="s2">&quot;First request.&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">),</span>
+    <span class="n">SynthesisSegment</span><span class="p">(</span><span class="s2">&quot;two&quot;</span><span class="p">,</span> <span class="s2">&quot;Second request.&quot;</span><span class="p">,</span> <span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">rendered</span> <span class="ow">in</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_segments</span><span class="p">(</span><span class="n">requests</span><span class="p">):</span>
+        <span class="n">rendered</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rendered</span><span class="o">.</span><span class="n">id</span><span class="si">}</span><span class="s2">.wav&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-</section>
-<section id="portable-ssmd-0-8-headers">
-<h2>Portable SSMD 0.8 headers</h2>
-<p>Valid first-line YAML front matter is consumed automatically. <code class="docutils literal notranslate"><span class="pre">title</span></code> is metadata only,
-and logical voice roles can be mapped without changing the spoken body. Use
-<code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(parse_header=False)</span></code> when the leading delimiter is literal text.</p>
-<p>SSMD emphasis is metadata-only by default: <code class="docutils literal notranslate"><span class="pre">emphasis_mode=&quot;plain&quot;</span></code> preserves the
-annotation without changing speech. For audible, deterministic gain-only emphasis, opt
-in with <code class="docutils literal notranslate"><span class="pre">SSMDRenderConfig(emphasis_mode=&quot;approximate&quot;)</span></code>; at the default scale of <code class="docutils literal notranslate"><span class="pre">1.0</span></code>,
-this maps strong to <code class="docutils literal notranslate"><span class="pre">+6dB</span></code>, moderate to <code class="docutils literal notranslate"><span class="pre">+3dB</span></code>, and reduced to <code class="docutils literal notranslate"><span class="pre">-3dB</span></code>. Use
-<code class="docutils literal notranslate"><span class="pre">emphasis_gain_scale=0.5</span></code> for half gain or <code class="docutils literal notranslate"><span class="pre">1.5</span></code> for 50% stronger gain; values from
-<code class="docutils literal notranslate"><span class="pre">0.0</span></code> through <code class="docutils literal notranslate"><span class="pre">2.0</span></code> are supported. The scale does not change semantic emphasis or add
-automatic pitch/rate changes, and explicit SSMD volume overrides it. The <code class="docutils literal notranslate"><span class="pre">none</span></code> level is
-always a silent no-op. <code class="docutils literal notranslate"><span class="pre">warn</span></code> emits one diagnostic per logical source segment, and
-<code class="docutils literal notranslate"><span class="pre">error</span></code> rejects effectful emphasis before inference.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;---</span>
-<span class="s2">title: Quick review</span>
-<span class="s2">voice_bindings:</span>
-<span class="s2">  kokoro:</span>
-<span class="s2">    narrator: af_sarah</span>
-<span class="s2">---</span>
-<span class="s2">&lt;div voice=&quot;narrator&quot;&gt;This text uses a portable role.&lt;/div&gt;</span>
-<span class="s2">&quot;&quot;&quot;</span>
-<span class="n">result</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="p">))</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">script</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">[</span><span class="s2">&quot;title&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;Quick review&quot;</span>
-</pre></div>
-</div>
+<p>The order and IDs are preserved. Each item is a separate waveform; PyKokoro does not
+concatenate them or insert silence between requests. The caller decides whether and how
+to compose the resulting audio.</p>
 </section>
 <section id="next-steps">
-<h2>Next Steps</h2>
-<p>Now that you know the basics, explore:</p>
+<h2>Next steps</h2>
 <ul class="simple">
-<li><p><a class="reference internal" href="../basic_usage/"><span class="doc">Basic Usage</span></a> - Detailed usage guide</p></li>
-<li><p><a class="reference internal" href="../advanced_features/"><span class="doc">Advanced Features</span></a> - Voice blending, phoneme control, and more</p></li>
-<li><p><a class="reference internal" href="../examples/"><span class="doc">Examples</span></a> - More examples and use cases</p></li>
-<li><p><a class="reference internal" href="../api_reference/"><span class="doc">API Reference</span></a> - Complete API documentation</p></li>
+<li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Installation and model providers</span></a></p></li>
+<li><p><a class="reference internal" href="../basic_usage/"><span class="std std-doc">Basic request and configuration patterns</span></a></p></li>
+<li><p><a class="reference internal" href="../advanced_features/"><span class="std std-doc">Pronunciation context, routing, and calibration</span></a></p></li>
+<li><p><a class="reference internal" href="../api_reference/"><span class="std std-doc">Public API reference</span></a></p></li>
+<li><p><a class="reference internal" href="../breaking-change-0.10.0/"><span class="std std-doc">Breaking change and migration note</span></a></p></li>
 </ul>
 </section>
 </section>

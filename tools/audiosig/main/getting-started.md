@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a333ad697731e33e1c7f976736b56d3fa08ad54a"
+docs_commit: "ca74470524957f2b155920aaea7a7bab24f08b7f"
 search_enabled: true
 ---
 
@@ -605,6 +605,22 @@ normalization. Both functions return caller-owned arrays and raise typed
 stream long silence buffers; applications creating long files should write
 bounded silence chunks through their file layer.</p>
 </section>
+<section id="smooth-cut-point-selection">
+<h3>Smooth Cut-Point Selection</h3>
+<p>When an application already has a legal numeric interval, it can choose a low-disruption waveform boundary without changing the audio:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">find_smooth_cut_point</span>
+
+<span class="n">candidate</span> <span class="o">=</span> <span class="n">find_smooth_cut_point</span><span class="p">(</span>
+    <span class="n">audio</span><span class="p">,</span>
+    <span class="n">start</span><span class="o">=</span><span class="n">search_start</span><span class="p">,</span>
+    <span class="n">end</span><span class="o">=</span><span class="n">search_end</span><span class="p">,</span>
+    <span class="n">anchor</span><span class="o">=</span><span class="n">preferred_index</span><span class="p">,</span>
+    <span class="n">window_length</span><span class="o">=</span><span class="mi">120</span><span class="p">,</span>
+ <span class="p">)</span>
+</pre></div>
+</div>
+<p>The interval is half-open, the anchor is only a preference, and the function always returns a legal candidate for a non-empty interval. It is not a silence detector. Invalid arrays or parameters raise typed <code class="docutils literal notranslate"><span class="pre">AudioSig</span></code> exceptions. The application must decide whether the interval is semantically legal and whether a failed downstream policy should retry.</p>
+</section>
 <section id="silence-detection-and-trimming">
 <h3>Silence Detection and Trimming</h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">trim</span><span class="p">,</span> <span class="n">split</span><span class="p">,</span> <span class="n">normalized_energy_vad</span>
@@ -636,6 +652,23 @@ bounded silence chunks through their file layer.</p>
 <span class="n">normalized</span> <span class="o">=</span> <span class="n">peak_normalize</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">peak</span><span class="o">=</span><span class="mf">0.9</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="loudness-measurement">
+<h3>Loudness Measurement</h3>
+<p>Use integrated loudness when comparing perceived programme level, rather than treating peak normalization or full-file RMS as a loudness meter:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">audiosig</span>
+
+<span class="n">metrics</span> <span class="o">=</span> <span class="n">audiosig</span><span class="o">.</span><span class="n">measure_loudness</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">metrics</span><span class="o">.</span><span class="n">integrated_lufs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">sample_peak_dbfs</span><span class="p">,</span> <span class="n">metrics</span><span class="o">.</span><span class="n">true_peak_dbtp</span><span class="p">)</span>
+
+<span class="n">before</span> <span class="o">=</span> <span class="n">audiosig</span><span class="o">.</span><span class="n">integrated_loudness</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">)</span>
+<span class="n">after</span> <span class="o">=</span> <span class="n">audiosig</span><span class="o">.</span><span class="n">integrated_loudness</span><span class="p">(</span>
+    <span class="n">audiosig</span><span class="o">.</span><span class="n">apply_gain_db</span><span class="p">(</span><span class="n">audio</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="nb">abs</span><span class="p">((</span><span class="n">after</span> <span class="o">-</span> <span class="n">before</span><span class="p">)</span> <span class="o">-</span> <span class="mf">3.0</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">0.05</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">integrated_loudness</span></code> follows BS.1770-style K-weighting and gated 400 ms blocks. <code class="docutils literal notranslate"><span class="pre">sample_peak_dbfs</span></code> is the discrete sample maximum; <code class="docutils literal notranslate"><span class="pre">true_peak_dbtp</span></code> uses configurable oversampling (4x by default) to estimate inter-sample overshoot. These functions measure only: they do not clip, limit, or normalize audio. V1 accepts mono one-dimensional arrays and validates the mandatory 24 kHz case, plus 44.1 and 48 kHz. Silence returns <code class="docutils literal notranslate"><span class="pre">-math.inf</span></code>; empty, non-finite, and inputs shorter than 400 ms have explicit validation/deterministic behavior documented in the API reference.</p>
 </section>
 </section>
 <section id="understanding-the-api">

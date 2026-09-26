@@ -6,7 +6,7 @@ nav_tool: lexphon-main
 docs_project: "lexphon"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c4904d0bbc374dd1b663b51f0250057b71ea2ac0"
+docs_commit: "9c82295126df453fe3db5f9adafda8ce8e32537e"
 search_enabled: true
 ---
 
@@ -599,6 +599,12 @@ lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w
 </pre></div>
 </div>
 <p>Lexphon’s data layer may discover, install, and verify <code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code> assets, but the generic Phonemizer rejects them as unsupported layers. KokoroG2P owns Kokoro vocabulary conversion.</p>
+<p>The CLI can inspect that asset without normalization:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>lookup<span class="w"> </span>--language<span class="w"> </span>en-US<span class="w"> </span>--lexicon<span class="w"> </span>en-us:gold<span class="w"> </span>hello
+lexphon<span class="w"> </span>phonemize<span class="w"> </span>--language<span class="w"> </span>en-US<span class="w"> </span>--lexicon<span class="w"> </span>en-us:gold<span class="w"> </span><span class="s2">&quot;A meeting&quot;</span>
+</pre></div>
+</div>
+<p>These commands display the stored <code class="docutils literal notranslate"><span class="pre">kokoro-v1</span></code> strings unchanged and identify the output encoding. They do not validate Kokoro vocabulary or transform the values. Kokoro-specific semantic interpretation and conversion remain in KokoroG2P; callers using the Python <code class="docutils literal notranslate"><span class="pre">Phonemizer</span></code> still receive <code class="docutils literal notranslate"><span class="pre">UnsupportedAlphabetError</span></code> for this encoding.</p>
 </section>
 <section id="german-configuration">
 <h2>German configuration</h2>

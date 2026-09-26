@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -555,10 +555,347 @@ files. The CLI uses Typer/Click for command registration and provides a root-lev
 <p class="topic-title">Commands</p>
 <ul class="simple">
 <li><p><a class="reference internal" href="#exit-codes" id="id1">Exit codes</a></p></li>
+<li><p><a class="reference internal" href="#machine-readable-output" id="id2">Machine-readable output</a></p></li>
+<li><p><a class="reference internal" href="#config-and-voices" id="id3"><code class="docutils literal notranslate"><span class="pre">config</span></code> and <code class="docutils literal notranslate"><span class="pre">voices</span></code></a></p></li>
+<li><p><a class="reference internal" href="#lint-check" id="id4"><code class="docutils literal notranslate"><span class="pre">lint</span></code> / <code class="docutils literal notranslate"><span class="pre">check</span></code></a></p></li>
+<li><p><a class="reference internal" href="#create" id="id5"><code class="docutils literal notranslate"><span class="pre">create</span></code></a></p></li>
+<li><p><a class="reference internal" href="#convert" id="id6"><code class="docutils literal notranslate"><span class="pre">convert</span></code></a></p></li>
+<li><p><a class="reference internal" href="#to-ssml-from-ssml-text" id="id7"><code class="docutils literal notranslate"><span class="pre">to-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">from-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">text</span></code></a></p></li>
+<li><p><a class="reference internal" href="#fmt" id="id8"><code class="docutils literal notranslate"><span class="pre">fmt</span></code></a></p></li>
+<li><p><a class="reference internal" href="#migrate" id="id9"><code class="docutils literal notranslate"><span class="pre">migrate</span></code></a></p></li>
+<li><p><a class="reference internal" href="#profiles" id="id10"><code class="docutils literal notranslate"><span class="pre">profiles</span></code></a></p></li>
+<li><p><a class="reference internal" href="#inspect-json" id="id11"><code class="docutils literal notranslate"><span class="pre">inspect</span></code> (JSON)</a></p></li>
+<li><p><a class="reference internal" href="#version" id="id12"><code class="docutils literal notranslate"><span class="pre">version</span></code></a></p></li>
 </ul>
 </nav>
 <section id="exit-codes">
 <h2><a class="toc-backref" href="#id1" role="doc-backlink">Exit codes</a></h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Exit code</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>Success. No lint errors (warnings allowed unless <code class="docutils literal notranslate"><span class="pre">--fail-on-warn</span></code>).</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>Lint found one or more errors, or <code class="docutils literal notranslate"><span class="pre">--fail-on-warn</span></code> found warnings.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>CLI usage error, unreadable input, invalid output path, or invalid profile/preset.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p>Fatal conversion or parse error.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="machine-readable-output">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">Machine-readable output</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--json</span></code> at the root level to get JSON output:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>lint<span class="w"> </span>story.ssmd.md
+ssmd<span class="w"> </span>--json<span class="w"> </span>profiles
+ssmd<span class="w"> </span>--json<span class="w"> </span>inspect<span class="w"> </span>story.ssmd.md<span class="w"> </span>--spans
+ssmd<span class="w"> </span>--json<span class="w"> </span>voices<span class="w"> </span>list
+</pre></div>
+</div>
+<p>The JSON output uses a stable envelope format:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>{
+  &quot;schema&quot;: &quot;ssmd.cli.v1&quot;,
+  &quot;ok&quot;: true,
+  &quot;command&quot;: &quot;lint&quot;,
+  &quot;result_type&quot;: &quot;lint_report&quot;,
+  &quot;result&quot;: { ... }
+}
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">schema</span></code> value is <code class="docutils literal notranslate"><span class="pre">ssmd.cli.v1</span></code> for both success and error envelopes. Consumers
+should check the schema before interpreting the command-specific payload. Error
+envelope:</p>
+<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;schema&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssmd.cli.v1&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;ok&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;command&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;convert&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;error&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;code&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;USAGE_ERROR&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;message&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;exit_code&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>For lint and format-check reports, <code class="docutils literal notranslate"><span class="pre">result.passed</span></code> or <code class="docutils literal notranslate"><span class="pre">result.clean</span></code> indicates whether
+the document passed validation. The outer <code class="docutils literal notranslate"><span class="pre">ok</span></code> indicates whether the CLI operation
+itself succeeded.</p>
+<p>Agents must check both the process exit code and the command-specific result state:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Command</p></th>
+<th class="head"><p>Required success state</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">create</span></code></p></td>
+<td><p>exit <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">result.created</span> <span class="pre">==</span> <span class="pre">true</span></code>, output exists</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lint</span></code> / <code class="docutils literal notranslate"><span class="pre">check</span></code></p></td>
+<td><p>exit <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">result.passed</span> <span class="pre">==</span> <span class="pre">true</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">fmt</span> <span class="pre">--check</span></code></p></td>
+<td><p>exit <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">result.clean</span> <span class="pre">==</span> <span class="pre">true</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>conversion with output</p></td>
+<td><p>exit <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, expected output exists or is reported written</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">validate</span></code></p></td>
+<td><p>exit <code class="docutils literal notranslate"><span class="pre">0</span></code>, <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, command-specific valid state</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code> only means that a domain result was returned. A warning-blocked
+<code class="docutils literal notranslate"><span class="pre">create</span> <span class="pre">--fail-on-warn</span></code> can return <code class="docutils literal notranslate"><span class="pre">ok</span> <span class="pre">==</span> <span class="pre">true</span></code>, <code class="docutils literal notranslate"><span class="pre">result.created</span> <span class="pre">==</span> <span class="pre">false</span></code>, and exit
+<code class="docutils literal notranslate"><span class="pre">1</span></code>; it must not be treated as a successful shipment.</p>
+</section>
+<section id="config-and-voices">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">config</span></code> and <code class="docutils literal notranslate"><span class="pre">voices</span></code></a></h2>
+<p>The local authoring configuration is resolved in this order: root <code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">PATH</span></code>,
+<code class="docutils literal notranslate"><span class="pre">SSMD_CONFIG</span></code>, then Click’s platform application directory. On Linux the default is
+<code class="docutils literal notranslate"><span class="pre">~/.config/ssmd/config.yaml</span></code>. Read-only commands do not create the file.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>--json<span class="w"> </span>config<span class="w"> </span>path
+ssmd<span class="w"> </span>config<span class="w"> </span>init
+ssmd<span class="w"> </span>--json<span class="w"> </span>config<span class="w"> </span>show<span class="w"> </span>--effective
+ssmd<span class="w"> </span>--json<span class="w"> </span>config<span class="w"> </span>validate
+ssmd<span class="w"> </span>--json<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--provider<span class="w"> </span>kokoro
+ssmd<span class="w"> </span>voices<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>kokoro<span class="w"> </span>moderator<span class="w"> </span>af_sarah
+ssmd<span class="w"> </span>--json<span class="w"> </span>voices<span class="w"> </span>resolve<span class="w"> </span>moderator<span class="w"> </span>--provider<span class="w"> </span>kokoro
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">voices</span> <span class="pre">list</span></code> is deterministic and excludes disabled entries unless <code class="docutils literal notranslate"><span class="pre">--include-disabled</span></code>
+is supplied. Inventory entries are local authoring data and are not copied into portable
+document headers.</p>
+</section>
+<section id="lint-check">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">lint</span></code> / <code class="docutils literal notranslate"><span class="pre">check</span></code></a></h2>
+<p>Validate SSMD syntax and profile compatibility:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">lint</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+<span class="n">ssmd</span> <span class="n">check</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>          <span class="c1"># alias for lint</span>
+</pre></div>
+</div>
+<p>Options:</p>
+<p><code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">NAME</span></code></p>
+<p>: Lint profile to use (default <code class="docutils literal notranslate"><span class="pre">ssmd-core</span></code>). Available profiles: run <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">profiles</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--dialect</span> <span class="pre">{auto,0.8,0.9}</span></code></p>
+<p>: Select syntax dialect. <code class="docutils literal notranslate"><span class="pre">auto</span></code> uses <code class="docutils literal notranslate"><span class="pre">ssmd_version</span></code> when present and retains the legacy
+behavior for unversioned documents; explicit <code class="docutils literal notranslate"><span class="pre">0.9</span></code> enables strict 0.9 parsing.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--loss-policy</span> <span class="pre">{error,warn,drop}</span></code></p>
+<p>: Choose how unsupported rendering semantics are handled during compatibility checks.
+<code class="docutils literal notranslate"><span class="pre">error</span></code> fails, <code class="docutils literal notranslate"><span class="pre">warn</span></code> reports a warning, and <code class="docutils literal notranslate"><span class="pre">drop</span></code> allows the conversion with an
+informational diagnostic. <code class="docutils literal notranslate"><span class="pre">--capabilities</span> <span class="pre">PRESET</span></code></p>
+<p>: Validate conversion against a TTS capability preset.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">{text,json}</span></code></p>
+<p>: Output format (default <code class="docutils literal notranslate"><span class="pre">text</span></code>). JSON emits a machine-readable report.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--fail-on-warn</span></code></p>
+<p>: Exit <code class="docutils literal notranslate"><span class="pre">1</span></code> when warnings are found (useful in CI).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--quiet</span></code></p>
+<p>: Suppress the <code class="docutils literal notranslate"><span class="pre">path:</span> <span class="pre">ok</span></code> line on success.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--no-xml-check</span></code></p>
+<p>: Skip checking generated SSML for XML well-formedness.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--roundtrip</span></code></p>
+<p>: Additionally compare canonical SSMD semantics across SSMD→SSML→SSMD. Equivalent
+block-level and inline voice representations are treated as the same semantics.</p>
+<p>The comparison tolerates formatting-only whitespace changes but preserves spoken text,
+voice boundaries, supported annotations, marks, breaks, paragraph structure, and
+front-matter meaning. Reconstructed nested markup is emitted in a safe block form rather
+than becoming literal prose.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--parse-yaml-header</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-yaml-header</span></code></p>
+<p>: Front matter is parsed by default. Use <code class="docutils literal notranslate"><span class="pre">--no-yaml-header</span></code> for literal leading <code class="docutils literal notranslate"><span class="pre">---</span></code>
+content; <code class="docutils literal notranslate"><span class="pre">--parse-yaml-header</span></code> remains a compatibility spelling.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-provider</span> <span class="pre">PROVIDER</span></code></p>
+<p>: Resolve voice references against one provider.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--no-config</span></code></p>
+<p>: Perform portable structural lint without requiring local inventory entries.</p>
+<p>Text output uses <code class="docutils literal notranslate"><span class="pre">clean</span> <span class="pre">chars</span></code> offsets (the clean-text coordinate system), not source
+line/column positions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="p">:</span> <span class="n">error</span><span class="p">:</span> <span class="n">clean</span> <span class="n">chars</span> <span class="mi">0</span><span class="o">-</span><span class="mi">7</span><span class="p">:</span> <span class="n">Tag</span> <span class="s1">&#39;inline&#39;</span> <span class="ow">is</span> <span class="ow">not</span> <span class="n">supported</span> <span class="n">by</span> <span class="n">profile</span> <span class="s1">&#39;ssmd-core&#39;</span><span class="o">.</span>
+<span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="p">:</span> <span class="n">warn</span><span class="p">:</span> <span class="n">say</span><span class="o">-</span><span class="k">as</span> <span class="s1">&#39;currency&#39;</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">,</span> <span class="n">dropping</span>
+</pre></div>
+</div>
+</section>
+<section id="create">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">create</span></code></a></h2>
+<p>Create a formatted and validated SSMD file with an atomic write:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">create</span> <span class="n">draft</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">o</span> <span class="n">episode</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+<span class="n">cat</span> <span class="n">draft</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">|</span> <span class="n">ssmd</span> <span class="n">create</span> <span class="o">-</span> <span class="o">-</span><span class="n">o</span> <span class="n">episode</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+<span class="n">ssmd</span> <span class="n">create</span> <span class="n">draft</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">o</span> <span class="n">episode</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">fail</span><span class="o">-</span><span class="n">on</span><span class="o">-</span><span class="n">warn</span>
+<span class="n">ssmd</span> <span class="n">create</span> <span class="n">draft</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">o</span> <span class="n">episode</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">force</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">create</span></code> performs source formatting, syntax/profile validation, SSMD→SSML conversion,
+XML well-formedness validation, and a semantic SSMD→SSML→SSMD round-trip check before
+writing the output. If validation fails, the output file is not created or replaced. In
+JSON mode, successful creation requires <code class="docutils literal notranslate"><span class="pre">result.created</span> <span class="pre">==</span> <span class="pre">true</span></code>, nonzero
+<code class="docutils literal notranslate"><span class="pre">result.bytes_written</span></code>, and the requested output path to exist.</p>
+<p>Options:</p>
+<p><code class="docutils literal notranslate"><span class="pre">--profile</span> <span class="pre">NAME</span></code></p>
+<p>: Lint profile to enforce (default <code class="docutils literal notranslate"><span class="pre">ssmd-core</span></code>).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--capabilities</span> <span class="pre">PRESET</span></code></p>
+<p>: Validate against a target TTS capability preset.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--fail-on-warn</span></code></p>
+<p>: Refuse to write when warnings are present.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--parse-yaml-header</span></code></p>
+<p>: Compatibility spelling; YAML front matter is parsed by default.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--config</span> <span class="pre">PATH</span></code></p>
+<p>: Select the local authoring configuration. <code class="docutils literal notranslate"><span class="pre">SSMD_CONFIG</span></code> is used when this option is
+absent, followed by Click’s platform application directory (<code class="docutils literal notranslate"><span class="pre">~/.config/ssmd/config.yaml</span></code>
+on Linux).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--voice-provider</span> <span class="pre">PROVIDER</span></code></p>
+<p>: Select the active provider for voice binding materialization.</p>
+<p>Create discovers canonical fenced directives and materializes required <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code>
+as defaults. Empty mappings and missing nested provider or role entries may be filled,
+while explicit document bindings remain authoritative. Raw <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> syntax is
+compatibility-only.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--bind</span> <span class="pre">REFERENCE=VOICE_ID</span></code></p>
+<p>: Add a repeatable explicit binding override for the selected provider.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--materialize-config/--no-materialize-config</span></code></p>
+<p>: Enable or disable create-time config-derived header fields (enabled by default).</p>
+<p><code class="docutils literal notranslate"><span class="pre">--materialize-voice-bindings/--no-materialize-voice-bindings</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--materialize-pause-defaults/--no-materialize-pause-defaults</span></code></p>
+<p>: Override individual materialization categories.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--no-format</span></code></p>
+<p>: Preserve source bytes instead of normalizing line endings.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--no-roundtrip</span></code></p>
+<p>: Skip the semantic round-trip check.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p>
+<p>: Replace an existing output file. Replacement is atomic and preserves existing
+permissions.</p>
+</section>
+<section id="convert">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">convert</span></code></a></h2>
+<p>Convert between SSMD, SSML, and plain text:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">convert</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">to</span> <span class="n">ssml</span>
+<span class="n">ssmd</span> <span class="n">convert</span> <span class="n">story</span><span class="o">.</span><span class="n">ssml</span> <span class="o">--</span><span class="kn">from</span><span class="w"> </span><span class="nn">ssml</span> <span class="o">--</span><span class="n">to</span> <span class="n">ssmd</span> <span class="o">-</span><span class="n">o</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+<span class="n">ssmd</span> <span class="n">convert</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">to</span> <span class="n">text</span>
+<span class="n">ssmd</span> <span class="n">convert</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">to</span> <span class="n">ssml</span> <span class="o">-</span><span class="n">o</span> <span class="n">story</span><span class="o">.</span><span class="n">ssml</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> and <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> as unambiguous SSMD filename hints. SSML inputs with <code class="docutils literal notranslate"><span class="pre">.ssml</span></code>
+or <code class="docutils literal notranslate"><span class="pre">.xml</span></code> are inferred as SSML. A plain <code class="docutils literal notranslate"><span class="pre">.md</span></code> file is inferred as SSMD only when its
+front matter contains <code class="docutils literal notranslate"><span class="pre">ssmd_version</span></code>; otherwise specify <code class="docutils literal notranslate"><span class="pre">--from</span></code> explicitly. Explicit
+<code class="docutils literal notranslate"><span class="pre">--from</span></code> always takes precedence.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">cat</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">|</span> <span class="n">ssmd</span> <span class="n">convert</span> <span class="o">-</span> <span class="o">--</span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span> <span class="o">--</span><span class="n">to</span> <span class="n">ssml</span>
+</pre></div>
+</div>
+<p>For SSMD-to-SSML conversions, <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">{generic,ssml-1.1,provider}</span></code> selects the
+serialization target. <code class="docutils literal notranslate"><span class="pre">generic</span></code> produces portable SSML, <code class="docutils literal notranslate"><span class="pre">ssml-1.1</span></code> enforces SSML 1.1
+requirements, and <code class="docutils literal notranslate"><span class="pre">provider</span></code> applies the selected capability profile.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--language</span></code> and <code class="docutils literal notranslate"><span class="pre">--fallback-language</span></code> override the root language used for SSML output.
+The <code class="docutils literal notranslate"><span class="pre">ssml-1.1</span></code> target requires a root language and a <code class="docutils literal notranslate"><span class="pre">&lt;speak&gt;</span></code> document wrapper; the CLI
+rejects <code class="docutils literal notranslate"><span class="pre">--target</span> <span class="pre">ssml-1.1</span></code> combined with <code class="docutils literal notranslate"><span class="pre">--no-speak-tag</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--loss-policy</span> <span class="pre">{error,warn,drop}</span></code> controls unsupported semantics: <code class="docutils literal notranslate"><span class="pre">error</span></code> rejects lossy
+output, <code class="docutils literal notranslate"><span class="pre">warn</span></code> returns warnings, and <code class="docutils literal notranslate"><span class="pre">drop</span></code> permits losses with informational
+diagnostics. The optional <code class="docutils literal notranslate"><span class="pre">--dialect</span> <span class="pre">{auto,0.8,0.9}</span></code> selects the input syntax version;
+<code class="docutils literal notranslate"><span class="pre">auto</span></code> honors the document version and preserves the unversioned compatibility default.</p>
+<p>For SSML-to-SSMD conversion, <code class="docutils literal notranslate"><span class="pre">from-ssml</span></code> and <code class="docutils literal notranslate"><span class="pre">convert</span> <span class="pre">--from</span> <span class="pre">ssml</span></code> reject
+unrepresentable semantics by default. <code class="docutils literal notranslate"><span class="pre">warn</span></code> and <code class="docutils literal notranslate"><span class="pre">drop</span></code> opt into reported losses.
+Results are complete, versioned SSMD 0.9 documents by default; use <code class="docutils literal notranslate"><span class="pre">--fragment</span></code> only
+when a body fragment is needed.</p>
+</section>
+<section id="to-ssml-from-ssml-text">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">to-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">from-ssml</span></code> / <code class="docutils literal notranslate"><span class="pre">text</span></code></a></h2>
+<p>Convenience aliases for common conversions:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">to</span><span class="o">-</span><span class="n">ssml</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">o</span> <span class="n">story</span><span class="o">.</span><span class="n">ssml</span>
+<span class="n">ssmd</span> <span class="n">from</span><span class="o">-</span><span class="n">ssml</span> <span class="n">story</span><span class="o">.</span><span class="n">ssml</span> <span class="o">-</span><span class="n">o</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+<span class="n">ssmd</span> <span class="n">text</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">to-ssml</span></code> accepts the same SSMD-to-SSML options as <code class="docutils literal notranslate"><span class="pre">convert</span></code>, including <code class="docutils literal notranslate"><span class="pre">--target</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--loss-policy</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--fallback-language</span></code>, and <code class="docutils literal notranslate"><span class="pre">--no-speak-tag</span></code>. The strict
+SSML 1.1 target cannot be combined with <code class="docutils literal notranslate"><span class="pre">--no-speak-tag</span></code>.</p>
+<p>Sentence detection options on <code class="docutils literal notranslate"><span class="pre">convert</span></code> and <code class="docutils literal notranslate"><span class="pre">to-ssml</span></code> are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">--sentence-spacy-model</span> <span class="pre">TEXT</span></code> for an exact package.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--sentence-model-size</span> <span class="pre">sm|md|lg|trf</span></code> for an exact tier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--sentence-use-spacy</span></code> or <code class="docutils literal notranslate"><span class="pre">--no-sentence-use-spacy</span></code> to force the backend.</p></li>
+</ul>
+<p>When neither model nor size is set, SSMD uses phrasplit’s highest installed compatible
+model for the document language. JSON conversion results and <code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--header</span></code> include
+the selected model diagnostics when sentence detection runs.</p>
+<p><code class="docutils literal notranslate"><span class="pre">text</span> <span class="pre">--capabilities</span> <span class="pre">PRESET</span></code> applies strict capability filtering before plain-text
+rendering. For example, unsupported substitutions remain as their source text.</p>
+</section>
+<section id="fmt">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">fmt</span></code></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">fmt</span></code> applies canonical formatting to explicitly versioned SSMD 0.9. Unversioned and 0.8
+documents retain their dialect and receive source-preserving line-ending normalization
+only; <code class="docutils literal notranslate"><span class="pre">fmt</span></code> never migrates input. Use <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span></code> for an explicit
+semantic-equivalence-checked upgrade.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">fmt</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span>            <span class="c1"># formatted output to stdout</span>
+<span class="n">ssmd</span> <span class="n">fmt</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">w</span>         <span class="c1"># write normalized result in place, atomically</span>
+<span class="n">ssmd</span> <span class="n">fmt</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">check</span>    <span class="c1"># exit 1 if formatting would change</span>
+<span class="n">ssmd</span> <span class="n">fmt</span> <span class="n">a</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="n">b</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">-</span><span class="n">w</span>      <span class="c1"># format multiple files</span>
+</pre></div>
+</div>
+<p>Without <code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--check</span></code>, formatted SSMD is written to stdout. Multiple files require
+either <code class="docutils literal notranslate"><span class="pre">-w</span></code> or <code class="docutils literal notranslate"><span class="pre">--check</span></code>; those two modes are mutually exclusive. Stdin cannot be
+combined with <code class="docutils literal notranslate"><span class="pre">-w</span></code>, and <code class="docutils literal notranslate"><span class="pre">-</span></code> may appear only once.</p>
+</section>
+<section id="migrate">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">migrate</span></code></a></h2>
+<p>Migrate a legacy document to canonical SSMD 0.9 only when semantic equivalence is
+verified:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmd<span class="w"> </span>migrate<span class="w"> </span>legacy.ssmd<span class="w"> </span>--to<span class="w"> </span><span class="m">0</span>.9<span class="w">                 </span><span class="c1"># canonical content to stdout</span>
+ssmd<span class="w"> </span>migrate<span class="w"> </span>legacy.ssmd<span class="w"> </span>--to<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span>-o<span class="w"> </span>story-09.ssmd.md
+ssmd<span class="w"> </span>migrate<span class="w"> </span>legacy.ssmd<span class="w"> </span>--to<span class="w"> </span><span class="m">0</span>.9<span class="w"> </span>--write<span class="w">        </span><span class="c1"># replace in place atomically</span>
+ssmd<span class="w"> </span>--json<span class="w"> </span>migrate<span class="w"> </span>legacy.ssmd<span class="w"> </span>--to<span class="w"> </span><span class="m">0</span>.9<span class="w">           </span><span class="c1"># inspect migration result</span>
+</pre></div>
+</div>
+<p>Migration never modifies the source unless <code class="docutils literal notranslate"><span class="pre">--write</span></code> or an output path is explicit.
+Existing output files are not replaced without <code class="docutils literal notranslate"><span class="pre">--overwrite</span></code>. Documents that require a
+semantic decision are left unchanged, with diagnostics and manual actions returned
+instead of an unsafe rewrite.</p>
+<p>Migration preserves clean text, effective annotation coverage, structural events, and
+portable header data. Block-aligned legacy <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> scopes are emitted as fenced
+directives. When fencing would introduce paragraph boundaries absent from the legacy
+structure, migration can use paragraph-local inline annotations with separators outside
+the annotations. Invalid source syntax is reported as a source error. An invalid
+generated 0.9 candidate is a migration error, not a request to edit syntax that was
+absent from the source.</p>
+</section>
+<section id="profiles">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">profiles</span></code></a></h2>
+<p>List available lint profiles and capability presets:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">profiles</span>
+<span class="n">ssmd</span> <span class="n">profiles</span> <span class="o">--</span><span class="n">json</span>
+</pre></div>
+</div>
+</section>
+<section id="inspect-json">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">inspect</span></code> (JSON)</a></h2>
+<p>Inspect parsed structure (useful for debugging and TTS integrations):</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">inspect</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">spans</span>
+<span class="n">ssmd</span> <span class="n">inspect</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">sentences</span>
+<span class="n">ssmd</span> <span class="n">inspect</span> <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="o">.</span><span class="n">md</span> <span class="o">--</span><span class="n">paragraphs</span>
+</pre></div>
+</div>
+<p>Output is always JSON.</p>
+<p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--sentences</span></code> reports both author declarations and resolved rendering values for
+voice prosody. Each sentence includes <code class="docutils literal notranslate"><span class="pre">declared_prosody</span></code>, <code class="docutils literal notranslate"><span class="pre">effective_prosody</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">sources</span></code>; source values identify inline, directive, inherited directive, or
+<code class="docutils literal notranslate"><span class="pre">voice_default</span></code> provenance. <code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--header</span></code> exposes the parsed <code class="docutils literal notranslate"><span class="pre">voice_defaults</span></code> and
+<code class="docutils literal notranslate"><span class="pre">prosody_transitions</span></code> metadata.</p>
+<p><code class="docutils literal notranslate"><span class="pre">voice_defaults</span></code> is keyed by logical SSMD voice names and does not contain provider
+bindings. <code class="docutils literal notranslate"><span class="pre">prosody_transitions</span></code> is preserved as a renderer hint. It does not add a
+non-standard transition element to generated SSML.</p>
+</section>
+<section id="version">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">version</span></code></a></h2>
+<p>Print the installed SSMD version:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span> <span class="n">version</span>
+<span class="n">ssmd</span> <span class="o">--</span><span class="n">version</span>
+</pre></div>
+</div>
 </section>
 </section>
 </div>

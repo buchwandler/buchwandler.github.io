@@ -5,8 +5,8 @@ permalink: /tools/spokenform/quickstart/
 nav_tool: spokenform
 docs_project: "spokenform"
 docs_variant: "release"
-docs_ref: "v0.3.6"
-docs_commit: "4e15baa192685b02d0992eb9cdeab3a5b44420a1"
+docs_ref: "v0.4.5"
+docs_commit: "3da15861c766c2b4bb961aee0629f52562e1b314"
 search_enabled: true
 ---
 
@@ -583,9 +583,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">assert</span> <span class="n">prepare</span><span class="p">(</span>
     <span class="s2">&quot;TP. Hà Nội có 2 kg hàng với giá 1000 VND.&quot;</span><span class="p">,</span>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;vi&quot;</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span>
-    <span class="s2">&quot;thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.&quot;</span>
-<span class="p">)</span>
+<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span> <span class="o">==</span> <span class="p">(</span><span class="s2">&quot;thành phố Hà Nội có hai kilôgam hàng với giá một nghìn đồng Việt Nam.&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 <p>Vietnamese uses comma decimals with exact fractional precision, dot or space-family grouping, reviewed quantities and VND/₫ amounts, and guarded dependency abbreviations. Dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist domains remain caller-managed or fail closed.</p>

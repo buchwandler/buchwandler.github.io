@@ -6,7 +6,7 @@ nav_tool: phrasplit-main
 docs_project: "phrasplit"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "1980c788536c5f07db18decd0999af9c47f7cc62"
+docs_commit: "57d2cf1a6017e0fbc48999decb81e6c630c8e90d"
 search_enabled: true
 ---
 
@@ -740,6 +740,7 @@ python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-9-unreleased">[v0.3.9] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-8-2026-09-13">[v0.3.8] - 2026-09-13</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-7-2026-09-01">[v0.3.7] - 2026-09-01</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-6-2026-08-25">[v0.3.6] - 2026-08-25</a></li>

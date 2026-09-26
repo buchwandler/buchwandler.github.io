@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro Installation Guide"
+title: "pykokoro Installation"
 permalink: /tools/pykokoro/main/installation/
 nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -540,144 +540,49 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="installation-guide">
-<h1>Installation Guide</h1>
-<p>PyKokoro requires Python 3.10 or newer. Install the CPU provider extra for the standard
-ONNX Runtime setup:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span>
-</pre></div>
-</div>
-<p>The <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">gpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, and <code class="docutils literal notranslate"><span class="pre">directml</span></code> extras are alternative ONNX Runtime
-distributions; install exactly one provider extra per environment. Importing the
-pipeline and using fully custom stages does not require ONNX Runtime, but the default
-audio stages do.</p>
-<section id="android-termux-providers">
-<h2>Android/Termux providers</h2>
-<p>Use a provider name exposed by the installed ONNX Runtime build:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span><span class="n">PipelineConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span> <span class="n">provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">))</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello from Android.&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">provider=&quot;auto&quot;</span></code> selects the highest-priority available provider. PyKokoro does not
-infer provider availability from platform names.</p>
-<section id="termux-android-model-assets">
-<h3>Termux/Android model assets</h3>
-<p>HuggingFace remains the default model source. If HuggingFace downloads are unavailable
-in Termux, select the self-contained GitHub v1.0 profile explicitly:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-
-<span class="n">pipeline</span> <span class="o">=</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span>
-        <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
-        <span class="n">model_source</span><span class="o">=</span><span class="s2">&quot;github&quot;</span><span class="p">,</span>
-        <span class="n">model_variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span>
-        <span class="n">model_quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>GitHub v1.0 uses the embedded standard v1.0 vocabulary and does not download HuggingFace
-<code class="docutils literal notranslate"><span class="pre">config.json</span></code>. PyKokoro never silently changes the configured source. If <code class="docutils literal notranslate"><span class="pre">model_path</span></code>
-and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are supplied, each file is validated and used in place; missing custom
-files do not trigger a managed-cache download. The <code class="docutils literal notranslate"><span class="pre">Unsupported</span> <span class="pre">platform</span> <span class="pre">(android)</span></code>
-warning printed by some ONNX Runtime packages is independent of this model-source and
-asset fix.</p>
-</section>
-</section>
-<section id="other-providers">
-<h2>Other providers</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span><span class="w">       </span><span class="c1"># NVIDIA CUDA</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[openvino]&quot;</span><span class="w">  </span><span class="c1"># OpenVINO Runtime</span>
+<section id="installation">
+<h1>Installation</h1>
+<p>PyKokoro requires Python 3.10 or newer. Install the package with exactly one supported
+ONNX Runtime provider extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu]&quot;</span><span class="w">        </span><span class="c1"># CPU</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[gpu]&quot;</span><span class="w">        </span><span class="c1"># NVIDIA CUDA</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[openvino]&quot;</span><span class="w">   </span><span class="c1"># OpenVINO</span>
 pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[directml]&quot;</span><span class="w">  </span><span class="c1"># DirectML</span>
+pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[coreml]&quot;</span><span class="w">     </span><span class="c1"># Apple CoreML</span>
 </pre></div>
 </div>
-<p>For Lexphon Goruut provider fallback, install the supported extra:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[goruut]&quot;</span>
+<p>These provider extras select alternative ONNX Runtime distributions. Do not install
+multiple provider extras into one environment unless you deliberately manage the
+resulting runtime packages yourself.</p>
+<section id="optional-playback">
+<h2>Optional playback</h2>
+<p>WAV writing is available through the required <code class="docutils literal notranslate"><span class="pre">soundfile</span></code> dependency. Direct playback is
+optional:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pykokoro[cpu,playback]&quot;</span>
 </pre></div>
 </div>
-<p>This enables <code class="docutils literal notranslate"><span class="pre">fallback=&quot;goruut&quot;</span></code> for the native <code class="docutils literal notranslate"><span class="pre">backend=&quot;kokorog2p&quot;</span></code> path. It is
-distinct from <code class="docutils literal notranslate"><span class="pre">backend=&quot;goruut&quot;</span></code>, which selects Goruut as the primary backend. For a
-custom ONNX Runtime distribution, install the base package and the provider package
-separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>onnxruntime-gpu<span class="o">==</span><span class="m">1</span>.19.2
+<p><code class="docutils literal notranslate"><span class="pre">RenderedSegment.play()</span></code> plays that one waveform using <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code>; it does not
+compose several requests. Linux systems may also need a PortAudio system package.</p>
+</section>
+<section id="frontends-and-lexicons">
+<h2>Frontends and lexicons</h2>
+<p>PyKokoro uses KokoroG2P for prepared-text phonemization. Install <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> when using
+an espeak frontend or fallback. Named lexicon data can be provisioned by Lexphon on
+first use; for offline operation, install the required data ahead of time and select an
+installed-only lexicon policy in <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>available<span class="w"> </span>de-DE
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
 </pre></div>
 </div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> to choose a persistent data directory. <code class="docutils literal notranslate"><span class="pre">discover_lexicons()</span></code>
+lists lexicon metadata without running synthesis.</p>
 </section>
-<section id="dependencies-and-optional-spacy">
-<h2>Dependencies and optional spaCy</h2>
-<p>PyKokoro v0.9 requires <code class="docutils literal notranslate"><span class="pre">kokorog2p[espeak,en]&gt;=0.9.4,&lt;1.0</span></code>, <code class="docutils literal notranslate"><span class="pre">lexphon&gt;=0.2.3,&lt;0.3</span></code>,
-<code class="docutils literal notranslate"><span class="pre">phrasplit&gt;=0.3.8,&lt;0.4</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd&gt;=0.8.7,&lt;0.9</span></code>, and <code class="docutils literal notranslate"><span class="pre">spokenform&gt;=0.3.6,&lt;0.4</span></code>. The native
-KokoroG2P frontend uses named lexicons: <code class="docutils literal notranslate"><span class="pre">lexicons=None</span></code> selects KokoroG2P language
-defaults, while <code class="docutils literal notranslate"><span class="pre">lexicons=()</span></code> disables static Lexphon layers. New code should use named
-lexicons rather than the legacy <code class="docutils literal notranslate"><span class="pre">use_dictionary</span></code>, <code class="docutils literal notranslate"><span class="pre">load_gold</span></code>, and <code class="docutils literal notranslate"><span class="pre">load_silver</span></code>
-compatibility inputs.</p>
-<section id="lexphon-data-provisioning">
-<h3>Lexphon data provisioning</h3>
-<p>Before native <code class="docutils literal notranslate"><span class="pre">backend=&quot;kokorog2p&quot;</span></code> construction, PyKokoro resolves the effective named
-lexicons for the routed language and checks the local Lexphon store. The default
-<code class="docutils literal notranslate"><span class="pre">lexicon_data_policy=&quot;auto&quot;</span></code> installs only missing Lexphon-backed assets. Warm runs do
-not consult the catalog or network. Primary <code class="docutils literal notranslate"><span class="pre">backend=&quot;espeak&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">backend=&quot;goruut&quot;</span></code>
-paths never download static lexicons.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">lexicon_data_policy=&quot;installed-only&quot;</span></code> for offline or pre-provisioned deployments.
-PyKokoro will not install or consult the catalog in that mode, and a missing asset
-raises Lexphon’s original installation error. Set <code class="docutils literal notranslate"><span class="pre">LEXPHON_DATA_HOME</span></code> for a persistent
-store and <code class="docutils literal notranslate"><span class="pre">LEXPHON_CATALOG_URL</span></code> for a pinned local or remote catalog. The document
-language is explicit: pass <code class="docutils literal notranslate"><span class="pre">GenerationConfig(lang=&quot;en-us&quot;)</span></code> or <code class="docutils literal notranslate"><span class="pre">run(...,</span> <span class="pre">lang=&quot;en-us&quot;)</span></code>.
-Voice and profile selection never supplies the document language. SSMD <code class="docutils literal notranslate"><span class="pre">lang</span></code> spans are
-the supported mechanism for explicit mixed-language documents.</p>
-<p>The pipeline owns reusable spaCy resources for integrated Pass A and Pass B analysis:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> disables spaCy;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=None</span></code> selects the best compatible installed local model and falls back
-without downloading when none is available;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">use_spacy=True</span></code>, an explicit model, or an exact model size is strict and remains
-offline.</p></li>
-</ul>
-<p>Install a model only when you want spaCy-aware splitting or G2P:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-</pre></div>
-</div>
-<p>No spaCy model is downloaded automatically. The native kokorog2p backend supports the
-languages declared by <code class="docutils literal notranslate"><span class="pre">pykokoro.constants.SUPPORTED_LANGUAGES</span></code>; languages in
-<code class="docutils literal notranslate"><span class="pre">ESPEAK_ONLY_LANGUAGES</span></code> require an explicit fallback backend.</p>
-</section>
-</section>
-<section id="german-martin-assets">
-<h2>German Martin assets</h2>
-<p>German runs automatically select the single-speaker GitHub <code class="docutils literal notranslate"><span class="pre">v1.2-de-martin</span></code> profile when
-no model or voice is supplied. It provides only <code class="docutils literal notranslate"><span class="pre">fp32</span></code> and downloads approximately 311
-MB for the ONNX model plus a 522,506-byte <code class="docutils literal notranslate"><span class="pre">martin</span></code> voice archive on first use. Both
-artifacts are checked against their published SHA-256 digests before being cached under
-<code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro</span></code>.</p>
-<p>Custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> are never replaced by automatic selection; missing
-custom files fail directly rather than triggering a download to the shared cache.
-Managed cache hits are checksum and structure checked before use. <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> when a
-valid managed cache is required. Interrupted GitHub transfers retain a temporary <code class="docutils literal notranslate"><span class="pre">.part</span></code>
-file and resume with HTTP Range requests when the release host supports them; completed
-files are still checked for exact size, SHA-256, and structure before replacement.</p>
-<p>The registry catalog is cached at <code class="docutils literal notranslate"><span class="pre">~/.cache/pykokoro/registry/models.json</span></code>, with runtime
-artifacts kept under model and distribution-specific directories. PyKokoro revalidates
-cached files and replaces invalid artifacts individually. If a downloaded file reveals
-stale catalog metadata, the catalog is refreshed once without falling back to the stale
-cache, then asset resolution is retried. Offline mode never refreshes over the network,
-and manual deletion of the registry catalog or model directory is not required.</p>
-<section id="observing-first-run-downloads">
-<h3>Observing first-run downloads</h3>
-<p>Managed runtime assets are provisioned lazily during the first synthesis. Pass
-<code class="docutils literal notranslate"><span class="pre">asset_progress=ConsoleAssetProgress()</span></code> to show cold-cache downloads, byte progress, and
-verification, or pass a callable to <code class="docutils literal notranslate"><span class="pre">PipelineConfig.asset_progress</span></code> to consume
-structured <code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values. Valid cache hits remain quiet. Offline mode
-raises the existing cache error without emitting a download-start event.</p>
-</section>
-</section>
-<section id="model-capability-discovery">
-<h2>Model capability discovery</h2>
-<p>Use the public discovery API to inspect models, voices, languages, qualities, frontends,
-and runtime status without downloading model or voice assets:</p>
+<section id="model-assets-and-discovery">
+<h2>Model assets and discovery</h2>
+<p>Model and voice assets are resolved lazily when synthesis first needs them. Use the
+<code class="docutils literal notranslate"><span class="pre">asset_progress</span></code> callback in <code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code> to report managed asset downloads. For
+metadata-only runtime inventory, call:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
 
 <span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -685,65 +590,25 @@ and runtime status without downloading model or voice assets:</p>
     <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The default call follows the registry network and cache policy. <code class="docutils literal notranslate"><span class="pre">offline=True</span></code> forbids
-network access and requires cached registry metadata. <code class="docutils literal notranslate"><span class="pre">refresh=True</span></code> forces a registry
-metadata refresh and may report <code class="docutils literal notranslate"><span class="pre">cache_fallback=True</span></code> if the existing policy uses a
-valid cache after a failed refresh. Refresh never downloads model assets, and
-<code class="docutils literal notranslate"><span class="pre">offline=True,</span> <span class="pre">refresh=True</span></code> is invalid. <code class="docutils literal notranslate"><span class="pre">registry_source</span></code> identifies the registry or
-cache used.</p>
-<p><code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> is runtime capability discovery. <code class="docutils literal notranslate"><span class="pre">available_model_releases()</span></code>
-remains the API for published release and artifact discovery.</p>
+<p>This does not load model weights or create an ONNX session. Explicit custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code>
+and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> values are used in place and validated; they are not silently replaced
+with a managed download.</p>
 </section>
-<section id="system-requirements">
-<h2>System requirements</h2>
-<p>Install <code class="docutils literal notranslate"><span class="pre">espeak-ng</span></code> when using the espeak fallback or backend.</p>
-<p><strong>Ubuntu/Debian:</strong> <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">apt-get</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code></p>
-<p><strong>macOS:</strong> <code class="docutils literal notranslate"><span class="pre">brew</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code></p>
-<p><strong>Windows:</strong> install a release from <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a> or
-use <code class="docutils literal notranslate"><span class="pre">choco</span> <span class="pre">install</span> <span class="pre">espeak-ng</span></code>.</p>
-</section>
-<section id="verify-installation">
-<h2>Verify installation</h2>
-<p>The public API is pipeline-first:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
-
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroPipeline</span><span class="p">,</span> <span class="n">PipelineConfig</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.generation_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">pykokoro</span><span class="o">.</span><span class="n">__version__</span><span class="p">)</span>
-<span class="k">with</span> <span class="n">KokoroPipeline</span><span class="p">(</span>
-    <span class="n">PipelineConfig</span><span class="p">(</span><span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
-<span class="p">)</span> <span class="k">as</span> <span class="n">pipeline</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">pipeline</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="s2">&quot;Hello, world!&quot;</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generated </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">)</span><span class="si">}</span><span class="s2"> samples at </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="si">}</span><span class="s2"> Hz&quot;</span><span class="p">)</span>
-    <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
-</pre></div>
-</div>
-<p>For long-form output, use <code class="docutils literal notranslate"><span class="pre">prepare_units()</span></code> or <code class="docutils literal notranslate"><span class="pre">iter_units()</span></code> so only one paragraph
-waveform is rendered at a time. Preparation still parses and phonemizes the complete
-document globally. See <code class="docutils literal notranslate"><span class="pre">examples/paragraph_wave_export.py</span></code> for a resumable manifest.</p>
-</section>
-<section id="development-installation">
-<h2>Development installation</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/remixer-dec/pykokoro.git
+<section id="development-install">
+<h2>Development install</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/pykokoro.git
 <span class="nb">cd</span><span class="w"> </span>pykokoro
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,cpu]&quot;</span>
 </pre></div>
 </div>
 </section>
-<section id="troubleshooting">
-<h2>Troubleshooting</h2>
-<p>If the default pipeline reports that ONNX Runtime is missing, install one provider
-extra, for example <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">&quot;pykokoro[cpu]&quot;</span></code>. If model loading fails, verify that
-the provider is available and that the model/voice assets can be downloaded or supplied
-through <code class="docutils literal notranslate"><span class="pre">PipelineConfig(model_path=...,</span> <span class="pre">voices_path=...)</span></code>.</p>
-<p>For dependency-light diagnostics:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.model_assets</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_model_asset_paths</span>
-
-<span class="n">assets</span> <span class="o">=</span> <span class="n">get_model_asset_paths</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="s2">&quot;huggingface&quot;</span><span class="p">,</span> <span class="n">variant</span><span class="o">=</span><span class="s2">&quot;v1.0&quot;</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;fp32&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">assets</span><span class="o">.</span><span class="n">missing</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">assets</span><span class="o">.</span><span class="n">complete</span> <span class="k">else</span> <span class="s2">&quot;model assets are ready&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<section id="dependency-boundary">
+<h2>Dependency boundary</h2>
+<p>The PyKokoro runtime depends on KokoroG2P and OnnxVoice, plus the libraries used by its
+request-local audio and asset paths. Utterplan, SSMD, and AudioCompose are outside this
+package’s runtime dependency boundary. Applications can prepare text and resolve speech
+plans before calling PyKokoro, then compose returned waveforms in their own output
+layer.</p>
 </section>
 </section>
 </div>

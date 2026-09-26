@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -548,6 +548,219 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="document">
 <h3>Document</h3>
 <p>The primary class for creating and managing SSMD/SSML documents.</p>
+<p>.. autoclass:: ssmd.Document :members: :undoc-members: :show-inheritance:</p>
+<p><strong>Construction Methods:</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>init</strong></p>
+<p>.. automethod:: ssmd.Document.from_ssml</p>
+<p>.. automethod:: ssmd.Document.from_text</p>
+<p><strong>Building Methods:</strong></p>
+<p>.. automethod:: ssmd.Document.add</p>
+<p>.. automethod:: ssmd.Document.add_sentence</p>
+<p>.. automethod:: ssmd.Document.add_paragraph</p>
+<p><strong>Export Methods:</strong></p>
+<p>.. automethod:: ssmd.Document.to_ssml</p>
+<p>.. automethod:: ssmd.Document.to_ssmd</p>
+<p>.. automethod:: ssmd.Document.to_text</p>
+<p><strong>Properties:</strong></p>
+<p>.. autoproperty:: ssmd.Document.ssmd</p>
+<p>.. autoproperty:: ssmd.Document.config</p>
+<p>.. autoproperty:: ssmd.Document.capabilities</p>
+<p>.. autoproperty:: ssmd.Document.source</p>
+<p>.. autoproperty:: ssmd.Document.voice_bindings</p>
+<p>.. autoproperty:: ssmd.Document.pause_defaults</p>
+<p><code class="docutils literal notranslate"><span class="pre">Document</span></code> parses YAML front matter by default. <code class="docutils literal notranslate"><span class="pre">doc.ssmd</span></code> is the body-only SSMD;
+<code class="docutils literal notranslate"><span class="pre">doc.source</span></code> and <code class="docutils literal notranslate"><span class="pre">doc.to_ssmd(include_header=True)</span></code> include a deterministic header when
+one was present. Pass <code class="docutils literal notranslate"><span class="pre">parse_yaml_header=False</span></code> when literal leading front matter syntax
+is required.</p>
+<p>Sentence/list APIs such as <code class="docutils literal notranslate"><span class="pre">sentences()</span></code>, <code class="docutils literal notranslate"><span class="pre">split()</span></code>, indexing, and <code class="docutils literal notranslate"><span class="pre">len()</span></code> operate on
+unversioned legacy and SSMD 0.8 documents. SSMD 0.9 documents, including those created
+by <code class="docutils literal notranslate"><span class="pre">Document.from_ssml()</span></code>, reject sentence-level APIs; use structural parsing and
+explicit sentence spans instead.</p>
+<p><strong>Iteration:</strong></p>
+<p>.. automethod:: ssmd.Document.sentences</p>
+<p>.. automethod:: ssmd.Document.<strong>iter</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>len</strong></p>
+<p><strong>List-like Interface:</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>getitem</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>setitem</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>delitem</strong></p>
+<p>.. automethod:: ssmd.Document.<strong>iadd</strong></p>
+<p><strong>Editing Methods:</strong></p>
+<p>.. automethod:: ssmd.Document.insert</p>
+<p>.. automethod:: ssmd.Document.remove</p>
+<p>.. automethod:: ssmd.Document.clear</p>
+<p>.. automethod:: ssmd.Document.replace</p>
+<p><strong>Advanced Methods:</strong></p>
+<p>.. automethod:: ssmd.Document.merge</p>
+<p>.. automethod:: ssmd.Document.split</p>
+<p>.. automethod:: ssmd.Document.get_fragment</p>
+</section>
+<section id="ttscapabilities">
+<h3>TTSCapabilities</h3>
+<p>Define TTS engine capabilities for automatic feature filtering.</p>
+<p>.. autoclass:: ssmd.TTSCapabilities :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="ssmlparser">
+<h3>SSMLParser</h3>
+<p>Parse SSML and convert to SSMD format.</p>
+<p>.. autoclass:: ssmd.SSMLParser :members: :undoc-members: :show-inheritance:</p>
+</section>
+</section>
+<section id="convenience-functions">
+<h2>Convenience Functions</h2>
+<section id="parser-functions">
+<h3>Parser Functions</h3>
+<p>Extract structured data from SSMD text.</p>
+<p><code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> is the preferred structural API for strict SSMD 0.9. It returns
+clean text, annotations, structural events, front matter, and diagnostics without
+sentence detection. Use <code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> when only clean text and annotation spans are
+needed. Both preserve the offset-based metadata needed by downstream TTS normalization
+and sentence segmentation.</p>
+<p><code class="docutils literal notranslate"><span class="pre">parse_paragraphs()</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_sentences()</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_segments()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">parse_voice_blocks()</span></code> are sentence-/segment-oriented compatibility APIs for unversioned
+legacy input and SSMD 0.8; do not use them with strict 0.9 documents. See
+<a class="reference internal" href="../parser/"><span class="std std-doc">Parser API</span></a> for dialect guidance.</p>
+<p>.. autofunction:: ssmd.parse_paragraphs</p>
+<p>.. autofunction:: ssmd.parse_sentences</p>
+<p>.. autofunction:: ssmd.parse_segments</p>
+<p>.. autofunction:: ssmd.parse_voice_blocks</p>
+<p>.. autofunction:: ssmd.parse_spans</p>
+<p>.. autofunction:: ssmd.parse_structure</p>
+<p>.. autofunction:: ssmd.iter_sentences_spans</p>
+<p>.. autofunction:: ssmd.lint</p>
+</section>
+<section id="conversion-functions">
+<h3>Conversion Functions</h3>
+<p>Convert between SSMD, SSML, and plain text.</p>
+<section id="to-ssml">
+<h4>to_ssml</h4>
+<p>Convert SSMD markup to SSML.</p>
+<p>.. autofunction:: ssmd.to_ssml</p>
+</section>
+<section id="to-text">
+<h4>to_text</h4>
+<p>Convert SSMD to plain text (strips all markup).</p>
+<p>.. autofunction:: ssmd.to_text</p>
+</section>
+<section id="from-ssml">
+<h4>from_ssml</h4>
+<p>Convert SSML back to SSMD format.</p>
+<p>The default result is a complete SSMD 0.9 document. Pass <code class="docutils literal notranslate"><span class="pre">complete_document=False</span></code> when
+a body fragment is required.</p>
+<p>.. autofunction:: ssmd.from_ssml</p>
+</section>
+</section>
+<section id="sentencespanlike">
+<h3>SentenceSpanLike</h3>
+<p>Protocol for external sentence boundaries supplied to <code class="docutils literal notranslate"><span class="pre">Document.to_ssml()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">ssmd.to_ssml()</span></code>. Implementations expose zero-based, half-open <code class="docutils literal notranslate"><span class="pre">char_start</span></code> and
+<code class="docutils literal notranslate"><span class="pre">char_end</span></code> offsets in the structural clean-text coordinate space.</p>
+</section>
+</section>
+<section id="parser-data-structures">
+<h2>Parser Data Structures</h2>
+<section id="sentence-alias-ssmdsentence">
+<h3>Sentence (alias: SSMDSentence)</h3>
+<p>Represents a sentence with voice context and segments.</p>
+<p>.. autoclass:: ssmd.Sentence :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="segment-alias-ssmdsegment">
+<h3>Segment (alias: SSMDSegment)</h3>
+<p>Represents a text segment with metadata.</p>
+<p>.. autoclass:: ssmd.Segment :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="voiceattrs">
+<h3>VoiceAttrs</h3>
+<p>Voice configuration attributes.</p>
+<p>.. autoclass:: ssmd.VoiceAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="prosodyattrs">
+<h3>ProsodyAttrs</h3>
+<p>Prosody (volume, rate, pitch) attributes.</p>
+<p>.. autoclass:: ssmd.ProsodyAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="breakattrs">
+<h3>BreakAttrs</h3>
+<p>Pause/break attributes.</p>
+<p>.. autoclass:: ssmd.BreakAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="sayasattrs">
+<h3>SayAsAttrs</h3>
+<p>Say-as interpretation attributes.</p>
+<p>.. autoclass:: ssmd.SayAsAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="phonemeattrs">
+<h3>PhonemeAttrs</h3>
+<p>Phonetic pronunciation attributes.</p>
+<p>.. autoclass:: ssmd.PhonemeAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="audioattrs">
+<h3>AudioAttrs</h3>
+<p>Audio file attributes.</p>
+<p>.. autoclass:: ssmd.AudioAttrs :members: :undoc-members: :show-inheritance:</p>
+</section>
+</section>
+<section id="structure-data-types">
+<h2>Structure Data Types</h2>
+<section id="structuralevent">
+<h3>StructuralEvent</h3>
+<p>A zero-width break, mark, or paragraph event in clean-text boundary coordinates.</p>
+<p>.. autoclass:: ssmd.StructuralEvent :members:</p>
+</section>
+<section id="parsestructureresult">
+<h3>ParseStructureResult</h3>
+<p>The sentence-neutral result returned by <code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code>.</p>
+<p>.. autoclass:: ssmd.ParseStructureResult :members:</p>
+</section>
+</section>
+<section id="capability-presets">
+<h2>Capability Presets</h2>
+<p>Pre-configured capability sets for common TTS engines.</p>
+<p>.. autodata:: ssmd.MINIMAL_CAPABILITIES</p>
+<p>.. autodata:: ssmd.PYTTSX3_CAPABILITIES</p>
+<p>.. autodata:: ssmd.ESPEAK_CAPABILITIES</p>
+<p>.. autodata:: ssmd.GOOGLE_TTS_CAPABILITIES</p>
+<p>.. autodata:: ssmd.AZURE_TTS_CAPABILITIES</p>
+<p>.. autodata:: ssmd.AMAZON_POLLY_CAPABILITIES</p>
+<p>.. autodata:: ssmd.FULL_CAPABILITIES</p>
+<p>.. autofunction:: ssmd.get_preset</p>
+</section>
+<section id="internal-modules">
+<h2>Internal Modules</h2>
+<section id="ssml-parser">
+<h3>SSML Parser</h3>
+<p>Internal SSML to SSMD parsing engine.</p>
+<p>.. automodule:: ssmd.ssml_parser :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="document-module">
+<h3>Document Module</h3>
+<p>Document container implementation.</p>
+<p>.. automodule:: ssmd.document :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="parser-module">
+<h3>Parser Module</h3>
+<p>SSMD parsing functions for extracting structured data.</p>
+<p>.. automodule:: ssmd.parser :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="segment-module">
+<h3>Segment Module</h3>
+<p>Segment class for representing text portions with attributes.</p>
+<p>.. automodule:: ssmd.segment :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="sentence-module">
+<h3>Sentence Module</h3>
+<p>Sentence class for representing collections of segments.</p>
+<p>.. automodule:: ssmd.sentence :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="types-module">
+<h3>Types Module</h3>
+<p>Data types used throughout the SSMD library.</p>
+<p>.. automodule:: ssmd.types :members: :undoc-members: :show-inheritance:</p>
+</section>
+<section id="utilities">
+<h3>Utilities</h3>
+<p>Helper functions for SSML processing.</p>
+<p>.. automodule:: ssmd.utils :members: :undoc-members: :show-inheritance:</p>
 </section>
 </section>
 </section>

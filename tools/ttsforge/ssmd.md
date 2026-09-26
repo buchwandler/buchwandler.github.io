@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge SSMD 0.8"
+title: "ttsforge SSMD 0.8.7"
 permalink: /tools/ttsforge/ssmd/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.3.7"
-docs_commit: "684cecebc746c71d88b76c34a5a58e12fae51a1e"
+docs_ref: "v0.4.0"
+docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
 search_enabled: true
 ---
 
@@ -540,11 +540,11 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ssmd-0-8">
-<h1>SSMD 0.8</h1>
-<p>ttsforge treats SSMD 0.8 as a document format, not as decorated plain text. Generated,
+<section id="ssmd-0-8-7">
+<h1>SSMD 0.8.7</h1>
+<p>ttsforge treats SSMD 0.8.7 as a document format, not as decorated plain text. Generated,
 edited, and direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> documents are validated with the public <code class="docutils literal notranslate"><span class="pre">ssmd</span></code> APIs and the
-pykokoro Kokoro profile before synthesis. Header metadata is never sent to speech.</p>
+PyKokoro 0.9 profile before synthesis. Header metadata is never sent to speech.</p>
 <section id="basic-workflow">
 <h2>Basic workflow</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--generate-ssmd
@@ -601,15 +601,14 @@ layers: epub2text performs semantic extraction, TTSForge preserves the resulting
 controlled Markdown in SSMD, and the SSMD emphasis policy controls audible rendering.
 Emphasis is spoken plainly by default: it does not add automatic gain, rate, or pitch
 changes, and its metadata is preserved. Use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, or <code class="docutils literal notranslate"><span class="pre">3</span></code> for Light,
-Normal, or Strong gain-only audible emphasis; level 2 is the current legacy behavior.
-Use <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">approximate</span></code> or the deprecated <code class="docutils literal notranslate"><span class="pre">--enable-ssmd-emphasis</span></code> only as
-advanced/compatibility controls, and use <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter behavior.
-Explicit document prosody such as <code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain
-mode. Language, voice, prosody, say-as, substitution, phoneme, break, mark, paragraph,
-heading, and supported audio attributes are passed to the renderer.</p>
+Normal, or Strong gain-only audible emphasis; level 2 is the normal emphasis
+approximation. Use <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter SSMD emphasis behavior. Explicit
+document prosody such as <code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode.
+Language, voice, prosody, say-as, heading, and supported audio attributes are passed to
+the renderer.</p>
 <section id="automatic-written-to-spoken-preparation-vs-explicit-say-as">
 <h3>Automatic written-to-spoken preparation vs explicit say-as</h3>
-<p>Ordinary unannotated text flows through the PyKokoro/kokorog2p 0.8.x preparation
+<p>Ordinary unannotated text flows through the PyKokoro 0.9/kokorog2p 0.9.2 preparation
 boundary. For supported languages and forms, kokorog2p may prepare dates, times,
 measurements, currency, ordinals, and abbreviations as speakable text before G2P.
 TTSForge does not rewrite source SSMD into automatic annotations or duplicate that
@@ -636,7 +635,6 @@ preserved for rendering.</p>
 --ssmd-missing-voice<span class="w"> </span>error<span class="p">|</span>use-default
 --emphasis-level<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">1</span><span class="p">|</span><span class="m">2</span><span class="p">|</span><span class="m">3</span>
 --ssmd-emphasis<span class="w"> </span>plain<span class="p">|</span>approximate<span class="p">|</span>warn<span class="p">|</span>error
---enable-ssmd-emphasis
 --detect-emphasis
 --ssmd-voice<span class="w"> </span><span class="nv">narrator</span><span class="o">=</span>af_sarah
 --pause-voice-change<span class="w"> </span><span class="m">0</span>.35

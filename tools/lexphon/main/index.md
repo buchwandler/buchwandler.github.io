@@ -6,7 +6,7 @@ nav_tool: lexphon-main
 docs_project: "lexphon"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c4904d0bbc374dd1b663b51f0250057b71ea2ac0"
+docs_commit: "9c82295126df453fe3db5f9adafda8ce8e32537e"
 search_enabled: true
 ---
 
@@ -558,6 +558,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#catalog-and-installation">Catalog and installation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#lexhint-source-variants">LexHint source variants</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#runtime-rule">Runtime rule</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#normalization-and-storage-inspection-paths">Normalization and storage inspection paths</a></li>
 <li class="toctree-l2"><a class="reference internal" href="ARCHITECTURE/#kokorog2p-integration">KokoroG2P integration</a></li>
 </ul>
 </li>
@@ -576,6 +577,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-09-17">[v0.2.5] - 2026-09-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-4-2026-09-17">[v0.2.4] - 2026-09-17</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-3-2026-09-09">[v0.2.3] - 2026-09-09</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-2-2026-09-09">[v0.2.2] - 2026-09-09</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-09-09">[v0.2.1] - 2026-09-09</a></li>
@@ -599,7 +603,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;lexphon[goruut]&quot;</span>
 </pre></div>
 </div>
-<p>The eSpeak extra expects an eSpeak or eSpeak-NG executable supplied by the operating system. Pygoruut may provision its own Goruut runtime.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">espeak</span></code> extra installs <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> and uses an available system eSpeak or eSpeak-NG runtime. Install <code class="docutils literal notranslate"><span class="pre">lexphon[espeak-bundled]</span></code> when the runtime’s bundled native loader is desired. Pygoruut may provision its own Goruut runtime.</p>
 </section>
 <section id="quick-start">
 <h2>Quick start</h2>

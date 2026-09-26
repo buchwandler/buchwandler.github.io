@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "pykokoro PolyNorm benchmark"
+title: "pykokoro PolyNorm benchmark status"
 permalink: /tools/pykokoro/main/polynorm_benchmark/
 nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "9d36442a35f40d932f8999be8fe33c5e20ae8a66"
+docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
 search_enabled: true
 ---
 
@@ -540,108 +540,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="polynorm-benchmark">
-<h1>PolyNorm benchmark</h1>
-<p>PyKokoro includes a maintainer-focused benchmark for the end-to-end frontend path:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PolyNorm text -&gt; PyKokoro document parsing -&gt; kokorog2p / Spokenform semantics -&gt; Kokoro phonemes
-</pre></div>
-</div>
-<p>The benchmark compares phonemizing the original PolyNorm text against phonemizing the
-reviewed spoken-form target. It uses the real PyKokoro pipeline through G2P and swaps
-only the downstream audio stages for no-op adapters, so it does not require ONNX Runtime
-or Kokoro model downloads.</p>
-<section id="license-and-pinned-corpus">
-<h2>License and pinned corpus</h2>
-<ul class="simple">
-<li><p>Repository: <code class="docutils literal notranslate"><span class="pre">https://github.com/apple/ml-speech-polynorm-bench</span></code></p></li>
-<li><p>Commit: <code class="docutils literal notranslate"><span class="pre">f3c67e047bea6b7c40bc2466c0fdaad51d8ce67d</span></code></p></li>
-<li><p>License: <code class="docutils literal notranslate"><span class="pre">CC</span> <span class="pre">BY-NC-ND</span> <span class="pre">4.0</span></code></p></li>
-</ul>
-<p>PyKokoro does <strong>not</strong> bundle the PolyNorm corpus. First download requires explicit
-acknowledgement:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_phoneme<span class="w"> </span>--accept-license
-</pre></div>
-</div>
-<p>The benchmark caches the pinned JSONL files under a commit-scoped cache root and can be
-re-run offline:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_phoneme<span class="w"> </span>--offline<span class="w"> </span>--locale<span class="w"> </span>en-US
-</pre></div>
-</div>
-</section>
-<section id="reproducing-a-single-case">
-<h2>Reproducing a single case</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_phoneme<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--offline<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--case<span class="w"> </span>en-US:1<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--pipeline<span class="w"> </span>both<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--show-failures<span class="w"> </span>all
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--pipeline</span> <span class="pre">plain</span></code> runs the plain-text parser, <code class="docutils literal notranslate"><span class="pre">--pipeline</span> <span class="pre">ssmd</span></code> runs the SSMD parser,
-and <code class="docutils literal notranslate"><span class="pre">--pipeline</span> <span class="pre">both</span></code> compares both frontends in one report.</p>
-</section>
-<section id="metrics">
-<h2>Metrics</h2>
-<p>The benchmark reports:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">raw_phoneme_exact</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">semantic_phoneme_exact</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">token_exact</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">token_error_rate</span></code></p></li>
-<li><p>phoneme/token edit distance</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">semantic_phoneme_exact</span></code> is the primary maintainer metric. Raw phoneme equality and
-token equality remain visible so regressions in punctuation handling or tokenization are
-not hidden.</p>
-</section>
-<section id="reports">
-<h2>Reports</h2>
-<p>Each run writes:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">summary.json</span></code>: aggregate-only metadata with no PolyNorm sentence text</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">failures.jsonl</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">failures.md</span></code></p></li>
-</ul>
-<p>The failure reports are local diagnostics and are ignored by default because they
-contain corpus text.</p>
-</section>
-<section id="baseline-and-strict-modes">
-<h2>Baseline and strict modes</h2>
-<p>The committed baseline file stores reviewed failure ids for regression gating:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_phoneme<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--offline<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--baseline<span class="w"> </span>benchmarks/baselines/polynorm_phoneme.json
-</pre></div>
-</div>
-<p>Baseline mode fails only on new reviewed failures. Strict mode fails on any remaining
-semantic/token mismatch:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_phoneme<span class="w"> </span>--offline<span class="w"> </span>--strict
-</pre></div>
-</div>
-<p>You can compare two summaries directly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>benchmarks.polynorm_compare<span class="w"> </span>before/summary.json<span class="w"> </span>after/summary.json
-</pre></div>
-</div>
-</section>
-<section id="fault-attribution">
-<h2>Fault attribution</h2>
-<p>For benchmark failures, PyKokoro records:</p>
-<ul class="simple">
-<li><p>direct kokorog2p diagnostics</p></li>
-<li><p>optional direct Spokenform preparation output</p></li>
-<li><p>likely-owner classification</p></li>
-</ul>
-<p>These signals are advisory only. They help decide whether to inspect PyKokoro
-segmentation, kokorog2p, or Spokenform first.</p>
-</section>
-<section id="limitations">
-<h2>Limitations</h2>
-<ul class="simple">
-<li><p>The benchmark does not prove general G2P correctness outside the pinned corpus.</p></li>
-<li><p>The external corpus is not downloaded during normal pytest runs.</p></li>
-<li><p>The default benchmark gate stops at phoneme/token output and does not compare audio.</p></li>
-</ul>
-</section>
+<section id="polynorm-benchmark-status">
+<h1>PolyNorm benchmark status</h1>
+<p>This maintainer benchmark guide describes the previous pipeline-based PolyNorm harness,
+including separate plain-document and SSMD modes. That harness has not been migrated to
+the request-centric PyKokoro API and is not a supported verification path for the new
+engine boundary.</p>
+<p>The upstream PolyNorm dataset is not bundled with PyKokoro. Its terms and provenance
+remain unchanged; do not treat the old document-pipeline reports as evidence for the
+request API. For current engine behavior, see the <a class="reference internal" href="../api_reference/"><span class="std std-doc">API reference</span></a> and
+<a class="reference internal" href="../breaking-change-0.10.0/"><span class="std std-doc">breaking-change note</span></a>.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -233,8 +233,8 @@
         {
           "anchor": "",
           "heading": "Direct Backend Access",
-          "text": "from kokorog2p.backends.espeak import EspeakBackend\n\n# Create espeak backend\nbackend = EspeakBackend(language=\"en-us\")\n\n# Phonemize a word\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)",
-          "lower": "from kokorog2p.backends.espeak import espeakbackend\n\n# create espeak backend\nbackend = espeakbackend(language=\"en-us\")\n\n# phonemize a word\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)"
+          "text": "from kokorog2p.backends.espeak import EspeakBackend\n\n# Create espeak backend\nbackend = EspeakBackend(language=\"en-us\")\n\n# Phonemize a word\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)\n\n\n\n\nEspeakBackend is a Kokoro policy adapter over espeakng-runtime. It keeps runtime\ncreation lazy, uses native-to-CLI fallback by default, and forces CLI when\nuse_cli=True. After use, backend.runtime_info reports the selected implementation,\nfallback diagnostics, discovery source, version, and capability metadata. A bundled\nnative runtime does not provide an executable for explicit CLI mode.\n\nLegacy configuration variables remain supported: KOKOROG2P_ESPEAK_EXECUTABLE,\nKOKOROG2P_ESPEAK_LIBRARY, and KOKOROG2P_ESPEAK_DATA. New applications can use the\nneutral ESPEAKNG_RUNTIME_* variables instead. The…",
+          "lower": "from kokorog2p.backends.espeak import espeakbackend\n\n# create espeak backend\nbackend = espeakbackend(language=\"en-us\")\n\n# phonemize a word\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)\n\n\n\n\nespeakbackend is a kokoro policy adapter over espeakng-runtime. it keeps runtime\ncreation lazy, uses native-to-cli fallback by default, and forces cli when\nuse_cli=true. after use, backend.runtime_info reports the selected implementation,\nfallback diagnostics, discovery source, version, and capability metadata. a bundled\nnative runtime does not provide an executable for explicit cli mode.\n\nlegacy configuration variables remain supported: kokorog2p_espeak_executable,\nkokorog2p_espeak_library, and kokorog2p_espeak_data. new applications can use the\nneutral espeakng_runtime_* variables instead. the…"
         },
         {
           "anchor": "",
@@ -344,7 +344,7 @@
     {
       "url": "/tools/kokorog2p/main/api/backends/",
       "title": "kokorog2p Backends API",
-      "snippet": "kokorog2p supports multiple phonemization backends.\nclass kokorog2p.backends.espeak.EspeakBackend(language: str = 'en-us', with_stress: bool …",
+      "snippet": "kokorog2p supports multiple phonemization backends.\nclass kokorog2p.espeak_g2p.EspeakOnlyG2P(language: str = 'en-us', use_espeak_fallback: b …",
       "sections": [
         {
           "anchor": "",
@@ -355,20 +355,14 @@
         {
           "anchor": "",
           "heading": "espeak-ng Backend",
-          "text": "class kokorog2p.backends.espeak.EspeakBackend(language: str = 'en-us', with_stress: bool = True, tie: str = '^', use_cli: bool = False, data_path: str | Path | None = None)[source]\nBases: object\n\nHigh-level espeak backend for Kokoro TTS phonemization.\n\nThis class provides a simple interface for converting text to phonemes\nusing espeak-ng. It automatically converts espeak’s IPA output to\nKokoro’s phoneme format.\n\n\nExample:>>> backend = EspeakBackend(\"en-us\")\n>>> backend.phonemize(\"hello world\")\n'hˈɛlO wˈɜɹld'\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', with_stress: bool = True, tie: str = '^', use_cli: bool = False, data_path: str | Path | None = None) → None[source]\nInitialize the espeak backend.\n\n\nArgs:language: Language code (e.g., “en-us”, “en-gb”, “fr-fr”).\nwith_stress: Whether to inc…",
-          "lower": "class kokorog2p.backends.espeak.espeakbackend(language: str = 'en-us', with_stress: bool = true, tie: str = '^', use_cli: bool = false, data_path: str | path | none = none)[source]\nbases: object\n\nhigh-level espeak backend for kokoro tts phonemization.\n\nthis class provides a simple interface for converting text to phonemes\nusing espeak-ng. it automatically converts espeak’s ipa output to\nkokoro’s phoneme format.\n\n\nexample:>>> backend = espeakbackend(\"en-us\")\n>>> backend.phonemize(\"hello world\")\n'hˈɛlo wˈɜɹld'\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', with_stress: bool = true, tie: str = '^', use_cli: bool = false, data_path: str | path | none = none) → none[source]\ninitialize the espeak backend.\n\n\nargs:language: language code (e.g., “en-us”, “en-gb”, “fr-fr”).\nwith_stress: whether to inc…"
-        },
-        {
-          "anchor": "",
-          "heading": "goruut Backend",
-          "text": "class kokorog2p.goruut_g2p.GoruutOnlyG2P(language: str = 'en-us', use_espeak_fallback: bool = False, use_goruut_fallback: bool = True, strict: bool = True, version: str = '1.0', **kwargs)[source]\nBases: G2PBase\n\nG2P implementation using only pygoruut/goruut.\n\nThis is used as an alternative to espeak for languages that\npygoruut supports well. It provides phonemization via the\ngoruut engine.\n\n\nExample:>>> g2p = GoruutOnlyG2P(\"fr\")\n>>> tokens = g2p(\"Bonjour le monde\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = False, use_goruut_fallback: bool = True, strict: bool = True, version: str = '1.0', **kwargs) → None[source]\nInitialize the goruut-only G2P.\n\n\nArgs:language: Language code (e.g., ‘fr’, ‘de’, ‘en-us’).\nuse_espeak_fallback: Ignored (always uses goruut).\nuse_g…",
-          "lower": "class kokorog2p.goruut_g2p.goruutonlyg2p(language: str = 'en-us', use_espeak_fallback: bool = false, use_goruut_fallback: bool = true, strict: bool = true, version: str = '1.0', **kwargs)[source]\nbases: g2pbase\n\ng2p implementation using only pygoruut/goruut.\n\nthis is used as an alternative to espeak for languages that\npygoruut supports well. it provides phonemization via the\ngoruut engine.\n\n\nexample:>>> g2p = goruutonlyg2p(\"fr\")\n>>> tokens = g2p(\"bonjour le monde\")\n\n\n\n\n\n\n\n\n__init__(language: str = 'en-us', use_espeak_fallback: bool = false, use_goruut_fallback: bool = true, strict: bool = true, version: str = '1.0', **kwargs) → none[source]\ninitialize the goruut-only g2p.\n\n\nargs:language: language code (e.g., ‘fr’, ‘de’, ‘en-us’).\nuse_espeak_fallback: ignored (always uses goruut).\nuse_g…"
+          "text": "class kokorog2p.espeak_g2p.EspeakOnlyG2P(language: str = 'en-us', use_espeak_fallback: bool = True, use_goruut_fallback: bool = False, strict: bool = True, version: str = '1.0', use_cli: bool = False, **kwargs)[source]\nBases: G2PBase\n\nG2P implementation using only espeak-ng.\n\nThis is used for languages that don’t have dedicated dictionaries\nor custom G2P logic. It provides basic phonemization via espeak.\n\n\nExample:>>> g2p = EspeakOnlyG2P(\"fr-fr\")\n>>> tokens = g2p(\"Bonjour le monde\")\n\n\n\n\n\n\n\n\nVOICE_MAP = {'ar': 'ar', 'ar-sa': 'ar', 'bn': 'bn', 'bn-in': 'bn', 'cs': 'cs', 'cs-cz': 'cs', 'da': 'da', 'da-dk': 'da', 'de': 'de', 'de-de': 'de', 'el': 'el', 'el-gr': 'el', 'es': 'es', 'es-es': 'es', 'fa': 'fa', 'fa-ir': 'fa', 'fi': 'fi', 'fi-fi': 'fi', 'fr': 'fr-fr', 'fr-fr': 'fr-fr', 'he': 'he', '…",
+          "lower": "class kokorog2p.espeak_g2p.espeakonlyg2p(language: str = 'en-us', use_espeak_fallback: bool = true, use_goruut_fallback: bool = false, strict: bool = true, version: str = '1.0', use_cli: bool = false, **kwargs)[source]\nbases: g2pbase\n\ng2p implementation using only espeak-ng.\n\nthis is used for languages that don’t have dedicated dictionaries\nor custom g2p logic. it provides basic phonemization via espeak.\n\n\nexample:>>> g2p = espeakonlyg2p(\"fr-fr\")\n>>> tokens = g2p(\"bonjour le monde\")\n\n\n\n\n\n\n\n\nvoice_map = {'ar': 'ar', 'ar-sa': 'ar', 'bn': 'bn', 'bn-in': 'bn', 'cs': 'cs', 'cs-cz': 'cs', 'da': 'da', 'da-dk': 'da', 'de': 'de', 'de-de': 'de', 'el': 'el', 'el-gr': 'el', 'es': 'es', 'es-es': 'es', 'fa': 'fa', 'fa-ir': 'fa', 'fi': 'fi', 'fi-fi': 'fi', 'fr': 'fr-fr', 'fr-fr': 'fr-fr', 'he': 'he', '…"
         },
         {
           "anchor": "",
           "heading": "espeak Backend",
-          "text": "from kokorog2p.backends.espeak import EspeakBackend\n\nbackend = EspeakBackend(language=\"en-us\")\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)",
-          "lower": "from kokorog2p.backends.espeak import espeakbackend\n\nbackend = espeakbackend(language=\"en-us\")\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)"
+          "text": "from kokorog2p.backends.espeak import EspeakBackend\n\nbackend = EspeakBackend(language=\"en-us\")\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)\n\n\n\n\nEspeakBackend delegates discovery and native/CLI lifecycle to espeakng-runtime.\nDefault mode prefers native and falls back to CLI; use_cli=True forces CLI. Inspect\nthe selected implementation after first use with backend.runtime_info, then call\nbackend.close() when the instance is no longer needed.\n\nThe neutral runtime configuration variables are ESPEAKNG_RUNTIME_EXECUTABLE,\nESPEAKNG_RUNTIME_LIBRARY, and ESPEAKNG_RUNTIME_DATA. The legacy\nKOKOROG2P_ESPEAK_EXECUTABLE, KOKOROG2P_ESPEAK_LIBRARY, and KOKOROG2P_ESPEAK_DATA\nvariables remain compatibility aliases. This direct backend is distinct from the Lexphon\neSpeak fallback selected with use_…",
+          "lower": "from kokorog2p.backends.espeak import espeakbackend\n\nbackend = espeakbackend(language=\"en-us\")\nphonemes = backend.phonemize(\"hello\")\nprint(phonemes)\n\n\n\n\nespeakbackend delegates discovery and native/cli lifecycle to espeakng-runtime.\ndefault mode prefers native and falls back to cli; use_cli=true forces cli. inspect\nthe selected implementation after first use with backend.runtime_info, then call\nbackend.close() when the instance is no longer needed.\n\nthe neutral runtime configuration variables are espeakng_runtime_executable,\nespeakng_runtime_library, and espeakng_runtime_data. the legacy\nkokorog2p_espeak_executable, kokorog2p_espeak_library, and kokorog2p_espeak_data\nvariables remain compatibility aliases. this direct backend is distinct from the lexphon\nespeak fallback selected with use_…"
         },
         {
           "anchor": "",
@@ -563,14 +557,14 @@
         {
           "anchor": "",
           "heading": "English API",
-          "text": "The English frontend phonemizes prepared English text with an externally provisioned\nLexphon dictionary and optional backend/model controls. It does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import EnglishG2P\n\ng2p = EnglishG2P(language=\"en-us\", lexicons=\"gold\", use_spacy=False)\nprint(g2p.phonemize(\"Hello world\"))\n\n\n\n\nInstall the selected asset before construction:\n\nlexphon data install en-us:gold en-gb:gold\nlexphon data verify en-us:gold en-gb:gold\n\n\n\n\nUse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. The frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller.",
-          "lower": "the english frontend phonemizes prepared english text with an externally provisioned\nlexphon dictionary and optional backend/model controls. it does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import englishg2p\n\ng2p = englishg2p(language=\"en-us\", lexicons=\"gold\", use_spacy=false)\nprint(g2p.phonemize(\"hello world\"))\n\n\n\n\ninstall the selected asset before construction:\n\nlexphon data install en-us:gold en-gb:gold\nlexphon data verify en-us:gold en-gb:gold\n\n\n\n\nuse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. the frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller."
+          "text": "The English frontend phonemizes prepared English text with an externally provisioned\nLexphon dictionary and optional backend/model controls. It does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import EnglishG2P\n\ng2p = EnglishG2P(language=\"en-us\", lexicons=\"gold\", use_spacy=False)\nprint(g2p.phonemize(\"Hello world\"))\n\n\n\n\nInstall the selected asset before construction:\n\nlexphon data install en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint\nlexphon data verify en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint\n\n\n\n\nUse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. The frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller.",
+          "lower": "the english frontend phonemizes prepared english text with an externally provisioned\nlexphon dictionary and optional backend/model controls. it does not expand numbers,\ncurrencies, dates, units, or abbreviations.\n\nfrom kokorog2p.en import englishg2p\n\ng2p = englishg2p(language=\"en-us\", lexicons=\"gold\", use_spacy=false)\nprint(g2p.phonemize(\"hello world\"))\n\n\n\n\ninstall the selected asset before construction:\n\nlexphon data install en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint\nlexphon data verify en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint\n\n\n\n\nuse get_g2p(\"en-us\") or get_g2p(\"en-gb\") for factory construction. the frontend\npreserves supplied text and token offsets; semantic preparation belongs to the caller."
         },
         {
           "anchor": "",
           "heading": "Lexicon controls",
-          "text": "English exposes one logical gold selection backed by an external Lexphon asset. Use\nlexicons=() for fallback-only operation. There is no English silver tier and no\nruntime API for loading or selecting packaged dictionaries. use_spacy and explicit\nlocal model settings control optional POS-aware tokenization.",
-          "lower": "english exposes one logical gold selection backed by an external lexphon asset. use\nlexicons=() for fallback-only operation. there is no english silver tier and no\nruntime api for loading or selecting packaged dictionaries. use_spacy and explicit\nlocal model settings control optional pos-aware tokenization."
+          "text": "English exposes gold and an explicitly selected lexhint source. Gold values use the\nkokoro-v1 encoding; LexHint values use IPA and pass through the same English\nrealization profile after decoding. Use lexicons=() for fallback-only operation. There\nis no English silver tier or runtime API for loading packaged dictionaries. use_spacy\nand explicit local model settings control optional POS-aware tokenization.",
+          "lower": "english exposes gold and an explicitly selected lexhint source. gold values use the\nkokoro-v1 encoding; lexhint values use ipa and pass through the same english\nrealization profile after decoding. use lexicons=() for fallback-only operation. there\nis no english silver tier or runtime api for loading packaged dictionaries. use_spacy\nand explicit local model settings control optional pos-aware tokenization."
         }
       ]
     },
@@ -911,13 +905,103 @@
     {
       "url": "/tools/kokorog2p/main/changelog/",
       "title": "kokorog2p Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nFixed Russian LexHi …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nFixed release valid …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed release validation to accept additional registered English lexicons",
+          "lower": "fixed release validation to accept additional registered english lexicons"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added selectable English LexHint IPA sources and improved pronunciation for tagged\nwords and lexical compounds\n\n\nAdded morphological metadata to token annotations and preserved it through\nprepared-text segment rebasing",
+          "lower": "added selectable english lexhint ipa sources and improved pronunciation for tagged\nwords and lexical compounds\n\n\nadded morphological metadata to token annotations and preserved it through\nprepared-text segment rebasing"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved eSpeak regression coverage to verify automatic phonemization stays silent on\nstdout",
+          "lower": "improved espeak regression coverage to verify automatic phonemization stays silent on\nstdout"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed Goruut availability checks to select a host executable without starting a\nprocess and serialize initialization\n\n\nChanged Japanese Cutlet to load optional dependencies lazily for lightweight module\nimports",
+          "lower": "changed goruut availability checks to select a host executable without starting a\nprocess and serialize initialization\n\n\nchanged japanese cutlet to load optional dependencies lazily for lightweight module\nimports"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Goruut platform failures with Android and Termux compatibility plus actionable\ndiagnostics",
+          "lower": "fixed goruut platform failures with android and termux compatibility plus actionable\ndiagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented direct eSpeak and Goruut extras outside the Lexphon provider layer",
+          "lower": "documented direct espeak and goruut extras outside the lexphon provider layer"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved Goruut test isolation with injected processes and opt-in live backend smoke\ntests",
+          "lower": "improved goruut test isolation with injected processes and opt-in live backend smoke\ntests"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added compatibility fallback for backends without phonemize_many",
+          "lower": "added compatibility fallback for backends without phonemize_many"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed eSpeak runtime diagnostics, cache cleanup, and batch phonemization support",
+          "lower": "changed espeak runtime diagnostics, cache cleanup, and batch phonemization support"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed get_g2p to return the cached or newly created instance\n\n\nFixed English eSpeak fallback pronunciation and debug consistency while updating\nruntime dependency bounds",
+          "lower": "fixed get_g2p to return the cached or newly created instance\n\n\nfixed english espeak fallback pronunciation and debug consistency while updating\nruntime dependency bounds"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed direct eSpeak support to use espeakng-runtime while preserving Kokoro\nconversion and native-to-CLI fallback",
+          "lower": "changed direct espeak support to use espeakng-runtime while preserving kokoro\nconversion and native-to-cli fallback"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed eSpeak data-path handling to preserve configured paths across platforms",
+          "lower": "fixed espeak data-path handling to preserve configured paths across platforms"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented direct runtime eSpeak installation and its distinction from the Lexphon\nfallback provider",
+          "lower": "documented direct runtime espeak installation and its distinction from the lexphon\nfallback provider"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed Russian fallback lookup when no selected lexicon is configured, preserving\nprovider provenance\n\n\nFixed Kazakh pronunciation conversion for eSpeak uvular trill symbols",
+          "lower": "fixed russian fallback lookup when no selected lexicon is configured, preserving\nprovider provenance\n\n\nfixed kazakh pronunciation conversion for espeak uvular trill symbols"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented runnable examples for the prepared API, lexicon selection, fallbacks,\nresults, caching, and annotations",
+          "lower": "documented runnable examples for the prepared api, lexicon selection, fallbacks,\nresults, caching, and annotations"
         },
         {
           "anchor": "",
@@ -1032,108 +1116,6 @@
           "heading": "Added",
           "text": "Added an opt-in Swedish NST pronunciation lexicon and normalized German lexicon output\nbefore fallback processing\n\n\nAdded station benchmarks and lazy, batched, cached frontend fallbacks",
           "lower": "added an opt-in swedish nst pronunciation lexicon and normalized german lexicon output\nbefore fallback processing\n\n\nadded station benchmarks and lazy, batched, cached frontend fallbacks"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed the Thai optional extra to declare scikit-learn explicitly",
-          "lower": "changed the thai optional extra to declare scikit-learn explicitly"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed German eSpeak fallback tie-marker normalization before Kokoro conversion\n\n\nFixed fallback cache keys to preserve lazy backend initialization",
-          "lower": "fixed german espeak fallback tie-marker normalization before kokoro conversion\n\n\nfixed fallback cache keys to preserve lazy backend initialization"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added provider-neutral linguistic annotations and explicit language span routing",
-          "lower": "added provider-neutral linguistic annotations and explicit language span routing"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "BREAKING: Changed the canonical input contract to require prepared text owned by\nthe caller\n\n\nBREAKING: Changed public phonemization and tokenization APIs to require an\nexplicit language",
-          "lower": "breaking: changed the canonical input contract to require prepared text owned by\nthe caller\n\n\nbreaking: changed public phonemization and tokenization apis to require an\nexplicit language"
-        },
-        {
-          "anchor": "",
-          "heading": "Removed",
-          "text": "BREAKING: Removed semantic flags, abbreviation registries, and automatic language\ndetection from the core API\n\n\nBREAKING: Removed the mandatory Spokenform runtime dependency from the core\ninstallation",
-          "lower": "breaking: removed semantic flags, abbreviation registries, and automatic language\ndetection from the core api\n\n\nbreaking: removed the mandatory spokenform runtime dependency from the core\ninstallation"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented the prepared-text responsibility boundary and 0.8 to 0.9 migration",
-          "lower": "documented the prepared-text responsibility boundary and 0.8 to 0.9 migration"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added executable-example contract checks and separated optional Spokenform composition\ncoverage",
-          "lower": "added executable-example contract checks and separated optional spokenform composition\ncoverage"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added phonemize_prepared for caller-owned written-to-spoken preparation\n\n\nAdded an opt-in German Crane/Wiktionary pronunciation lexicon with pinned provenance\nand named public selection\n\n\nAdded opt-in German eSpeak-derived and OLaPh pronunciation lexicons\n\n\nAdded structured per-span stress overrides with language-aware validation",
-          "lower": "added phonemize_prepared for caller-owned written-to-spoken preparation\n\n\nadded an opt-in german crane/wiktionary pronunciation lexicon with pinned provenance\nand named public selection\n\n\nadded opt-in german espeak-derived and olaph pronunciation lexicons\n\n\nadded structured per-span stress overrides with language-aware validation"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed bundled language lexicons to lazy packaged G2Lex assets with named ordered\nselection\n\n\nAdded strict ARPABET conversion and manifest-driven lexicon selection\n\n\nChanged German IPA handling to reject invalid pronunciations and preserve fallback\n\n\nChanged named lexicon selection to override legacy load flags\n\n\nChanged prepared-input handling across language frontends to avoid repeating semantic\npreparation\n\n\nChanged minimum Spokenform dependency to 0.3.5 and G2Lex dependency to 0.1.8\n\n\nChanged Korean and Thai semantic preparation to use Spokenform while preserving\nsource-aligned replacements\n\n\nChanged prepared span pipelines to avoid repeated semantic normalization\n\n\nChanged German Crane runtime keys to NFC lowercase with POS-aware collision resolution",
-          "lower": "changed bundled language lexicons to lazy packaged g2lex assets with named ordered\nselection\n\n\nadded strict arpabet conversion and manifest-driven lexicon selection\n\n\nchanged german ipa handling to reject invalid pronunciations and preserve fallback\n\n\nchanged named lexicon selection to override legacy load flags\n\n\nchanged prepared-input handling across language frontends to avoid repeating semantic\npreparation\n\n\nchanged minimum spokenform dependency to 0.3.5 and g2lex dependency to 0.1.8\n\n\nchanged korean and thai semantic preparation to use spokenform while preserving\nsource-aligned replacements\n\n\nchanged prepared span pipelines to avoid repeated semantic normalization\n\n\nchanged german crane runtime keys to nfc lowercase with pos-aware collision resolution"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed shared packaged lexicon resources so closing one G2P instance does not\ninvalidate active consumers\n\n\nFixed Unicode replacement composition within source tokens\n\n\nFixed German currency preparation to retain minor-unit wording in spoken output",
-          "lower": "fixed shared packaged lexicon resources so closing one g2p instance does not\ninvalidate active consumers\n\n\nfixed unicode replacement composition within source tokens\n\n\nfixed german currency preparation to retain minor-unit wording in spoken output"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Improved German lexicon quality evaluation with a supported benchmark package\n\n\nChanged packaged G2Lex assets to reproducible output with stable version and path\nvalidation",
-          "lower": "improved german lexicon quality evaluation with a supported benchmark package\n\n\nchanged packaged g2lex assets to reproducible output with stable version and path\nvalidation"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added a Japanese G2P frontend with improved source alignment, dependency handling, and\nbenchmark coverage\n\n\nAdded Vietnamese G2P support with Unicode-aware normalization, phonology, syllable\nhandling, and rendering\n\n\nAdded Arabic G2P support with diacritization, model-profile integration, and optional\ndependency handling\n\n\nAdded a native Swedish rule-based G2P frontend with phonology rules and regression\ncoverage\n\n\nAdded Thai G2P support with normalization and source-aware recovery for optional\npronunciation engines\n\n\nAdded Russian G2P support with explicit and contextual stress handling and optional\naccent models\n\n\nAdded Kazakh G2P support through the eSpeak-NG backend with raw IPA validation",
-          "lower": "added a japanese g2p frontend with improved source alignment, dependency handling, and\nbenchmark coverage\n\n\nadded vietnamese g2p support with unicode-aware normalization, phonology, syllable\nhandling, and rendering\n\n\nadded arabic g2p support with diacritization, model-profile integration, and optional\ndependency handling\n\n\nadded a native swedish rule-based g2p frontend with phonology rules and regression\ncoverage\n\n\nadded thai g2p support with normalization and source-aware recovery for optional\npronunciation engines\n\n\nadded russian g2p support with explicit and contextual stress handling and optional\naccent models\n\n\nadded kazakh g2p support through the espeak-ng backend with raw ipa validation"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Improved Korean G2P processing with explicit semantic and model-profile contracts",
-          "lower": "improved korean g2p processing with explicit semantic and model-profile contracts"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed memory-regression test execution with isolated suite tooling and dedicated\nregression coverage",
-          "lower": "fixed memory-regression test execution with isolated suite tooling and dedicated\nregression coverage"
-        },
-        {
-          "anchor": "",
-          "heading": "Quality",
-          "text": "Added a pinned Crane held-out benchmark with reproducible metrics, mismatch reporting,\nand regression tests\n\n\nAdded opt-in German lexicon compression and resident-entry reduction experiments with\nexact checks and staged benchmarks",
-          "lower": "added a pinned crane held-out benchmark with reproducible metrics, mismatch reporting,\nand regression tests\n\n\nadded opt-in german lexicon compression and resident-entry reduction experiments with\nexact checks and staged benchmarks"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed Spokenform semantic-preparation baseline to 0.3.1 and support the 0.3.x series",
-          "lower": "changed spokenform semantic-preparation baseline to 0.3.1 and support the 0.3.x series"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed contextual countdown boundaries through Kokoro model punctuation as two em-dash\nmarkers",
-          "lower": "fixed contextual countdown boundaries through kokoro model punctuation as two em-dash\nmarkers"
         }
       ]
     },
@@ -1205,6 +1187,43 @@
       ]
     },
     {
+      "url": "/tools/kokorog2p/main/en/PROVENANCE/",
+      "title": "kokorog2p English Kokoro frontend provenance",
+      "snippet": "The English realization contract is based on hexgrad/misaki, specifically\nmisaki/en.py at commit fba1236595f2d2bf21d414ba6e57d25256afada3, p …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Reference",
+          "text": "The English realization contract is based on hexgrad/misaki, specifically\nmisaki/en.py at commit fba1236595f2d2bf21d414ba6e57d25256afada3, package version\n0.9.4, frontend misaki.en.G2P.\n\nThe pinned implementation is the compatibility oracle for model-facing English phoneme\nbehavior. The reference package is used only by isolated benchmark and review tooling.\nKokoroG2P does not import Misaki at runtime.",
+          "lower": "the english realization contract is based on hexgrad/misaki, specifically\nmisaki/en.py at commit fba1236595f2d2bf21d414ba6e57d25256afada3, package version\n0.9.4, frontend misaki.en.g2p.\n\nthe pinned implementation is the compatibility oracle for model-facing english phoneme\nbehavior. the reference package is used only by isolated benchmark and review tooling.\nkokorog2p does not import misaki at runtime."
+        },
+        {
+          "anchor": "",
+          "heading": "Ported semantic areas",
+          "text": "POS parent selectors and tagged heteronym selection.\n\n\nContext-sensitive function words and right-to-left future-vowel/future-to state.\n\n\nCapitalization-derived stress.\n\n\nProper-noun and letter-name spelling.\n\n\nProductive -s, -ed, and -ing morphology.\n\n\nUnicode-aware lexical subtokenization and grouped resolution.\n\n\nCompound stress balancing.\n\n\nLegacy English frontend finalization.\n\n\n\nThe realization order is:\n\nselected source value\n    -> source codec\n    -> lexical and morphological realization\n    -> subtoken/compound stress resolution\n    -> profile finalization\n    -> Kokoro inventory validation\n\n\n\n\nen-us:gold stores kokoro-v1 values. The logical gold asset represents the legacy\ngold and silver data after the G2Lex transform, including case aliases and gold\nprecedence. Those dataset…",
+          "lower": "pos parent selectors and tagged heteronym selection.\n\n\ncontext-sensitive function words and right-to-left future-vowel/future-to state.\n\n\ncapitalization-derived stress.\n\n\nproper-noun and letter-name spelling.\n\n\nproductive -s, -ed, and -ing morphology.\n\n\nunicode-aware lexical subtokenization and grouped resolution.\n\n\ncompound stress balancing.\n\n\nlegacy english frontend finalization.\n\n\n\nthe realization order is:\n\nselected source value\n    -> source codec\n    -> lexical and morphological realization\n    -> subtoken/compound stress resolution\n    -> profile finalization\n    -> kokoro inventory validation\n\n\n\n\nen-us:gold stores kokoro-v1 values. the logical gold asset represents the legacy\ngold and silver data after the g2lex transform, including case aliases and gold\nprecedence. those dataset…"
+        },
+        {
+          "anchor": "",
+          "heading": "Intentional differences",
+          "text": "KokoroG2P intentionally differs from the reference architecture in these areas:\n\n\nNo runtime Misaki dependency.\n\n\nExternal G2Lex resources with lazy shared leases.\n\n\nLexphon-owned fallback providers.\n\n\nKokoroG2P’s public GToken and debug/provenance model.\n\n\nPrepared-text APIs keep written-to-spoken semantic expansion outside the core.\n\n\nConsolidated gold/silver data is selected by the G2Lex transform.\n\n\n\nThese differences are allowed only when they do not change the model-facing English\nrealization contract. Any retained phoneme difference must be recorded in a regression\ntest and explained here.",
+          "lower": "kokorog2p intentionally differs from the reference architecture in these areas:\n\n\nno runtime misaki dependency.\n\n\nexternal g2lex resources with lazy shared leases.\n\n\nlexphon-owned fallback providers.\n\n\nkokorog2p’s public gtoken and debug/provenance model.\n\n\nprepared-text apis keep written-to-spoken semantic expansion outside the core.\n\n\nconsolidated gold/silver data is selected by the g2lex transform.\n\n\n\nthese differences are allowed only when they do not change the model-facing english\nrealization contract. any retained phoneme difference must be recorded in a regression\ntest and explained here."
+        },
+        {
+          "anchor": "",
+          "heading": "Compatibility profile",
+          "text": "The initial internal profile is hexgrad-misaki-v1. It enables compound stress\nresolution and uses the legacy finalization rewrites:\n\nɾ -> T\nʔ -> t\n\n\n\n\nThe profile is deliberately separate from KokoroG2P’s public target-model version\nfield. A target model version and a frontend compatibility version are independent\nconcepts.",
+          "lower": "the initial internal profile is hexgrad-misaki-v1. it enables compound stress\nresolution and uses the legacy finalization rewrites:\n\nɾ -> t\nʔ -> t\n\n\n\n\nthe profile is deliberately separate from kokorog2p’s public target-model version\nfield. a target model version and a frontend compatibility version are independent\nconcepts."
+        },
+        {
+          "anchor": "",
+          "heading": "Contract corpus",
+          "text": "benchmarks/reference/data/en_us_misaki_contract_v1.json is the maintained review\ncorpus. It covers tagged entries, function words, capitalization, morphology, compounds,\npunctuation context boundaries, proper-noun spelling, compound stress, and generated\nflap/glottal finalization. Cases are compared to the pinned reference with stage-aware\ndiagnostics when the reference environment is available.",
+          "lower": "benchmarks/reference/data/en_us_misaki_contract_v1.json is the maintained review\ncorpus. it covers tagged entries, function words, capitalization, morphology, compounds,\npunctuation context boundaries, proper-noun spelling, compound stress, and generated\nflap/glottal finalization. cases are compared to the pinned reference with stage-aware\ndiagnostics when the reference environment is available."
+        }
+      ]
+    },
+    {
       "url": "/tools/kokorog2p/main/",
       "title": "kokorog2p documentation",
       "snippet": "kokorog2p is a multilingual grapheme-to-phoneme and Kokoro model adaptation layer.\nThe core accepts prepared, speakable text and an explicit …",
@@ -1243,8 +1262,14 @@
         {
           "anchor": "",
           "heading": "Optional language and backend extras",
-          "text": "Install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\"\n\n\n\n\nOptional spaCy models and system tools such as espeak-ng are installed separately.\nHindi uses the existing eSpeak-NG integration with the hi voice and preserves raw IPA\nfor Kokoro v1.0. It does not require lexphon data install ... because no Hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nKokoroG2P never downloads models or dictionary assets during construction or lookup.",
-          "lower": "install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\"\n\n\n\n\noptional spacy models and system tools such as espeak-ng are installed separately.\nhindi uses the existing espeak-ng integration with the hi voice and preserves raw ipa\nfor kokoro v1.0. it does not require lexphon data install ... because no hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nkokorog2p never downloads models or dictionary assets during construction or lookup."
+          "text": "Install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\"",
+          "lower": "install only the integrations used by the application:\n\npython -m pip install \"kokorog2p[en]\"\npython -m pip install \"kokorog2p[de]\"\npython -m pip install \"kokorog2p[fr]\"\npython -m pip install \"kokorog2p[ja]\"\npython -m pip install \"kokorog2p[ko]\"\npython -m pip install \"kokorog2p[espeak]\"\npython -m pip install \"kokorog2p[hi]\"\npython -m pip install \"kokorog2p[goruut]\""
+        },
+        {
+          "anchor": "",
+          "heading": "Direct eSpeak runtime",
+          "text": "backend=\"espeak\" uses the core espeakng-runtime adapter. Install\nkokorog2p[espeak-direct] for the runtime’s bundled native loader:\n\npython -m pip install \"kokorog2p[espeak-direct]\"\n\n\n\n\nThe bundled native loader does not install an eSpeak executable. Explicit CLI mode\n(use_cli=True) requires espeak-ng or espeak on PATH, or a configured executable.\nThe espeak extra above remains the separate Lexphon eSpeak fallback provider path.\n\nOptional spaCy models and system tools such as espeak-ng are installed separately.\nHindi uses the existing eSpeak-NG integration with the hi voice and preserves raw IPA\nfor Kokoro v1.0. It does not require lexphon data install ... because no Hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nKokoroG2P never downloads models or dictionary as…",
+          "lower": "backend=\"espeak\" uses the core espeakng-runtime adapter. install\nkokorog2p[espeak-direct] for the runtime’s bundled native loader:\n\npython -m pip install \"kokorog2p[espeak-direct]\"\n\n\n\n\nthe bundled native loader does not install an espeak executable. explicit cli mode\n(use_cli=true) requires espeak-ng or espeak on path, or a configured executable.\nthe espeak extra above remains the separate lexphon espeak fallback provider path.\n\noptional spacy models and system tools such as espeak-ng are installed separately.\nhindi uses the existing espeak-ng integration with the hi voice and preserves raw ipa\nfor kokoro v1.0. it does not require lexphon data install ... because no hindi runtime\nlexicon or automatic-routing evidence provider is included.\n\nkokorog2p never downloads models or dictionary as…"
         },
         {
           "anchor": "",
@@ -1330,8 +1355,8 @@
         {
           "anchor": "",
           "heading": "English and French",
-          "text": "English and French each expose one logical gold lexicon backed by an external asset:\n\n\n\nLanguage\n\nLexphon ID\n\n\n\n\n\nUS English\n\nen-us:gold\n\n\n\nGB English\n\nen-gb:gold\n\n\n\nFrench\n\nfr-fr:gold\n\n\n\n\n\nProvision released data before using the default English or French dictionary path:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nUse lexicons=() for fallback-only operation. silver is not an English runtime\noption.\n\nRuntime lookup is offline. KokoroG2P does not fetch catalogs, download assets, invoke\nthe Lexphon CLI, or rebuild source dictionaries during construction or lookup. Missing\ndata produces an installation and verification command in the error mess…",
-          "lower": "english and french each expose one logical gold lexicon backed by an external asset:\n\n\n\nlanguage\n\nlexphon id\n\n\n\n\n\nus english\n\nen-us:gold\n\n\n\ngb english\n\nen-gb:gold\n\n\n\nfrench\n\nfr-fr:gold\n\n\n\n\n\nprovision released data before using the default english or french dictionary path:\n\nlexphon data install en-us:gold en-gb:gold fr-fr:gold\nlexphon data verify en-us:gold en-gb:gold fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nuse lexicons=() for fallback-only operation. silver is not an english runtime\noption.\n\nruntime lookup is offline. kokorog2p does not fetch catalogs, download assets, invoke\nthe lexphon cli, or rebuild source dictionaries during construction or lookup. missing\ndata produces an installation and verification command in the error mess…"
+          "text": "English exposes a default gold lexicon and an explicit lexhint source backed by\nexternal assets: the two sources use different encodings but share the KokoroG2P English\nrealization layer.\n\n\n\nLanguage\n\nLexphon ID\n\nDefault\n\nEncoding\n\n\n\n\n\nUS English\n\nen-us:gold\n\nyes\n\nkokoro-v1\n\n\n\nUS English\n\nen-us:lexhint\n\nno\n\nIPA\n\n\n\nGB English\n\nen-gb:gold\n\nyes\n\nkokoro-v1\n\n\n\nGB English\n\nen-gb:lexhint\n\nno\n\nIPA\n\n\n\nFrench\n\nfr-fr:gold\n\nyes\n\nkokoro-v1\n\n\n\n\n\nProvision released data before using the default English or French dictionary path:\n\nlexphon data install en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint fr-fr:gold\nlexphon data verify en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nUse lexicons=\"lexhint\" for the…",
+          "lower": "english exposes a default gold lexicon and an explicit lexhint source backed by\nexternal assets: the two sources use different encodings but share the kokorog2p english\nrealization layer.\n\n\n\nlanguage\n\nlexphon id\n\ndefault\n\nencoding\n\n\n\n\n\nus english\n\nen-us:gold\n\nyes\n\nkokoro-v1\n\n\n\nus english\n\nen-us:lexhint\n\nno\n\nipa\n\n\n\ngb english\n\nen-gb:gold\n\nyes\n\nkokoro-v1\n\n\n\ngb english\n\nen-gb:lexhint\n\nno\n\nipa\n\n\n\nfrench\n\nfr-fr:gold\n\nyes\n\nkokoro-v1\n\n\n\n\n\nprovision released data before using the default english or french dictionary path:\n\nlexphon data install en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint fr-fr:gold\nlexphon data verify en-us:gold en-us:lexhint en-gb:gold en-gb:lexhint fr-fr:gold\n\n\n\n\nget_g2p(\"en-us\"), get_g2p(\"en-gb\"), and get_g2p(\"fr-fr\") select gold by default.\nuse lexicons=\"lexhint\" for the…"
         },
         {
           "anchor": "",

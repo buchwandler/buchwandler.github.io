@@ -5,8 +5,8 @@ permalink: /tools/lexphon/KOKOROG2P_INTEGRATION/
 nav_tool: lexphon
 docs_project: "lexphon"
 docs_variant: "release"
-docs_ref: "v0.2.3"
-docs_commit: "1a6a1395225c036ae618d9d33e773cc9f79890b8"
+docs_ref: "v0.2.5"
+docs_commit: "6eaaf5d0ec408497d042a2baaa59048aac1e08ae"
 search_enabled: true
 ---
 

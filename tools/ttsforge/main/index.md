@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge Documentation"
+title: "TTSForge documentation"
 permalink: /tools/ttsforge/main/
 nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "eae2d650dfb8e0d9cfaff3a1f9ce6d47e7e146fe"
+docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
 search_enabled: true
 ---
 
@@ -541,120 +541,105 @@ html[data-theme="dark"] .sphinxpress-doc {
 
 <div class="sphinxpress-doc">
 <section id="ttsforge-documentation">
-<h1>ttsforge Documentation</h1>
-<p><strong>ttsforge</strong> is a command-line tool for converting EPUB files to audiobooks using Kokoro
-ONNX TTS (Text-to-Speech).</p>
+<h1>TTSForge documentation</h1>
+<p>TTSForge is an audiobook-focused command-line frontend for Readio. Readio owns the
+persistent project lifecycle, synthesis engines, composition, reuse, and exports;
+TTSForge presents an EPUB audiobook workflow and maps choices to Readio’s public
+services.</p>
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.1</span></code>, whose public API supplies its audiobook project,
+synthesis preflight, and export workflows. See <a class="reference internal" href="installation/"><span class="std std-doc">Installation</span></a> for user
+and development setup.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#system-requirements">System Requirements</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#dependencies">Dependencies</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#installing-ttsforge">Installing ttsforge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#onnx-runtime-providers">ONNX Runtime Providers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#memory-diagnostics">Memory diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#mixed-language-support">Mixed-Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#downloading-models">Downloading Models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#verifying-installation">Verifying Installation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#requirements">Requirements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#development-installation">Development installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#verify-the-environment">Verify the environment</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#install-from-pypi">Install from PyPI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#supported-python">Supported Python</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick Start Guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#basic-conversion">Basic Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#choosing-a-voice">Choosing a Voice</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#voice-blending">Voice Blending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#output-formats">Output Formats</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#converting-specific-chapters">Converting Specific Chapters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#speed-control">Speed Control</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#resumable-conversions">Resumable Conversions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#phoneme-pre-tokenization">Phoneme Pre-tokenization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#testing-tts-settings">Testing TTS Settings</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#streaming-read-optional">Streaming Read (Optional)</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#voice-demo">Voice Demo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#mixed-language-support">Mixed-Language Support</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#ssmd-editing">SSMD Editing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#configuration">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#complete-example">Complete Example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next Steps</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration-readio/">Migrating to the Readio-backed TTSForge</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#compatibility-and-installation">Compatibility and installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#what-changes">What changes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#existing-workspaces-are-not-migrated">Existing workspaces are not migrated</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#configuration-migration">Configuration migration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#removed-commands-and-ownership">Removed commands and ownership</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#new-workflow">New workflow</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="cli/">CLI Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="cli/#global-options">Global Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#convert">convert</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#list">list</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#info">info</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#sample">sample</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#read">read</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#voices">voices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#demo">demo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#download">download</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#config">config</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#config-short-sentence">config short-sentence</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#phonemes">phonemes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="migration-v0.4/">Historical migration notes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#inspect-and-convert">Inspect and convert</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#select-chapters">Select chapters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#preview-plan-and-status">Preview, plan, and status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#choose-an-output-and-synthesis-settings">Choose an output and synthesis settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#configuration-and-troubleshooting">Configuration and troubleshooting</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD 0.8.7</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#basic-workflow">Basic workflow</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#portable-document-example">Portable document example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#syntax">Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#direct-ssmd-input">Direct SSMD input</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#policies-and-diagnostics">Policies and diagnostics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#intentional-kokoro-limitations">Intentional Kokoro limitations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmd/#see-also">See also</a></li>
+<li class="toctree-l1"><a class="reference internal" href="cli/">CLI reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/#convert"><code class="docutils literal notranslate"><span class="pre">convert</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#conversion-interaction-and-progress">Conversion interaction and progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#inspecting-and-managing-projects">Inspecting and managing projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#preview"><code class="docutils literal notranslate"><span class="pre">preview</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#readio-discovery">Readio discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#config"><code class="docutils literal notranslate"><span class="pre">config</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#ssmd"><code class="docutils literal notranslate"><span class="pre">ssmd</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#removed-commands">Removed commands</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="projects/">Projects and outputs</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="projects/#default-project-and-reuse">Default project and reuse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projects/#chapter-selection-is-project-scope">Chapter selection is project scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projects/#fresh-projects-and-outputs">Fresh projects and outputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projects/#former-ttsforge-workspaces">Former TTSForge workspaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="projects/#status-and-planning">Status and planning</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="configuration/">Configuration</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#configuration-file-location">Configuration File Location</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#managing-configuration">Managing Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#configuration-options">Configuration Options</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#complete-configuration-reference">Complete Configuration Reference</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#example-configuration-file">Example Configuration File</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#command-line-override">Command-Line Override</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#environment-variables">Environment Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="configuration/#model-source-status">Model source status</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#inspect-and-initialize">Inspect and initialize</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#set-a-readio-setting">Set a Readio setting</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#command-line-overrides-and-projects">Command-line overrides and projects</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#migrating-old-settings">Migrating old settings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="configuration/#diagnose-configuration-and-engine-setup">Diagnose configuration and engine setup</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="filename_templates/">Filename Templates</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#template-syntax">Template Syntax</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#available-variables">Available Variables</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#template-types">Template Types</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#format-specifiers">Format Specifiers</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#filename-sanitization">Filename Sanitization</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#partial-chapter-selections">Partial Chapter Selections</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#examples">Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#work-directory">Work Directory</a></li>
-<li class="toctree-l2"><a class="reference internal" href="filename_templates/#troubleshooting">Troubleshooting</a></li>
+<li class="toctree-l1"><a class="reference internal" href="voices/">Voices and discovery</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voices/#list-voices">List voices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voices/#inspect-models-and-engines">Inspect models and engines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voices/#use-a-discovered-voice">Use a discovered voice</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="voices/">Voices</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="voices/#voice-naming-convention">Voice Naming Convention</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#listing-voices">Listing Voices</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#voice-demo">Voice Demo</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#voices-by-language">Voices by Language</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#voice-blending">Voice Blending</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#recommendations">Recommendations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="voices/#language-code-reference">Language Code Reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD tools</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#check-and-validate">Check and validate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#materialize-voice-bindings">Materialize voice bindings</a></li>
+<li class="toctree-l2"><a class="reference internal" href="ssmd/#format-and-semantics">Format and semantics</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="testing/">Testing and Coverage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="testing/#minimum-dependency-contract">Minimum dependency contract</a></li>
+<li class="toctree-l1"><a class="reference internal" href="filename_templates/">Output paths (formerly filename templates)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="filename_templates/#choose-an-output-path">Choose an output path</a></li>
+<li class="toctree-l2"><a class="reference internal" href="filename_templates/#choose-a-project-path-separately">Choose a project path separately</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="testing/">Testing and release checks</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="testing/#publishing-checks">Publishing checks</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - 2026-08-12</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.3.3] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.3.2] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.3.1] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.0] - 2026-08-02</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.2.0] - 2026-07-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.2] - 2026-02-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.1] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.1.0] - 2026-02-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.4.0] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id34">[0.3.7] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id38">[0.3.6] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.4.0] - 2026-09-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.3.7] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.3.6] - 2026-08-15</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-3-5-2026-08-12">[v0.3.5] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.3.4] - 2026-08-12</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.3] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.3.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.3.1] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.3.0] - 2026-08-02</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.2.0] - 2026-07-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.1.2] - 2026-02-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.1.1] - 2026-02-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.1.0] - 2026-02-01</a></li>
 </ul>
 </li>
 </ul>
@@ -662,82 +647,34 @@ ONNX TTS (Text-to-Speech).</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">API Reference</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="api/">API Reference</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/#module-overview">Module Overview</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#quick-api-examples">Quick API Examples</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#module-ttsforge.constants">Auto-generated API Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/">Python API boundary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/#audiobook-export">Audiobook export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#ttsforge-integration-boundary">TTSForge integration boundary</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<section id="features">
-<h2>Features</h2>
-<ul class="simple">
-<li><p><strong>EPUB to Audiobook Conversion</strong>: Convert EPUB files to M4B, MP3, WAV, FLAC, or OPUS
-formats</p></li>
-<li><p><strong>PyKokoro metadata voices</strong>: Discover profile voices without a fixed TTSForge
-whitelist</p></li>
-<li><p><strong>SSMD Editing</strong>: Edit intermediate SSMD files to fine-tune pronunciation and pacing</p></li>
-<li><p><strong>Resumable Conversions</strong>: Long audiobook conversions can be interrupted and resumed</p></li>
-<li><p><strong>Phoneme Pre-tokenization</strong>: Pre-process text to phonemes for faster batch
-conversions</p></li>
-<li><p><strong>Configurable Filename Templates</strong>: Customize output filenames with book metadata</p></li>
-<li><p><strong>Voice Blending</strong>: Mix multiple voices for custom narration styles</p></li>
-<li><p><strong>GPU Acceleration</strong>: Optional GPU support for faster processing</p></li>
-<li><p><strong>Chapter Selection</strong>: Convert specific chapters or chapter ranges</p></li>
-<li><p><strong>Explicit SSMD language spans</strong>: Mark mixed-language text with <code class="docutils literal notranslate"><span class="pre">lang</span></code> annotations</p></li>
-<li><p><strong>Streaming Read</strong>: Real-time playback with the <code class="docutils literal notranslate"><span class="pre">read</span></code> command (optional audio extra)</p></li>
-</ul>
-</section>
-<section id="quick-example">
-<h2>Quick Example</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Install ttsforge</span>
-pip<span class="w"> </span>install<span class="w"> </span>ttsforge
-
-<span class="c1"># Convert an EPUB to audiobook (M4B format with chapters)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-
-<span class="c1"># Convert with a specific voice</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>-v<span class="w"> </span>am_adam
-
-<span class="c1"># Convert specific chapters</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
-
-<span class="c1"># List available voices</span>
-ttsforge<span class="w"> </span>voices
+<section id="workflow-overview">
+<h2>Workflow overview</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
 </pre></div>
 </div>
-</section>
-<section id="supported-languages">
-<h2>Supported Languages</h2>
-<p>ttsforge supports 10 languages with native TTS voices (including German):</p>
-<ul class="simple">
-<li><p><strong>American English</strong> (a)</p></li>
-<li><p><strong>British English</strong> (b)</p></li>
-<li><p><strong>German</strong> (d)</p></li>
-<li><p><strong>Spanish</strong> (e)</p></li>
-<li><p><strong>French</strong> (f)</p></li>
-<li><p><strong>Hindi</strong> (h)</p></li>
-<li><p><strong>Italian</strong> (i)</p></li>
-<li><p><strong>Japanese</strong> (j)</p></li>
-<li><p><strong>Brazilian Portuguese</strong> (p)</p></li>
-<li><p><strong>Mandarin Chinese</strong> (z)</p></li>
-</ul>
-</section>
-<section id="requirements">
-<h2>Requirements</h2>
-<ul class="simple">
-<li><p>Python 3.10 or later</p></li>
-<li><p>ffmpeg (required for MP3/FLAC/OPUS/M4B output and chapter merging)</p></li>
-<li><p>espeak-ng (for phonemization)</p></li>
-<li><p>PyKokoro 0.9.4 with kokorog2p 0.9.5 and SSMD 0.8.7</p></li>
-<li><p>~330MB disk space for ONNX models (downloaded automatically)</p></li>
-<li><p>sounddevice (optional, for playback features)</p></li>
-</ul>
+<p>TTSForge creates or reuses a Readio project, normally <code class="docutils literal notranslate"><span class="pre">&lt;book-stem&gt;.readio</span></code> beside the
+EPUB. Readio manages project state and decides which work can be reused. M4B is produced
+through Readio’s audiobook export service; generic formats use its project export
+service.</p>
+<p>See the <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/api.md">Readio API guide</a>
+and <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/projects.md">project guide</a>
+for service details. TTSForge deliberately does not duplicate Readio’s internal project
+schema or engine documentation. For reproducible command-line recipes, see the
+<a class="reference external" href="https://github.com/buchwandler/ttsforge/blob/main/examples/README.md">TTSForge examples</a>.</p>
 </section>
 <section id="license">
 <h2>License</h2>
-<p>ttsforge is released under the MIT License.</p>
+<p>TTSForge is released under the MIT License.</p>
 </section>
 <section id="indices-and-tables">
 <h2>Indices and tables</h2>

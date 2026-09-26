@@ -5,8 +5,8 @@ permalink: /tools/ssmd/parser/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_ref: "v0.9.0"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 
@@ -542,67 +542,175 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="parser-api">
 <h1>Parser API</h1>
-<p>The SSMD Parser provides an alternative to SSML generation by extracting structured data
-from SSMD text. This is useful when you need programmatic control over SSMD features or
-want to build custom TTS pipelines.</p>
-<section id="when-to-use-the-parser">
-<h2>When to Use the Parser</h2>
-<p>Use the parser API when you need to:</p>
+<p>SSMD exposes two parser surfaces for different input dialects. Use the sentence-neutral
+structural parser for strict 0.9 documents. Sentence- and segment-oriented convenience
+helpers are retained for unversioned legacy input and SSMD 0.8 compatibility; they are
+not a strict 0.9 API.</p>
+<section id="strict-ssmd-0-9-structural-parser">
+<h2>Strict SSMD 0.9 structural parser</h2>
+<p><code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> is the native parser for strict 0.9. It parses document structure
+without sentence detection and returns clean text, annotations, structural events, front
+matter, and source-aware diagnostics.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_structure</span>
+
+<span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span><span class="se">\</span>
+<span class="s2">---</span>
+<span class="s2">ssmd_version: &#39;0.9&#39;</span>
+<span class="s2">---</span>
+<span class="s2">:::{voice=&quot;host&quot; voice-languages=&quot;en-US&quot;}</span>
+<span class="s2">One.</span>
+<span class="s2">:::</span>
+<span class="s2">:::{voice=&quot;guest&quot; voice-languages=&quot;en-US&quot;}</span>
+<span class="s2">Two.</span>
+<span class="s2">:::</span>
+<span class="s2">&quot;&quot;&quot;</span>
+<span class="n">structure</span> <span class="o">=</span> <span class="n">parse_structure</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
+
+<span class="k">assert</span> <span class="n">structure</span><span class="o">.</span><span class="n">clean_text</span> <span class="o">==</span> <span class="s2">&quot;One. Two.&quot;</span>
+<span class="k">assert</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;paragraph&quot;</span> <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">structure</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">annotations</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">events</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">header</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">structure</span><span class="o">.</span><span class="n">diagnostics</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The adjacent voice directives above are tight siblings: their scopes remain separate,
+but the speaker change does not create a paragraph boundary or pause. Put a blank line
+between sibling directives to create a paragraph event. This rule applies only to
+adjacent directive siblings; blank-line behavior for other block-node pairs is
+unchanged. The canonical formatter preserves tight and loose spacing, including inside
+nested directives.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ParseStructureResult</span></code> exposes:</p>
 <ul class="simple">
-<li><p><strong>Process SSMD features programmatically</strong> - Extract and handle features individually</p></li>
-<li><p><strong>Build custom TTS pipelines</strong> - Implement your own text-to-speech workflow</p></li>
-<li><p><strong>Handle text transformations</strong> - Process say-as, substitution, and phoneme
-conversions</p></li>
-<li><p><strong>Create multi-voice dialogue systems</strong> - Build voice-specific processing pipelines</p></li>
-<li><p><strong>Analyze SSMD content</strong> - Extract metadata and features without generating SSML</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">clean_text</span></code>: text with SSMD markup removed.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">annotations</span></code>: <code class="docutils literal notranslate"><span class="pre">AnnotationSpan</span></code> values with half-open offsets into <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">effective_annotations</span></code>: annotations after supported inherited defaults are resolved.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">events</span></code>: zero-width break, mark, heading, and paragraph events. Their positions are
+clean-text boundary coordinates.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">header</span></code>: parsed YAML front matter, excluded from <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> and <code class="docutils literal notranslate"><span class="pre">warnings</span></code>: source-aware syntax and metadata feedback.</p></li>
 </ul>
-</section>
-<section id="overview">
-<h2>Overview</h2>
-<p>The parser extracts SSMD markup into structured segments, allowing you to process each
-feature individually instead of generating a complete SSML document.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span> <span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_paragraphs</span>
+<p>Paragraph events describe structure; they do not assign a pause duration. Break events
+expose a <code class="docutils literal notranslate"><span class="pre">time</span></code> or semantic <code class="docutils literal notranslate"><span class="pre">strength</span></code>; mark events expose their stable <code class="docutils literal notranslate"><span class="pre">name</span></code>.
+Clean-text offsets and source offsets are separate coordinate systems.</p>
+<p>Use the strict dialect explicitly in API code, or declare <code class="docutils literal notranslate"><span class="pre">ssmd_version:</span> <span class="pre">'0.9'</span></code> and
+allow <code class="docutils literal notranslate"><span class="pre">auto</span></code> to select it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">parsed</span> <span class="o">=</span> <span class="n">parse_structure</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">span</span> <span class="ow">in</span> <span class="n">parsed</span><span class="o">.</span><span class="n">annotations</span><span class="p">:</span>
+    <span class="n">annotated_text</span> <span class="o">=</span> <span class="n">parsed</span><span class="o">.</span><span class="n">clean_text</span><span class="p">[</span><span class="n">span</span><span class="o">.</span><span class="n">char_start</span> <span class="p">:</span> <span class="n">span</span><span class="o">.</span><span class="n">char_end</span><span class="p">]</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">annotated_text</span><span class="p">,</span> <span class="n">span</span><span class="o">.</span><span class="n">attrs</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The parser does not detect languages, normalize written text into spoken form,
+phonemize, or split sentences. A downstream pipeline can normalize <code class="docutils literal notranslate"><span class="pre">clean_text</span></code>, remap
+annotation offsets, and then perform its own sentence segmentation. <code class="docutils literal notranslate"><span class="pre">ssmd.to_ssml()</span></code>
+accepts explicit sentence spans when that caller-owned segmentation should determine
+rendering boundaries.</p>
+<p><code class="docutils literal notranslate"><span class="pre">parse_spans()</span></code> is a lighter-weight API for clean text and annotation ranges when
+structural events and front matter are not needed. See <a class="reference internal" href="../spans/"><span class="std std-doc">Span API</span></a> for details.</p>
+<section id="strict-lint">
+<h3>Strict lint</h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">lint()</span></code> or the CLI to validate strict syntax and profile compatibility:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd.parser</span><span class="w"> </span><span class="kn">import</span> <span class="n">lint</span>
 
- <span class="n">script</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>
-<span class="s2"> &lt;div voice=&quot;sarah&quot;&gt;</span>
-<span class="s2"> Hello! Call [+1-555-0123]{as=&quot;telephone&quot;} for info.</span>
-<span class="s2"> &lt;/div&gt;</span>
-
-<span class="s2"> &lt;div voice=&quot;michael&quot;&gt;</span>
-<span class="s2"> Thanks *Sarah*!</span>
-<span class="s2"> &lt;/div&gt;</span>
-<span class="s2"> &quot;&quot;&quot;</span>
-
- <span class="c1"># Parse into structured paragraphs</span>
-<span class="k">for</span> <span class="n">paragraph</span> <span class="ow">in</span> <span class="n">parse_paragraphs</span><span class="p">(</span><span class="n">script</span><span class="p">):</span>
-    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">paragraph</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
-        <span class="c1"># Get voice configuration</span>
-        <span class="n">voice_name</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
-
-        <span class="c1"># Build complete text from segments</span>
-        <span class="n">full_text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">seg</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
-            <span class="c1"># Handle text transformations</span>
-            <span class="k">if</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">convert_say_as</span><span class="p">(</span><span class="n">seg</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">seg</span><span class="o">.</span><span class="n">say_as</span><span class="o">.</span><span class="n">interpret_as</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">substitution</span>
-            <span class="k">elif</span> <span class="n">seg</span><span class="o">.</span><span class="n">phoneme</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>  <span class="c1"># TTS engine handles phoneme</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">text</span> <span class="o">=</span> <span class="n">seg</span><span class="o">.</span><span class="n">text</span>
-            <span class="n">full_text</span> <span class="o">+=</span> <span class="n">text</span>
-
-        <span class="c1"># Speak with TTS engine</span>
-        <span class="n">tts</span><span class="o">.</span><span class="n">speak</span><span class="p">(</span><span class="n">full_text</span><span class="p">,</span> <span class="n">voice</span><span class="o">=</span><span class="n">voice_name</span><span class="p">)</span>
+<span class="n">issues</span> <span class="o">=</span> <span class="n">lint</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">dialect</span><span class="o">=</span><span class="s2">&quot;0.9&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">issues</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="o">.</span><span class="n">severity</span><span class="p">,</span> <span class="n">issue</span><span class="o">.</span><span class="n">code</span><span class="p">,</span> <span class="n">issue</span><span class="o">.</span><span class="n">message</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="parser-functions">
-<h2>Parser Functions</h2>
-<section id="parse-paragraphs">
-<h3>parse_paragraphs</h3>
-<p>Parse SSMD text into structured paragraphs with sentences and segments.</p>
+</section>
+<section id="legacy-0-8-sentence-and-segment-apis">
+<h2>Legacy 0.8 sentence and segment APIs</h2>
+<p><code class="docutils literal notranslate"><span class="pre">parse_paragraphs()</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_sentences()</span></code>, <code class="docutils literal notranslate"><span class="pre">parse_segments()</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">parse_voice_blocks()</span></code> are compatibility helpers for unversioned legacy input and the
+explicit 0.8 dialect. They produce sentence/segment model objects and may invoke
+sentence detection. Do not pass a strict 0.9 document to these APIs; use
+<code class="docutils literal notranslate"><span class="pre">parse_structure()</span></code> instead. Strict 0.9 <code class="docutils literal notranslate"><span class="pre">Document</span></code> objects also reject sentence/list
+operations such as <code class="docutils literal notranslate"><span class="pre">len(document)</span></code>, indexing, and <code class="docutils literal notranslate"><span class="pre">.sentences()</span></code>.</p>
+<p>The following raw <code class="docutils literal notranslate"><span class="pre">&lt;div&gt;</span></code> example is intentionally legacy 0.8 compatibility input, not
+recommended 0.9 authoring syntax:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>&lt;div voice=&quot;sarah&quot;&gt;
+Hello from Sarah.
+&lt;/div&gt;
+
+&lt;div voice=&quot;michael&quot;&gt;
+Hello from Michael.
+&lt;/div&gt;
+</pre></div>
+</div>
+<p>A legacy consumer may process that input with the compatibility sentence API:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmd</span><span class="w"> </span><span class="kn">import</span> <span class="n">parse_sentences</span>
+
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">parse_sentences</span><span class="p">(</span><span class="n">legacy_source</span><span class="p">):</span>
+    <span class="n">voice</span> <span class="o">=</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span><span class="o">.</span><span class="n">name</span> <span class="k">if</span> <span class="n">sentence</span><span class="o">.</span><span class="n">voice</span> <span class="k">else</span> <span class="s2">&quot;default&quot;</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span> <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">sentence</span><span class="o">.</span><span class="n">segments</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">voice</span><span class="si">}</span><span class="s2">] </span><span class="si">{</span><span class="n">text</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="legacy-function-reference">
+<h3>Legacy function reference</h3>
+<p>.. py:function:: parse_paragraphs(text: str, *, capabilities: TTSCapabilities | str | None = None, heading_levels: dict | None = None, extensions: dict | None = None, sentence_detection: bool = True, language: str | None = None, use_spacy: bool | None = None, spacy_model: str | None = None, model_size: ~typing.Literal[‘sm’, ‘md’, ‘lg’, ‘trf’] | None = None, parse_yaml_header: bool = True, strict_parse: bool = False) -&gt; ~ssmd.types.ParsedResult[~ssmd.paragraph.Paragraph]
+:module: ssmd</p>
+<p>Parse SSMD text into a list of Paragraphs.</p>
+<p>This is the main parsing function. It handles:</p>
+<ul class="simple">
+<li><p>Directive blocks (&lt;div …&gt; … </div>)</p></li>
+<li><p>Paragraph and sentence splitting</p></li>
+<li><p>All SSMD markup (emphasis, annotations, breaks, etc.)</p></li>
+</ul>
+<p>Args:
+text: SSMD markdown text
+capabilities: TTS capabilities for filtering (optional)
+heading_levels: Custom heading configurations
+extensions: Custom extension handlers
+sentence_detection: If True, split text into sentences
+language: Default language for sentence detection
+use_spacy: If True, use spaCy for sentence detection
+spacy_model: Exact spaCy package name, if supplied
+model_size: Exact spaCy model size (“sm”, “md”, “lg”, “trf”), if supplied
+parse_yaml_header: If True, parse YAML front matter and apply
+heading/extensions config while stripping it from the body. If False,
+YAML front matter is preserved as plain text.
+strict_parse: If True, strip unsupported features based on capabilities.</p>
+<p>Returns:
+List of Paragraph objects</p>
+<p>.. py:function:: parse_sentences(ssmd_text: str, *, capabilities: TTSCapabilities | str | None = None, include_default_voice: bool = True, sentence_detection: bool = True, language: str | None = None, model_size: ~typing.Literal[‘sm’, ‘md’, ‘lg’, ‘trf’] | None = None, spacy_model: str | None = None, use_spacy: bool | None = None, heading_levels: dict | None = None, extensions: dict | None = None, parse_yaml_header: bool = True, strict_parse: bool = False) -&gt; ~ssmd.types.ParsedResult[~ssmd.sentence.Sentence]
+:module: ssmd</p>
+<p>Parse SSMD text into sentences (backward compatible API).</p>
+<p>This is an alias for parse_paragraphs() with the old parameter names.
+Returned sentences include paragraph_index and sentence_index metadata.</p>
+<p>Args:
+ssmd_text: SSMD formatted text to parse
+capabilities: TTS capabilities or preset name
+include_default_voice: If False, exclude sentences without voice context
+sentence_detection: Enable/disable sentence splitting
+language: Language code for sentence detection
+model_size: Size of spacy model (sm/md/lg)
+spacy_model: Full spacy model name (deprecated, use model_size)
+use_spacy: Force use of spacy for sentence detection
+heading_levels: Custom heading configurations
+extensions: Custom extension handlers
+parse_yaml_header: If True, parse YAML front matter and apply
+heading/extensions config while stripping it from the body. If False,
+YAML front matter is preserved as plain text.
+strict_parse: If True, strip unsupported features based on capabilities.</p>
+<p>Returns:
+List of Sentence objects</p>
+<p>.. py:function:: parse_segments(ssmd_text: str, *, capabilities: TTSCapabilities | str | None = None, voice_context: ~ssmd.types.VoiceAttrs | None = None) -&gt; list[~ssmd.segment.Segment]
+:module: ssmd</p>
+<p>Parse SSMD text into segments (backward compatible API).</p>
+<p>.. py:function:: parse_voice_blocks(ssmd_text: str) -&gt; list[tuple[~ssmd.types.DirectiveAttrs, str]]
+:module: ssmd</p>
+<p>Parse SSMD text into directive blocks (backward compatible API).</p>
+<p>Returns list of (DirectiveAttrs, text) tuples.</p>
+<p>Sentence detection options such as <code class="docutils literal notranslate"><span class="pre">use_spacy</span></code>, <code class="docutils literal notranslate"><span class="pre">model_size</span></code>, and <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> apply to
+the legacy sentence-oriented helpers. <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code> selects the fast regex splitter;
+default selection uses the configured phrasplit behavior. These options do not change
+the structural 0.9 grammar or make strict 0.9 parsing sentence-based.</p>
+<p>See <a class="reference internal" href="../api/"><span class="std std-doc">API Reference</span></a> for legacy <code class="docutils literal notranslate"><span class="pre">Paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">Sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">Segment</span></code>, and attribute
+data structures, and <a class="reference internal" href="../examples/"><span class="std std-doc">Examples</span></a> for a clearly labeled compatibility
+snippet.</p>
 </section>
 </section>
 </section>

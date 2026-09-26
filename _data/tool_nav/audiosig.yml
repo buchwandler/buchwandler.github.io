@@ -4,17 +4,17 @@ nav_key: audiosig
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.2
-source_commit: a333ad697731e33e1c7f976736b56d3fa08ad54a
-source_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.2
+source_ref: v0.1.5
+source_commit: ca74470524957f2b155920aaea7a7bab24f08b7f
+source_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.5
 is_default: true
 repo_url: https://github.com/buchwandler/audiosig
-release_tag: v0.1.2
-release_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.2
+release_tag: v0.1.5
+release_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.5
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.2
+  ref: v0.1.5
   url: /tools/audiosig/
   current: true
 - name: main

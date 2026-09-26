@@ -5,8 +5,8 @@ permalink: /tools/lexphon/
 nav_tool: lexphon
 docs_project: "lexphon"
 docs_variant: "release"
-docs_ref: "v0.2.3"
-docs_commit: "1a6a1395225c036ae618d9d33e773cc9f79890b8"
+docs_ref: "v0.2.5"
+docs_commit: "6eaaf5d0ec408497d042a2baaa59048aac1e08ae"
 search_enabled: true
 ---
 
@@ -576,6 +576,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-5-2026-09-17">[v0.2.5] - 2026-09-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-4-2026-09-17">[v0.2.4] - 2026-09-17</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-3-2026-09-09">[v0.2.3] - 2026-09-09</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-2-2026-09-09">[v0.2.2] - 2026-09-09</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-2-1-2026-09-09">[v0.2.1] - 2026-09-09</a></li>
@@ -599,7 +601,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;lexphon[goruut]&quot;</span>
 </pre></div>
 </div>
-<p>The eSpeak extra expects an eSpeak or eSpeak-NG executable supplied by the operating system. Pygoruut may provision its own Goruut runtime.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">espeak</span></code> extra installs <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> and uses an available system eSpeak or eSpeak-NG runtime. Install <code class="docutils literal notranslate"><span class="pre">lexphon[espeak-bundled]</span></code> when the runtime’s bundled native loader is desired. Pygoruut may provision its own Goruut runtime.</p>
 </section>
 <section id="quick-start">
 <h2>Quick start</h2>

@@ -5,8 +5,8 @@ permalink: /tools/ssmd/installation/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.8.7"
-docs_commit: "6b45c5d780776697f0626d746bcc55966abeb567"
+docs_ref: "v0.9.0"
+docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
 search_enabled: true
 ---
 

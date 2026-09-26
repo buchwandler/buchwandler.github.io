@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 1980c788536c5f07db18decd0999af9c47f7cc62
+source_commit: 57d2cf1a6017e0fbc48999decb81e6c630c8e90d
 source_url: https://github.com/buchwandler/phrasplit/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/phrasplit
-release_tag: v0.3.7
-release_url: https://github.com/buchwandler/phrasplit/releases/tag/v0.3.7
+release_tag: v0.3.9
+release_url: https://github.com/buchwandler/phrasplit/releases/tag/v0.3.9
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.7
+  ref: v0.3.9
   url: /tools/phrasplit/
   current: false
 - name: main

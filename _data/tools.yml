@@ -70,3 +70,7 @@
   description: Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.
   docs_url: /tools/readio/
   repo_url: https://github.com/buchwandler/readio
+- name: phonodist
+  description: Language-aware, explainable distance metrics for IPA pronunciations.
+  docs_url: /tools/phonodist/
+  repo_url: https://github.com/buchwandler/phonodist

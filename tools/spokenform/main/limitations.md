@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -558,7 +558,7 @@ default output.</p></li>
 <li><p>German quantity recognition depends on the released <code class="docutils literal notranslate"><span class="pre">abbr2words</span></code> structured
 match API. spokenform owns the semantic grammar, not the symbol inventory.</p></li>
 <li><p>English, German, French, Spanish, Italian, Portuguese, Czech, Japanese, Korean, Russian, Swedish, Vietnamese, and Chinese have explicit runtime structured policies. Japanese, Korean, Russian, Swedish, Vietnamese, and Chinese runtime support is covered by focused regression tests, but it does not imply kokorog2p or PolyNorm parity.</p></li>
-<li><p>Japanese and Korean use released <code class="docutils literal notranslate"><span class="pre">num2words</span></code>; Chinese uses released <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>. Generic <code class="docutils literal notranslate"><span class="pre">zh</span></code> is conservative, while Mainland reviewed terminology and RMB live under exact <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>. <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code> and <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code> are not claimed.</p></li>
+<li><p>Numeralform is the released renderer for non-Chinese numbers; Chinese uses released <code class="docutils literal notranslate"><span class="pre">cn2an</span></code>. Generic <code class="docutils literal notranslate"><span class="pre">zh</span></code> is conservative, while Mainland reviewed terminology and RMB live under exact <code class="docutils literal notranslate"><span class="pre">zh_CN</span></code>. <code class="docutils literal notranslate"><span class="pre">hi</span></code>, <code class="docutils literal notranslate"><span class="pre">hy</span></code>, and <code class="docutils literal notranslate"><span class="pre">mn</span></code> have renderer availability but remain outside automatic plain-number ownership until reviewed. <code class="docutils literal notranslate"><span class="pre">zh_TW</span></code> and <code class="docutils literal notranslate"><span class="pre">zh_HK</span></code> are not claimed.</p></li>
 <li><p>Swedish uses comma decimals, space/NBSP/NNBSP grouping, reviewed quantities, temperatures, and SEK currency grammar. Numeric dates and digital times are caller-managed but protected from generic rewriting; arbitrary initialisms and unreviewed specialist domains fail closed instead of borrowing English vocabulary.</p></li>
 <li><p>Vietnamese runtime support covers reviewed plain-number punctuation, exact decimal precision, canonical quantities, temperatures, VND/₫ amounts, and dependency-backed guarded abbreviations. Vietnamese dates, digital times, ordinals, arbitrary initialisms, and unreviewed specialist semantic domains remain caller-managed or fail closed.</p></li>
 <li><p>Thai runtime support covers point-decimal numbers, comma or space-family grouping, Thai and Latin digits, reviewed quantities and temperatures, exact THB/฿ amounts, and guarded Thai abbreviations. Thai ordinals are not enabled; dates, eras, and digital times remain caller-managed; unreviewed specialist sequence and range semantics remain literal or fail closed without English fallback.</p></li>
@@ -578,7 +578,7 @@ units; reviewed fixtures define spelling and preserve written fractional
 precision rather than delegating to a third-party currency string.</p></li>
 <li><p>Spanish decimal quantities and money are decomposed deterministically from
 written fractional digits; reviewed fixtures define major/minor wording and
-Spanish one-ending agreement rather than delegating grammar to <code class="docutils literal notranslate"><span class="pre">num2words</span></code>.</p></li>
+Spanish one-ending agreement rather than delegating grammar to Numeralform.</p></li>
 </ul>
 <p>High-confidence structured sequences include slash and Unicode fractions,
 coordinates, ISBNs, UUIDs, IPv4, MAC addresses, IBANs, locale-grouped phones,
@@ -613,7 +613,7 @@ ordinary-number categories. English phoneme-sensitive years, suffix ordinals,
 Roman numerals, phone/ID and arbitrary multi-dot sequences, numeric suffixes, and
 G2P decisions remain downstream-owned. Unsupported
 language categories use an explicit
-<code class="docutils literal notranslate"><span class="pre">NumberPolicy.NONE</span></code> warning rather than a generic <code class="docutils literal notranslate"><span class="pre">num2words</span></code> fallback.</p>
+<code class="docutils literal notranslate"><span class="pre">NumberPolicy.NONE</span></code> warning rather than an automatic plain-cardinal ownership decision.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">PreparationConfig.for_kokorog2p(language)</span></code> for a profile that keeps all run
 boundary whitespace caller-owned, enables exact protection/mapping, and makes
 number ownership visible. <code class="docutils literal notranslate"><span class="pre">model_punctuation</span></code> only records that punctuation stays

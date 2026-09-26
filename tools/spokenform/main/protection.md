@@ -6,7 +6,7 @@ nav_tool: spokenform-main
 docs_project: "spokenform"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "e5b009cd4e66768a9f5304eded1ad9b5158e9d59"
+docs_commit: "b85de41a66f7918f01b8cd63448e529c81b1ddc2"
 search_enabled: true
 ---
 
@@ -542,13 +542,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="protected-text">
 <h1>Protected text</h1>
-<p>Automatic protection covers URLs, email addresses, and semantic-version-like
+<p>Automatic protection covers HTTP(S), FTP, <code class="docutils literal notranslate"><span class="pre">www</span></code> URLs, email addresses, and semantic-version-like
 strings. Caller-defined spans can protect additional source ranges. High-
 confidence literal promotion is opt-in:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">prepare</span><span class="p">(</span><span class="s2">&quot;See https://example.org/a2 and v1.2.3&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span> <span class="n">normalize_literals</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, structured URL, e-mail, version, and contextual
+<p>The default profile keeps these literals unchanged. Literal promotion is opt-in, and the German promoted renderer uses localized URL and e-mail punctuation and the reviewed FTP scheme policy.
+With <code class="docutils literal notranslate"><span class="pre">normalize_literals=True</span></code>, structured URL, e-mail, version, and contextual
 Roman candidates are rendered before generic stages. Caller-defined spans are
 still absolute and always win over promotion.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedSpan</span><span class="p">,</span> <span class="n">prepare</span>
