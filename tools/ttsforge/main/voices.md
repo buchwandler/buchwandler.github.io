@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -556,10 +556,12 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>--engine<span clas
 <p>Filters include <code class="docutils literal notranslate"><span class="pre">--engine</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--model</span></code>, and <code class="docutils literal notranslate"><span class="pre">--gender</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--offline</span></code> to
 avoid network discovery and <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> to refresh cached catalog data. <code class="docutils literal notranslate"><span class="pre">--json</span></code> returns
 catalog items together with discovery information.</p>
-<p>A voice row may include a selector, language/locale, model, engine, status, and whether
-the runtime is available. Select a voice value that Readio reports for the engine/model
-you plan to use; do not assume legacy Kokoro IDs or language-prefix conventions apply to
-every engine.</p>
+<p>Human-readable output shows the canonical Readio voice ID (<code class="docutils literal notranslate"><span class="pre">VoiceInfo.id</span></code>) as the
+primary name, with the stable selector as a secondary alias when available. If a
+selector is not available, the qualified voice ID is shown instead. Voice listings may
+also include language/locale, model, engine, status, and runtime availability. Readio
+owns these identities; do not assume legacy Kokoro IDs or language-prefix conventions
+apply to every engine.</p>
 </section>
 <section id="inspect-models-and-engines">
 <h2>Inspect models and engines</h2>
@@ -575,12 +577,24 @@ missing runtime dependencies and format availability.</p>
 </section>
 <section id="use-a-discovered-voice">
 <h2>Use a discovered voice</h2>
-<p>Pass the reported selector or voice ID to the audiobook command:</p>
+<p>For explicit <code class="docutils literal notranslate"><span class="pre">--voice</span></code> values, use the canonical voice ID or selector reported by
+Readio:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--engine<span class="w"> </span>kokoro<span class="w"> </span>--voice<span class="w"> </span>af_heart
 ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--engine<span class="w"> </span>kokoro<span class="w"> </span>--voice<span class="w"> </span>af_heart
 </pre></div>
 </div>
-<p>Voice and model details are engine-specific. TTSForge does not implement voice blending,
+</section>
+<section id="guided-selection-during-conversion">
+<h2>Guided selection during conversion</h2>
+<p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> uses the same Readio discovery services interactively on a TTY. It
+displays filtered engine, model, voice, and lexicon choices as compact vertical lists
+where selection is needed. Enter a row number or exact identifier. Voice entries show
+the canonical Readio voice ID first and the stable selector as an alias. Guided voice
+prompts accept a row number, canonical voice ID, selector, or qualified ID, then keep
+the selected row’s canonical ID. The catalog is filtered by the chosen language and
+engine, and by model for voices. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">voices</span></code> remains available for independent
+discovery, while explicit <code class="docutils literal notranslate"><span class="pre">--model</span></code> and <code class="docutils literal notranslate"><span class="pre">--voice</span></code> options bypass the matching prompts.
+Voice and model details are engine-specific. TTSForge does not implement voice blending,
 maintain voice recommendations, or promise that a voice selector will be available for
 every engine. See
 <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/api.md#discovery-and-roles">Readio’s catalog documentation</a>

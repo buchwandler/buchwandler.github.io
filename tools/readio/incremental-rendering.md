@@ -5,8 +5,8 @@ permalink: /tools/readio/incremental-rendering/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "86a3aecedd9d31f8c36e2b85d8ec18aa833a2472"
+docs_ref: "v0.3.4"
+docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
 search_enabled: true
 ---
 

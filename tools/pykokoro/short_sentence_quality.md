@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/short_sentence_quality/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.0"
-docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
+docs_ref: "v0.10.1"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -542,27 +542,68 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="short-sentence-synthesis">
 <h1>Short-sentence synthesis</h1>
-<p>Short-sentence handling is an engine-local Kokoro behavior. When enabled, the renderer
-can try its configured phrase/cut strategy and fall back to a wrapped request result. It
-must still return one waveform for the public request; callers do not receive an
-engine-authored pause or cross-request timeline.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> through <code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code> when a model/application needs
-explicit short-sentence policy:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">ShortSentenceConfig</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
+<p>Short-sentence processing is <strong>disabled by default</strong>. Enable it explicitly with
+<code class="docutils literal notranslate"><span class="pre">SynthesisConfig.short_sentence_config</span></code> or the per-request
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig.enable_short_sentence</span></code> override. It is an engine-local inference aid
+for short utterances, not editorial pause insertion, cross-request composition, or a
+timeline API. The result remains one <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> aligned to the original request
+text.</p>
+<section id="public-configuration">
+<h2>Public configuration</h2>
+<p><code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> supports these root-API choices:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShortSentenceConfig</span>
+
+<span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">enabled</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>                 <span class="c1"># Explicitly off</span>
+<span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;wrap&quot;</span><span class="p">)</span>           <span class="c1"># Fast phoneme-context wrapping</span>
+<span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;phrase&quot;</span><span class="p">)</span>         <span class="c1"># Phrase context and audio cutting</span>
+<span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;randomized-phrase&quot;</span><span class="p">)</span>  <span class="c1"># Varied phrase context and cutting</span>
+</pre></div>
+</div>
+<p>The default <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig()</span></code> is enabled and uses <code class="docutils literal notranslate"><span class="pre">randomized-phrase</span></code>; it does not
+become active unless the application supplies that config or turns on the generation
+override. The default <code class="docutils literal notranslate"><span class="pre">min_phoneme_length=30</span></code> threshold determines which prepared
+utterances are treated as short. The <code class="docutils literal notranslate"><span class="pre">wrap</span></code> strategy surrounds the target phonemes with
+configured phoneme pretext. Phrase strategies synthesize a surrounding sentence and cut
+the target region when timing geometry supports it; <code class="docutils literal notranslate"><span class="pre">randomized-phrase</span></code> varies the
+surrounding phrase. Phrase selection’s built-in <code class="docutils literal notranslate"><span class="pre">auto</span></code> policy chooses a context style
+from the target form.</p>
+<p>Phrase-based strategies need a model ONNX output with duration/timestamp information. If
+that is unavailable, an explicitly configured phrase mode warns and falls back to <code class="docutils literal notranslate"><span class="pre">wrap</span></code>
+for the run. <code class="docutils literal notranslate"><span class="pre">wrap</span></code> does not require phrase timestamps. Phrase processing can require
+additional inference work; use <code class="docutils literal notranslate"><span class="pre">enabled=False</span></code> when that work is not appropriate.</p>
+</section>
+<section id="configure-for-a-synthesizer">
+<h2>Configure for a synthesizer</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GenerationConfig</span><span class="p">,</span>
+    <span class="n">KokoroSynthesizer</span><span class="p">,</span>
+    <span class="n">ShortSentenceConfig</span><span class="p">,</span>
+    <span class="n">SynthesisConfig</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
     <span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-    <span class="n">short_sentence_config</span><span class="o">=</span><span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;wrap&quot;</span><span class="p">),</span>
+    <span class="n">short_sentence_config</span><span class="o">=</span><span class="n">ShortSentenceConfig</span><span class="p">(</span><span class="n">resolve_mode</span><span class="o">=</span><span class="s2">&quot;phrase&quot;</span><span class="p">),</span>
 <span class="p">)</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_text</span><span class="p">(</span><span class="s2">&quot;Yes!&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">short_sentence_mode</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The default behavior depends on the selected model and runtime profile. Prefer the
-defaults unless a reproducible use case requires a specific strategy.
-<code class="docutils literal notranslate"><span class="pre">return_trace=True</span></code> attaches request-local diagnostic events where available. Internal
-attempts, retries, trimming, and chunk stitching are implementation details and do not
-change the one-request/one-result contract.</p>
-<p>Short-sentence handling is separate from editorial pauses, cross-request silence,
-playback rate, and final composition. Those policies remain with the caller.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GenerationConfig.enable_short_sentence=True</span></code> is an explicit per-request enable
+override; <code class="docutils literal notranslate"><span class="pre">False</span></code> disables processing even if a config is present. If left unset, the
+<code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> (when supplied) determines whether it is enabled. Keep the random
+seed fixed when reproducibility across randomized phrase choices matters.</p>
+<p>PyKokoro may use internal context, retries, and audio cutting, but it returns only the
+original request’s waveform and metadata. The short-sentence mode used is available
+through <code class="docutils literal notranslate"><span class="pre">RenderedSegment.short_sentence_mode</span></code>; original text and word timings remain
+source-aligned. For diagnostics, opt into <code class="docutils literal notranslate"><span class="pre">return_trace=True</span></code> and inspect the
+request-local <code class="docutils literal notranslate"><span class="pre">trace</span></code>.</p>
+<p>See the public-API-only <a class="reference download internal" download="" href="../_downloads/c84444d4bec915d93ec4cfbe0ebfcc64/short_sentence_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">short_sentence_demo.py</span></code></span></a>
+for the supported configuration forms. For speech outside this engine feature, such as
+pauses between requests, use the caller’s composition layer.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

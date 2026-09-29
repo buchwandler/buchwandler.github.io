@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
+docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
 search_enabled: true
 ---
 
@@ -774,10 +774,12 @@ Thanks for having me.
 :::
 </pre></div>
 </div>
-<p>Logical references may be resolved through the portable <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> front-matter
-key or local trusted configuration. Voice selectors are independent of provider
-inventory data. Supported feature selectors are preserved when rendering or reported as
-losses if the selected target cannot represent them.</p>
+<p>Fenced directives require <strong>at least three colons</strong> on both the opening and matching
+closing fence. A two-colon opener such as <code class="docutils literal notranslate"><span class="pre">::{voice=&quot;host&quot;}</span></code> is invalid; use
+<code class="docutils literal notranslate"><span class="pre">:::{voice=&quot;host&quot;}</span></code>. Logical references may be resolved through the portable
+<code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> front-matter key or local trusted configuration. Voice selectors are
+independent of provider inventory data. Supported feature selectors are preserved when
+rendering or reported as losses if the selected target cannot represent them.</p>
 <p>Adjacent sibling fenced directives with no blank line between remain in the same
 semantic paragraph: their clean text receives ordinary inline separation and no
 paragraph event. A blank line between the directives creates a paragraph boundary.
@@ -895,7 +897,7 @@ forms. Use explicit <code class="docutils literal notranslate"><span class="pre"
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[lower]{pitch=&quot;-5%&quot;}&#39;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p class="rubric" id="audio-files">Audio Files</p>
+<p class="rubric" id="audio-sources">Audio Sources</p>
 <p class="rubric" id="basic-audio">Basic Audio</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># With description</span>
 <span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[doorbell]{src=&quot;https://example.com/sounds/bell.mp3&quot;}&#39;</span><span class="p">)</span>
@@ -906,12 +908,29 @@ forms. Use explicit <code class="docutils literal notranslate"><span class="pre"
 <span class="c1"># → &lt;audio src=&quot;beep.mp3&quot;&gt;&lt;/audio&gt;</span>
 </pre></div>
 </div>
+<p class="rubric" id="application-resolved-audio-sources">Application-resolved audio sources</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">src</span></code> attribute is a non-empty source string. It may use a renderer- or
+application-specific URI scheme; SSMD preserves the value without resolving it or
+checking whether a renderer supports it. <code class="docutils literal notranslate"><span class="pre">sfx:</span></code> is one application-defined scheme, not a
+scheme interpreted by SSMD. Rendering support and URI resolution belong to the consuming
+application.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[three knocks]{src=&quot;sfx:impact.knock?material=oak&amp;count=3&amp;force=0.7&amp;seed=42&quot; desc=&quot;Three knocks&quot;}
+[spoken fallback]{src=&quot;sfx:impact.knock?seed=42&quot; desc=&quot;Knocking&quot;}
+</pre></div>
+</div>
+<p>For audio annotations, the annotation content is spoken fallback text and <code class="docutils literal notranslate"><span class="pre">desc</span></code> is
+descriptive metadata; <code class="docutils literal notranslate"><span class="pre">desc</span></code> does not replace the fallback. Generic audio controls such
+as <code class="docutils literal notranslate"><span class="pre">clip</span></code>, <code class="docutils literal notranslate"><span class="pre">speed</span></code>, <code class="docutils literal notranslate"><span class="pre">repeat</span></code>, <code class="docutils literal notranslate"><span class="pre">repeatdur</span></code>, and <code class="docutils literal notranslate"><span class="pre">level</span></code> remain SSMD attributes.
+Effect-specific parameters belong inside the application-defined URI. SSMD does not
+generate sounds, validate effect catalogs or parameters, fetch sources, or cache
+rendered media.</p>
 <p class="rubric" id="audio-with-fallback">Audio with Fallback</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ssmd</span><span class="o">.</span><span class="n">to_ssml</span><span class="p">(</span><span class="s1">&#39;[cat purring]{src=&quot;cat.ogg&quot; alt=&quot;Sound file not loaded&quot;}&#39;</span><span class="p">)</span>
 <span class="c1"># → &lt;audio src=&quot;cat.ogg&quot;&gt;&lt;desc&gt;cat purring&lt;/desc&gt;Sound file not loaded&lt;/audio&gt;</span>
 </pre></div>
 </div>
-<p>The fallback text is spoken if the audio file can’t be played.</p>
+<p>If an audio source cannot be played, the annotation content provides its spoken
+fallback.</p>
 <p class="rubric" id="advanced-audio-attributes">Advanced Audio Attributes</p>
 <p>SSMD supports advanced audio control through SSML attributes:</p>
 <p class="rubric" id="audio-clipping">Audio Clipping</p>

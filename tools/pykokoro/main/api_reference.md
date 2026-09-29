@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -542,93 +542,136 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="api-reference">
 <h1>API reference</h1>
-<p>The supported public API represents one prepared synthesis request and one independent
-rendered result. Document planning and composition APIs are intentionally not part of
-the package.</p>
+<p>PyKokoro’s supported API is exported by <code class="docutils literal notranslate"><span class="pre">pykokoro</span></code> and listed in <code class="docutils literal notranslate"><span class="pre">pykokoro.__all__</span></code>. It
+models prepared synthesis requests and their independent rendered results; document
+parsing, speech planning, and composition between requests remain caller-owned.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GenerationConfig</span><span class="p">,</span>
+    <span class="n">KokoroSynthesizer</span><span class="p">,</span>
+    <span class="n">SynthesisConfig</span><span class="p">,</span>
+    <span class="n">SynthesisRequest</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<section id="public-root-symbols">
+<h2>Public root symbols</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Area</p></th>
+<th class="head"><p>Root exports</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Synthesis</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code>, <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Source context and timing</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PronunciationOverride</span></code>, <code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code>, <code class="docutils literal notranslate"><span class="pre">WordTiming</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Configuration</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Voice level</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VoiceLevelConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceLevelApplication</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Model discovery</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ModelCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">ModelDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_models</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Lexicon discovery</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">LexiconCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">LexiconDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_lexicons</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Asset progress</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code>, <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Synthesis identity</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">SynthesisIdentity</span></code>, <code class="docutils literal notranslate"><span class="pre">build_synthesis_identity</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Errors</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisError</span></code>, <code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidRequestError</span></code>, <code class="docutils literal notranslate"><span class="pre">EmptyTextError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLanguageError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidVoiceError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidModelError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidPronunciationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLinguisticTokensError</span></code>, <code class="docutils literal notranslate"><span class="pre">UnsupportedFeatureError</span></code>, <code class="docutils literal notranslate"><span class="pre">CapabilityError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisStateError</span></code>, <code class="docutils literal notranslate"><span class="pre">AlignmentError</span></code>, <code class="docutils literal notranslate"><span class="pre">BackendError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Version</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">__version__</span></code>, <code class="docutils literal notranslate"><span class="pre">__version_tuple__</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> is an alias of <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code>, and <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code> is a
+compatibility alias of <code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>. <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code> and <code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code>
+are type aliases; they describe accepted Python values rather than runtime record
+classes.</p>
+</section>
 <section id="synthesizer">
 <h2>Synthesizer</h2>
-<p>The main methods are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">synthesize(request)</span></code> renders one <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> (<code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> remains a
-compatibility alias).</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">synthesize_text(text,</span> <span class="pre">language=...,</span> <span class="pre">voice=...)</span></code> creates and renders one plain
-prepared text request.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">synthesize_segments(segments)</span></code> yields independent results in input order.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">prepare(segment)</span></code> returns model-ready Kokoro frontend data for diagnostics and
-advanced integrations.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">close()</span></code> releases the owned renderer resources.</p></li>
-</ul>
+<p>Use it as a context manager or call <code class="docutils literal notranslate"><span class="pre">close()</span></code> when finished. <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> renders one
+request, <code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code> constructs and renders one prepared string, and
+<code class="docutils literal notranslate"><span class="pre">synthesize_segments()</span></code> yields independent results in input order. <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> runs the
+frontend and returns <code class="docutils literal notranslate"><span class="pre">PreparedSynthesis</span></code> (request ID, text, language, voice, phonemes,
+token IDs, alignment tokens, and diagnostics) without running ONNX inference.</p>
 </section>
-<section id="request-and-result-types">
-<h2>Request and result types</h2>
-<p><code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> offsets are half-open Python character ranges into its exact <code class="docutils literal notranslate"><span class="pre">text</span></code>.
-<code class="docutils literal notranslate"><span class="pre">RenderedSegment.audio</span></code> is one-dimensional float32 audio, <code class="docutils literal notranslate"><span class="pre">sample_rate</span></code> is positive, and
-word timings are local to that result. <code class="docutils literal notranslate"><span class="pre">save_wav(path)</span></code> writes mono float32 WAV audio.</p>
+<section id="requests-results-and-source-alignment">
+<h2>Requests, results, and source alignment</h2>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> is the supported compatibility spelling for <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code>.
+Request language and voice are explicit. <code class="docutils literal notranslate"><span class="pre">PronunciationOverride</span></code> and <code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code>
+offsets are half-open character ranges into the exact <code class="docutils literal notranslate"><span class="pre">text</span></code> carried by that request;
+<code class="docutils literal notranslate"><span class="pre">tokens</span></code> is the canonical <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> field.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> contains one request’s waveform and metadata. <code class="docutils literal notranslate"><span class="pre">save_wav()</span></code> writes mono
+float32 WAV audio. <code class="docutils literal notranslate"><span class="pre">play()</span></code> uses the optional playback dependency. Results from a batch
+remain separate: this API does not join independent requests or insert silence between
+them.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
-<dl class="py class">
-<dt class="sig sig-object py" id="pykokoro.exceptions.SynthesisInputTooLongError">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykokoro.exceptions.</span></span><span class="sig-name descname"><span class="pre">SynthesisInputTooLongError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">token_count</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_tokens</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">model_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pykokoro/exceptions/#SynthesisInputTooLongError"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">SynthesisError</span></code>, <a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ValueError</span></code></a></p>
-<p>Tokenized request exceeds model capacity.</p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pykokoro.generation_config.</span></span><span class="sig-name descname"><span class="pre">GenerationConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">speed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lang</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_seed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">enable_short_sentence</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/pykokoro/generation_config/#GenerationConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/builtins/functions.html#object" title="(in Python v3.14)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
-<p>Acoustic speed, default language, and short-sentence inference settings.</p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.speed">
-<span class="sig-name descname"><span class="pre">speed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#float" title="(in Python v3.14)"><span class="pre">float</span></a></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.lang">
-<span class="sig-name descname"><span class="pre">lang</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.random_seed">
-<span class="sig-name descname"><span class="pre">random_seed</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
-<dd></dd></dl>
-
-<dl class="py attribute">
-<dt class="sig sig-object py" id="pykokoro.generation_config.GenerationConfig.enable_short_sentence">
-<span class="sig-name descname"><span class="pre">enable_short_sentence</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#bool" title="(in Python v3.14)"><span class="pre">bool</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<p>Each call returns one <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code>, even when a single request is internally split.
-G2P tokenization is checked against the selected model capacity. With the default
-<code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;none&quot;</span></code>, oversized input raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code>. Set
-<code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;sentence&quot;</span></code> to enable lazy PhraseSplit-based splitting only for
-oversized requests. It packs source spans into model-safe chunks, falling back from
-sentences to clauses and then safe word boundaries when needed. Chunk audio is joined
-into the one request result, while request text and source-aligned context remain
-intact. A word that cannot fit safely still raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">long_text_use_spacy=False</span></code> selects PhraseSplit’s simple mode without spaCy. <code class="docutils literal notranslate"><span class="pre">None</span></code>
-permits a compatible local spaCy model with regex fallback; <code class="docutils literal notranslate"><span class="pre">True</span></code> requires spaCy and a
-compatible model. Separate synthesis requests still produce separate results.
-<code class="docutils literal notranslate"><span class="pre">RenderedSegment.synthesis_identity</span></code> and <code class="docutils literal notranslate"><span class="pre">voice_level_applications</span></code> expose resolved
-output identity and calibration outcomes. <code class="docutils literal notranslate"><span class="pre">GenerationConfig.speed</span></code> is the acoustic
-inference speed passed to Kokoro, not an application-level playback-rate effect.
-<code class="docutils literal notranslate"><span class="pre">SynthesisConfig.voice_level</span></code> is engine-local voice calibration rather than whole-output
-mastering.</p>
+<p><code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span> <span class="pre">|</span> <span class="pre">&quot;sentence&quot;</span></code>. The default <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> path raises
+<code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> for an oversized request. <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code> lazily loads
+PhraseSplit only when a request exceeds capacity, then returns one result for the
+original request. <code class="docutils literal notranslate"><span class="pre">long_text_use_spacy=False</span></code> selects PhraseSplit’s simple mode without
+spaCy.</p>
+<p><code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> controls Kokoro acoustic speed, the default language for
+<code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code>, inference random seed, and the per-request short-sentence override.
+Short-sentence handling is disabled unless explicitly enabled with <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>
+or <code class="docutils literal notranslate"><span class="pre">GenerationConfig.enable_short_sentence</span></code>.</p>
 </section>
-<section id="voice-blends-and-discovery">
-<h2>Voice blends and discovery</h2>
-<p><code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> describes runtime capabilities without initializing ONNX inference
-or downloading model weights. <code class="docutils literal notranslate"><span class="pre">discover_lexicons()</span></code> describes available named G2P
-lexicons.</p>
+<section id="voice-blending-and-calibration">
+<h2>Voice blending and calibration</h2>
+<p>A <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> combines supported voice IDs for one request/model profile. Voice-level
+calibration is an engine-local option; it is not whole-program loudness mastering.</p>
 </section>
-<section id="frontend-configuration-and-model-asset-progress">
-<h2>Frontend configuration and model asset progress</h2>
-<p>For installation, request examples, and the breaking migration boundary, see the
-<a class="reference internal" href="../quickstart/"><span class="std std-doc">quickstart</span></a>, <a class="reference internal" href="../advanced_features/"><span class="std std-doc">advanced features</span></a>, and
-<a class="reference internal" href="../breaking-change-0.10.0/"><span class="std std-doc">release note</span></a>.</p>
+<section id="model-and-lexicon-discovery">
+<h2>Model and lexicon discovery</h2>
+<p>Discovery reports metadata and runtime capability without loading synthesis weights or
+creating an ONNX session. Offline discovery uses available local metadata; it does not
+install model or lexicon assets. Use the inventory to select an available
+model/language/voice rather than inferring compatibility from a voice name.</p>
+</section>
+<section id="asset-progress">
+<h2>Asset progress</h2>
+<p><code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code> is a callable receiving <code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values. Pass a
+callback or <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress()</span></code> with <code class="docutils literal notranslate"><span class="pre">SynthesisConfig.asset_progress</span></code>. Progress
+notifications cover managed model assets, not lexicon data provisioning.</p>
+</section>
+<section id="synthesis-identity">
+<h2>Synthesis identity</h2>
+<p>The identity captures output-affecting synthesis settings and exposes a stable cache
+key. Building identity metadata does not run inference.</p>
+</section>
+<section id="exceptions">
+<h2>Exceptions</h2>
+<p>Catch the narrow exception that an application can act on; avoid treating every failure
+as a recoverable input error. <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code> is the retained alias for <code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>.</p>
+</section>
+<section id="version">
+<h2>Version</h2>
+<p><code class="docutils literal notranslate"><span class="pre">pykokoro.__version__</span></code> is the package’s version string and <code class="docutils literal notranslate"><span class="pre">pykokoro.__version_tuple__</span></code>
+is its parsed tuple. The package version is generated by setuptools-scm.</p>
+</section>
+<section id="related-guides">
+<h2>Related guides</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../quickstart/"><span class="std std-doc">Quickstart</span></a></p></li>
+<li><p><a class="reference internal" href="../basic_usage/"><span class="std std-doc">Configuration and request behavior</span></a></p></li>
+<li><p><a class="reference internal" href="../advanced_features/"><span class="std std-doc">Prepared text, routing, and result metadata</span></a></p></li>
+<li><p><a class="reference internal" href="../languages/"><span class="std std-doc">Languages and model profiles</span></a></p></li>
+<li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Installation and asset progress</span></a></p></li>
+</ul>
 </section>
 </section>
 </div>

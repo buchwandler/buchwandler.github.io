@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 

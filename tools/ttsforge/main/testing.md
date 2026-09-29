@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -542,9 +542,10 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="testing-and-release-checks">
 <h1>Testing and release checks</h1>
-<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.1</span></code>. The public API contract test checks
-that the installed Readio exposes the version and services required by the frontend. For
-development against a sibling Readio checkout, install both projects editable:</p>
+<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>. The public API contract test checks
+that the installed Readio exposes persisted project settings, synthesis requests and
+resolutions, catalog types, and services required by the frontend. For development
+against a Readio checkout, install both projects editable:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>../readio<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
@@ -553,15 +554,17 @@ development against a sibling Readio checkout, install both projects editable:</
 ruff<span class="w"> </span>check<span class="w"> </span>ttsforge<span class="w"> </span>tests
 </pre></div>
 </div>
-<p>The tests cover the public <code class="docutils literal notranslate"><span class="pre">readio.api</span></code> contract, request mapping, project reuse and
-legacy-workspace handling, chapter selection, preflight, interaction modes, scoped
-progress, CLI behavior, package metadata, and CI configuration. Use
-<code class="docutils literal notranslate"><span class="pre">tests/test_readio_api_contract.py</span></code> to diagnose an incompatible Readio installation.</p>
+<p>The tests cover the public <code class="docutils literal notranslate"><span class="pre">readio.api</span></code> contract, persisted settings mapping and
+requestless builds, guided catalog selection and capability gates, project reuse and
+legacy-workspace handling, saved-setup retry and reconfiguration, chapter selection,
+preflight and interaction modes, scoped progress, CLI behavior, package metadata, and CI
+configuration. Use <code class="docutils literal notranslate"><span class="pre">tests/test_readio_api_contract.py</span></code> to diagnose an incompatible
+Readio installation.</p>
 <section id="publishing-checks">
 <h2>Publishing checks</h2>
 <p>Before a TTSForge package release:</p>
 <ol class="arabic simple">
-<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.1</span></code>, and the newest supported Readio
+<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.4</span></code>, and the newest supported Readio
 release.</p></li>
 <li><p>Install TTSForge into a clean environment, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">check</span></code>, and smoke-test
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code>.</p></li>

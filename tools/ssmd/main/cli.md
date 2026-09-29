@@ -6,7 +6,7 @@ nav_tool: ssmd-main
 docs_project: "ssmd"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
+docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
 search_enabled: true
 ---
 
@@ -722,6 +722,8 @@ line/column positions:</p>
 <span class="n">story</span><span class="o">.</span><span class="n">ssmd</span><span class="p">:</span> <span class="n">warn</span><span class="p">:</span> <span class="n">say</span><span class="o">-</span><span class="k">as</span> <span class="s1">&#39;currency&#39;</span> <span class="ow">not</span> <span class="n">supported</span><span class="p">,</span> <span class="n">dropping</span>
 </pre></div>
 </div>
+<p>Parser diagnostics with a remediation hint print a following <code class="docutils literal notranslate"><span class="pre">&lt;path&gt;:</span> <span class="pre">hint:</span> <span class="pre">...</span></code> line.
+Lint JSON issue objects include a <code class="docutils literal notranslate"><span class="pre">hint</span></code> field only when a hint is available.</p>
 </section>
 <section id="create">
 <h2><a class="toc-backref" href="#id5" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">create</span></code></a></h2>

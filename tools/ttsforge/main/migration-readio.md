@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ for Readio’s public API, not the owner of an EPUB-to-audio rendering pipeline.
 owns projects, planning, synthesis, composition, resumability, invalidation, and export.</p>
 <section id="compatibility-and-installation">
 <h2>Compatibility and installation</h2>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.1</span></code>. Install the published package with:</p>
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, which provides the persisted project-settings API.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
 </pre></div>
 </div>
@@ -619,6 +619,15 @@ equivalent values using Readio’s current configuration keys and semantics.
 Engine-specific settings and optional engine installation are owned by Readio; consult
 its
 <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/index.md">configuration documentation</a>.</p>
+</section>
+<section id="guided-audiobook-setup">
+<h2>Guided audiobook setup</h2>
+<p>In an interactive terminal, <code class="docutils literal notranslate"><span class="pre">convert</span></code> now guides you through synthesis values that were
+not specified on the command line, using Readio’s catalogs and effective defaults.
+Explicit options such as <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--model</span></code>, <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code>,
+and <code class="docutils literal notranslate"><span class="pre">--unit</span></code> pin their values and skip matching questions. <code class="docutils literal notranslate"><span class="pre">--yes</span></code> bypasses only final
+confirmation; <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and <code class="docutils literal notranslate"><span class="pre">--json</span></code> remain prompt-free. Preview retains its
+smaller option set and does not run the conversion wizard.</p>
 </section>
 <section id="removed-commands-and-ownership">
 <h2>Removed commands and ownership</h2>

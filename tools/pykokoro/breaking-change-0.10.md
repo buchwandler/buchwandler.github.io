@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/breaking-change-0.10.0/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.0"
-docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
+docs_ref: "v0.10.1"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -618,7 +618,9 @@ owns provider selection and ONNX session creation.</p>
 <h2>Deliberate compatibility aliases</h2>
 <p>The new API keeps <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> as an alias for <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> and accepts
 <code class="docutils literal notranslate"><span class="pre">annotations</span></code> as a compatibility alias for <code class="docutils literal notranslate"><span class="pre">tokens</span></code>. These aliases do not restore the
-removed pipeline, document parsing, SSMD, planning, or composition APIs. Example:</p>
+removed pipeline, document parsing, SSMD, planning, or composition APIs. Example:
+Current request code and maintained examples use <code class="docutils literal notranslate"><span class="pre">tokens=</span></code>; the compatibility keyword is
+retained only for existing callers.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">GenerationConfig</span><span class="p">,</span> <span class="n">KokoroSynthesizer</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
 
 <span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
@@ -669,10 +671,11 @@ as runtime dependencies. KokoroG2P owns prepared-text phonemization; OnnxVoice o
 model installation, resolution, and ONNX session concerns; AudioSig supplies DSP
 primitives. PyKokoro retains request rendering, voice/model profile selection, timing
 reconstruction, and metadata-only <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> and <code class="docutils literal notranslate"><span class="pre">discover_lexicons()</span></code> APIs.</p>
-<p>The supported integration floors are KokoroG2P 0.9.9, Lexphon 0.2.3, PhraseSplit 0.3.9,
-AudioSig 0.1.4, and OnnxVoice 0.1.7. PhraseSplit remains a runtime dependency for opt-in
-long-text splitting, but neither it nor PyKokoro requires spaCy for the default simple
-path. See the <a class="reference internal" href="../quickstart/"><span class="std std-doc">quickstart</span></a>, <a class="reference internal" href="../examples/"><span class="std std-doc">request examples</span></a>, and
+<p>The supported integration floors are KokoroG2P 0.9.15, Lexphon 0.2.5, PhraseSplit 0.3.9,
+AudioSig 0.1.4, and OnnxVoice 0.1.7. The bounds come from package metadata. PhraseSplit
+remains an optional-path runtime dependency for sentence splitting, but neither it nor
+PyKokoro requires spaCy for the default simple path. See the
+<a class="reference internal" href="../quickstart/"><span class="std std-doc">quickstart</span></a>, <a class="reference internal" href="../examples/"><span class="std std-doc">request examples</span></a>, and
 <a class="reference internal" href="../api_reference/"><span class="std std-doc">API reference</span></a> for the new boundary.</p>
 </section>
 </section>

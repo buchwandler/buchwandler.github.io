@@ -5,8 +5,8 @@ permalink: /tools/ssmd/quickstart/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.9.0"
-docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
+docs_ref: "v0.9.2"
+docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
 search_enabled: true
 ---
 

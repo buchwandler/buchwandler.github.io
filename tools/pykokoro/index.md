@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.0"
-docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
+docs_ref: "v0.10.1"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -554,13 +554,14 @@ application and its other tools.</p>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#render-longer-text">Render longer text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#submit-a-prepared-request">Submit a prepared request</a></li>
 <li class="toctree-l2"><a class="reference internal" href="quickstart/#independent-requests">Independent requests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#next-steps">Next steps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#where-next">Where next?</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="installation/#optional-playback">Optional playback</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#frontends-and-lexicons">Frontends and lexicons</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#model-assets-and-discovery">Model assets and discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#managed-asset-progress">Managed asset progress</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#development-install">Development install</a></li>
 <li class="toctree-l2"><a class="reference internal" href="installation/#dependency-boundary">Dependency boundary</a></li>
 </ul>
@@ -568,18 +569,31 @@ application and its other tools.</p>
 <li class="toctree-l1"><a class="reference internal" href="basic_usage/">Basic usage</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#configure-and-reuse-the-synthesizer">Configure and reuse the synthesizer</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#configure-a-model">Configure a model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#managed-asset-cache-location">Managed asset cache location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#render-longer-text">Render longer text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#per-request-voice-and-independent-batch-output">Per-request voice and independent batch output</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#save-and-play">Save and play</a></li>
 <li class="toctree-l2"><a class="reference internal" href="basic_usage/#configuration-ownership">Configuration ownership</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#catch-request-failures">Catch request failures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="basic_usage/#inference-cache-and-configuration-groups">Inference cache and configuration groups</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="advanced_features/">Advanced request features</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="advanced_features/#source-aligned-pronunciation-overrides">Source-aligned pronunciation overrides</a></li>
-<li class="toctree-l2"><a class="reference internal" href="advanced_features/#caller-provided-linguistic-annotations">Caller-provided linguistic annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#caller-provided-linguistic-tokens">Caller-provided linguistic tokens</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_features/#automatic-pronunciation-language-routing">Automatic pronunciation-language routing</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_features/#explicit-short-sentence-handling">Explicit short-sentence handling</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#short-sentence-modes">Short-sentence modes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced_features/#tracing-and-voice-calibration">Tracing and voice calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#voice-blends">Voice blends</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#prepared-phoneme-input">Prepared phoneme input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#result-metadata-and-errors">Result metadata and errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced_features/#related-recipes">Related recipes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="short_sentence_quality/">Short-sentence synthesis</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="short_sentence_quality/#public-configuration">Public configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="short_sentence_quality/#configure-for-a-synthesizer">Configure for a synthesizer</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="pipeline_stages/">Request lifecycle</a><ul>
@@ -590,25 +604,32 @@ application and its other tools.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="api_reference/">API reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#public-root-symbols">Public root symbols</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/#synthesizer">Synthesizer</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#request-and-result-types">Request and result types</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#requests-results-and-source-alignment">Requests, results, and source alignment</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api_reference/#configuration">Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#voice-blends-and-discovery">Voice blends and discovery</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api_reference/#frontend-configuration-and-model-asset-progress">Frontend configuration and model asset progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#voice-blending-and-calibration">Voice blending and calibration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#model-and-lexicon-discovery">Model and lexicon discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#asset-progress">Asset progress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#synthesis-identity">Synthesis identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#exceptions">Exceptions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#version">Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api_reference/#related-guides">Related guides</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="examples/">Examples</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="examples/#simple-synthesis">Simple synthesis</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#independent-request-batches">Independent request batches</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#pronunciation-and-linguistic-context">Pronunciation and linguistic context</a></li>
-<li class="toctree-l2"><a class="reference internal" href="examples/#model-inventory">Model inventory</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#runner-groups">Runner groups</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#core-request-examples">Core request examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#feature-examples">Feature examples</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#language-showcase">Language showcase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/#optional-heavy-examples">Optional heavy examples</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="languages/">Languages and model profiles</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="languages/#prepared-text-languages">Prepared-text languages</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#pronunciation-language-spans">Pronunciation-language spans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#prepared-text-language-codes">Prepared-text language codes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#explicit-language-and-pronunciation-spans">Explicit language and pronunciation spans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="languages/#automatic-pronunciation-routing">Automatic pronunciation routing</a></li>
-<li class="toctree-l2"><a class="reference internal" href="languages/#model-and-voice-discovery">Model and voice discovery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="languages/#discover-compatible-model-profiles-and-voices">Discover compatible model profiles and voices</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="breaking-change-0.10.0/">Breaking change: request-centric synthesis (v0.10.0)</a><ul>
@@ -620,43 +641,44 @@ application and its other tools.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.10.0] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.9.10] - 2026-09-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.9.9] - 2026-09-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.9.8] - 2026-09-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.9.7] - 2026-09-13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.9.6] - 2026-09-13</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.9.5] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.9.4] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.9.3] - 2026-09-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.9.2] - 2026-09-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.9.1] - 2026-09-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.9.0] - 2026-09-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id34">[0.8.8] - 2026-09-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id38">[0.8.7] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id43">[0.8.6] - 2026-08-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id47">[0.8.5] - 2026-08-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id50">[0.8.4] - 2026-08-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id52">[0.8.3] - 2026-08-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id56">[0.8.2] - 2026-08-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id59">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id63">[0.8.0] - 2026-08-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id67">[0.7.4] - 2026-07-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id70">[0.7.2] - 2026-07-29</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id73">[0.7.1] - 2026-07-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id77">[0.7.0] - 2026-07-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id82">[0.6.5] - 2026-02-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id84">[0.6.4] - 2026-01-31</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id87">[0.6.3] - 2026-01-28</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id89">[0.6.2] - 2026-01-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id92">[0.6.1] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id94">[0.6.0] - 2026-01-25</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id98">[0.5.1] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id101">[0.5.0] - 2026-01-23</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id105">[0.4.0] - 2026-01-17</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id109">[0.3.0] - 2026-01-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id112">[0.2.0] - 2026-01-11</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id115">[0.1.0] - 2026-01-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.10.1] - 2026-09-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.10.0] - 2026-09-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.9.10] - 2026-09-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.9.9] - 2026-09-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.9.8] - 2026-09-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.9.7] - 2026-09-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.9.6] - 2026-09-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id23">[0.9.5] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.9.4] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.9.3] - 2026-09-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id29">[0.9.2] - 2026-09-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.9.1] - 2026-09-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id34">[0.9.0] - 2026-09-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id39">[0.8.8] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.8.7] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id47">[0.8.6] - 2026-08-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id51">[0.8.5] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id54">[0.8.4] - 2026-08-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id56">[0.8.3] - 2026-08-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id60">[0.8.2] - 2026-08-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id63">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id67">[0.8.0] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id71">[0.7.4] - 2026-07-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id74">[0.7.2] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id77">[0.7.1] - 2026-07-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id81">[0.7.0] - 2026-07-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id86">[0.6.5] - 2026-02-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id88">[0.6.4] - 2026-01-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id91">[0.6.3] - 2026-01-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id93">[0.6.2] - 2026-01-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id96">[0.6.1] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id98">[0.6.0] - 2026-01-25</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id102">[0.5.1] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id106">[0.5.0] - 2026-01-23</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id110">[0.4.0] - 2026-01-17</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id114">[0.3.0] - 2026-01-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id117">[0.2.0] - 2026-01-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id120">[0.1.0] - 2026-01-07</a></li>
 </ul>
 </li>
 </ul>
@@ -665,13 +687,24 @@ application and its other tools.</p>
 <h2>Engine responsibilities</h2>
 <ul class="simple">
 <li><p>KokoroG2P prepared-text integration with explicit pronunciation languages,
-source-aligned overrides, and linguistic annotations</p></li>
+source-aligned overrides, and linguistic tokens</p></li>
 <li><p>Kokoro voice, model, and style selection, including blends</p></li>
 <li><p>Model token-capacity validation and opt-in sentence-level splitting for oversized
 requests, plus ONNX inference</p></li>
 <li><p>Request-local timing reconstruction, waveform validation, tracing, and optional voice
 calibration</p></li>
 <li><p>Independent <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> results and standalone WAV writing</p></li>
+</ul>
+</section>
+<section id="feature-guides">
+<h2>Feature guides</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="basic_usage/#render-longer-text"><span class="std std-ref">Long-text capacity, splitting, and errors</span></a></p></li>
+<li><p>[Direct phonemes, language routing, VoiceBlend, and result metadata]
+(advanced_features.md)</p></li>
+<li><p><a class="reference internal" href="languages/"><span class="std std-doc">Language codes and acoustic-profile discovery</span></a></p></li>
+<li><p><a class="reference internal" href="installation/"><span class="std std-doc">Frontends, installed lexicons, cache location, and asset progress</span></a></p></li>
+<li><p><a class="reference internal" href="short_sentence_quality/"><span class="std std-doc">Short-sentence configuration and modes</span></a></p></li>
 </ul>
 <p>PyKokoro does not parse SSMD or YAML, create UtterPlans or AudioJobs, compose separate
 caller requests, insert cross-request silence, or apply document-level effects. The
@@ -691,8 +724,8 @@ v0.10.0 breaking boundary and migration examples are described in the
 <span class="n">result</span><span class="o">.</span><span class="n">save_wav</span><span class="p">(</span><span class="s2">&quot;hello.wav&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>See the <span class="xref myst">maintained examples</span> for requests with pronunciation
-context, annotations, and independent batch results.</p>
+<p>See the <a class="reference internal" href="examples/"><span class="std std-doc">maintained examples</span></a> for requests with pronunciation context,
+linguistic tokens, and independent batch results.</p>
 </section>
 </section>
 </div>

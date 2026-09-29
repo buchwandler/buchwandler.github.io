@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -569,8 +569,9 @@ services:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">next_actions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.1</span></code> provides this public API. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for
-the standard package install and optional source-development setup.</p>
+<p>Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code> provides this public API, including expanded synthesis resolution and
+persisted project settings. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for the standard
+package install and optional source-development setup.</p>
 <section id="audiobook-export">
 <h2>Audiobook export</h2>
 <p>Readio keeps M4B audiobook export distinct from generic audio export. A typical API

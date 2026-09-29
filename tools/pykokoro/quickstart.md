@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/quickstart/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.0"
-docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
+docs_ref: "v0.10.1"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -598,7 +598,7 @@ request text:</p>
     <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
     <span class="n">pronunciation_overrides</span><span class="o">=</span><span class="p">(</span><span class="n">PronunciationOverride</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de&quot;</span><span class="p">),),</span>
-    <span class="n">annotations</span><span class="o">=</span><span class="p">(</span><span class="n">LinguisticToken</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;INTJ&quot;</span><span class="p">),),</span>
+    <span class="n">tokens</span><span class="o">=</span><span class="p">(</span><span class="n">LinguisticToken</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;INTJ&quot;</span><span class="p">),),</span>
 <span class="p">)</span>
 <span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
     <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span>
@@ -633,15 +633,28 @@ parser, or spaCy objects to PyKokoro.</p>
 concatenate them or insert silence between requests. The caller decides whether and how
 to compose the resulting audio.</p>
 </section>
-<section id="next-steps">
-<h2>Next steps</h2>
+<section id="where-next">
+<h2>Where next?</h2>
 <ul class="simple">
 <li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Installation and model providers</span></a></p></li>
 <li><p><a class="reference internal" href="../basic_usage/"><span class="std std-doc">Basic request and configuration patterns</span></a></p></li>
 <li><p><a class="reference internal" href="../advanced_features/"><span class="std std-doc">Pronunciation context, routing, and calibration</span></a></p></li>
 <li><p><a class="reference internal" href="../api_reference/"><span class="std std-doc">Public API reference</span></a></p></li>
 <li><p><a class="reference internal" href="../breaking-change-0.10.0/"><span class="std std-doc">Breaking change and migration note</span></a></p></li>
+<li><p><a class="reference internal" href="../languages/"><span class="std std-doc">Language codes and supported model profiles</span></a></p></li>
+<li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Frontends, lexicons, asset progress, and cache installation</span></a></p></li>
+<li><p><a class="reference internal" href="../examples/"><span class="std std-doc">Maintained categorized examples</span></a></p></li>
+<li><p>Need long text? → <a class="reference internal" href="../basic_usage/#render-longer-text"><span class="std std-ref">basic usage</span></a></p></li>
+<li><p>Need pronunciation control? → <a class="reference internal" href="../advanced_features/"><span class="std std-doc">advanced features</span></a></p></li>
+<li><p>Need a model/voice? → <a class="reference internal" href="../languages/"><span class="std std-doc">language profiles</span></a> and the
+<a class="reference download internal" download="" href="../_downloads/41c29e50a3c7ae275d8549488df9835e/models_and_languages.py"><span class="xref download myst">discovery example</span></a></p></li>
+<li><p>Need diagnostics? →
+<a class="reference internal" href="../advanced_features/#result-metadata-and-errors"><span class="std std-ref">advanced features</span></a> and the
+<a class="reference download internal" download="" href="../_downloads/e0d3ec1986052b1bbc11c3dffac0631e/result_metadata.py"><span class="xref download myst">result metadata example</span></a></p></li>
 </ul>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> is the expected default outcome for an oversized request;
+enable sentence splitting explicitly or catch the typed error and decide how the caller
+should continue.</p>
 </section>
 </section>
 </div>

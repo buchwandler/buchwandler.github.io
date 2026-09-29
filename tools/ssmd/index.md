@@ -5,8 +5,8 @@ permalink: /tools/ssmd/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.9.0"
-docs_commit: "d8cfffc8bfccf9fa301cf965617e795114f2e5de"
+docs_ref: "v0.9.2"
+docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
 search_enabled: true
 ---
 
@@ -729,15 +729,17 @@ versioned 0.9 document shown above.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.9.0] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.8.7] - 2026-09-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id3">[0.8.6] - 2026-09-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.8.5] - 2026-08-30</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.8.4] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.8.3] - 2026-08-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.8.2] - 2026-08-18</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.8.1] - 2026-08-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.8.0] - 2026-07-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.9.2] - 2026-09-28</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.9.1] - 2026-09-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.9.0] - 2026-09-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.8.7] - 2026-09-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.8.6] - 2026-09-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.8.5] - 2026-08-30</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.8.4] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.8.3] - 2026-08-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.8.2] - 2026-08-18</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.8.1] - 2026-08-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.8.0] - 2026-07-29</a></li>
 </ul>
 </li>
 </ul>

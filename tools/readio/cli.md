@@ -5,8 +5,8 @@ permalink: /tools/readio/cli/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "86a3aecedd9d31f8c36e2b85d8ec18aa833a2472"
+docs_ref: "v0.3.4"
+docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
 search_enabled: true
 ---
 
@@ -542,6 +542,18 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="cli-reference-project-pipeline">
 <h1>CLI reference: project pipeline</h1>
+<section id="getting-help">
+<h2>Getting help</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio
+readio<span class="w"> </span>--help
+readio<span class="w"> </span>render<span class="w"> </span>--help
+readio<span class="w"> </span>audiobook<span class="w"> </span>--help
+</pre></div>
+</div>
+<p>Running <code class="docutils literal notranslate"><span class="pre">readio</span></code> without arguments prints the root command overview. Use <code class="docutils literal notranslate"><span class="pre">-h</span></code> or <code class="docutils literal notranslate"><span class="pre">--help</span></code> on the root command and on individual commands.</p>
+<p>Command groups show their child-command help when invoked without a child. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code> is the intentional exception: it builds a plan for the current project.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">engines</span></code> to list known synthesis engines and <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">formats</span></code> to list generic audio and audiobook output formats. Both commands support <code class="docutils literal notranslate"><span class="pre">--json</span></code>.</p>
+</section>
 <section id="project-lifecycle">
 <h2>Project lifecycle</h2>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>readio project init SOURCE -o PROJECT
@@ -566,6 +578,22 @@ readio render PROJECT --format FORMAT
 </section>
 <section id="project-voice-provider-and-routing">
 <h2>Project voice provider and routing</h2>
+</section>
+<section id="saved-project-pipeline-settings">
+<h2>Saved project pipeline settings</h2>
+<p>Inspect, patch, or clear supported settings with the project command family:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>readio project settings [--project PROJECT] [--json]
+readio project settings show [PROJECT] [--json]
+readio project settings set [PROJECT] [--engine ENGINE] [--model MODEL] [--language LANG] [--voice VOICE] [--speed FLOAT]
+  [--mastering PROFILE] [--target-lufs FLOAT] [--sample-rate HZ]
+  [--export-format FORMAT] [--export-output PATH] [--export-bitrate RATE]
+  [--audiobook-output PATH] [--audiobook-title TITLE] [--audiobook-author AUTHOR]
+  [--audiobook-cover IMAGE] [--audiobook-bitrate RATE]
+readio project settings clear [PROJECT] --section {synthesis,composition,export,audiobook_export}
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">set</span></code> updates only sections represented by its flags and preserves other saved section fields. It exposes named supported values, not arbitrary JSON editing. Relative paths are interpreted from the project root. Invocation-only <code class="docutils literal notranslate"><span class="pre">--force</span></code> and <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> flags are never persisted.</p>
+<p>Synthesis, composition, generic export, and audiobook export defaults are used by requestless project APIs and builds. Explicit API or stage options override saved values for that invocation only. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">status</span></code> reports stage-specific staleness when saved settings differ from built provenance; synthesis caches and previous outputs are retained.</p>
 <p><code class="docutils literal notranslate"><span class="pre">project.json</span></code> can select an active provider at <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_provider</span></code>. Existing projects without that field infer the provider from a single non-empty <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> namespace. Projects with neither an active provider nor project binding namespaces keep the global configuration fallback. Multiple provider namespaces without an active provider are ambiguous and must be resolved explicitly. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">bind</span></code> can activate a provider from a stable selector, and <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span></code> reports bindings from the effective provider.</p>
 <p>With no explicit engine, project synthesis selects the engine associated with that provider. It does not inherit global <code class="docutils literal notranslate"><span class="pre">reader.engine</span></code> or <code class="docutils literal notranslate"><span class="pre">reader.voice</span></code> over an active project provider. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span> <span class="pre">--engine</span> <span class="pre">ENGINE</span></code> is a run-local override; it never writes project settings. Use <code class="docutils literal notranslate"><span class="pre">--voice</span></code> for a concrete run-local voice override.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>narrator<span class="w"> </span>en-pi-13
@@ -618,6 +646,12 @@ readio audiobook init EPUB [--chapters SPEC] [-o PROJECT] [--json]
 <h2>Synthesis progress and JSON</h2>
 <p>Project <code class="docutils literal notranslate"><span class="pre">synth</span></code> and <code class="docutils literal notranslate"><span class="pre">preview</span></code> accept the shared <code class="docutils literal notranslate"><span class="pre">--progress</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> option. Interactive progress is written to stderr and includes the resolved profile, cache counts, model-loading phase, and unit/segment preview. <code class="docutils literal notranslate"><span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> select the existing INFO and DEBUG logging levels; use them for bounded stage, runtime, timing, and cache diagnostics.</p>
 <p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span> <span class="pre">--json</span></code> emits one final JSON object on stdout. It includes the project, scope, plan ID, profile identity and engine/model/voice/language, selector/count, and cache reuse/render counts. Progress and logs remain on stderr, and automatic progress is disabled for JSON unless explicitly forced.</p>
+</section>
+<section id="mastering-profiles">
+<h2>Mastering profiles</h2>
+<p>Composition, preview, and bounded <code class="docutils literal notranslate"><span class="pre">render</span></code> default to <code class="docutils literal notranslate"><span class="pre">--mastering</span> <span class="pre">spoken-word</span></code> (<code class="docutils literal notranslate"><span class="pre">-16</span> <span class="pre">LUFS</span></code>, <code class="docutils literal notranslate"><span class="pre">-1</span> <span class="pre">dBTP</span></code>). Select <code class="docutils literal notranslate"><span class="pre">spoken-word-dual-mono</span></code> (<code class="docutils literal notranslate"><span class="pre">-19/-1</span></code>), <code class="docutils literal notranslate"><span class="pre">broadcast-ebu</span></code> (<code class="docutils literal notranslate"><span class="pre">-23/-1</span></code>), <code class="docutils literal notranslate"><span class="pre">peak-safe</span></code> (no LUFS target, <code class="docutils literal notranslate"><span class="pre">-1</span> <span class="pre">dBTP</span></code>), or <code class="docutils literal notranslate"><span class="pre">off</span></code> (no target or ceiling). Readio does not offer an ACX LUFS preset: ACX compliance requires separate RMS, peak, and noise-floor checks.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--target-lufs</span></code> and <code class="docutils literal notranslate"><span class="pre">--true-peak-ceiling-dbtp</span></code> are expert numeric overrides; omitted values inherit from the selected profile. Choose <code class="docutils literal notranslate"><span class="pre">peak-safe</span></code> or <code class="docutils literal notranslate"><span class="pre">off</span></code> to disable inherited processing. <code class="docutils literal notranslate"><span class="pre">--peak-policy</span> <span class="pre">reduce_gain</span></code> preserves transparent constant-gain behavior and reduces requested gain when needed to meet the true-peak ceiling; it is not a limiter. Use <code class="docutils literal notranslate"><span class="pre">--peak-policy</span> <span class="pre">error</span></code> to fail instead of reducing gain.</p>
+<p>Human output and <code class="docutils literal notranslate"><span class="pre">--json</span></code> include the selected profile, before/after integrated loudness, sample and true peaks, requested/applied gain, target status, and warnings. Progress separates assembly and loudness finalization (analysis, gain, and cached post-gain metrics) from AudioJob, WAV, timeline, hashing, and state writes. Runtime timings are diagnostic only and never enter composition identity.</p>
 </section>
 <section id="composition-progress">
 <h2>Composition progress</h2>

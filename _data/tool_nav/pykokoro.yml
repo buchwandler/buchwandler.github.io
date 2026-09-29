@@ -4,17 +4,17 @@ nav_key: pykokoro
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.10.0
-source_commit: 3c53e5d768d0465bde0a92e69f3e05d297a2d2da
-source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.0
+source_ref: v0.10.1
+source_commit: 1d7e2fd45f89c2c160369ce14f31789c6feb1650
+source_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.1
 is_default: true
 repo_url: https://github.com/buchwandler/pykokoro
-release_tag: v0.10.0
-release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.0
+release_tag: v0.10.1
+release_url: https://github.com/buchwandler/pykokoro/releases/tag/v0.10.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.10.0
+  ref: v0.10.1
   url: /tools/pykokoro/
   current: true
 - name: main
@@ -38,6 +38,9 @@ entries:
 - slug: advanced_features
   title: pykokoro Advanced request features
   url: /tools/pykokoro/advanced_features/
+- slug: short_sentence_quality
+  title: pykokoro Short-sentence synthesis
+  url: /tools/pykokoro/short_sentence_quality/
 - slug: pipeline_stages
   title: pykokoro Request lifecycle
   url: /tools/pykokoro/pipeline_stages/

@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -578,8 +578,8 @@ cannot be combined with span-level direct-phoneme overrides. Ambiguous overlappi
 direct overrides are rejected. Offsets refer to the exact prepared request string, not
 an earlier source file or markup document.</p>
 </section>
-<section id="caller-provided-linguistic-annotations">
-<h2>Caller-provided linguistic annotations</h2>
+<section id="caller-provided-linguistic-tokens">
+<h2>Caller-provided linguistic tokens</h2>
 <p><code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code> supplies source-aligned POS, tag, lemma, morphology, and optional
 language context to KokoroG2P. The caller owns text analysis and passes only these
 simple values:</p>
@@ -600,7 +600,7 @@ simple values:</p>
 </div>
 <p>PyKokoro does not require Utterplan, spaCy documents, or planner node objects. Supplied
 tokens, including <code class="docutils literal notranslate"><span class="pre">morph</span></code>, take precedence and bypass engine-side spaCy. <code class="docutils literal notranslate"><span class="pre">annotations</span></code>
-remains available as a compatibility alias for <code class="docutils literal notranslate"><span class="pre">tokens</span></code>. Annotation ranges are validated
+remains available as a compatibility alias for <code class="docutils literal notranslate"><span class="pre">tokens</span></code>. Token ranges are validated
 against the request text; if token text is present, it must match the slice at those
 offsets.</p>
 </section>
@@ -615,9 +615,13 @@ select among configured pronunciation candidates:</p>
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>Explicit request language overrides and token language annotations are passed through
-the prepared-text API; routing does not change the selected acoustic model, voice, or
-runtime.</p>
+<p>Explicit request language overrides and token-level language information are passed
+through the prepared-text API; routing does not change the selected acoustic model,
+voice, or runtime.</p>
+<p>For a deterministic comparison, keep the main request language and apply a
+<code class="docutils literal notranslate"><span class="pre">PronunciationOverride(language=...)</span></code> to the exact source span; automatic routing and
+the deterministic variant are contrasted in
+<a class="reference download internal" download="" href="../_downloads/5e893eb4ced7b39a75892b0ccbfce374/language_routing.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">language_routing.py</span></code></span></a>.</p>
 </section>
 <section id="explicit-short-sentence-handling">
 <h2>Explicit short-sentence handling</h2>
@@ -627,6 +631,15 @@ generation override is supplied. Opt in with a <code class="docutils literal not
 internally, but the result text and word timings remain aligned to the original request.
 The <code class="docutils literal notranslate"><span class="pre">RenderedSegment.short_sentence_mode</span></code> field reports the mode used without exposing
 the context.</p>
+</section>
+<section id="short-sentence-modes">
+<h2>Short-sentence modes</h2>
+<p>This feature is off unless enabled through <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> or
+<code class="docutils literal notranslate"><span class="pre">GenerationConfig.enable_short_sentence</span></code>. The public modes are <code class="docutils literal notranslate"><span class="pre">wrap</span></code>, <code class="docutils literal notranslate"><span class="pre">phrase</span></code>, and
+<code class="docutils literal notranslate"><span class="pre">randomized-phrase</span></code>; <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig(enabled=False)</span></code> explicitly disables it.
+Phrase-based modes require timestamp-capable model output and may fall back to <code class="docutils literal notranslate"><span class="pre">wrap</span></code>.
+See <a class="reference internal" href="../short_sentence_quality/"><span class="std std-doc">short-sentence configuration</span></a> and
+<a class="reference download internal" download="" href="../_downloads/c84444d4bec915d93ec4cfbe0ebfcc64/short_sentence_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">short_sentence_demo.py</span></code></span></a>.</p>
 </section>
 <section id="tracing-and-voice-calibration">
 <h2>Tracing and voice calibration</h2>
@@ -646,6 +659,62 @@ structured <code class="docutils literal notranslate"><span class="pre">calibrat
 <code class="docutils literal notranslate"><span class="pre">synthesis_identity.cache_key</span></code> provides a stable digest of output-affecting engine
 settings. For capacity errors and model profiles, see
 <a class="reference internal" href="../pipeline_stages/"><span class="std std-doc">the request lifecycle</span></a> and <a class="reference internal" href="../languages/"><span class="std std-doc">language profiles</span></a>.</p>
+</section>
+<section id="voice-blends">
+<h2>Voice blends</h2>
+<p>Pass a real voice ID or an explicit <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> as the request/config voice. The
+structured form makes interpolation and weights visible; the compact form uses
+percentages:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceBlend</span>
+
+<span class="n">blend</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="p">(</span>
+    <span class="n">voices</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)],</span>
+    <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">compact</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_sarah:60,af_bella:40&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Voice IDs and valid combinations come from model profiles; inspect <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code>
+instead of assuming a voice is available for every language or model. See
+<a class="reference download internal" download="" href="../_downloads/b83bca77396ef1194572dbe7cfcab7cb/voice_blend.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">voice_blend.py</span></code></span></a>.</p>
+</section>
+<section id="prepared-phoneme-input">
+<h2>Prepared phoneme input</h2>
+<p>A request may carry whole-request <code class="docutils literal notranslate"><span class="pre">phonemes</span></code> when the caller already prepared compatible
+Kokoro phonemes. Whole-request phonemes cannot be combined with span-level
+direct-phoneme overrides and must match the selected frontend, model vocabulary, and
+source-alignment requirements. Invalid or oversized input raises a typed request error.</p>
+<p>Call <code class="docutils literal notranslate"><span class="pre">synthesizer.prepare(request)</span></code> to inspect frontend output without ONNX inference:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">prepared</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">request</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">token_ids</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">prepared</span><span class="o">.</span><span class="n">diagnostics</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">PreparedSynthesis</span></code> also reports the request ID, text, language, voice, and alignment
+tokens.</p>
+</section>
+<section id="result-metadata-and-errors">
+<h2>Result metadata and errors</h2>
+<p><code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> carries the original request ID/text, audio and sample rate,
+request-local word timings, optional trace, <code class="docutils literal notranslate"><span class="pre">synthesis_identity</span></code>, short-sentence mode,
+and <code class="docutils literal notranslate"><span class="pre">voice_level_applications</span></code>. <code class="docutils literal notranslate"><span class="pre">build_synthesis_identity()</span></code> creates identity metadata
+without synthesizing. See <a class="reference download internal" download="" href="../_downloads/e0d3ec1986052b1bbc11c3dffac0631e/result_metadata.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">result_metadata.py</span></code></span></a> for a
+result-output walkthrough. For expected invalid-input, language, or voice failures,
+catch the narrow public exceptions rather than catching <code class="docutils literal notranslate"><span class="pre">Exception</span></code>; see
+<a class="reference download internal" download="" href="../_downloads/9365a42a779178440e1e66bffd206082/error_handling.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">error_handling.py</span></code></span></a>.</p>
+<p>Use the canonical <code class="docutils literal notranslate"><span class="pre">SynthesisSegment.tokens</span></code> field for caller-provided linguistic tokens.
+Routing, G2P languages, and model/voice profiles are distinct: see
+<a class="reference internal" href="../languages/"><span class="std std-doc">language support</span></a>.</p>
+</section>
+<section id="related-recipes">
+<h2>Related recipes</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../basic_usage/#render-longer-text"><span class="std std-ref">Long text and capacity behavior</span></a></p></li>
+<li><p><a class="reference internal" href="../short_sentence_quality/"><span class="std std-doc">Short-sentence quality and explicit modes</span></a></p></li>
+<li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Frontend, lexicon, cache, and asset progress configuration</span></a></p></li>
+<li><p><a class="reference internal" href="../examples/"><span class="std std-doc">All maintained example groups</span></a></p></li>
+</ul>
 </section>
 </section>
 </div>

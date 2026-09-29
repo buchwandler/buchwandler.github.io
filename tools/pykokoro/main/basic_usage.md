@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -577,6 +577,20 @@ pronunciation language remains on the request:</p>
     <span class="n">rendered</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_text</span><span class="p">(</span><span class="s2">&quot;Model-selected speech.&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="managed-asset-cache-location">
+<h2>Managed asset cache location</h2>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisConfig.cache_dir</span></code> selects the OnnxVoice managed-asset cache directory and is
+forwarded to the backend at installation time. The default <code class="docutils literal notranslate"><span class="pre">None</span></code> delegates to the
+backend’s normal cache. Explicit custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> or <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> files continue to
+be used as given; this does not relocate caller-owned files.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">SynthesisConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.cache&quot;</span> <span class="o">/</span> <span class="s2">&quot;pykokoro&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p>The supported combinations depend on model profiles and available artifacts. Use
 <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> to inspect runtime-ready models, languages, voices, qualities, and
 frontends without loading model weights. <code class="docutils literal notranslate"><span class="pre">model_path</span></code>, <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>, and
@@ -659,6 +673,86 @@ the result.</p></li>
 </ul>
 <p>See <a class="reference internal" href="../advanced_features/"><span class="std std-doc">advanced features</span></a> for source-aligned G2P context and
 routing.</p>
+</section>
+<section id="catch-request-failures">
+<h2>Catch request failures</h2>
+<p>The default oversized-input behavior is a typed error, not implicit splitting. Catch the
+specific error when the application wants to report, shorten, or retry a request:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">GenerationConfig</span><span class="p">,</span>
+    <span class="n">KokoroSynthesizer</span><span class="p">,</span>
+    <span class="n">SynthesisConfig</span><span class="p">,</span>
+    <span class="n">SynthesisInputTooLongError</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;One request that exceeds model capacity. &quot;</span> <span class="o">*</span> <span class="mi">1000</span>
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">generation</span><span class="o">=</span><span class="n">GenerationConfig</span><span class="p">(</span><span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">))</span>
+<span class="k">with</span> <span class="n">KokoroSynthesizer</span><span class="p">(</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">synthesizer</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">rendered</span> <span class="o">=</span> <span class="n">synthesizer</span><span class="o">.</span><span class="n">synthesize_text</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">SynthesisInputTooLongError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Shorten the request or opt into sentence splitting: </span><span class="si">{</span><span class="n">exc</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>See <a class="reference download internal" download="" href="../_downloads/9365a42a779178440e1e66bffd206082/error_handling.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">error_handling.py</span></code></span></a> for narrow handling of
+supported language, voice, pronunciation, and length failures.</p>
+</section>
+<section id="inference-cache-and-configuration-groups">
+<h2>Inference cache and configuration groups</h2>
+<p><code class="docutils literal notranslate"><span class="pre">SynthesisConfig.inference_cache_enabled</span></code> and <code class="docutils literal notranslate"><span class="pre">inference_cache_max_bytes</span></code> control the
+renderer-side inference cache; the default budget is 128 MiB. Set
+<code class="docutils literal notranslate"><span class="pre">inference_cache_enabled=False</span></code> or the maximum to <code class="docutils literal notranslate"><span class="pre">0</span></code> to disable it. This is separate
+from the managed-asset <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">SynthesisConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span>
+    <span class="n">inference_cache_enabled</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">inference_cache_max_bytes</span><span class="o">=</span><span class="mi">64</span> <span class="o">*</span> <span class="mi">1024</span> <span class="o">*</span> <span class="mi">1024</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Common <code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code> settings can be grouped by ownership:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Concern</p></th>
+<th class="head"><p>Representative settings</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Model/profile selection</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">voice</span></code>, <code class="docutils literal notranslate"><span class="pre">model_source</span></code>, <code class="docutils literal notranslate"><span class="pre">model_variant</span></code>, <code class="docutils literal notranslate"><span class="pre">model_quality</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Runtime/provider</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">provider</span></code>, <code class="docutils literal notranslate"><span class="pre">provider_options</span></code>, <code class="docutils literal notranslate"><span class="pre">session_options</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Frontend/G2P</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">tokenizer_config</span></code>, <code class="docutils literal notranslate"><span class="pre">language_routing</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Long text</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long_text_split</span></code>, <code class="docutils literal notranslate"><span class="pre">long_text_use_spacy</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Short sentences</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">short_sentence_config</span></code>, <code class="docutils literal notranslate"><span class="pre">generation.enable_short_sentence</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Diagnostics</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">return_trace</span></code>, <code class="docutils literal notranslate"><span class="pre">waveform_validation</span></code>, <code class="docutils literal notranslate"><span class="pre">inference_audio_diagnostics</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Inference cache</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">inference_cache_enabled</span></code>, <code class="docutils literal notranslate"><span class="pre">inference_cache_max_bytes</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Voice level</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">voice_level</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Local/custom assets</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">model_path</span></code>, <code class="docutils literal notranslate"><span class="pre">voices_path</span></code>, <code class="docutils literal notranslate"><span class="pre">model_config_path</span></code>, <code class="docutils literal notranslate"><span class="pre">cache_dir</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code> separately controls acoustic <code class="docutils literal notranslate"><span class="pre">speed</span></code>, the default language for
+<code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code>, <code class="docutils literal notranslate"><span class="pre">random_seed</span></code>, and the optional short-sentence override. For local
+or custom model paths, consult the
+<a class="reference internal" href="../installation/#model-assets-and-discovery"><span class="std std-ref">installation guide</span></a>; discovery and path
+configuration do not silently provision a replacement for a supplied custom artifact.</p>
 </section>
 </section>
 </div>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -560,6 +560,24 @@ state. Completed compatible work can be reused; Readio determines what needs to 
 planned, synthesized, composed, or exported again. Consult
 <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/projects.md">Readio’s project guide</a>
 for stage and invalidation details.</p>
+</section>
+<section id="guided-synthesis-setup">
+<h2>Guided synthesis setup</h2>
+<p>Chapter selection remains persistent project scope. TTSForge loads saved choices from
+Readio’s public project-settings API. During initial setup, the resolved synthesis and
+export settings are saved to the Readio project before final confirmation or build;
+TTSForge does not create a parallel settings file.</p>
+<p>On normal reuse, valid saved choices suppress their setup questions, and model/voice
+catalogs appear only when a selection is needed. If an existing or legacy project has no
+saved setup, Readio resolves the defaults and TTSForge saves the resulting choices. A
+failed build can be retried with the saved setup and original chapter scope.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit unpinned synthesis choices with saved values as defaults.
+Explicit CLI options pin and update only their corresponding settings. When language,
+engine, or model changes, dependent unpinned choices are reconsidered; explicitly pinned
+dependent options remain unchanged.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips only final confirmation, not setup questions. <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--json</span></code> never prompt: they use saved project setup and let Readio resolve unspecified
+values, with explicit CLI options taking precedence.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> to choose an explicit project location. This is useful for multiple
 audiobook variants or when project files should live outside the source directory:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-en.readio

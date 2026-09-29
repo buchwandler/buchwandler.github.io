@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -595,35 +595,71 @@ traceback after an error.</p>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--speed</span> <span class="pre">FLOAT</span></code></p></td>
 <td><p>Synthesis speed from <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--bitrate</span> <span class="pre">VALUE</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio spaCy policy for text processing.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio short-sentence handling policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--lexicon</span> <span class="pre">SELECTOR</span></code></p></td>
+<td><p>Select a lexicon; repeatable for multiple selectors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code></p></td>
+<td><p>Disable lexicons; mutually exclusive with <code class="docutils literal notranslate"><span class="pre">--lexicon</span></code> and <code class="docutils literal notranslate"><span class="pre">--auto-lexicons</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--auto-lexicons</span></code></p></td>
+<td><p>Let Readio select lexicons; mutually exclusive with explicit/disabled modes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--g2p-fallback</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio grapheme-to-phoneme fallback policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--lexicon-data-policy</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio lexicon data selection policy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--allow-experimental</span></code></p></td>
+<td><p>Permit experimental catalog choices where Readio supports them.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--voice-level</span> <span class="pre">MODE</span></code></p></td>
+<td><p>Voice-level calibration, when supported by the selected engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code></p></td>
+<td><p>Readio pause-handling policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">UNIT</span></code>, <code class="docutils literal notranslate"><span class="pre">--synthesis-unit</span> <span class="pre">UNIT</span></code></p></td>
+<td><p>Choose sentence or paragraph synthesis units.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--bitrate</span> <span class="pre">VALUE</span></code></p></td>
 <td><p>Export bitrate where the selected format supports it.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--target-lufs</span> <span class="pre">FLOAT</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--target-lufs</span> <span class="pre">FLOAT</span></code></p></td>
 <td><p>Composition loudness target.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--offline</span></code> / <code class="docutils literal notranslate"><span class="pre">--refresh</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--offline</span></code> / <code class="docutils literal notranslate"><span class="pre">--refresh</span></code></p></td>
 <td><p>Control Readio’s offline/resource-refresh behavior for this request.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code>, <code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code>, <code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code></p></td>
 <td><p>Audiobook metadata overrides.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code></p></td>
 <td><p>Explicit cover image for audiobook export.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
 <td><p>Ask Readio to replace an existing output it owns.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code></p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code></p></td>
 <td><p>Create a separate project and preserve the existing one.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code></p></td>
-<td><p>Skip final confirmation; does not disable chapter selection prompts.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code></p></td>
+<td><p>Skip final confirmation; does not disable chapter or synthesis setup prompts.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code></p></td>
-<td><p>Disable all prompts.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code></p></td>
+<td><p>Disable prompts; use saved setup and Readio defaults.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code></p></td>
+<td><p>Revisit unpinned saved synthesis choices, using their current values as defaults.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--json</span></code></p></td>
-<td><p>Emit one JSON result without prompts or human-readable progress.</p></td>
+<td><p>Emit one JSON result, including saved-setup provenance; no prompts or progress.</p></td>
 </tr>
 </tbody>
 </table>
@@ -633,14 +669,38 @@ traceback after an error.</p>
 <p>When stdin, stdout, and stderr are terminals, conversion is interactive unless <code class="docutils literal notranslate"><span class="pre">--json</span></code>
 or <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> is selected. A new project without <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> shows the
 detected chapter table and prompts for a selection. An existing project uses its saved
-chapter scope and does not prompt again. TTSForge displays a preflight summary with
-Readio’s effective synthesis resolution, then asks for confirmation (default yes).
-<code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips this confirmation only; it does not skip automatic chapter selection.</p>
+chapter scope and does not prompt again.</p>
+<p>Before preflight, <code class="docutils literal notranslate"><span class="pre">convert</span></code> merges saved project settings with explicitly supplied CLI
+values and guides you through missing synthesis settings. Normal reuse skips valid saved
+choices and opens catalogs only when a choice is needed. A project without saved
+settings—including a legacy project—gets Readio’s resolved defaults; TTSForge saves the
+complete resolved setup through Readio’s public project-settings API before confirmation
+or build. A failed build can be retried without repeating setup. Readio remains the sole
+owner of persisted project state.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit unpinned setup fields with saved values as defaults.
+Explicit CLI values pin and update only their corresponding settings. Changing language,
+engine, or model causes dependent unpinned choices to be selected again; CLI-pinned
+dependents remain.</p>
+<p>TTSForge asks for language, runnable engine selection where applicable, and model/voice
+catalog choices when needed. These catalogs render as compact vertical lists. Voice
+choices show canonical Readio voice IDs first and stable selectors as aliases; guided
+voice prompts accept a row number, canonical ID, selector, or qualified ID and store the
+selected catalog row’s canonical ID. Remaining questions cover supported quality, speed,
+spaCy and short-sentence policies, lexicons, G2P fallback and lexicon data, supported
+voice-level calibration, pause mode, and synthesis unit. Readio owns catalogs,
+capabilities, and resolution rules; the <code class="docutils literal notranslate"><span class="pre">Audiobook</span> <span class="pre">Setup</span></code> table shows the effective
+values used.</p>
+<p>Explicit synthesis options pin and update their corresponding saved settings. <code class="docutils literal notranslate"><span class="pre">--yes</span></code>
+skips only final confirmation; it does not skip any setup questions still needed.
+<code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> reopens unpinned saved setup questions with their current values as
+defaults.</p>
 <p>For a new project in non-interactive mode, chapter selection defaults to <code class="docutils literal notranslate"><span class="pre">all</span></code> unless
-<code class="docutils literal notranslate"><span class="pre">--chapters</span></code> is explicit. JSON mode never prompts or emits progress prose on stdout; it
-emits one JSON result. Existing projects keep their persisted scope. If an explicit
-<code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value conflicts with that saved scope, conversion fails with guidance to
-use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> or another <code class="docutils literal notranslate"><span class="pre">--project</span></code> path.</p>
+<code class="docutils literal notranslate"><span class="pre">--chapters</span></code> is explicit. Non-interactive runs reuse valid project settings and let
+Readio resolve any unspecified values without prompting; CLI options override saved
+values. JSON mode never prompts or emits progress prose on stdout; its single result
+includes <code class="docutils literal notranslate"><span class="pre">settings_source</span></code> and <code class="docutils literal notranslate"><span class="pre">settings_saved</span></code> metadata. Existing projects keep their
+persisted chapter scope. If an explicit <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value conflicts with that saved
+scope, conversion fails with guidance to use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> or another <code class="docutils literal notranslate"><span class="pre">--project</span></code> path.</p>
 <p>A TTY conversion uses a live, chapter-aware progress display. Redirected/non-interactive
 runs print milestone lines rather than every segment; JSON mode has no human-readable
 progress.</p>
@@ -676,7 +736,8 @@ defaults to the current directory.</p></li>
 <p>Options include <code class="docutils literal notranslate"><span class="pre">--project</span></code>, <code class="docutils literal notranslate"><span class="pre">--chapters</span></code>, <code class="docutils literal notranslate"><span class="pre">--selection</span></code>, <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>,
 <code class="docutils literal notranslate"><span class="pre">--engine</span></code>, <code class="docutils literal notranslate"><span class="pre">--speed</span></code>, <code class="docutils literal notranslate"><span class="pre">--target-lufs</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>. The default selection is
 <code class="docutils literal notranslate"><span class="pre">first:3</span></code>. If no project exists, preview creates the default project; subsequent
-conversion reuses it.</p>
+conversion reuses it. <code class="docutils literal notranslate"><span class="pre">preview</span></code> has a smaller option set and does not run the guided
+<code class="docutils literal notranslate"><span class="pre">convert</span></code> setup wizard.</p>
 </section>
 <section id="readio-discovery">
 <h2>Readio discovery</h2>

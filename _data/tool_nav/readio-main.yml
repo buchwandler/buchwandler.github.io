@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 20c403748d0d85caf31bcbc2d107275c06010c36
+source_commit: caca636ff4f4634f2d360f8ea79a450cfb4924d8
 source_url: https://github.com/buchwandler/readio/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/readio
-release_tag: v0.3.1
-release_url: https://github.com/buchwandler/readio/releases/tag/v0.3.1
+release_tag: v0.3.4
+release_url: https://github.com/buchwandler/readio/releases/tag/v0.3.4
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.1
+  ref: v0.3.4
   url: /tools/readio/
   current: false
 - name: main

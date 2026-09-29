@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/installation/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.0"
-docs_commit: "3c53e5d768d0465bde0a92e69f3e05d297a2d2da"
+docs_ref: "v0.10.1"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -570,6 +570,24 @@ compose several requests. Linux systems may also need a PortAudio system package
 an espeak frontend or fallback. Named lexicon data can be provisioned by Lexphon on
 first use; for offline operation, install the required data ahead of time and select an
 installed-only lexicon policy in <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenizerConfig</span><span class="p">,</span> <span class="n">discover_lexicons</span>
+
+<span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_lexicons</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;de-de&quot;</span><span class="p">,</span> <span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">lexicon</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">lexicons</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">lexicon</span><span class="o">.</span><span class="n">selector</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">installed</span><span class="p">,</span> <span class="n">lexicon</span><span class="o">.</span><span class="n">model_support</span><span class="p">)</span>
+
+<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">TokenizerConfig</span><span class="p">(</span>
+    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;kokorog2p&quot;</span><span class="p">,</span>
+    <span class="n">fallback</span><span class="o">=</span><span class="s2">&quot;espeak&quot;</span><span class="p">,</span>
+    <span class="n">lexicons</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;gold&quot;</span><span class="p">,),</span>
+    <span class="n">lexicon_data_policy</span><span class="o">=</span><span class="s2">&quot;installed-only&quot;</span><span class="p">,</span>
+    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>  <span class="c1"># no spaCy model required for this recipe</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>Discovery inspects metadata; it does not download or install lexicon data. The
+<code class="docutils literal notranslate"><span class="pre">installed-only</span></code> policy prevents implicit lexicon data provisioning during synthesis.
+See <a class="reference download internal" download="" href="../_downloads/f5aabb980211e3b25ccad1d28ec6b683/frontend_and_lexicons.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">frontend_and_lexicons.py</span></code></span></a>.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>lexphon<span class="w"> </span>data<span class="w"> </span>available<span class="w"> </span>de-DE
 lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>de-de:gold
 lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>de-de:gold
@@ -580,9 +598,17 @@ lists lexicon metadata without running synthesis.</p>
 </section>
 <section id="model-assets-and-discovery">
 <h2>Model assets and discovery</h2>
-<p>Model and voice assets are resolved lazily when synthesis first needs them. Use the
-<code class="docutils literal notranslate"><span class="pre">asset_progress</span></code> callback in <code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code> to report managed asset downloads. For
-metadata-only runtime inventory, call:</p>
+<p>Model and voice assets are resolved lazily when synthesis first needs them.
+<code class="docutils literal notranslate"><span class="pre">SynthesisConfig.cache_dir</span></code> chooses the cache directory passed to OnnxVoice for managed
+model/voice assets. The default <code class="docutils literal notranslate"><span class="pre">None</span></code> delegates to the backend’s normal cache.
+Caller-owned custom model and voice files are not moved or replaced.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">SynthesisConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">cache_dir</span><span class="o">=</span><span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.cache&quot;</span> <span class="o">/</span> <span class="s2">&quot;pykokoro&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For metadata-only runtime inventory, call <code class="docutils literal notranslate"><span class="pre">discover_models(offline=True)</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">discover_models</span>
 
 <span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
@@ -590,9 +616,33 @@ metadata-only runtime inventory, call:</p>
     <span class="nb">print</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">model</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>This does not load model weights or create an ONNX session. Explicit custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code>
-and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> values are used in place and validated; they are not silently replaced
-with a managed download.</p>
+<p>This does not load model weights or create an ONNX session.</p>
+</section>
+<section id="managed-asset-progress">
+<h2>Managed asset progress</h2>
+<p>Attach <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress()</span></code> for a ready-made terminal reporter, or provide a
+callback that receives typed <code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> values. Notifications cover managed
+model assets; they do not report lexicon provisioning. First-time synthesis can download
+assets unless they are already cached. The example script may require network access and
+model storage:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConsoleAssetProgress</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">asset_progress</span><span class="o">=</span><span class="n">ConsoleAssetProgress</span><span class="p">())</span>
+</pre></div>
+</div>
+<p>For a custom callback, inspect <code class="docutils literal notranslate"><span class="pre">event.phase</span></code>, <code class="docutils literal notranslate"><span class="pre">filename</span></code>, and byte counts. See
+<a class="reference download internal" download="" href="../_downloads/c7356613316c639130ec9dfddddf8457/asset_progress.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">asset_progress.py</span></code></span></a>.</p>
+<p>A custom callback can use the public event fields directly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="n">AssetProgressEvent</span><span class="p">,</span> <span class="n">SynthesisConfig</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">report_progress</span><span class="p">(</span><span class="n">event</span><span class="p">:</span> <span class="n">AssetProgressEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">phase</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">filename</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">bytes_done</span><span class="p">,</span> <span class="n">event</span><span class="o">.</span><span class="n">bytes_total</span><span class="p">)</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="n">SynthesisConfig</span><span class="p">(</span><span class="n">asset_progress</span><span class="o">=</span><span class="n">report_progress</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Explicit custom <code class="docutils literal notranslate"><span class="pre">model_path</span></code> and <code class="docutils literal notranslate"><span class="pre">voices_path</span></code> values are used in place and validated;
+they are not silently replaced with managed downloads.</p>
 </section>
 <section id="development-install">
 <h2>Development install</h2>

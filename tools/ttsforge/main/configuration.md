@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "8d25d2e006f226b0c98fe5704587c0e59081d30e"
+docs_commit: "20bb74b9e537be4954cabbf081ea5c833a23a16f"
 search_enabled: true
 ---
 
@@ -583,20 +583,30 @@ project-local behavior—use
 </section>
 <section id="command-line-overrides-and-projects">
 <h2>Command-line overrides and projects</h2>
-<p><code class="docutils literal notranslate"><span class="pre">convert</span></code> and <code class="docutils literal notranslate"><span class="pre">preview</span></code> accept per-operation options such as <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>,
-<code class="docutils literal notranslate"><span class="pre">--engine</span></code>, <code class="docutils literal notranslate"><span class="pre">--model</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-source</span></code>, <code class="docutils literal notranslate"><span class="pre">--quality</span></code>, <code class="docutils literal notranslate"><span class="pre">--speed</span></code>, and <code class="docutils literal notranslate"><span class="pre">--target-lufs</span></code>.
-These are mapped to Readio public request types; they do not create a second TTSForge
-config schema. Persistent project state and Readio’s rules for effective settings
-determine reuse. Refer to the
+<p><code class="docutils literal notranslate"><span class="pre">convert</span></code> accepts per-operation options such as <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--engine</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--model</span></code>, <code class="docutils literal notranslate"><span class="pre">--model-source</span></code>, <code class="docutils literal notranslate"><span class="pre">--quality</span></code>, <code class="docutils literal notranslate"><span class="pre">--speed</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, <code class="docutils literal notranslate"><span class="pre">--short-sentence</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--lexicon</span></code>/<code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code>/<code class="docutils literal notranslate"><span class="pre">--auto-lexicons</span></code>, <code class="docutils literal notranslate"><span class="pre">--g2p-fallback</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--lexicon-data-policy</span></code>, <code class="docutils literal notranslate"><span class="pre">--voice-level</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code>, and <code class="docutils literal notranslate"><span class="pre">--unit</span></code>. These stable
+audiobook choices map to Readio’s public request and discovery APIs; they do not create
+a second TTSForge configuration schema. <code class="docutils literal notranslate"><span class="pre">preview</span></code> retains a smaller set of explicit
+options and does not run the guided setup wizard. Persistent project state and Readio’s
+rules for effective settings determine reuse. See the
 <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/projects.md">Readio project guide</a>
 before relying on project/global setting precedence.</p>
+<p>The guided <code class="docutils literal notranslate"><span class="pre">convert</span></code> setup exposes stable Readio audiobook controls such as spaCy and
+short-sentence policy, lexicon/G2P behavior, pause handling, and synthesis unit as
+command options and interactive choices. These are not backend-private settings.
+TTSForge still does not expose engine internals, renderer-only pause controls, or output
+templates.</p>
 </section>
 <section id="migrating-old-settings">
 <h2>Migrating old settings</h2>
 <p>Former TTSForge-specific keys and config files are not automatically imported. Review
-the old values and set only their current Readio equivalents. TTSForge no longer accepts
-backend controls for PyKokoro internals, phoneme dictionaries, renderer pause settings,
-or TTSForge-specific output filename templates. See the
+the old values and check <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">--help</span></code> for currently supported public
+options. The interactive setup and its matching flags expose Readio’s stable audiobook
+controls; they do not translate obsolete settings. TTSForge no longer accepts backend
+controls for PyKokoro internals, private phoneme dictionaries, renderer-internal pause
+tuning, or TTSForge-specific output filename templates. See the
 <a class="reference internal" href="../migration-readio/"><span class="std std-doc">migration guide</span></a>.</p>
 </section>
 <section id="diagnose-configuration-and-engine-setup">

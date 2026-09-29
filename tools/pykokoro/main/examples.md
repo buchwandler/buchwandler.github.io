@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "335188ed2d0c8aaf96438789171f79a8609dc16c"
+docs_commit: "1d7e2fd45f89c2c160369ce14f31789c6feb1650"
 search_enabled: true
 ---
 
@@ -542,45 +542,203 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="examples">
 <h1>Examples</h1>
-<p>The maintained scripts in <code class="docutils literal notranslate"><span class="pre">examples/</span></code> use the request-centric API. Run them from the
-project root after installing <code class="docutils literal notranslate"><span class="pre">pykokoro[cpu]</span></code>:</p>
+<p>The maintained scripts in <code class="docutils literal notranslate"><span class="pre">examples/</span></code> use the request-centric API. Install one provider
+(for example, <code class="docutils literal notranslate"><span class="pre">pykokoro[cpu]</span></code>) before running a synthesis example. Uncached synthesis
+may download model assets; discovery-only scripts are identified below. Outputs go to
+<code class="docutils literal notranslate"><span class="pre">example-artifacts/</span></code> when run directly, and to <code class="docutils literal notranslate"><span class="pre">example-artifacts/&lt;script&gt;/</span></code> through the
+runner.</p>
+<section id="runner-groups">
+<h2>Runner groups</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--list
-python<span class="w"> </span>examples/run_all.py
+python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--group<span class="w"> </span>core
+python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--group<span class="w"> </span>feature
+python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--group<span class="w"> </span>language-showcase
+python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--group<span class="w"> </span>optional-heavy
+python<span class="w"> </span>examples/run_all.py<span class="w"> </span>--include-optional
 </pre></div>
 </div>
-<p>Synthesis examples download model assets on first use. The sequential runner gives each
-script its own output directory below <code class="docutils literal notranslate"><span class="pre">example-artifacts/</span></code> and continues after a
-failure.</p>
-<section id="simple-synthesis">
-<h2>Simple synthesis</h2>
-<p><a class="reference download internal" download="" href="../_downloads/4f6fdc331cb42a160eca9f0f1fbc6d60/simple_synthesis.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/simple_synthesis.py</span></code></span></a> renders prepared text
-with <code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code> and writes the independent result as a float32 WAV.</p>
+<p>The default group is <code class="docutils literal notranslate"><span class="pre">core</span></code>. Feature examples and the language showcase are separate
+from it; <code class="docutils literal notranslate"><span class="pre">optional-heavy</span></code> is never added unless selected explicitly or
+<code class="docutils literal notranslate"><span class="pre">--include-optional</span></code> is used. The runner processes scripts sequentially, isolates each
+script’s output directory, and continues after a script fails. Use <code class="docutils literal notranslate"><span class="pre">--list</span></code> to inspect a
+group without running it.</p>
 </section>
-<section id="independent-request-batches">
-<h2>Independent request batches</h2>
-<p><a class="reference download internal" download="" href="../_downloads/8297bbd8c3f0c3d6d882aee058126030/request_batch.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/request_batch.py</span></code></span></a> passes two requests with
-distinct voices to <code class="docutils literal notranslate"><span class="pre">synthesize_segments()</span></code> and writes each <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> separately.
-It does not join them into one timeline.</p>
+<section id="core-request-examples">
+<h2>Core request examples</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Script / command</p></th>
+<th class="head"><p>Purpose and public API</p></th>
+<th class="head"><p>Assets, network, and cost</p></th>
+<th class="head"><p>Expected output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/4f6fdc331cb42a160eca9f0f1fbc6d60/simple_synthesis.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">simple_synthesis.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/simple_synthesis.py</span></code></p></td>
+<td><p>Smallest request using <code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.synthesize_text()</span></code>, and <code class="docutils literal notranslate"><span class="pre">RenderedSegment.save_wav()</span></code>.</p></td>
+<td><p>First run may download one model/voice asset; low CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hello.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/8297bbd8c3f0c3d6d882aee058126030/request_batch.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">request_batch.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/request_batch.py</span></code></p></td>
+<td><p>Two explicit <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> requests through <code class="docutils literal notranslate"><span class="pre">synthesize_segments()</span></code>. Results are saved independently; PyKokoro does not concatenate them or insert silence.</p></td>
+<td><p>First run may download model assets; low-to-medium CPU cost for two short requests.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">greeting-a.wav</span></code>, <code class="docutils literal notranslate"><span class="pre">greeting-b.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/e1c236991b64bacc9666dda0057b4237/pronunciation_overrides.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">pronunciation_overrides.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/pronunciation_overrides.py</span></code></p></td>
+<td><p>Contrasts a source-span <code class="docutils literal notranslate"><span class="pre">PronunciationOverride(language=...)</span></code> with a direct phoneme span.</p></td>
+<td><p>First run may download model assets; low-to-medium cost for two short requests.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">language-override.wav</span></code>, <code class="docutils literal notranslate"><span class="pre">phoneme-span-override.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/af1bb0ddab51caac69e94ac3143db654/linguistic_tokens.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">linguistic_tokens.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/linguistic_tokens.py</span></code></p></td>
+<td><p>Passes a source-aligned <code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code> through the canonical <code class="docutils literal notranslate"><span class="pre">tokens=</span></code> field.</p></td>
+<td><p>First run may download model assets; low CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">contextual-pronunciation.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/cb71703d97b880be3b5b5b9bec96c7ee/long_text.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">long_text.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/long_text.py</span></code></p></td>
+<td><p>Sends one oversized original request with <code class="docutils literal notranslate"><span class="pre">long_text_split=&quot;sentence&quot;</span></code>; engine-managed chunks return as one result.</p></td>
+<td><p>First run may download model assets; higher CPU cost for the long passage.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">long_text.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/b83bca77396ef1194572dbe7cfcab7cb/voice_blend.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">voice_blend.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/voice_blend.py</span></code></p></td>
+<td><p>Shows structured and parsed <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> construction and synthesizes one blended voice.</p></td>
+<td><p>First run may download assets for the selected model/voices; low-to-medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">voice_blend.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/e0d3ec1986052b1bbc11c3dffac0631e/result_metadata.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">result_metadata.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/result_metadata.py</span></code></p></td>
+<td><p>Prints request/result fields, token IDs, diagnostics, trace summary, synthesis identity, word timings, and voice-level applications.</p></td>
+<td><p>First run may download model assets; low CPU cost for one request.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">result_metadata.wav</span></code> and printed metadata</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/41c29e50a3c7ae275d8549488df9835e/models_and_languages.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">models_and_languages.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/models_and_languages.py</span> <span class="pre">--offline</span></code></p></td>
+<td><p>Uses <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> to print runtime model/profile, language, and voice inventory without creating an ONNX session. <code class="docutils literal notranslate"><span class="pre">--model</span> <span class="pre">MODEL_ID</span></code> optionally synthesizes using a selected profile.</p></td>
+<td><p>Default discovery may refresh registry metadata over the network; <code class="docutils literal notranslate"><span class="pre">--offline</span></code> uses cached metadata. No model download unless <code class="docutils literal notranslate"><span class="pre">--model</span></code> is supplied; discovery cost is low.</p></td>
+<td><p>Default: printed inventory only. With <code class="docutils literal notranslate"><span class="pre">--model</span></code>: <code class="docutils literal notranslate"><span class="pre">&lt;model&gt;_&lt;language&gt;_&lt;voice&gt;.wav</span></code> under <code class="docutils literal notranslate"><span class="pre">example-artifacts/model_language_outputs/</span></code>.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="pronunciation-and-linguistic-context">
-<h2>Pronunciation and linguistic context</h2>
-<ul class="simple">
-<li><p><a class="reference download internal" download="" href="../_downloads/e1c236991b64bacc9666dda0057b4237/pronunciation_overrides.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/pronunciation_overrides.py</span></code></span></a>
-supplies an explicit source-aligned pronunciation-language span.</p></li>
-<li><p><a class="reference download internal" download="" href="../_downloads/8b39c530dca061b0c0469b4a868aea73/linguistic_annotations.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/linguistic_annotations.py</span></code></span></a> passes
-POS, tag, and lemma context without planner or spaCy objects.</p></li>
-</ul>
+<section id="feature-examples">
+<h2>Feature examples</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Script / command</p></th>
+<th class="head"><p>Purpose and public API</p></th>
+<th class="head"><p>Assets, network, and cost</p></th>
+<th class="head"><p>Expected output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/de15e3868561a06ff2fc12cc1f9946e7/english.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">english.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/english.py</span></code></p></td>
+<td><p>Synthesizes prepared English text, calls <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>, and reuses its phonemes in a whole-request phoneme request.</p></td>
+<td><p>First run may download model assets; two short inferences, low-to-medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">english_demo.wav</span></code>, <code class="docutils literal notranslate"><span class="pre">english_phonemes_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/5e893eb4ced7b39a75892b0ccbfce374/language_routing.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">language_routing.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/language_routing.py</span></code></p></td>
+<td><p>Contrasts automatic G2P language routing with an explicit deterministic language override on the same source span. Acoustic model and voice remain explicit.</p></td>
+<td><p>First run may download model assets; low-to-medium cost for two short requests.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">automatic-routing.wav</span></code>, <code class="docutils literal notranslate"><span class="pre">explicit-german-span.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/f5aabb980211e3b25ccad1d28ec6b683/frontend_and_lexicons.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">frontend_and_lexicons.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/frontend_and_lexicons.py</span></code></p></td>
+<td><p>Runs offline <code class="docutils literal notranslate"><span class="pre">discover_lexicons()</span></code> and constructs an installed-only <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>; it does not synthesize.</p></td>
+<td><p>No model assets or lexicon data are installed; offline discovery avoids metadata refresh. Low cost.</p></td>
+<td><p>Printed lexicon inventory and frontend configuration; no file.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/c7356613316c639130ec9dfddddf8457/asset_progress.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">asset_progress.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/asset_progress.py</span></code><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/asset_progress.py</span> <span class="pre">--custom-callback</span></code></p></td>
+<td><p>Demonstrates <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress</span></code> or a typed <code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code> callback during managed model asset installation.</p></td>
+<td><p>May download model assets on first use; low CPU cost for one short request.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">asset_progress.wav</span></code> plus progress events</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/9365a42a779178440e1e66bffd206082/error_handling.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">error_handling.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/error_handling.py</span></code></p></td>
+<td><p>Shows narrow catches for invalid language, voice, pronunciation, and oversized input errors.</p></td>
+<td><p>First run may download model assets on the valid path; low CPU cost for one short request.</p></td>
+<td><p>Normally <code class="docutils literal notranslate"><span class="pre">error_handling.wav</span></code>; a caught failure prints a message instead.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="model-inventory">
-<h2>Model inventory</h2>
-<p><a class="reference download internal" download="" href="../_downloads/41c29e50a3c7ae275d8549488df9835e/models_and_languages.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/models_and_languages.py</span></code></span></a> displays
-available model profiles without downloading weights. Pass <code class="docutils literal notranslate"><span class="pre">--model</span> <span class="pre">MODEL_ID</span></code> to
-synthesize a sample with a selected runnable model; experimental frontends require
-<code class="docutils literal notranslate"><span class="pre">--include-experimental</span></code>.</p>
-<p>The optional <a class="reference download internal" download="" href="../_downloads/994ea25592f1fa0935be45bfa4b38d9a/all_voices.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">examples/all_voices.py</span></code></span></a> showcase can take a
-long time and download several model/voice assets. It requests each voice independently
-and assembles its own WAV as caller-side example code; this composition behavior is not
-part of PyKokoro’s engine API.</p>
+<section id="language-showcase">
+<h2>Language showcase</h2>
+<p>These scripts are separated from the default runner group because each performs
+synthesis; uncached runs may download model assets. Each is a short-to-medium
+single-language showcase unless noted. Run one directly with the command shown.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Script / command</p></th>
+<th class="head"><p>Purpose and public API</p></th>
+<th class="head"><p>Assets, network, and cost</p></th>
+<th class="head"><p>Expected output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/6f5414beb55d4d66a7916a648789a761/chinese.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">chinese.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/chinese.py</span></code></p></td>
+<td><p>Synthesizes Mandarin with explicit <code class="docutils literal notranslate"><span class="pre">zh</span></code> language and the <code class="docutils literal notranslate"><span class="pre">v1.1-zh</span></code> model variant.</p></td>
+<td><p>May download the Chinese model/voice assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">chinese_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/4cc966dc38aa1372e6136d3b5202ce19/contractions.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">contractions.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/contractions.py</span></code></p></td>
+<td><p>Exercises English contractions and past-tense endings through multiple requests; joins audio in this caller-owned example.</p></td>
+<td><p>May download model assets; higher CPU cost than a single short sample.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">contractions_demo.wav</span></code> (caller-assembled)</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/ee6d00d1fbf29d82ab408f454ab0048e/french.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">french.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/french.py</span></code></p></td>
+<td><p>Synthesizes a prepared French passage with an explicit French voice/language.</p></td>
+<td><p>May download model assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">french_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/9743642b0c39987d0db0ce03cfc0abb2/italian.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">italian.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/italian.py</span></code></p></td>
+<td><p>Synthesizes an Italian passage using the request API.</p></td>
+<td><p>May download model assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">italian_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/b06c005c809da1379b772a3353423918/japanese.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">japanese.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/japanese.py</span></code></p></td>
+<td><p>Synthesizes a Japanese passage with an explicit <code class="docutils literal notranslate"><span class="pre">ja</span></code> request language.</p></td>
+<td><p>May download model assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">japanese_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/1bd8d97e0b5a68f98c742d688d5ba76b/korean.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">korean.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/korean.py</span></code></p></td>
+<td><p>Demonstrates experimental Korean phonemization and a parsed <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code>; pronunciation may be inaccurate.</p></td>
+<td><p>Requires a compatible experimental frontend/profile and may download assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">korean_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/cdfeb13c7177ab4294f13cb5555628f2/portuguese.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">portuguese.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/portuguese.py</span></code></p></td>
+<td><p>Synthesizes a Brazilian Portuguese passage with an explicit voice and language.</p></td>
+<td><p>May download model assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">portuguese_demo.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/eb5251950e6e7b233db296abf36c417c/spanish.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">spanish.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/spanish.py</span></code></p></td>
+<td><p>Synthesizes a prepared Spanish passage with the request API.</p></td>
+<td><p>May download model assets; medium CPU cost.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">spanish_demo.wav</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="optional-heavy-examples">
+<h2>Optional heavy examples</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Script / command</p></th>
+<th class="head"><p>Purpose and public API</p></th>
+<th class="head"><p>Assets, network, and cost</p></th>
+<th class="head"><p>Expected output</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/994ea25592f1fa0935be45bfa4b38d9a/all_voices.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">all_voices.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/all_voices.py</span> <span class="pre">--list-only</span></code> (inventory)<br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/all_voices.py</span></code> (render)</p></td>
+<td><p>Uses model discovery to enumerate profiles, then submits one independent synthesis request per selected voice. The script itself assembles a comparison WAV on the caller side.</p></td>
+<td><p>Inventory may refresh registry metadata. Rendering can download many model/voice assets, use substantial storage, and run for a long time on CPU; list-only does not synthesize.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">all_voices.wav</span></code>; with <code class="docutils literal notranslate"><span class="pre">--compare-leveling</span></code>, <code class="docutils literal notranslate"><span class="pre">all_voices_raw.wav</span></code> and <code class="docutils literal notranslate"><span class="pre">all_voices_calibrated.wav</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/c84444d4bec915d93ec4cfbe0ebfcc64/short_sentence_demo.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">short_sentence_demo.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/short_sentence_demo.py</span></code></p></td>
+<td><p>Compares disabled, wrap, phrase, and randomized-phrase <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code> modes; joins comparison sections in example code, not in the engine.</p></td>
+<td><p>May download model assets; high CPU cost (many short requests across four modes).</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">short_sentence_demo.wav</span></code> (caller-assembled)</p></td>
+</tr>
+</tbody>
+</table>
+<p>Every runnable script is listed above. <code class="docutils literal notranslate"><span class="pre">__init__.py</span></code>, <code class="docutils literal notranslate"><span class="pre">_output.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">run_all.py</span></code> are
+support modules rather than synthesis examples. For API details, see the
+<a class="reference internal" href="../api_reference/"><span class="std std-doc">reference</span></a>.</p>
 </section>
 </section>
 </div>

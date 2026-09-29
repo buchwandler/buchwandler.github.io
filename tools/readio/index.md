@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.1"
-docs_commit: "86a3aecedd9d31f8c36e2b85d8ec18aa833a2472"
+docs_ref: "v0.3.4"
+docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
 search_enabled: true
 ---
 
@@ -644,10 +644,11 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --speed NUMBER            speech speed multiplier
 --voice-level MODE       off or calibrated voice-level handling
 --spacy MODE              linguistic analysis policy
---short-sentence MODE     short-sentence handling policy
+--short-sentence MODE     off, wrap, phrase, or randomized-phrase (default: phrase)
 --pause-mode MODE         auto, tts, or manual
 --unit UNIT               sentence or paragraph
 
+Readio&#39;s short-sentence default is `phrase`; Readio resolves the policy before engine adapters translate it to engine-native settings.
 Readio requires SSMD &gt;=0.9,&lt;0.10 and UtterPlan &gt;=0.3,&lt;0.4, persisting linguistic artifacts as UtterPlan schema v3 inside `readio.plan.v2`. Supported optional engine floors are PyKokoro &gt;=0.10.0,&lt;0.11, PiperSynth &gt;=0.2.0,&lt;0.3, and PocketSynth &gt;=0.2.0,&lt;0.3. The `kokoro`, `piper`, and `pocket` extras install these runtimes. `readio doctor` checks their strict request APIs; incompatible packages do not trigger fallback to retired pipeline paths.
 Readio&#39;s built-in `pause_mode` is `auto`; an explicit `[reader] pause_mode` setting or `--pause-mode tts|manual|auto` override takes precedence.
 
