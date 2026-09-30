@@ -133,7 +133,7 @@ permalink: /tools/
       <p>A Python-based TTS automation framework with multi-engine support.</p>
       <div class="card-links">
         <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.4.1" rel="external noopener">Latest release: v0.4.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

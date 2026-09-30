@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge Quick start"
-permalink: /tools/ttsforge/main/quickstart/
-nav_tool: ttsforge-main
-docs_project: "ttsforge"
+title: "phonodist"
+permalink: /tools/phonodist/main/
+nav_tool: phonodist-main
+docs_project: "phonodist"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "8889ab888680454934e6ae84acc9de3f20530a67"
 search_enabled: true
 ---
 
@@ -540,109 +540,43 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="quick-start">
-<h1>Quick start</h1>
-<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, then install a supported Readio engine extra if
-you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform and
-development instructions.</p>
-<section id="inspect-and-convert">
-<h2>Inspect and convert</h2>
-<p>List the chapters Readio detects in an EPUB:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
-</pre></div>
+<section id="phonodist">
+<h1>phonodist</h1>
+<p>Language-aware, explainable distance metrics for IPA pronunciations.</p>
+<p><code class="docutils literal notranslate"><span class="pre">phonodist</span></code> compares IPA with IPA. It does not perform grapheme-to-phoneme conversion or synthesize audio.</p>
+<p>The package provides two related contracts:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Contract</p></th>
+<th class="head"><p>Purpose</p></th>
+<th class="head"><p>Stress</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">feature-align/1</span></code></p></td>
+<td><p>Normalized phonetic feature distance</p></td>
+<td><p>Ignored</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ipa-compare/1</span></code></p></td>
+<td><p>Structural difference classification</p></td>
+<td><p>Preserved</p></td>
+</tr>
+</tbody>
+</table>
+<section id="start-here">
+<h2>Start here</h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="getting-started/"><span class="std std-doc">Getting started</span></a> — install the package and compare IPA in Python.</p></li>
+<li><p><a class="reference internal" href="cli/"><span class="std std-doc">Command-line interface</span></a> — use <code class="docutils literal notranslate"><span class="pre">phonodist</span> <span class="pre">compare</span></code> and <code class="docutils literal notranslate"><span class="pre">phonodist</span> <span class="pre">diff</span></code>.</p></li>
+<li><p><a class="reference internal" href="api/"><span class="std std-doc">Python API</span></a> — public functions, results, profiles, and errors.</p></li>
+<li><p><a class="reference internal" href="METRIC/"><span class="std std-doc">Metric v1</span></a> — understand scoring and limitations.</p></li>
+<li><p><a class="reference internal" href="COMPARISON/"><span class="std std-doc">Structural IPA comparison</span></a> — understand comparison classifications.</p></li>
+<li><p><a class="reference internal" href="PROFILES/"><span class="std std-doc">Language profiles</span></a> — understand profile-specific rules.</p></li>
+</ul>
+<div class="toctree-wrapper compound">
 </div>
-<p>Create or reuse its audiobook project and export the default M4B:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
-</pre></div>
+<div class="toctree-wrapper compound">
 </div>
-<p>The default project is <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> beside the source EPUB, and the default output is
-<code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Re-running the command uses the existing project’s saved chapter scope and
-reusable work. In an interactive terminal, TTSForge then guides you through synthesis
-choices and displays the resolved Readio settings before confirmation.</p>
-</section>
-<section id="select-chapters">
-<h2>Select chapters</h2>
-<p>For a new project, an interactive terminal automatically displays the detected chapters
-and prompts for a selection; no extra flag is required. Use <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> to select
-explicitly and skip that prompt:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
-</pre></div>
-</div>
-<p>The selected scope is saved with the project. Reusing it does not ask for chapters
-again, and a conflicting <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value is rejected rather than silently ignored.
-Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> or <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to create another project with a different selection.
-<code class="docutils literal notranslate"><span class="pre">--interactive-chapters</span></code> is deprecated; normal TTY behavior is automatic.</p>
-</section>
-<section id="guided-synthesis-setup">
-<h2>Guided synthesis setup</h2>
-<p>On a TTY, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">novel.epub</span></code> continues after chapter selection with a guided
-setup for omitted synthesis values. Readio catalogs are shown for available models and
-voices; choose a row number or enter its exact identifier. The prompts include language,
-runnable engine selection when needed, model and voice, speed and supported quality,
-spaCy and short-sentence policies, lexicon/G2P choices, capability-gated voice level,
-pause handling, and sentence-versus-paragraph units. The final setup displays Readio’s
-effective resolution before confirmation. The resolved setup is saved through Readio’s
-public project-settings API before confirmation or build, so a failed build can be
-retried and later runs do not repeat the same questions. Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit
-saved choices with their saved values as defaults. Explicit CLI options pin and update
-only their corresponding settings.</p>
-<p>Use explicit options to pin settings and skip matching questions, for example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--language<span class="w"> </span>en-us<span class="w"> </span>--model<span class="w"> </span>MODEL_ID<span class="w"> </span>--voice<span class="w"> </span>VOICE_ID<span class="w"> </span>--unit<span class="w"> </span>paragraph
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips only the final confirmation. <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and <code class="docutils literal notranslate"><span class="pre">--json</span></code> disable
-prompts and reuse settings already saved on the project. For a new or unconfigured
-project, Readio resolves unspecified values from its defaults; CLI options override
-them.</p>
-<p>When stdin, stdout, and stderr are not all terminals, or when <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> is
-supplied, no chapter or synthesis setup prompts appear. A new project selects all
-chapters unless <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> was provided. <code class="docutils literal notranslate"><span class="pre">--json</span></code> also disables human-readable
-progress. TTY build progress updates live by chapter. See
-<a class="reference internal" href="../projects/"><span class="std std-doc">Projects and outputs</span></a> for project scope and reuse details.</p>
-</section>
-<section id="preview-plan-and-status">
-<h2>Preview, plan, and status</h2>
-<p>A preview uses the same Readio project pipeline as a full conversion:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--selection<span class="w"> </span>first:3
-ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">preview</span></code> creates or reuses the default project if necessary. <code class="docutils literal notranslate"><span class="pre">status</span></code> reports Readio’s
-current stage state and next actions.</p>
-</section>
-<section id="choose-an-output-and-synthesis-settings">
-<h2>Choose an output and synthesis settings</h2>
-<p>M4B is the default audiobook export. Readio also provides generic audio exports; inspect
-formats and availability for the current environment:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>formats
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--output<span class="w"> </span>./novel.mp3
-</pre></div>
-</div>
-<p>You can set voice, language, engine, model, model source, quality, and speed, plus
-export bitrate, loudness, metadata, and cover. Readio resolves effective synthesis
-values; the preflight view shows those resolved values before you commit to the build.
-Model selectors and quality values are forwarded opaquely to Readio and installed
-engines:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span>--language<span class="w"> </span>en-us
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--voice<span class="w"> </span>af_heart<span class="w"> </span>--model<span class="w"> </span>kokoro-v1<span class="w"> </span>--model-source<span class="w"> </span>github<span class="w"> </span>--quality<span class="w"> </span>fp32<span class="w"> </span>--speed<span class="w"> </span><span class="m">1</span>.1<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
-</pre></div>
-</div>
-<p>Run <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">--help</span></code> for the complete options available in this build.</p>
-</section>
-<section id="configuration-and-troubleshooting">
-<h2>Configuration and troubleshooting</h2>
-<p>TTSForge accesses Readio’s persistent configuration directly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>show
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>af_heart
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.speed<span class="w"> </span><span class="m">1</span>.1
-ttsforge<span class="w"> </span>doctor
-</pre></div>
-</div>
-<p>The frontend does not create a parallel configuration file. For engine setup and project
-semantics, see the
-<a class="reference external" href="https://github.com/buchwandler/readio/tree/main/docs">Readio documentation</a>.</p>
 </section>
 </section>
 </div>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge Quick Start Guide"
+title: "ttsforge Quick start"
 permalink: /tools/ttsforge/quickstart/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -540,344 +540,109 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="quick-start-guide">
-<h1>Quick Start Guide</h1>
-<p>This guide will help you get started with ttsforge quickly.</p>
-<section id="basic-conversion">
-<h2>Basic Conversion</h2>
-<p>Convert an EPUB file to an audiobook with default settings:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub
+<section id="quick-start">
+<h1>Quick start</h1>
+<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, then install a supported Readio engine extra if
+you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform and
+development instructions.</p>
+<section id="inspect-and-convert">
+<h2>Inspect and convert</h2>
+<p>List the chapters Readio detects in an EPUB:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
 </pre></div>
 </div>
-<p>This creates <code class="docutils literal notranslate"><span class="pre">mybook.m4b</span></code> in the same directory with:</p>
-<ul class="simple">
-<li><p>Default voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code> (American English female)</p></li>
-<li><p>Default format: M4B (with chapter markers)</p></li>
-<li><p>Auto-detected language from EPUB metadata</p></li>
-</ul>
+<p>Create or reuse its audiobook project and export the default M4B:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
+</pre></div>
+</div>
+<p>The default project is <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> beside the source EPUB, and the default output is
+<code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Re-running the command uses the existing project’s saved chapter scope and
+reusable work. In an interactive terminal, TTSForge then guides you through synthesis
+choices and displays the resolved Readio settings before confirmation.</p>
 </section>
-<section id="choosing-a-voice">
-<h2>Choosing a Voice</h2>
-<p>List available voices:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices
+<section id="select-chapters">
+<h2>Select chapters</h2>
+<p>For a new project, an interactive terminal automatically displays the detected chapters
+and prompts for a selection; no extra flag is required. Use <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> to select
+explicitly and skip that prompt:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
 </pre></div>
 </div>
-<p>List voices for a specific language:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>a<span class="w">  </span><span class="c1"># American English</span>
-ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>b<span class="w">  </span><span class="c1"># British English</span>
-</pre></div>
-</div>
-<p>Convert with a specific voice:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-v<span class="w"> </span>am_adam<span class="w">  </span><span class="c1"># Male voice</span>
-</pre></div>
-</div>
+<p>The selected scope is saved with the project. Reusing it does not ask for chapters
+again, and a conflicting <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value is rejected rather than silently ignored.
+Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> or <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to create another project with a different selection.
+<code class="docutils literal notranslate"><span class="pre">--interactive-chapters</span></code> is deprecated; normal TTY behavior is automatic.</p>
 </section>
-<section id="voice-blending">
-<h2>Voice Blending</h2>
-<p>Mix multiple voices for unique narration by specifying voice blends in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code>
-parameter:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 50/50 blend of two voices</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello world&quot;</span><span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_nicole:50,am_michael:50&quot;</span><span class="w"> </span>-p
-
-<span class="c1"># Weighted blend (70% Nicole, 30% Michael)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_nicole:70,am_michael:30&quot;</span>
-
-<span class="c1"># Three-way blend</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Testing&quot;</span><span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_sky:40,af_bella:30,am_adam:30&quot;</span><span class="w"> </span>-p
+<section id="guided-synthesis-setup">
+<h2>Guided synthesis setup</h2>
+<p>On a TTY, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">novel.epub</span></code> continues after chapter selection with a guided
+setup for omitted synthesis values. Readio catalogs are shown for available models and
+voices; choose a row number or enter its exact identifier. The prompts include language,
+runnable engine selection when needed, model and voice, speed and supported quality,
+spaCy and short-sentence policies, lexicon/G2P choices, capability-gated voice level,
+pause handling, and sentence-versus-paragraph units. The final setup displays Readio’s
+effective resolution before confirmation. The resolved setup is saved through Readio’s
+public project-settings API before confirmation or build, so a failed build can be
+retried and later runs do not repeat the same questions. Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit
+saved choices with their saved values as defaults. Explicit CLI options pin and update
+only their corresponding settings.</p>
+<p>Use explicit options to pin settings and skip matching questions, for example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--language<span class="w"> </span>en-us<span class="w"> </span>--model<span class="w"> </span>MODEL_ID<span class="w"> </span>--voice<span class="w"> </span>VOICE_ID<span class="w"> </span>--unit<span class="w"> </span>paragraph
 </pre></div>
 </div>
-<p>The format is: <code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2,...</span></code> where weights are percentages
-(0-100).</p>
-<p>You can also use the traditional <code class="docutils literal notranslate"><span class="pre">--voice-blend</span></code> parameter:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--voice-blend<span class="w"> </span><span class="s2">&quot;af_nicole:50,am_michael:50&quot;</span>
-</pre></div>
-</div>
+<p><code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips only the final confirmation. <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and <code class="docutils literal notranslate"><span class="pre">--json</span></code> disable
+prompts and reuse settings already saved on the project. For a new or unconfigured
+project, Readio resolves unspecified values from its defaults; CLI options override
+them.</p>
+<p>When stdin, stdout, and stderr are not all terminals, or when <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> is
+supplied, no chapter or synthesis setup prompts appear. A new project selects all
+chapters unless <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> was provided. <code class="docutils literal notranslate"><span class="pre">--json</span></code> also disables human-readable
+progress. TTY build progress updates live by chapter. See
+<a class="reference internal" href="../projects/"><span class="std std-doc">Projects and outputs</span></a> for project scope and reuse details.</p>
 </section>
-<section id="output-formats">
-<h2>Output Formats</h2>
-<p>ttsforge supports multiple audio formats:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># M4B audiobook (default) - includes chapter markers</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-f<span class="w"> </span>m4b
-
-<span class="c1"># MP3</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-f<span class="w"> </span>mp3
-
-<span class="c1"># WAV (uncompressed)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-f<span class="w"> </span>wav
-
-<span class="c1"># FLAC (lossless compression)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-f<span class="w"> </span>flac
-
-<span class="c1"># OPUS (efficient compression)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-f<span class="w"> </span>opus
+<section id="preview-plan-and-status">
+<h2>Preview, plan, and status</h2>
+<p>A preview uses the same Readio project pipeline as a full conversion:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--selection<span class="w"> </span>first:3
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">preview</span></code> creates or reuses the default project if necessary. <code class="docutils literal notranslate"><span class="pre">status</span></code> reports Readio’s
+current stage state and next actions.</p>
 </section>
-<section id="converting-specific-chapters">
-<h2>Converting Specific Chapters</h2>
-<p>Preview chapter list:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>mybook.epub
+<section id="choose-an-output-and-synthesis-settings">
+<h2>Choose an output and synthesis settings</h2>
+<p>M4B is the default audiobook export. Readio also provides generic audio exports; inspect
+formats and availability for the current environment:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>formats
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--output<span class="w"> </span>./novel.mp3
 </pre></div>
 </div>
-<p>Convert specific chapters:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert chapters 1 through 5</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
-
-<span class="c1"># Convert specific chapters</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3,5,7
-
-<span class="c1"># Mixed selection</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-3,5,7-10
+<p>You can set voice, language, engine, model, model source, quality, and speed, plus
+export bitrate, loudness, metadata, and cover. Readio resolves effective synthesis
+values; the preflight view shows those resolved values before you commit to the build.
+Model selectors and quality values are forwarded opaquely to Readio and installed
+engines:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span>--language<span class="w"> </span>en-us
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--voice<span class="w"> </span>af_heart<span class="w"> </span>--model<span class="w"> </span>kokoro-v1<span class="w"> </span>--model-source<span class="w"> </span>github<span class="w"> </span>--quality<span class="w"> </span>fp32<span class="w"> </span>--speed<span class="w"> </span><span class="m">1</span>.1<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
 </pre></div>
 </div>
+<p>Run <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">--help</span></code> for the complete options available in this build.</p>
 </section>
-<section id="speed-control">
-<h2>Speed Control</h2>
-<p>Adjust speech speed (0.5 to 2.0):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Faster</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-s<span class="w"> </span><span class="m">1</span>.2
-
-<span class="c1"># Slower</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>-s<span class="w"> </span><span class="m">0</span>.9
+<section id="configuration-and-troubleshooting">
+<h2>Configuration and troubleshooting</h2>
+<p>TTSForge accesses Readio’s persistent configuration directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>show
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>af_heart
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.speed<span class="w"> </span><span class="m">1</span>.1
+ttsforge<span class="w"> </span>doctor
 </pre></div>
 </div>
-</section>
-<section id="resumable-conversions">
-<h2>Resumable Conversions</h2>
-<p>ttsforge automatically saves progress during conversion. If interrupted:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Simply re-run the same command</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub
-
-<span class="c1"># Progress is resumed from the last completed compatible unit</span>
-</pre></div>
-</div>
-<p>To start fresh, discarding previous progress:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--fresh
-</pre></div>
-</div>
-<section id="paragraph-output-and-resume">
-<h3>Paragraph output and resume</h3>
-<p>Use paragraph conversion for visible, independently resumable render-unit WAV artifacts:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph<span class="w"> </span>--yes
-</pre></div>
-</div>
-<p>This creates <code class="docutils literal notranslate"><span class="pre">mybook_paragraphs/</span></code> with fixed-width globally sequenced WAV names, marker
-sidecars, <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, and <code class="docutils literal notranslate"><span class="pre">playlist.m3u8</span></code>. A render unit is an optional announced
-chapter title followed by a spoken paragraph. The files sort in playback order and
-remain after the merged audiobook succeeds. <code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">paragraph</span></code> is a separate
-internal batching setting. The saved conversion unit, selected chapters, and generation
-fingerprint cannot be changed during resume; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to start a new workspace. A
-complete workspace supports merge-only recovery without ONNX.</p>
-<p>The canonical interrupted paragraph workflow is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.epub&quot;</span><span class="w"> </span>--fresh<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
-<span class="c1"># Interrupt, then resume without repeating options:</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.epub&quot;</span>
-</pre></div>
-</div>
-<p>Resume restores the saved chapter selection, paragraph mode, output path, and omitted
-audio-affecting settings. An explicit changed setting is rejected with its field name;
-use the saved value or choose <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> for a new workspace.</p>
-<p>Paragraph resume persists a per-chapter preparation seed before randomized processing,
-so a second process skips already finalized units even when the default short-sentence
-handling is enabled. Pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> for an explicit reproducible seed. TTSForge owns
-the persistent unit identity as a SHA-256 of exact prepared text; provider-internal
-descriptor hashes do not invalidate a compatible resume. If saved state is incompatible,
-TTSForge reports the changed fields and stops; use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to deliberately discard
-progress and begin again. Verifiable schema-6 state is migrated to schema 7, and a
-compatible schema-7 paragraph identity can migrate to schema 8 without re-rendering its
-retained WAVs. A changed saved/current SSMD is reported as <code class="docutils literal notranslate"><span class="pre">paragraph-ssmd-changed</span></code>.
-Unverifiable state and existing paragraph WAVs are preserved. See
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_resume.py</span> <span class="pre">--help</span></code> for an example that cancels after a
-configurable number of units before restarting.</p>
-<p>Inspect the retained output without loading TTS models:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/paragraph_manifest.py<span class="w"> </span>mybook_paragraphs/manifest.json
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phoneme-pre-tokenization">
-<h2>Phoneme Pre-tokenization</h2>
-<p>For large books or batch processing, pre-tokenize text to phonemes:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Step 1: Export to phonemes (fast, no TTS)</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>mybook.epub<span class="w"> </span>-o<span class="w"> </span>mybook.phonemes.json
-
-<span class="c1"># Step 2: Convert phonemes to audio (can be run on different machine)</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>mybook.phonemes.json<span class="w"> </span>-v<span class="w"> </span>af_heart
-</pre></div>
-</div>
-<p>Benefits:</p>
-<ul class="simple">
-<li><p>Review phonemes before generating audio</p></li>
-<li><p>Faster repeated conversions (skip phonemization)</p></li>
-<li><p>Separate phonemization from audio generation</p></li>
-</ul>
-</section>
-<section id="testing-tts-settings">
-<h2>Testing TTS Settings</h2>
-<p>Generate a sample to test your settings:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default sample</span>
-ttsforge<span class="w"> </span>sample
-
-<span class="c1"># Custom text</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello, this is a test of the voice.&quot;</span>
-
-<span class="c1"># With specific voice and speed</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span>--voice<span class="w"> </span>am_adam<span class="w"> </span>--speed<span class="w"> </span><span class="m">1</span>.1
-
-<span class="c1"># Play directly (requires audio extra)</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span>--play
-</pre></div>
-</div>
-</section>
-<section id="streaming-read-optional">
-<h2>Streaming Read (Optional)</h2>
-<p>Listen to an EPUB or text file in real-time with the <code class="docutils literal notranslate"><span class="pre">read</span></code> command. This requires the
-optional audio playback extra:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
-</pre></div>
-</div>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read an EPUB aloud</span>
-ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span>mybook.epub
-
-<span class="c1"># Read a text file</span>
-ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span>story.txt
-</pre></div>
-</div>
-</section>
-<section id="voice-demo">
-<h2>Voice Demo</h2>
-<p>Listen to all voices with a demo:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demo all voices</span>
-ttsforge<span class="w"> </span>demo
-
-<span class="c1"># Demo voices for a specific language</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>-l<span class="w"> </span>a<span class="w">  </span><span class="c1"># American English only</span>
-
-<span class="c1"># Save individual voice files</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span class="w"> </span>-o<span class="w"> </span>./voice_samples/
-</pre></div>
-</div>
-</section>
-<section id="mixed-language-support">
-<h2>Mixed-Language Support</h2>
-<p>Mixed-language changes must be explicit SSMD spans. Generate or edit the chapter SSMD
-and annotate the foreign segment:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Das ist ein deutscher Satz. [This is an English sentence.]{lang=&quot;en-us&quot;}
-</pre></div>
-</div>
-<p>TTSForge does not automatically detect language changes. The legacy
-<code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> option and related settings are rejected with migration guidance.
-The document language remains required for the overall synthesis pipeline.</p>
-</section>
-<section id="ssmd-editing">
-<h2>SSMD Editing</h2>
-<p>ttsforge uses SSMD (Speech Synthesis Markdown) as an intermediate format between EPUB
-and audio. This allows you to fine-tune pronunciation and pacing.</p>
-<p>During conversion, <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> files are automatically generated for each chapter:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>.{book_title}_chapters/
-├── chapter_001_intro.ssmd
-├── chapter_001_intro.wav
-└── ...
-</pre></div>
-</div>
-<p><strong>Basic workflow</strong>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Start conversion</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-
-<span class="c1"># 2. Pause (Ctrl+C) and edit SSMD files</span>
-vim<span class="w"> </span>.book_chapters/chapter_001_intro.ssmd
-
-<span class="c1"># 3. Resume - auto-detects edits and regenerates audio</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-</pre></div>
-</div>
-<p><strong>Common SSMD syntax</strong>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>...p                               # Paragraph break
-...s                               # Sentence break
-*text*                             # Moderate emphasis
-**text**                           # Strong emphasis
-[Hermione]{ph=&quot;hɝmˈIni&quot;}          # Custom pronunciation
-</pre></div>
-</div>
-<p>EPUB conversion has three layers: epub2text performs semantic Markdown extraction,
-TTSForge generates editable SSMD while preserving that structure, and the SSMD policy
-controls audible rendering. Markdown extraction and emphasis preservation are enabled by
-default, while emphasis is spoken plainly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--no-detect-emphasis</span></code> to unwrap italic/bold delimiters without removing headings or
-scene breaks. Use <code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">plain</span></code> to compare against the legacy flattened
-source path. The persisted equivalents are <code class="docutils literal notranslate"><span class="pre">epub_content_mode</span></code> and <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code>.</p>
-<p>To control audible emphasis strength without changing the source semantics, use the
-friendly level option:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--emphasis-level<span class="w"> </span><span class="m">2</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--emphasis-level<span class="w"> </span><span class="m">3</span>
-</pre></div>
-</div>
-<p>The levels are <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>, <code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, and <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Persist the normal level
-with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--set</span> <span class="pre">emphasis_level</span> <span class="pre">2</span></code>; subsequent conversions need no emphasis
-flag. <code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span></code> remains an advanced policy control. Explicit SSMD prosody
-remains supported independently, and a resume with omitted emphasis options restores the
-saved policy.</p>
-<p><strong>Example SSMD file</strong>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Chapter One ...p
-
-[Harry]{ph=&quot;hæɹi&quot;} Potter was a *highly unusual* boy. ...s
-He **hated** the summer holidays. ...p
-</pre></div>
-</div>
-<p>For complete SSMD documentation, see <a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.7</span></a>.</p>
-</section>
-<section id="configuration">
-<h2>Configuration</h2>
-<p>Set default options:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Set default voice</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_voice<span class="w"> </span>am_adam
-
-<span class="c1"># Set default format</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_format<span class="w"> </span>mp3
-
-<span class="c1"># Select an ONNX Runtime provider (Termux example)</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
-
-<span class="c1"># View all settings</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--show
-</pre></div>
-</div>
-<p>Provider aliases include <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>, <code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, and <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>; full map to
-the canonical provider names. Availability depends on the installed ONNX Runtime build,
-and PyKokoro may apply its documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override. On a desktop
-build exposing OpenVINO, the equivalent persistent setup is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>openvino
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
-</pre></div>
-</div>
-</section>
-<section id="complete-example">
-<h2>Complete Example</h2>
-<p>Full conversion with all options:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>mybook.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--voice<span class="w"> </span>af_sarah<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--speed<span class="w"> </span><span class="m">1</span>.1<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--format<span class="w"> </span>m4b<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--chapters<span class="w"> </span><span class="m">1</span>-10<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--title<span class="w"> </span><span class="s2">&quot;My Audiobook&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--author<span class="w"> </span><span class="s2">&quot;Author Name&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--cover<span class="w"> </span>cover.jpg<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--output<span class="w"> </span>./audiobooks/mybook.m4b
-</pre></div>
-</div>
-</section>
-<section id="next-steps">
-<h2>Next Steps</h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../ssmd/"><span class="doc">SSMD 0.8.7</span></a> - SSMD editing and syntax reference</p></li>
-<li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a> - Complete command reference</p></li>
-<li><p><a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> - Detailed voice information</p></li>
-<li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> - All configuration options</p></li>
-<li><p><a class="reference internal" href="../filename_templates/"><span class="doc">Filename Templates</span></a> - Customize output filenames</p></li>
-</ul>
+<p>The frontend does not create a parallel configuration file. For engine setup and project
+semantics, see the
+<a class="reference external" href="https://github.com/buchwandler/readio/tree/main/docs">Readio documentation</a>.</p>
 </section>
 </section>
 </div>

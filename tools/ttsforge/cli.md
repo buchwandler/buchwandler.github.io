@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge CLI Reference"
+title: "ttsforge CLI reference"
 permalink: /tools/ttsforge/cli/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -541,675 +541,254 @@ html[data-theme="dark"] .sphinxpress-doc {
 
 <div class="sphinxpress-doc">
 <section id="cli-reference">
-<h1>CLI Reference</h1>
-<p>Complete command-line interface reference for ttsforge.</p>
-<p>The command tree is declared with explicit typed Typer wrappers. CLI startup, help, and
-version output remain independent of the ONNX provider. The legacy <code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code>
-configuration grammar accepts repeated pairs, including values that begin with <code class="docutils literal notranslate"><span class="pre">-</span></code>.</p>
-<section id="global-options">
-<h2>Global Options</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>--version<span class="w">    </span><span class="c1"># Show version and exit</span>
-ttsforge<span class="w"> </span>--help<span class="w">       </span><span class="c1"># Show help message</span>
-</pre></div>
-</div>
-</section>
+<h1>CLI reference</h1>
+<p>TTSForge exposes a focused audiobook workflow over Readio’s public services. Run
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code> or <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">COMMAND</span> <span class="pre">--help</span></code> for help from the installed build. Use
+<code class="docutils literal notranslate"><span class="pre">--json</span></code> on supported commands for machine-readable results and <code class="docutils literal notranslate"><span class="pre">--debug</span></code> for a
+traceback after an error.</p>
 <section id="convert">
-<h2>convert</h2>
-<p>Convert an EPUB file to an audiobook.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>EPUB_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<h2><code class="docutils literal notranslate"><span class="pre">convert</span></code></h2>
+<p>Inspect an EPUB, create or reuse its Readio project, and build/export an audiobook:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
 </pre></div>
 </div>
-<section id="arguments">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file to convert (required).</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code></p></td>
+<td><p>Output file path; defaults to the source stem and selected format.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code></p></td>
+<td><p>Output format; default <code class="docutils literal notranslate"><span class="pre">m4b</span></code>. Use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> for available formats.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--project</span> <span class="pre">PATH</span></code></p></td>
+<td><p>Project directory; default is <code class="docutils literal notranslate"><span class="pre">&lt;source-stem&gt;.readio</span></code> beside the EPUB.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></p></td>
+<td><p>Chapter scope for a new project, such as <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, or <code class="docutils literal notranslate"><span class="pre">all</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--interactive-chapters</span></code></p></td>
+<td><p>Deprecated compatibility flag; interactive terminals now prompt automatically.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--voice</span> <span class="pre">VOICE</span></code></p></td>
+<td><p>Engine voice/selector supported by Readio.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--language</span> <span class="pre">LANG</span></code></p></td>
+<td><p>Synthesis language/profile override.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--engine</span> <span class="pre">ENGINE</span></code></p></td>
+<td><p>Readio synthesis engine.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--model</span> <span class="pre">MODEL</span></code></p></td>
+<td><p>Model selector forwarded to Readio.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--model-source</span> <span class="pre">SOURCE</span></code></p></td>
+<td><p>Model-source selector forwarded to Readio.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--quality</span> <span class="pre">QUALITY</span></code></p></td>
+<td><p>Quality value forwarded to Readio.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--speed</span> <span class="pre">FLOAT</span></code></p></td>
+<td><p>Synthesis speed from <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio spaCy policy for text processing.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio short-sentence handling policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--lexicon</span> <span class="pre">SELECTOR</span></code></p></td>
+<td><p>Select a lexicon; repeatable for multiple selectors.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--no-lexicons</span></code></p></td>
+<td><p>Disable lexicons; mutually exclusive with <code class="docutils literal notranslate"><span class="pre">--lexicon</span></code> and <code class="docutils literal notranslate"><span class="pre">--auto-lexicons</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--auto-lexicons</span></code></p></td>
+<td><p>Let Readio select lexicons; mutually exclusive with explicit/disabled modes.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--g2p-fallback</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio grapheme-to-phoneme fallback policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--lexicon-data-policy</span> <span class="pre">POLICY</span></code></p></td>
+<td><p>Readio lexicon data selection policy.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--allow-experimental</span></code></p></td>
+<td><p>Permit experimental catalog choices where Readio supports them.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--voice-level</span> <span class="pre">MODE</span></code></p></td>
+<td><p>Voice-level calibration, when supported by the selected engine.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code></p></td>
+<td><p>Readio pause-handling policy.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">UNIT</span></code>, <code class="docutils literal notranslate"><span class="pre">--synthesis-unit</span> <span class="pre">UNIT</span></code></p></td>
+<td><p>Choose sentence or paragraph synthesis units.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--bitrate</span> <span class="pre">VALUE</span></code></p></td>
+<td><p>Export bitrate where the selected format supports it.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--target-lufs</span> <span class="pre">FLOAT</span></code></p></td>
+<td><p>Composition loudness target.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--offline</span></code> / <code class="docutils literal notranslate"><span class="pre">--refresh</span></code></p></td>
+<td><p>Control Readio’s offline/resource-refresh behavior for this request.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code>, <code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code></p></td>
+<td><p>Audiobook metadata overrides.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code></p></td>
+<td><p>Explicit cover image for audiobook export.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--force</span></code></p></td>
+<td><p>Ask Readio to replace an existing output it owns.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code></p></td>
+<td><p>Create a separate project and preserve the existing one.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code></p></td>
+<td><p>Skip final confirmation; does not disable chapter or synthesis setup prompts.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code></p></td>
+<td><p>Disable prompts; use saved setup and Readio defaults.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code></p></td>
+<td><p>Revisit unpinned saved synthesis choices, using their current values as defaults.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--json</span></code></p></td>
+<td><p>Emit one JSON result, including saved-setup provenance; no prompts or progress.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="options">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Defaults to input filename with new extension in
-the same directory.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format. Choices: <code class="docutils literal notranslate"><span class="pre">wav</span></code>, <code class="docutils literal notranslate"><span class="pre">mp3</span></code>, <code class="docutils literal notranslate"><span class="pre">flac</span></code>, <code class="docutils literal notranslate"><span class="pre">opus</span></code>,
-<code class="docutils literal notranslate"><span class="pre">m4b</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">m4b</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS. Can be a single voice name or a voice blend.</p>
+<section id="conversion-interaction-and-progress">
+<h2>Conversion interaction and progress</h2>
+<p>When stdin, stdout, and stderr are terminals, conversion is interactive unless <code class="docutils literal notranslate"><span class="pre">--json</span></code>
+or <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> is selected. A new project without <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> shows the
+detected chapter table and prompts for a selection. An existing project uses its saved
+chapter scope and does not prompt again.</p>
+<p>Before preflight, <code class="docutils literal notranslate"><span class="pre">convert</span></code> merges saved project settings with explicitly supplied CLI
+values and guides you through missing synthesis settings. Normal reuse skips valid saved
+choices and opens catalogs only when a choice is needed. A project without saved
+settings—including a legacy project—gets Readio’s resolved defaults; TTSForge saves the
+complete resolved setup through Readio’s public project-settings API before confirmation
+or build. A failed build can be retried without repeating setup. Readio remains the sole
+owner of persisted project state.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit unpinned setup fields with saved values as defaults.
+Explicit CLI values pin and update only their corresponding settings. Changing language,
+engine, or model causes dependent unpinned choices to be selected again; CLI-pinned
+dependents remain.</p>
+<p>TTSForge asks for language, runnable engine selection where applicable, and model/voice
+catalog choices when needed. These catalogs render as compact vertical lists. Voice
+choices show canonical Readio voice IDs first and stable selectors as aliases; guided
+voice prompts accept a row number, canonical ID, selector, or qualified ID and store the
+selected catalog row’s canonical ID. Remaining questions cover supported quality, speed,
+spaCy and short-sentence policies, lexicons, G2P fallback and lexicon data, supported
+voice-level calibration, pause mode, and synthesis unit. Readio owns catalogs,
+capabilities, and resolution rules; the <code class="docutils literal notranslate"><span class="pre">Audiobook</span> <span class="pre">Setup</span></code> table shows the effective
+values used.</p>
+<p>Explicit synthesis options pin and update their corresponding saved settings. <code class="docutils literal notranslate"><span class="pre">--yes</span></code>
+skips only final confirmation; it does not skip any setup questions still needed.
+<code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> reopens unpinned saved setup questions with their current values as
+defaults.</p>
+<p>For a new project in non-interactive mode, chapter selection defaults to <code class="docutils literal notranslate"><span class="pre">all</span></code> unless
+<code class="docutils literal notranslate"><span class="pre">--chapters</span></code> is explicit. Non-interactive runs reuse valid project settings and let
+Readio resolve any unspecified values without prompting; CLI options override saved
+values. JSON mode never prompts or emits progress prose on stdout; its single result
+includes <code class="docutils literal notranslate"><span class="pre">settings_source</span></code> and <code class="docutils literal notranslate"><span class="pre">settings_saved</span></code> metadata. Existing projects keep their
+persisted chapter scope. If an explicit <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value conflicts with that saved
+scope, conversion fails with guidance to use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> or another <code class="docutils literal notranslate"><span class="pre">--project</span></code> path.</p>
+<p>A TTY conversion uses a live, chapter-aware progress display. Redirected/non-interactive
+runs print milestone lines rather than every segment; JSON mode has no human-readable
+progress.</p>
+<p>Chapter selection is project scope: it is persisted when the project is first created.
+Reusing a project does not replace its saved chapter scope. Use another <code class="docutils literal notranslate"><span class="pre">--project</span></code> or
+<code class="docutils literal notranslate"><span class="pre">--fresh</span></code> for a different selection. See <a class="reference internal" href="../projects/"><span class="std std-doc">Projects and outputs</span></a>.</p>
+<p>M4B is exported through Readio’s audiobook service; generic formats use Readio’s project
+export. TTSForge does not encode audio itself. Readio’s public API determines output
+reuse and replacement safety.</p>
+</section>
+<section id="inspecting-and-managing-projects">
+<h2>Inspecting and managing projects</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
+</pre></div>
+</div>
 <ul class="simple">
-<li><p>Single voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code>, <code class="docutils literal notranslate"><span class="pre">am_adam</span></code>, etc.</p></li>
-<li><p>Voice blend: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code> (auto-detects blend format)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">list</span> <span class="pre">EPUB</span></code> displays chapters and character counts.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">info</span> <span class="pre">EPUB</span></code> displays EPUB metadata and chapter count.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">[PROJECT]</span></code> reports Readio’s stage states and next actions. The argument
+defaults to the current directory.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plan</span> <span class="pre">PROJECT</span></code> creates or updates speech plans through Readio.</p></li>
 </ul>
-<p>See <a class="reference internal" href="../voices/"><span class="doc">Voices</span></a> for PyKokoro metadata-discovered voices. Omit the option to use the
-profile default for the document language.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for TTS. Choices: <code class="docutils literal notranslate"><span class="pre">a</span></code> (American English), <code class="docutils literal notranslate"><span class="pre">b</span></code>
-(British English), <code class="docutils literal notranslate"><span class="pre">e</span></code> (Spanish), <code class="docutils literal notranslate"><span class="pre">f</span></code> (French), <code class="docutils literal notranslate"><span class="pre">h</span></code> (Hindi), <code class="docutils literal notranslate"><span class="pre">i</span></code> (Italian), <code class="docutils literal notranslate"><span class="pre">j</span></code>
-(Japanese), <code class="docutils literal notranslate"><span class="pre">p</span></code> (Brazilian Portuguese), <code class="docutils literal notranslate"><span class="pre">z</span></code> (Mandarin Chinese). Default: auto-detected
-from EPUB metadata.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>). By
-default, language is determined from the voice.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed multiplier (0.5 to 2.0). Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name). Available on
-<code class="docutils literal notranslate"><span class="pre">convert</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span> <span class="pre">convert</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapters to convert. Examples: <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, <code class="docutils literal notranslate"><span class="pre">1-3,5,7-10</span></code>,
-<code class="docutils literal notranslate"><span class="pre">all</span></code>. Default: all chapters (interactive selection if not specified).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence duration between chapters in seconds. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--disable-short-sentence</span></code> : Disable special handling for short sentences.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
-<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
-config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code> : Read chapter titles aloud before
-chapter content. Default: enabled.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code> : Pause after chapter title announcement in seconds. Default:
-<code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code> : Title metadata for the audiobook. Defaults to EPUB title.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code> : Author metadata for the audiobook. Defaults to EPUB author.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code> : Cover image for M4B format.</p>
 </section>
-<section id="ssmd-0-8-6-options">
-<h3>SSMD 0.8.6 options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-header</span> <span class="pre">/</span> <span class="pre">--no-ssmd-header</span></code> : Parse or preserve an exact leading front-matter
-block.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-unknown-header</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">warn</span></code>, <code class="docutils literal notranslate"><span class="pre">error</span></code>, or <code class="docutils literal notranslate"><span class="pre">ignore</span></code> unknown header keys.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-missing-voice</span> <span class="pre">POLICY</span></code> : <code class="docutils literal notranslate"><span class="pre">error</span></code> or <code class="docutils literal notranslate"><span class="pre">use-default</span></code> for unresolved logical roles.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">INTEGER</span></code> : User-friendly audible strength: <code class="docutils literal notranslate"><span class="pre">0=Off</span></code>, <code class="docutils literal notranslate"><span class="pre">1=Light</span></code>,
-<code class="docutils literal notranslate"><span class="pre">2=Normal</span></code>, or <code class="docutils literal notranslate"><span class="pre">3=Strong</span></code>. Level 2 is the normal emphasis approximation.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-emphasis</span> <span class="pre">MODE</span></code> : Advanced policy: <code class="docutils literal notranslate"><span class="pre">plain</span></code>, <code class="docutils literal notranslate"><span class="pre">approximate</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, or <code class="docutils literal notranslate"><span class="pre">error</span></code>.
-For normal audible strength use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code>. Approximation is gain-only; it does
-not change speech rate.</p>
-<p>existing SSMD emphasis. Use <code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span></code> separately when EPUB italic/bold styling
-should first be extracted into SSMD annotations. Choose only one emphasis control.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">[markdown|plain]</span></code> : Select structured chapter Markdown extraction
-(default) or the explicit legacy plain compatibility path.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--detect-emphasis</span> <span class="pre">/</span> <span class="pre">--no-detect-emphasis</span></code> : Preserve or unwrap EPUB italic and bold
-semantics in generated SSMD. Headings and scene breaks are preserved independently; when
-omitted, <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> from configuration is used.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--prosody-method</span> <span class="pre">METHOD</span></code> : One-off override for the configured SSMD prosody algorithm:
-<code class="docutils literal notranslate"><span class="pre">wsola</span></code>, <code class="docutils literal notranslate"><span class="pre">esola</span></code>, <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>, <code class="docutils literal notranslate"><span class="pre">psola</span></code>, or <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code>. <code class="docutils literal notranslate"><span class="pre">psola</span></code> is the user-facing
-alias for AudioSig <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--prosody-strict</span> <span class="pre">/</span> <span class="pre">--no-prosody-strict</span></code> : Override whether prosody fallback is strict.
-Advanced tuning values remain available through persistent configuration. The conversion
-summary shows the effective method, fallbacks, strictness, clipping, FFT/hop, and
-boundary-blend values.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-voice</span> <span class="pre">ROLE=VOICE</span></code> : Repeatable explicit Kokoro binding override.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-pause-defaults</span> <span class="pre">/</span> <span class="pre">--no-ssmd-pause-defaults</span></code> and <code class="docutils literal notranslate"><span class="pre">--pause-voice-change</span> <span class="pre">FLOAT</span></code> :
-Explicit pause-default enablement and voice-change timing. Explicit pause values
-override document defaults; persistent config values do not.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--ssmd-audio-root</span> <span class="pre">PATH</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd-remote-audio</span></code>, <code class="docutils literal notranslate"><span class="pre">--ssmd-audio-max-bytes</span> <span class="pre">INTEGER</span></code>,
-<code class="docutils literal notranslate"><span class="pre">--ssmd-audio-max-duration</span> <span class="pre">FLOAT</span></code> : Secure bounded audio source policy. Remote sources
-require explicit opt-in.</p>
-</section>
-<section id="ssmd-inspection">
-<h3>SSMD inspection</h3>
-<p>These commands do not initialize ONNX:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>FILE
-ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>FILE<span class="w"> </span>--strict
-ttsforge<span class="w"> </span>ssmd<span class="w"> </span>inspect<span class="w"> </span>FILE<span class="w"> </span>--json
+<section id="preview">
+<h2><code class="docutils literal notranslate"><span class="pre">preview</span></code></h2>
+<p>Render a small preview through the project pipeline:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--selection<span class="w"> </span>first:3
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code> : Skip confirmation prompts.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output during conversion.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode. Choices: <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">line</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>,
-<code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--conversion-unit</span> <span class="pre">UNIT</span></code> : Output and resume granularity: <code class="docutils literal notranslate"><span class="pre">chapter</span></code> (default) or
-<code class="docutils literal notranslate"><span class="pre">paragraph</span></code>. Paragraph mode retains fixed-width-sequence WAVs in
-<code class="docutils literal notranslate"><span class="pre">&lt;output-stem&gt;_paragraphs/</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--resume</span> <span class="pre">/</span> <span class="pre">--no-resume</span></code> : Enable or disable resume capability. Default: enabled.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--use-spacy</span> <span class="pre">/</span> <span class="pre">--no-spacy</span></code> : Require or disable spaCy in sentence/G2P processing. When
-neither switch is supplied, automatic mode selects the highest compatible installed
-local model and falls back without one. <code class="docutils literal notranslate"><span class="pre">--use-spacy</span></code> is strict.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--spacy-model</span> <span class="pre">PACKAGE</span></code> : Require one exact local spaCy package. This is strict and
-overrides <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span> <span class="pre">sm|md|lg|trf</span></code> : Require one exact local spaCy tier. If neither this
-nor <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code> is set, TTSForge selects the highest installed compatible model.
-Selection never downloads packages. Exact package and tier requests are strict.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> : Discard any previous progress and start conversion from scratch.</p>
-<p>When a discovered resume candidate fails strong compatibility validation, the CLI exits
-with the reason and an instruction to use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>; it does not announce a resume and
-then silently create a replacement state. Paragraph summaries use completed/total unit
-counts and show the next chapter and paragraph.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> : Generate only SSMD files without creating audio (for manual
-editing).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep individual chapter audio files after conversion.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code> : Blend multiple voices (traditional method). Format:
-<code class="docutils literal notranslate"><span class="pre">voice1:weight1,voice2:weight2</span></code>. Example: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>.</p>
-<p><strong>Note:</strong> You can also specify blends directly in the <code class="docutils literal notranslate"><span class="pre">--voice</span></code> parameter, which will
-auto-detect the blend format. Both methods work identically.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--voice-db</span> <span class="pre">PATH</span></code> : Path to custom voice database (SQLite).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file for pronunciation
-overrides.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
-(default: case-insensitive).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Deprecated compatibility option. <code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected because
-TTSForge does not automatically detect language changes.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span></code>, <code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span></code> are deprecated compatibility options. Use explicit SSMD
-spans such as <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code> instead.</p>
-<p>Phoneme export exposes the same spaCy request options and stores the concrete sentence
-model in export metadata. Name extraction exposes <code class="docutils literal notranslate"><span class="pre">--spacy-model</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy-model-size</span></code>,
-and <code class="docutils literal notranslate"><span class="pre">--language</span></code>; it validates that the selected package supports PERSON NER (and POS
-tagging when <code class="docutils literal notranslate"><span class="pre">--include-all</span></code> is used).</p>
+<p>Options include <code class="docutils literal notranslate"><span class="pre">--project</span></code>, <code class="docutils literal notranslate"><span class="pre">--chapters</span></code>, <code class="docutils literal notranslate"><span class="pre">--selection</span></code>, <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--language</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--engine</span></code>, <code class="docutils literal notranslate"><span class="pre">--speed</span></code>, <code class="docutils literal notranslate"><span class="pre">--target-lufs</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>. The default selection is
+<code class="docutils literal notranslate"><span class="pre">first:3</span></code>. If no project exists, preview creates the default project; subsequent
+conversion reuses it. <code class="docutils literal notranslate"><span class="pre">preview</span></code> has a smaller option set and does not run the guided
+<code class="docutils literal notranslate"><span class="pre">convert</span></code> setup wizard.</p>
 </section>
-<section id="examples">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic conversion</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-
-<span class="c1"># Convert with specific voice and speed</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>-v<span class="w"> </span>am_adam<span class="w"> </span>-s<span class="w"> </span><span class="m">1</span>.1
-
-<span class="c1"># Convert chapters 1-5 to MP3</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5<span class="w"> </span>-f<span class="w"> </span>mp3
-
-<span class="c1"># Full options</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--voice<span class="w"> </span>af_sarah<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--speed<span class="w"> </span><span class="m">1</span>.1<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--format<span class="w"> </span>m4b<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--title<span class="w"> </span><span class="s2">&quot;My Audiobook&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--author<span class="w"> </span><span class="s2">&quot;Author Name&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--cover<span class="w"> </span>cover.jpg<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--output<span class="w"> </span>./audiobooks/mybook.m4b<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--yes
-
-<span class="c1"># Resume interrupted conversion</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
-
-<span class="c1"># Start fresh (discard progress)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--fresh
-
-<span class="c1"># Mixed-language conversion (German with English terms)</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--use-mixed-language<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-primary<span class="w"> </span>de<span class="w"> </span><span class="se">\</span>
-<span class="w">    </span>--mixed-language-allowed<span class="w"> </span>de,en-us
+<section id="readio-discovery">
+<h2>Readio discovery</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span><span class="o">[</span>--engine<span class="w"> </span>ENGINE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--language<span class="w"> </span>LANG<span class="o">]</span><span class="w"> </span><span class="o">[</span>--model<span class="w"> </span>MODEL<span class="o">]</span><span class="w"> </span><span class="o">[</span>--gender<span class="w"> </span>GENDER<span class="o">]</span>
+ttsforge<span class="w"> </span>models<span class="w"> </span><span class="o">[</span>--engine<span class="w"> </span>ENGINE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--language<span class="w"> </span>LANG<span class="o">]</span><span class="w"> </span><span class="o">[</span>--status<span class="w"> </span>STATUS<span class="o">]</span>
+ttsforge<span class="w"> </span>engines
+ttsforge<span class="w"> </span>formats
+ttsforge<span class="w"> </span>doctor
 </pre></div>
 </div>
-</section>
-<section id="paragraph-conversion-and-resume">
-<h3>Paragraph conversion and resume</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph<span class="w"> </span>--yes
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--fresh<span class="w"> </span>--conversion-unit<span class="w"> </span>paragraph
-</pre></div>
-</div>
-<p>The unit choice is fixed in the workspace. Resume without the option restores the saved
-choice; a conflicting choice requires <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>. Paragraph mode retains one WAV per
-render unit, including an optional title unit, plus marker sidecars, a manifest, and a
-playlist. <code class="docutils literal notranslate"><span class="pre">--generate-ssmd</span></code> cannot be combined with paragraph conversion. Paragraph WAVs
-are always retained, so <code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> is redundant in that mode. A complete
-paragraph workspace can rebuild a missing final audiobook without initializing
-inference. The maintained inspection workflow is
-<code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/paragraph_manifest.py</span> <span class="pre">book_paragraphs/manifest.json</span></code>.</p>
-<p>Paragraph mode persists an effective preparation seed per chapter before stochastic
-short-sentence handling. Omit <code class="docutils literal notranslate"><span class="pre">--seed</span></code> to receive a hidden durable seed for each fresh
-chapter, or pass <code class="docutils literal notranslate"><span class="pre">--seed</span> <span class="pre">42</span></code> to use an explicit seed. State schema 5 paragraph
-workspaces cannot safely reconstruct this identity and require <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>. Existing
-schema-7 paragraph workspaces may be upgraded in place to schema 8 when their SSMD,
-generation identity, seed, structure, and retained artifacts still match.</p>
-<p>An accepted paragraph resume is monotonic: completed units and their WAV/marker sidecars
-are never silently discarded. Before printing the resume confirmation, TTSForge checks
-the saved contiguous cursor, ownership manifest, completed unit plan, and retained
-artifacts. TTSForge compares its canonical prepared-text SHA-256 and structural
-identity; an opaque provider-hash change alone is not a plan change. If prepared
-content, structure, a WAV, marker, path, or sequence is missing or changed, resume stops
-with a diagnostic such as <code class="docutils literal notranslate"><span class="pre">paragraph-unit-plan-changed</span></code> or <code class="docutils literal notranslate"><span class="pre">paragraph-audio-missing</span></code>. If
-the saved/current SSMD differs, the specific diagnostic is <code class="docutils literal notranslate"><span class="pre">paragraph-ssmd-changed</span></code>. Use
-<code class="docutils literal notranslate"><span class="pre">--fresh</span></code> only when a whole-conversion restart is intended. A valid interrupted
-conversion resumes with the first saved incomplete unit, and live paragraph numbering is
-one-based like the resume summary.</p>
-</section>
-</section>
-<section id="list">
-<h2>list</h2>
-<p>List chapters in an EPUB file.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>EPUB_FILE
-</pre></div>
-</div>
-<section id="id1">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
-</section>
-<section id="example">
-<h3>Example</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>book.epub
-</pre></div>
-</div>
-<p>Output shows chapter numbers, titles, and character counts.</p>
-</section>
-</section>
-<section id="info">
-<h2>info</h2>
-<p>Show metadata and information about an EPUB file.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>info<span class="w"> </span>EPUB_FILE
-</pre></div>
-</div>
-<section id="id2">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
-</section>
-<section id="id3">
-<h3>Example</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>info<span class="w"> </span>book.epub
-</pre></div>
-</div>
-<p>Shows title, author, language, publisher, year, chapter count, and file size.</p>
-</section>
-</section>
-<section id="sample">
-<h2>sample</h2>
-<p>Generate a sample audio file to test TTS settings.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="o">[</span>TEXT<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id4">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">TEXT</span></code> : Text to convert. If not provided, uses default sample text.</p>
-</section>
-<section id="id5">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./sample.wav</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format. Default: <code class="docutils literal notranslate"><span class="pre">wav</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : TTS voice to use. Can be a single voice or voice blend.</p>
-<ul class="simple">
-<li><p>Single voice: <code class="docutils literal notranslate"><span class="pre">af_heart</span></code></p></li>
-<li><p>Voice blend: <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code> (auto-detects blend format)</p></li>
-</ul>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">LANG</span></code> : Override language for phonemization (e.g., <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">fr</span></code>, <code class="docutils literal notranslate"><span class="pre">en-us</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Text splitting mode.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--verbose</span></code> : Show detailed output.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly (also saves to file if <code class="docutils literal notranslate"><span class="pre">-o</span></code> specified).</p>
-<p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--use-mixed-language</span></code> : Deprecated compatibility option. <code class="docutils literal notranslate"><span class="pre">true</span></code> is rejected because
-automatic mixed-language detection is not provided.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mixed-language-primary</span></code>, <code class="docutils literal notranslate"><span class="pre">--mixed-language-allowed</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">--mixed-language-confidence</span></code> are deprecated. Use explicit SSMD spans such as
-<code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>. <code class="docutils literal notranslate"><span class="pre">--phoneme-dict</span> <span class="pre">PATH</span></code> : Path to custom phoneme dictionary JSON file
-for pronunciation overrides.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--phoneme-dict-case-sensitive</span></code> : Make phoneme dictionary matching case-sensitive
-(default: case-insensitive).</p>
-</section>
-<section id="id6">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Default sample</span>
-ttsforge<span class="w"> </span>sample
-
-<span class="c1"># Custom text</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello, this is a test.&quot;</span>
-
-<span class="c1"># With voice and output options</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Testing voice&quot;</span><span class="w"> </span>--voice<span class="w"> </span>am_adam<span class="w"> </span>-o<span class="w"> </span>test.wav
-</pre></div>
-</div>
-</section>
-</section>
-<section id="read">
-<h2>read</h2>
-<p>Stream playback from an EPUB or text file (no output files).</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span><span class="o">[</span>INPUT_FILE<span class="o">]</span><span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id7">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">INPUT_FILE</span></code> : Path to EPUB/TXT file, or <code class="docutils literal notranslate"><span class="pre">-</span></code> to read from stdin. If omitted, reads
-stdin.</p>
-</section>
-<section id="id8">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : TTS voice to use.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language for TTS.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--mode</span> <span class="pre">MODE</span></code> : Content mode: <code class="docutils literal notranslate"><span class="pre">chapters</span></code> or <code class="docutils literal notranslate"><span class="pre">pages</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-c,</span> <span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapter selection for <code class="docutils literal notranslate"><span class="pre">chapters</span></code> mode.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--pages</span> <span class="pre">SELECTION</span></code> : Page selection for <code class="docutils literal notranslate"><span class="pre">pages</span></code> mode.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--start-chapter</span> <span class="pre">INT</span></code> : Start from specific chapter number (1-indexed).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--start-page</span> <span class="pre">INT</span></code> : Start from specific page number (1-indexed).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--page-size</span> <span class="pre">INT</span></code> : Synthetic page size in characters (default: 2000).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--resume</span></code> : Resume from last saved position.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--list</span></code> : List chapters/pages and exit without reading.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--split</span> <span class="pre">MODE</span></code> : Text splitting mode: <code class="docutils literal notranslate"><span class="pre">sentence</span></code> or <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--disable-short-sentence</span></code> : Disable special handling for short sentences.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
-<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
-config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
-<p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-</section>
-<section id="id9">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Read an EPUB aloud</span>
-ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub
-
-<span class="c1"># Read pages 1-10</span>
-ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--mode<span class="w"> </span>pages<span class="w"> </span>--pages<span class="w"> </span><span class="m">1</span>-10
-
-<span class="c1"># Resume from last position</span>
-ttsforge<span class="w"> </span><span class="nb">read</span><span class="w"> </span>book.epub<span class="w"> </span>--resume
-</pre></div>
-</div>
-</section>
-</section>
-<section id="voices">
-<h2>voices</h2>
-<p>List available TTS voices.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id10">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Filter voices by language code.</p>
-</section>
-<section id="id11">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># List all voices</span>
-ttsforge<span class="w"> </span>voices
-
-<span class="c1"># List American English voices</span>
-ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>a
-
-<span class="c1"># List British English voices</span>
-ttsforge<span class="w"> </span>voices<span class="w"> </span>-l<span class="w"> </span>b
-</pre></div>
-</div>
-</section>
-</section>
-<section id="demo">
-<h2>demo</h2>
-<p>Generate a demo audio file with voice samples.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>demo<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id12">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: <code class="docutils literal notranslate"><span class="pre">./voices_demo.wav</span></code> (or directory with
-<code class="docutils literal notranslate"><span class="pre">--separate</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Filter voices by language.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICES</span></code> : Specific voices to include (comma-separated). Example:
-<code class="docutils literal notranslate"><span class="pre">af_heart,am_adam</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between voice samples in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--text</span> <span class="pre">TEXT</span></code> : Custom text to use. Use <code class="docutils literal notranslate"><span class="pre">{voice}</span></code> placeholder for voice name.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--separate</span></code> : Save each voice as a separate file instead of concatenating.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--blend</span> <span class="pre">SPEC</span></code> : Voice blend to demo (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--blend-presets</span></code> : Demo a curated set of voice blend combinations.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-p,</span> <span class="pre">--play</span></code> : Play audio directly instead of only saving files.</p>
-<p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-</section>
-<section id="id13">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Demo all voices</span>
-ttsforge<span class="w"> </span>demo
-
-<span class="c1"># Demo American English voices only</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>-l<span class="w"> </span>a
-
-<span class="c1"># Demo specific voices</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>-v<span class="w"> </span>af_heart,am_adam,bf_emma
-
-<span class="c1"># Save separate files</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>--separate<span class="w"> </span>-o<span class="w"> </span>./voice_samples/
-
-<span class="c1"># Custom demo text</span>
-ttsforge<span class="w"> </span>demo<span class="w"> </span>--text<span class="w"> </span><span class="s2">&quot;Hi, I&#39;m {voice}. Nice to meet you!&quot;</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="download">
-<h2>download</h2>
-<p>Download ONNX model files required for TTS.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>download<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id14">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">--force</span></code> : Force re-download even if files exist.</p>
-</section>
-<section id="id15">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download models</span>
-ttsforge<span class="w"> </span>download
-
-<span class="c1"># Force re-download</span>
-ttsforge<span class="w"> </span>download<span class="w"> </span>--force
-</pre></div>
-</div>
-</section>
+<p><code class="docutils literal notranslate"><span class="pre">voices</span></code> and <code class="docutils literal notranslate"><span class="pre">models</span></code> accept <code class="docutils literal notranslate"><span class="pre">--offline</span></code>, <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>, and <code class="docutils literal notranslate"><span class="pre">--json</span></code>. Catalog contents
+and runtime availability depend on the installed Readio engines and local environment.
+<code class="docutils literal notranslate"><span class="pre">doctor</span></code> reports Readio version, configuration, engines, dependencies, formats, and
+paths.</p>
 </section>
 <section id="config">
-<h2>config</h2>
-<p>Manage ttsforge configuration.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
+<h2><code class="docutils literal notranslate"><span class="pre">config</span></code></h2>
+<p>All configuration operations use Readio’s persisted settings; TTSForge does not maintain
+a duplicate settings file:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>path
+ttsforge<span class="w"> </span>config<span class="w"> </span>show
+ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>af_heart
+ttsforge<span class="w"> </span>config<span class="w"> </span>init
+ttsforge<span class="w"> </span>config<span class="w"> </span>languages
+ttsforge<span class="w"> </span>config<span class="w"> </span>language<span class="w"> </span>en-us
 </pre></div>
 </div>
-<p>Configuration is stored in <code class="docutils literal notranslate"><span class="pre">~/.config/ttsforge/config.json</span></code>.</p>
-<section id="id16">
-<h3>Options</h3>
-<p><code class="docutils literal notranslate"><span class="pre">--show</span></code> : Show current configuration.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--reset</span></code> : Reset configuration to defaults.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code> : Set a configuration option. Can be used multiple times.</p>
+<p><code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">set</span> <span class="pre">KEY</span> <span class="pre">VALUE</span></code> accepts one value; JSON values such as numbers, booleans, arrays,
+and objects are parsed as JSON, otherwise the value is stored as text. <code class="docutils literal notranslate"><span class="pre">--path</span> <span class="pre">PATH</span></code>
+selects an alternate configuration file on <code class="docutils literal notranslate"><span class="pre">show</span></code> and <code class="docutils literal notranslate"><span class="pre">set</span></code>.</p>
 </section>
-<section id="id17">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Show configuration</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--show
-
-<span class="c1"># Set default voice</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_voice<span class="w"> </span>am_adam
-
-<span class="c1"># Set multiple options</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>default_voice<span class="w"> </span>af_sarah<span class="w"> </span>--set<span class="w"> </span>default_speed<span class="w"> </span><span class="m">1</span>.1
-
-<span class="c1"># Select the default ONNX provider</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
-
-<span class="c1"># Legacy compatibility shortcut</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--set<span class="w"> </span>use_gpu<span class="w"> </span><span class="nb">true</span>
-
-<span class="c1"># Reset to defaults</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--reset
+<section id="ssmd">
+<h2><code class="docutils literal notranslate"><span class="pre">ssmd</span></code></h2>
+<p>Readio-backed SSMD commands are:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>FILE<span class="w"> </span><span class="o">[</span>--roundtrip<span class="o">]</span>
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>FILE<span class="w"> </span><span class="o">[</span>--roundtrip<span class="o">]</span>
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>analyze<span class="w"> </span>FILE
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>roundtrip<span class="w"> </span>FILE
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>materialize<span class="w"> </span>FILE<span class="w"> </span>--bindings<span class="w"> </span><span class="s1">&#39;{&quot;narrator&quot;:&quot;af_heart&quot;}&#39;</span><span class="w"> </span><span class="o">[</span>--output<span class="w"> </span>OUT<span class="o">]</span>
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a> for all available options.</p>
+<p><code class="docutils literal notranslate"><span class="pre">validate</span></code> additionally requires resolvable voice references. <code class="docutils literal notranslate"><span class="pre">materialize</span></code> writes
+explicit bindings to a new file by default; <code class="docutils literal notranslate"><span class="pre">--in-place</span></code> opts into updating the source
+file. These commands use Readio’s SSMD authoring API; see <a class="reference internal" href="../ssmd/"><span class="std std-doc">SSMD tools</span></a>.</p>
 </section>
-</section>
-<section id="config-short-sentence">
-<h2>config short-sentence</h2>
-<p>Create, link, or inspect the advanced short-sentence JSON configuration.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span><span class="o">[</span>show<span class="p">|</span>init<span class="p">|</span>reset<span class="o">]</span>
-</pre></div>
-</div>
-<p>Called without an action, this command prints its help.</p>
-<section id="id18">
-<h3>Arguments</h3>
-<p><code class="docutils literal notranslate"><span class="pre">show</span></code> : Show the advanced JSON config.</p>
-<p><code class="docutils literal notranslate"><span class="pre">init</span></code> : Write the advanced JSON config and update the ttsforge config to use it.</p>
-<p><code class="docutils literal notranslate"><span class="pre">reset</span></code> : Recreate the advanced JSON config from defaults and update the ttsforge config
-to use it.</p>
-</section>
-<section id="id19">
-<h3>Examples</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Create and link the advanced short-sentence config</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>init
-
-<span class="c1"># Show the advanced short-sentence config</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>show
-
-<span class="c1"># Reset the advanced short-sentence config to defaults</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>short-sentence<span class="w"> </span>reset
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phonemes">
-<h2>phonemes</h2>
-<p>Commands for working with phonemes and pre-tokenized content.</p>
-<section id="phonemes-export">
-<h3>phonemes export</h3>
-<p>Export an EPUB as pre-tokenized phoneme data.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>EPUB_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id20">
-<h4>Arguments</h4>
-<p><code class="docutils literal notranslate"><span class="pre">EPUB_FILE</span></code> : Path to the EPUB file (required).</p>
-</section>
-<section id="id21">
-<h4>Options</h4>
-<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path. Default: input filename with <code class="docutils literal notranslate"><span class="pre">.phonemes.json</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--readable</span></code> : Export as human-readable text format instead of JSON.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Chapters to export.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code> : Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--split-mode</span> <span class="pre">MODE</span></code> : Split mode: <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, or <code class="docutils literal notranslate"><span class="pre">clause</span></code>. Default:
-<code class="docutils literal notranslate"><span class="pre">sentence</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--max-chars</span> <span class="pre">INT</span></code> : Maximum characters per segment. Default: <code class="docutils literal notranslate"><span class="pre">300</span></code>.</p>
-</section>
-<section id="id22">
-<h4>Examples</h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Export to phonemes</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub
-
-<span class="c1"># Export as readable format</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub<span class="w"> </span>--readable<span class="w"> </span>-o<span class="w"> </span>book.readable.txt
-
-<span class="c1"># Export specific chapters</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
-
-<span class="c1"># Use clause splitting for shorter segments</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span><span class="nb">export</span><span class="w"> </span>book.epub<span class="w"> </span>--split-mode<span class="w"> </span>clause
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phonemes-convert">
-<h3>phonemes convert</h3>
-<p>Convert a pre-tokenized phoneme file to audio.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>PHONEME_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id23">
-<h4>Arguments</h4>
-<p><code class="docutils literal notranslate"><span class="pre">PHONEME_FILE</span></code> : Path to the phoneme JSON file (required).</p>
-</section>
-<section id="id24">
-<h4>Options</h4>
-<p><code class="docutils literal notranslate"><span class="pre">-o,</span> <span class="pre">--output</span> <span class="pre">PATH</span></code> : Output file path.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-f,</span> <span class="pre">--format</span> <span class="pre">FORMAT</span></code> : Output audio format.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for TTS.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-s,</span> <span class="pre">--speed</span> <span class="pre">FLOAT</span></code> : Speech speed. Default: <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> : ONNX Runtime execution provider or alias (<code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">cpu</span></code>,
-<code class="docutils literal notranslate"><span class="pre">openvino</span></code>, <code class="docutils literal notranslate"><span class="pre">nnapi</span></code>, <code class="docutils literal notranslate"><span class="pre">xnnpack</span></code>, or a full <code class="docutils literal notranslate"><span class="pre">*ExecutionProvider</span></code> name).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--silence</span> <span class="pre">FLOAT</span></code> : Silence between chapters. Default: <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-clause</span> <span class="pre">FLOAT</span></code> : Pause after clauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.5</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-sentence</span> <span class="pre">FLOAT</span></code> : Pause after sentences in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.7</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-paragraph</span> <span class="pre">FLOAT</span></code> : Pause after paragraphs in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.9</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-variance</span> <span class="pre">FLOAT</span></code> : Random variance added to pauses in seconds. Default: <code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">MODE</span></code> : Pause mode: <code class="docutils literal notranslate"><span class="pre">tts</span></code>, <code class="docutils literal notranslate"><span class="pre">manual</span></code>, or <code class="docutils literal notranslate"><span class="pre">auto</span></code>. Default: <code class="docutils literal notranslate"><span class="pre">auto</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--short-sentence</span> <span class="pre">TEXT</span></code> : Short-sentence handling config. Example:
-<code class="docutils literal notranslate"><span class="pre">mode=randomized,threshold=30,selection=auto,max-tries=3</span></code>. Can also reference a JSON
-config with <code class="docutils literal notranslate"><span class="pre">config=path/to/short_sentence.json</span></code>. See
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">short-sentence</span> <span class="pre">init</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--announce-chapters</span> <span class="pre">/</span> <span class="pre">--no-announce-chapters</span></code> : Read chapter titles aloud before
-chapter content. Default: enabled.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--chapter-pause</span> <span class="pre">FLOAT</span></code> : Pause after chapter title announcement in seconds. Default:
-<code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code> : Select chapters to convert.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--title</span> <span class="pre">TEXT</span></code> : Audiobook title.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--author</span> <span class="pre">TEXT</span></code> : Audiobook author.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--cover</span> <span class="pre">PATH</span></code> : Cover image path.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--voice-blend</span> <span class="pre">SPEC</span></code> : Blend multiple voices.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--voice-database</span> <span class="pre">PATH</span></code> : Path to custom voice database.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--streaming</span> <span class="pre">/</span> <span class="pre">--no-streaming</span></code> : Use streaming mode (faster, no resume). Default:
-resumable.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--keep-chapters</span></code> : Keep intermediate chapter files.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-y,</span> <span class="pre">--yes</span></code> : Skip confirmation prompts.</p>
-</section>
-<section id="id25">
-<h4>Examples</h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Convert phoneme file</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>book.phonemes.json
-
-<span class="c1"># With voice and output</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>book.phonemes.json<span class="w"> </span>-v<span class="w"> </span>am_adam<span class="w"> </span>-o<span class="w"> </span>book.m4b
-
-<span class="c1"># Streaming mode (faster but no resume)</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>convert<span class="w"> </span>book.phonemes.json<span class="w"> </span>--streaming
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phonemes-info">
-<h3>phonemes info</h3>
-<p>Show information about a phoneme file.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class="w"> </span>PHONEME_FILE<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id26">
-<h4>Options</h4>
-<p><code class="docutils literal notranslate"><span class="pre">--stats</span></code> : Show detailed token statistics.</p>
-</section>
-<section id="id27">
-<h4>Examples</h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Basic info</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class="w"> </span>book.phonemes.json
-
-<span class="c1"># With statistics</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>info<span class="w"> </span>book.phonemes.json<span class="w"> </span>--stats
-</pre></div>
-</div>
-</section>
-</section>
-<section id="phonemes-preview">
-<h3>phonemes preview</h3>
-<p>Preview phonemes for given text.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span>TEXT<span class="w"> </span><span class="o">[</span>OPTIONS<span class="o">]</span>
-</pre></div>
-</div>
-<section id="id28">
-<h4>Options</h4>
-<p><code class="docutils literal notranslate"><span class="pre">-l,</span> <span class="pre">--language</span> <span class="pre">LANG</span></code> : Language code for phonemization. Default: <code class="docutils literal notranslate"><span class="pre">a</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">-v,</span> <span class="pre">--voice</span> <span class="pre">VOICE</span></code> : Voice to use for audio preview (when using <code class="docutils literal notranslate"><span class="pre">--play</span></code>). Can be a
-single voice or voice blend (e.g., <code class="docutils literal notranslate"><span class="pre">af_nicole:50,am_michael:50</span></code>).</p>
-<p><code class="docutils literal notranslate"><span class="pre">--play</span></code> : Generate and play audio preview of the phonemes.</p>
-<p><strong>Note:</strong> Playback requires the optional <code class="docutils literal notranslate"><span class="pre">ttsforge[audio]</span></code> extra.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--tokens</span></code> : Show token IDs in addition to phonemes.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--vocab-version</span> <span class="pre">VERSION</span></code> : Vocabulary version. Default: <code class="docutils literal notranslate"><span class="pre">v1.0</span></code>.</p>
-</section>
-<section id="id29">
-<h4>Examples</h4>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Preview phonemes</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span>
-
-<span class="c1"># With tokens</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span><span class="w"> </span>--tokens
-
-<span class="c1"># Different language</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Bonjour!&quot;</span><span class="w"> </span>-l<span class="w"> </span>f
-
-<span class="c1"># With audio playback</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Test audio&quot;</span><span class="w"> </span>--play
-
-<span class="c1"># With voice blend</span>
-ttsforge<span class="w"> </span>phonemes<span class="w"> </span>preview<span class="w"> </span><span class="s2">&quot;Test blend&quot;</span><span class="w"> </span>--voice<span class="w"> </span><span class="s2">&quot;af_nicole:60,am_michael:40&quot;</span><span class="w"> </span>--play
-</pre></div>
-</div>
-</section>
-</section>
+<section id="removed-commands">
+<h2>Removed commands</h2>
+<p><code class="docutils literal notranslate"><span class="pre">read</span></code>, <code class="docutils literal notranslate"><span class="pre">sample</span></code>, <code class="docutils literal notranslate"><span class="pre">demo</span></code>, <code class="docutils literal notranslate"><span class="pre">download</span></code>, and <code class="docutils literal notranslate"><span class="pre">phonemes</span></code> belonged to the former TTSForge
+rendering backend and are no longer registered. TTSForge does not maintain compatibility
+aliases or a parallel engine implementation. See the
+<a class="reference internal" href="../migration-readio/"><span class="std std-doc">migration guide</span></a>.</p>
 </section>
 </section>
 </div>

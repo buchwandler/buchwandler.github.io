@@ -4,17 +4,17 @@ nav_key: phonodist
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.0
-source_commit: 
-source_url: https://github.com/buchwandler/phonodist/releases/tag/v0.1.0
+source_ref: v0.1.2
+source_commit: 8889ab888680454934e6ae84acc9de3f20530a67
+source_url: https://github.com/buchwandler/phonodist/releases/tag/v0.1.2
 is_default: true
 repo_url: https://github.com/buchwandler/phonodist
-release_tag: v0.1.0
-release_url: https://github.com/buchwandler/phonodist/releases/tag/v0.1.0
+release_tag: v0.1.2
+release_url: https://github.com/buchwandler/phonodist/releases/tag/v0.1.2
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.0
+  ref: v0.1.2
   url: /tools/phonodist/
   current: true
 - name: main
@@ -24,17 +24,29 @@ versions:
   current: false
 entries:
 - slug: index
-  title: Phonodist
+  title: phonodist
   url: /tools/phonodist/
+- slug: COMPARISON
+  title: phonodist Structural IPA comparison
+  url: /tools/phonodist/COMPARISON/
 - slug: METRIC
-  title: phonodist Metric
+  title: phonodist Metric v1
   url: /tools/phonodist/METRIC/
 - slug: PROFILES
-  title: phonodist Profiles
+  title: phonodist Language profiles
   url: /tools/phonodist/PROFILES/
 - slug: RELEASING
-  title: phonodist Releasing
+  title: phonodist Releasing phonodist
   url: /tools/phonodist/RELEASING/
+- slug: api
+  title: phonodist Python API
+  url: /tools/phonodist/api/
 - slug: changelog
   title: phonodist Changelog
   url: /tools/phonodist/changelog/
+- slug: cli
+  title: phonodist Command-line interface
+  url: /tools/phonodist/cli/
+- slug: getting-started
+  title: phonodist Getting started
+  url: /tools/phonodist/getting-started/

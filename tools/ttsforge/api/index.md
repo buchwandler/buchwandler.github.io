@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge API Reference"
+title: "ttsforge Python API boundary"
 permalink: /tools/ttsforge/api/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -540,197 +540,56 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="api-reference">
-<h1>API Reference</h1>
-<p>This section documents the Python API for ttsforge, allowing programmatic use of the
-library.</p>
-<section id="module-overview">
-<h2>Module Overview</h2>
-<p>ttsforge is organized into the following modules:</p>
-<section id="core-modules">
-<h3>Core Modules</h3>
-<p><strong>ttsforge.cli</strong> : Command-line interface implementation using explicit typed Typer
-wrappers (with Click as the runtime substrate). App construction and help paths are
-provider-independent; implementation modules are imported lazily.</p>
-<p><strong>ttsforge.paths</strong> : Provider-independent user configuration and advanced short-sentence
-path calculations.</p>
-<p><strong>ttsforge.conversion</strong> : Main conversion logic for EPUB to audiobook conversion.</p>
-<p><strong>ttsforge.render_units</strong> : Dependency-light paragraph descriptors, persistent unit
-identity, renderer contracts, and resume reconciliation.</p>
-<p><strong>ttsforge.paragraph_output</strong> : Owned paragraph workspace files, manifests, playlists,
-marker sidecars, and atomic WAV output.</p>
-<p><strong>ttsforge.phoneme_conversion</strong> : Conversion logic for pre-tokenized phoneme files.</p>
-</section>
-<section id="tts-backend">
-<h3>TTS Backend</h3>
-<p><strong>ttsforge.kokoro_runner</strong> : Shared Kokoro ONNX runner used by conversion paths.</p>
-<p><strong>ttsforge.kokoro_lang</strong> : Language code helpers for Kokoro.</p>
-<p><strong>ttsforge.phonemes</strong> : Data structures for phoneme book representation.</p>
-</section>
-<section id="utilities">
-<h3>Utilities</h3>
-<p><strong>ttsforge.constants</strong> : Configuration defaults, voice definitions, and language
-mappings.</p>
-<p><strong>ttsforge.utils</strong> : Utility functions for file handling, configuration, and formatting.</p>
-<p><strong>ttsforge.audio_merge</strong> : Audio concatenation and chapter marker handling.</p>
-<p><strong>ttsforge.chapter_selection</strong> : Parsing helpers for chapter selection strings.</p>
-<p><strong>ttsforge.ssmd_generator</strong> : Canonical SSMD 0.8 generation, validation, deterministic
-front matter, and SHA-256 content hashing helpers.</p>
-<p><strong>ttsforge.ssmd_support</strong> : Stable SSMD policy, document metadata, diagnostics, and
-pykokoro config translation types. Inspection and validation do not initialize ONNX.</p>
-<p><strong>ttsforge.ssmd_audio</strong> : Bounded document-relative local and opt-in HTTPS audio source
-resolution.</p>
-<p><strong>ttsforge.input_reader</strong> : EPUB/text input parsing helpers.</p>
-<p><strong>ttsforge.name_extractor</strong> : Name extraction utilities for dictionary building.</p>
-<p><strong>ttsforge.vocab</strong> : Vocabulary utilities and metadata.</p>
-</section>
-</section>
-<section id="quick-api-examples">
-<h2>Quick API Examples</h2>
-<section id="basic-text-to-speech">
-<h3>Basic Text-to-Speech</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ttsforge.kokoro_lang</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_onnx_lang_code</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ttsforge.kokoro_runner</span><span class="w"> </span><span class="kn">import</span> <span class="n">KokoroRunOptions</span><span class="p">,</span> <span class="n">KokoroRunner</span>
-
-<span class="c1"># Initialize runner</span>
-<span class="n">opts</span> <span class="o">=</span> <span class="n">KokoroRunOptions</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;af_heart&quot;</span><span class="p">,</span>
-    <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">onnx_provider</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
-    <span class="n">pause_clause</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span>
-    <span class="n">pause_sentence</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
-    <span class="n">pause_paragraph</span><span class="o">=</span><span class="mf">0.9</span><span class="p">,</span>
-    <span class="n">pause_variance</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="k">with</span> <span class="n">KokoroRunner</span><span class="p">(</span><span class="n">opts</span><span class="p">,</span> <span class="n">log</span><span class="o">=</span><span class="nb">print</span><span class="p">)</span> <span class="k">as</span> <span class="n">runner</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">runner</span><span class="o">.</span><span class="n">synthesize</span><span class="p">(</span>
-        <span class="s2">&quot;Hello, world!&quot;</span><span class="p">,</span>
-        <span class="n">lang_code</span><span class="o">=</span><span class="n">get_onnx_lang_code</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
-        <span class="n">pause_mode</span><span class="o">=</span><span class="s2">&quot;tts&quot;</span><span class="p">,</span>
-        <span class="n">is_phonemes</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="kn">import</span><span class="w"> </span><span class="nn">soundfile</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">sf</span>
-        <span class="n">sf</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s2">&quot;output.wav&quot;</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">audio</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">sample_rate</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">document_metadata</span><span class="p">,</span> <span class="n">result</span><span class="o">.</span><span class="n">markers</span><span class="p">)</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">result</span><span class="o">.</span><span class="n">release_audio</span><span class="p">()</span>
-</pre></div>
-</div>
-</section>
-<section id="converting-an-epub">
-<h3>Converting an EPUB</h3>
+<section id="python-api-boundary">
+<h1>Python API boundary</h1>
+<p>The supported TTSForge interface is its command line. TTSForge is intentionally a small
+product layer over Readio rather than a second Python synthesis/project API. Its
+internal adapter modules are implementation details and may change with the Readio
+contract.</p>
+<p>For Python integrations, use Readio’s public API directly. It exposes typed inspection,
+project, build, audiobook export, catalog, diagnostics, configuration, and SSMD
+services:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">ttsforge.conversion</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConversionOptions</span><span class="p">,</span> <span class="n">TTSConverter</span>
 
-<span class="c1"># Configure conversion</span>
-<span class="n">options</span> <span class="o">=</span> <span class="n">ConversionOptions</span><span class="p">(</span>
-    <span class="n">voice</span><span class="o">=</span><span class="s2">&quot;am_adam&quot;</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;a&quot;</span><span class="p">,</span>
-    <span class="n">speed</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
-    <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;m4b&quot;</span><span class="p">,</span>
-    <span class="n">use_gpu</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
-    <span class="n">onnx_provider</span><span class="o">=</span><span class="s2">&quot;nnapi&quot;</span><span class="p">,</span>
-    <span class="n">conversion_unit</span><span class="o">=</span><span class="s2">&quot;paragraph&quot;</span><span class="p">,</span>
-    <span class="n">use_spacy</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">readio.api</span><span class="w"> </span><span class="kn">import</span> <span class="n">Readio</span>
+
+<span class="n">app</span> <span class="o">=</span> <span class="n">Readio</span><span class="p">()</span>
+<span class="n">source</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">)</span>
+
+<span class="n">inspection</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">audiobooks</span><span class="o">.</span><span class="n">inspect</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">inspection</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">([</span><span class="n">chapter</span><span class="o">.</span><span class="n">title</span> <span class="k">for</span> <span class="n">chapter</span> <span class="ow">in</span> <span class="n">inspection</span><span class="o">.</span><span class="n">chapters</span><span class="p">])</span>
+
+<span class="n">created</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">audiobooks</span><span class="o">.</span><span class="n">create_project_result</span><span class="p">(</span>
+    <span class="n">source</span><span class="p">,</span>
+    <span class="n">chapters</span><span class="o">=</span><span class="s2">&quot;1-5&quot;</span><span class="p">,</span>
+    <span class="n">output</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;novel.readio&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-
-<span class="k">with</span> <span class="n">TTSConverter</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">options</span><span class="p">)</span> <span class="k">as</span> <span class="n">converter</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">converter</span><span class="o">.</span><span class="n">convert_epub</span><span class="p">(</span>
-        <span class="n">epub_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.epub&quot;</span><span class="p">),</span>
-        <span class="n">output_path</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;book.m4b&quot;</span><span class="p">),</span>
-    <span class="p">)</span>
-
-<span class="k">if</span> <span class="n">result</span><span class="o">.</span><span class="n">success</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Created: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">output_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-<span class="k">else</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error: </span><span class="si">{</span><span class="n">result</span><span class="o">.</span><span class="n">error_message</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">status</span> <span class="o">=</span> <span class="n">app</span><span class="o">.</span><span class="n">projects</span><span class="o">.</span><span class="n">status</span><span class="p">(</span><span class="n">created</span><span class="o">.</span><span class="n">project</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">next_actions</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code> provides this public API, including expanded synthesis resolution and
+persisted project settings. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for the standard
+package install and optional source-development setup.</p>
+<section id="audiobook-export">
+<h2>Audiobook export</h2>
+<p>Readio keeps M4B audiobook export distinct from generic audio export. A typical API
+integration creates a project, builds composition, then calls the audiobook service.
+Request types, defaults, output ownership, and build stages are documented by Readio; do
+not duplicate those contracts in TTSForge code or assume that generic export handles
+M4B.</p>
+<p>See
+<a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/api.md#projects-and-audiobooks">Readio’s API guide</a>
+and <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/projects.md">project guide</a>.</p>
 </section>
-<section id="paragraph-units-and-ownership">
-<h3>Paragraph units and ownership</h3>
-<p>Paragraph conversion prepares a chapter once and renders each public PyKokoro unit
-sequentially. Persist or copy the current result before asking for the next one;
-iteration may release the previous result. TTSForge writes each WAV and marker sidecar
-before advancing, rebuilds the manifest and playlist atomically, and records source
-paragraph identity separately from chapter output-unit order. See
-<code class="docutils literal notranslate"><span class="pre">examples/paragraph_conversion.py</span></code>, <code class="docutils literal notranslate"><span class="pre">examples/paragraph_resume.py</span></code>,
-<code class="docutils literal notranslate"><span class="pre">examples/paragraph_manifest.py</span></code>, and <code class="docutils literal notranslate"><span class="pre">examples/pykokoro_paragraph_units.py</span></code>.</p>
-</section>
-<section id="working-with-phonemes">
-<h3>Working with Phonemes</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro.tokenizer</span><span class="w"> </span><span class="kn">import</span> <span class="n">Tokenizer</span>
-
-<span class="c1"># Initialize tokenizer</span>
-<span class="n">tokenizer</span> <span class="o">=</span> <span class="n">Tokenizer</span><span class="p">()</span>
-
-<span class="c1"># Convert text to phonemes</span>
-<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello, world!&quot;</span>
-<span class="n">phonemes</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Phonemes: </span><span class="si">{</span><span class="n">phonemes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Get token IDs</span>
-<span class="n">tokens</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">tokenize</span><span class="p">(</span><span class="n">phonemes</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Tokens: </span><span class="si">{</span><span class="n">tokens</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Human-readable format</span>
-<span class="n">readable</span> <span class="o">=</span> <span class="n">tokenizer</span><span class="o">.</span><span class="n">format_readable</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">lang</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Readable: </span><span class="si">{</span><span class="n">readable</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-<section id="loading-configuration">
-<h3>Loading Configuration</h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ttsforge.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">save_config</span>
-
-<span class="c1"># Load current config</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Default voice: </span><span class="si">{</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_voice&#39;</span><span class="p">]</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-<span class="c1"># Modify and save</span>
-<span class="n">config</span><span class="p">[</span><span class="s1">&#39;default_voice&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="s1">&#39;am_adam&#39;</span>
-<span class="n">save_config</span><span class="p">(</span><span class="n">config</span><span class="p">)</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="module-ttsforge.constants">
-<span id="auto-generated-api-documentation"></span><h2>Auto-generated API Documentation</h2>
-<p>Constants for ttsforge - voices, languages, and formats.</p>
-<dl class="py function" id="module-ttsforge.chapter_selection">
-<dt class="sig sig-object py" id="ttsforge.chapter_selection.parse_chapter_selection">
-<span class="sig-prename descclassname"><span class="pre">ttsforge.chapter_selection.</span></span><span class="sig-name descname"><span class="pre">parse_chapter_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="../_modules/ttsforge/chapter_selection/#parse_chapter_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Parse chapter selection string into list of 0-based chapter indices.</p>
-<p>Supports formats like:
-- “3” -&gt; [2] (single chapter, 1-based to 0-based)
-- “1-5” -&gt; [0, 1, 2, 3, 4] (range, inclusive)
-- “3,5,7” -&gt; [2, 4, 6] (comma-separated)
-- “1-3,7,9-10” -&gt; [0, 1, 2, 6, 8, 9] (mixed)</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>selection</strong> – Chapter selection string (1-based indexing)</p></li>
-<li><p><strong>total_chapters</strong> – Total number of chapters available</p></li>
-</ul>
-</dd>
-<dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>List of 0-based chapter indices</p>
-</dd>
-<dt class="field-odd">Raises<span class="colon">:</span></dt>
-<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/builtins/exceptions.html#ValueError" title="(in Python v3.14)"><strong>ValueError</strong></a> – If selection format is invalid or chapters out of range</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="ttsforge.chapter_selection.resolve_chapter_selection">
-<span class="sig-prename descclassname"><span class="pre">ttsforge.chapter_selection.</span></span><span class="sig-name descname"><span class="pre">resolve_chapter_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#str" title="(in Python v3.14)"><span class="pre">str</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">total_chapters</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference external" href="https://docs.python.org/3/builtins/stdtypes.html#list" title="(in Python v3.14)"><span class="pre">list</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/builtins/functions.html#int" title="(in Python v3.14)"><span class="pre">int</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/builtins/constants.html#None" title="(in Python v3.14)"><span class="pre">None</span></a></span></span><a class="reference internal" href="../_modules/ttsforge/chapter_selection/#resolve_chapter_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a></dt>
-<dd><p>Resolve included chapters after applying an optional skip selection.</p>
-</dd></dl>
-
+<section id="ttsforge-integration-boundary">
+<h2>TTSForge integration boundary</h2>
+<p>The implementation imports only <code class="docutils literal notranslate"><span class="pre">readio.api</span></code> for Readio integration. TTSForge’s
+audiobook options are translated at that boundary into Readio request types; progress
+events are presented to CLI users without taking ownership of project state. The API
+contract test verifies the public API version and required symbols used by the current
+adapter.</p>
 </section>
 </section>
 </div>

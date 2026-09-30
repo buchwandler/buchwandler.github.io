@@ -5,8 +5,8 @@ permalink: /tools/ttsforge/installation/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -542,288 +542,75 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation">
 <h1>Installation</h1>
-<p>This guide covers the installation of ttsforge and its dependencies.</p>
-<section id="system-requirements">
-<h2>System Requirements</h2>
-<ul class="simple">
-<li><p><strong>Python</strong>: 3.10 or later</p></li>
-<li><p><strong>Operating System</strong>: Linux, macOS, or Windows</p></li>
-<li><p><strong>Disk Space</strong>: ~330MB for ONNX models (downloaded automatically on first use)</p></li>
-</ul>
-</section>
-<section id="dependencies">
-<h2>Dependencies</h2>
-<p>ttsforge requires the following external tools:</p>
-<section id="audiosig-waveform-primitives">
-<h3>AudioSig waveform primitives</h3>
-<p>TTSForge depends directly on AudioSig <code class="docutils literal notranslate"><span class="pre">&gt;=0.1.2,&lt;0.2</span></code> for reusable NumPy waveform
-operations: duration-based silence generation and arithmetic-mean channel downmixing.
-NumPy remains a direct dependency for TTSForge arrays, composition, playback buffers,
-and bounded I/O buffers. SoundFile remains required for audio decoding and encoding;
-AudioSig does not replace TTSForge’s file, FFmpeg, or audiobook orchestration layers.</p>
-</section>
-<section id="pykokoro-kokorog2p-and-spacy-model-policy">
-<h3>PyKokoro, kokorog2p, and spaCy model policy</h3>
-<p>The package requires PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.4,&lt;0.10</span></code>, kokorog2p <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.5,&lt;1.0</span></code>, SSMD
-<code class="docutils literal notranslate"><span class="pre">&gt;=0.8.7,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.7,&lt;0.4</span></code>. TTSForge forwards document language and
-ONNX provider through the PyKokoro 0.9 pipeline. Omitted model and voice values use
-PyKokoro metadata discovery; explicit profiles, custom model paths, and voice databases
-remain supported.</p>
-<p>PyKokoro owns written-form preparation and language-aware model selection.
-Mixed-language changes must be explicit SSMD spans such as <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>. TTSForge
-no longer provides automatic mixed-language detection, and the legacy mixed-language
-settings are rejected with migration guidance.</p>
-<p>The default <code class="docutils literal notranslate"><span class="pre">use_spacy=null</span></code> policy selects the highest compatible installed local model
-and falls back when none is installed; strict requests require a model.</p>
-<p>Users should not install <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> separately for TTSForge. The compatible kokorog2p
-release owns its Spokenform and abbr2words constraints.</p>
-<p>Install one or more compatible local spaCy packages when strict behavior or higher
-quality automatic selection is wanted:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_lg
-</pre></div>
-</div>
-<p>With multiple tiers installed, automatic conversion may use a different model after an
-environment change. The concrete model is recorded in state; an incompatible old run is
-rejected rather than mixing model identities. Use an explicit <code class="docutils literal notranslate"><span class="pre">spacy_model</span></code> or
-<code class="docutils literal notranslate"><span class="pre">spacy_model_size</span></code> to make a workflow reproducible.</p>
-</section>
-<section id="ffmpeg-required-for-mp3-flac-opus-m4b">
-<h3>ffmpeg (Required for MP3/FLAC/OPUS/M4B)</h3>
-<p>ffmpeg is required for MP3/FLAC/OPUS/M4B output and chapter merging.</p>
-<p><strong>Termux (Android):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pkg<span class="w"> </span>install<span class="w"> </span>ffmpeg
-</pre></div>
-</div>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>ffmpeg
-</pre></div>
-</div>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>ffmpeg
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download from <a class="reference external" href="https://ffmpeg.org/download.html">https://ffmpeg.org/download.html</a> and add it to <code class="docutils literal notranslate"><span class="pre">PATH</span></code>.</p>
-</section>
-<section id="optional-bundled-ffmpeg-via-python-not-available-on-all-platforms">
-<h3>Optional: bundled ffmpeg via Python (not available on all platforms)</h3>
-<p>If you cannot install a system ffmpeg, you can try the optional prebuilt binaries:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="espeak-ng-required-for-phonemization">
-<h3>espeak-ng (Required for Phonemization)</h3>
-<p>espeak-ng is used for text-to-phoneme conversion.</p>
-<p><strong>Ubuntu/Debian:</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>macOS (Homebrew):</strong></p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>brew<span class="w"> </span>install<span class="w"> </span>espeak-ng
-</pre></div>
-</div>
-<p><strong>Windows:</strong></p>
-<p>Download from <a class="reference external" href="https://github.com/espeak-ng/espeak-ng/releases">https://github.com/espeak-ng/espeak-ng/releases</a></p>
-</section>
-<section id="audio-playback-optional">
-<h3>Audio Playback (Optional)</h3>
-<p>Audio playback features (<code class="docutils literal notranslate"><span class="pre">--play</span></code> flags and the <code class="docutils literal notranslate"><span class="pre">read</span></code> command) require <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code>:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
-</pre></div>
-</div>
-<p>Or install directly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sounddevice
-</pre></div>
-</div>
-</section>
-<section id="spacy-models-optional">
-<h3>spaCy Models (Optional)</h3>
-<p>spaCy is used for sentence splitting, name extraction, and spaCy-aware phonemization
-workflows. The base conversion does not require a local model in automatic mode:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>spacy
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_sm
-python<span class="w"> </span>-m<span class="w"> </span>spacy<span class="w"> </span>download<span class="w"> </span>en_core_web_md
-</pre></div>
-</div>
-</section>
-</section>
-<section id="installing-ttsforge">
-<h2>Installing ttsforge</h2>
-<section id="from-pypi-recommended">
-<h3>From PyPI (Recommended)</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
-</pre></div>
-</div>
-<p>The base installation is provider-neutral. Install exactly one provider extra in the
-environment used for rendering. Provider-dependent modules are loaded only when audio
-rendering starts, so <code class="docutils literal notranslate"><span class="pre">import</span> <span class="pre">ttsforge</span></code>, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code>, and configuration/inspection
-commands work without model initialization.</p>
-<p>Provider extras (do not combine them in one environment):</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[cpu]&quot;</span><span class="w">       </span><span class="c1"># ONNX Runtime CPU</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span><span class="w">       </span><span class="c1"># ONNX Runtime CUDA</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[openvino]&quot;</span><span class="w">  </span><span class="c1"># ONNX Runtime OpenVINO</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[directml]&quot;</span><span class="w">  </span><span class="c1"># ONNX Runtime DirectML</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[coreml]&quot;</span><span class="w">    </span><span class="c1"># ONNX Runtime CoreML (macOS)</span>
-</pre></div>
-</div>
-<p>Optional non-provider extras:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Audio playback (required for --play and read)</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[audio]&quot;</span>
-
-<span class="c1"># Bundled ffmpeg binaries</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[static_ffmpeg]&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="from-source">
-<h3>From Source</h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
-<span class="nb">cd</span><span class="w"> </span>ttsforge
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-</pre></div>
-</div>
+<p>TTSForge is an audiobook frontend for Readio. Readio supplies persistent projects,
+synthesis engines, and export services; install engine integrations as Readio extras
+rather than installing a TTSForge-specific backend.</p>
+<section id="requirements">
+<h2>Requirements</h2>
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, which provides the public audiobook project,
+persisted project-settings, expanded synthesis-resolution, and M4B export APIs used by
+the CLI. This is the declared dependency floor; a local Readio checkout is not required
+for a normal installation.</p>
 </section>
 <section id="development-installation">
-<h3>Development Installation</h3>
-<p>For development with testing and linting tools:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
+<h2>Development installation</h2>
+<p>For local development, check out TTSForge beside the Readio repository and install both
+editable. For Kokoro-backed synthesis, include Readio’s <code class="docutils literal notranslate"><span class="pre">kokoro</span></code> extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># From a directory where both repositories will live</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/readio.git
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/buchwandler/ttsforge.git
 <span class="nb">cd</span><span class="w"> </span>ttsforge
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
-</pre></div>
-</div>
-</section>
-</section>
-<section id="onnx-runtime-providers">
-<h2>ONNX Runtime Providers</h2>
-<p>Select a provider with an alias or full runtime provider name. Install the matching
-provider extra in a fresh environment, and do not install multiple provider extras
-together. NNAPI and XNNPACK are runtime providers exposed by platform-specific builds
-rather than TTSForge installation extras:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[cpu]&quot;</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>cpu
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>cpu
-</pre></div>
-</div>
-<p>For a desktop build exposing OpenVINO:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[openvino]&quot;</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>openvino
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;OpenVINO provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>openvino
-</pre></div>
-</div>
-<p>For CUDA:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ttsforge[gpu]&quot;</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>runtime.provider<span class="w"> </span>cuda
-</pre></div>
-</div>
-<p>For Termux/Android, use the declared PyKokoro release with an ONNX Runtime build
-exposing NNAPI or XNNPACK:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>model_source<span class="w"> </span>github<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>model_variant<span class="w"> </span>v1.0<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>model_quality<span class="w"> </span>fp32<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--set<span class="w"> </span>onnx_provider<span class="w"> </span>nnapi
-ttsforge<span class="w"> </span>config<span class="w"> </span>--show
-ttsforge<span class="w"> </span>download
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Termux provider test&quot;</span><span class="w"> </span>--provider<span class="w"> </span>nnapi
-</pre></div>
-</div>
-<p>Provider availability and the documented <code class="docutils literal notranslate"><span class="pre">ONNX_PROVIDER</span></code> environment override are
-handled by PyKokoro. With the required patched PyKokoro release, GitHub <code class="docutils literal notranslate"><span class="pre">v1.0</span></code> uses the
-embedded standard vocabulary and does not download Hugging Face <code class="docutils literal notranslate"><span class="pre">config.json</span></code>. NNAPI is
-not guaranteed; use a provider exposed by the installed Android ONNX Runtime build. Run
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code> to inspect the environment.</p>
-</section>
-<section id="memory-diagnostics">
-<h2>Memory diagnostics</h2>
-<p>Set <code class="docutils literal notranslate"><span class="pre">TTSFORGE_MEMORY_DEBUG=1</span></code> to log RSS, peak RSS, available memory, and the effective
-ONNX provider before and after runner initialization, chapter synthesis, WAV writing,
-result release, state saves, final merging, and converter cleanup. Native allocators may
-retain pages at a high-water mark after audio release; this diagnostic does not claim a
-provider-native leak from RSS alone.</p>
-</section>
-<section id="mixed-language-support">
-<h2>Mixed-Language Support</h2>
-<p>Mixed-language changes must be explicit SSMD spans, for example <code class="docutils literal notranslate"><span class="pre">[Welt]{lang=&quot;de&quot;}</span></code>.
-TTSForge does not automatically detect language changes. The legacy
-<code class="docutils literal notranslate"><span class="pre">use_mixed_language=true</span></code> setting and related CLI options are rejected with migration
-guidance.</p>
-</section>
-<section id="downloading-models">
-<h2>Downloading Models</h2>
-<p>ttsforge uses Kokoro ONNX models (~330MB total) which are downloaded automatically on
-first use. You can also download them proactively:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Download models</span>
-ttsforge<span class="w"> </span>download
 
-<span class="c1"># Force re-download</span>
-ttsforge<span class="w"> </span>download<span class="w"> </span>--force
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>.venv
+.<span class="w"> </span>.venv/bin/activate<span class="w">                 </span><span class="c1"># Windows: .venv\Scripts\activate</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;../readio[kokoro]&quot;</span><span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-<p>Models are stored in:</p>
-<ul class="simple">
-<li><p>Linux: <code class="docutils literal notranslate"><span class="pre">~/.cache/ttsforge/</span></code></p></li>
-<li><p>macOS: <code class="docutils literal notranslate"><span class="pre">~/Library/Caches/ttsforge/</span></code></p></li>
-<li><p>Windows: <code class="docutils literal notranslate"><span class="pre">%LOCALAPPDATA%\ttsforge\Cache\</span></code></p></li>
-</ul>
-</section>
-<section id="verifying-installation">
-<h2>Verifying Installation</h2>
-<p>Verify that ttsforge is installed correctly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Check version</span>
-ttsforge<span class="w"> </span>--version
-
-<span class="c1"># Show current configuration</span>
-ttsforge<span class="w"> </span>config<span class="w"> </span>--show
-
-<span class="c1"># Generate a sample audio file</span>
-ttsforge<span class="w"> </span>sample<span class="w"> </span><span class="s2">&quot;Hello, world!&quot;</span>
+<p>Readio also provides optional <code class="docutils literal notranslate"><span class="pre">piper</span></code> and <code class="docutils literal notranslate"><span class="pre">pocket</span></code> engine extras where those engines are
+supported. They are installed and diagnosed through Readio, not through
+TTSForge-specific backend extras. Consult the
+<a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/index.md">Readio installation guide</a>
+for engine requirements and platform-specific setup.</p>
+<p>To install only TTSForge’s development and test tools against the local Readio checkout,
+omit the engine extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>../readio<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-<p>If the sample command succeeds and creates <code class="docutils literal notranslate"><span class="pre">sample.wav</span></code>, ttsforge is ready to use.</p>
 </section>
-<section id="troubleshooting">
-<h2>Troubleshooting</h2>
-<section id="ffmpeg-not-found">
-<h3>ffmpeg not found</h3>
-<p>If you see “ffmpeg not found” errors when creating M4B files:</p>
-<ol class="arabic simple">
-<li><p>Ensure ffmpeg is installed (see above)</p></li>
-<li><p>Verify it’s in your PATH: <code class="docutils literal notranslate"><span class="pre">ffmpeg</span> <span class="pre">-version</span></code></p></li>
-<li><p>On Windows, you may need to restart your terminal after installation</p></li>
-</ol>
+<section id="verify-the-environment">
+<h2>Verify the environment</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>--help
+ttsforge<span class="w"> </span>doctor
+ttsforge<span class="w"> </span>engines
+ttsforge<span class="w"> </span>formats
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">doctor</span></code> reports Readio’s detected runtimes, dependencies, paths, and available formats.
+Install an engine extra if no synthesis engine is runnable. For a real workflow, first
+inspect an EPUB and then create a project:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
+</pre></div>
+</div>
 </section>
-<section id="espeak-ng-not-found">
-<h3>espeak-ng not found</h3>
-<p>If phonemization fails:</p>
-<ol class="arabic simple">
-<li><p>Ensure espeak-ng is installed (see above)</p></li>
-<li><p>On Linux, the library should be <code class="docutils literal notranslate"><span class="pre">libespeak-ng.so.1</span></code></p></li>
-<li><p>On macOS with Homebrew, it’s typically at <code class="docutils literal notranslate"><span class="pre">/opt/homebrew/lib/libespeak-ng.dylib</span></code></p></li>
-</ol>
+<section id="install-from-pypi">
+<h2>Install from PyPI</h2>
+<p>Install TTSForge with its declared Readio dependency floor:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
+<span class="c1"># Optional example: install Readio&#39;s Kokoro engine extra</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;readio[kokoro]&quot;</span>
+</pre></div>
+</div>
+<p>Then install a Readio engine extra if needed, using the package extra documented for
+that engine and platform. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> report the active
+environment.</p>
 </section>
-<section id="model-download-fails">
-<h3>Model download fails</h3>
-<p>If model download fails:</p>
-<ol class="arabic simple">
-<li><p>Check your internet connection</p></li>
-<li><p>Try downloading manually with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">download</span></code></p></li>
-<li><p>Check disk space (~330MB required)</p></li>
-<li><p>The model directory can be found with <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code></p></li>
-</ol>
-</section>
-<section id="requested-provider-unavailable">
-<h3>Requested provider unavailable</h3>
-<p>If an explicitly requested provider is unavailable:</p>
-<ol class="arabic simple">
-<li><p>Run <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">--show</span></code> and inspect the available, configured, and resolved
-providers.</p></li>
-<li><p>Confirm the installed ONNX Runtime build exposes the requested provider.</p></li>
-<li><p>Use <code class="docutils literal notranslate"><span class="pre">--provider</span> <span class="pre">auto</span></code> or another provider reported as available.</p></li>
-</ol>
-<p>For CUDA specifically, ensure <code class="docutils literal notranslate"><span class="pre">onnxruntime-gpu</span></code> is installed (not just <code class="docutils literal notranslate"><span class="pre">onnxruntime</span></code>),
-verify CUDA is installed, and check CUDA compatibility with ONNX Runtime.</p>
-</section>
+<section id="supported-python">
+<h2>Supported Python</h2>
+<p>TTSForge and Readio support Python 3.10 or newer. Engine runtime availability and
+audio-format encoders vary by platform; use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> for
+the active environment rather than assuming a provider or format is installed.</p>
 </section>
 </section>
 </div>

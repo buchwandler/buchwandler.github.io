@@ -1,0 +1,405 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "phonodist",
+  "entries": [
+    {
+      "url": "/tools/phonodist/COMPARISON/",
+      "title": "phonodist Structural IPA comparison",
+      "snippet": "phonodist exposes two deliberately separate comparison contracts:\n\n\n\nContract\n\nPurpose\n\nStress\n\nResult\n\n\n\n\n\nfeature-align/1\n\nPhonetic featur …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Structural IPA comparison",
+          "text": "phonodist exposes two deliberately separate comparison contracts:\n\n\n\nContract\n\nPurpose\n\nStress\n\nResult\n\n\n\n\n\nfeature-align/1\n\nPhonetic feature distance\n\nIgnored\n\nDistanceResult\n\n\n\nipa-compare/1\n\nStructural difference classification\n\nPreserved\n\nPronunciationComparison\n\n\n\n\n\nipa-compare/1 is a diagnostic classifier, not a calibrated stress-distance model. It\nexplains supplied IPA output. It does not decide which pronunciation is correct, rewrite\npronunciations, perform grapheme-to-phoneme conversion, or apply word-specific rules.",
+          "lower": "phonodist exposes two deliberately separate comparison contracts:\n\n\n\ncontract\n\npurpose\n\nstress\n\nresult\n\n\n\n\n\nfeature-align/1\n\nphonetic feature distance\n\nignored\n\ndistanceresult\n\n\n\nipa-compare/1\n\nstructural difference classification\n\npreserved\n\npronunciationcomparison\n\n\n\n\n\nipa-compare/1 is a diagnostic classifier, not a calibrated stress-distance model. it\nexplains supplied ipa output. it does not decide which pronunciation is correct, rewrite\npronunciations, perform grapheme-to-phoneme conversion, or apply word-specific rules."
+        },
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "from phonodist import compare_pronunciations, pronunciation_distance\n\ndistance = pronunciation_distance(\"wɪɹ\", \"wˈɪɹ\")\nassert distance.distance == 0.0\n\ncomparison = compare_pronunciations(\"wɪɹ\", \"wˈɪɹ\")\nassert comparison.classification == \"stress_only\"\nassert comparison.segment_equal\nassert not comparison.stress_equal\nassert comparison.target.stress[0].kind == \"primary\"\nassert comparison.target.stress[0].anchor == 1\n\n\n\n\nThe distance API answers whether the normalized segment sequences have feature distance.\nThe structural API additionally reports raw equality, canonical segment equality, stress\nequality, segment relation, stress operations, and the embedded segmental distance result.\nSee the PronunciationComparison, ComparisonPronunciation,\nStressEvent, and StressOperation API entries for…",
+          "lower": "from phonodist import compare_pronunciations, pronunciation_distance\n\ndistance = pronunciation_distance(\"wɪɹ\", \"wˈɪɹ\")\nassert distance.distance == 0.0\n\ncomparison = compare_pronunciations(\"wɪɹ\", \"wˈɪɹ\")\nassert comparison.classification == \"stress_only\"\nassert comparison.segment_equal\nassert not comparison.stress_equal\nassert comparison.target.stress[0].kind == \"primary\"\nassert comparison.target.stress[0].anchor == 1\n\n\n\n\nthe distance api answers whether the normalized segment sequences have feature distance.\nthe structural api additionally reports raw equality, canonical segment equality, stress\nequality, segment relation, stress operations, and the embedded segmental distance result.\nsee the pronunciationcomparison, comparisonpronunciation,\nstressevent, and stressoperation api entries for…"
+        },
+        {
+          "anchor": "",
+          "heading": "Structural fields",
+          "text": "ComparisonPronunciation.segments is a stress-free canonical segment tuple.\nComparisonPronunciation.stress contains StressEvent values. Each event has kind\nprimary or secondary and an anchor equal to the number of canonical segments before it.\nAnchors count segments, not Unicode codepoints.\n\nsegment_relation is one of:\n\n\nexact: canonical segment tuples are identical.\n\n\nequivalent: tuples differ, but feature-align/1 has zero cost under the selected profile.\n\n\ndifferent: the segmental distance is greater than zero.\n\n\n\nClassifications are deterministic:\n\n\n\nClassification\n\nMeaning\n\n\n\n\n\nexact\n\nRaw input strings are equal.\n\n\n\nnotation_only\n\nRaw strings differ, but canonical segments and stress are equal.\n\n\n\nstress_only\n\nCanonical segments are equal and stress differs.\n\n\n\nphonetic_equivalent\n\nStr…",
+          "lower": "comparisonpronunciation.segments is a stress-free canonical segment tuple.\ncomparisonpronunciation.stress contains stressevent values. each event has kind\nprimary or secondary and an anchor equal to the number of canonical segments before it.\nanchors count segments, not unicode codepoints.\n\nsegment_relation is one of:\n\n\nexact: canonical segment tuples are identical.\n\n\nequivalent: tuples differ, but feature-align/1 has zero cost under the selected profile.\n\n\ndifferent: the segmental distance is greater than zero.\n\n\n\nclassifications are deterministic:\n\n\n\nclassification\n\nmeaning\n\n\n\n\n\nexact\n\nraw input strings are equal.\n\n\n\nnotation_only\n\nraw strings differ, but canonical segments and stress are equal.\n\n\n\nstress_only\n\ncanonical segments are equal and stress differs.\n\n\n\nphonetic_equivalent\n\nstr…"
+        },
+        {
+          "anchor": "",
+          "heading": "CLI",
+          "text": "Use diff for structural diagnostics. A language profile is optional.\n\nphonodist diff 'wɪɹ' 'wˈɪɹ'\nphonodist diff --language de-DE 't͡s' 'ts'\nphonodist diff --explain 'ˌa' 'ˈa'\nphonodist diff --json 'wɪɹ' 'wˈɪɹ'\n\n\n\n\nThe existing phonodist compare de-DE SOURCE TARGET command remains the\nfeature-align/1 distance command. Ordinary structural differences do not cause diff\nto return a non-zero status. See the CLI reference for JSON and error behavior.",
+          "lower": "use diff for structural diagnostics. a language profile is optional.\n\nphonodist diff 'wɪɹ' 'wˈɪɹ'\nphonodist diff --language de-de 't͡s' 'ts'\nphonodist diff --explain 'ˌa' 'ˈa'\nphonodist diff --json 'wɪɹ' 'wˈɪɹ'\n\n\n\n\nthe existing phonodist compare de-de source target command remains the\nfeature-align/1 distance command. ordinary structural differences do not cause diff\nto return a non-zero status. see the cli reference for json and error behavior."
+        },
+        {
+          "anchor": "",
+          "heading": "Profile boundary",
+          "text": "Profiles can define notation aliases, segment equivalences, and segment distance behavior.\nStress extraction is universal IPA structure. Profiles do not define expected stress,\ncontraction rules, or pronunciation rewrites.",
+          "lower": "profiles can define notation aliases, segment equivalences, and segment distance behavior.\nstress extraction is universal ipa structure. profiles do not define expected stress,\ncontraction rules, or pronunciation rewrites."
+        },
+        {
+          "anchor": "",
+          "heading": "See also",
+          "text": "Python API\n\n\nMetric v1\n\n\nLanguage profiles",
+          "lower": "python api\n\n\nmetric v1\n\n\nlanguage profiles"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/METRIC/",
+      "title": "phonodist Metric v1",
+      "snippet": "Metric identifier:\n\nfeature-align/1\nNFC-normalize IPA.\n\n\nRemove Unicode format (Cf) characters.\n\n\nIgnore stress by default for broad pronunc …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Metric v1",
+          "text": "Metric identifier:\n\nfeature-align/1",
+          "lower": "metric identifier:\n\nfeature-align/1"
+        },
+        {
+          "anchor": "",
+          "heading": "Pipeline",
+          "text": "NFC-normalize IPA.\n\n\nRemove Unicode format (Cf) characters.\n\n\nIgnore stress by default for broad pronunciation comparison.\n\n\nNormalize tie-bar variants.\n\n\nApply sparse language-profile notation aliases.\n\n\nTokenize IPA into segment-like units.\n\n\nCompare single segments using PanPhon articulatory feature vectors.\n\n\nAlign sequences with dynamic programming.\n\n\nPermit sparse profile-defined N↔M equivalences.\n\n\nNormalize raw cost by the maximum segment count.",
+          "lower": "nfc-normalize ipa.\n\n\nremove unicode format (cf) characters.\n\n\nignore stress by default for broad pronunciation comparison.\n\n\nnormalize tie-bar variants.\n\n\napply sparse language-profile notation aliases.\n\n\ntokenize ipa into segment-like units.\n\n\ncompare single segments using panphon articulatory feature vectors.\n\n\nalign sequences with dynamic programming.\n\n\npermit sparse profile-defined n↔m equivalences.\n\n\nnormalize raw cost by the maximum segment count."
+        },
+        {
+          "anchor": "",
+          "heading": "Costs",
+          "text": "Default MVP costs:\n\nexact match             0\nfeature substitution    PanPhon-derived [0, 1]\ninsertion               1\ndeletion                1\nprofile equivalence     profile-defined [0, 1]\n\n\n\n\nThe normalized pronunciation score is bounded to [0, 1].",
+          "lower": "default mvp costs:\n\nexact match             0\nfeature substitution    panphon-derived [0, 1]\ninsertion               1\ndeletion                1\nprofile equivalence     profile-defined [0, 1]\n\n\n\n\nthe normalized pronunciation score is bounded to [0, 1]."
+        },
+        {
+          "anchor": "",
+          "heading": "Interpreting a result",
+          "text": "A DistanceResult exposes the normalized distance, unnormalized raw_cost,\nand denominator used for normalization. raw_cost is the alignment cost before\nnormalization; denominator is the larger of the source and target segment counts. The\nscore is raw_cost / denominator, with zero for two empty segment sequences, and is\nbounded to [0, 1].\n\nA zero score can result from canonicalization or a zero-cost profile equivalence, not just\nidentical input strings. Stress removal, notation normalization, and profile sequence\nequivalences can make different strings score zero. phonodist does not supply universal\ndecision thresholds; choose thresholds for the application and data being evaluated.\n\nfrom phonodist import pronunciation_distance\n\nassert pronunciation_distance(\"p\", \"p\").distance == 0.0",
+          "lower": "a distanceresult exposes the normalized distance, unnormalized raw_cost,\nand denominator used for normalization. raw_cost is the alignment cost before\nnormalization; denominator is the larger of the source and target segment counts. the\nscore is raw_cost / denominator, with zero for two empty segment sequences, and is\nbounded to [0, 1].\n\na zero score can result from canonicalization or a zero-cost profile equivalence, not just\nidentical input strings. stress removal, notation normalization, and profile sequence\nequivalences can make different strings score zero. phonodist does not supply universal\ndecision thresholds; choose thresholds for the application and data being evaluated.\n\nfrom phonodist import pronunciation_distance\n\nassert pronunciation_distance(\"p\", \"p\").distance == 0.0"
+        },
+        {
+          "anchor": "",
+          "heading": "Explanation mode",
+          "text": "Score-only and traceback modes are intended to produce the same score. The default\nscore-only mode leaves DistanceResult.operations empty; pass explain=True to add the\ndeterministic alignment operations without changing the distance.",
+          "lower": "score-only and traceback modes are intended to produce the same score. the default\nscore-only mode leaves distanceresult.operations empty; pass explain=true to add the\ndeterministic alignment operations without changing the distance."
+        },
+        {
+          "anchor": "",
+          "heading": "Important limitation",
+          "text": "This score is not a calibrated human perceptual-distance model. It is a deterministic\nphonetic-feature comparison intended for validation and ranking.",
+          "lower": "this score is not a calibrated human perceptual-distance model. it is a deterministic\nphonetic-feature comparison intended for validation and ranking."
+        },
+        {
+          "anchor": "",
+          "heading": "Diagnostic offsets",
+          "text": "ParseDiagnostic.offset is an index into the normalized working input after\nouter delimiters and surrounding whitespace have been removed. It is not necessarily an\nindex into ParsedPronunciation.original when those transformations changed the input.",
+          "lower": "parsediagnostic.offset is an index into the normalized working input after\nouter delimiters and surrounding whitespace have been removed. it is not necessarily an\nindex into parsedpronunciation.original when those transformations changed the input."
+        },
+        {
+          "anchor": "",
+          "heading": "Stress scope",
+          "text": "feature-align/1 intentionally ignores primary and secondary stress. Stress-aware or\nprosodic comparison is outside the v0.1 metric. The public pronunciation-distance API\nrejects retained-stress scoring instead of treating stress markers as ordinary PanPhon\nsegments. Use Structural IPA comparison for separate structural stress\ndiagnostics.",
+          "lower": "feature-align/1 intentionally ignores primary and secondary stress. stress-aware or\nprosodic comparison is outside the v0.1 metric. the public pronunciation-distance api\nrejects retained-stress scoring instead of treating stress markers as ordinary panphon\nsegments. use structural ipa comparison for separate structural stress\ndiagnostics."
+        },
+        {
+          "anchor": "",
+          "heading": "Structural comparison",
+          "text": "The separate structural contract is identified as ipa-compare/1. It preserves primary\nand secondary stress as StressEvent values anchored in the stress-free canonical segment\nsequence. Its result classifies exact, notation-only, stress-only, phonetic-equivalent, and\nsegmental differences, while embedding the feature-align/1 segmental result.\n\nipa-compare/1 is a structural diagnostic, not a calibrated stress-distance model. It does\nnot alter pronunciations or determine expected stress. See Structural IPA comparison.",
+          "lower": "the separate structural contract is identified as ipa-compare/1. it preserves primary\nand secondary stress as stressevent values anchored in the stress-free canonical segment\nsequence. its result classifies exact, notation-only, stress-only, phonetic-equivalent, and\nsegmental differences, while embedding the feature-align/1 segmental result.\n\nipa-compare/1 is a structural diagnostic, not a calibrated stress-distance model. it does\nnot alter pronunciations or determine expected stress. see structural ipa comparison."
+        },
+        {
+          "anchor": "",
+          "heading": "Provenance and versioning",
+          "text": "Every DistanceResult records the metric and metric version, selected profile and\nprofile version, and the PanPhon backend name, resolved version, and spe+ feature set.\nBump the metric version when alignment, normalization, costs, or feature formulas change.\nBump a profile version when language-specific rules or costs change. Package-only fixes\nthat preserve scores do not require a metric version bump.",
+          "lower": "every distanceresult records the metric and metric version, selected profile and\nprofile version, and the panphon backend name, resolved version, and spe+ feature set.\nbump the metric version when alignment, normalization, costs, or feature formulas change.\nbump a profile version when language-specific rules or costs change. package-only fixes\nthat preserve scores do not require a metric version bump."
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/PROFILES/",
+      "title": "phonodist Language profiles",
+      "snippet": "Profiles add sparse language-specific knowledge to the generic IPA feature\ndistance. A profile may specify an intended language/variety, a v …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Language profiles",
+          "text": "Profiles add sparse language-specific knowledge to the generic IPA feature\ndistance. A profile may specify an intended language/variety, a version, descriptive\ninventory metadata, notation aliases, low-cost sequence equivalences, and provenance\nsources.\n\nProfiles should not become:\n\n\npronunciation dictionaries\n\n\nG2P engines\n\n\nTTS-specific rewrite systems\n\n\nexhaustive N×N distance matrices",
+          "lower": "profiles add sparse language-specific knowledge to the generic ipa feature\ndistance. a profile may specify an intended language/variety, a version, descriptive\ninventory metadata, notation aliases, low-cost sequence equivalences, and provenance\nsources.\n\nprofiles should not become:\n\n\npronunciation dictionaries\n\n\ng2p engines\n\n\ntts-specific rewrite systems\n\n\nexhaustive n×n distance matrices"
+        },
+        {
+          "anchor": "",
+          "heading": "Bundled profiles",
+          "text": "The currently bundled profile set is:\n\nde-DE\n\n\n\n\nThe aliases de, de-DE, and de_de resolve to canonical profile ID de-DE.\nProfile IDs and aliases are normalized case-insensitively.\n\nfrom phonodist import available_profiles, get_profile\n\nassert available_profiles() == (\"de-DE\",)\nassert get_profile(\"de\").id == \"de-DE\"\nassert get_profile(\"de-DE\").id == \"de-DE\"\nassert get_profile(\"de_de\").id == \"de-DE\"",
+          "lower": "the currently bundled profile set is:\n\nde-de\n\n\n\n\nthe aliases de, de-de, and de_de resolve to canonical profile id de-de.\nprofile ids and aliases are normalized case-insensitively.\n\nfrom phonodist import available_profiles, get_profile\n\nassert available_profiles() == (\"de-de\",)\nassert get_profile(\"de\").id == \"de-de\"\nassert get_profile(\"de-de\").id == \"de-de\"\nassert get_profile(\"de_de\").id == \"de-de\""
+        },
+        {
+          "anchor": "",
+          "heading": "Using a profile",
+          "text": "from phonodist import available_profiles, get_profile, pronunciation_distance\n\nprint(available_profiles())\nprofile = get_profile(\"de_de\")\nresult = pronunciation_distance(\"n̩\", \"ən\", language=profile.id, explain=True)\n\n\n\n\nLanguageProfile.inventory is descriptive metadata and an audit aid, not an exhaustive\nrejection list. PanPhon remains authoritative for whether a segment has a feature\nrepresentation in metric v1. The inventory does not enumerate every length mark, narrow\nallophone, loanword segment, or external G2P realization. See the LanguageProfile\nAPI entry for profile fields.",
+          "lower": "from phonodist import available_profiles, get_profile, pronunciation_distance\n\nprint(available_profiles())\nprofile = get_profile(\"de_de\")\nresult = pronunciation_distance(\"n̩\", \"ən\", language=profile.id, explain=true)\n\n\n\n\nlanguageprofile.inventory is descriptive metadata and an audit aid, not an exhaustive\nrejection list. panphon remains authoritative for whether a segment has a feature\nrepresentation in metric v1. the inventory does not enumerate every length mark, narrow\nallophone, loanword segment, or external g2p realization. see the languageprofile\napi entry for profile fields."
+        },
+        {
+          "anchor": "",
+          "heading": "Alias",
+          "text": "Use an alias when two strings are alternate notation for the same intended segment in the\nprofile.\n\nde-DE: t͜s -> t͡s\n\n\n\n\nAliases are reserved for representation-level canonicalization. Generic normalization\nalready canonicalizes the supported tie-bar variant; untied affricates are modeled as\nsequence equivalences so their zero-cost alignment remains visible in explanations.",
+          "lower": "use an alias when two strings are alternate notation for the same intended segment in the\nprofile.\n\nde-de: t͜s -> t͡s\n\n\n\n\naliases are reserved for representation-level canonicalization. generic normalization\nalready canonicalizes the supported tie-bar variant; untied affricates are modeled as\nsequence equivalences so their zero-cost alignment remains visible in explanations."
+        },
+        {
+          "anchor": "",
+          "heading": "Sequence equivalence",
+          "text": "Use a sequence equivalence when common language-specific realization or phonological\nbehavior maps different segment sequences closely.\n\nde-DE: ə n ↔ n̩\n\n\n\n\nThese rules have low non-zero cost so the explanation remains visible.",
+          "lower": "use a sequence equivalence when common language-specific realization or phonological\nbehavior maps different segment sequences closely.\n\nde-de: ə n ↔ n̩\n\n\n\n\nthese rules have low non-zero cost so the explanation remains visible."
+        },
+        {
+          "anchor": "",
+          "heading": "Inventory semantics",
+          "text": "The bundled inventory is descriptive profile metadata and an audit aid. It is not an\nexhaustive rejection list in metric v1. PanPhon remains authoritative for whether an IPA\nsegment has a feature representation, because the profile does not enumerate every length\nmark, narrow allophone, loanword segment, or external G2P realization.",
+          "lower": "the bundled inventory is descriptive profile metadata and an audit aid. it is not an\nexhaustive rejection list in metric v1. panphon remains authoritative for whether an ipa\nsegment has a feature representation, because the profile does not enumerate every length\nmark, narrow allophone, loanword segment, or external g2p realization."
+        },
+        {
+          "anchor": "",
+          "heading": "Provenance",
+          "text": "Profile authors should cite linguistic/research sources, but should not copy\nincompatibly licensed linguistic databases into Apache-2.0 profile files.",
+          "lower": "profile authors should cite linguistic/research sources, but should not copy\nincompatibly licensed linguistic databases into apache-2.0 profile files."
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/RELEASING/",
+      "title": "phonodist Releasing phonodist",
+      "snippet": "The v* GitHub Actions workflow runs the supported Python test matrix, builds a\ndistribution set, validates the artifacts, and publishes thos …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Releasing phonodist",
+          "text": "The v* GitHub Actions workflow runs the supported Python test matrix, builds a\ndistribution set, validates the artifacts, and publishes those same artifacts to PyPI.",
+          "lower": "the v* github actions workflow runs the supported python test matrix, builds a\ndistribution set, validates the artifacts, and publishes those same artifacts to pypi."
+        },
+        {
+          "anchor": "",
+          "heading": "PyPI authentication",
+          "text": "The current publish job uses API-token authentication. The workflow passes the PYPI_API_TOKEN\nGitHub Actions secret to pypa/gh-action-pypi-publish as the __token__ username/password\ncredentials. Ensure that secret is available to the pypi environment and publish job.\n\nThe workflow also grants id-token: write, but the publishing action is explicitly given\nAPI-token credentials; the current setup is not tokenless GitHub Actions OIDC Trusted\nPublishing. Do not remove the token inputs until a PyPI Trusted Publisher is configured and\nthe publishing strategy is deliberately changed.",
+          "lower": "the current publish job uses api-token authentication. the workflow passes the pypi_api_token\ngithub actions secret to pypa/gh-action-pypi-publish as the __token__ username/password\ncredentials. ensure that secret is available to the pypi environment and publish job.\n\nthe workflow also grants id-token: write, but the publishing action is explicitly given\napi-token credentials; the current setup is not tokenless github actions oidc trusted\npublishing. do not remove the token inputs until a pypi trusted publisher is configured and\nthe publishing strategy is deliberately changed."
+        },
+        {
+          "anchor": "",
+          "heading": "Release rehearsal",
+          "text": "A TestPyPI rehearsal is recommended before changing the production publishing configuration\nor performing a high-risk release.",
+          "lower": "a testpypi rehearsal is recommended before changing the production publishing configuration\nor performing a high-risk release."
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/api/",
+      "title": "phonodist Python API",
+      "snippet": "The supported public API is exported from the top-level phonodist package. The package version is available as phonodist.__version__.\nComput …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "The supported public API is exported from the top-level phonodist package. The package version is available as phonodist.__version__.",
+          "lower": "the supported public api is exported from the top-level phonodist package. the package version is available as phonodist.__version__."
+        },
+        {
+          "anchor": "",
+          "heading": "pronunciation_distance",
+          "text": "Computes the normalized feature-align/1 distance.\n\n\n\nphonodist.pronunciation_distance(source, target, *, language=None, ignore_stress=None, explain=False)[source]\nCompute normalized feature-align/1 distance between IPA values.\n\n\nParameters:\n\nsource (str) – IPA pronunciations to compare.\n\n\ntarget (str) – IPA pronunciations to compare.\n\n\nlanguage (str or None) – Language-profile tag; None selects universal mode without\nlanguage-specific profile rules.\n\n\nignore_stress (bool or None) – Stress policy passed to IPA parsing. None uses the selected profile’s\ndefault, or ignores stress in universal mode. Explicit False is\nunsupported by feature-align/1 and raises NotImplementedError.\n\n\nexplain (bool) – If true, include the deterministic segment-alignment traceback in\nDistanceResult.operations. Th…",
+          "lower": "computes the normalized feature-align/1 distance.\n\n\n\nphonodist.pronunciation_distance(source, target, *, language=none, ignore_stress=none, explain=false)[source]\ncompute normalized feature-align/1 distance between ipa values.\n\n\nparameters:\n\nsource (str) – ipa pronunciations to compare.\n\n\ntarget (str) – ipa pronunciations to compare.\n\n\nlanguage (str or none) – language-profile tag; none selects universal mode without\nlanguage-specific profile rules.\n\n\nignore_stress (bool or none) – stress policy passed to ipa parsing. none uses the selected profile’s\ndefault, or ignores stress in universal mode. explicit false is\nunsupported by feature-align/1 and raises notimplementederror.\n\n\nexplain (bool) – if true, include the deterministic segment-alignment traceback in\ndistanceresult.operations. th…"
+        },
+        {
+          "anchor": "",
+          "heading": "compare_pronunciations",
+          "text": "Returns an ipa-compare/1 structural comparison with an embedded segmental distance result.\n\n\n\nphonodist.compare_pronunciations(source, target, *, language=None, explain=False)[source]\nClassify structural differences between two IPA pronunciations.\n\n\nParameters:\n\nsource (str) – IPA pronunciations to compare.\n\n\ntarget (str) – IPA pronunciations to compare.\n\n\nlanguage (str or None) – Optional language-profile tag for notation aliases and sequence\nequivalences; None uses universal rules.\n\n\nexplain (bool) – If true, include segment-alignment and stress-operation details.\n\n\n\n\nReturns:\nipa-compare/1 classification, canonical sides, anchored stress\nevents, and an embedded stress-free feature-align/1 result.\n\n\nReturn type:\nPronunciationComparison\n\n\nRaises:\n\nInvalidIPAError – If an input contains…",
+          "lower": "returns an ipa-compare/1 structural comparison with an embedded segmental distance result.\n\n\n\nphonodist.compare_pronunciations(source, target, *, language=none, explain=false)[source]\nclassify structural differences between two ipa pronunciations.\n\n\nparameters:\n\nsource (str) – ipa pronunciations to compare.\n\n\ntarget (str) – ipa pronunciations to compare.\n\n\nlanguage (str or none) – optional language-profile tag for notation aliases and sequence\nequivalences; none uses universal rules.\n\n\nexplain (bool) – if true, include segment-alignment and stress-operation details.\n\n\n\n\nreturns:\nipa-compare/1 classification, canonical sides, anchored stress\nevents, and an embedded stress-free feature-align/1 result.\n\n\nreturn type:\npronunciationcomparison\n\n\nraises:\n\ninvalidipaerror – if an input contains…"
+        },
+        {
+          "anchor": "",
+          "heading": "parse_ipa",
+          "text": "Normalizes and parses IPA into a public parsed-pronunciation result.\n\n\n\nphonodist.parse_ipa(value, *, language=None, ignore_stress=None)[source]\nNormalize IPA text and split it into IPA units.\n\n\nParameters:\n\nvalue (str) – IPA string to normalize. Matching outer /.../ or [...] delimiters\nand surrounding whitespace are stripped.\n\n\nlanguage (str or None) – Bundled language-profile tag used for profile defaults and notation aliases.\nNone selects universal parsing. Aliases include de, de-DE, and\nde_de for the German profile.\n\n\nignore_stress (bool or None) – Whether to remove primary/secondary stress markers. None uses the\nselected profile’s default; in universal mode it defaults to True.\n\n\n\n\nReturns:\nOriginal and normalized text, canonical segment units, and diagnostics.\n\n\nReturn type:\nParsed…",
+          "lower": "normalizes and parses ipa into a public parsed-pronunciation result.\n\n\n\nphonodist.parse_ipa(value, *, language=none, ignore_stress=none)[source]\nnormalize ipa text and split it into ipa units.\n\n\nparameters:\n\nvalue (str) – ipa string to normalize. matching outer /.../ or [...] delimiters\nand surrounding whitespace are stripped.\n\n\nlanguage (str or none) – bundled language-profile tag used for profile defaults and notation aliases.\nnone selects universal parsing. aliases include de, de-de, and\nde_de for the german profile.\n\n\nignore_stress (bool or none) – whether to remove primary/secondary stress markers. none uses the\nselected profile’s default; in universal mode it defaults to true.\n\n\n\n\nreturns:\noriginal and normalized text, canonical segment units, and diagnostics.\n\n\nreturn type:\nparsed…"
+        },
+        {
+          "anchor": "",
+          "heading": "segment_distance",
+          "text": "Returns a feature distance for two IPA segments.\n\n\n\nphonodist.segment_distance(left, right)[source]\nReturn normalized PanPhon feature distance for two IPA segments.\n\n\nParameters:\n\nleft (str) – IPA segments to compare. Each value must be recognized as exactly one\nsegment by the PanPhon backend.\n\n\nright (str) – IPA segments to compare. Each value must be recognized as exactly one\nsegment by the PanPhon backend.\n\n\n\n\nReturns:\nUnweighted feature difference normalized to [0, 1].\n\n\nReturn type:\nfloat\n\n\nRaises:\nUnknownSegmentError – If either input is not a supported single segment or their feature\n    vectors are incompatible.",
+          "lower": "returns a feature distance for two ipa segments.\n\n\n\nphonodist.segment_distance(left, right)[source]\nreturn normalized panphon feature distance for two ipa segments.\n\n\nparameters:\n\nleft (str) – ipa segments to compare. each value must be recognized as exactly one\nsegment by the panphon backend.\n\n\nright (str) – ipa segments to compare. each value must be recognized as exactly one\nsegment by the panphon backend.\n\n\n\n\nreturns:\nunweighted feature difference normalized to [0, 1].\n\n\nreturn type:\nfloat\n\n\nraises:\nunknownsegmenterror – if either input is not a supported single segment or their feature\n    vectors are incompatible."
+        },
+        {
+          "anchor": "",
+          "heading": "Profiles",
+          "text": "phonodist.available_profiles()[source]\nReturn identifiers of the profiles bundled in this package.\n\n\nReturns:\nCanonical IDs for profiles currently bundled with this package. The\ncurrent set is (\"de-DE\",); this is not dynamic profile discovery.\n\n\nReturn type:\ntuple of str\n\n\n\n\n\n\n\nphonodist.get_profile(language)[source]\nLoad a bundled language profile by ID or supported alias.\n\n\nParameters:\nlanguage (str) – Profile identifier. For the bundled German profile, de, de-DE,\nand de_de resolve to canonical ID de-DE (case-insensitively).\n\n\nReturns:\nImmutable profile metadata and sparse rules.\n\n\nReturn type:\nLanguageProfile\n\n\nRaises:\n\nUnknownLanguageProfileError – If no bundled profile matches the normalized identifier.\n\n\nProfileValidationError – If the profile data is invalid.\n\n\n\n\n\n\n\nProfile names…",
+          "lower": "phonodist.available_profiles()[source]\nreturn identifiers of the profiles bundled in this package.\n\n\nreturns:\ncanonical ids for profiles currently bundled with this package. the\ncurrent set is (\"de-de\",); this is not dynamic profile discovery.\n\n\nreturn type:\ntuple of str\n\n\n\n\n\n\n\nphonodist.get_profile(language)[source]\nload a bundled language profile by id or supported alias.\n\n\nparameters:\nlanguage (str) – profile identifier. for the bundled german profile, de, de-de,\nand de_de resolve to canonical id de-de (case-insensitively).\n\n\nreturns:\nimmutable profile metadata and sparse rules.\n\n\nreturn type:\nlanguageprofile\n\n\nraises:\n\nunknownlanguageprofileerror – if no bundled profile matches the normalized identifier.\n\n\nprofilevalidationerror – if the profile data is invalid.\n\n\n\n\n\n\n\nprofile names…"
+        },
+        {
+          "anchor": "",
+          "heading": "Distance results",
+          "text": "class phonodist.DistanceResult(distance, raw_cost, denominator, source, target, operations, metric, metric_version, language, profile_version, backend, backend_version, feature_set)[source]\nBases: object\n\nScore, optional traceback, and provenance for feature-align/1.\n\ndistance is normalized to [0, 1] as raw_cost / denominator;\nit is zero when both segment sequences are empty. A zero score can result\nfrom canonicalization or a zero-cost profile equivalence, not only identical\noriginal strings.\n\n\nParameters:\n\ndistance (float)\n\n\nraw_cost (float)\n\n\ndenominator (float)\n\n\nsource (ParsedPronunciation)\n\n\ntarget (ParsedPronunciation)\n\n\noperations (tuple[AlignmentOperation, ...])\n\n\nmetric (str)\n\n\nmetric_version (str)\n\n\nlanguage (str | None)\n\n\nprofile_version (str | None)\n\n\nbackend (str)\n\n\nbackend_…",
+          "lower": "class phonodist.distanceresult(distance, raw_cost, denominator, source, target, operations, metric, metric_version, language, profile_version, backend, backend_version, feature_set)[source]\nbases: object\n\nscore, optional traceback, and provenance for feature-align/1.\n\ndistance is normalized to [0, 1] as raw_cost / denominator;\nit is zero when both segment sequences are empty. a zero score can result\nfrom canonicalization or a zero-cost profile equivalence, not only identical\noriginal strings.\n\n\nparameters:\n\ndistance (float)\n\n\nraw_cost (float)\n\n\ndenominator (float)\n\n\nsource (parsedpronunciation)\n\n\ntarget (parsedpronunciation)\n\n\noperations (tuple[alignmentoperation, ...])\n\n\nmetric (str)\n\n\nmetric_version (str)\n\n\nlanguage (str | none)\n\n\nprofile_version (str | none)\n\n\nbackend (str)\n\n\nbackend_…"
+        },
+        {
+          "anchor": "",
+          "heading": "Structural comparison results",
+          "text": "class phonodist.PronunciationComparison(classification, source, target, raw_equal, canonical_equal, segment_equal, stress_equal, segment_relation, segmental, stress_operations, metric, metric_version)[source]\nBases: object\n\nStructural ipa-compare/1 result with an embedded segmental score.\n\n\nParameters:\n\nclassification (Literal['exact', 'notation_only', 'stress_only', 'phonetic_equivalent', 'stress_and_phonetic_equivalent', 'segmental', 'stress_and_segmental'])\n\n\nsource (ComparisonPronunciation)\n\n\ntarget (ComparisonPronunciation)\n\n\nraw_equal (bool)\n\n\ncanonical_equal (bool)\n\n\nsegment_equal (bool)\n\n\nstress_equal (bool)\n\n\nsegment_relation (Literal['exact', 'equivalent', 'different'])\n\n\nsegmental (DistanceResult)\n\n\nstress_operations (tuple[StressOperation, ...])\n\n\nmetric (str)\n\n\nmetric_versio…",
+          "lower": "class phonodist.pronunciationcomparison(classification, source, target, raw_equal, canonical_equal, segment_equal, stress_equal, segment_relation, segmental, stress_operations, metric, metric_version)[source]\nbases: object\n\nstructural ipa-compare/1 result with an embedded segmental score.\n\n\nparameters:\n\nclassification (literal['exact', 'notation_only', 'stress_only', 'phonetic_equivalent', 'stress_and_phonetic_equivalent', 'segmental', 'stress_and_segmental'])\n\n\nsource (comparisonpronunciation)\n\n\ntarget (comparisonpronunciation)\n\n\nraw_equal (bool)\n\n\ncanonical_equal (bool)\n\n\nsegment_equal (bool)\n\n\nstress_equal (bool)\n\n\nsegment_relation (literal['exact', 'equivalent', 'different'])\n\n\nsegmental (distanceresult)\n\n\nstress_operations (tuple[stressoperation, ...])\n\n\nmetric (str)\n\n\nmetric_versio…"
+        },
+        {
+          "anchor": "",
+          "heading": "Language profiles",
+          "text": "class phonodist.LanguageProfile(id, version, name, default_ignore_stress, inventory, aliases, sequence_equivalences, sources)[source]\nBases: object\n\nBundled language-specific defaults and sparse IPA comparison rules.\n\ninventory is descriptive metadata, not an exhaustive segment\nrejection list; metric v1 uses PanPhon as the authority for feature\navailability.\n\n\nParameters:\n\nid (str)\n\n\nversion (str)\n\n\nname (str)\n\n\ndefault_ignore_stress (bool)\n\n\ninventory (tuple[str, ...])\n\n\naliases (tuple[AliasRule, ...])\n\n\nsequence_equivalences (tuple[SequenceEquivalence, ...])\n\n\nsources (tuple[str, ...])\n\n\n\n\n\n\n\nid\nCanonical profile identifier.\n\n\nType:\nstr\n\n\n\n\n\n\n\nversion\nProfile data version, recorded in distance provenance.\n\n\nType:\nstr\n\n\n\n\n\n\n\nname\nHuman-readable profile name.\n\n\nType:\nstr\n\n\n\n\n\n\n\ndefaul…",
+          "lower": "class phonodist.languageprofile(id, version, name, default_ignore_stress, inventory, aliases, sequence_equivalences, sources)[source]\nbases: object\n\nbundled language-specific defaults and sparse ipa comparison rules.\n\ninventory is descriptive metadata, not an exhaustive segment\nrejection list; metric v1 uses panphon as the authority for feature\navailability.\n\n\nparameters:\n\nid (str)\n\n\nversion (str)\n\n\nname (str)\n\n\ndefault_ignore_stress (bool)\n\n\ninventory (tuple[str, ...])\n\n\naliases (tuple[aliasrule, ...])\n\n\nsequence_equivalences (tuple[sequenceequivalence, ...])\n\n\nsources (tuple[str, ...])\n\n\n\n\n\n\n\nid\ncanonical profile identifier.\n\n\ntype:\nstr\n\n\n\n\n\n\n\nversion\nprofile data version, recorded in distance provenance.\n\n\ntype:\nstr\n\n\n\n\n\n\n\nname\nhuman-readable profile name.\n\n\ntype:\nstr\n\n\n\n\n\n\n\ndefaul…"
+        },
+        {
+          "anchor": "",
+          "heading": "Exceptions",
+          "text": "All package domain exceptions inherit from PhonodistError.\n\n\n\nexception phonodist.PhonodistError[source]\nBases: Exception\n\nBase class for phonodist errors.\n\n\n\n\n\nexception phonodist.InvalidIPAError[source]\nBases: PhonodistError\n\nRaised when an IPA value cannot be normalized or parsed.\n\n\n\n\n\nexception phonodist.UnknownSegmentError[source]\nBases: PhonodistError\n\nRaised when the feature backend cannot represent an IPA segment.\n\n\n\n\n\nexception phonodist.UnknownLanguageProfileError[source]\nBases: PhonodistError\n\nRaised when a requested language profile is unavailable.\n\n\n\n\n\nexception phonodist.ProfileValidationError[source]\nBases: PhonodistError\n\nRaised when bundled or supplied profile data is invalid.\n\n\n\nInvalidIPAError reports malformed or invalid input. UnknownSegmentError reports IPA segm…",
+          "lower": "all package domain exceptions inherit from phonodisterror.\n\n\n\nexception phonodist.phonodisterror[source]\nbases: exception\n\nbase class for phonodist errors.\n\n\n\n\n\nexception phonodist.invalidipaerror[source]\nbases: phonodisterror\n\nraised when an ipa value cannot be normalized or parsed.\n\n\n\n\n\nexception phonodist.unknownsegmenterror[source]\nbases: phonodisterror\n\nraised when the feature backend cannot represent an ipa segment.\n\n\n\n\n\nexception phonodist.unknownlanguageprofileerror[source]\nbases: phonodisterror\n\nraised when a requested language profile is unavailable.\n\n\n\n\n\nexception phonodist.profilevalidationerror[source]\nbases: phonodisterror\n\nraised when bundled or supplied profile data is invalid.\n\n\n\ninvalidipaerror reports malformed or invalid input. unknownsegmenterror reports ipa segm…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/changelog/",
+      "title": "phonodist Changelog",
+      "snippet": "Added structural IPA comparison diagnostics with stress-aware classifications and a profile-aware diff CLI\nAdded the feature-align/1 IPA pro …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added structural IPA comparison diagnostics with stress-aware classifications and a profile-aware diff CLI",
+          "lower": "added structural ipa comparison diagnostics with stress-aware classifications and a profile-aware diff cli"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added the feature-align/1 IPA pronunciation distance API and CLI\n\n\nAdded PanPhon-backed articulatory feature comparison with explicit metric and backend provenance\n\n\nAdded the bundled Standard German de-DE profile and language-specific sequence equivalences",
+          "lower": "added the feature-align/1 ipa pronunciation distance api and cli\n\n\nadded panphon-backed articulatory feature comparison with explicit metric and backend provenance\n\n\nadded the bundled standard german de-de profile and language-specific sequence equivalences"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed alignment output to support score-only and explainable deterministic operation traces",
+          "lower": "changed alignment output to support score-only and explainable deterministic operation traces"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed IPA normalization, unsupported-segment validation, and release provenance",
+          "lower": "fixed ipa normalization, unsupported-segment validation, and release provenance"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented metric limitations, profile semantics, and release publishing requirements",
+          "lower": "documented metric limitations, profile semantics, and release publishing requirements"
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/cli/",
+      "title": "phonodist Command-line interface",
+      "snippet": "phonodist --version\nphonodist compare LANGUAGE SOURCE TARGET [--explain] [--json]\nphonodist diff SOURCE TARGET [--language LANGUAGE] [--expl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Synopsis",
+          "text": "phonodist --version\nphonodist compare LANGUAGE SOURCE TARGET [--explain] [--json]\nphonodist diff SOURCE TARGET [--language LANGUAGE] [--explain] [--json]\n\n\n\n\nThe CLI accepts IPA strings as positional arguments. Quote them when your shell might interpret punctuation or whitespace.",
+          "lower": "phonodist --version\nphonodist compare language source target [--explain] [--json]\nphonodist diff source target [--language language] [--explain] [--json]\n\n\n\n\nthe cli accepts ipa strings as positional arguments. quote them when your shell might interpret punctuation or whitespace."
+        },
+        {
+          "anchor": "",
+          "heading": "phonodist compare",
+          "text": "compare requires a language/profile tag as its first positional argument and uses the feature-align/1 metric. Stress is ignored. Add --explain to include alignment operations.\n\nphonodist compare de-DE 'n̩' 'ən' --explain\n\n\n\n\nUse --json to emit the serialized DistanceResult dataclass structure instead of the human-readable summary.",
+          "lower": "compare requires a language/profile tag as its first positional argument and uses the feature-align/1 metric. stress is ignored. add --explain to include alignment operations.\n\nphonodist compare de-de 'n̩' 'ən' --explain\n\n\n\n\nuse --json to emit the serialized distanceresult dataclass structure instead of the human-readable summary."
+        },
+        {
+          "anchor": "",
+          "heading": "phonodist diff",
+          "text": "diff uses ipa-compare/1 to report structural differences. A language profile is optional with --language; stress is preserved and compared structurally. Ordinary pronunciation differences are diagnostic results and do not make the command fail.\n\nphonodist diff 'wɪɹ' 'wˈɪɹ'\nphonodist diff --language de-DE 't͡s' 'ts'\nphonodist diff --explain 'ˌa' 'ˈa'\nphonodist diff --json 'p' 'b'\n\n\n\n\n--explain adds stress and segment alignment operations. --json emits the serialized PronunciationComparison structure, including its embedded segmental result.",
+          "lower": "diff uses ipa-compare/1 to report structural differences. a language profile is optional with --language; stress is preserved and compared structurally. ordinary pronunciation differences are diagnostic results and do not make the command fail.\n\nphonodist diff 'wɪɹ' 'wˈɪɹ'\nphonodist diff --language de-de 't͡s' 'ts'\nphonodist diff --explain 'ˌa' 'ˈa'\nphonodist diff --json 'p' 'b'\n\n\n\n\n--explain adds stress and segment alignment operations. --json emits the serialized pronunciationcomparison structure, including its embedded segmental result."
+        },
+        {
+          "anchor": "",
+          "heading": "JSON output",
+          "text": "Both commands serialize their result dataclasses as JSON when --json is supplied. The structure contains nested result and pronunciation data; use the Python API when you need typed objects rather than serialized output.",
+          "lower": "both commands serialize their result dataclasses as json when --json is supplied. the structure contains nested result and pronunciation data; use the python api when you need typed objects rather than serialized output."
+        },
+        {
+          "anchor": "",
+          "heading": "Exit status and errors",
+          "text": "Package/domain errors are printed as concise phonodist: ... messages and exit with status 2 through argparse. This includes unsupported IPA segments, unknown profiles, and requests for the unimplemented stress-sensitive distance mode. A normal diff classification is not an error and exits successfully. Diagnostic text formatting is not a stable machine-readable interface; use --json for structured output.",
+          "lower": "package/domain errors are printed as concise phonodist: ... messages and exit with status 2 through argparse. this includes unsupported ipa segments, unknown profiles, and requests for the unimplemented stress-sensitive distance mode. a normal diff classification is not an error and exits successfully. diagnostic text formatting is not a stable machine-readable interface; use --json for structured output."
+        },
+        {
+          "anchor": "",
+          "heading": "Version",
+          "text": "phonodist --version\n\n\n\n\nThis prints the installed package version.",
+          "lower": "phonodist --version\n\n\n\n\nthis prints the installed package version."
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/getting-started/",
+      "title": "phonodist Getting started",
+      "snippet": "Install the published package with Python’s package installer:\n\npython -m pip install phonodist\n\n\n\n\nFor repository development, install the …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "Install the published package with Python’s package installer:\n\npython -m pip install phonodist\n\n\n\n\nFor repository development, install the development tools and Sphinx dependencies separately:\n\npython -m pip install -e \".[dev]\"\npython -m pip install -r docs/requirements.txt\n\n\n\n\nNormal package users do not need the documentation dependencies.",
+          "lower": "install the published package with python’s package installer:\n\npython -m pip install phonodist\n\n\n\n\nfor repository development, install the development tools and sphinx dependencies separately:\n\npython -m pip install -e \".[dev]\"\npython -m pip install -r docs/requirements.txt\n\n\n\n\nnormal package users do not need the documentation dependencies."
+        },
+        {
+          "anchor": "",
+          "heading": "First distance",
+          "text": "from phonodist import pronunciation_distance\n\nresult = pronunciation_distance(\"p\", \"b\")\nprint(result.distance)\n\n\n\n\nThe distance is normalized to [0, 1]. A value of 0 means equivalence under the active normalization and profile rules, not necessarily identical input strings. Alignment operations are empty unless explain=True is requested.",
+          "lower": "from phonodist import pronunciation_distance\n\nresult = pronunciation_distance(\"p\", \"b\")\nprint(result.distance)\n\n\n\n\nthe distance is normalized to [0, 1]. a value of 0 means equivalence under the active normalization and profile rules, not necessarily identical input strings. alignment operations are empty unless explain=true is requested."
+        },
+        {
+          "anchor": "",
+          "heading": "Inspect the alignment",
+          "text": "result = pronunciation_distance(\"n̩\", \"ən\", language=\"de-DE\", explain=True)\nfor operation in result.operations:\n    print(operation.kind, operation.source, operation.target, operation.cost)\n\n\n\n\nA language profile can define sequence equivalences; see Language profiles. Do not treat an exact non-zero feature score as a calibrated measure of human perceptual similarity. See Metric v1 for the score contract and its limitations.",
+          "lower": "result = pronunciation_distance(\"n̩\", \"ən\", language=\"de-de\", explain=true)\nfor operation in result.operations:\n    print(operation.kind, operation.source, operation.target, operation.cost)\n\n\n\n\na language profile can define sequence equivalences; see language profiles. do not treat an exact non-zero feature score as a calibrated measure of human perceptual similarity. see metric v1 for the score contract and its limitations."
+        },
+        {
+          "anchor": "",
+          "heading": "Structural comparison",
+          "text": "Use the separate structural API when stress and notation differences should remain visible:\n\nfrom phonodist import compare_pronunciations\n\ncomparison = compare_pronunciations(\"wɪɹ\", \"wˈɪɹ\")\nassert comparison.classification == \"stress_only\"\n\n\n\n\nipa-compare/1 preserves stress as structure and includes a segmental feature-align/1 result. It does not determine which pronunciation is correct. See Structural IPA comparison.",
+          "lower": "use the separate structural api when stress and notation differences should remain visible:\n\nfrom phonodist import compare_pronunciations\n\ncomparison = compare_pronunciations(\"wɪɹ\", \"wˈɪɹ\")\nassert comparison.classification == \"stress_only\"\n\n\n\n\nipa-compare/1 preserves stress as structure and includes a segmental feature-align/1 result. it does not determine which pronunciation is correct. see structural ipa comparison."
+        },
+        {
+          "anchor": "",
+          "heading": "Universal mode and language profiles",
+          "text": "pronunciation_distance uses universal feature mode when language=None; this applies general IPA normalization without language-specific profile rules. Pass a language/profile tag such as \"de-DE\" to use a bundled profile. The current bundled profile set and accepted aliases are described in Language profiles.",
+          "lower": "pronunciation_distance uses universal feature mode when language=none; this applies general ipa normalization without language-specific profile rules. pass a language/profile tag such as \"de-de\" to use a bundled profile. the current bundled profile set and accepted aliases are described in language profiles."
+        },
+        {
+          "anchor": "",
+          "heading": "Error handling",
+          "text": "Catch the package’s public exception base class for domain errors:\n\nfrom phonodist import PhonodistError, pronunciation_distance\n\ntry:\n    pronunciation_distance(\"#\", \"#\")\nexcept PhonodistError as exc:\n    print(exc)\n\n\n\n\nMore specific errors, including invalid IPA, unsupported segments, and unknown profiles, are listed in the Python API reference.",
+          "lower": "catch the package’s public exception base class for domain errors:\n\nfrom phonodist import phonodisterror, pronunciation_distance\n\ntry:\n    pronunciation_distance(\"#\", \"#\")\nexcept phonodisterror as exc:\n    print(exc)\n\n\n\n\nmore specific errors, including invalid ipa, unsupported segments, and unknown profiles, are listed in the python api reference."
+        },
+        {
+          "anchor": "",
+          "heading": "Where to go next",
+          "text": "Python API for function signatures, result types, and exceptions.\n\n\nCommand-line interface for compare, diff, and JSON output.\n\n\nMetric v1 and Structural IPA comparison for result interpretation.",
+          "lower": "python api for function signatures, result types, and exceptions.\n\n\ncommand-line interface for compare, diff, and json output.\n\n\nmetric v1 and structural ipa comparison for result interpretation."
+        }
+      ]
+    },
+    {
+      "url": "/tools/phonodist/",
+      "title": "phonodist",
+      "snippet": "Language-aware, explainable distance metrics for IPA pronunciations.\n\nphonodist compares IPA with IPA. It does not perform grapheme-to-phone …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "phonodist",
+          "text": "Language-aware, explainable distance metrics for IPA pronunciations.\n\nphonodist compares IPA with IPA. It does not perform grapheme-to-phoneme conversion or synthesize audio.\n\nThe package provides two related contracts:\n\n\n\nContract\n\nPurpose\n\nStress\n\n\n\n\n\nfeature-align/1\n\nNormalized phonetic feature distance\n\nIgnored\n\n\n\nipa-compare/1\n\nStructural difference classification\n\nPreserved",
+          "lower": "language-aware, explainable distance metrics for ipa pronunciations.\n\nphonodist compares ipa with ipa. it does not perform grapheme-to-phoneme conversion or synthesize audio.\n\nthe package provides two related contracts:\n\n\n\ncontract\n\npurpose\n\nstress\n\n\n\n\n\nfeature-align/1\n\nnormalized phonetic feature distance\n\nignored\n\n\n\nipa-compare/1\n\nstructural difference classification\n\npreserved"
+        },
+        {
+          "anchor": "",
+          "heading": "Start here",
+          "text": "Getting started — install the package and compare IPA in Python.\n\n\nCommand-line interface — use phonodist compare and phonodist diff.\n\n\nPython API — public functions, results, profiles, and errors.\n\n\nMetric v1 — understand scoring and limitations.\n\n\nStructural IPA comparison — understand comparison classifications.\n\n\nLanguage profiles — understand profile-specific rules.",
+          "lower": "getting started — install the package and compare ipa in python.\n\n\ncommand-line interface — use phonodist compare and phonodist diff.\n\n\npython api — public functions, results, profiles, and errors.\n\n\nmetric v1 — understand scoring and limitations.\n\n\nstructural ipa comparison — understand comparison classifications.\n\n\nlanguage profiles — understand profile-specific rules."
+        }
+      ]
+    }
+  ]
+}

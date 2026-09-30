@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge Testing and Coverage"
+title: "ttsforge Testing and release checks"
 permalink: /tools/ttsforge/testing/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -540,60 +540,39 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="testing-and-coverage">
-<h1>Testing and Coverage</h1>
-<p>Run the normal test suite with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
+<section id="testing-and-release-checks">
+<h1>Testing and release checks</h1>
+<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>. The public API contract test checks
+that the installed Readio exposes persisted project settings, synthesis requests and
+resolutions, catalog types, and services required by the frontend. For development
+against a Readio checkout, install both projects editable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>../readio<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
 </div>
-<p>Paragraph conversion has focused contract coverage:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_pykokoro_unit_contract.py<span class="w"> </span>tests/test_conversion_unit_cli.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>tests/test_paragraph_filenames.py<span class="w"> </span>tests/test_paragraph_state.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>tests/test_paragraph_rendering.py<span class="w"> </span>tests/test_paragraph_audio_parity.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>tests/test_paragraph_merge.py<span class="w"> </span>tests/test_paragraph_manifest.py
+<p>Run the suite and lint:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-q
+ruff<span class="w"> </span>check<span class="w"> </span>ttsforge<span class="w"> </span>tests
 </pre></div>
 </div>
-<p>These tests cover public PyKokoro streaming, schema-6 seed persistence and explicit
-schema-5 paragraph rejection, atomic output and ownership, unit resume boundaries,
-filename ordering, timing parity, no-gap merging, strict CLI mismatch handling, and
-merge-only recovery. The main regression test models a changed stochastic descriptor
-hash and verifies that a saved prefix is not rendered again.</p>
-<section id="minimum-dependency-contract">
-<h2>Minimum dependency contract</h2>
-<p>Release CI separately installs the exact lower-bound generation stack:</p>
-<ul class="simple">
-<li><p>PyKokoro 0.9.4</p></li>
-<li><p>kokorog2p 0.9.5</p></li>
-<li><p>phrasplit 0.3.7</p></li>
-<li><p>SSMD 0.8.7</p></li>
-</ul>
-<p>The minimum-dependency job proves that the package’s declared lower bounds install and
-that representative written-to-spoken source reaches the upstream preparation/G2P
-boundary. The normal OS/Python matrix continues to test currently resolved compatible
-dependencies.</p>
-<p>The focused local equivalent is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest<span class="w"> </span>-q<span class="w"> </span>tests/test_packaging.py<span class="w"> </span>tests/test_dependency_contract.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>tests/test_pykokoro_unit_contract.py<span class="w"> </span>tests/test_name_extractor.py<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>tests/test_resume_identity.py<span class="w"> </span>tests/test_resume_integrity.py
-</pre></div>
-</div>
-<p>The maintained coverage policy is staged so high-risk code has explicit gates while the
-repository-wide target can be raised as the large CLI modules are decomposed:</p>
-<ul class="simple">
-<li><p>repository branch coverage: 55% minimum;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge/audio_player.py</span></code>: 80% minimum;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">ttsforge/audio_merge.py</span></code>: 75% minimum;</p></li>
-<li><p>changed lines: 85% minimum;</p></li>
-<li><p>changed resume/state lines are expected to meet the same 85% changed-line gate, which
-is stricter than the initial 80% target.</p></li>
-</ul>
-<p>The complete policy is wired into tox:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>tox
-</pre></div>
-</div>
-<p>The final changed-line check compares <code class="docutils literal notranslate"><span class="pre">coverage.xml</span></code> with <code class="docutils literal notranslate"><span class="pre">origin/main</span></code> using
-<code class="docutils literal notranslate"><span class="pre">diff-cover</span></code>. A local checkout without that remote can run the first three coverage
-commands directly and use an appropriate local base branch for the final comparison.</p>
+<p>The tests cover the public <code class="docutils literal notranslate"><span class="pre">readio.api</span></code> contract, persisted settings mapping and
+requestless builds, guided catalog selection and capability gates, project reuse and
+legacy-workspace handling, saved-setup retry and reconfiguration, chapter selection,
+preflight and interaction modes, scoped progress, CLI behavior, package metadata, and CI
+configuration. Use <code class="docutils literal notranslate"><span class="pre">tests/test_readio_api_contract.py</span></code> to diagnose an incompatible
+Readio installation.</p>
+<section id="publishing-checks">
+<h2>Publishing checks</h2>
+<p>Before a TTSForge package release:</p>
+<ol class="arabic simple">
+<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.4</span></code>, and the newest supported Readio
+release.</p></li>
+<li><p>Install TTSForge into a clean environment, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">check</span></code>, and smoke-test
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code>.</p></li>
+<li><p>Exercise an audiobook workflow with a supported engine, including project reuse and
+output export.</p></li>
+</ol>
+<p>The local Readio checkout is useful for development but does not replace
+clean-environment installation and packaging checks.</p>
 </section>
 </section>
 </div>

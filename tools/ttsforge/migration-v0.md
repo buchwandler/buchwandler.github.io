@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "TTSForge 0.4 migration guide"
+title: "ttsforge Historical TTSForge 0.4 migration notes"
 permalink: /tools/ttsforge/migration-v0.4/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -540,61 +540,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ttsforge-0-4-migration-guide">
-<h1>TTSForge 0.4 migration guide</h1>
-<p>TTSForge 0.4 is a breaking release. Existing v0.3 command lines, configuration files,
-and resumable workspaces are not treated as a compatible public contract.</p>
-<section id="dependencies-and-providers">
-<h2>Dependencies and providers</h2>
-<p>The core package is provider-neutral. Install exactly one provider extra, such as
-<code class="docutils literal notranslate"><span class="pre">ttsforge[cpu]</span></code> or <code class="docutils literal notranslate"><span class="pre">ttsforge[gpu]</span></code>, in a fresh environment. Do not combine provider
-extras. The supported backend floors are PyKokoro <code class="docutils literal notranslate"><span class="pre">&gt;=0.9.4,&lt;0.10</span></code>, kokorog2p
-<code class="docutils literal notranslate"><span class="pre">&gt;=0.9.5,&lt;1.0</span></code>, SSMD <code class="docutils literal notranslate"><span class="pre">&gt;=0.8.7,&lt;0.9</span></code>, and phrasplit <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.7,&lt;0.4</span></code>.</p>
-</section>
-<section id="configuration">
-<h2>Configuration</h2>
-<p>Configuration is migrated to schema 2 with nested sections. Use commands such as:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ttsforge config set runtime.provider cpu
-ttsforge config set tts.language en-us
-ttsforge config set model.quality q8
-</pre></div>
-</div>
-<p>Legacy one-letter language values are migrated to canonical BCP-47 values. New
-configuration should use values such as <code class="docutils literal notranslate"><span class="pre">en-us</span></code>, <code class="docutils literal notranslate"><span class="pre">en-gb</span></code>, <code class="docutils literal notranslate"><span class="pre">de</span></code>, <code class="docutils literal notranslate"><span class="pre">es</span></code>, <code class="docutils literal notranslate"><span class="pre">fr-fr</span></code>, <code class="docutils literal notranslate"><span class="pre">it</span></code>,
-<code class="docutils literal notranslate"><span class="pre">ja</span></code>, <code class="docutils literal notranslate"><span class="pre">pt-br</span></code>, and <code class="docutils literal notranslate"><span class="pre">zh</span></code>. Legacy GPU, mixed-language, and flat provider settings are not
-part of the v0.4 public API.</p>
-</section>
-<section id="commands-and-options">
-<h2>Commands and options</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code> to inspect package versions, providers, model assets,
-configuration, and cache paths. Use <code class="docutils literal notranslate"><span class="pre">convert</span> <span class="pre">--model</span></code>, <code class="docutils literal notranslate"><span class="pre">--quality</span></code>, and <code class="docutils literal notranslate"><span class="pre">--source</span></code> for
-explicit model selection. The old GPU switches, one-letter language options,
-short-sentence command, and SSMD emphasis switches have been removed.</p>
-<p>Automatic mixed-language detection is removed. Mark language changes explicitly in SSMD:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Bonjour le monde]{lang=&quot;fr-fr&quot;}
-</pre></div>
-</div>
-</section>
-<section id="voices-and-models">
-<h2>Voices and models</h2>
-<p>Voice and model lists come from PyKokoro metadata discovery. Do not rely on the removed
-static TTSForge voice inventory or voice-name prefixes. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">voices</span></code> reports the
-discovered model, language, and default selection.</p>
-</section>
-<section id="resume-and-audio-state">
-<h2>Resume and audio state</h2>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> when a saved workspace is rejected. v0.4 state records the effective
-conversion plan, prepared-unit hashes, and runtime sample rates. Runtime package
-diagnostics are kept separate from semantic resume identity. Existing artifacts are
-preserved when migration cannot verify them, but they are not reused unsafely.</p>
-</section>
-<section id="compatibility-statement">
-<h2>Compatibility statement</h2>
-<p>There is no compatibility promise for removed v0.3 CLI options, flat configuration keys,
-legacy language codes in new API calls, static voice inventories, mixed-language
-auto-detection, or v0.3 renderer state. Recreate configuration with
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">config</span> <span class="pre">show</span></code> and start an explicit fresh conversion when required.</p>
-</section>
+<section id="historical-ttsforge-0-4-migration-notes">
+<h1>Historical TTSForge 0.4 migration notes</h1>
+<p>This page described an earlier migration of the TTSForge-owned synthesis pipeline and is
+no longer a guide to the current product. TTSForge is now an audiobook-focused frontend
+to Readio’s public API.</p>
+<p>For the current migration, compatibility status, removed features, and legacy-workspace
+handling, see <a class="reference internal" href="../migration-readio/"><span class="std std-doc">Migrating to the Readio-backed TTSForge</span></a>. For
+installation, use <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a>.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

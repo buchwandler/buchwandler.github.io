@@ -1,11 +1,11 @@
 ---
 layout: tool-doc
-title: "ttsforge Quick start"
-permalink: /tools/ttsforge/main/quickstart/
-nav_tool: ttsforge-main
+title: "ttsforge Projects and outputs"
+permalink: /tools/ttsforge/projects/
+nav_tool: ttsforge
 docs_project: "ttsforge"
-docs_variant: "main"
-docs_ref: "main"
+docs_variant: "release"
+docs_ref: "v0.4.1"
 docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
@@ -540,109 +540,111 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="quick-start">
-<h1>Quick start</h1>
-<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, then install a supported Readio engine extra if
-you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform and
-development instructions.</p>
-<section id="inspect-and-convert">
-<h2>Inspect and convert</h2>
-<p>List the chapters Readio detects in an EPUB:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
-</pre></div>
-</div>
-<p>Create or reuse its audiobook project and export the default M4B:</p>
+<section id="projects-and-outputs">
+<h1>Projects and outputs</h1>
+<p>TTSForge’s EPUB workflow is a thin frontend to Readio’s persistent project services.
+Readio owns project state, planning, synthesis, composition, reusable work,
+invalidation, and output export. TTSForge does not maintain a second conversion
+workspace or duplicate Readio’s project schema.</p>
+<section id="default-project-and-reuse">
+<h2>Default project and reuse</h2>
+<p>For <code class="docutils literal notranslate"><span class="pre">novel.epub</span></code>, TTSForge uses a sibling project directory named <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> unless
+<code class="docutils literal notranslate"><span class="pre">--project</span></code> supplies another path:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
-</pre></div>
-</div>
-<p>The default project is <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> beside the source EPUB, and the default output is
-<code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Re-running the command uses the existing project’s saved chapter scope and
-reusable work. In an interactive terminal, TTSForge then guides you through synthesis
-choices and displays the resolved Readio settings before confirmation.</p>
-</section>
-<section id="select-chapters">
-<h2>Select chapters</h2>
-<p>For a new project, an interactive terminal automatically displays the detected chapters
-and prompts for a selection; no extra flag is required. Use <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> to select
-explicitly and skip that prompt:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-5
-</pre></div>
-</div>
-<p>The selected scope is saved with the project. Reusing it does not ask for chapters
-again, and a conflicting <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value is rejected rather than silently ignored.
-Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> or <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to create another project with a different selection.
-<code class="docutils literal notranslate"><span class="pre">--interactive-chapters</span></code> is deprecated; normal TTY behavior is automatic.</p>
-</section>
-<section id="guided-synthesis-setup">
-<h2>Guided synthesis setup</h2>
-<p>On a TTY, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">novel.epub</span></code> continues after chapter selection with a guided
-setup for omitted synthesis values. Readio catalogs are shown for available models and
-voices; choose a row number or enter its exact identifier. The prompts include language,
-runnable engine selection when needed, model and voice, speed and supported quality,
-spaCy and short-sentence policies, lexicon/G2P choices, capability-gated voice level,
-pause handling, and sentence-versus-paragraph units. The final setup displays Readio’s
-effective resolution before confirmation. The resolved setup is saved through Readio’s
-public project-settings API before confirmation or build, so a failed build can be
-retried and later runs do not repeat the same questions. Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit
-saved choices with their saved values as defaults. Explicit CLI options pin and update
-only their corresponding settings.</p>
-<p>Use explicit options to pin settings and skip matching questions, for example:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--language<span class="w"> </span>en-us<span class="w"> </span>--model<span class="w"> </span>MODEL_ID<span class="w"> </span>--voice<span class="w"> </span>VOICE_ID<span class="w"> </span>--unit<span class="w"> </span>paragraph
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips only the final confirmation. <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and <code class="docutils literal notranslate"><span class="pre">--json</span></code> disable
-prompts and reuse settings already saved on the project. For a new or unconfigured
-project, Readio resolves unspecified values from its defaults; CLI options override
-them.</p>
-<p>When stdin, stdout, and stderr are not all terminals, or when <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> is
-supplied, no chapter or synthesis setup prompts appear. A new project selects all
-chapters unless <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> was provided. <code class="docutils literal notranslate"><span class="pre">--json</span></code> also disables human-readable
-progress. TTY build progress updates live by chapter. See
-<a class="reference internal" href="../projects/"><span class="std std-doc">Projects and outputs</span></a> for project scope and reuse details.</p>
-</section>
-<section id="preview-plan-and-status">
-<h2>Preview, plan, and status</h2>
-<p>A preview uses the same Readio project pipeline as a full conversion:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--selection<span class="w"> </span>first:3
-ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
 ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">preview</span></code> creates or reuses the default project if necessary. <code class="docutils literal notranslate"><span class="pre">status</span></code> reports Readio’s
-current stage state and next actions.</p>
+<p>The first conversion creates the project and records its chapter scope. Later
+conversions open the same project and ask Readio to build/export from its authoritative
+state. Completed compatible work can be reused; Readio determines what needs to be
+planned, synthesized, composed, or exported again. Consult
+<a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/projects.md">Readio’s project guide</a>
+for stage and invalidation details.</p>
 </section>
-<section id="choose-an-output-and-synthesis-settings">
-<h2>Choose an output and synthesis settings</h2>
-<p>M4B is the default audiobook export. Readio also provides generic audio exports; inspect
-formats and availability for the current environment:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>formats
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--format<span class="w"> </span>mp3<span class="w"> </span>--output<span class="w"> </span>./novel.mp3
+<section id="guided-synthesis-setup">
+<h2>Guided synthesis setup</h2>
+<p>Chapter selection remains persistent project scope. TTSForge loads saved choices from
+Readio’s public project-settings API. During initial setup, the resolved synthesis and
+export settings are saved to the Readio project before final confirmation or build;
+TTSForge does not create a parallel settings file.</p>
+<p>On normal reuse, valid saved choices suppress their setup questions, and model/voice
+catalogs appear only when a selection is needed. If an existing or legacy project has no
+saved setup, Readio resolves the defaults and TTSForge saves the resulting choices. A
+failed build can be retried with the saved setup and original chapter scope.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit unpinned synthesis choices with saved values as defaults.
+Explicit CLI options pin and update only their corresponding settings. When language,
+engine, or model changes, dependent unpinned choices are reconsidered; explicitly pinned
+dependent options remain unchanged.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--yes</span></code> skips only final confirmation, not setup questions. <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--json</span></code> never prompt: they use saved project setup and let Readio resolve unspecified
+values, with explicit CLI options taking precedence.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> to choose an explicit project location. This is useful for multiple
+audiobook variants or when project files should live outside the source directory:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-en.readio
 </pre></div>
 </div>
-<p>You can set voice, language, engine, model, model source, quality, and speed, plus
-export bitrate, loudness, metadata, and cover. Readio resolves effective synthesis
-values; the preflight view shows those resolved values before you commit to the build.
-Model selectors and quality values are forwarded opaquely to Readio and installed
-engines:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>voices<span class="w"> </span>--language<span class="w"> </span>en-us
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--voice<span class="w"> </span>af_heart<span class="w"> </span>--model<span class="w"> </span>kokoro-v1<span class="w"> </span>--model-source<span class="w"> </span>github<span class="w"> </span>--quality<span class="w"> </span>fp32<span class="w"> </span>--speed<span class="w"> </span><span class="m">1</span>.1<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
-</pre></div>
-</div>
-<p>Run <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">--help</span></code> for the complete options available in this build.</p>
 </section>
-<section id="configuration-and-troubleshooting">
-<h2>Configuration and troubleshooting</h2>
-<p>TTSForge accesses Readio’s persistent configuration directly:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>config<span class="w"> </span>show
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.voice<span class="w"> </span>af_heart
-ttsforge<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.speed<span class="w"> </span><span class="m">1</span>.1
-ttsforge<span class="w"> </span>doctor
+<section id="chapter-selection-is-project-scope">
+<h2>Chapter selection is project scope</h2>
+<p>A chapter selection is applied when creating a project. For example:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8
 </pre></div>
 </div>
-<p>The frontend does not create a parallel configuration file. For engine setup and project
-semantics, see the
-<a class="reference external" href="https://github.com/buchwandler/readio/tree/main/docs">Readio documentation</a>.</p>
+<p>That scope is persistent. Opening the project again does not silently replace its
+selected chapters with a new <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> value. To work on a different selection,
+create another project with <code class="docutils literal notranslate"><span class="pre">--project</span></code> or use <code class="docutils literal notranslate"><span class="pre">--fresh</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>-3<span class="w"> </span>--fresh
+</pre></div>
+</div>
+<p>When an interactive terminal creates a new project without explicit <code class="docutils literal notranslate"><span class="pre">--chapters</span></code>,
+TTSForge shows the detected chapters and prompts for the initial selection
+automatically. In non-TTY or <code class="docutils literal notranslate"><span class="pre">--non-interactive</span></code> mode, it defaults to all chapters
+unless a selection was provided. The deprecated <code class="docutils literal notranslate"><span class="pre">--interactive-chapters</span></code> flag is no
+longer needed.</p>
+<p>A reused project keeps its persisted chapter scope and does not prompt again. If you
+pass <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> when reusing a project, the selection must match the saved scope;
+TTSForge rejects a conflict rather than silently changing or ignoring it. Use another
+<code class="docutils literal notranslate"><span class="pre">--project</span></code> path or <code class="docutils literal notranslate"><span class="pre">--fresh</span></code> to create a project for a different selection. The
+preflight view shows the exact persisted chapters. <code class="docutils literal notranslate"><span class="pre">list</span></code> and <code class="docutils literal notranslate"><span class="pre">info</span></code> inspect the source
+EPUB without creating a project.</p>
+</section>
+<section id="fresh-projects-and-outputs">
+<h2>Fresh projects and outputs</h2>
+<p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> preserves the current project and chooses a new sibling project path. If
+<code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> already exists, the fresh project is typically <code class="docutils literal notranslate"><span class="pre">novel.fresh.readio</span></code>; if
+that path exists, TTSForge chooses another available numbered path. Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> when
+an exact path is required.</p>
+<p>The default output for the default M4B format is <code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Supply <code class="docutils literal notranslate"><span class="pre">--output</span></code> to
+choose another path, or <code class="docutils literal notranslate"><span class="pre">--format</span></code> to select a generic Readio export format.
+<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> reports formats available in the current installation. M4B uses
+Readio’s audiobook export service; it is not treated as a generic audio format.</p>
+<p>Output replacement is deliberately explicit. <code class="docutils literal notranslate"><span class="pre">--force</span></code> requests replacement of an
+existing output according to Readio’s ownership rules. TTSForge does not remove a
+project’s source, state, or unrelated output files as a side effect of starting a fresh
+project.</p>
+</section>
+<section id="former-ttsforge-workspaces">
+<h2>Former TTSForge workspaces</h2>
+<p>Workspaces created by the previous TTSForge-owned Kokoro renderer are not Readio
+projects. This migration does not convert their state, completed audio, SSMD files, or
+resume metadata. If the default project path collides with an old workspace, TTSForge
+stops with migration guidance instead of overwriting or attempting to resume it.</p>
+<p>Keep the old directory as-is. To start separately, choose a new <code class="docutils literal notranslate"><span class="pre">--project</span></code> path or use
+<code class="docutils literal notranslate"><span class="pre">--fresh</span></code>. Existing final audio files are also left in place unless an explicit output
+replacement is requested.</p>
+</section>
+<section id="status-and-planning">
+<h2>Status and planning</h2>
+<p>Use Readio-backed commands to inspect and advance project state:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.readio<span class="w"> </span>--selection<span class="w"> </span>first:3
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.readio
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> reports stage states and next actions. <code class="docutils literal notranslate"><span class="pre">plan</span></code> creates or refreshes Readio
+speech plans. <code class="docutils literal notranslate"><span class="pre">preview</span></code> creates or reuses the project and renders a small selection
+through the same Readio project pipeline used by conversion.</p>
 </section>
 </section>
 </div>

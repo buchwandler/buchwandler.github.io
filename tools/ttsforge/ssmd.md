@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ttsforge SSMD 0.8.7"
+title: "ttsforge SSMD tools"
 permalink: /tools/ttsforge/ssmd/
 nav_tool: ttsforge
 docs_project: "ttsforge"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "e21a1a28ee3c70c8b25329795c6bd2deaecbf104"
+docs_ref: "v0.4.1"
+docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
 search_enabled: true
 ---
 
@@ -540,156 +540,48 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ssmd-0-8-7">
-<h1>SSMD 0.8.7</h1>
-<p>ttsforge treats SSMD 0.8.7 as a document format, not as decorated plain text. Generated,
-edited, and direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> documents are validated with the public <code class="docutils literal notranslate"><span class="pre">ssmd</span></code> APIs and the
-PyKokoro 0.9 profile before synthesis. Header metadata is never sent to speech.</p>
-<section id="basic-workflow">
-<h2>Basic workflow</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>--generate-ssmd
-<span class="c1"># edit the .ssmd files in the chapter directory</span>
-ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>.book_chapters/chapter_001.ssmd<span class="w"> </span>--strict
-ttsforge<span class="w"> </span>convert<span class="w"> </span>book.epub
+<section id="ssmd-tools">
+<h1>SSMD tools</h1>
+<p>TTSForge provides access to Readio’s public SSMD authoring and analysis services. It
+does not implement an independent SSMD renderer or a TTSForge-specific SSMD policy
+stack.</p>
+<section id="check-and-validate">
+<h2>Check and validate</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>chapter.ssmd
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>validate<span class="w"> </span>chapter.ssmd
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>analyze<span class="w"> </span>chapter.ssmd
+ttsforge<span class="w"> </span>ssmd<span class="w"> </span>roundtrip<span class="w"> </span>chapter.ssmd
 </pre></div>
 </div>
-<p>The generated files use truncated SHA-256 content hashes. An edited invalid file stops
-its chapter and is never silently replaced; an existing audio file is retained until a
-valid synthesis and its sidecars succeed.</p>
-</section>
-<section id="portable-document-example">
-<h2>Portable document example</h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>---
-title: Review podcast
-voice_bindings:
-  kokoro:
-    moderator: af_sarah
-    positive: af_bella
-pause_defaults:
-  enabled: true
-  sentence: 250ms
-  paragraph: 700ms
-  voice_change: 350ms
----
-&lt;div voice=&quot;moderator&quot;&gt;
-Welcome to the review.
-&lt;/div&gt;
-
-&lt;div voice=&quot;positive&quot;&gt;
-The new format is portable. @approved
-&lt;/div&gt;
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">title</span></code> is metadata and is not spoken. Logical roles resolve through
-<code class="docutils literal notranslate"><span class="pre">voice_bindings.kokoro</span></code>. Explicit <code class="docutils literal notranslate"><span class="pre">...100ms</span></code> breaks beat implicit defaults; simultaneous
-implicit paragraph and voice changes use the longest duration. <code class="docutils literal notranslate"><span class="pre">&#64;approved</span></code> is retained
-as a marker event and exported to marker sidecars.</p>
-</section>
-<section id="syntax">
-<h2>Syntax</h2>
-<p>Canonical inline annotations use <code class="docutils literal notranslate"><span class="pre">[text]{key=&quot;value&quot;}</span></code>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>[Hermione]{ph=&quot;hɝmˈIni&quot;}
-[Bonjour]{lang=&quot;fr-FR&quot;}
-[100]{as=&quot;cardinal&quot;}
-[XML]{sub=&quot;extensible markup language&quot;}
-[fast words]{rate=&quot;fast&quot; volume=&quot;loud&quot;}
-...c ...s ...p ...250ms
-</pre></div>
-</div>
-<p>Moderate, strong, reduced, and none emphasis are parsed. EPUB processing has three
-layers: epub2text performs semantic extraction, TTSForge preserves the resulting
-controlled Markdown in SSMD, and the SSMD emphasis policy controls audible rendering.
-Emphasis is spoken plainly by default: it does not add automatic gain, rate, or pitch
-changes, and its metadata is preserved. Use <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">2</span></code>, or <code class="docutils literal notranslate"><span class="pre">3</span></code> for Light,
-Normal, or Strong gain-only audible emphasis; level 2 is the normal emphasis
-approximation. Use <code class="docutils literal notranslate"><span class="pre">warn</span></code> or <code class="docutils literal notranslate"><span class="pre">error</span></code> for stricter SSMD emphasis behavior. Explicit
-document prosody such as <code class="docutils literal notranslate"><span class="pre">[fast</span> <span class="pre">words]{rate=&quot;fast&quot;}</span></code> remains active in plain mode.
-Language, voice, prosody, say-as, heading, and supported audio attributes are passed to
-the renderer.</p>
-<section id="automatic-written-to-spoken-preparation-vs-explicit-say-as">
-<h3>Automatic written-to-spoken preparation vs explicit say-as</h3>
-<p>Ordinary unannotated text flows through the PyKokoro 0.9/kokorog2p 0.9.2 preparation
-boundary. For supported languages and forms, kokorog2p may prepare dates, times,
-measurements, currency, ordinals, and abbreviations as speakable text before G2P.
-TTSForge does not rewrite source SSMD into automatic annotations or duplicate that
-upstream normalization.</p>
-<p>Explicit author intent remains separate: annotations such as <code class="docutils literal notranslate"><span class="pre">[100]{as=&quot;cardinal&quot;}</span></code> and
-other SSMD <code class="docutils literal notranslate"><span class="pre">say-as</span></code> values are document semantics and remain active overrides. The
-renderer applies explicit SSMD intent according to its upstream contract rather than
-treating every ordinary source form as an author annotation.</p>
-</section>
-</section>
-<section id="direct-ssmd-input">
-<h2>Direct SSMD input</h2>
-<p>An exact leading <code class="docutils literal notranslate"><span class="pre">---</span></code> line opens front matter and a matching <code class="docutils literal notranslate"><span class="pre">---</span></code> or <code class="docutils literal notranslate"><span class="pre">...</span></code> closes it.
-A <code class="docutils literal notranslate"><span class="pre">----</span></code> line is ordinary body text. Use <code class="docutils literal notranslate"><span class="pre">--no-ssmd-header</span></code> when an exact leading block
-is literal spoken text.</p>
-<p>For a direct <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> input, title precedence is explicit <code class="docutils literal notranslate"><span class="pre">--title</span></code> or API title, then
-header <code class="docutils literal notranslate"><span class="pre">title</span></code>, then the filename stem. The complete source, including front matter, is
-preserved for rendering.</p>
-</section>
-<section id="policies-and-diagnostics">
-<h2>Policies and diagnostics</h2>
-<p>Useful conversion options include:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>--ssmd-unknown-header<span class="w"> </span>warn<span class="p">|</span>error<span class="p">|</span>ignore
---ssmd-missing-voice<span class="w"> </span>error<span class="p">|</span>use-default
---emphasis-level<span class="w"> </span><span class="m">0</span><span class="p">|</span><span class="m">1</span><span class="p">|</span><span class="m">2</span><span class="p">|</span><span class="m">3</span>
---ssmd-emphasis<span class="w"> </span>plain<span class="p">|</span>approximate<span class="p">|</span>warn<span class="p">|</span>error
---detect-emphasis
---ssmd-voice<span class="w"> </span><span class="nv">narrator</span><span class="o">=</span>af_sarah
---pause-voice-change<span class="w"> </span><span class="m">0</span>.35
---ssmd-audio-root<span class="w"> </span>./audio
---ssmd-remote-audio
---ssmd-fail-on-warning
-</pre></div>
-</div>
-<p>Diagnostics have stable codes and source locations. Inspect without loading ONNX using
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span></code> or <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">inspect</span> <span class="pre">FILE</span> <span class="pre">--json</span></code>. Validate with
-<code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">ssmd</span> <span class="pre">validate</span> <span class="pre">FILE</span></code>; <code class="docutils literal notranslate"><span class="pre">--strict</span></code> promotes warnings to failures.</p>
-<section id="prosody-method-selection">
-<h3>Prosody method selection</h3>
-<p><code class="docutils literal notranslate"><span class="pre">prosody_method</span></code> is independent of <code class="docutils literal notranslate"><span class="pre">detect_emphasis</span></code> and <code class="docutils literal notranslate"><span class="pre">ssmd_emphasis_mode</span></code>. It
-chooses the AudioSig algorithm used when an SSMD segment contains <code class="docutils literal notranslate"><span class="pre">rate</span></code> or <code class="docutils literal notranslate"><span class="pre">pitch</span></code>
-metadata. <code class="docutils literal notranslate"><span class="pre">wsola</span></code> is the default speech-oriented audiobook choice; <code class="docutils literal notranslate"><span class="pre">esola</span></code> is an
-experimental speech-oriented alternative; <code class="docutils literal notranslate"><span class="pre">psola</span></code> is accepted as an alias for AudioSig’s
-canonical <code class="docutils literal notranslate"><span class="pre">td_psola</span></code>; and <code class="docutils literal notranslate"><span class="pre">phase_vocoder</span></code> is a generic reference/fallback path. Keep
-fallbacks enabled unless testing strict behavior.</p>
-<p>The current <code class="docutils literal notranslate"><span class="pre">emphasis_level</span></code> profile changes gain only. Selecting ESOLA, WSOLA, or PSOLA
-does not change those fixed emphasis gains; the selected prosody method is used for
-explicit SSMD rate and pitch annotations. <code class="docutils literal notranslate"><span class="pre">plain</span></code> disables emphasis approximation but
-does not disable explicit rate, pitch, or volume annotations. Omit <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code>
-when resuming so the saved renderer policy remains authoritative.</p>
-<p>Audio annotations use a document-relative local resolver with byte and duration limits.
-Remote audio is disabled by default; when enabled, only bounded HTTPS sources are
-accepted. Unresolved audio uses SSMD fallback text and emits an <code class="docutils literal notranslate"><span class="pre">ssmd.audio_fallback</span></code> or
-<code class="docutils literal notranslate"><span class="pre">ssmd.audio_unresolved</span></code> diagnostic. Audio files are decoded and downmixed to mono before
-pykokoro applies SSMD transformations. TTSForge retains source resolution, security
-limits, SoundFile decoding, and output orchestration; AudioSig supplies the reusable
-array downmix, while PyKokoro remains responsible for SSMD speed, gain, and resampling.</p>
-</section>
-</section>
-<section id="intentional-kokoro-limitations">
-<h2>Intentional Kokoro limitations</h2>
 <ul class="simple">
-<li><p>SSMD voice language, gender, and variant hints are preserved as metadata but do not
-select a Kokoro voice.</p></li>
-<li><p>SSMD extensions are rejected by default for the Kokoro profile.</p></li>
-<li><p>Emphasis is spoken plainly by default. EPUB Markdown extraction and SSMD rendering are
-independent; use <code class="docutils literal notranslate"><span class="pre">--epub-content-mode</span> <span class="pre">plain</span></code> only for legacy comparison,
-<code class="docutils literal notranslate"><span class="pre">--no-detect-emphasis</span></code> to unwrap inline emphasis, and <code class="docutils literal notranslate"><span class="pre">--emphasis-level</span></code> for audible
-strength.</p></li>
-<li><p>Remote audio is opt-in and bounded.</p></li>
-<li><p>Marks are exported as <code class="docutils literal notranslate"><span class="pre">chapter_NNN.markers.json</span></code> and an aggregate output sidecar
-rather than embedded in every audiobook container.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">check</span></code> reports Readio’s SSMD diagnostics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">validate</span></code> additionally requires voice references to resolve.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">analyze</span></code> summarizes voice references and unresolved bindings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">roundtrip</span></code> runs Readio’s authoring roundtrip check.</p></li>
 </ul>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--roundtrip</span></code> with <code class="docutils literal notranslate"><span class="pre">check</span></code> or <code class="docutils literal notranslate"><span class="pre">validate</span></code> to include the roundtrip check. Add
+<code class="docutils literal notranslate"><span class="pre">--json</span></code> for structured output. Commands that find issues return a non-zero exit status.</p>
 </section>
-<section id="see-also">
-<h2>See also</h2>
-<ul class="simple">
-<li><p><a class="reference internal" href="../quickstart/"><span class="doc">Quick Start Guide</span></a></p></li>
-<li><p><a class="reference internal" href="../cli/"><span class="doc">CLI Reference</span></a></p></li>
-<li><p><a class="reference internal" href="../configuration/"><span class="doc">Configuration</span></a></p></li>
-</ul>
+<section id="materialize-voice-bindings">
+<h2>Materialize voice bindings</h2>
+<p>If a document uses logical voice references, map them explicitly through Readio:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>ssmd<span class="w"> </span>materialize<span class="w"> </span>chapter.ssmd<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--bindings<span class="w"> </span><span class="s1">&#39;{&quot;narrator&quot;:&quot;af_heart&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>chapter.materialized.ssmd
+</pre></div>
+</div>
+<p>The bindings argument must be a JSON object mapping reference strings to voice strings.
+By default, the command writes a separate output. Use <code class="docutils literal notranslate"><span class="pre">--in-place</span></code> only when
+intentionally replacing the source document. <code class="docutils literal notranslate"><span class="pre">--provider</span></code> may select an SSMD provider
+supported by Readio.</p>
+</section>
+<section id="format-and-semantics">
+<h2>Format and semantics</h2>
+<p>SSMD syntax, supported annotations, voice-resolution behavior, and diagnostics are
+defined by Readio and the SSMD format implementation. Use the upstream
+<a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/api.md">Readio API guide</a> for
+authoring-service details and the <a class="reference external" href="https://github.com/buchwandler/ssmd">SSMD project</a>
+for format reference.</p>
 </section>
 </section>
 </div>
