@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -593,7 +593,7 @@ traceback after an error.</p>
 <td><p>Quality value forwarded to Readio.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--speed</span> <span class="pre">FLOAT</span></code></p></td>
-<td><p>Synthesis speed from <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>.</p></td>
+<td><p>Synthesis speed from <code class="docutils literal notranslate"><span class="pre">0.5</span></code> to <code class="docutils literal notranslate"><span class="pre">2.0</span></code>; Pocket currently supports <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">POLICY</span></code></p></td>
 <td><p>Readio spaCy policy for text processing.</p></td>
@@ -671,25 +671,35 @@ or <code class="docutils literal notranslate"><span class="pre">--non-interactiv
 detected chapter table and prompts for a selection. An existing project uses its saved
 chapter scope and does not prompt again.</p>
 <p>Before preflight, <code class="docutils literal notranslate"><span class="pre">convert</span></code> merges saved project settings with explicitly supplied CLI
-values and guides you through missing synthesis settings. Normal reuse skips valid saved
-choices and opens catalogs only when a choice is needed. A project without saved
-settings—including a legacy project—gets Readio’s resolved defaults; TTSForge saves the
-complete resolved setup through Readio’s public project-settings API before confirmation
-or build. A failed build can be retried without repeating setup. Readio remains the sole
-owner of persisted project state.</p>
+values and guides users through missing synthesis settings. Catalog discovery is allowed
+while engine, target, and voice choices are incomplete. Readio strictly resolves the
+completed synthesis target only after those selections are gathered. Project settings
+are saved through Readio’s public API only after that resolution succeeds, before
+confirmation or build. A failed build can be retried without repeating setup. Readio
+remains the sole owner of persisted project state.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit unpinned setup fields with saved values as defaults.
 Explicit CLI values pin and update only their corresponding settings. Changing language,
 engine, or model causes dependent unpinned choices to be selected again; CLI-pinned
 dependents remain.</p>
-<p>TTSForge asks for language, runnable engine selection where applicable, and model/voice
-catalog choices when needed. These catalogs render as compact vertical lists. Voice
-choices show canonical Readio voice IDs first and stable selectors as aliases; guided
-voice prompts accept a row number, canonical ID, selector, or qualified ID and store the
-selected catalog row’s canonical ID. Remaining questions cover supported quality, speed,
-spaCy and short-sentence policies, lexicons, G2P fallback and lexicon data, supported
-voice-level calibration, pause mode, and synthesis unit. Readio owns catalogs,
-capabilities, and resolution rules; the <code class="docutils literal notranslate"><span class="pre">Audiobook</span> <span class="pre">Setup</span></code> table shows the effective
-values used.</p>
+<p>Interactive catalogs provide choices for the selected engine. PyKokoro uses model then
+voice; Piper uses a target-bound voice bundle, and its matching canonical voice is
+selected automatically; Pocket uses a bundle followed by a predefined named voice.
+TTSForge stores these choices in Readio’s neutral <code class="docutils literal notranslate"><span class="pre">model</span></code> and <code class="docutils literal notranslate"><span class="pre">voice</span></code> request fields.
+The wizard gathers catalog selections before strict resolution of the complete synthesis
+target.</p>
+<p>Remaining questions cover supported quality and speed, spaCy and short-sentence
+policies, lexicons, G2P fallback and lexicon data, supported voice-level calibration,
+pause mode, and synthesis unit. Pocket speed defaults automatically to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. An
+explicit <code class="docutils literal notranslate"><span class="pre">--speed</span></code> value is preserved and may be rejected by Readio’s final resolution.
+Readio owns catalogs, capabilities, and resolution rules; the <code class="docutils literal notranslate"><span class="pre">Audiobook</span> <span class="pre">Setup</span></code> table
+shows the effective values used.</p>
+<p>Interactive catalog discovery happens before strict synthesis resolution. TTSForge
+collects the required engine, target, and voice choices first, then strictly resolves
+the complete request through Readio before saving synthesis settings. If that resolution
+fails, the incomplete or invalid setup is not persisted. Piper is target-bound: choose
+its voice bundle once, and the matching canonical voice is selected automatically.
+Pocket uses bundle then predefined named voice; unpinned speed is <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. An explicit
+<code class="docutils literal notranslate"><span class="pre">--speed</span></code> pin is preserved for Readio to validate.</p>
 <p>Explicit synthesis options pin and update their corresponding saved settings. <code class="docutils literal notranslate"><span class="pre">--yes</span></code>
 skips only final confirmation; it does not skip any setup questions still needed.
 <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> reopens unpinned saved setup questions with their current values as

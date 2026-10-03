@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -542,7 +542,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="testing-and-release-checks">
 <h1>Testing and release checks</h1>
-<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>. The public API contract test checks
+<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>. The public API contract test checks
 that the installed Readio exposes persisted project settings, synthesis requests and
 resolutions, catalog types, and services required by the frontend. For development
 against a Readio checkout, install both projects editable:</p>
@@ -564,7 +564,7 @@ Readio installation.</p>
 <h2>Publishing checks</h2>
 <p>Before a TTSForge package release:</p>
 <ol class="arabic simple">
-<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.4</span></code>, and the newest supported Readio
+<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.5</span></code>, and the newest supported Readio
 release.</p></li>
 <li><p>Install TTSForge into a clean environment, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">check</span></code>, and smoke-test
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code>.</p></li>

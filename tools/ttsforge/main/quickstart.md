@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -542,7 +542,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="quick-start">
 <h1>Quick start</h1>
-<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, then install a supported Readio engine extra if
+<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, then install a supported Readio engine extra if
 you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform and
 development instructions.</p>
 <section id="inspect-and-convert">
@@ -577,16 +577,31 @@ Use <code class="docutils literal notranslate"><span class="pre">--project</span
 <section id="guided-synthesis-setup">
 <h2>Guided synthesis setup</h2>
 <p>On a TTY, <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span> <span class="pre">novel.epub</span></code> continues after chapter selection with a guided
-setup for omitted synthesis values. Readio catalogs are shown for available models and
-voices; choose a row number or enter its exact identifier. The prompts include language,
-runnable engine selection when needed, model and voice, speed and supported quality,
-spaCy and short-sentence policies, lexicon/G2P choices, capability-gated voice level,
-pause handling, and sentence-versus-paragraph units. The final setup displays Readio’s
-effective resolution before confirmation. The resolved setup is saved through Readio’s
-public project-settings API before confirmation or build, so a failed build can be
-retried and later runs do not repeat the same questions. Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit
-saved choices with their saved values as defaults. Explicit CLI options pin and update
-only their corresponding settings.</p>
+setup for omitted synthesis values. It discovers catalog choices while the selection is
+in progress, then asks Readio to strictly resolve the completed synthesis target.</p>
+<p>The selection differs by engine:</p>
+<ul class="simple">
+<li><p>PyKokoro: choose a model, then a voice.</p></li>
+<li><p>Piper: choose a voice-bundle target. Its matching canonical voice is selected
+automatically, so users do not choose the same bundle twice.</p></li>
+<li><p>Pocket: choose a bundle, then a predefined named voice. Pocket speed is fixed at <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
+unless an explicit CLI speed is supplied. An explicit value is preserved for Readio’s
+final validation.</p></li>
+</ul>
+<p>The remaining prompts cover language, runnable engine selection when needed, supported
+quality and speed, spaCy and short-sentence policies, lexicon/G2P choices,
+capability-gated voice level, pause handling, and sentence-versus-paragraph units.
+TTSForge saves the resolved setup through Readio’s public project-settings API only
+after final resolution succeeds, before confirmation or build. A failed build can then
+be retried without repeating setup questions. Use <code class="docutils literal notranslate"><span class="pre">--reconfigure</span></code> to revisit saved
+choices with their saved values as defaults. Explicit CLI options pin and update only
+their corresponding settings.</p>
+<p>Piper is target-bound: choose a voice bundle once, and TTSForge automatically uses its
+canonical voice instead of asking you to select the same identity again. Pocket
+selection is bundle first, then a predefined named voice. Catalog choices are gathered
+before the final strict Readio synthesis resolution; incomplete setup is not saved. The
+current Pocket integration uses speed <code class="docutils literal notranslate"><span class="pre">1.0</span></code> when speed is not pinned explicitly. An
+explicit <code class="docutils literal notranslate"><span class="pre">--speed</span></code> pin is retained for Readio to validate.</p>
 <p>Use explicit options to pin settings and skip matching questions, for example:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--language<span class="w"> </span>en-us<span class="w"> </span>--model<span class="w"> </span>MODEL_ID<span class="w"> </span>--voice<span class="w"> </span>VOICE_ID<span class="w"> </span>--unit<span class="w"> </span>paragraph
 </pre></div>

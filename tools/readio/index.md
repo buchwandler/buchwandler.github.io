@@ -5,8 +5,8 @@ permalink: /tools/readio/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
+docs_ref: "v0.3.5"
+docs_commit: "630dc65f7594c79bc9adfd0d963dcd5cfdf2da34"
 search_enabled: true
 ---
 

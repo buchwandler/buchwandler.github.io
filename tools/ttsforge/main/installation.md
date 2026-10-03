@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ synthesis engines, and export services; install engine integrations as Readio ex
 rather than installing a TTSForge-specific backend.</p>
 <section id="requirements">
 <h2>Requirements</h2>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, which provides the public audiobook project,
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, which provides the public audiobook project,
 persisted project-settings, expanded synthesis-resolution, and M4B export APIs used by
 the CLI. This is the declared dependency floor; a local Readio checkout is not required
 for a normal installation.</p>

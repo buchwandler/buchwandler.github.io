@@ -5,8 +5,8 @@ permalink: /tools/readio/cli/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
+docs_ref: "v0.3.5"
+docs_commit: "630dc65f7594c79bc9adfd0d963dcd5cfdf2da34"
 search_enabled: true
 ---
 
@@ -560,7 +560,7 @@ readio<span class="w"> </span>audiobook<span class="w"> </span>--help
 readio plan                         # build current project
 readio plan build [PROJECT]
 readio plan roles [PROJECT]
-readio plan bind ROLE VOICE [--project PROJECT]
+readio plan bind ROLE VOICE [PROJECT] [--engine ENGINE] [--provider PROVIDER] [--project PROJECT]
 readio plan unbind ROLE [--project PROJECT]
 readio synth PROJECT [--engine ENGINE] [--voice VOICE] [--select SELECTOR]
 readio preview PROJECT --select SELECTOR [--voice VOICE] [-o PREVIEW.wav]
@@ -576,8 +576,33 @@ readio render PROJECT --format FORMAT
 </pre></div>
 </div>
 </section>
-<section id="project-voice-provider-and-routing">
-<h2>Project voice provider and routing</h2>
+<section id="voice-role-targets-and-mixed-engine-routing">
+<h2>Voice role targets and mixed-engine routing</h2>
+<section id="global-role-bindings">
+<h3>Global role bindings</h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">roles</span></code> for persistent user-global role targets:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>roles<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>host<span class="w"> </span>en_us-ko-4
+readio<span class="w"> </span>roles<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>guest<span class="w"> </span>en_US-amy-medium<span class="w"> </span>--engine<span class="w"> </span>piper
+readio<span class="w"> </span>roles<span class="w"> </span>list<span class="w"> </span>--json
+readio<span class="w"> </span>roles<span class="w"> </span>unbind<span class="w"> </span>guest
+</pre></div>
+</div>
+<p>New global targets are saved under the top-level <code class="docutils literal notranslate"><span class="pre">[roles.&lt;role&gt;]</span></code> configuration table and take precedence over legacy <code class="docutils literal notranslate"><span class="pre">[voices.&lt;provider&gt;.roles]</span></code> values. Legacy values remain readable for roles without a new target; conflicting legacy definitions for such a role are ambiguous rather than implicitly assigned to one provider.</p>
+</section>
+<section id="project-role-bindings">
+<h3>Project role bindings</h3>
+<p>Project bindings use the same engine-qualified target model. Bind selectors directly; Readio retains the resolved engine, canonical voice, target ID, and selector:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>host<span class="w"> </span>en_us-ko-4
+readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>guest<span class="w"> </span>en-pi-13
+readio<span class="w"> </span>plan<span class="w"> </span>roles
+readio<span class="w"> </span>synth
+</pre></div>
+</div>
+<p>New bindings are stored under <code class="docutils literal notranslate"><span class="pre">settings.ssmd.role_bindings.&lt;role&gt;</span></code> in <code class="docutils literal notranslate"><span class="pre">project.json</span></code>. A binding does not select a project-wide provider or engine. Role inspection reports the engine and derived provider per target. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span> <span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> filters results; it does not override project bindings.</p>
+<p>Run these commands from the project root or a nested directory. An explicit project path can be supplied positionally or through <code class="docutils literal notranslate"><span class="pre">--project</span></code>; supplying conflicting paths is an error. For a raw voice ID that does not identify its engine, pass <code class="docutils literal notranslate"><span class="pre">--engine</span></code>, for example <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">bind</span> <span class="pre">guest</span> <span class="pre">en_US-amy-medium</span> <span class="pre">--engine</span> <span class="pre">piper</span></code>. <code class="docutils literal notranslate"><span class="pre">--provider</span></code> is accepted for compatibility, must agree with the target engine, and does not choose a project-wide route.</p>
+<p>Legacy manifests using <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_bindings.&lt;provider&gt;.&lt;role&gt;</span></code> remain readable. The optional <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_provider</span></code> scopes those legacy bindings when present; it does not control new role-centric bindings. Without an active legacy provider, conflicting definitions for the same role are ambiguous. SSMD document <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> syntax is unchanged, and a role bound in multiple provider namespaces is ambiguous. New <code class="docutils literal notranslate"><span class="pre">plan</span> <span class="pre">bind</span></code> writes role-centric targets without rewriting unrelated legacy settings. There is no automatic migration command.</p>
+<p>Resolution precedence is document binding, invocation <code class="docutils literal notranslate"><span class="pre">--voice-bind</span></code>, project role target, global configured role, then direct concrete voice. The semantic plan remains independent of casting. Project synthesis routes each bound segment through its target engine and uses the normal project synthesis selection for unbound segments, opening reusable sessions per distinct route.</p>
+</section>
 </section>
 <section id="saved-project-pipeline-settings">
 <h2>Saved project pipeline settings</h2>
@@ -594,15 +619,6 @@ readio project settings clear [PROJECT] --section {synthesis,composition,export,
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">set</span></code> updates only sections represented by its flags and preserves other saved section fields. It exposes named supported values, not arbitrary JSON editing. Relative paths are interpreted from the project root. Invocation-only <code class="docutils literal notranslate"><span class="pre">--force</span></code> and <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> flags are never persisted.</p>
 <p>Synthesis, composition, generic export, and audiobook export defaults are used by requestless project APIs and builds. Explicit API or stage options override saved values for that invocation only. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">status</span></code> reports stage-specific staleness when saved settings differ from built provenance; synthesis caches and previous outputs are retained.</p>
-<p><code class="docutils literal notranslate"><span class="pre">project.json</span></code> can select an active provider at <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_provider</span></code>. Existing projects without that field infer the provider from a single non-empty <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> namespace. Projects with neither an active provider nor project binding namespaces keep the global configuration fallback. Multiple provider namespaces without an active provider are ambiguous and must be resolved explicitly. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">bind</span></code> can activate a provider from a stable selector, and <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span></code> reports bindings from the effective provider.</p>
-<p>With no explicit engine, project synthesis selects the engine associated with that provider. It does not inherit global <code class="docutils literal notranslate"><span class="pre">reader.engine</span></code> or <code class="docutils literal notranslate"><span class="pre">reader.voice</span></code> over an active project provider. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span> <span class="pre">--engine</span> <span class="pre">ENGINE</span></code> is a run-local override; it never writes project settings. Use <code class="docutils literal notranslate"><span class="pre">--voice</span></code> for a concrete run-local voice override.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>narrator<span class="w"> </span>en-pi-13
-readio<span class="w"> </span>plan<span class="w"> </span>roles
-readio<span class="w"> </span>synth
-readio<span class="w"> </span>synth<span class="w"> </span>--engine<span class="w"> </span>pykokoro<span class="w">  </span><span class="c1"># one-run override</span>
-</pre></div>
-</div>
-<p>PyKokoro and Pocket expose request-scoped voice selection; Piper binds each role to a voice-bundle target. Readio validates all target-bound selections before opening sessions and reuses one session per distinct target. Project synthesis preserves semantic plan identity when voice bindings change.</p>
 <section id="shared-speech-controls">
 <h3>Shared speech controls</h3>
 <p>The <code class="docutils literal notranslate"><span class="pre">--speed</span></code> option and <code class="docutils literal notranslate"><span class="pre">reader.speed</span></code> configuration value are engine synthesis multipliers. PyKokoro receives speed directly, PiperSynth maps it to <code class="docutils literal notranslate"><span class="pre">length_scale</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">speed</span></code>, and PocketSynth accepts only <code class="docutils literal notranslate"><span class="pre">1.0</span></code>; unsupported explicit values fail before inference. Composition rate is separate and is not also changed by <code class="docutils literal notranslate"><span class="pre">--speed</span></code>.</p>
@@ -617,6 +633,8 @@ readio<span class="w"> </span>synth<span class="w"> </span>PROJECT<span class="w
 <section id="voice-catalog-filters">
 <h2>Voice catalog filters</h2>
 <p>For <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">list</span></code>, registered engine names passed as <code class="docutils literal notranslate"><span class="pre">--model</span></code> are shortcuts only when <code class="docutils literal notranslate"><span class="pre">--engine</span></code> is omitted: <code class="docutils literal notranslate"><span class="pre">piper</span></code> and <code class="docutils literal notranslate"><span class="pre">pipersynth</span></code> select Piper, <code class="docutils literal notranslate"><span class="pre">pykokoro</span></code> and <code class="docutils literal notranslate"><span class="pre">kokoro</span></code> select PyKokoro, and <code class="docutils literal notranslate"><span class="pre">pocket</span></code> selects PocketSynth. The JSON <code class="docutils literal notranslate"><span class="pre">filters</span></code> object reports the effective engine and clears the model field for shortcuts. Concrete model IDs, voice bundles, and Pocket bundle IDs remain model filters.</p>
+<p>Voice metadata keeps <code class="docutils literal notranslate"><span class="pre">language</span></code> (lowercase base language, such as <code class="docutils literal notranslate"><span class="pre">en</span></code>), <code class="docutils literal notranslate"><span class="pre">locale</span></code> (canonical descriptive locale, such as <code class="docutils literal notranslate"><span class="pre">en-US</span></code>), and <code class="docutils literal notranslate"><span class="pre">selector_language</span></code> (the stable selector namespace, such as <code class="docutils literal notranslate"><span class="pre">en</span></code> or <code class="docutils literal notranslate"><span class="pre">en_us</span></code>) distinct. For example, <code class="docutils literal notranslate"><span class="pre">en-pi-13</span></code> can remain the selector for an <code class="docutils literal notranslate"><span class="pre">en-US</span></code> Piper voice.
+Pocket language filtering treats a generic bundle language as compatible with a specific query: <code class="docutils literal notranslate"><span class="pre">--lang</span> <span class="pre">en-us</span></code> includes a bundle advertising <code class="docutils literal notranslate"><span class="pre">en</span></code>, but excludes one explicitly advertising <code class="docutils literal notranslate"><span class="pre">en-GB</span></code>. The generic voice remains labeled <code class="docutils literal notranslate"><span class="pre">en</span></code>; Readio does not infer a regional locale.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>piper<span class="w"> </span>--lang<span class="w"> </span>en-us
 readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--engine<span class="w"> </span>piper<span class="w"> </span>--model<span class="w"> </span>en_US-amy-medium
 </pre></div>

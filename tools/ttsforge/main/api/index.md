@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -569,7 +569,7 @@ services:</p>
 <span class="nb">print</span><span class="p">(</span><span class="n">status</span><span class="o">.</span><span class="n">next_actions</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code> provides this public API, including expanded synthesis resolution and
+<p>Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code> provides this public API, including expanded synthesis resolution and
 persisted project settings. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for the standard
 package install and optional source-development setup.</p>
 <section id="audiobook-export">

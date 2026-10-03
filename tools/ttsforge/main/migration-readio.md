@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ for Readio’s public API, not the owner of an EPUB-to-audio rendering pipeline.
 owns projects, planning, synthesis, composition, resumability, invalidation, and export.</p>
 <section id="compatibility-and-installation">
 <h2>Compatibility and installation</h2>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, which provides the persisted project-settings API.</p>
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, which provides the persisted project-settings API.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
 </pre></div>
 </div>

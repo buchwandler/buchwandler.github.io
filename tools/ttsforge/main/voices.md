@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -587,18 +587,38 @@ ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span c
 <section id="guided-selection-during-conversion">
 <h2>Guided selection during conversion</h2>
 <p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> uses the same Readio discovery services interactively on a TTY. It
-displays filtered engine, model, voice, and lexicon choices as compact vertical lists
-where selection is needed. Enter a row number or exact identifier. Voice entries show
-the canonical Readio voice ID first and the stable selector as an alias. Guided voice
-prompts accept a row number, canonical voice ID, selector, or qualified ID, then keep
-the selected row’s canonical ID. The catalog is filtered by the chosen language and
-engine, and by model for voices. <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">voices</span></code> remains available for independent
-discovery, while explicit <code class="docutils literal notranslate"><span class="pre">--model</span></code> and <code class="docutils literal notranslate"><span class="pre">--voice</span></code> options bypass the matching prompts.
-Voice and model details are engine-specific. TTSForge does not implement voice blending,
-maintain voice recommendations, or promise that a voice selector will be available for
-every engine. See
+shows filtered choices as compact vertical lists. Enter a row number or exact
+identifier. Voice entries show the canonical Readio voice ID first and the stable
+selector as an alias. Guided voice prompts accept a row number, canonical voice ID,
+selector, or qualified ID, then keep the selected row’s canonical ID. Catalogs are
+filtered by language and engine, and by model for voices. Explicit <code class="docutils literal notranslate"><span class="pre">--model</span></code> and
+<code class="docutils literal notranslate"><span class="pre">--voice</span></code> options bypass matching prompts.</p>
+<p>The engine-specific selection layouts are:</p>
+<ul class="simple">
+<li><p>PyKokoro: model, then voice.</p></li>
+<li><p>Piper: choose a voice-bundle target. The matching voice has the same canonical
+identity and is selected automatically, without a duplicate prompt.</p></li>
+<li><p>Pocket: choose a model bundle, then a predefined named voice.</p></li>
+</ul>
+<p>The completed selection is strictly resolved by Readio after catalog choices are
+gathered. Pocket speed defaults to <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. TTSForge does not expose Readio’s Pocket
+reference WAV <code class="docutils literal notranslate"><span class="pre">voice_file</span></code> option in <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code>. Voice and model details remain
+engine-specific. TTSForge does not implement voice blending or maintain voice
+recommendations. See
 <a class="reference external" href="https://github.com/buchwandler/readio/blob/main/docs/api.md#discovery-and-roles">Readio’s catalog documentation</a>
 for the public discovery contract.</p>
+</section>
+<section id="selection-layouts">
+<h2>Selection layouts</h2>
+<p>The interactive converter follows each engine’s public Readio catalog semantics:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PyKokoro: model -&gt; voice
+Piper:    voice-bundle target
+Pocket:   bundle -&gt; predefined named voice
+</pre></div>
+</div>
+<p>For Piper, the selected bundle is stored in Readio’s neutral <code class="docutils literal notranslate"><span class="pre">model</span></code> request field, and
+its matching canonical voice is selected automatically. Pocket stores the bundle in
+<code class="docutils literal notranslate"><span class="pre">model</span></code> and the chosen predefined voice in <code class="docutils literal notranslate"><span class="pre">voice</span></code>.</p>
 </section>
 </section>
 </div>

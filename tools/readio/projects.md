@@ -5,8 +5,8 @@ permalink: /tools/readio/projects/
 nav_tool: readio
 docs_project: "readio"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "caca636ff4f4634f2d360f8ea79a450cfb4924d8"
+docs_ref: "v0.3.5"
+docs_commit: "630dc65f7594c79bc9adfd0d963dcd5cfdf2da34"
 search_enabled: true
 ---
 
@@ -547,23 +547,28 @@ The <code class="docutils literal notranslate"><span class="pre">.readio</span><
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>project<span class="w"> </span>init<span class="w"> </span>episode.ssmd<span class="w"> </span>-o<span class="w"> </span>episode.readio
 <span class="nb">cd</span><span class="w"> </span>episode.readio
 readio<span class="w"> </span>plan<span class="w"> </span>roles
-readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>narrator<span class="w"> </span>en_us-ko-4
+readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>host<span class="w"> </span>en_us-ko-4
+readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>guest<span class="w"> </span>en-pi-13
 readio<span class="w"> </span>plan<span class="w">                         </span><span class="c1"># build semantic plan</span>
 readio<span class="w"> </span>synth
 readio<span class="w"> </span>compose<span class="w"> </span>--progress
 readio<span class="w"> </span><span class="nb">export</span><span class="w"> </span>--format<span class="w"> </span>mp3
 </pre></div>
 </div>
-<section id="project-local-ssmd-role-bindings">
-<h2>Project-local SSMD role bindings</h2>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span></code> discovers logical SSMD roles from project source before a semantic plan exists and shows each effective voice and its source. Bind or remove a project override with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>narrator<span class="w"> </span>en_us-ko-4
-readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>host<span class="w"> </span>en_us-ko-7
-readio<span class="w"> </span>plan<span class="w"> </span>unbind<span class="w"> </span>narrator
+<section id="project-local-ssmd-role-targets">
+<h2>Project-local SSMD role targets</h2>
+<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span></code> discovers logical roles from project source before a semantic plan exists. It reports each role’s effective voice, engine, provider, and source. Bind or remove a project override with stable selectors:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>host<span class="w"> </span>en_us-ko-4
+readio<span class="w"> </span>plan<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>guest<span class="w"> </span>en-pi-13
+readio<span class="w"> </span>plan<span class="w"> </span>roles
+readio<span class="w"> </span>plan<span class="w"> </span>unbind<span class="w"> </span>host
 </pre></div>
 </div>
-<p>Bindings are stored in <code class="docutils literal notranslate"><span class="pre">project.json</span></code> under <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_bindings</span></code>, provider-keyed, and canonicalized to concrete voice IDs. They do not edit SSMD source, mutate user-global <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">roles</span></code> settings, or change Utterplan <code class="docutils literal notranslate"><span class="pre">plan_id</span></code>. A document-local SSMD binding remains authoritative; when it exists in any relevant scope, project binding is rejected rather than saved as an ineffective override. Role inspection reports per-scope effective values when document bindings differ between scopes.</p>
-<p>Voice resolution follows <code class="docutils literal notranslate"><span class="pre">document</span> <span class="pre">&gt;</span> <span class="pre">invocation</span> <span class="pre">--voice-bind</span> <span class="pre">&gt;</span> <span class="pre">project</span> <span class="pre">&gt;</span> <span class="pre">global</span> <span class="pre">config</span> <span class="pre">role</span> <span class="pre">&gt;</span> <span class="pre">direct</span> <span class="pre">voice</span></code>. A project binding is an acoustic synthesis setting. Changing it leaves the semantic plan current, marks active synthesis stale with <code class="docutils literal notranslate"><span class="pre">synthesis.stale.project_voice_bindings_changed</span></code>, blocks composition and output, and makes <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span></code> the next action. The content-addressed synthesis cache is retained.</p>
+<p>New bindings are stored role-centrically in <code class="docutils literal notranslate"><span class="pre">project.json</span></code> under <code class="docutils literal notranslate"><span class="pre">settings.ssmd.role_bindings</span></code>. Each entry contains an engine-qualified target with <code class="docutils literal notranslate"><span class="pre">engine</span></code> and canonical <code class="docutils literal notranslate"><span class="pre">voice</span></code>, plus optional <code class="docutils literal notranslate"><span class="pre">target_id</span></code> and <code class="docutils literal notranslate"><span class="pre">selector</span></code>. Binding a selector preserves its resolved target identity and does not set a project-wide provider. For raw voice IDs, pass <code class="docutils literal notranslate"><span class="pre">--engine</span></code> if Readio cannot infer the engine. Binding and unbinding leave SSMD source, user-global roles, and Utterplan <code class="docutils literal notranslate"><span class="pre">plan_id</span></code> unchanged.</p>
+<p>A document-local SSMD binding remains authoritative; a project binding is rejected rather than saved as an ineffective override. SSMD <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> syntax remains provider-qualified and unchanged. If the same role is bound in multiple document provider namespaces, or conflicting unscoped legacy project bindings exist for that role, Readio reports an ambiguity instead of choosing one.</p>
+<p>Existing manifests using <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_bindings.&lt;provider&gt;.&lt;role&gt;</span></code> remain readable. The optional legacy <code class="docutils literal notranslate"><span class="pre">settings.ssmd.voice_provider</span></code> scopes those provider-keyed inputs when present; it does not choose an engine or affect new <code class="docutils literal notranslate"><span class="pre">role_bindings</span></code>. When no legacy provider is selected, conflicting legacy definitions for the same role are ambiguous. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">bind</span></code> writes the new role-centric format without rewriting unrelated legacy settings. There is no automatic migration command.</p>
+<p>Voice resolution follows <code class="docutils literal notranslate"><span class="pre">document</span> <span class="pre">&gt;</span> <span class="pre">invocation</span> <span class="pre">--voice-bind</span> <span class="pre">&gt;</span> <span class="pre">project</span> <span class="pre">&gt;</span> <span class="pre">global</span> <span class="pre">config</span> <span class="pre">role</span> <span class="pre">&gt;</span> <span class="pre">direct</span> <span class="pre">voice</span></code>. A project role target is an acoustic synthesis setting. Changing it leaves the semantic plan current, marks active synthesis stale with <code class="docutils literal notranslate"><span class="pre">synthesis.stale.project_voice_bindings_changed</span></code>, blocks composition and output, and makes <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span></code> the next action. The content-addressed synthesis cache is retained.</p>
+<p>Each bound segment is routed to its target’s engine. Unbound segments use the normal project synthesis selection. One project can therefore use Kokoro for one role and Piper for another, without choosing one provider project-wide. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span> <span class="pre">--provider</span> <span class="pre">PROVIDER</span></code> filters inspection output and does not override bindings.</p>
 </section>
 <section id="desired-pipeline-settings">
 <h2>Desired pipeline settings</h2>

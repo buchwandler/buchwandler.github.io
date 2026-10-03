@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "b3ecf81576a350cc0a95d3fdd6ed5e94892d800c"
+docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
 search_enabled: true
 ---
 
@@ -546,7 +546,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 persistent project lifecycle, synthesis engines, composition, reuse, and exports;
 TTSForge presents an EPUB audiobook workflow and maps choices to Readio’s public
 services.</p>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.4</span></code>, whose public API supplies its audiobook project,
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, whose public API supplies its audiobook project,
 expanded synthesis resolution, and persisted project settings. See
 <a class="reference internal" href="installation/"><span class="std std-doc">Installation</span></a> for user and development setup.</p>
 <div class="toctree-wrapper compound">
@@ -613,6 +613,7 @@ expanded synthesis resolution, and persisted project settings. See
 <li class="toctree-l2"><a class="reference internal" href="voices/#inspect-models-and-engines">Inspect models and engines</a></li>
 <li class="toctree-l2"><a class="reference internal" href="voices/#use-a-discovered-voice">Use a discovered voice</a></li>
 <li class="toctree-l2"><a class="reference internal" href="voices/#guided-selection-during-conversion">Guided selection during conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="voices/#selection-layouts">Selection layouts</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="ssmd/">SSMD tools</a><ul>

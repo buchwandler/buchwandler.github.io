@@ -113,7 +113,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.1" rel="external noopener">Latest release: v0.10.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.2" rel="external noopener">Latest release: v0.10.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -183,7 +183,7 @@ permalink: /tools/
       <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
       <div class="card-links">
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.3.5" rel="external noopener">Latest release: v0.3.5 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
