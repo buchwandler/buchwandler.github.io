@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">17<span>focused tools</span></div>
+    <div class="hero-stat">18<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -195,6 +195,16 @@ permalink: /tools/
         <a href="/tools/phonodist/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/phonodist/releases/tag/v0.1.2" rel="external noopener">Latest release: v0.1.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/phonodist" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>espeakng-runtime</h3>
+      <p>Small Python runtime adapter for eSpeak NG phonemization.</p>
+      <div class="card-links">
+        <a href="/tools/espeakng-runtime/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/espeakng-runtime/releases/tag/v0.1.5" rel="external noopener">Latest release: v0.1.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/espeakng-runtime" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
   </div>

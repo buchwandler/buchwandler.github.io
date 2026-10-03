@@ -74,3 +74,9 @@
   description: Language-aware, explainable distance metrics for IPA pronunciations.
   docs_url: /tools/phonodist/
   repo_url: https://github.com/buchwandler/phonodist
+
+- name: espeakng-runtime
+  description: Small Python runtime adapter for eSpeak NG phonemization.
+  docs_url: /tools/espeakng-runtime/
+  repo_url: https://github.com/buchwandler/espeakng-runtime
+  pypi_url: https://pypi.org/project/espeakng-runtime/

@@ -62,7 +62,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist", "espeakng-runtime"]
 [pdf]
 builder = "weasyprint"
 output = "dist/buchwandler-tool-documentation.pdf"
@@ -281,6 +281,18 @@ conf_dir = "../phonodist/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/phonodist"
 description = "Language-aware, explainable distance metrics for IPA pronunciations."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "espeakng-runtime"
+title = "espeakng-runtime"
+docs_root = "../espeakng-runtime/docs"
+conf_dir = "../espeakng-runtime/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/espeakng-runtime"
+description = "Small Python runtime adapter for eSpeak NG phonemization."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

@@ -1,0 +1,313 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "espeakng-runtime",
+  "entries": [
+    {
+      "url": "/tools/espeakng-runtime/api/",
+      "title": "espeakng-runtime API reference",
+      "snippet": "espeakng_runtime.Mode\nalias of Literal[‘auto’, ‘native’, ‘cli’]\n\n\n\nThe Mode type constrains backend selection. Use 'auto' to prefer native …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Types",
+          "text": "espeakng_runtime.Mode\nalias of Literal[‘auto’, ‘native’, ‘cli’]\n\n\n\nThe Mode type constrains backend selection. Use 'auto' to prefer native with CLI fallback, 'native' to require the ctypes backend, or 'cli' to force the subprocess backend.",
+          "lower": "espeakng_runtime.mode\nalias of literal[‘auto’, ‘native’, ‘cli’]\n\n\n\nthe mode type constrains backend selection. use 'auto' to prefer native with cli fallback, 'native' to require the ctypes backend, or 'cli' to force the subprocess backend."
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime",
+          "text": "class espeakng_runtime.EspeakRuntime(*, mode: Literal['auto', 'native', 'cli'] = 'auto', executable: str | None = None, library: str | None = None, data: str | None = None, timeout: float | None = None, prefer_exact_clauses: bool = False)[source]\nBases: object\n\nResolve and own one eSpeak backend.\n\nNative calls are serialized process-wide because eSpeak’s public API uses\nglobal state, including the currently selected voice.\n\n\n\nproperty info: RuntimeInfo\n\n\n\n\nproperty native_probes: tuple[LibraryProbe, ...]\nProbes from native library selection during construction.\n\nReturns an empty tuple for CLI mode. Does not perform additional\ndiscovery when read.\n\n\n\n\n\nresolve_voice(voice: str, *, allow_mbrola: bool = False) → Voice[source]\nResolve a caller voice request to a concrete eSpeak voice.…",
+          "lower": "class espeakng_runtime.espeakruntime(*, mode: literal['auto', 'native', 'cli'] = 'auto', executable: str | none = none, library: str | none = none, data: str | none = none, timeout: float | none = none, prefer_exact_clauses: bool = false)[source]\nbases: object\n\nresolve and own one espeak backend.\n\nnative calls are serialized process-wide because espeak’s public api uses\nglobal state, including the currently selected voice.\n\n\n\nproperty info: runtimeinfo\n\n\n\n\nproperty native_probes: tuple[libraryprobe, ...]\nprobes from native library selection during construction.\n\nreturns an empty tuple for cli mode. does not perform additional\ndiscovery when read.\n\n\n\n\n\nresolve_voice(voice: str, *, allow_mbrola: bool = false) → voice[source]\nresolve a caller voice request to a concrete espeak voice.…"
+        },
+        {
+          "anchor": "",
+          "heading": "Data models",
+          "text": "class espeakng_runtime.RuntimeInfo(requested_mode: Literal['auto', 'native', 'cli'], implementation: Literal['native', 'cli'], executable: str | None = None, library: str | None = None, data: str | None = None, source: str | None = None, version: str | None = None, exact_clause_api: bool = False, phoneme_output_api: Literal['cli', 'native-trace', 'native-translation'] | None = None, phoneme_parity: Literal['exact', 'best-effort'] | None = None, parity: Literal['exact', 'best-effort'] = 'best-effort', fallback_reason: str | None = None, fallback_code: Literal['native-unavailable', 'native-load-error', 'exact-clause-api-unavailable', 'native-init-failed'] | None = None)[source]\nBases: object\n\nResolved backend and capability information.\n\n\n\nrequested_mode: Literal['auto', 'native', 'cli']…",
+          "lower": "class espeakng_runtime.runtimeinfo(requested_mode: literal['auto', 'native', 'cli'], implementation: literal['native', 'cli'], executable: str | none = none, library: str | none = none, data: str | none = none, source: str | none = none, version: str | none = none, exact_clause_api: bool = false, phoneme_output_api: literal['cli', 'native-trace', 'native-translation'] | none = none, phoneme_parity: literal['exact', 'best-effort'] | none = none, parity: literal['exact', 'best-effort'] = 'best-effort', fallback_reason: str | none = none, fallback_code: literal['native-unavailable', 'native-load-error', 'exact-clause-api-unavailable', 'native-init-failed'] | none = none)[source]\nbases: object\n\nresolved backend and capability information.\n\n\n\nrequested_mode: literal['auto', 'native', 'cli']…"
+        },
+        {
+          "anchor": "",
+          "heading": "Errors",
+          "text": "Public exceptions for espeakng-runtime.\n\n\n\nexception espeakng_runtime.errors.EspeakError[source]\nBases: RuntimeError\n\nBase class for runtime errors.\n\n\n\n\n\nexception espeakng_runtime.errors.EspeakUnavailableError[source]\nBases: EspeakError\n\nRaised when no requested eSpeak backend can be initialized.\n\n\n\n\n\nexception espeakng_runtime.errors.EspeakConflictError[source]\nBases: EspeakError\n\nRaised when incompatible native eSpeak configurations share a process.\n\n\n\n\n\nexception espeakng_runtime.errors.PhonemizationError[source]\nBases: EspeakError\n\nRaised when eSpeak fails while phonemizing text.\n\n\n\n\n\nexception espeakng_runtime.errors.VoiceNotFoundError[source]\nBases: PhonemizationError\n\nRaised when eSpeak cannot select a requested voice.\n\n\n\n\n\nexception espeakng_runtime.errors.CapabilityError[so…",
+          "lower": "public exceptions for espeakng-runtime.\n\n\n\nexception espeakng_runtime.errors.espeakerror[source]\nbases: runtimeerror\n\nbase class for runtime errors.\n\n\n\n\n\nexception espeakng_runtime.errors.espeakunavailableerror[source]\nbases: espeakerror\n\nraised when no requested espeak backend can be initialized.\n\n\n\n\n\nexception espeakng_runtime.errors.espeakconflicterror[source]\nbases: espeakerror\n\nraised when incompatible native espeak configurations share a process.\n\n\n\n\n\nexception espeakng_runtime.errors.phonemizationerror[source]\nbases: espeakerror\n\nraised when espeak fails while phonemizing text.\n\n\n\n\n\nexception espeakng_runtime.errors.voicenotfounderror[source]\nbases: phonemizationerror\n\nraised when espeak cannot select a requested voice.\n\n\n\n\n\nexception espeakng_runtime.errors.capabilityerror[so…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/backends/",
+      "title": "espeakng-runtime Backends and discovery",
+      "snippet": "EspeakRuntime(mode=\"auto\") probes native libraries first, then falls back to the CLI executable. A requested exact capability filters native …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Automatic selection",
+          "text": "EspeakRuntime(mode=\"auto\") probes native libraries first, then falls back to the CLI executable. A requested exact capability filters native candidates to libraries exposing espeak_TextToPhonemesWithTerminator; if none is available, auto mode uses CLI best-effort behavior and records both RuntimeInfo.fallback_code and the detailed RuntimeInfo.fallback_reason. If a selected native library cannot initialize, auto mode uses the same fallback; mode=\"native\" always raises instead.\n\nExplicit constructor arguments override environment configuration. The discovery variables are ESPEAKNG_RUNTIME_EXECUTABLE, ESPEAKNG_RUNTIME_LIBRARY, and ESPEAKNG_RUNTIME_DATA.",
+          "lower": "espeakruntime(mode=\"auto\") probes native libraries first, then falls back to the cli executable. a requested exact capability filters native candidates to libraries exposing espeak_texttophonemeswithterminator; if none is available, auto mode uses cli best-effort behavior and records both runtimeinfo.fallback_code and the detailed runtimeinfo.fallback_reason. if a selected native library cannot initialize, auto mode uses the same fallback; mode=\"native\" always raises instead.\n\nexplicit constructor arguments override environment configuration. the discovery variables are espeakng_runtime_executable, espeakng_runtime_library, and espeakng_runtime_data."
+        },
+        {
+          "anchor": "",
+          "heading": "Inspection and diagnostics",
+          "text": "inspect_espeak(...) returns an immutable, non-initializing EspeakInspection record. It reports CLI availability independently, the selected native library/source/data, and the ordered LibraryProbe records. Probes distinguish unloadable libraries, missing mandatory native symbols, and missing exact-clause support. Explicit libraries are authoritative and are the only library probed.\n\nDiagnostic source labels such as espeakng-loader, near-executable, system-espeak-ng, system-espeak, explicit, and cli identify discovery paths. They are diagnostic strings, not an enum contract.",
+          "lower": "inspect_espeak(...) returns an immutable, non-initializing espeakinspection record. it reports cli availability independently, the selected native library/source/data, and the ordered libraryprobe records. probes distinguish unloadable libraries, missing mandatory native symbols, and missing exact-clause support. explicit libraries are authoritative and are the only library probed.\n\ndiagnostic source labels such as espeakng-loader, near-executable, system-espeak-ng, system-espeak, explicit, and cli identify discovery paths. they are diagnostic strings, not an enum contract."
+        },
+        {
+          "anchor": "",
+          "heading": "Native backend",
+          "text": "The native backend uses ctypes. eSpeak’s selected voice and other state are process-global, so native calls share a process-wide lock and native manager. Closing a runtime releases its Python ownership; the initialized native library remains resident for the process lifetime rather than being terminated and reinitialized repeatedly. Compatible runtimes reuse it, and conflicting library or data paths are rejected.",
+          "lower": "the native backend uses ctypes. espeak’s selected voice and other state are process-global, so native calls share a process-wide lock and native manager. closing a runtime releases its python ownership; the initialized native library remains resident for the process lifetime rather than being terminated and reinitialized repeatedly. compatible runtimes reuse it, and conflicting library or data paths are rejected."
+        },
+        {
+          "anchor": "",
+          "heading": "Voice selector resolution",
+          "text": "The native backend resolves voice selectors using a two-step strategy:\n\n\nName lookup: espeak_SetVoiceByName(selector) — succeeds for explicit eSpeak voice names and identifiers.\n\n\nLanguage property fallback: when name lookup fails and the native library exposes espeak_SetVoiceByProperties, the backend retries using espeak_SetVoiceByProperties(languages=selector).\n\n\n\nThis is a compatibility strategy, not a BCP-47 implementation in Python. It allows common locale-style selectors such as de-de, en-gb, fr-fr, sv-se, and pt-br to work natively without consumers maintaining their own alias tables.\n\nCLI:\n    eSpeak -v<selector>\n\nNative:\n    SetVoiceByName(selector)\n    -> if not found:\n       SetVoiceByProperties(languages=selector)\n\n\n\n\nOlder eSpeak libraries that lack espeak_SetVoiceByPropertie…",
+          "lower": "the native backend resolves voice selectors using a two-step strategy:\n\n\nname lookup: espeak_setvoicebyname(selector) — succeeds for explicit espeak voice names and identifiers.\n\n\nlanguage property fallback: when name lookup fails and the native library exposes espeak_setvoicebyproperties, the backend retries using espeak_setvoicebyproperties(languages=selector).\n\n\n\nthis is a compatibility strategy, not a bcp-47 implementation in python. it allows common locale-style selectors such as de-de, en-gb, fr-fr, sv-se, and pt-br to work natively without consumers maintaining their own alias tables.\n\ncli:\n    espeak -v<selector>\n\nnative:\n    setvoicebyname(selector)\n    -> if not found:\n       setvoicebyproperties(languages=selector)\n\n\n\n\nolder espeak libraries that lack espeak_setvoicebypropertie…"
+        },
+        {
+          "anchor": "",
+          "heading": "CLI backend",
+          "text": "The CLI backend starts eSpeak for each operation. An explicit data directory, the environment data directory, or data derived near the selected executable is used before any optional loader data. When data names espeak-ng-data or espeak-data, the CLI receives its parent directory through --path, matching native initialization. Otherwise the executable uses its own default data.",
+          "lower": "the cli backend starts espeak for each operation. an explicit data directory, the environment data directory, or data derived near the selected executable is used before any optional loader data. when data names espeak-ng-data or espeak-data, the cli receives its parent directory through --path, matching native initialization. otherwise the executable uses its own default data."
+        },
+        {
+          "anchor": "",
+          "heading": "Clause behavior",
+          "text": "Exact native clauses preserve the complete eSpeak NG terminator code. The six common punctuation constants are comma, colon, semicolon, period, question mark, and exclamation mark. The sentence boundary is derived independently from the sentence-type bit.\n\nOther backends use a documented best-effort punctuation splitter. Its output is useful for migration and ordinary processing, but it is not a substitute for exact native metadata.",
+          "lower": "exact native clauses preserve the complete espeak ng terminator code. the six common punctuation constants are comma, colon, semicolon, period, question mark, and exclamation mark. the sentence boundary is derived independently from the sentence-type bit.\n\nother backends use a documented best-effort punctuation splitter. its output is useful for migration and ordinary processing, but it is not a substitute for exact native metadata."
+        },
+        {
+          "anchor": "",
+          "heading": "Phoneme output semantics",
+          "text": "The native backend supports two phoneme output paths:",
+          "lower": "the native backend supports two phoneme output paths:"
+        },
+        {
+          "anchor": "",
+          "heading": "Native trace (CLI-equivalent)",
+          "text": "When the native library exposes espeak_SetPhonemeCallback, espeak_Synth, and espeak_Synchronize, the backend uses the synthesis trace path. This produces phoneme output identical to the CLI’s -x --ipa mode, including stress markers on weak words and contractions.\n\nRuntimeInfo.phoneme_output_api = \"native-trace\"\nRuntimeInfo.phoneme_parity = \"exact\"",
+          "lower": "when the native library exposes espeak_setphonemecallback, espeak_synth, and espeak_synchronize, the backend uses the synthesis trace path. this produces phoneme output identical to the cli’s -x --ipa mode, including stress markers on weak words and contractions.\n\nruntimeinfo.phoneme_output_api = \"native-trace\"\nruntimeinfo.phoneme_parity = \"exact\""
+        },
+        {
+          "anchor": "",
+          "heading": "Native translation (legacy)",
+          "text": "Older libraries or builds without trace symbols use the espeak_TextToPhonemes direct translation API. This path may produce different stress semantics than the CLI for some words.\n\nRuntimeInfo.phoneme_output_api = \"native-translation\"\nRuntimeInfo.phoneme_parity = \"best-effort\"",
+          "lower": "older libraries or builds without trace symbols use the espeak_texttophonemes direct translation api. this path may produce different stress semantics than the cli for some words.\n\nruntimeinfo.phoneme_output_api = \"native-translation\"\nruntimeinfo.phoneme_parity = \"best-effort\""
+        },
+        {
+          "anchor": "",
+          "heading": "CLI backend",
+          "text": "The CLI backend always uses the eSpeak executable’s synthesis phoneme output.\n\nRuntimeInfo.phoneme_output_api = \"cli\"\nRuntimeInfo.phoneme_parity = \"exact\"",
+          "lower": "the cli backend always uses the espeak executable’s synthesis phoneme output.\n\nruntimeinfo.phoneme_output_api = \"cli\"\nruntimeinfo.phoneme_parity = \"exact\""
+        },
+        {
+          "anchor": "",
+          "heading": "Auto-mode behavior",
+          "text": "When mode=\"auto\", the runtime prefers native trace when available. This ensures mode=\"auto\" produces CLI-equivalent phoneme output on modern eSpeak NG installations.\n\nThe parity field on RuntimeInfo is preserved for backward compatibility but relates to exact clause API support, not phoneme output semantics. Use phoneme_output_api and phoneme_parity for phoneme-level diagnostics.",
+          "lower": "when mode=\"auto\", the runtime prefers native trace when available. this ensures mode=\"auto\" produces cli-equivalent phoneme output on modern espeak ng installations.\n\nthe parity field on runtimeinfo is preserved for backward compatibility but relates to exact clause api support, not phoneme output semantics. use phoneme_output_api and phoneme_parity for phoneme-level diagnostics."
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/changelog/",
+      "title": "espeakng-runtime Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nChanged phonemize_m …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed phonemize_many to accept multiline text inputs with transparent CLI fallback",
+          "lower": "changed phonemize_many to accept multiline text inputs with transparent cli fallback"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Added Termux-specific library discovery tests",
+          "lower": "added termux-specific library discovery tests"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added native phoneme trace API path for CLI-equivalent IPA output\n\n\nAdded phoneme_output_api and phoneme_parity fields on RuntimeInfo for backend diagnostics\n\n\nAdded native library discovery probes for phoneme trace symbols\n\n\nAdded backend parity checking development tool",
+          "lower": "added native phoneme trace api path for cli-equivalent ipa output\n\n\nadded phoneme_output_api and phoneme_parity fields on runtimeinfo for backend diagnostics\n\n\nadded native library discovery probes for phoneme trace symbols\n\n\nadded backend parity checking development tool"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented native trace and native translation phoneme output paths",
+          "lower": "documented native trace and native translation phoneme output paths"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved phoneme parity tests for weak words, contractions, and phrase context",
+          "lower": "improved phoneme parity tests for weak words, contractions, and phrase context"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added Mode type constraining backend selection to auto, native, or cli\n\n\nAdded native_probes property on EspeakRuntime to expose library selection diagnostics",
+          "lower": "added mode type constraining backend selection to auto, native, or cli\n\n\nadded native_probes property on espeakruntime to expose library selection diagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed phonemize_many in native backend to set voice once and reuse it across all texts\n\n\nChanged CLI clauses to use phonemize_many for batch processing instead of individual calls",
+          "lower": "changed phonemize_many in native backend to set voice once and reuse it across all texts\n\n\nchanged cli clauses to use phonemize_many for batch processing instead of individual calls"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented Mode type and native_probes property in API reference\n\n\nFixed changelog formatting and generation",
+          "lower": "documented mode type and native_probes property in api reference\n\n\nfixed changelog formatting and generation"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved CI workflows and release artifact checks",
+          "lower": "improved ci workflows and release artifact checks"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added native voice selection with language-property fallback for locale-style selectors\n\n\nAdded shared whitespace normalization helper for backend output parity\n\n\nAdded batch input validation for phonemize_many",
+          "lower": "added native voice selection with language-property fallback for locale-style selectors\n\n\nadded shared whitespace normalization helper for backend output parity\n\n\nadded batch input validation for phonemize_many"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed parity tests with regional locale matrix, custom U+200D tie coverage, batch parity, and auto mode parity",
+          "lower": "changed parity tests with regional locale matrix, custom u+200d tie coverage, batch parity, and auto mode parity"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented native voice selector resolution algorithm (name-first, language-property-second)\n\n\nDocumented regional locale selector support and custom tie examples in usage guide\n\n\nDocumented auto mode compatibility for downstream consumers in migration guide",
+          "lower": "documented native voice selector resolution algorithm (name-first, language-property-second)\n\n\ndocumented regional locale selector support and custom tie examples in usage guide\n\n\ndocumented auto mode compatibility for downstream consumers in migration guide"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added native and CLI eSpeak NG backends for IPA phonemization, batching, voices, clauses, and diagnostics\n\n\nAdded exact native clause metadata and grouped punctuation handling for best-effort clause processing\n\n\nAdded non-initializing eSpeak capability inspection with ordered native candidate probes\n\n\nAdded language-style voice resolution with deterministic standard and explicit MBROLA selection",
+          "lower": "added native and cli espeak ng backends for ipa phonemization, batching, voices, clauses, and diagnostics\n\n\nadded exact native clause metadata and grouped punctuation handling for best-effort clause processing\n\n\nadded non-initializing espeak capability inspection with ordered native candidate probes\n\n\nadded language-style voice resolution with deterministic standard and explicit mbrola selection"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed cross-platform native library discovery by normalizing near-executable paths\n\n\nFixed CLI fallback after native initialization failures and normalized native and CLI data paths\n\n\nFixed native runtime cleanup on garbage collection and exposed normalized version components",
+          "lower": "fixed cross-platform native library discovery by normalizing near-executable paths\n\n\nfixed cli fallback after native initialization failures and normalized native and cli data paths\n\n\nfixed native runtime cleanup on garbage collection and exposed normalized version components"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the Sphinx build and Python-version-compatible TOML packaging configuration\n\n\nDocumented package version, Python support, download, and coverage badges in the project README\n\n\nDocumented Termux installation and Android-specific handling for unavailable bundled libraries\n\n\nDocumented structured fallback diagnostics, exact clauses, and Piper consumer ownership boundaries\n\n\nDocumented voice request resolution and runtime lifecycle behavior",
+          "lower": "documented the sphinx build and python-version-compatible toml packaging configuration\n\n\ndocumented package version, python support, download, and coverage badges in the project readme\n\n\ndocumented termux installation and android-specific handling for unavailable bundled libraries\n\n\ndocumented structured fallback diagnostics, exact clauses, and piper consumer ownership boundaries\n\n\ndocumented voice request resolution and runtime lifecycle behavior"
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/",
+      "title": "espeakng-runtime",
+      "snippet": "espeakng-runtime is a small Python adapter around eSpeak and eSpeak NG for applications that need phonemization without embedding model-spec …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "espeakng-runtime",
+          "text": "espeakng-runtime is a small Python adapter around eSpeak and eSpeak NG for applications that need phonemization without embedding model-specific G2P policy.\n\nIt provides:\n\n\nnative ctypes and command-line backends\n\n\nautomatic executable, library, and data discovery\n\n\noptional espeakng-loader integration\n\n\nIPA phonemization and batching\n\n\nvoice enumeration\n\n\nexact native clause terminator codes when supported\n\n\nruntime diagnostics and capability reporting\n\n\n\n\n\nInstallation\nRequirements\n\nDevelopment and documentation\n\nConfiguration\n\n\n\n\nUsage\nBasic phonemization\n\nRegional locale selectors\n\nOptions and batches\n\nClauses\n\nClosing runtimes\n\n\n\n\nBackends and discovery\nAutomatic selection\n\nInspection and diagnostics\n\nNative backend\n\nCLI backend\n\nClause behavior\n\nPhoneme output semantics\n\n\n\n\nAPI refe…",
+          "lower": "espeakng-runtime is a small python adapter around espeak and espeak ng for applications that need phonemization without embedding model-specific g2p policy.\n\nit provides:\n\n\nnative ctypes and command-line backends\n\n\nautomatic executable, library, and data discovery\n\n\noptional espeakng-loader integration\n\n\nipa phonemization and batching\n\n\nvoice enumeration\n\n\nexact native clause terminator codes when supported\n\n\nruntime diagnostics and capability reporting\n\n\n\n\n\ninstallation\nrequirements\n\ndevelopment and documentation\n\nconfiguration\n\n\n\n\nusage\nbasic phonemization\n\nregional locale selectors\n\noptions and batches\n\nclauses\n\nclosing runtimes\n\n\n\n\nbackends and discovery\nautomatic selection\n\ninspection and diagnostics\n\nnative backend\n\ncli backend\n\nclause behavior\n\nphoneme output semantics\n\n\n\n\napi refe…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/installation/",
+      "title": "espeakng-runtime Installation",
+      "snippet": "Python 3.10 or newer is supported. Install eSpeak NG from your operating system package manager when using the native or CLI backends.\n\npyth …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Requirements",
+          "text": "Python 3.10 or newer is supported. Install eSpeak NG from your operating system package manager when using the native or CLI backends.\n\npython -m pip install espeakng-runtime\n\n\n\n\nThe optional bundled extra installs espeakng-loader, which supplies a native library and its data files when that package supports the current platform:\n\npython -m pip install \"espeakng-runtime[bundled]\"\n\n\n\n\nThe bundled extra does not change the package’s public API and does not provide model-specific G2P conversion.",
+          "lower": "python 3.10 or newer is supported. install espeak ng from your operating system package manager when using the native or cli backends.\n\npython -m pip install espeakng-runtime\n\n\n\n\nthe optional bundled extra installs espeakng-loader, which supplies a native library and its data files when that package supports the current platform:\n\npython -m pip install \"espeakng-runtime[bundled]\"\n\n\n\n\nthe bundled extra does not change the package’s public api and does not provide model-specific g2p conversion."
+        },
+        {
+          "anchor": "",
+          "heading": "Termux / Android",
+          "text": "On Termux, prefer the native Termux eSpeak NG package rather than the\nbundled extra. espeakng-loader publishes desktop/server Linux\nmanylinux builds, not Android/Bionic builds.\n\npkg install espeak\npython -m pip install espeakng-runtime\n\n\n\n\nEspeakRuntime(mode=\"auto\") or mode=\"native\" can then discover the\nTermux-provided shared library. Use runtime.info to confirm the selected\nlibrary and source.",
+          "lower": "on termux, prefer the native termux espeak ng package rather than the\nbundled extra. espeakng-loader publishes desktop/server linux\nmanylinux builds, not android/bionic builds.\n\npkg install espeak\npython -m pip install espeakng-runtime\n\n\n\n\nespeakruntime(mode=\"auto\") or mode=\"native\" can then discover the\ntermux-provided shared library. use runtime.info to confirm the selected\nlibrary and source."
+        },
+        {
+          "anchor": "",
+          "heading": "Development and documentation",
+          "text": "python -m pip install -e \".[dev,docs]\"\n\n\n\n\nBuild the site with:\n\npython docs/make.py html",
+          "lower": "python -m pip install -e \".[dev,docs]\"\n\n\n\n\nbuild the site with:\n\npython docs/make.py html"
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration",
+          "text": "Constructor arguments take precedence over environment variables:\n\n\nESPEAKNG_RUNTIME_EXECUTABLE\n\n\nESPEAKNG_RUNTIME_LIBRARY\n\n\nESPEAKNG_RUNTIME_DATA\n\n\n\nUse runtime.info to inspect the selected implementation and resolved paths.",
+          "lower": "constructor arguments take precedence over environment variables:\n\n\nespeakng_runtime_executable\n\n\nespeakng_runtime_library\n\n\nespeakng_runtime_data\n\n\n\nuse runtime.info to inspect the selected implementation and resolved paths."
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/migration/",
+      "title": "espeakng-runtime Migration",
+      "snippet": "espeakng-runtime centralizes eSpeak discovery and phonemization while leaving model-specific mapping to the consumer.\nPass legacy executable …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Migration",
+          "text": "espeakng-runtime centralizes eSpeak discovery and phonemization while leaving model-specific mapping to the consumer.",
+          "lower": "espeakng-runtime centralizes espeak discovery and phonemization while leaving model-specific mapping to the consumer."
+        },
+        {
+          "anchor": "",
+          "heading": "KokoroG2P and PiperG2P",
+          "text": "Pass legacy executable, library, and data settings to the public constructor. The valid exact-clause preference argument is prefer_exact_clauses, not require_exact_clauses.\n\nfrom espeakng_runtime import EspeakRuntime\n\nruntime = EspeakRuntime(\n    mode=\"auto\",\n    executable=legacy_executable,\n    library=legacy_library,\n    data=legacy_data,\n    prefer_exact_clauses=True,\n)\n\n\n\n\nUse runtime.phonemize() for raw IPA output. Keep Piper clause composition, terminator handling, phone IDs, and NFD mapping in PiperG2P. Keep Kokoro vocabulary conversion in KokoroG2P.\n\nprefer_exact_clauses=True prefers an exact native backend in auto mode, but may fall back to CLI. Require exact behavior at the call site with runtime.clauses(text, voice=voice, exact=True), which raises CapabilityError when exact na…",
+          "lower": "pass legacy executable, library, and data settings to the public constructor. the valid exact-clause preference argument is prefer_exact_clauses, not require_exact_clauses.\n\nfrom espeakng_runtime import espeakruntime\n\nruntime = espeakruntime(\n    mode=\"auto\",\n    executable=legacy_executable,\n    library=legacy_library,\n    data=legacy_data,\n    prefer_exact_clauses=true,\n)\n\n\n\n\nuse runtime.phonemize() for raw ipa output. keep piper clause composition, terminator handling, phone ids, and nfd mapping in piperg2p. keep kokoro vocabulary conversion in kokorog2p.\n\nprefer_exact_clauses=true prefers an exact native backend in auto mode, but may fall back to cli. require exact behavior at the call site with runtime.clauses(text, voice=voice, exact=true), which raises capabilityerror when exact na…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/espeakng-runtime/usage/",
+      "title": "espeakng-runtime Usage",
+      "snippet": "from espeakng_runtime import EspeakRuntime\n\nwith EspeakRuntime() as runtime:\n    print(runtime.phonemize(\"Hello world\", voice=\"en-us\")) …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Basic phonemization",
+          "text": "from espeakng_runtime import EspeakRuntime\n\nwith EspeakRuntime() as runtime:\n    print(runtime.phonemize(\"Hello world\", voice=\"en-us\"))\n\n\n\n\nThe default auto mode prefers a usable native library and falls back to the CLI executable. Select a backend explicitly with mode=\"native\" or mode=\"cli\".",
+          "lower": "from espeakng_runtime import espeakruntime\n\nwith espeakruntime() as runtime:\n    print(runtime.phonemize(\"hello world\", voice=\"en-us\"))\n\n\n\n\nthe default auto mode prefers a usable native library and falls back to the cli executable. select a backend explicitly with mode=\"native\" or mode=\"cli\"."
+        },
+        {
+          "anchor": "",
+          "heading": "Regional locale selectors",
+          "text": "Common locale-style selectors work across both backends:\n\nwith EspeakRuntime(mode=\"auto\") as runtime:\n    runtime.phonemize(\"Haus\", voice=\"de-de\")\n    runtime.phonemize(\"bonjour\", voice=\"fr-fr\")\n    runtime.phonemize(\"hej\", voice=\"sv-se\")",
+          "lower": "common locale-style selectors work across both backends:\n\nwith espeakruntime(mode=\"auto\") as runtime:\n    runtime.phonemize(\"haus\", voice=\"de-de\")\n    runtime.phonemize(\"bonjour\", voice=\"fr-fr\")\n    runtime.phonemize(\"hej\", voice=\"sv-se\")"
+        },
+        {
+          "anchor": "",
+          "heading": "Options and batches",
+          "text": "with EspeakRuntime(mode=\"auto\") as runtime:\n    runtime.phonemize(\"Hello\", voice=\"en-us\", separator=\"_\")\n    runtime.phonemize(\"joined\", voice=\"en-us\", use_tie=True)\n    runtime.phonemize_many([\"One\", \"Two\"], voice=\"en-us\")\n    runtime.phonemize(\n        \"Haus\",\n        voice=\"de-de\",\n        use_tie=True,\n        tie_char=\"\\u200d\",\n    )\n\n\n\n\nphonemize_many() preserves one output element per input element. Inputs may contain line breaks (\\n, \\r, or \\r\\n). The CLI backend uses its fast newline-delimited batch path for single-line inputs and transparently falls back to per-item invocations when multiline input would make CLI framing ambiguous.\n\nlist_voices() returns available Voice records. runtime.info returns a RuntimeInfo record describing discovery, implementation, version, parity, and…",
+          "lower": "with espeakruntime(mode=\"auto\") as runtime:\n    runtime.phonemize(\"hello\", voice=\"en-us\", separator=\"_\")\n    runtime.phonemize(\"joined\", voice=\"en-us\", use_tie=true)\n    runtime.phonemize_many([\"one\", \"two\"], voice=\"en-us\")\n    runtime.phonemize(\n        \"haus\",\n        voice=\"de-de\",\n        use_tie=true,\n        tie_char=\"\\u200d\",\n    )\n\n\n\n\nphonemize_many() preserves one output element per input element. inputs may contain line breaks (\\n, \\r, or \\r\\n). the cli backend uses its fast newline-delimited batch path for single-line inputs and transparently falls back to per-item invocations when multiline input would make cli framing ambiguous.\n\nlist_voices() returns available voice records. runtime.info returns a runtimeinfo record describing discovery, implementation, version, parity, and…"
+        },
+        {
+          "anchor": "",
+          "heading": "Clauses",
+          "text": "All backends support best-effort clause splitting. Native eSpeak NG libraries that expose espeak_TextToPhonemesWithTerminator also support exact clause metadata:\n\nwith EspeakRuntime(prefer_exact_clauses=True) as runtime:\n    clauses = runtime.clauses(\"One, two: three; four. Five? Six!\", voice=\"en-us\", exact=True)\n\n\n\n\nEach Clause contains phonemes, a punctuation token, the raw terminator_code, and sentence_end. Calling exact=True on a backend without the native capability raises CapabilityError.",
+          "lower": "all backends support best-effort clause splitting. native espeak ng libraries that expose espeak_texttophonemeswithterminator also support exact clause metadata:\n\nwith espeakruntime(prefer_exact_clauses=true) as runtime:\n    clauses = runtime.clauses(\"one, two: three; four. five? six!\", voice=\"en-us\", exact=true)\n\n\n\n\neach clause contains phonemes, a punctuation token, the raw terminator_code, and sentence_end. calling exact=true on a backend without the native capability raises capabilityerror."
+        },
+        {
+          "anchor": "",
+          "heading": "Closing runtimes",
+          "text": "Use the context manager for deterministic cleanup. After close(), a runtime is unusable and raises the backend’s runtime error if an operation is attempted.",
+          "lower": "use the context manager for deterministic cleanup. after close(), a runtime is unusable and raises the backend’s runtime error if an operation is attempted."
+        }
+      ]
+    }
+  ]
+}
