@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "piperg2p Configuration API"
-permalink: /tools/piperg2p/main/api/config/
+title: "piperg2p Result and span types"
+permalink: /tools/piperg2p/main/api/types/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
@@ -540,102 +540,247 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="configuration-api">
-<h1>Configuration API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is the validated, immutable view of the Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> fields used by PiperG2P. <code class="docutils literal notranslate"><span class="pre">PiperConfig</span></code> is a compatibility alias. High-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> arguments accept a path, mapping, or existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; the lower-level frontend expects a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> or path via <code class="docutils literal notranslate"><span class="pre">from_config()</span></code>.</p>
-<p>Strict parsing is the default. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is a compatibility mode for legacy inputs that can infer supported defaults and emit <code class="docutils literal notranslate"><span class="pre">CompatibilityWarning</span></code>; it does not make unsupported phoneme providers available.</p>
-<p>.. py:class:: VoiceConfig(num_symbols: int, num_speakers: int, sample_rate: int, phoneme_id_map: ~collections.abc.Mapping[str, tuple[int, …]], phoneme_type: ~piperg2p.config.PhonemeType = PhonemeType.ESPEAK, espeak_voice: str = ‘en-us’, speaker_id_map: ~collections.abc.Mapping[str, int] = <factory>, default_speaker_id: int = 0, noise_scale: float = 0.667, length_scale: float = 1.0, noise_w: float = 0.8, hop_length: int = 256, vowel_clusters: frozenset[tuple[str, …]] = <factory>, piper_version: str | None = None, extra: ~collections.abc.Mapping[str, ~typing.Any] = <factory>)
+<section id="result-and-span-types">
+<h1>Result and span types</h1>
+<p>PiperG2P returns structured phonemization results and sentence-scoped model IDs. Source offsets throughout this API use half-open character ranges <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code> into the exact input text.</p>
+<section id="phonemizeresult">
+<h2><code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code></h2>
+<p>The high-level result contains:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">clean_text</span></code>: source text after the facade’s preparation boundary (PiperG2P does not perform semantic verbalization).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">tokens</span></code>: source-aligned <code class="docutils literal notranslate"><span class="pre">TokenSpan</span></code> entries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">extended_text</span></code>: current extended text view; for PiperG2P it is the prepared source text.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phonemes</span></code>: flattened phoneme-string convenience view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">token_ids</span></code>: flattened ID list convenience view.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">warnings</span></code>: phonemization/encoding warning messages.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">language_routes</span></code>: routing decisions, when routing is requested.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sentences</span></code>: authoritative sentence-level phonemes and IDs.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">diagnostics</span></code>: frontend/backend and optional lexicon diagnostics.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">missing_phonemes</span></code>: absent symbols recorded during encoding.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ids</span></code>: tuple convenience view of <code class="docutils literal notranslate"><span class="pre">token_ids</span></code>.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phoneme_symbols</span></code>: tuple of characters from the flattened <code class="docutils literal notranslate"><span class="pre">phonemes</span></code> string; use sentence phoneme data when symbol grouping matters.</p></li>
+</ul>
+<p>Do not use the flattened <code class="docutils literal notranslate"><span class="pre">token_ids</span></code>/<code class="docutils literal notranslate"><span class="pre">ids</span></code> as the normal model-inference unit. Process each <code class="docutils literal notranslate"><span class="pre">sentence.ids</span></code> independently.</p>
+<p>.. py:class:: PhonemizeResult(clean_text: str = ‘’, tokens: list[~piperg2p.types.TokenSpan] = <factory>, extended_text: str = ‘’, phonemes: str = ‘’, token_ids: list[int] = <factory>, warnings: list[str] = <factory>, language_routes: list[~piperg2p.types.LanguageRoute] = <factory>, sentences: tuple[~piperg2p.types.PhonemeSentence, …] = (), diagnostics: ~piperg2p.diagnostics.FrontendDiagnostics | None = None, missing_phonemes: tuple[str, …] = ())
 :module: piperg2p
-:canonical: piperg2p.config.VoiceConfig</p>
+:canonical: piperg2p.types.PhonemizeResult</p>
 <p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Validated subset of a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> voice configuration.</p>
-<p>.. py:attribute:: VoiceConfig.num_symbols
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.num_speakers
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.sample_rate
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, tuple[int, …]]</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_type
-:module: piperg2p
-:type: ~piperg2p.config.PhonemeType
-:value: ‘espeak’</p>
-<p>.. py:attribute:: VoiceConfig.espeak_voice
+<p>High-level result with flattened convenience views and Piper sentence data.</p>
+<p>.. py:attribute:: PhonemizeResult.clean_text
 :module: piperg2p
 :type: str
-:value: ‘en-us’</p>
-<p>.. py:attribute:: VoiceConfig.speaker_id_map
+:value: ‘’</p>
+<p>.. py:attribute:: PhonemizeResult.tokens
 :module: piperg2p
-:type: ~collections.abc.Mapping[str, int]</p>
-<p>.. py:attribute:: VoiceConfig.default_speaker_id
+:type: list[~piperg2p.types.TokenSpan]</p>
+<p>.. py:attribute:: PhonemizeResult.extended_text
 :module: piperg2p
-:type: int
-:value: 0</p>
-<p>.. py:attribute:: VoiceConfig.noise_scale
+:type: str
+:value: ‘’</p>
+<p>.. py:attribute:: PhonemizeResult.phonemes
 :module: piperg2p
-:type: float
-:value: 0.667</p>
-<p>.. py:attribute:: VoiceConfig.length_scale
+:type: str
+:value: ‘’</p>
+<p>.. py:attribute:: PhonemizeResult.token_ids
 :module: piperg2p
-:type: float
-:value: 1.0</p>
-<p>.. py:attribute:: VoiceConfig.noise_w
+:type: list[int]</p>
+<p>.. py:attribute:: PhonemizeResult.warnings
 :module: piperg2p
-:type: float
-:value: 0.8</p>
-<p>.. py:attribute:: VoiceConfig.hop_length
+:type: list[str]</p>
+<p>.. py:attribute:: PhonemizeResult.language_routes
 :module: piperg2p
-:type: int
-:value: 256</p>
-<p>.. py:attribute:: VoiceConfig.vowel_clusters
+:type: list[~piperg2p.types.LanguageRoute]</p>
+<p>.. py:attribute:: PhonemizeResult.sentences
 :module: piperg2p
-:type: frozenset[tuple[str, …]]</p>
-<p>.. py:attribute:: VoiceConfig.piper_version
+:type: tuple[~piperg2p.types.PhonemeSentence, …]
+:value: ()</p>
+<p>.. py:attribute:: PhonemizeResult.diagnostics
+:module: piperg2p
+:type: ~piperg2p.diagnostics.FrontendDiagnostics | None
+:value: None</p>
+<p>.. py:attribute:: PhonemizeResult.missing_phonemes
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:property:: PhonemizeResult.text
+:module: piperg2p
+:type: str</p>
+<p>.. py:property:: PhonemizeResult.ids
+:module: piperg2p
+:type: tuple[int, …]</p>
+<p>.. py:property:: PhonemizeResult.phoneme_symbols
+:module: piperg2p
+:type: tuple[str, …]</p>
+</section>
+<section id="phonemesentence">
+<h2><code class="docutils literal notranslate"><span class="pre">PhonemeSentence</span></code></h2>
+<p>Each sentence records <code class="docutils literal notranslate"><span class="pre">phonemes</span></code>, <code class="docutils literal notranslate"><span class="pre">phoneme_string</span></code> (the joined string view), <code class="docutils literal notranslate"><span class="pre">ids</span></code>, <code class="docutils literal notranslate"><span class="pre">missing_phonemes</span></code>, and <code class="docutils literal notranslate"><span class="pre">warnings</span></code>. Its <code class="docutils literal notranslate"><span class="pre">metadata</span></code> field is a tuple of extra key/value pairs. Piper model inference should normally receive each sentence’s <code class="docutils literal notranslate"><span class="pre">ids</span></code> separately.</p>
+<p>.. py:class:: PhonemeSentence(phonemes: ‘tuple[str, …]’, ids: ‘tuple[int, …]’, missing_phonemes: ‘tuple[str, …]’ = (), warnings: ‘tuple[str, …]’ = (), metadata: ‘tuple[tuple[str, Any], …]’ = ())
+:module: piperg2p
+:canonical: piperg2p.types.PhonemeSentence</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: PhonemeSentence.phonemes
+:module: piperg2p
+:type: tuple[str, …]</p>
+<p>.. py:attribute:: PhonemeSentence.ids
+:module: piperg2p
+:type: tuple[int, …]</p>
+<p>.. py:attribute:: PhonemeSentence.missing_phonemes
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:attribute:: PhonemeSentence.warnings
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:attribute:: PhonemeSentence.metadata
+:module: piperg2p
+:type: tuple[tuple[str, ~typing.Any], …]
+:value: ()</p>
+<p>.. py:property:: PhonemeSentence.phoneme_string
+:module: piperg2p
+:type: str</p>
+</section>
+<section id="source-spans-and-caller-annotations">
+<h2>Source spans and caller annotations</h2>
+<p><code class="docutils literal notranslate"><span class="pre">TokenSpan</span></code> preserves the original token text, half-open <code class="docutils literal notranslate"><span class="pre">char_start</span></code>/<code class="docutils literal notranslate"><span class="pre">char_end</span></code> offsets (also available as <code class="docutils literal notranslate"><span class="pre">start</span></code>/<code class="docutils literal notranslate"><span class="pre">end</span></code>), optional <code class="docutils literal notranslate"><span class="pre">lang</span></code>, <code class="docutils literal notranslate"><span class="pre">extended_text</span></code>, and caller metadata. <code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> records source-aligned optional <code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code> fields.</p>
+<p>.. py:class:: TokenSpan(text: str, char_start: int, char_end: int, lang: str | None = None, extended_text: str | None = None, meta: dict[str, ~typing.Any] = <factory>)
+:module: piperg2p
+:canonical: piperg2p.types.TokenSpan</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>A source-preserving token using half-open character offsets.</p>
+<p>.. py:attribute:: TokenSpan.text
+:module: piperg2p
+:type: str</p>
+<p>.. py:attribute:: TokenSpan.char_start
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: TokenSpan.char_end
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: TokenSpan.lang
 :module: piperg2p
 :type: str | None
 :value: None</p>
-<p>.. py:attribute:: VoiceConfig.extra
+<p>.. py:attribute:: TokenSpan.extended_text
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenSpan.meta
+:module: piperg2p
+:type: dict[str, ~typing.Any]</p>
+<p>.. py:property:: TokenSpan.start
+:module: piperg2p
+:type: int</p>
+<p>.. py:property:: TokenSpan.end
+:module: piperg2p
+:type: int</p>
+<p>.. py:class:: TokenAnnotation(start: ‘int’, end: ‘int’, text: ‘str | None’ = None, pos: ‘str | None’ = None, tag: ‘str | None’ = None, lemma: ‘str | None’ = None, language: ‘str | None’ = None, morph: ‘str | None’ = None)
+:module: piperg2p
+:canonical: piperg2p.types.TokenAnnotation</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: TokenAnnotation.start
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: TokenAnnotation.end
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: TokenAnnotation.text
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenAnnotation.pos
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenAnnotation.tag
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenAnnotation.lemma
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenAnnotation.language
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: TokenAnnotation.morph
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:property:: TokenAnnotation.char_start
+:module: piperg2p
+:type: int</p>
+<p>.. py:property:: TokenAnnotation.char_end
+:module: piperg2p
+:type: int</p>
+<p><code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> contains <code class="docutils literal notranslate"><span class="pre">char_start</span></code>, <code class="docutils literal notranslate"><span class="pre">char_end</span></code>, and immutable <code class="docutils literal notranslate"><span class="pre">attrs</span></code>; its <code class="docutils literal notranslate"><span class="pre">start</span></code> and <code class="docutils literal notranslate"><span class="pre">end</span></code> properties are aliases. Common attributes are <code class="docutils literal notranslate"><span class="pre">ph</span></code> for explicit phoneme content, <code class="docutils literal notranslate"><span class="pre">lang</span></code> for an eSpeak voice override, and <code class="docutils literal notranslate"><span class="pre">stress</span></code> for structured stress after pronunciation resolution. See <a class="reference internal" href="../../overrides/"><span class="std std-doc">overrides</span></a>.</p>
+<p>.. py:class:: OverrideSpan(char_start: ‘int’, char_end: ‘int’, attrs: ‘Mapping[str, Any]’ = <factory>)
+:module: piperg2p
+:canonical: piperg2p.types.OverrideSpan</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: OverrideSpan.char_start
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: OverrideSpan.char_end
+:module: piperg2p
+:type: int</p>
+<p>.. py:attribute:: OverrideSpan.attrs
 :module: piperg2p
 :type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:method:: VoiceConfig.from_dict(raw: ~collections.abc.Mapping[str, ~typing.Any], *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
+<p>.. py:property:: OverrideSpan.start
 :module: piperg2p
-:classmethod:</p>
-<p>.. py:method:: VoiceConfig.from_json(path: str | ~pathlib.Path, *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
+:type: int</p>
+<p>.. py:property:: OverrideSpan.end
 :module: piperg2p
-:classmethod:</p>
-<p>.. py:property:: VoiceConfig.noise_w_scale
+:type: int</p>
+</section>
+<section id="routing-types">
+<h2>Routing types</h2>
+<p><code class="docutils literal notranslate"><span class="pre">LanguageRoute</span></code> records a half-open source span, selected <code class="docutils literal notranslate"><span class="pre">language</span></code>, optional <code class="docutils literal notranslate"><span class="pre">requested_language</span></code>, decision <code class="docutils literal notranslate"><span class="pre">reason</span></code>, and evidence. <code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig</span></code> accepts <code class="docutils literal notranslate"><span class="pre">mode=&quot;explicit&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">mode=&quot;auto&quot;</span></code>; automatic routing changes the default only on unambiguous configured evidence. Explicit spans are supplied by the caller as overrides.</p>
+<p>.. py:class:: LanguageRoute(char_start: ‘int’, char_end: ‘int’, language: ‘str’, requested_language: ‘str | None’ = None, reason: ‘str | None’ = None, evidence: ‘tuple[str, …]’ = ())
 :module: piperg2p
-:type: float</p>
-<p>.. py:method:: VoiceConfig.to_dict() -&gt; dict[str, ~typing.Any]
-:module: piperg2p</p>
-<p>.. py:class:: PhonemeType(*values)
+:canonical: piperg2p.types.LanguageRoute</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: LanguageRoute.char_start
 :module: piperg2p
-:canonical: piperg2p.config.PhonemeType</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~enum.Enum</span></code></p>
-<p>.. py:attribute:: PhonemeType.ESPEAK
+:type: int</p>
+<p>.. py:attribute:: LanguageRoute.char_end
 :module: piperg2p
-:value: ‘espeak’</p>
-<p>.. py:attribute:: PhonemeType.TEXT
+:type: int</p>
+<p>.. py:attribute:: LanguageRoute.language
 :module: piperg2p
-:value: ‘text’</p>
-<p>.. py:attribute:: PhonemeType.PINYIN
+:type: str</p>
+<p>.. py:attribute:: LanguageRoute.requested_language
 :module: piperg2p
-:value: ‘pinyin’</p>
-<p>.. py:attribute:: PhonemeType.HEBREW
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: LanguageRoute.reason
 :module: piperg2p
-:value: ‘hebrew’</p>
-<p>.. py:attribute:: PhonemeType.JAPANESE
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: LanguageRoute.evidence
 :module: piperg2p
-:value: ‘japanese’</p>
-<p>.. py:attribute:: PhonemeType.THAI
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:class:: LanguageRoutingConfig(mode: ‘str’ = ‘explicit’, languages: ‘tuple[str, …]’ = (), lexicons: ‘Mapping[str, Sequence[str]]’ = <factory>)
 :module: piperg2p
-:value: ‘thai’</p>
-<p>For the supported/unavailable distinction and the base eSpeak voice versus routing language, see <a class="reference internal" href="../../phoneme-types/"><span class="std std-doc">phoneme types</span></a> and <a class="reference internal" href="../../voice-config/"><span class="std std-doc">voice configuration</span></a>.</p>
+:canonical: piperg2p.types.LanguageRoutingConfig</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: LanguageRoutingConfig.mode
+:module: piperg2p
+:type: str
+:value: ‘explicit’</p>
+<p>.. py:attribute:: LanguageRoutingConfig.languages
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:attribute:: LanguageRoutingConfig.lexicons
+:module: piperg2p
+:type: ~collections.abc.Mapping[str, ~collections.abc.Sequence[str]]</p>
+<p>The runtime currently accepts per-language evidence mappings, lookup-capable objects, or callables even though <code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig.lexicons</span></code> is annotated more narrowly. This reference records behavior without changing that contract. See <a class="reference internal" href="../../language-routing/"><span class="std std-doc">language routing</span></a>.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

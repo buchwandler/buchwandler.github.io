@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: d127d076465ba8e486f88339095db3128f7d8832
+source_commit: 15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec
 source_url: https://github.com/buchwandler/piperg2p/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/piperg2p
@@ -24,7 +24,7 @@ versions:
   current: true
 entries:
 - slug: index
-  title: piperg2p documentation
+  title: PiperG2P
   url: /tools/piperg2p/main/
 - slug: installation
   title: piperg2p Installation
@@ -32,6 +32,12 @@ entries:
 - slug: quickstart
   title: piperg2p Quick start
   url: /tools/piperg2p/main/quickstart/
+- slug: prepared-text
+  title: piperg2p Prepared-text boundary
+  url: /tools/piperg2p/main/prepared-text/
+- slug: usage
+  title: piperg2p Practical usage
+  url: /tools/piperg2p/main/usage/
 - slug: voice-config
   title: piperg2p Voice configuration
   url: /tools/piperg2p/main/voice-config/
@@ -47,14 +53,41 @@ entries:
 - slug: raw-phonemes
   title: piperg2p Raw phonemes
   url: /tools/piperg2p/main/raw-phonemes/
+- slug: overrides
+  title: piperg2p Overrides, annotations, markers, and stress
+  url: /tools/piperg2p/main/overrides/
+- slug: language-routing
+  title: piperg2p Language routing
+  url: /tools/piperg2p/main/language-routing/
 - slug: phoneme-types
   title: piperg2p Phoneme types
   url: /tools/piperg2p/main/phoneme-types/
+- slug: api/high-level
+  title: piperg2p High-level API
+  url: /tools/piperg2p/main/api/high-level/
+- slug: api/core
+  title: piperg2p Low-level frontend API
+  url: /tools/piperg2p/main/api/core/
+- slug: api/config
+  title: piperg2p Configuration API
+  url: /tools/piperg2p/main/api/config/
+- slug: api/types
+  title: piperg2p Result and span types
+  url: /tools/piperg2p/main/api/types/
+- slug: api/backends
+  title: piperg2p Backend API
+  url: /tools/piperg2p/main/api/backends/
+- slug: api/diagnostics
+  title: piperg2p Diagnostics API
+  url: /tools/piperg2p/main/api/diagnostics/
+- slug: api/errors
+  title: piperg2p Errors and warnings
+  url: /tools/piperg2p/main/api/errors/
 - slug: compatibility
   title: piperg2p Compatibility policy
   url: /tools/piperg2p/main/compatibility/
 - slug: provenance
-  title: piperg2p Provenance and clean-room boundary
+  title: piperg2p Provenance and independence boundary
   url: /tools/piperg2p/main/provenance/
 - slug: reference-benchmark
   title: piperg2p Reference benchmark
@@ -65,15 +98,3 @@ entries:
 - slug: changelog
   title: piperg2p Changelog
   url: /tools/piperg2p/main/changelog/
-- slug: api/core
-  title: piperg2p Core API
-  url: /tools/piperg2p/main/api/core/
-- slug: api/backends
-  title: piperg2p Backend API
-  url: /tools/piperg2p/main/api/backends/
-- slug: api/config
-  title: piperg2p Configuration API
-  url: /tools/piperg2p/main/api/config/
-- slug: api/diagnostics
-  title: piperg2p Diagnostics API
-  url: /tools/piperg2p/main/api/diagnostics/

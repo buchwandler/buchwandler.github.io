@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "piperg2p Core API"
+title: "piperg2p Low-level frontend API"
 permalink: /tools/piperg2p/main/api/core/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -540,23 +540,33 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="core-api">
-<h1>Core API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">PiperFrontend</span></code> accepts a validated <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> and optional runtime lexicon settings:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">PiperFrontend</span><span class="p">(</span>
-    <span class="n">config</span><span class="p">,</span>
-    <span class="n">backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">missing</span><span class="o">=</span><span class="n">MissingPhonemePolicy</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
-    <span class="n">lexicons</span><span class="o">=</span><span class="p">(),</span>
-    <span class="n">lexicon_store</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">lexicon_backend</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">lexicons</span></code> and <code class="docutils literal notranslate"><span class="pre">lexicon_backend</span></code> are mutually exclusive. Lexicon overlays currently apply only to <code class="docutils literal notranslate"><span class="pre">phoneme_type=&quot;espeak&quot;</span></code>. <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is not modified by runtime lexicon selection, and its <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code> remains authoritative.</p>
-<p>Stable lexicon contracts are available from <code class="docutils literal notranslate"><span class="pre">piperg2p.lexicons</span></code>: <code class="docutils literal notranslate"><span class="pre">PronunciationLookup</span></code>, <code class="docutils literal notranslate"><span class="pre">LexiconPronunciation</span></code>, <code class="docutils literal notranslate"><span class="pre">LexiconDiagnostics</span></code>, <code class="docutils literal notranslate"><span class="pre">LexphonLookup</span></code>, and <code class="docutils literal notranslate"><span class="pre">G2LexLookup</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">FrontendDiagnostics.lexicon</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code> when disabled. When enabled it identifies the implementation, language, identifiers, and override compatibility label.</p>
-<p>High-level <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> accepts already-prepared text. Semantic preparation is intentionally outside the API. Applications may compose <code class="docutils literal notranslate"><span class="pre">spokenform.prepare_for_piperg2p()</span></code> before this call, but PiperG2P does not import or depend on Spokenform.</p>
+<section id="low-level-frontend-api">
+<h1>Low-level frontend API</h1>
+<p><code class="docutils literal notranslate"><span class="pre">PiperFrontend</span></code> is the lower-level voice-config-driven frontend. Most applications should start with the sibling-style facade documented on the <a class="reference internal" href="../high-level/"><span class="std std-doc">high-level API page</span></a>; use this class when you need direct backend, encoder, or lexicon adapter control.</p>
+<p>Autodoc renders the constructor and public methods from the current implementation, avoiding a manually copied signature:</p>
+<p>.. py:class:: PiperFrontend(config: ~piperg2p.config.VoiceConfig, *, backend: ~piperg2p.backends.base.PhonemeBackend | None = None, espeak_mode: ~typing.Literal[‘auto’, ‘native’, ‘cli’] = ‘auto’, missing: ~piperg2p.codec.MissingPhonemePolicy | str = MissingPhonemePolicy.WARN, lexicons: ~collections.abc.Sequence[str] = (), lexicon_store: ~typing.Any = None, lexicon_backend: ~piperg2p.lexicons.base.PronunciationLookup | None = None, use_espeak_fallback: bool = True)
+:module: piperg2p
+:canonical: piperg2p.frontend.PiperFrontend</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Voice-config-driven Piper frontend independent from Piper’s runtime.</p>
+<p>.. py:method:: PiperFrontend.<strong>init</strong>(config: ~piperg2p.config.VoiceConfig, *, backend: ~piperg2p.backends.base.PhonemeBackend | None = None, espeak_mode: ~typing.Literal[‘auto’, ‘native’, ‘cli’] = ‘auto’, missing: ~piperg2p.codec.MissingPhonemePolicy | str = MissingPhonemePolicy.WARN, lexicons: ~collections.abc.Sequence[str] = (), lexicon_store: ~typing.Any = None, lexicon_backend: ~piperg2p.lexicons.base.PronunciationLookup | None = None, use_espeak_fallback: bool = True) -&gt; None
+:module: piperg2p</p>
+<p>.. py:method:: PiperFrontend.from_config(path: str | ~pathlib.Path, **kwargs: ~typing.Any) -&gt; ~piperg2p.frontend.PiperFrontend
+:module: piperg2p
+:classmethod:</p>
+<p>.. py:method:: PiperFrontend.encode(phonemes: ~collections.abc.Iterable[str]) -&gt; ~piperg2p.types.EncodeResult
+:module: piperg2p</p>
+<p>.. py:property:: PiperFrontend.diagnostics
+:module: piperg2p
+:type: ~piperg2p.diagnostics.FrontendDiagnostics</p>
+<p>.. py:method:: PiperFrontend.phonemize_prepared(text: str, *, annotations: ~collections.abc.Sequence[~typing.Any] | None = None) -&gt; ~piperg2p.types.PhonemizeResult
+:module: piperg2p</p>
+<p>.. py:method:: PiperFrontend.phonemize(text: str, *, annotations: ~collections.abc.Sequence[~typing.Any] | None = None) -&gt; ~piperg2p.types.PhonemizeResult
+:module: piperg2p</p>
+<p>.. py:method:: PiperFrontend.close() -&gt; None
+:module: piperg2p</p>
+<p><code class="docutils literal notranslate"><span class="pre">PiperFrontend.phonemize()</span></code> aliases its low-level <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code> (unlike <code class="docutils literal notranslate"><span class="pre">PiperG2P.phonemize()</span></code>, which returns <code class="docutils literal notranslate"><span class="pre">str</span></code>). The frontend accepts a validated <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; <code class="docutils literal notranslate"><span class="pre">from_config()</span></code> loads a JSON path. Runtime lexicon selection is optional, mutually exclusive between managed identifiers and an injected backend, and supported only for <code class="docutils literal notranslate"><span class="pre">phoneme_type=&quot;espeak&quot;</span></code>. The voice’s <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code> remains authoritative.</p>
+<p>See the <a class="reference internal" href="../config/"><span class="std std-doc">configuration reference</span></a>, <a class="reference internal" href="../types/"><span class="std std-doc">result types</span></a>, and <a class="reference internal" href="../backends/"><span class="std std-doc">backend guide</span></a> for details.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

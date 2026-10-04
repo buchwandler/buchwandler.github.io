@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,15 +542,20 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="voice-configuration">
 <h1>Voice configuration</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig.from_json</span></code> reads a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> file. Strict parsing is the default and requires <code class="docutils literal notranslate"><span class="pre">num_symbols</span></code>, <code class="docutils literal notranslate"><span class="pre">num_speakers</span></code>, <code class="docutils literal notranslate"><span class="pre">audio.sample_rate</span></code>, and a non-empty <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> loads a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> file or validates an in-memory mapping. The high-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> argument accepts a path, an existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>, or a mapping:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">VoiceConfig</span>
 
-<span class="n">config</span> <span class="o">=</span> <span class="n">VoiceConfig</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span>
-<span class="n">config</span> <span class="o">=</span> <span class="n">VoiceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">config</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
+<span class="n">voice</span> <span class="o">=</span> <span class="n">VoiceConfig</span><span class="o">.</span><span class="n">from_json</span><span class="p">(</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span>
+<span class="n">from_mapping</span> <span class="o">=</span> <span class="n">VoiceConfig</span><span class="o">.</span><span class="n">from_dict</span><span class="p">(</span><span class="n">voice</span><span class="o">.</span><span class="n">to_dict</span><span class="p">())</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">phoneme_type</span></code> is a string-compatible <code class="docutils literal notranslate"><span class="pre">PhonemeType</span></code> enum with values <code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">espeak</span></code>, <code class="docutils literal notranslate"><span class="pre">pinyin</span></code>, <code class="docutils literal notranslate"><span class="pre">hebrew</span></code>, <code class="docutils literal notranslate"><span class="pre">japanese</span></code>, and <code class="docutils literal notranslate"><span class="pre">thai</span></code>. This Phase 1 release implements <code class="docutils literal notranslate"><span class="pre">text</span></code> and <code class="docutils literal notranslate"><span class="pre">espeak</span></code>. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is available for legacy configs and emits a compatibility warning when values are inferred.</p>
-<p>ID values are normalized to immutable integer tuples. IDs must be non-negative and below <code class="docutils literal notranslate"><span class="pre">num_symbols</span></code>. Voice maps are never replaced by a universal vocabulary. Vowel clusters must have at least two elements and their merged token must be in the map.</p>
+<p>Strict parsing is the default and requires <code class="docutils literal notranslate"><span class="pre">num_symbols</span></code>, <code class="docutils literal notranslate"><span class="pre">num_speakers</span></code>, <code class="docutils literal notranslate"><span class="pre">audio.sample_rate</span></code>, and a non-empty <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>. Use <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> only for compatibility with legacy configurations; inferred values produce a compatibility warning.</p>
+<p>The configured <code class="docutils literal notranslate"><span class="pre">phoneme_type</span></code> controls the pronunciation frontend. <code class="docutils literal notranslate"><span class="pre">text</span></code> and <code class="docutils literal notranslate"><span class="pre">espeak</span></code> are implemented; recognized-but-unavailable values and profile restrictions are listed under <a class="reference internal" href="../phoneme-types/"><span class="std std-doc">current phoneme-type support</span></a>.</p>
+<section id="voice-versus-language">
+<h2>Voice versus language</h2>
+<p>The Piper voice configuration remains authoritative for the model’s phoneme type, <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>, and base eSpeak voice. For eSpeak profiles, <code class="docutils literal notranslate"><span class="pre">espeak.voice</span></code> in the config selects that base voice. The high-level <code class="docutils literal notranslate"><span class="pre">language</span></code> passed to <code class="docutils literal notranslate"><span class="pre">PiperG2P</span></code> or <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> is a source/routing label; it does not select a different Piper model or automatically replace <code class="docutils literal notranslate"><span class="pre">espeak.voice</span></code>. An explicit language-span route may request a different eSpeak voice for that span.</p>
+<p>ID values are normalized to immutable integer tuples and must be non-negative and below <code class="docutils literal notranslate"><span class="pre">num_symbols</span></code>. Voice maps are never replaced by a universal vocabulary. Vowel clusters must have at least two elements and their merged token must be present in the map.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

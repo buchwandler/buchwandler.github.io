@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "piperg2p documentation"
+title: "PiperG2P"
 permalink: /tools/piperg2p/main/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -540,47 +540,132 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="piperg2p-documentation">
-<h1>piperg2p documentation</h1>
+<section id="piperg2p">
+<h1>PiperG2P</h1>
+<p>PiperG2P is a voice-config-driven phoneme and ID frontend for Piper ONNX
+voice configurations. It consumes prepared, speakable text and returns
+phonemes, sentence-scoped model IDs, and diagnostics.</p>
+<section id="start-here">
+<h2>Start here</h2>
 <div class="toctree-wrapper compound">
-<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<p class="caption" role="heading"><span class="caption-text">Getting started</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="installation/">Installation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="installation/#semantic-preparation-boundary">Semantic preparation boundary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="installation/#optional-semantic-preparation">Optional semantic preparation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#python-requirement">Python requirement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#install-the-package">Install the package</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#espeak-runtime-choices">eSpeak runtime choices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#optional-extras">Optional extras</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#termux-android">Termux / Android</a></li>
+<li class="toctree-l2"><a class="reference internal" href="installation/#development-and-documentation">Development and documentation</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="quickstart/">Quick start</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="quickstart/#prepare-semantics-outside-the-core">Prepare semantics outside the core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#one-shot-structured-result">One-shot structured result</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#reusable-facade">Reusable facade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quickstart/#result-and-advanced-features">Result and advanced features</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="voice-config/">Voice configuration</a></li>
-<li class="toctree-l1"><a class="reference internal" href="encoding/">Encoding</a></li>
+<li class="toctree-l1"><a class="reference internal" href="prepared-text/">Prepared-text boundary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="prepared-text/#preserve-piper-raw-phoneme-blocks">Preserve Piper raw phoneme blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="prepared-text/#source-coordinate-overrides">Source-coordinate overrides</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="usage/">Practical usage</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/#one-shot-calls">One-shot calls</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#reuse-and-caching">Reuse and caching</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#configuration-and-policy">Configuration and policy</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#sentence-ids">Sentence IDs</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="features">
+<h2>Features</h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Guides</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="voice-config/">Voice configuration</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="voice-config/#voice-versus-language">Voice versus language</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="encoding/">Encoding</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="encoding/#missing-symbols">Missing symbols</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="espeak/">eSpeak backends</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="espeak/#runtime-ownership-and-mode-policy">Runtime ownership and mode policy</a></li>
-<li class="toctree-l2"><a class="reference internal" href="espeak/#configuration-compatibility">Configuration compatibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="espeak/#capability-inspection">Capability inspection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="espeak/#public-compatibility-classes">Public compatibility classes</a></li>
-<li class="toctree-l2"><a class="reference internal" href="espeak/#ipa3-benchmark-identity">IPA3 benchmark identity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#user-visible-modes">User-visible modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#clause-capability-versus-phoneme-parity">Clause capability versus phoneme parity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#inspect-capabilities">Inspect capabilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#configuration-and-environment-precedence">Configuration and environment precedence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#runtime-ownership-and-piper-composition">Runtime ownership and Piper composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#termux-android">Termux / Android</a></li>
+<li class="toctree-l2"><a class="reference internal" href="espeak/#benchmark">Benchmark</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="lexicons/">Pronunciation lexicons</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="lexicons/#managed-lexphon-assets">Managed Lexphon assets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lexicons/#direct-local-g2lex-assets">Direct local G2Lex assets</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lexicons/#precedence-and-composition">Precedence and composition</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lexicons/#diagnostics-and-reproducibility">Diagnostics and reproducibility</a></li>
-<li class="toctree-l2"><a class="reference internal" href="lexicons/#discovery-and-evidence-api">Discovery and evidence API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#provision-managed-lexphon-assets">Provision managed Lexphon assets</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#lookup-and-fallback-behavior">Lookup and fallback behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="lexicons/#direct-local-g2lex-files">Direct local G2Lex files</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="raw-phonemes/">Raw phonemes</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="raw-phonemes/#semantic-preparation-and-raw-blocks">Semantic preparation and raw blocks</a></li>
+<li class="toctree-l2"><a class="reference internal" href="raw-phonemes/#compose-with-external-text-rewriting">Compose with external text rewriting</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="overrides/">Overrides, annotations, markers, and stress</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="overrides/#direct-phoneme-and-language-overrides">Direct phoneme and language overrides</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overrides/#caller-supplied-annotations">Caller-supplied annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overrides/#marker-parsing">Marker parsing</a></li>
+<li class="toctree-l2"><a class="reference internal" href="overrides/#source-alignment-after-transformations">Source alignment after transformations</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="language-routing/">Language routing</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="language-routing/#explicit-spans">Explicit spans</a></li>
+<li class="toctree-l2"><a class="reference internal" href="language-routing/#conservative-automatic-routing">Conservative automatic routing</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="phoneme-types/">Phoneme types</a></li>
+</ul>
+</div>
+</section>
+<section id="reference">
+<h2>Reference</h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">API reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/high-level/">High-level API</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/high-level/#reusable-facade">Reusable facade</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/high-level/#one-shot-phonemization-and-ids">One-shot phonemization and IDs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/high-level/#tokenization-cache-markers-and-lexicon-discovery">Tokenization, cache, markers, and lexicon discovery</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/core/">Low-level frontend API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/config/">Configuration API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/types/">Result and span types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/types/#phonemizeresult"><code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/types/#phonemesentence"><code class="docutils literal notranslate"><span class="pre">PhonemeSentence</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/types/#source-spans-and-caller-annotations">Source spans and caller annotations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/types/#routing-types">Routing types</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="api/backends/">Backend API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/diagnostics/">Diagnostics API</a></li>
+<li class="toctree-l1"><a class="reference internal" href="api/errors/">Errors and warnings</a></li>
+</ul>
+</div>
+</section>
+<section id="compatibility-and-development">
+<h2>Compatibility and development</h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Project reference</span></p>
+<ul>
 <li class="toctree-l1"><a class="reference internal" href="compatibility/">Compatibility policy</a></li>
-<li class="toctree-l1"><a class="reference internal" href="provenance/">Provenance and clean-room boundary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="provenance/">Provenance and independence boundary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="reference-benchmark/">Reference benchmark</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="reference-benchmark/#espeak-ipa3-primary-benchmark">eSpeak IPA3 primary benchmark</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-benchmark/#which-benchmark-should-i-use">Which benchmark should I use?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-benchmark/#piper-compatibility-corpus">Piper compatibility corpus</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reference-benchmark/#espeak-ipa3-pronunciation-benchmark">eSpeak IPA3 pronunciation benchmark</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="contributing/">Contributing</a></li>
@@ -595,14 +680,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <li class="toctree-l2"><a class="reference internal" href="changelog/#v0-1-0-2026-09-13">[v0.1.0] - 2026-09-13</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="api/core/">Core API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/backends/">Backend API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/config/">Configuration API</a></li>
-<li class="toctree-l1"><a class="reference internal" href="api/diagnostics/">Diagnostics API</a></li>
 </ul>
 </div>
-<p>The project is an independent phoneme and ID frontend. It accepts prepared, speakable text and does not synthesize audio or own written-to-spoken semantic normalization.</p>
-<p>Applications that need number, unit, currency, date, abbreviation, or other semantic expansion may prepare text with a separate package such as Spokenform before calling <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code>. Spokenform is not a PiperG2P dependency.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

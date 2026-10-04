@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "piperg2p Configuration API"
-permalink: /tools/piperg2p/main/api/config/
+title: "piperg2p Language routing"
+permalink: /tools/piperg2p/main/language-routing/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
@@ -540,102 +540,45 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="configuration-api">
-<h1>Configuration API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is the validated, immutable view of the Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> fields used by PiperG2P. <code class="docutils literal notranslate"><span class="pre">PiperConfig</span></code> is a compatibility alias. High-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> arguments accept a path, mapping, or existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; the lower-level frontend expects a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> or path via <code class="docutils literal notranslate"><span class="pre">from_config()</span></code>.</p>
-<p>Strict parsing is the default. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is a compatibility mode for legacy inputs that can infer supported defaults and emit <code class="docutils literal notranslate"><span class="pre">CompatibilityWarning</span></code>; it does not make unsupported phoneme providers available.</p>
-<p>.. py:class:: VoiceConfig(num_symbols: int, num_speakers: int, sample_rate: int, phoneme_id_map: ~collections.abc.Mapping[str, tuple[int, …]], phoneme_type: ~piperg2p.config.PhonemeType = PhonemeType.ESPEAK, espeak_voice: str = ‘en-us’, speaker_id_map: ~collections.abc.Mapping[str, int] = <factory>, default_speaker_id: int = 0, noise_scale: float = 0.667, length_scale: float = 1.0, noise_w: float = 0.8, hop_length: int = 256, vowel_clusters: frozenset[tuple[str, …]] = <factory>, piper_version: str | None = None, extra: ~collections.abc.Mapping[str, ~typing.Any] = <factory>)
-:module: piperg2p
-:canonical: piperg2p.config.VoiceConfig</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Validated subset of a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> voice configuration.</p>
-<p>.. py:attribute:: VoiceConfig.num_symbols
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.num_speakers
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.sample_rate
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, tuple[int, …]]</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_type
-:module: piperg2p
-:type: ~piperg2p.config.PhonemeType
-:value: ‘espeak’</p>
-<p>.. py:attribute:: VoiceConfig.espeak_voice
-:module: piperg2p
-:type: str
-:value: ‘en-us’</p>
-<p>.. py:attribute:: VoiceConfig.speaker_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, int]</p>
-<p>.. py:attribute:: VoiceConfig.default_speaker_id
-:module: piperg2p
-:type: int
-:value: 0</p>
-<p>.. py:attribute:: VoiceConfig.noise_scale
-:module: piperg2p
-:type: float
-:value: 0.667</p>
-<p>.. py:attribute:: VoiceConfig.length_scale
-:module: piperg2p
-:type: float
-:value: 1.0</p>
-<p>.. py:attribute:: VoiceConfig.noise_w
-:module: piperg2p
-:type: float
-:value: 0.8</p>
-<p>.. py:attribute:: VoiceConfig.hop_length
-:module: piperg2p
-:type: int
-:value: 256</p>
-<p>.. py:attribute:: VoiceConfig.vowel_clusters
-:module: piperg2p
-:type: frozenset[tuple[str, …]]</p>
-<p>.. py:attribute:: VoiceConfig.piper_version
-:module: piperg2p
-:type: str | None
-:value: None</p>
-<p>.. py:attribute:: VoiceConfig.extra
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:method:: VoiceConfig.from_dict(raw: ~collections.abc.Mapping[str, ~typing.Any], *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:method:: VoiceConfig.from_json(path: str | ~pathlib.Path, *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:property:: VoiceConfig.noise_w_scale
-:module: piperg2p
-:type: float</p>
-<p>.. py:method:: VoiceConfig.to_dict() -&gt; dict[str, ~typing.Any]
-:module: piperg2p</p>
-<p>.. py:class:: PhonemeType(*values)
-:module: piperg2p
-:canonical: piperg2p.config.PhonemeType</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~enum.Enum</span></code></p>
-<p>.. py:attribute:: PhonemeType.ESPEAK
-:module: piperg2p
-:value: ‘espeak’</p>
-<p>.. py:attribute:: PhonemeType.TEXT
-:module: piperg2p
-:value: ‘text’</p>
-<p>.. py:attribute:: PhonemeType.PINYIN
-:module: piperg2p
-:value: ‘pinyin’</p>
-<p>.. py:attribute:: PhonemeType.HEBREW
-:module: piperg2p
-:value: ‘hebrew’</p>
-<p>.. py:attribute:: PhonemeType.JAPANESE
-:module: piperg2p
-:value: ‘japanese’</p>
-<p>.. py:attribute:: PhonemeType.THAI
-:module: piperg2p
-:value: ‘thai’</p>
-<p>For the supported/unavailable distinction and the base eSpeak voice versus routing language, see <a class="reference internal" href="../../phoneme-types/"><span class="std std-doc">phoneme types</span></a> and <a class="reference internal" href="../../voice-config/"><span class="std std-doc">voice configuration</span></a>.</p>
+<section id="language-routing">
+<h1>Language routing</h1>
+<p><code class="docutils literal notranslate"><span class="pre">language</span></code> passed to <code class="docutils literal notranslate"><span class="pre">PiperG2P</span></code> or <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> is the default source/routing language. The Piper config independently selects the model, phoneme type, ID map, and base <code class="docutils literal notranslate"><span class="pre">espeak.voice</span></code>. Routing can select an eSpeak voice for one span; it never changes the configured Piper model or base voice.</p>
+<p>Meaningful language-specific pronunciation routing requires an eSpeak-backed voice. A <code class="docutils literal notranslate"><span class="pre">text</span></code> voice maps normalized text characters and does not provide language-specific pronunciation.</p>
+<section id="explicit-spans">
+<h2>Explicit spans</h2>
+<p>For a caller-known language span, use an ordinary <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> with a <code class="docutils literal notranslate"><span class="pre">lang</span></code> attribute. The range uses half-open <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code> offsets in the exact prepared source text:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">OverrideSpan</span><span class="p">,</span> <span class="n">get_g2p</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello Welt&quot;</span>
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span>
+        <span class="n">text</span><span class="p">,</span>
+        <span class="n">overrides</span><span class="o">=</span><span class="p">[</span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;de-de&quot;</span><span class="p">})],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>An explicit choice is evidence supplied by the caller. <code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig(mode=&quot;explicit&quot;)</span></code> does not infer additional languages; use explicit override spans for the known source ranges. See <a class="reference internal" href="../overrides/"><span class="std std-doc">overrides</span></a>.</p>
+</section>
+<section id="conservative-automatic-routing">
+<h2>Conservative automatic routing</h2>
+<p><code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig(mode=&quot;auto&quot;)</span></code> considers only configured candidate languages and switches away from the default only when exactly one candidate has evidence for a token. A per-language mapping whose keys are known words can supply deterministic in-memory evidence; the stored values are not interpreted:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">LanguageRoutingConfig</span><span class="p">,</span> <span class="n">get_g2p</span>
+
+<span class="n">routing</span> <span class="o">=</span> <span class="n">LanguageRoutingConfig</span><span class="p">(</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="n">languages</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="s2">&quot;de-de&quot;</span><span class="p">),</span>
+    <span class="n">lexicons</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;de-de&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;Welt&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}},</span>
+<span class="p">)</span>
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello Welt&quot;</span><span class="p">,</span> <span class="n">language_routing</span><span class="o">=</span><span class="n">routing</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">route</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">language_routes</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">route</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">reason</span><span class="p">,</span> <span class="n">route</span><span class="o">.</span><span class="n">evidence</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This illustrates policy only; production routing should use evidence appropriate to the application. A route selected from evidence has reason <code class="docutils literal notranslate"><span class="pre">&quot;lexicon-evidence&quot;</span></code>. Unknown words stay on the default language (<code class="docutils literal notranslate"><span class="pre">&quot;default-language&quot;</span></code>); if multiple candidates match, ambiguous words also stay on the default (<code class="docutils literal notranslate"><span class="pre">&quot;ambiguous-lexicon-evidence&quot;</span></code>). Auto routing is evidence-driven, not language identification.</p>
+<p>The current runtime accepts per-language evidence sources implemented as word-key mappings, objects with <code class="docutils literal notranslate"><span class="pre">lookup(word)</span></code>, or callables. The dataclass’s <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> type annotation is narrower than those runtime forms; this documentation task records the observed behavior without changing routing semantics. This lightweight evidence interface is not a managed Lexphon adapter. See <a class="reference internal" href="../lexicons/"><span class="std std-doc">lexicons</span></a> for asset provisioning.</p>
+<p>For an executable offline routing example, see <a class="reference external" href="https://github.com/buchwandler/piperg2p/blob/main/examples/mixed_language_auto.py"><code class="docutils literal notranslate"><span class="pre">mixed_language_auto.py</span></code></a>; for source-aligned explicit routing, see <a class="reference external" href="https://github.com/buchwandler/piperg2p/blob/main/examples/explicit_language_spans.py"><code class="docutils literal notranslate"><span class="pre">explicit_language_spans.py</span></code></a>.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

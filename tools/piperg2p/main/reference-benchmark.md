@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,8 +542,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="reference-benchmark">
 <h1>Reference benchmark</h1>
-<p><code class="docutils literal notranslate"><span class="pre">benchmarks/data/core.json</span></code> records the pinned Piper Python 1.8.0 profile, commit, and minimum compatibility corpus. It covers text normalization, punctuation, sentence boundaries, language switches, raw blocks, vowel clusters, missing symbols, IPA3 overlay hits and misses, mixed sentences, tie or joiner behavior, and the Arabic policy.</p>
-<p>Inspect the corpus metadata without executing a voice configuration:</p>
+<section id="which-benchmark-should-i-use">
+<h2>Which benchmark should I use?</h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">benchmark_espeak.py</span></code> is the pronunciation oracle: it compares PiperG2P output with eSpeak IPA3.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">benchmark_reference.py</span></code> records Piper-specific composition and historical compatibility evidence against a pinned Piper profile.</p></li>
+</ul>
+</section>
+<section id="piper-compatibility-corpus">
+<h2>Piper compatibility corpus</h2>
+<p><code class="docutils literal notranslate"><span class="pre">benchmarks/data/core.json</span></code> records the pinned Piper Python 1.8.0 profile, commit, and compatibility corpus. It covers text normalization, punctuation, sentence boundaries, language switches, raw blocks, vowel clusters, missing symbols, IPA3 overlay hits and misses, mixed sentences, tie or joiner behavior, and the Arabic policy.</p>
+<p>Inspect corpus metadata without executing a voice configuration:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>benchmarks/benchmark_reference.py
 </pre></div>
 </div>
@@ -559,21 +568,17 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="w">  </span>--expected<span class="w"> </span>benchmarks/data/core.expected.json
 </pre></div>
 </div>
-<p>The command records Piper commit and version, Python and platform information, dependency versions, voice configuration hash, and overlay asset identity. A missing or mismatched expected file exits nonzero. Expected output is never created or changed during normal execution. Replacing it requires the explicit <code class="docutils literal notranslate"><span class="pre">--write-expected</span> <span class="pre">--expected</span> <span class="pre">PATH</span></code> command and subsequent human review.</p>
-<section id="espeak-ipa3-primary-benchmark">
-<h2>eSpeak IPA3 primary benchmark</h2>
-<p><code class="docutils literal notranslate"><span class="pre">eSpeak</span> <span class="pre">--ipa=3</span></code> is the pronunciation gold standard. The direct benchmark has separate core, sentence, composition, lexicon-overlay, and parity suites and reports exact matches plus symbol substitutions, insertions, deletions, edit distance, and error rate.</p>
-<p>The parity suite (<code class="docutils literal notranslate"><span class="pre">--suite</span> <span class="pre">parity</span></code>) covers weak words, contractions, and phrase-context contrasts to detect stress and pronunciation differences between native and CLI modes. When Phonodist is available (<code class="docutils literal notranslate"><span class="pre">--phonodist</span> <span class="pre">auto</span></code> or <code class="docutils literal notranslate"><span class="pre">--phonodist</span> <span class="pre">required</span></code>), the benchmark also reports phonetic classification counts (exact, notation_only, stress_only, segmental) to explain structural differences.</p>
+<p>The command records Piper commit/version, Python and platform information, dependency versions, voice configuration hash, and overlay asset identity. A missing or mismatched expected file exits nonzero. Expected output is never created or changed during normal execution; refreshing it requires <code class="docutils literal notranslate"><span class="pre">--write-expected</span> <span class="pre">--expected</span> <span class="pre">PATH</span></code> and human review.</p>
+</section>
+<section id="espeak-ipa3-pronunciation-benchmark">
+<h2>eSpeak IPA3 pronunciation benchmark</h2>
+<p><code class="docutils literal notranslate"><span class="pre">benchmark_espeak.py</span></code> invokes the external executable directly with <code class="docutils literal notranslate"><span class="pre">-q</span> <span class="pre">--ipa=3</span> <span class="pre">-v</span> <span class="pre">&lt;voice&gt;</span> <span class="pre">--stdin</span></code>; the reference does not call PiperG2P’s backend or <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. The benchmark has core, sentence, composition, lexicon-overlay, and parity suites and reports exact matches, substitutions, insertions, deletions, edit distance, and error rate.</p>
+<p>The parity suite (<code class="docutils literal notranslate"><span class="pre">--suite</span> <span class="pre">parity</span></code>) covers weak words, contractions, and phrase-context contrasts between native and CLI modes. When Phonodist is available, it can report phonetic classification counts (exact, notation_only, stress_only, segmental).</p>
 <p>Quick live check:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>benchmarks/benchmark_espeak.py<span class="w"> </span>--quick<span class="w"> </span>--suite<span class="w"> </span>core<span class="w"> </span>--candidate<span class="w"> </span>auto<span class="w"> </span>--format<span class="w"> </span>summary
 </pre></div>
 </div>
-<p>Parity suite with Phonodist diagnostics:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>benchmarks/benchmark_espeak.py<span class="w"> </span>--suite<span class="w"> </span>parity<span class="w"> </span>--candidate<span class="w"> </span>auto<span class="w"> </span>--reference-source<span class="w"> </span>golden<span class="w"> </span>--golden<span class="w"> </span>benchmarks/goldens/espeak_ipa3_en-us.json<span class="w"> </span>--policy<span class="w"> </span>piper-ipa3<span class="w"> </span>--phonodist<span class="w"> </span>auto<span class="w"> </span>--format<span class="w"> </span>summary
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--reference-source</span> <span class="pre">live</span></code> for the installed executable or <code class="docutils literal notranslate"><span class="pre">--reference-source</span> <span class="pre">golden</span> <span class="pre">--golden</span> <span class="pre">PATH</span></code> for a committed capture. Golden refresh requires <code class="docutils literal notranslate"><span class="pre">--write-reference-golden</span> <span class="pre">--overwrite</span></code> and is never implicit. The pinned <code class="docutils literal notranslate"><span class="pre">benchmark_reference.py</span></code> remains secondary evidence for Piper-specific composition and historical compatibility, not the pronunciation oracle.
-The normal runtime package does not depend on Piper. Reference dependencies and expected outputs are development and CI evidence only.</p>
+<p>See the <a class="reference internal" href="../espeak/"><span class="std std-doc">eSpeak guide</span></a> for backend semantics. Golden reference refresh requires explicit <code class="docutils literal notranslate"><span class="pre">--write-reference-golden</span> <span class="pre">--overwrite</span></code>; it is never implicit. Reference dependencies and expected outputs are development evidence only and are not runtime dependencies.</p>
 </section>
 </section>
 </div>

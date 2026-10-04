@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "piperg2p Configuration API"
-permalink: /tools/piperg2p/main/api/config/
+title: "piperg2p Errors and warnings"
+permalink: /tools/piperg2p/main/api/errors/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
@@ -540,102 +540,100 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="configuration-api">
-<h1>Configuration API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is the validated, immutable view of the Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> fields used by PiperG2P. <code class="docutils literal notranslate"><span class="pre">PiperConfig</span></code> is a compatibility alias. High-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> arguments accept a path, mapping, or existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; the lower-level frontend expects a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> or path via <code class="docutils literal notranslate"><span class="pre">from_config()</span></code>.</p>
-<p>Strict parsing is the default. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is a compatibility mode for legacy inputs that can infer supported defaults and emit <code class="docutils literal notranslate"><span class="pre">CompatibilityWarning</span></code>; it does not make unsupported phoneme providers available.</p>
-<p>.. py:class:: VoiceConfig(num_symbols: int, num_speakers: int, sample_rate: int, phoneme_id_map: ~collections.abc.Mapping[str, tuple[int, …]], phoneme_type: ~piperg2p.config.PhonemeType = PhonemeType.ESPEAK, espeak_voice: str = ‘en-us’, speaker_id_map: ~collections.abc.Mapping[str, int] = <factory>, default_speaker_id: int = 0, noise_scale: float = 0.667, length_scale: float = 1.0, noise_w: float = 0.8, hop_length: int = 256, vowel_clusters: frozenset[tuple[str, …]] = <factory>, piper_version: str | None = None, extra: ~collections.abc.Mapping[str, ~typing.Any] = <factory>)
+<section id="errors-and-warnings">
+<h1>Errors and warnings</h1>
+<p>Errors are organized by the failure boundary: configuration/compatibility, backend execution, resources, lexicons, and missing voice-map symbols. Warning classes derive from <code class="docutils literal notranslate"><span class="pre">PiperG2PWarning</span></code>.</p>
+<p>.. py:class:: PiperG2PError
 :module: piperg2p
-:canonical: piperg2p.config.VoiceConfig</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Validated subset of a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> voice configuration.</p>
-<p>.. py:attribute:: VoiceConfig.num_symbols
+:canonical: piperg2p.errors.PiperG2PError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">Exception</span></code></p>
+<p>Base class for piperg2p failures.</p>
+<p>.. py:class:: ConfigError
 :module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.num_speakers
+:canonical: piperg2p.errors.ConfigError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PError</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">ValueError</span></code></p>
+<p>The voice configuration is invalid.</p>
+<p>.. py:class:: UnsupportedPhonemeTypeError
 :module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.sample_rate
+:canonical: piperg2p.errors.UnsupportedPhonemeTypeError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.ConfigError</span></code></p>
+<p>The configuration names a frontend that is not supported.</p>
+<p>.. py:class:: UnsupportedCompatibilityError
 :module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_id_map
+:canonical: piperg2p.errors.UnsupportedCompatibilityError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.ConfigError</span></code></p>
+<p>The recognized profile is outside the implemented compatibility boundary.</p>
+<p>.. py:class:: BackendError
 :module: piperg2p
-:type: ~collections.abc.Mapping[str, tuple[int, …]]</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_type
+:canonical: piperg2p.errors.BackendError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PError</span></code></p>
+<p>Base class for backend failures.</p>
+<p>.. py:class:: BackendUnavailableError
 :module: piperg2p
-:type: ~piperg2p.config.PhonemeType
-:value: ‘espeak’</p>
-<p>.. py:attribute:: VoiceConfig.espeak_voice
+:canonical: piperg2p.errors.BackendUnavailableError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.BackendError</span></code></p>
+<p>A requested backend cannot be initialized.</p>
+<p>.. py:class:: PhonemizationError
 :module: piperg2p
-:type: str
-:value: ‘en-us’</p>
-<p>.. py:attribute:: VoiceConfig.speaker_id_map
+:canonical: piperg2p.errors.PhonemizationError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.BackendError</span></code></p>
+<p>A backend failed while converting text.</p>
+<p>.. py:class:: ResourceError
 :module: piperg2p
-:type: ~collections.abc.Mapping[str, int]</p>
-<p>.. py:attribute:: VoiceConfig.default_speaker_id
+:canonical: piperg2p.errors.ResourceError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PError</span></code></p>
+<p>A language or backend resource is invalid.</p>
+<p>.. py:class:: ResourceUnavailableError
 :module: piperg2p
-:type: int
-:value: 0</p>
-<p>.. py:attribute:: VoiceConfig.noise_scale
+:canonical: piperg2p.errors.ResourceUnavailableError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.ResourceError</span></code></p>
+<p>An optional resource is not installed or usable.</p>
+<p>.. py:class:: LexiconError
 :module: piperg2p
-:type: float
-:value: 0.667</p>
-<p>.. py:attribute:: VoiceConfig.length_scale
+:canonical: piperg2p.errors.LexiconError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PError</span></code></p>
+<p>Base class for lexicon overlay failures.</p>
+<p>.. py:class:: LexiconDependencyError
 :module: piperg2p
-:type: float
-:value: 1.0</p>
-<p>.. py:attribute:: VoiceConfig.noise_w
+:canonical: piperg2p.errors.LexiconDependencyError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.LexiconError</span></code></p>
+<p>An optional lexicon package is not installed.</p>
+<p>.. py:class:: LexiconResourceError
 :module: piperg2p
-:type: float
-:value: 0.8</p>
-<p>.. py:attribute:: VoiceConfig.hop_length
+:canonical: piperg2p.errors.LexiconResourceError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.LexiconError</span></code></p>
+<p>A requested lexicon asset or runtime is invalid or unavailable.</p>
+<p>.. py:class:: LexiconConfigurationError
 :module: piperg2p
-:type: int
-:value: 256</p>
-<p>.. py:attribute:: VoiceConfig.vowel_clusters
+:canonical: piperg2p.errors.LexiconConfigurationError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.LexiconError</span></code></p>
+<p>Lexicon options are incompatible with the selected frontend.</p>
+<p>.. py:class:: MissingPhonemeError
 :module: piperg2p
-:type: frozenset[tuple[str, …]]</p>
-<p>.. py:attribute:: VoiceConfig.piper_version
+:canonical: piperg2p.errors.MissingPhonemeError</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PError</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">KeyError</span></code></p>
+<p>A required phoneme is absent from the selected voice map.</p>
+<p>.. py:class:: PiperG2PWarning
 :module: piperg2p
-:type: str | None
-:value: None</p>
-<p>.. py:attribute:: VoiceConfig.extra
+:canonical: piperg2p.errors.PiperG2PWarning</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">UserWarning</span></code></p>
+<p>Base class for piperg2p warnings.</p>
+<p>.. py:class:: MissingPhonemeWarning
 :module: piperg2p
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:method:: VoiceConfig.from_dict(raw: ~collections.abc.Mapping[str, ~typing.Any], *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
+:canonical: piperg2p.errors.MissingPhonemeWarning</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PWarning</span></code></p>
+<p>A phoneme was omitted because it is absent from the voice map.</p>
+<p>.. py:class:: BackendFallbackWarning
 :module: piperg2p
-:classmethod:</p>
-<p>.. py:method:: VoiceConfig.from_json(path: str | ~pathlib.Path, *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
+:canonical: piperg2p.errors.BackendFallbackWarning</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PWarning</span></code></p>
+<p>A backend fell back to a less compatible implementation.</p>
+<p>.. py:class:: CompatibilityWarning
 :module: piperg2p
-:classmethod:</p>
-<p>.. py:property:: VoiceConfig.noise_w_scale
-:module: piperg2p
-:type: float</p>
-<p>.. py:method:: VoiceConfig.to_dict() -&gt; dict[str, ~typing.Any]
-:module: piperg2p</p>
-<p>.. py:class:: PhonemeType(*values)
-:module: piperg2p
-:canonical: piperg2p.config.PhonemeType</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~enum.Enum</span></code></p>
-<p>.. py:attribute:: PhonemeType.ESPEAK
-:module: piperg2p
-:value: ‘espeak’</p>
-<p>.. py:attribute:: PhonemeType.TEXT
-:module: piperg2p
-:value: ‘text’</p>
-<p>.. py:attribute:: PhonemeType.PINYIN
-:module: piperg2p
-:value: ‘pinyin’</p>
-<p>.. py:attribute:: PhonemeType.HEBREW
-:module: piperg2p
-:value: ‘hebrew’</p>
-<p>.. py:attribute:: PhonemeType.JAPANESE
-:module: piperg2p
-:value: ‘japanese’</p>
-<p>.. py:attribute:: PhonemeType.THAI
-:module: piperg2p
-:value: ‘thai’</p>
-<p>For the supported/unavailable distinction and the base eSpeak voice versus routing language, see <a class="reference internal" href="../../phoneme-types/"><span class="std std-doc">phoneme types</span></a> and <a class="reference internal" href="../../voice-config/"><span class="std std-doc">voice configuration</span></a>.</p>
+:canonical: piperg2p.errors.CompatibilityWarning</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~piperg2p.errors.PiperG2PWarning</span></code></p>
+<p>A compatibility-relevant lenient behavior was used.</p>
+<p>See <a class="reference internal" href="../../encoding/"><span class="std std-doc">encoding</span></a> for missing-symbol policy and <a class="reference internal" href="../../espeak/"><span class="std std-doc">eSpeak modes</span></a> for automatic fallback behavior.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

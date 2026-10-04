@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,12 +542,45 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="encoding">
 <h1>Encoding</h1>
-<p>Ordinary encoding uses the configured map and preserves this framing:</p>
+<p>Ordinary encoding uses the configured voice map and preserves Piper’s framing:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>BOS, PAD, (phoneme IDs, PAD)*, EOS
 </pre></div>
 </div>
-<p>Map values may contain multiple IDs. Missing phonemes are always recorded in <code class="docutils literal notranslate"><span class="pre">EncodeResult</span></code> and sentence results. <code class="docutils literal notranslate"><span class="pre">MissingPhonemePolicy.ERROR</span></code> raises <code class="docutils literal notranslate"><span class="pre">MissingPhonemeError</span></code>, <code class="docutils literal notranslate"><span class="pre">WARN</span></code> emits <code class="docutils literal notranslate"><span class="pre">MissingPhonemeWarning</span></code> and skips the symbol, and <code class="docutils literal notranslate"><span class="pre">IGNORE</span></code> skips it silently.</p>
-<p>A separate <code class="docutils literal notranslate"><span class="pre">PinyinEncoder</span></code> exists for future provider integration. It does not change ordinary <code class="docutils literal notranslate"><span class="pre">text</span></code> or <code class="docutils literal notranslate"><span class="pre">espeak</span></code> framing.</p>
+<p>A map value may contain multiple IDs. The loaded voice’s <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code> is authoritative; there is no universal symbol vocabulary. <code class="docutils literal notranslate"><span class="pre">PhonemizeResult.token_ids</span></code> is a flattened convenience view. For Piper inference, use each sentence’s IDs separately.</p>
+<section id="missing-symbols">
+<h2>Missing symbols</h2>
+<p>A produced phoneme absent from the configured map is recorded in <code class="docutils literal notranslate"><span class="pre">EncodeResult</span></code> and sentence/result data. The <code class="docutils literal notranslate"><span class="pre">missing</span></code> policy controls whether processing stops, warns, or continues silently:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">MissingPhonemePolicy</span><span class="p">,</span> <span class="n">phonemize_prepared</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Hello world&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
+    <span class="n">missing</span><span class="o">=</span><span class="n">MissingPhonemePolicy</span><span class="o">.</span><span class="n">WARN</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">missing_phonemes</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Policy</p></th>
+<th class="head"><p>Behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MissingPhonemePolicy.ERROR</span></code></p></td>
+<td><p>Raise <code class="docutils literal notranslate"><span class="pre">MissingPhonemeError</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">MissingPhonemePolicy.WARN</span></code></p></td>
+<td><p>Emit <code class="docutils literal notranslate"><span class="pre">MissingPhonemeWarning</span></code> and skip the unmapped symbol</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">MissingPhonemePolicy.IGNORE</span></code></p></td>
+<td><p>Skip the unmapped symbol silently</p></td>
+</tr>
+</tbody>
+</table>
+<p>With <code class="docutils literal notranslate"><span class="pre">WARN</span></code> and <code class="docutils literal notranslate"><span class="pre">IGNORE</span></code>, the absent symbol remains recorded in result data even though encoding continues.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

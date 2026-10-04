@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,18 +542,21 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="backend-api">
 <h1>Backend API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">EspeakBackend(mode=&quot;auto&quot;)</span></code> is PiperG2P’s adapter to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. It requests an exact-capable native runtime when available and otherwise uses runtime CLI phonemization with Piper’s local clause splitter and composition. Automatic fallback emits <code class="docutils literal notranslate"><span class="pre">BackendFallbackWarning</span></code>; explicit <code class="docutils literal notranslate"><span class="pre">mode=&quot;cli&quot;</span></code> does not warn.</p>
-<p><code class="docutils literal notranslate"><span class="pre">mode=&quot;native&quot;</span></code> requires exact native clause support and raises <code class="docutils literal notranslate"><span class="pre">BackendUnavailableError</span></code> when it is unavailable. <code class="docutils literal notranslate"><span class="pre">mode=&quot;cli&quot;</span></code> does not probe native through Piper policy and always reports best-effort parity.</p>
-<p>Piper owns the public three-field <code class="docutils literal notranslate"><span class="pre">Clause</span></code>, clause composition, NFD normalization, punctuation spacing, language-switch and joiner cleanup, vowel-cluster merging, raw blocks, and lexicon overlays. Runtime clauses are converted explicitly at the adapter boundary. Runtime terminator codes are not exposed through Piper’s local <code class="docutils literal notranslate"><span class="pre">Clause</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">BackendDiagnostics</span></code> preserves Piper’s stable diagnostics fields while mapping <code class="docutils literal notranslate"><span class="pre">RuntimeInfo</span></code>, including implementation, selected executable/library/data paths, discovery source, version, exact clause capability, parity, fallback reason, warnings, and native candidate probes. The runtime source name <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> is mapped to Piper’s historical <code class="docutils literal notranslate"><span class="pre">modern-loader</span></code> name.</p>
-<p>The compatibility classes <code class="docutils literal notranslate"><span class="pre">EspeakCliBackend</span></code> and <code class="docutils literal notranslate"><span class="pre">NativeEspeakProvider</span></code> remain available. They retain their existing constructor shapes while delegating all eSpeak execution and lifetime management to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>.</p>
-<p>Legacy configuration variables remain supported:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_EXECUTABLE</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_LIBRARY</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_DATA</span></code></p></li>
-</ul>
-<p>Explicit Piper constructor arguments take precedence over those variables, followed by the corresponding <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_*</span></code> variables and runtime discovery. <code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> is a non-initializing Piper compatibility facade over runtime inspection.</p>
+<p>The eSpeak adapter delegates discovery and execution to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> while retaining Piper-specific clause composition and phoneme policy. <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">native</span></code>, and <code class="docutils literal notranslate"><span class="pre">cli</span></code> behavior and capability semantics are explained in the <a class="reference internal" href="../../espeak/"><span class="std std-doc">eSpeak guide</span></a>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">NativeEspeakProvider</span></code> and <code class="docutils literal notranslate"><span class="pre">EspeakCliBackend</span></code> are retained as compatibility wrappers for downstream users. Piper’s public <code class="docutils literal notranslate"><span class="pre">Clause</span></code> has three fields; runtime clause terminator codes are converted at the adapter boundary and are not exposed through that type.</p>
+<p>.. py:class:: TextBackend()
+:module: piperg2p
+:canonical: piperg2p.backends.text.TextBackend</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Backend for voices whose phonemes are input codepoints.</p>
+<p>.. py:property:: TextBackend.diagnostics
+:module: piperg2p
+:type: ~piperg2p.diagnostics.BackendDiagnostics</p>
+<p>.. py:method:: TextBackend.phonemize(text: str, *, voice: str = ‘’) -&gt; list[list[str]]
+:module: piperg2p</p>
+<p>.. py:method:: TextBackend.close() -&gt; None
+:module: piperg2p</p>
+<p>Piper owns the public frontend boundary, NFD normalization, punctuation spacing, language-switch and joiner cleanup, vowel-cluster merging, raw blocks, and lexicon overlays. See <a class="reference internal" href="../diagnostics/"><span class="std std-doc">diagnostics</span></a> for stable reported fields.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

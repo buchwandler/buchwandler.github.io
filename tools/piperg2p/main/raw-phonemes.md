@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,45 +542,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="raw-phonemes">
 <h1>Raw phonemes</h1>
-<p>In eSpeak mode, <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">...</span> <span class="pre">]]</span></code> blocks are parsed before normal conversion. Their contents are inserted as phoneme characters and are not normalized or sent through eSpeak. Adjacent normal text is composed into the active sentence so a normal sentence immediately following a raw block joins that active group.</p>
-<section id="semantic-preparation-and-raw-blocks">
-<h2>Semantic preparation and raw blocks</h2>
-<p>PiperG2P owns raw blocks such as <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">tɛst</span> <span class="pre">]]</span></code>. Spokenform must not reinterpret text inside those blocks. Discover Piper raw blocks before semantic preparation and pass their source ranges to Spokenform as protected spans:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">RawPhonemeSegment</span><span class="p">,</span>
-    <span class="n">parse_raw_blocks</span><span class="p">,</span>
-    <span class="n">phonemize_prepared</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">ProtectedSpan</span><span class="p">,</span> <span class="n">prepare_for_piperg2p</span>
-
-<span class="n">source</span> <span class="o">=</span> <span class="s2">&quot;Use 2 kg [[ tɛst ]] and 3 kg.&quot;</span>
-
-<span class="n">protected</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="n">ProtectedSpan</span><span class="p">(</span>
-        <span class="n">segment</span><span class="o">.</span><span class="n">source_start</span><span class="p">,</span>
-        <span class="n">segment</span><span class="o">.</span><span class="n">source_end</span><span class="p">,</span>
-        <span class="n">kind</span><span class="o">=</span><span class="s2">&quot;piperg2p-raw-phonemes&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">parse_raw_blocks</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
-    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">RawPhonemeSegment</span><span class="p">)</span>
-<span class="p">]</span>
-
-<span class="n">prepared</span> <span class="o">=</span> <span class="n">prepare_for_piperg2p</span><span class="p">(</span>
-    <span class="n">source</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
-    <span class="n">protected_spans</span><span class="o">=</span><span class="n">protected</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
-    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-</pre></div>
-</div>
-<p>Discover Piper raw blocks before semantic preparation and pass their source ranges to Spokenform as protected spans. This keeps caller-owned raw phonemes unchanged while surrounding written semantics can be expanded.</p>
-<p>If an application also has source-coordinate overrides, map those source spans through <code class="docutils literal notranslate"><span class="pre">PreparedText.map_source_span()</span></code> before constructing overrides for the prepared text. Do not reuse token or POS metadata from the source text across a semantic replacement without reanalyzing the prepared text.
-Opening and closing delimiters without a matching pair are deterministic ordinary text. Empty blocks do not add symbols. Raw symbols still pass through the configured voice map and therefore appear in missing-phoneme diagnostics when unmapped.</p>
+<p>In eSpeak mode, PiperG2P recognizes <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">...</span> <span class="pre">]]</span></code> blocks before normal conversion. Their contents are inserted as phoneme characters and are not normalized or sent through eSpeak. Adjacent ordinary text remains composed into its sentence group. With a lexicon overlay, raw blocks take precedence over lexicon lookup. Raw symbols still pass through the configured voice map and are reported as missing when they are unmapped.</p>
+<p>Opening or closing delimiters without a matching pair are deterministic ordinary text. Empty blocks add no symbols. See the <a class="reference external" href="https://github.com/buchwandler/piperg2p/blob/main/examples/README.md">executable examples</a> for executable raw-block usage.</p>
+<section id="compose-with-external-text-rewriting">
+<h2>Compose with external text rewriting</h2>
+<p>PiperG2P owns the <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">...</span> <span class="pre">]]</span></code> syntax. If an external semantic-preparation layer runs before phonemization, identify and protect raw-block source ranges before rewriting ordinary text, then restore the blocks for PiperG2P. This is an external composition pattern, not a locally verified integration: the preparation package is not included in this repository snapshot or required by PiperG2P.</p>
+<p>Any override or annotation offsets must be remapped to the final transformed text after rewriting. See the canonical <a class="reference internal" href="../prepared-text/"><span class="std std-doc">prepared-text guide</span></a> for source-coordinate ownership and <a class="reference internal" href="../overrides/"><span class="std std-doc">overrides</span></a> for half-open span semantics.</p>
 </section>
 </section>
 </div>

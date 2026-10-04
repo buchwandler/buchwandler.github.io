@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,19 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="quick-start">
 <h1>Quick start</h1>
-<p>The examples below pass prepared, speakable text. Semantic expansion belongs to the calling application, not PiperG2P.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">PiperFrontend</span>
-
-<span class="k">with</span> <span class="n">PiperFrontend</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">frontend</span><span class="p">:</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">frontend</span><span class="o">.</span><span class="n">phonemize</span><span class="p">(</span><span class="s2">&quot;Hello world.&quot;</span><span class="p">)</span>
-    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">phoneme_string</span><span class="p">)</span>
-        <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
-</pre></div>
-</div>
-<p>For a text voice, <code class="docutils literal notranslate"><span class="pre">phonemize</span></code> decomposes input with Unicode NFD and treats each resulting codepoint as a model phoneme. For an eSpeak voice, it selects the configured eSpeak voice and returns one result per detected sentence.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">frontend.diagnostics</span></code> or <code class="docutils literal notranslate"><span class="pre">result.diagnostics</span></code> to inspect backend implementation and parity.</p>
-<p>For sibling-style calls, use the explicit high-level facade:</p>
+<section id="one-shot-structured-result">
+<h2>One-shot structured result</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> for a structured result:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
 
 <span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
@@ -566,34 +556,26 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">token_ids</span><span class="p">)</span>
 </pre></div>
 </div>
-<section id="prepare-semantics-outside-the-core">
-<h2>Prepare semantics outside the core</h2>
-<p>Semantic preparation belongs in the calling application when written forms need expansion:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_piperg2p</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
+<p><code class="docutils literal notranslate"><span class="pre">language</span></code> is a source/routing label. The <code class="docutils literal notranslate"><span class="pre">config</span></code> selects the Piper voice, including its phoneme type, base eSpeak voice, and authoritative <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>. A language argument does not switch the configured Piper model or base voice.</p>
+</section>
+<section id="reusable-facade">
+<h2>Reusable facade</h2>
+<p>For repeated calls, <code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> provides a reusable, bounded-cache facade:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
 
-<span class="n">prepared</span> <span class="o">=</span> <span class="n">prepare_for_piperg2p</span><span class="p">(</span>
-    <span class="s2">&quot;Pay $12.50 for 2 kg.&quot;</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
-    <span class="n">prepared</span><span class="o">.</span><span class="n">spoken_text</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">phoneme_string</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The semantic language and Piper voice are separate choices. Spokenform prepares one explicitly selected language; PiperG2P then phonemizes the prepared text using the explicitly selected voice configuration.</p>
-<p>The optional preparation package is not imported by PiperG2P and is not required for a minimal PiperG2P installation.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Spokenform language: &quot;en&quot;
-Piper voice/config:   &quot;en-us&quot; + voice.onnx.json
-</pre></div>
-</div>
-<p>Do not imply that the Spokenform language selects a Piper voice.</p>
-<p><code class="docutils literal notranslate"><span class="pre">result.tokens</span></code> contains source offsets. <code class="docutils literal notranslate"><span class="pre">result.sentences</span></code> remains authoritative for sentence-wise Piper inference.</p>
+</section>
+<section id="result-and-advanced-features">
+<h2>Result and advanced features</h2>
+<p><code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code> exposes the flattened phoneme string and token IDs as convenient views. For Piper inference, process each <code class="docutils literal notranslate"><span class="pre">sentence.ids</span></code> independently. See <a class="reference internal" href="../usage/"><span class="std std-doc">practical usage</span></a> for return types, caching, policies, and configuration inputs.</p>
+<p>PiperG2P consumes prepared, speakable text and does not own number, unit, date, currency, or abbreviation verbalization. See the canonical <a class="reference internal" href="../prepared-text/"><span class="std std-doc">prepared-text guide</span></a> for semantic ownership and composition boundaries.</p>
+<p>For source-aligned overrides, annotations, and marker helpers, see <a class="reference internal" href="../overrides/"><span class="std std-doc">overrides</span></a>. For explicit and evidence-driven language selection, see <a class="reference internal" href="../language-routing/"><span class="std std-doc">language routing</span></a>.</p>
 </section>
 </section>
 </div>

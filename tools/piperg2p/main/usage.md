@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "piperg2p Configuration API"
-permalink: /tools/piperg2p/main/api/config/
+title: "piperg2p Practical usage"
+permalink: /tools/piperg2p/main/usage/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
@@ -540,102 +540,82 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="configuration-api">
-<h1>Configuration API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is the validated, immutable view of the Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> fields used by PiperG2P. <code class="docutils literal notranslate"><span class="pre">PiperConfig</span></code> is a compatibility alias. High-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> arguments accept a path, mapping, or existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; the lower-level frontend expects a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> or path via <code class="docutils literal notranslate"><span class="pre">from_config()</span></code>.</p>
-<p>Strict parsing is the default. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is a compatibility mode for legacy inputs that can infer supported defaults and emit <code class="docutils literal notranslate"><span class="pre">CompatibilityWarning</span></code>; it does not make unsupported phoneme providers available.</p>
-<p>.. py:class:: VoiceConfig(num_symbols: int, num_speakers: int, sample_rate: int, phoneme_id_map: ~collections.abc.Mapping[str, tuple[int, …]], phoneme_type: ~piperg2p.config.PhonemeType = PhonemeType.ESPEAK, espeak_voice: str = ‘en-us’, speaker_id_map: ~collections.abc.Mapping[str, int] = <factory>, default_speaker_id: int = 0, noise_scale: float = 0.667, length_scale: float = 1.0, noise_w: float = 0.8, hop_length: int = 256, vowel_clusters: frozenset[tuple[str, …]] = <factory>, piper_version: str | None = None, extra: ~collections.abc.Mapping[str, ~typing.Any] = <factory>)
-:module: piperg2p
-:canonical: piperg2p.config.VoiceConfig</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Validated subset of a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> voice configuration.</p>
-<p>.. py:attribute:: VoiceConfig.num_symbols
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.num_speakers
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.sample_rate
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, tuple[int, …]]</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_type
-:module: piperg2p
-:type: ~piperg2p.config.PhonemeType
-:value: ‘espeak’</p>
-<p>.. py:attribute:: VoiceConfig.espeak_voice
-:module: piperg2p
-:type: str
-:value: ‘en-us’</p>
-<p>.. py:attribute:: VoiceConfig.speaker_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, int]</p>
-<p>.. py:attribute:: VoiceConfig.default_speaker_id
-:module: piperg2p
-:type: int
-:value: 0</p>
-<p>.. py:attribute:: VoiceConfig.noise_scale
-:module: piperg2p
-:type: float
-:value: 0.667</p>
-<p>.. py:attribute:: VoiceConfig.length_scale
-:module: piperg2p
-:type: float
-:value: 1.0</p>
-<p>.. py:attribute:: VoiceConfig.noise_w
-:module: piperg2p
-:type: float
-:value: 0.8</p>
-<p>.. py:attribute:: VoiceConfig.hop_length
-:module: piperg2p
-:type: int
-:value: 256</p>
-<p>.. py:attribute:: VoiceConfig.vowel_clusters
-:module: piperg2p
-:type: frozenset[tuple[str, …]]</p>
-<p>.. py:attribute:: VoiceConfig.piper_version
-:module: piperg2p
-:type: str | None
-:value: None</p>
-<p>.. py:attribute:: VoiceConfig.extra
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:method:: VoiceConfig.from_dict(raw: ~collections.abc.Mapping[str, ~typing.Any], *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:method:: VoiceConfig.from_json(path: str | ~pathlib.Path, *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:property:: VoiceConfig.noise_w_scale
-:module: piperg2p
-:type: float</p>
-<p>.. py:method:: VoiceConfig.to_dict() -&gt; dict[str, ~typing.Any]
-:module: piperg2p</p>
-<p>.. py:class:: PhonemeType(*values)
-:module: piperg2p
-:canonical: piperg2p.config.PhonemeType</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~enum.Enum</span></code></p>
-<p>.. py:attribute:: PhonemeType.ESPEAK
-:module: piperg2p
-:value: ‘espeak’</p>
-<p>.. py:attribute:: PhonemeType.TEXT
-:module: piperg2p
-:value: ‘text’</p>
-<p>.. py:attribute:: PhonemeType.PINYIN
-:module: piperg2p
-:value: ‘pinyin’</p>
-<p>.. py:attribute:: PhonemeType.HEBREW
-:module: piperg2p
-:value: ‘hebrew’</p>
-<p>.. py:attribute:: PhonemeType.JAPANESE
-:module: piperg2p
-:value: ‘japanese’</p>
-<p>.. py:attribute:: PhonemeType.THAI
-:module: piperg2p
-:value: ‘thai’</p>
-<p>For the supported/unavailable distinction and the base eSpeak voice versus routing language, see <a class="reference internal" href="../../phoneme-types/"><span class="std std-doc">phoneme types</span></a> and <a class="reference internal" href="../../voice-config/"><span class="std std-doc">voice configuration</span></a>.</p>
+<section id="practical-usage">
+<h1>Practical usage</h1>
+<p>PiperG2P’s high-level API is the recommended entry point for application code. Pass prepared, speakable text, a source/routing language label, and a Piper voice configuration.</p>
+<section id="one-shot-calls">
+<h2>One-shot calls</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> when you need the structured result:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
+    <span class="s2">&quot;Hello world&quot;</span><span class="p">,</span>
+    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">phonemes</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">token_ids</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">sentence</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">sentences</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">phoneme_string</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">sentence</span><span class="o">.</span><span class="n">ids</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>For only a plain phoneme string or a flattened ID list, use <code class="docutils literal notranslate"><span class="pre">phonemes()</span></code> or <code class="docutils literal notranslate"><span class="pre">phoneme_ids()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phoneme_ids</span><span class="p">,</span> <span class="n">phonemes</span>
+
+<span class="n">plain</span> <span class="o">=</span> <span class="n">phonemes</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span>
+<span class="n">ids</span> <span class="o">=</span> <span class="n">phoneme_ids</span><span class="p">(</span><span class="s2">&quot;Hello world&quot;</span><span class="p">,</span> <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Call</p></th>
+<th class="head"><p>Return value</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PiperG2P.phonemize(text)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PiperG2P.phonemize_prepared(text,</span> <span class="pre">...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Module-level <code class="docutils literal notranslate"><span class="pre">phonemize_prepared(...)</span></code> / <code class="docutils literal notranslate"><span class="pre">phonemize(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">PhonemizeResult</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Module-level <code class="docutils literal notranslate"><span class="pre">phonemes(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">str</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Module-level <code class="docutils literal notranslate"><span class="pre">phoneme_ids(...)</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">list[int]</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>The similarly named APIs intentionally differ: module-level <code class="docutils literal notranslate"><span class="pre">phonemize()</span></code> is an alias of <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> and returns a structured result, while <code class="docutils literal notranslate"><span class="pre">PiperG2P.phonemize()</span></code> returns a string.</p>
+<p><code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> retains the public <code class="docutils literal notranslate"><span class="pre">return_ids</span></code> and <code class="docutils literal notranslate"><span class="pre">return_phonemes</span></code> compatibility parameters, but currently ignores them; they do not change the result type or omit result fields.</p>
+</section>
+<section id="reuse-and-caching">
+<h2>Reuse and caching</h2>
+<p><code class="docutils literal notranslate"><span class="pre">get_g2p()</span></code> returns a reusable <code class="docutils literal notranslate"><span class="pre">PiperG2P</span></code>. Equivalent construction requests may reuse an object from the bounded cache:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
+
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;First sentence. Second sentence.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The context manager closes the facade when the block exits. <code class="docutils literal notranslate"><span class="pre">cache_info()</span></code> reports cache status, and <code class="docutils literal notranslate"><span class="pre">clear_cache()</span></code> closes and removes cached values. Use these when the application controls an explicit lifecycle or needs to reset cached objects.</p>
+</section>
+<section id="configuration-and-policy">
+<h2>Configuration and policy</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">config</span></code> argument accepts a <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> path, a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>, or a mapping. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> selects compatibility-mode config parsing; strict parsing is the default. The configured voice data, especially its <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>, remains authoritative for ID encoding.</p>
+<p><code class="docutils literal notranslate"><span class="pre">espeak_mode</span></code> selects <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;native&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;cli&quot;</span></code> for eSpeak-backed voices. Auto mode uses native eSpeak when the required capability is available and otherwise falls back to CLI; inspect <a class="reference internal" href="../espeak/"><span class="std std-doc">eSpeak modes and diagnostics</span></a> for details. Text voices do not invoke eSpeak.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">missing</span></code> option accepts <code class="docutils literal notranslate"><span class="pre">MissingPhonemePolicy.ERROR</span></code>, <code class="docutils literal notranslate"><span class="pre">WARN</span></code>, or <code class="docutils literal notranslate"><span class="pre">IGNORE</span></code>. These policies control what happens when a produced symbol is absent from the voice map; missing symbols remain represented in result reporting when processing continues. See <a class="reference internal" href="../encoding/"><span class="std std-doc">encoding and missing phonemes</span></a>.</p>
+</section>
+<section id="sentence-ids">
+<h2>Sentence IDs</h2>
+<p><code class="docutils literal notranslate"><span class="pre">result.token_ids</span></code> and <code class="docutils literal notranslate"><span class="pre">result.ids</span></code> are convenient flattened views. Piper inference normally consumes each <code class="docutils literal notranslate"><span class="pre">sentence.ids</span></code> as a separate sequence, so retain <code class="docutils literal notranslate"><span class="pre">result.sentences</span></code> when preparing model input.</p>
+<p>For result fields and span coordinates, see <a class="reference internal" href="../api/types/"><span class="std std-doc">API result types</span></a>. For source-aligned overrides, annotations, markers, and language routing, see <a class="reference internal" href="../overrides/"><span class="std std-doc">overrides</span></a> and <a class="reference internal" href="../language-routing/"><span class="std std-doc">language routing</span></a>.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

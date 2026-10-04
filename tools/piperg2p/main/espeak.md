@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,58 +542,71 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="espeak-backends">
 <h1>eSpeak backends</h1>
-<p><code class="docutils literal notranslate"><span class="pre">EspeakBackend</span></code> supports <code class="docutils literal notranslate"><span class="pre">auto</span></code>, <code class="docutils literal notranslate"><span class="pre">native</span></code>, and <code class="docutils literal notranslate"><span class="pre">cli</span></code> modes. PiperG2P delegates eSpeak discovery, native execution, CLI execution, voice selection, and lifetime management to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. Piper retains its local clause composition and phoneme policy. Native output is labeled <code class="docutils literal notranslate"><span class="pre">exact</span></code> only when the runtime exposes the terminator-capable clause API. CLI output is always labeled <code class="docutils literal notranslate"><span class="pre">best-effort</span></code>.</p>
-<p><strong>Important distinction:</strong> The exact clause API provides exact clause boundaries, but the phoneme semantics in the exact-clause path may differ from CLI for isolated weak words. The <code class="docutils literal notranslate"><span class="pre">phoneme_parity</span></code> diagnostic field reports the runtime’s raw phoneme semantic parity, while the <code class="docutils literal notranslate"><span class="pre">parity</span></code> field remains Piper’s historical clause/composition compatibility label.</p>
-<section id="runtime-ownership-and-mode-policy">
-<h2>Runtime ownership and mode policy</h2>
-<p><code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> owns executable, shared-library, and data discovery, optional <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> integration, native ctypes calls, process-global locking, and subprocess invocation. PiperG2P does not duplicate those mechanics.</p>
-<p>Piper’s mode policy is:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">auto</span></code> requests exact native capability from the runtime and falls back to CLI when it is unavailable. Piper emits one <code class="docutils literal notranslate"><span class="pre">BackendFallbackWarning</span></code> for that automatic fallback.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">native</span></code> requires an exact-capable native runtime and never falls back.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">cli</span></code> requests CLI directly, never probes native through Piper policy, and emits no fallback warning.</p></li>
-</ul>
-<p>Phrasplit supplies robust best-effort sentence spans to the CLI path through its exact-offset API. PiperG2P requests <code class="docutils literal notranslate"><span class="pre">mode=&quot;sentence&quot;</span></code> with <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, passing the eSpeak voice as the language. spaCy and its model-selection path are never loaded.</p>
-<p>Piper keeps <code class="docutils literal notranslate"><span class="pre">split_cli_clauses()</span></code> for its comma, semicolon, and colon composition policy, while sentence boundaries come from Phrasplit. URL punctuation is protected from clause splitting. This prevents abbreviations, decimals, dotted acronyms, versions, and URLs from becoming false sentence boundaries while retaining Piper’s NFD normalization, language-switch and joiner cleanup, punctuation spacing, vowel-cluster merging, raw blocks, and lexicon overlays.</p>
-<p>Piper’s local CLI splitter may produce clause bodies containing source line breaks, for example when a prepared segment begins after a paragraph break. <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> therefore must support multiline elements in <code class="docutils literal notranslate"><span class="pre">phonemize_many()</span></code>. PiperG2P does not strip these line breaks to accommodate CLI batching; safe CLI transport is owned by the runtime. The minimum runtime version for this behavior is <code class="docutils literal notranslate"><span class="pre">0.1.5</span></code>.</p>
+<section id="user-visible-modes">
+<h2>User-visible modes</h2>
+<p>For eSpeak-backed Piper voices, <code class="docutils literal notranslate"><span class="pre">espeak_mode</span></code> selects <code class="docutils literal notranslate"><span class="pre">&quot;auto&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;native&quot;</span></code>, or <code class="docutils literal notranslate"><span class="pre">&quot;cli&quot;</span></code>:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Behavior</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">auto</span></code></p></td>
+<td><p>Request exact-capable native support; fall back to CLI if unavailable and emit one <code class="docutils literal notranslate"><span class="pre">BackendFallbackWarning</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">native</span></code></p></td>
+<td><p>Require exact-capable native support; never fall back</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cli</span></code></p></td>
+<td><p>Use CLI directly; its compatibility label is best-effort</p></td>
+</tr>
+</tbody>
+</table>
+<p>Text voices do not invoke eSpeak. See <a class="reference internal" href="../voice-config/"><span class="std std-doc">voice configuration</span></a> for the distinction between the high-level <code class="docutils literal notranslate"><span class="pre">language</span></code> routing label and the configured base <code class="docutils literal notranslate"><span class="pre">espeak.voice</span></code>.</p>
 </section>
-<section id="configuration-compatibility">
-<h2>Configuration compatibility</h2>
-<p>Runtime variables are <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_DATA</span></code>. PiperG2P continues to support <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_DATA</span></code> as compatibility variables. Precedence is an explicit Piper constructor argument, a legacy Piper variable, a runtime variable, then runtime automatic discovery.</p>
-<p>For bundled loader support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[espeak-direct]&quot;</span>
-</pre></div>
-</div>
+<section id="clause-capability-versus-phoneme-parity">
+<h2>Clause capability versus phoneme parity</h2>
+<p>Native output is labeled <code class="docutils literal notranslate"><span class="pre">exact</span></code> only when <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> exposes the terminator-capable clause API. CLI output is always <code class="docutils literal notranslate"><span class="pre">best-effort</span></code>. Exact clause boundaries do not guarantee identical phoneme semantics: isolated weak words can differ between native and CLI. Piper’s <code class="docutils literal notranslate"><span class="pre">parity</span></code> diagnostic is the historical clause/composition label; <code class="docutils literal notranslate"><span class="pre">phoneme_parity</span></code> reports the runtime’s raw phoneme semantic parity.</p>
 </section>
-<section id="capability-inspection">
-<h2>Capability inspection</h2>
-<p><code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> remains available as a Piper compatibility facade over runtime inspection. It does not initialize eSpeak or emit fallback warnings:</p>
+<section id="inspect-capabilities">
+<h2>Inspect capabilities</h2>
+<p><code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> is a Piper compatibility facade over runtime inspection. It does not initialize eSpeak or emit fallback warnings:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">inspect_espeak</span>
 
 <span class="n">info</span> <span class="o">=</span> <span class="n">inspect_espeak</span><span class="p">()</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CLI available:&quot;</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">cli_available</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;exact native:&quot;</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">exact_native_available</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;selected:&quot;</span><span class="p">,</span> <span class="n">info</span><span class="o">.</span><span class="n">selected_exact_library</span><span class="p">)</span>
-
 <span class="k">for</span> <span class="n">candidate</span> <span class="ow">in</span> <span class="n">info</span><span class="o">.</span><span class="n">candidates</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span>
-        <span class="n">candidate</span><span class="o">.</span><span class="n">source</span><span class="p">,</span>
-        <span class="n">candidate</span><span class="o">.</span><span class="n">library</span><span class="p">,</span>
-        <span class="n">candidate</span><span class="o">.</span><span class="n">loadable</span><span class="p">,</span>
-        <span class="n">candidate</span><span class="o">.</span><span class="n">exact_clause_api</span><span class="p">,</span>
-        <span class="n">candidate</span><span class="o">.</span><span class="n">error</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">candidate</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">candidate</span><span class="o">.</span><span class="n">library</span><span class="p">,</span> <span class="n">candidate</span><span class="o">.</span><span class="n">loadable</span><span class="p">,</span>
+          <span class="n">candidate</span><span class="o">.</span><span class="n">exact_clause_api</span><span class="p">,</span> <span class="n">candidate</span><span class="o">.</span><span class="n">error</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">BackendDiagnostics</span></code> maps runtime information to Piper’s stable fields, including implementation, parity, exact clause support, fallback reason/code, selected paths, discovery source, version, and native candidate probes. New fields include <code class="docutils literal notranslate"><span class="pre">phoneme_output_api</span></code> (the runtime’s phoneme generation mechanism), <code class="docutils literal notranslate"><span class="pre">phoneme_parity</span></code> (the runtime’s raw phoneme semantic parity), and <code class="docutils literal notranslate"><span class="pre">fallback_code</span></code> (the runtime’s fallback cause identifier). The runtime source name <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> is exposed as Piper’s historical <code class="docutils literal notranslate"><span class="pre">modern-loader</span></code> compatibility name.</p>
 </section>
-<section id="public-compatibility-classes">
-<h2>Public compatibility classes</h2>
-<p><code class="docutils literal notranslate"><span class="pre">EspeakCliBackend</span></code> and <code class="docutils literal notranslate"><span class="pre">NativeEspeakProvider</span></code> remain available as thin wrappers for downstream code. They preserve their constructor shapes, use the runtime for eSpeak operations, and return Piper-local <code class="docutils literal notranslate"><span class="pre">Clause</span></code> records. Runtime clauses are converted explicitly, so runtime <code class="docutils literal notranslate"><span class="pre">terminator_code</span></code> does not alter Piper’s three-field public <code class="docutils literal notranslate"><span class="pre">Clause</span></code>.</p>
+<section id="configuration-and-environment-precedence">
+<h2>Configuration and environment precedence</h2>
+<p>Runtime variables are <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_DATA</span></code>. PiperG2P retains <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_DATA</span></code> as compatibility variables. Precedence is explicit Piper constructor argument, legacy Piper variable, runtime variable, then runtime automatic discovery.</p>
+<p>For bundled loader support on supported desktop/server platforms:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[espeak-direct]&quot;</span>
+</pre></div>
+</div>
 </section>
-<section id="ipa3-benchmark-identity">
-<h2>IPA3 benchmark identity</h2>
-<p>For pronunciation correctness, <code class="docutils literal notranslate"><span class="pre">benchmarks/benchmark_espeak.py</span></code> invokes the external executable directly with <code class="docutils literal notranslate"><span class="pre">-q</span> <span class="pre">--ipa=3</span> <span class="pre">-v</span> <span class="pre">&lt;voice&gt;</span> <span class="pre">--stdin</span></code>. The reference never calls PiperG2P’s backend or the runtime package. Select <code class="docutils literal notranslate"><span class="pre">--candidate</span> <span class="pre">native</span></code>, <code class="docutils literal notranslate"><span class="pre">--candidate</span> <span class="pre">cli</span></code>, or <code class="docutils literal notranslate"><span class="pre">--candidate</span> <span class="pre">auto</span></code>; native fallback is reported in diagnostics. Use <code class="docutils literal notranslate"><span class="pre">--reference-source</span> <span class="pre">golden</span></code> only with an explicitly captured golden file.</p>
+<section id="runtime-ownership-and-piper-composition">
+<h2>Runtime ownership and Piper composition</h2>
+<p><code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> owns executable, shared-library, and data discovery; optional <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> integration; native calls; process-global locking; and subprocess invocation. PiperG2P keeps Piper-specific clause composition and phoneme policy locally.</p>
+<p>Phrasplit supplies best-effort sentence spans to the CLI path through its exact-offset API. Piper requests sentence mode with <code class="docutils literal notranslate"><span class="pre">use_spacy=False</span></code>, passing the eSpeak voice as the language; spaCy and its model-selection path are never loaded. Piper retains its local comma, semicolon, and colon clause composition, URL-punctuation protection, NFD normalization, language-switch and joiner cleanup, punctuation spacing, vowel-cluster merging, raw blocks, and lexicon overlays.</p>
+<p>The local CLI splitter may produce clause bodies containing source line breaks, for example after a paragraph break. Piper passes these multiline elements to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>’s <code class="docutils literal notranslate"><span class="pre">phonemize_many()</span></code> rather than stripping the line breaks. This behavior requires <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> 0.1.5 or later.</p>
+<p><code class="docutils literal notranslate"><span class="pre">BackendDiagnostics</span></code> maps runtime information to Piper’s stable fields, including implementation, parity, exact clause support, fallback reason/code, selected paths, discovery source, version, and native probes. <code class="docutils literal notranslate"><span class="pre">phoneme_output_api</span></code> identifies the runtime’s phoneme generation mechanism. Runtime source name <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> is exposed under Piper’s historical <code class="docutils literal notranslate"><span class="pre">modern-loader</span></code> compatibility name.</p>
+<p><code class="docutils literal notranslate"><span class="pre">EspeakCliBackend</span></code> and <code class="docutils literal notranslate"><span class="pre">NativeEspeakProvider</span></code> remain thin compatibility wrappers for downstream code. They use the runtime for eSpeak operations and return Piper-local <code class="docutils literal notranslate"><span class="pre">Clause</span></code> records.</p>
+</section>
+<section id="termux-android">
+<h2>Termux / Android</h2>
+<p>Install Termux’s system eSpeak package; do not use the bundled desktop/server loader merely to obtain eSpeak on Android. Use <code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> to check whether the system library exposes exact native capability. <code class="docutils literal notranslate"><span class="pre">espeak_mode=&quot;auto&quot;</span></code> falls back to CLI when that capability is unavailable. Capability discovery handles future Termux package upgrades without a hard-coded version claim. See <a class="reference internal" href="../installation/"><span class="std std-doc">installation</span></a>.</p>
+</section>
+<section id="benchmark">
+<h2>Benchmark</h2>
+<p>For pronunciation correctness, <code class="docutils literal notranslate"><span class="pre">benchmarks/benchmark_espeak.py</span></code> invokes the external executable directly with <code class="docutils literal notranslate"><span class="pre">-q</span> <span class="pre">--ipa=3</span> <span class="pre">-v</span> <span class="pre">&lt;voice&gt;</span> <span class="pre">--stdin</span></code>; the reference does not call PiperG2P’s backend or <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>. Select native, CLI, or auto candidates and use explicitly captured goldens when needed. See the <a class="reference internal" href="../reference-benchmark/"><span class="std std-doc">reference benchmark guide</span></a>.</p>
 </section>
 </section>
 </div>

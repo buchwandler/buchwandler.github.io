@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,7 +542,126 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="diagnostics-api">
 <h1>Diagnostics API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">BackendDiagnostics</span></code> and <code class="docutils literal notranslate"><span class="pre">FrontendDiagnostics</span></code> are frozen dataclasses. Backend diagnostics include implementation, discovered paths, version, clause API availability, fallback reason, warnings, and parity.</p>
+<p>Diagnostics are immutable dataclasses that describe the selected frontend/backend, capability, fallback, and optional lexicon state. They are observational; <code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> performs capability inspection without initializing an inference backend.</p>
+<p>.. py:class:: BackendDiagnostics(requested_mode: ‘str’ = ‘text’, implementation: ‘str’ = ‘text’, executable: ‘str | None’ = None, library_path: ‘str | None’ = None, data_path: ‘str | None’ = None, discovery_source: ‘str | None’ = None, version: ‘str | None’ = None, exact_clause_api: ‘bool’ = False, fallback_code: ‘str | None’ = None, fallback_reason: ‘str | None’ = None, parity: ‘str’ = ‘exact’, phoneme_output_api: ‘str | None’ = None, phoneme_parity: ‘str | None’ = None, warnings: ‘tuple[str, …]’ = (), native_candidates: ‘tuple[EspeakLibraryProbe, …]’ = ())
+:module: piperg2p
+:canonical: piperg2p.diagnostics.BackendDiagnostics</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: BackendDiagnostics.requested_mode
+:module: piperg2p
+:type: str
+:value: ‘text’</p>
+<p>.. py:attribute:: BackendDiagnostics.implementation
+:module: piperg2p
+:type: str
+:value: ‘text’</p>
+<p>.. py:attribute:: BackendDiagnostics.executable
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.library_path
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.data_path
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.discovery_source
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.version
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.exact_clause_api
+:module: piperg2p
+:type: bool
+:value: False</p>
+<p>.. py:attribute:: BackendDiagnostics.fallback_code
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.fallback_reason
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.parity
+:module: piperg2p
+:type: str
+:value: ‘exact’</p>
+<p>.. py:attribute:: BackendDiagnostics.phoneme_output_api
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.phoneme_parity
+:module: piperg2p
+:type: str | None
+:value: None</p>
+<p>.. py:attribute:: BackendDiagnostics.warnings
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:attribute:: BackendDiagnostics.native_candidates
+:module: piperg2p
+:type: tuple[EspeakLibraryProbe, …]
+:value: ()</p>
+<p>.. py:class:: FrontendDiagnostics(phoneme_type: ‘str’, backend: ‘str’, compatibility_profile: ‘str’ = ‘piper-python’, warnings: ‘tuple[str, …]’ = (), backend_diagnostics: ‘BackendDiagnostics | None’ = None, lexicon: ‘LexiconDiagnostics | None’ = None)
+:module: piperg2p
+:canonical: piperg2p.diagnostics.FrontendDiagnostics</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: FrontendDiagnostics.phoneme_type
+:module: piperg2p
+:type: str</p>
+<p>.. py:attribute:: FrontendDiagnostics.backend
+:module: piperg2p
+:type: str</p>
+<p>.. py:attribute:: FrontendDiagnostics.compatibility_profile
+:module: piperg2p
+:type: str
+:value: ‘piper-python’</p>
+<p>.. py:attribute:: FrontendDiagnostics.warnings
+:module: piperg2p
+:type: tuple[str, …]
+:value: ()</p>
+<p>.. py:attribute:: FrontendDiagnostics.backend_diagnostics
+:module: piperg2p
+:type: BackendDiagnostics | None
+:value: None</p>
+<p>.. py:attribute:: FrontendDiagnostics.lexicon
+:module: piperg2p
+:type: LexiconDiagnostics | None
+:value: None</p>
+<p>.. py:class:: EspeakCapabilities(executable: ‘str | None’, cli_available: ‘bool’, selected_exact_library: ‘str | None’, selected_source: ‘str | None’, selected_data: ‘str | None’, candidates: ‘tuple[EspeakLibraryProbe, …]’ = ())
+:module: piperg2p
+:canonical: piperg2p.diagnostics.EspeakCapabilities</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>.. py:attribute:: EspeakCapabilities.executable
+:module: piperg2p
+:type: str | None</p>
+<p>.. py:attribute:: EspeakCapabilities.cli_available
+:module: piperg2p
+:type: bool</p>
+<p>.. py:attribute:: EspeakCapabilities.selected_exact_library
+:module: piperg2p
+:type: str | None</p>
+<p>.. py:attribute:: EspeakCapabilities.selected_source
+:module: piperg2p
+:type: str | None</p>
+<p>.. py:attribute:: EspeakCapabilities.selected_data
+:module: piperg2p
+:type: str | None</p>
+<p>.. py:attribute:: EspeakCapabilities.candidates
+:module: piperg2p
+:type: tuple[EspeakLibraryProbe, …]</p>
+<p>.. py:property:: EspeakCapabilities.exact_native_available
+:module: piperg2p
+:type: bool</p>
+<p>.. py:property:: EspeakCapabilities.trace_native_available
+:module: piperg2p
+:type: bool</p>
+<p><code class="docutils literal notranslate"><span class="pre">parity</span></code> is Piper’s clause/composition compatibility label; <code class="docutils literal notranslate"><span class="pre">phoneme_parity</span></code> is the runtime’s raw phoneme semantic parity. <code class="docutils literal notranslate"><span class="pre">exact_clause_api</span></code> reports terminator-capable native clause support and does not promise identical phoneme semantics. See the <a class="reference internal" href="../../espeak/"><span class="std std-doc">eSpeak guide</span></a> for interpretation.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

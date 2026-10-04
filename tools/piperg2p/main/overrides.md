@@ -1,7 +1,7 @@
 ---
 layout: tool-doc
-title: "piperg2p Configuration API"
-permalink: /tools/piperg2p/main/api/config/
+title: "piperg2p Overrides, annotations, markers, and stress"
+permalink: /tools/piperg2p/main/overrides/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
@@ -540,102 +540,65 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="configuration-api">
-<h1>Configuration API</h1>
-<p><code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> is the validated, immutable view of the Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> fields used by PiperG2P. <code class="docutils literal notranslate"><span class="pre">PiperConfig</span></code> is a compatibility alias. High-level <code class="docutils literal notranslate"><span class="pre">config=</span></code> arguments accept a path, mapping, or existing <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code>; the lower-level frontend expects a <code class="docutils literal notranslate"><span class="pre">VoiceConfig</span></code> or path via <code class="docutils literal notranslate"><span class="pre">from_config()</span></code>.</p>
-<p>Strict parsing is the default. <code class="docutils literal notranslate"><span class="pre">strict=False</span></code> is a compatibility mode for legacy inputs that can infer supported defaults and emit <code class="docutils literal notranslate"><span class="pre">CompatibilityWarning</span></code>; it does not make unsupported phoneme providers available.</p>
-<p>.. py:class:: VoiceConfig(num_symbols: int, num_speakers: int, sample_rate: int, phoneme_id_map: ~collections.abc.Mapping[str, tuple[int, …]], phoneme_type: ~piperg2p.config.PhonemeType = PhonemeType.ESPEAK, espeak_voice: str = ‘en-us’, speaker_id_map: ~collections.abc.Mapping[str, int] = <factory>, default_speaker_id: int = 0, noise_scale: float = 0.667, length_scale: float = 1.0, noise_w: float = 0.8, hop_length: int = 256, vowel_clusters: frozenset[tuple[str, …]] = <factory>, piper_version: str | None = None, extra: ~collections.abc.Mapping[str, ~typing.Any] = <factory>)
-:module: piperg2p
-:canonical: piperg2p.config.VoiceConfig</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Validated subset of a Piper <code class="docutils literal notranslate"><span class="pre">.onnx.json</span></code> voice configuration.</p>
-<p>.. py:attribute:: VoiceConfig.num_symbols
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.num_speakers
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.sample_rate
-:module: piperg2p
-:type: int</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, tuple[int, …]]</p>
-<p>.. py:attribute:: VoiceConfig.phoneme_type
-:module: piperg2p
-:type: ~piperg2p.config.PhonemeType
-:value: ‘espeak’</p>
-<p>.. py:attribute:: VoiceConfig.espeak_voice
-:module: piperg2p
-:type: str
-:value: ‘en-us’</p>
-<p>.. py:attribute:: VoiceConfig.speaker_id_map
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, int]</p>
-<p>.. py:attribute:: VoiceConfig.default_speaker_id
-:module: piperg2p
-:type: int
-:value: 0</p>
-<p>.. py:attribute:: VoiceConfig.noise_scale
-:module: piperg2p
-:type: float
-:value: 0.667</p>
-<p>.. py:attribute:: VoiceConfig.length_scale
-:module: piperg2p
-:type: float
-:value: 1.0</p>
-<p>.. py:attribute:: VoiceConfig.noise_w
-:module: piperg2p
-:type: float
-:value: 0.8</p>
-<p>.. py:attribute:: VoiceConfig.hop_length
-:module: piperg2p
-:type: int
-:value: 256</p>
-<p>.. py:attribute:: VoiceConfig.vowel_clusters
-:module: piperg2p
-:type: frozenset[tuple[str, …]]</p>
-<p>.. py:attribute:: VoiceConfig.piper_version
-:module: piperg2p
-:type: str | None
-:value: None</p>
-<p>.. py:attribute:: VoiceConfig.extra
-:module: piperg2p
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:method:: VoiceConfig.from_dict(raw: ~collections.abc.Mapping[str, ~typing.Any], *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:method:: VoiceConfig.from_json(path: str | ~pathlib.Path, *, strict: bool = True) -&gt; ~piperg2p.config.VoiceConfig
-:module: piperg2p
-:classmethod:</p>
-<p>.. py:property:: VoiceConfig.noise_w_scale
-:module: piperg2p
-:type: float</p>
-<p>.. py:method:: VoiceConfig.to_dict() -&gt; dict[str, ~typing.Any]
-:module: piperg2p</p>
-<p>.. py:class:: PhonemeType(*values)
-:module: piperg2p
-:canonical: piperg2p.config.PhonemeType</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">str</span></code>, :py:class:<code class="docutils literal notranslate"><span class="pre">~enum.Enum</span></code></p>
-<p>.. py:attribute:: PhonemeType.ESPEAK
-:module: piperg2p
-:value: ‘espeak’</p>
-<p>.. py:attribute:: PhonemeType.TEXT
-:module: piperg2p
-:value: ‘text’</p>
-<p>.. py:attribute:: PhonemeType.PINYIN
-:module: piperg2p
-:value: ‘pinyin’</p>
-<p>.. py:attribute:: PhonemeType.HEBREW
-:module: piperg2p
-:value: ‘hebrew’</p>
-<p>.. py:attribute:: PhonemeType.JAPANESE
-:module: piperg2p
-:value: ‘japanese’</p>
-<p>.. py:attribute:: PhonemeType.THAI
-:module: piperg2p
-:value: ‘thai’</p>
-<p>For the supported/unavailable distinction and the base eSpeak voice versus routing language, see <a class="reference internal" href="../../phoneme-types/"><span class="std std-doc">phoneme types</span></a> and <a class="reference internal" href="../../voice-config/"><span class="std std-doc">voice configuration</span></a>.</p>
+<section id="overrides-annotations-markers-and-stress">
+<h1>Overrides, annotations, markers, and stress</h1>
+<p>Overrides let a caller provide source-aligned pronunciation or language metadata without adding an NLP dependency. Span offsets address the exact prepared text passed to <code class="docutils literal notranslate"><span class="pre">phonemize_prepared()</span></code> and use half-open <code class="docutils literal notranslate"><span class="pre">[start,</span> <span class="pre">end)</span></code> character ranges.</p>
+<section id="direct-phoneme-and-language-overrides">
+<h2>Direct phoneme and language overrides</h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">OverrideSpan(start,</span> <span class="pre">end,</span> <span class="pre">attrs)</span></code> for a direct phoneme override (<code class="docutils literal notranslate"><span class="pre">ph</span></code>) or to route a span through another eSpeak voice (<code class="docutils literal notranslate"><span class="pre">lang</span></code>):</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">OverrideSpan</span><span class="p">,</span> <span class="n">get_g2p</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;Hello Welt&quot;</span>
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span>
+        <span class="n">text</span><span class="p">,</span>
+        <span class="n">overrides</span><span class="o">=</span><span class="p">[</span><span class="n">OverrideSpan</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="p">{</span><span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;de-de&quot;</span><span class="p">})],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ph</span></code> supplies the resolved phoneme content for that source range; its symbols must still exist in the configured voice’s <code class="docutils literal notranslate"><span class="pre">phoneme_id_map</span></code>. A <code class="docutils literal notranslate"><span class="pre">lang</span></code> override asks the eSpeak backend to pronounce the span with that voice. It does not change the Piper model or the voice configuration’s base <code class="docutils literal notranslate"><span class="pre">espeak.voice</span></code>.</p>
+<p>Overlaps and token boundaries are controlled by <code class="docutils literal notranslate"><span class="pre">overlap</span></code>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;snap&quot;</span></code> expands partial boundaries to token edges and reports a warning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;strict&quot;</span></code> skips a range that partially overlaps a token; overlapping override ranges are also rejected/skipped with a warning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;split&quot;</span></code> preserves the exact character boundaries, allowing a token to be split across ordinary and overridden segments.</p></li>
+</ul>
+<p>Overlapping ranges are not generally composable; avoid them. For <code class="docutils literal notranslate"><span class="pre">ph</span></code> plus <code class="docutils literal notranslate"><span class="pre">stress</span></code>, stress is applied after pronunciation resolution. Valid stress levels are <code class="docutils literal notranslate"><span class="pre">-2</span></code>, <code class="docutils literal notranslate"><span class="pre">-1</span></code>, <code class="docutils literal notranslate"><span class="pre">1</span></code>, and <code class="docutils literal notranslate"><span class="pre">2</span></code>; a compatible vowel-bearing phoneme string must be used and every resulting symbol must be supported by the voice map. See the executable <a class="reference external" href="https://github.com/buchwandler/piperg2p/blob/main/examples/structured_stress.py"><code class="docutils literal notranslate"><span class="pre">structured_stress.py</span></code></a> example for a compatible-voice demonstration.</p>
+</section>
+<section id="caller-supplied-annotations">
+<h2>Caller-supplied annotations</h2>
+<p><code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> carries caller-supplied metadata over a source range. It accepts <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code>; the values are attached to covered output tokens so the caller’s existing linguistic metadata remains available. PiperG2P preserves this supplied information but does not run spaCy or automatically add an NLP dependency.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">TokenAnnotation</span><span class="p">,</span> <span class="n">get_g2p</span>
+
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span>
+        <span class="s2">&quot;Hello world&quot;</span><span class="p">,</span>
+        <span class="n">annotations</span><span class="o">=</span><span class="p">[</span><span class="n">TokenAnnotation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="s2">&quot;Hello&quot;</span><span class="p">,</span> <span class="n">pos</span><span class="o">=</span><span class="s2">&quot;INTJ&quot;</span><span class="p">,</span> <span class="n">tag</span><span class="o">=</span><span class="s2">&quot;UH&quot;</span><span class="p">,</span>
+                                     <span class="n">lemma</span><span class="o">=</span><span class="s2">&quot;hello&quot;</span><span class="p">,</span> <span class="n">morph</span><span class="o">=</span><span class="s2">&quot;Number=Sing&quot;</span><span class="p">)],</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+<p>When <code class="docutils literal notranslate"><span class="pre">text</span></code> is supplied on an annotation, it must match the covered source slice. Offsets must align with the current text.</p>
+</section>
+<section id="marker-parsing">
+<h2>Marker parsing</h2>
+<p>Marker helpers separate identifying source ranges from assigning behavior:</p>
+<ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">parse_delimited()</span></code> removes paired markers and returns clean text, clean-text ranges, and parser warnings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">apply_marker_overrides()</span></code> converts those ranges and caller assignments to ordinary <code class="docutils literal notranslate"><span class="pre">OverrideSpan</span></code> objects.</p></li>
+</ol>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">apply_marker_overrides</span><span class="p">,</span> <span class="n">parse_delimited</span>
+
+<span class="n">clean</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="n">marker_warnings</span> <span class="o">=</span> <span class="n">parse_delimited</span><span class="p">(</span><span class="s2">&quot;Say @hello@ today&quot;</span><span class="p">)</span>
+<span class="n">overrides</span> <span class="o">=</span> <span class="n">apply_marker_overrides</span><span class="p">(</span><span class="n">clean</span><span class="p">,</span> <span class="n">ranges</span><span class="p">,</span> <span class="p">{</span><span class="mi">1</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;lang&quot;</span><span class="p">:</span> <span class="s2">&quot;en-us&quot;</span><span class="p">}})</span>
+</pre></div>
+</div>
+<p>Ranges are in the returned clean-text coordinate space, not the original marked string. Unmatched markers are restored as literal text with a warning. Escape the marker or escape character with the helper’s escape prefix. Keep parser warnings distinct from phonemization warnings when reporting diagnostics. See <a class="reference external" href="https://github.com/buchwandler/piperg2p/blob/main/examples/marker_demo.py"><code class="docutils literal notranslate"><span class="pre">marker_demo.py</span></code></a>.</p>
+</section>
+<section id="source-alignment-after-transformations">
+<h2>Source alignment after transformations</h2>
+<p>Semantic rewriting can insert, remove, or reorder characters and thereby invalidate spans and annotations. Build spans against the final text that PiperG2P will consume, or explicitly remap them after each transformation. See <a class="reference internal" href="../prepared-text/"><span class="std std-doc">prepared-text ownership</span></a> for the boundary and <a class="reference internal" href="../language-routing/"><span class="std std-doc">language routing</span></a> for explicit/automatic language choices.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

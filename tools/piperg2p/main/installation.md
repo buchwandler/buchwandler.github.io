@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,71 +542,81 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="installation">
 <h1>Installation</h1>
-<p>The core package supports Python 3.10 and newer and depends on <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> for eSpeak infrastructure. It has no dependency on semantic preparation packages.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>.
-</pre></div>
-</div>
-<section id="semantic-preparation-boundary">
-<h2>Semantic preparation boundary</h2>
-<p>PiperG2P consumes prepared, speakable text. It does not depend on Numeralform
-or Spokenform and does not own written-to-spoken semantic normalization.
-Higher-level applications should perform that preparation before calling
-PiperG2P.</p>
+<section id="python-requirement">
+<h2>Python requirement</h2>
+<p>PiperG2P supports Python 3.10 and newer.</p>
 </section>
-<section id="optional-semantic-preparation">
-<h2>Optional semantic preparation</h2>
-<p>Spokenform is a separate package for applications that need written-to-spoken semantic expansion. Install it independently from PiperG2P:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>spokenform
+<section id="install-the-package">
+<h2>Install the package</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>piperg2p
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">spokenform</span><span class="w"> </span><span class="kn">import</span> <span class="n">prepare_for_piperg2p</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">phonemize_prepared</span>
-
-<span class="n">prepared</span> <span class="o">=</span> <span class="n">prepare_for_piperg2p</span><span class="p">(</span>
-    <span class="s2">&quot;Pay $12.50 for 2 kg.&quot;</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en&quot;</span><span class="p">,</span>
-<span class="p">)</span><span class="o">.</span><span class="n">spoken_text</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">phonemize_prepared</span><span class="p">(</span>
-    <span class="n">prepared</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
-    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<p>The core package depends on <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> for eSpeak infrastructure and <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> for sentence segmentation. It does not depend on Piper, Spokenform, or Numeralform.</p>
+</section>
+<section id="espeak-runtime-choices">
+<h2>eSpeak runtime choices</h2>
+<p>Text voices do not invoke eSpeak. For eSpeak voices, <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> discovers and manages the native library or CLI fallback. The <code class="docutils literal notranslate"><span class="pre">espeak-direct</span></code> extra enables its bundled-loader support where supported:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[espeak-direct]&quot;</span>
 </pre></div>
 </div>
-<p>Spokenform is not a PiperG2P core, optional-extra, development, or core-test dependency.
-The <code class="docutils literal notranslate"><span class="pre">dev</span></code> extra provides pytest, coverage, ruff, mypy, and build tooling. <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> owns eSpeak discovery, native execution, CLI fallback, and lifetime management. Its executable, shared library, and data directory can be selected with Piper constructor arguments or the legacy <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">PIPERG2P_ESPEAK_DATA</span></code> variables.</p>
-<p>For bundled loader support:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[espeak-direct]&quot;</span>
-</pre></div>
-</div>
-<p>Runtime variables are <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_EXECUTABLE</span></code>, <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_LIBRARY</span></code>, and <code class="docutils literal notranslate"><span class="pre">ESPEAKNG_RUNTIME_DATA</span></code>. Precedence is explicit Piper constructor argument, legacy Piper variable, runtime variable, then runtime automatic discovery.</p>
-<p>For exact Piper native parity, ordinary eSpeak availability is not sufficient. Piper asks the runtime for an exact-capable native backend. Native mode requires that capability, auto mode falls back to CLI with a Piper warning, and CLI mode remains explicit best-effort behavior. <code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> is a Piper compatibility facade over runtime inspection.</p>
-<p>No frontend downloads models or makes network requests during phonemization.</p>
-<p>Optional lexicon adapters are installed separately:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;piperg2p[lexphon]&#39;</span><span class="w">  </span><span class="c1"># managed Lexphon identifiers</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;piperg2p[g2lex]&#39;</span><span class="w">     </span><span class="c1"># explicit local .g2lex files</span>
-pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;piperg2p[espeak-direct]&#39;</span><span class="w">  </span><span class="c1"># packaged modern eSpeak loader</span>
-</pre></div>
-</div>
-<p>These packages are not imported or required for core/text/eSpeak-only use.</p>
+<p>See <a class="reference internal" href="../espeak/"><span class="std std-doc">eSpeak modes and capability inspection</span></a> for backend behavior and configuration precedence.</p>
+</section>
+<section id="optional-extras">
+<h2>Optional extras</h2>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Extra</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">lexphon</span></code></p></td>
+<td><p>Managed installed pronunciation assets</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">lexicons</span></code></p></td>
+<td><p>Alias-equivalent convenience extra for <code class="docutils literal notranslate"><span class="pre">lexphon</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">g2lex</span></code></p></td>
+<td><p>Direct local <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> files</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">espeak-direct</span></code></p></td>
+<td><p>Bundled <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> loader support</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">reference</span></code></p></td>
+<td><p>Reference/phonetic benchmark tooling</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">docs</span></code></p></td>
+<td><p>Sphinx, MyST Parser, and RTD theme</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">dev</span></code></p></td>
+<td><p>Tests, lint, type-check, and package build tools</p></td>
+</tr>
+</tbody>
+</table>
+<p>Lexicon data is provisioned separately and is never downloaded by PiperG2P at runtime. See <a class="reference internal" href="../lexicons/"><span class="std std-doc">lexicon provisioning</span></a>.</p>
+</section>
 <section id="termux-android">
-<h3>Termux / Android</h3>
-<p>On Termux, install the native package:</p>
+<h2>Termux / Android</h2>
+<p>Install the system eSpeak package and PiperG2P:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pkg<span class="w"> </span>install<span class="w"> </span>espeak
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>piperg2p
 </pre></div>
 </div>
-<p>Do not use <code class="docutils literal notranslate"><span class="pre">piperg2p[espeak-direct]</span></code> merely to obtain eSpeak on Termux.
-The bundled <code class="docutils literal notranslate"><span class="pre">espeakng-loader</span></code> backend targets supported desktop/server
-platforms; Termux should use its system eSpeak installation.</p>
-<p>Current Termux packages eSpeak NG 1.52.0. That version does not expose
-<code class="docutils literal notranslate"><span class="pre">espeak_TextToPhonemesWithTerminator</span></code>, so Piper exact native clause
-parity is not available from the system library. <code class="docutils literal notranslate"><span class="pre">mode=&quot;auto&quot;</span></code> therefore
-uses the CLI best-effort fallback. Once Termux ships an eSpeak NG build
-that exposes the terminator API, capability discovery will select it
-without a <code class="docutils literal notranslate"><span class="pre">piperg2p</span></code> version-specific change.</p>
+<p>Do not use the desktop/server bundled loader merely to obtain eSpeak on Android. Use <code class="docutils literal notranslate"><span class="pre">inspect_espeak()</span></code> to see whether an exact-capable native library is available. <code class="docutils literal notranslate"><span class="pre">espeak_mode=&quot;auto&quot;</span></code> selects native operation when the required capability is present and otherwise falls back to CLI. Capability discovery handles system package changes without relying on a hard-coded eSpeak version.</p>
 </section>
+<section id="development-and-documentation">
+<h2>Development and documentation</h2>
+<p>From a source checkout, install the development tools and run the checks:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q
+</pre></div>
+</div>
+<p>For documentation work, include the docs extra:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs]&quot;</span>
+python<span class="w"> </span>docs/make.py<span class="w"> </span>html
+</pre></div>
+</div>
+<p>PiperG2P consumes prepared, speakable text rather than verbalizing written numbers, dates, units, and similar semantics. See the canonical <a class="reference internal" href="../prepared-text/"><span class="std std-doc">prepared-text guide</span></a> for that boundary and optional composition.</p>
 </section>
 </section>
 </div>

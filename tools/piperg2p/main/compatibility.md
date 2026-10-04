@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,46 +542,46 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="compatibility-policy">
 <h1>Compatibility policy</h1>
-<p>The primary target is the Piper Python voice behavior at the pinned Piper 1.8.0 reference commit <code class="docutils literal notranslate"><span class="pre">404aefedbd74baa0bd43e451bc407a2b3aace0f5</span></code>. <code class="docutils literal notranslate"><span class="pre">libpiper</span></code> behavior is a separate compatibility profile and is not silently mixed into the runtime.</p>
+<p>PiperG2P compares behavior with the pinned Piper Python 1.8.0 reference commit <code class="docutils literal notranslate"><span class="pre">404aefedbd74baa0bd43e451bc407a2b3aace0f5</span></code>. <code class="docutils literal notranslate"><span class="pre">libpiper</span></code> is a separate compatibility profile and is not silently mixed into runtime behavior.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Feature</p></th>
-<th class="head"><p>Core</p></th>
+<th class="head"><p>Current support</p></th>
 <th class="head"><p>Compatibility label</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Text frontend</p></td>
-<td><p>yes</p></td>
-<td><p>exact for tested Python profile</p></td>
+<td><p>Implemented</p></td>
+<td><p>Exact for the tested Python profile</p></td>
 </tr>
 <tr class="row-odd"><td><p>Native eSpeak clause API</p></td>
-<td><p>system library</p></td>
-<td><p>exact when the public terminator API is present</p></td>
+<td><p>System library</p></td>
+<td><p>Exact when the public terminator API is present</p></td>
 </tr>
 <tr class="row-even"><td><p>eSpeak CLI</p></td>
-<td><p>executable required</p></td>
-<td><p>best-effort</p></td>
+<td><p>Executable required</p></td>
+<td><p>Best-effort</p></td>
 </tr>
 <tr class="row-odd"><td><p>Raw blocks</p></td>
-<td><p>yes, eSpeak only</p></td>
-<td><p>reference-tested foundation</p></td>
+<td><p>Implemented for eSpeak</p></td>
+<td><p>Reference-tested foundation</p></td>
 </tr>
 <tr class="row-even"><td><p>Pinyin, Japanese, Thai, Hebrew</p></td>
-<td><p>recognized configuration values</p></td>
-<td><p>unavailable, no provider</p></td>
+<td><p>Recognized config values</p></td>
+<td><p>Unavailable without a provider</p></td>
 </tr>
-<tr class="row-odd"><td><p>Arabic eSpeak</p></td>
-<td><p>recognized voice profile</p></td>
-<td><p>explicitly unsupported until preprocessing is implemented</p></td>
+<tr class="row-odd"><td><p>Arabic eSpeak profile</p></td>
+<td><p>Recognized voice profile</p></td>
+<td><p>Unsupported until preprocessing is implemented</p></td>
 </tr>
 <tr class="row-even"><td><p>Lexphon/G2Lex overlay</p></td>
-<td><p>opt-in</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">override-generic-ipa</span></code> or <code class="docutils literal notranslate"><span class="pre">piper-espeak-frozen</span></code> extension</p></td>
+<td><p>Opt-in extension</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">override-generic-ipa</span></code> or <code class="docutils literal notranslate"><span class="pre">piper-espeak-frozen</span></code></p></td>
 </tr>
 </tbody>
 </table>
-<p>The pinned Phase 1 corpus metadata is in <code class="docutils literal notranslate"><span class="pre">benchmarks/data/core.json</span></code>. It is not a golden output and cannot silently refresh. Exactness claims require reference output and dependency metadata.</p>
+<p>The compatibility corpus at <code class="docutils literal notranslate"><span class="pre">benchmarks/data/core.json</span></code> records the pinned cases. It is not a golden output and cannot silently refresh. Exactness claims require reference output and dependency metadata. See the <a class="reference internal" href="../espeak/"><span class="std std-doc">eSpeak guide</span></a>, <a class="reference internal" href="../reference-benchmark/"><span class="std std-doc">benchmark guide</span></a>, and <a class="reference internal" href="../provenance/"><span class="std std-doc">provenance</span></a> for the underlying evidence.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,12 +542,16 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="contributing">
 <h1>Contributing</h1>
-<p>Run the core checks before submitting changes:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q
+<p>Install development and documentation dependencies, then run the same checks used to protect the public API and docs site:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev,docs]&quot;</span>
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>-q
+ruff<span class="w"> </span>check<span class="w"> </span>.
+python<span class="w"> </span>docs/make.py<span class="w"> </span>html
 python<span class="w"> </span>-m<span class="w"> </span>build
 </pre></div>
 </div>
-<p>Keep backend transformations independently testable with fake providers. Mark live eSpeak tests with <code class="docutils literal notranslate"><span class="pre">espeak</span></code> and <code class="docutils literal notranslate"><span class="pre">integration</span></code>. Do not add Piper as a runtime dependency or copy upstream implementation and data. Update provenance when a compatibility requirement changes.</p>
+<p>Update documentation when public behavior changes and update executable examples when the high-level facade changes. Keep fake-provider backend tests independent from live eSpeak; mark tests that need eSpeak or other external resources appropriately. Do not add Piper, Spokenform, or Numeralform as PiperG2P dependencies. Keep optional integrations optional and update compatibility/provenance pages when those claims change.</p>
+<p>Do not edit the generated <a class="reference internal" href="../changelog/"><span class="std std-doc">changelog</span></a> by hand. Update the releaseledger source record and regenerate it through the project workflow.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "piperg2p Provenance and clean-room boundary"
+title: "piperg2p Provenance and independence boundary"
 permalink: /tools/piperg2p/main/provenance/
 nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -540,60 +540,62 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="provenance-and-clean-room-boundary">
-<h1>Provenance and clean-room boundary</h1>
-<p>This project is implemented independently under Apache-2.0. The compatibility requirements were derived from public Piper configuration and behavior observations, the eSpeak NG public header/API, and the local <code class="docutils literal notranslate"><span class="pre">01_todo.md</span></code> engineering guide.</p>
+<section id="provenance-and-independence-boundary">
+<h1>Provenance and independence boundary</h1>
+<p>PiperG2P is independently implemented under Apache-2.0. Its compatibility requirements are based on public Piper configuration/behavior observations, the public eSpeak NG API, and documented optional adapter contracts. This page records the engineering provenance concisely; it is not a claim that the intentional <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> dependency is absent.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Requirement</p></th>
-<th class="head"><p>Public or black-box basis</p></th>
-<th class="head"><p>Independent decision</p></th>
+<th class="head"><p>Public or behavioral basis</p></th>
+<th class="head"><p>Independent implementation decision</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p>Voice-specific ID maps</p></td>
-<td><p>Piper voice configuration shape</p></td>
+<td><p>Piper voice configuration</p></td>
 <td><p>Keep the loaded map authoritative and validate IDs locally.</p></td>
 </tr>
-<tr class="row-odd"><td><p>Ordinary BOS/PAD/EOS framing</p></td>
+<tr class="row-odd"><td><p>BOS/PAD/EOS framing</p></td>
 <td><p>Observed frontend behavior</p></td>
-<td><p>Implement a small codec strategy with no universal map.</p></td>
+<td><p>Implement a small codec strategy without a universal map.</p></td>
 </tr>
 <tr class="row-even"><td><p>NFD normalization</p></td>
-<td><p>Existing project behavior and compatibility requirement</p></td>
-<td><p>Use Python <code class="docutils literal notranslate"><span class="pre">unicodedata.normalize</span></code> at the frontend boundary.</p></td>
+<td><p>Compatibility requirement</p></td>
+<td><p>Use Python <code class="docutils literal notranslate"><span class="pre">unicodedata</span></code> at the frontend boundary.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Clause terminators</p></td>
 <td><p>eSpeak NG public API and runtime contract</p></td>
 <td><p>Use the <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> public clause API and convert results at the Piper adapter boundary.</p></td>
 </tr>
 <tr class="row-even"><td><p>Native global-state locking</p></td>
-<td><p>eSpeak public API global behavior</p></td>
+<td><p>eSpeak public API behavior</p></td>
 <td><p>Delegate process-wide locking and lifetime to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Raw blocks</p></td>
-<td><p>Observed eSpeak/Piper behavior</p></td>
-<td><p>Use a small state-machine parser and independent composition helper.</p></td>
+<td><p>Observed Piper/eSpeak behavior</p></td>
+<td><p>Use an independent state-machine parser and composition helper.</p></td>
 </tr>
 <tr class="row-even"><td><p>CLI fallback</p></td>
-<td><p>Existing project behavior</p></td>
-<td><p>Delegate CLI execution to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> while retaining Piper’s local splitter and composition.</p></td>
+<td><p>Existing frontend behavior</p></td>
+<td><p>Delegate CLI execution to <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code>, retaining Piper-local splitting and composition.</p></td>
 </tr>
 <tr class="row-odd"><td><p>Lexphon managed assets</p></td>
 <td><p>Lexphon public data/profile APIs</p></td>
-<td><p>Keep installation, verification, and normalization in the optional adapter.</p></td>
+<td><p>Keep installation and verification external; interpret assets in the optional adapter.</p></td>
 </tr>
 <tr class="row-even"><td><p>G2Lex local assets</p></td>
 <td><p>G2Lex public open/lookup APIs</p></td>
 <td><p>Keep direct lookup narrow, ordered, and exact-key.</p></td>
 </tr>
+<tr class="row-odd"><td><p>Sibling architecture</p></td>
+<td><p>Public API conventions</p></td>
+<td><p>Reuse lifecycle ideas without copying source or tests.</p></td>
+</tr>
 </tbody>
 </table>
-<p>PiperG2P preserves <code class="docutils literal notranslate"><span class="pre">phoneme_encoding</span></code>, lexicon ID, data version, producer, transform, and generator identity from built-in assets. <code class="docutils literal notranslate"><span class="pre">ipa</span></code> is a generic override. <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code> is a Piper raw pronunciation representation and is not normalized by Lexphon.
-| Lexicon overlay | User-provided implementation guide | Preserve Piper sentence/model encoding ownership in PiperG2P. |
-| KokoroG2P | Architectural reference only | Reuse lifecycle ideas without copying source or tests. |</p>
-<p>eSpeak-derived test assets are generated during tests from declared source words and pronunciations. Production dictionaries are not bundled for test convenience.
-No Piper source, comments, tests, lookup tables, model files, bundled resources, or runtime import is used. The pinned upstream identity in the benchmark metadata is historical evidence, not code to port.</p>
+<p>Built-in lexicon adapters preserve <code class="docutils literal notranslate"><span class="pre">phoneme_encoding</span></code>, lexicon ID, data version, producer, transform, and generator identity. Generic <code class="docutils literal notranslate"><span class="pre">ipa</span></code> is an override; <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code> represents Piper raw pronunciation content.</p>
+<p>The PiperG2P package does not import the Piper runtime/package or bundle Piper source, tests, lookup tables, models, or resources. <code class="docutils literal notranslate"><span class="pre">espeakng-runtime</span></code> is an intentional runtime dependency for eSpeak infrastructure. Pinned upstream identity in benchmark metadata is historical evidence, not code to port.</p>
+<p>eSpeak-derived test assets are generated during tests from declared source words and pronunciations. Production dictionaries are not bundled for test convenience.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

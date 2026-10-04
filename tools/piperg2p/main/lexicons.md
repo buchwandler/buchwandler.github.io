@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,34 +542,56 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="pronunciation-lexicons">
 <h1>Pronunciation lexicons</h1>
-<p><code class="docutils literal notranslate"><span class="pre">piperg2p</span></code> has two runtime modes for eSpeak voices:</p>
-<ul class="simple">
-<li><p><strong>eSpeak-only</strong>, the default, preserves the normal Piper-compatible eSpeak route.</p></li>
-<li><p><strong>Lexicon-first</strong>, an opt-in overlay that uses a pronunciation lexicon for source words and sends unresolved source intervals to PiperG2P’s own <code class="docutils literal notranslate"><span class="pre">EspeakBackend</span></code>.</p></li>
-</ul>
-<p>Lexicon-first is a PiperG2P extension. It intentionally overrides selected eSpeak pronunciations and is not upstream Piper exact parity.</p>
-<section id="managed-lexphon-assets">
-<h2>Managed Lexphon assets</h2>
-<p>Install the optional dependency:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;piperg2p[lexphon]&#39;</span>
+<p>PiperG2P can optionally overlay lexicon pronunciations on an eSpeak voice. Raw <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">...</span> <span class="pre">]]</span></code> blocks take precedence, then configured lexicons are consulted, and unresolved source intervals are sent to PiperG2P’s own eSpeak backend. PiperG2P owns fallback policy; Lexphon performs lexicon-only lookup.</p>
+<blockquote>
+<div><p><strong>No implicit downloads:</strong> PiperG2P never downloads lexicon data. Provision and verify assets explicitly before runtime selection.</p>
+</div></blockquote>
+<section id="provision-managed-lexphon-assets">
+<h2>Provision managed Lexphon assets</h2>
+<p>Install the optional adapter and use Lexphon’s data commands to inspect and provision assets:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[lexphon]&quot;</span>
+lexphon<span class="w"> </span>data<span class="w"> </span>available<span class="w"> </span>de-DE
+lexphon<span class="w"> </span>data<span class="w"> </span>install<span class="w"> </span>&lt;lexicon-id&gt;
+lexphon<span class="w"> </span>data<span class="w"> </span>verify<span class="w"> </span>&lt;lexicon-id&gt;
 </pre></div>
 </div>
-<p>Then select installed identifiers at runtime:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">PiperFrontend</span>
+<p>Inspect what is locally installed before choosing an identifier:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">available_lexicons</span><span class="p">,</span> <span class="n">lexicon_info</span>
 
-<span class="n">frontend</span> <span class="o">=</span> <span class="n">PiperFrontend</span><span class="o">.</span><span class="n">from_config</span><span class="p">(</span>
-    <span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
-    <span class="n">lexicons</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;de-de:espeak-piper&quot;</span><span class="p">,),</span>
-<span class="p">)</span>
+<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">available_lexicons</span><span class="p">(</span><span class="s2">&quot;de-DE&quot;</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lexicon_info</span><span class="p">(</span><span class="s2">&quot;de-DE&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
 </pre></div>
 </div>
-<p>Lexphon is used with <code class="docutils literal notranslate"><span class="pre">fallback=None</span></code>. It performs lexicon-only lookup. A miss is passed to PiperG2P’s eSpeak backend, not to Lexphon’s generic eSpeak provider. Data is never downloaded implicitly. Install and verify assets through Lexphon’s data tooling before inference.</p>
-<p>The lexicon language defaults to <code class="docutils literal notranslate"><span class="pre">VoiceConfig.espeak_voice</span></code>.</p>
+<p>Select an installed asset by its actual identifier:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">get_g2p</span>
+
+<span class="k">with</span> <span class="n">get_g2p</span><span class="p">(</span>
+    <span class="s2">&quot;de-de&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="s2">&quot;voice.onnx.json&quot;</span><span class="p">,</span>
+    <span class="n">lexicons</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;&lt;installed-lexicon-id&gt;&quot;</span><span class="p">,),</span>
+<span class="p">)</span> <span class="k">as</span> <span class="n">g2p</span><span class="p">:</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">g2p</span><span class="o">.</span><span class="n">phonemize_prepared</span><span class="p">(</span><span class="s2">&quot;Guten Tag&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The placeholder is not a promise that any particular identifier is published. Keep provisioning separate from runtime startup.</p>
 </section>
-<section id="direct-local-g2lex-assets">
-<h2>Direct local G2Lex assets</h2>
-<p>Install the separate runtime and pass explicit files:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;piperg2p[g2lex]&#39;</span>
+<section id="lookup-and-fallback-behavior">
+<h2>Lookup and fallback behavior</h2>
+<p>Lexicon lookup is lexicon-only. A miss is passed to PiperG2P’s eSpeak backend, not to Lexphon’s generic eSpeak provider. Disable that fallback with <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=False</span></code> when a miss should remain explicit. Final IDs always use the configured voice map and its missing-symbol policy.</p>
+<p>Generic <code class="docutils literal notranslate"><span class="pre">ipa</span></code> pronunciations are normalized as generic IPA overrides. <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code> pronunciations are retained as Piper raw phoneme content. A lexicon hit that contains a symbol absent from the voice map is not silently replaced by eSpeak. Lexicon-first output is an intentional extension, not an unqualified exact-upstream-parity claim.</p>
+<p>Precedence is:</p>
+<ol class="arabic simple">
+<li><p>Explicit <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">raw</span> <span class="pre">phonemes</span> <span class="pre">]]</span></code> blocks.</p></li>
+<li><p>Configured lexicons, in order.</p></li>
+<li><p>PiperG2P eSpeak fallback for unresolved source intervals, unless disabled.</p></li>
+<li><p>The voice’s missing-symbol policy during ID encoding.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">result.diagnostics.lexicon</span></code> reports overlay implementation, language, identifiers, encodings, asset provenance, and compatibility label. Lookup/resource failures are errors, not normal misses. Optional packages are imported only when the corresponding adapter is selected.</p>
+</section>
+<section id="direct-local-g2lex-files">
+<h2>Direct local G2Lex files</h2>
+<p>For local development with explicit <code class="docutils literal notranslate"><span class="pre">.g2lex</span></code> files, install the separate extra and use the G2Lex adapter directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;piperg2p[g2lex]&quot;</span>
 </pre></div>
 </div>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">PiperFrontend</span>
@@ -582,37 +604,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>The direct adapter uses exact keys and configured path order. It is intended for local development before assets are installed into Lexphon. Built-in adapters read the modern <code class="docutils literal notranslate"><span class="pre">phoneme_encoding</span></code> metadata, accept generic IPA and <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code>, and reject unsupported kinds, languages, or encodings.
-Injected adapters are owned by the caller. Adapters created internally from <code class="docutils literal notranslate"><span class="pre">lexicons=</span></code> are closed by <code class="docutils literal notranslate"><span class="pre">PiperFrontend</span></code>.</p>
-</section>
-<section id="precedence-and-composition">
-<h2>Precedence and composition</h2>
-<p>The precedence order is:</p>
-<ol class="arabic simple">
-<li><p>Explicit <code class="docutils literal notranslate"><span class="pre">[[</span> <span class="pre">raw</span> <span class="pre">phonemes</span> <span class="pre">]]</span></code> blocks.</p></li>
-<li><p>Configured lexicons, in order.</p></li>
-<li><p>PiperG2P eSpeak fallback for unresolved source intervals.</p></li>
-<li><p>The configured model missing-symbol policy during ID encoding.</p></li>
-</ol>
-<p>Words are scanned without discarding punctuation or source whitespace. Lookup is batched per ordinary source segment. Unresolved intervals are coalesced so eSpeak retains context, while explicit raw and lexical segments remain in source order. Generic IPA hits use NFD normalization. <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code> hits are preserved as Piper raw phoneme content. Final IDs always use the voice-specific map and selected missing-symbol policy.</p>
-<p>A lexicon hit containing a symbol absent from the voice map is not silently replaced by eSpeak. <code class="docutils literal notranslate"><span class="pre">error</span></code>, <code class="docutils literal notranslate"><span class="pre">warn</span></code>, and <code class="docutils literal notranslate"><span class="pre">ignore</span></code> follow the normal encoder policy.</p>
-</section>
-<section id="diagnostics-and-reproducibility">
-<h2>Diagnostics and reproducibility</h2>
-<p><code class="docutils literal notranslate"><span class="pre">result.diagnostics.lexicon</span></code> reports whether the overlay is enabled, its implementation, language, identifiers, encodings, immutable asset provenance, and compatibility label. The labels distinguish generic IPA overrides from Piper frozen eSpeak assets. Asset provenance should include data version, producer, transform, and generator identity when supplied. A frozen eSpeak-derived dictionary combined with a different live eSpeak version can produce mixed-version output, so lexicon-first output is an extension rather than an unqualified exactness claim.</p>
-<p>Lexicon lookup/resource failures are errors, not normal misses. Optional packages are imported only when an adapter is selected. Core imports and eSpeak-only frontends do not require Lexphon or G2Lex.</p>
-<p>Mixed lexicon/eSpeak sentences can differ from pure eSpeak because selected source spans are intentionally converted independently. Do not claim bit-identical upstream Piper output for lexicon-first mode.</p>
-</section>
-<section id="discovery-and-evidence-api">
-<h2>Discovery and evidence API</h2>
-<p>Installed pronunciation assets can be inspected without network access:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">piperg2p</span><span class="w"> </span><span class="kn">import</span> <span class="n">available_lexicons</span><span class="p">,</span> <span class="n">lexicon_info</span>
-
-<span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">available_lexicons</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">lexicon_info</span><span class="p">(</span><span class="s2">&quot;de&quot;</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">g2p.lexicon_evidence(word,</span> <span class="pre">tag=...)</span></code> returns provenance for a selected hit. Set <code class="docutils literal notranslate"><span class="pre">use_espeak_fallback=False</span></code> to make a lexicon miss explicit instead of sending it to live eSpeak.</p>
+<p>This is a separate local-development path; the injected adapter is caller-owned. Built-in adapters read <code class="docutils literal notranslate"><span class="pre">phoneme_encoding</span></code> metadata, accept generic IPA and <code class="docutils literal notranslate"><span class="pre">espeak-ipa3</span></code>, and reject unsupported kinds, languages, or encodings.</p>
+<p><code class="docutils literal notranslate"><span class="pre">g2p.lexicon_evidence(word,</span> <span class="pre">tag=...)</span></code> can expose provenance for a selected hit. Mixed lexicon/eSpeak sentences may differ from pure eSpeak because selected source spans are intentionally processed independently.</p>
 </section>
 </section>
 </div>

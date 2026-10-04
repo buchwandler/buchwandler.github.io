@@ -6,7 +6,7 @@ nav_tool: piperg2p-main
 docs_project: "piperg2p"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "d127d076465ba8e486f88339095db3128f7d8832"
+docs_commit: "15c13b7a2fe395e2bf6e1c6171b5dc9631fe90ec"
 search_enabled: true
 ---
 
@@ -542,38 +542,36 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="phoneme-types">
 <h1>Phoneme types</h1>
-<p>The configuration enum recognizes the six current Piper phoneme type names:</p>
+<p><code class="docutils literal notranslate"><span class="pre">phoneme_type</span></code> is a string-compatible enum in the Piper voice configuration. The current support boundary is:</p>
 <table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>Type</p></th>
-<th class="head"><p>Phase 1 status</p></th>
+<tr class="row-odd"><th class="head"><p>Type/profile</p></th>
+<th class="head"><p>Current support</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">text</span></code></p></td>
-<td><p>implemented in core</p></td>
+<td><p>Implemented in core</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">espeak</span></code></p></td>
-<td><p>native and CLI backends implemented</p></td>
+<td><p>Implemented through native and CLI backends</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pinyin</span></code></p></td>
-<td><p>recognized configuration value, unavailable</p></td>
+<td><p>Recognized but unavailable without a provider</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">japanese</span></code></p></td>
-<td><p>recognized configuration value, unavailable</p></td>
+<td><p>Recognized but unavailable without a provider</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">thai</span></code></p></td>
-<td><p>recognized configuration value, unavailable</p></td>
+<td><p>Recognized but unavailable without a provider</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">hebrew</span></code></p></td>
-<td><p>recognized configuration value, unavailable</p></td>
-</tr>
-<tr class="row-even"><td><p>Arabic eSpeak voice</p></td>
-<td><p>explicitly blocked until preprocessing is implemented</p></td>
+<td><p>Recognized but unavailable without a provider</p></td>
 </tr>
 </tbody>
 </table>
-<p>Selecting a deferred type without a custom backend raises an actionable <code class="docutils literal notranslate"><span class="pre">UnsupportedPhonemeTypeError</span></code>. Arabic eSpeak profiles raise <code class="docutils literal notranslate"><span class="pre">UnsupportedCompatibilityError</span></code>. Optional language dependencies are not imported by the core package.</p>
+<p>Selecting an unavailable type without a custom backend raises <code class="docutils literal notranslate"><span class="pre">UnsupportedPhonemeTypeError</span></code>. Arabic is not another <code class="docutils literal notranslate"><span class="pre">PhonemeType</span></code> enum member: it is an eSpeak profile restriction that raises <code class="docutils literal notranslate"><span class="pre">UnsupportedCompatibilityError</span></code> until Piper-compatible preprocessing is implemented. Optional language dependencies are not imported by the core package.</p>
+<p>See <a class="reference internal" href="../voice-config/"><span class="std std-doc">voice configuration</span></a> and the <a class="reference internal" href="../compatibility/"><span class="std std-doc">compatibility guide</span></a> for the relationship between configured voices and supported backend capabilities.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>
