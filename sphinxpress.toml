@@ -62,7 +62,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist", "espeakng-runtime"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "piperg2p", "pykokoro", "ssmd", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist", "espeakng-runtime"]
 [pdf]
 builder = "weasyprint"
 output = "dist/buchwandler-tool-documentation.pdf"
@@ -170,6 +170,18 @@ conf_dir = "../kokorog2p/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/kokorog2p"
 description = "A unified multi-language G2P library for Kokoro TTS."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "piperg2p"
+title = "piperg2p"
+docs_root = "../piperg2p/docs"
+conf_dir = "../piperg2p/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/piperg2p"
+description = "Independent Piper-compatible text/phoneme/id frontend for Piper ONNX voice configs."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

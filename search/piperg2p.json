@@ -1,0 +1,426 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "piperg2p",
+  "entries": [
+    {
+      "url": "/tools/piperg2p/api/backends/",
+      "title": "piperg2p Backend API",
+      "snippet": "EspeakBackend(mode=\"auto\") is PiperG2P’s adapter to espeakng-runtime. It requests an exact-capable native runtime when available and otherwi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Backend API",
+          "text": "EspeakBackend(mode=\"auto\") is PiperG2P’s adapter to espeakng-runtime. It requests an exact-capable native runtime when available and otherwise uses runtime CLI phonemization with Piper’s local clause splitter and composition. Automatic fallback emits BackendFallbackWarning; explicit mode=\"cli\" does not warn.\n\nmode=\"native\" requires exact native clause support and raises BackendUnavailableError when it is unavailable. mode=\"cli\" does not probe native through Piper policy and always reports best-effort parity.\n\nPiper owns the public three-field Clause, clause composition, NFD normalization, punctuation spacing, language-switch and joiner cleanup, vowel-cluster merging, raw blocks, and lexicon overlays. Runtime clauses are converted explicitly at the adapter boundary. Runtime terminator code…",
+          "lower": "espeakbackend(mode=\"auto\") is piperg2p’s adapter to espeakng-runtime. it requests an exact-capable native runtime when available and otherwise uses runtime cli phonemization with piper’s local clause splitter and composition. automatic fallback emits backendfallbackwarning; explicit mode=\"cli\" does not warn.\n\nmode=\"native\" requires exact native clause support and raises backendunavailableerror when it is unavailable. mode=\"cli\" does not probe native through piper policy and always reports best-effort parity.\n\npiper owns the public three-field clause, clause composition, nfd normalization, punctuation spacing, language-switch and joiner cleanup, vowel-cluster merging, raw blocks, and lexicon overlays. runtime clauses are converted explicitly at the adapter boundary. runtime terminator code…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/api/config/",
+      "title": "piperg2p Configuration API",
+      "snippet": "Use VoiceConfig.from_dict, VoiceConfig.from_json, and VoiceConfig.to_dict. Strict parsing is the default. Use strict=False only for legacy c …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Configuration API",
+          "text": "Use VoiceConfig.from_dict, VoiceConfig.from_json, and VoiceConfig.to_dict. Strict parsing is the default. Use strict=False only for legacy configurations that require inferred defaults.",
+          "lower": "use voiceconfig.from_dict, voiceconfig.from_json, and voiceconfig.to_dict. strict parsing is the default. use strict=false only for legacy configurations that require inferred defaults."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/api/core/",
+      "title": "piperg2p Core API",
+      "snippet": "PiperFrontend accepts a validated VoiceConfig and optional runtime lexicon settings:\n\nPiperFrontend(\n    config,\n    backend=None,\n    missi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Core API",
+          "text": "PiperFrontend accepts a validated VoiceConfig and optional runtime lexicon settings:\n\nPiperFrontend(\n    config,\n    backend=None,\n    missing=MissingPhonemePolicy.WARN,\n    lexicons=(),\n    lexicon_store=None,\n    lexicon_backend=None,\n)\n\n\n\n\nlexicons and lexicon_backend are mutually exclusive. Lexicon overlays currently apply only to phoneme_type=\"espeak\". VoiceConfig is not modified by runtime lexicon selection, and its phoneme_id_map remains authoritative.\n\nStable lexicon contracts are available from piperg2p.lexicons: PronunciationLookup, LexiconPronunciation, LexiconDiagnostics, LexphonLookup, and G2LexLookup.\n\nFrontendDiagnostics.lexicon is None when disabled. When enabled it identifies the implementation, language, identifiers, and override compatibility label.\n\nHigh-level phonemiz…",
+          "lower": "piperfrontend accepts a validated voiceconfig and optional runtime lexicon settings:\n\npiperfrontend(\n    config,\n    backend=none,\n    missing=missingphonemepolicy.warn,\n    lexicons=(),\n    lexicon_store=none,\n    lexicon_backend=none,\n)\n\n\n\n\nlexicons and lexicon_backend are mutually exclusive. lexicon overlays currently apply only to phoneme_type=\"espeak\". voiceconfig is not modified by runtime lexicon selection, and its phoneme_id_map remains authoritative.\n\nstable lexicon contracts are available from piperg2p.lexicons: pronunciationlookup, lexiconpronunciation, lexicondiagnostics, lexphonlookup, and g2lexlookup.\n\nfrontenddiagnostics.lexicon is none when disabled. when enabled it identifies the implementation, language, identifiers, and override compatibility label.\n\nhigh-level phonemiz…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/api/diagnostics/",
+      "title": "piperg2p Diagnostics API",
+      "snippet": "BackendDiagnostics and FrontendDiagnostics are frozen dataclasses. Backend diagnostics include implementation, discovered paths, version, cl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Diagnostics API",
+          "text": "BackendDiagnostics and FrontendDiagnostics are frozen dataclasses. Backend diagnostics include implementation, discovered paths, version, clause API availability, fallback reason, warnings, and parity.",
+          "lower": "backenddiagnostics and frontenddiagnostics are frozen dataclasses. backend diagnostics include implementation, discovered paths, version, clause api availability, fallback reason, warnings, and parity."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/changelog/",
+      "title": "piperg2p Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nImproved CLI senten …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved CLI sentence splitting with Phrasplit while preserving punctuation and language-specific grouping",
+          "lower": "improved cli sentence splitting with phrasplit while preserving punctuation and language-specific grouping"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added morphological metadata to token annotations and mapping-based annotation input",
+          "lower": "added morphological metadata to token annotations and mapping-based annotation input"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added Termux installation guidance for system eSpeak and explicit compatibility-warning assertions in optional tests",
+          "lower": "added termux installation guidance for system espeak and explicit compatibility-warning assertions in optional tests"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed CLI clause batching to preserve multiline clause bodies and raised the espeakng-runtime minimum to 0.1.5",
+          "lower": "changed cli clause batching to preserve multiline clause bodies and raised the espeakng-runtime minimum to 0.1.5"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed missing-phoneme warnings to report the external caller location",
+          "lower": "fixed missing-phoneme warnings to report the external caller location"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added phoneme diagnostics",
+          "lower": "added phoneme diagnostics"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added espeakng-runtime support",
+          "lower": "added espeakng-runtime support"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Updated changelog",
+          "lower": "updated changelog"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added inspect_espeak() diagnostics and native library auto-discovery",
+          "lower": "added inspect_espeak() diagnostics and native library auto-discovery"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed eSpeak backend to delegate discovery and execution to espeakng-runtime\n\n\nChanged eSpeak backend exports to lazy imports",
+          "lower": "changed espeak backend to delegate discovery and execution to espeakng-runtime\n\n\nchanged espeak backend exports to lazy imports"
+        },
+        {
+          "anchor": "",
+          "heading": "Internal",
+          "text": "Fixed CI configuration",
+          "lower": "fixed ci configuration"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added a standalone voice-config-driven Piper frontend with text and eSpeak backends\n\n\nAdded opt-in G2Lex and Lexphon adapters with pronunciation overlays and raw-block precedence\n\n\nAdded reusable facades, caching, annotations, language routing, markers, and stress controls to the public API",
+          "lower": "added a standalone voice-config-driven piper frontend with text and espeak backends\n\n\nadded opt-in g2lex and lexphon adapters with pronunciation overlays and raw-block precedence\n\n\nadded reusable facades, caching, annotations, language routing, markers, and stress controls to the public api"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved lexicon resolution, configuration validation, and compatibility checks across supported profiles\n\n\nImproved package versioning with source control metadata and release-artifact validation\n\n\nChanged runtime dependency boundaries and clarified optional semantic preparation",
+          "lower": "improved lexicon resolution, configuration validation, and compatibility checks across supported profiles\n\n\nimproved package versioning with source control metadata and release-artifact validation\n\n\nchanged runtime dependency boundaries and clarified optional semantic preparation"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed eSpeak CLI clause handling and benchmark integration",
+          "lower": "fixed espeak cli clause handling and benchmark integration"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented batch processing usage\n\n\nDocumented prepared-text usage and explicit Spokenform composition",
+          "lower": "documented batch processing usage\n\n\ndocumented prepared-text usage and explicit spokenform composition"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/compatibility/",
+      "title": "piperg2p Compatibility policy",
+      "snippet": "The primary target is the Piper Python voice behavior at the pinned Piper 1.8.0 reference commit 404aefedbd74baa0bd43e451bc407a2b3aace0f5. l …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Compatibility policy",
+          "text": "The primary target is the Piper Python voice behavior at the pinned Piper 1.8.0 reference commit 404aefedbd74baa0bd43e451bc407a2b3aace0f5. libpiper behavior is a separate compatibility profile and is not silently mixed into the runtime.\n\n\n\nFeature\n\nCore\n\nCompatibility label\n\n\n\n\n\nText frontend\n\nyes\n\nexact for tested Python profile\n\n\n\nNative eSpeak clause API\n\nsystem library\n\nexact when the public terminator API is present\n\n\n\neSpeak CLI\n\nexecutable required\n\nbest-effort\n\n\n\nRaw blocks\n\nyes, eSpeak only\n\nreference-tested foundation\n\n\n\nPinyin, Japanese, Thai, Hebrew\n\nrecognized configuration values\n\nunavailable, no provider\n\n\n\nArabic eSpeak\n\nrecognized voice profile\n\nexplicitly unsupported until preprocessing is implemented\n\n\n\nLexphon/G2Lex overlay\n\nopt-in\n\noverride-generic-ipa or piper-espeak…",
+          "lower": "the primary target is the piper python voice behavior at the pinned piper 1.8.0 reference commit 404aefedbd74baa0bd43e451bc407a2b3aace0f5. libpiper behavior is a separate compatibility profile and is not silently mixed into the runtime.\n\n\n\nfeature\n\ncore\n\ncompatibility label\n\n\n\n\n\ntext frontend\n\nyes\n\nexact for tested python profile\n\n\n\nnative espeak clause api\n\nsystem library\n\nexact when the public terminator api is present\n\n\n\nespeak cli\n\nexecutable required\n\nbest-effort\n\n\n\nraw blocks\n\nyes, espeak only\n\nreference-tested foundation\n\n\n\npinyin, japanese, thai, hebrew\n\nrecognized configuration values\n\nunavailable, no provider\n\n\n\narabic espeak\n\nrecognized voice profile\n\nexplicitly unsupported until preprocessing is implemented\n\n\n\nlexphon/g2lex overlay\n\nopt-in\n\noverride-generic-ipa or piper-espeak…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/contributing/",
+      "title": "piperg2p Contributing",
+      "snippet": "Run the core checks before submitting changes:\n\npython -m pytest -q\npython -m build\n\n\n\n\nKeep backend transformations independently testable …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Contributing",
+          "text": "Run the core checks before submitting changes:\n\npython -m pytest -q\npython -m build\n\n\n\n\nKeep backend transformations independently testable with fake providers. Mark live eSpeak tests with espeak and integration. Do not add Piper as a runtime dependency or copy upstream implementation and data. Update provenance when a compatibility requirement changes.",
+          "lower": "run the core checks before submitting changes:\n\npython -m pytest -q\npython -m build\n\n\n\n\nkeep backend transformations independently testable with fake providers. mark live espeak tests with espeak and integration. do not add piper as a runtime dependency or copy upstream implementation and data. update provenance when a compatibility requirement changes."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/encoding/",
+      "title": "piperg2p Encoding",
+      "snippet": "Ordinary encoding uses the configured map and preserves this framing:\n\nBOS, PAD, (phoneme IDs, PAD)*, EOS\n\n\n\n\nMap values may contain multipl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Encoding",
+          "text": "Ordinary encoding uses the configured map and preserves this framing:\n\nBOS, PAD, (phoneme IDs, PAD)*, EOS\n\n\n\n\nMap values may contain multiple IDs. Missing phonemes are always recorded in EncodeResult and sentence results. MissingPhonemePolicy.ERROR raises MissingPhonemeError, WARN emits MissingPhonemeWarning and skips the symbol, and IGNORE skips it silently.\n\nA separate PinyinEncoder exists for future provider integration. It does not change ordinary text or espeak framing.",
+          "lower": "ordinary encoding uses the configured map and preserves this framing:\n\nbos, pad, (phoneme ids, pad)*, eos\n\n\n\n\nmap values may contain multiple ids. missing phonemes are always recorded in encoderesult and sentence results. missingphonemepolicy.error raises missingphonemeerror, warn emits missingphonemewarning and skips the symbol, and ignore skips it silently.\n\na separate pinyinencoder exists for future provider integration. it does not change ordinary text or espeak framing."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/espeak/",
+      "title": "piperg2p eSpeak backends",
+      "snippet": "EspeakBackend supports auto, native, and cli modes. PiperG2P delegates eSpeak discovery, native execution, CLI execution, voice selection, a …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "eSpeak backends",
+          "text": "EspeakBackend supports auto, native, and cli modes. PiperG2P delegates eSpeak discovery, native execution, CLI execution, voice selection, and lifetime management to espeakng-runtime. Piper retains its local clause composition and phoneme policy. Native output is labeled exact only when the runtime exposes the terminator-capable clause API. CLI output is always labeled best-effort.\n\nImportant distinction: The exact clause API provides exact clause boundaries, but the phoneme semantics in the exact-clause path may differ from CLI for isolated weak words. The phoneme_parity diagnostic field reports the runtime’s raw phoneme semantic parity, while the parity field remains Piper’s historical clause/composition compatibility label.",
+          "lower": "espeakbackend supports auto, native, and cli modes. piperg2p delegates espeak discovery, native execution, cli execution, voice selection, and lifetime management to espeakng-runtime. piper retains its local clause composition and phoneme policy. native output is labeled exact only when the runtime exposes the terminator-capable clause api. cli output is always labeled best-effort.\n\nimportant distinction: the exact clause api provides exact clause boundaries, but the phoneme semantics in the exact-clause path may differ from cli for isolated weak words. the phoneme_parity diagnostic field reports the runtime’s raw phoneme semantic parity, while the parity field remains piper’s historical clause/composition compatibility label."
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime ownership and mode policy",
+          "text": "espeakng-runtime owns executable, shared-library, and data discovery, optional espeakng-loader integration, native ctypes calls, process-global locking, and subprocess invocation. PiperG2P does not duplicate those mechanics.\n\nPiper’s mode policy is:\n\n\nauto requests exact native capability from the runtime and falls back to CLI when it is unavailable. Piper emits one BackendFallbackWarning for that automatic fallback.\n\n\nnative requires an exact-capable native runtime and never falls back.\n\n\ncli requests CLI directly, never probes native through Piper policy, and emits no fallback warning.\n\n\n\nPhrasplit supplies robust best-effort sentence spans to the CLI path through its exact-offset API. PiperG2P requests mode=\"sentence\" with use_spacy=False, passing the eSpeak voice as the language. spaC…",
+          "lower": "espeakng-runtime owns executable, shared-library, and data discovery, optional espeakng-loader integration, native ctypes calls, process-global locking, and subprocess invocation. piperg2p does not duplicate those mechanics.\n\npiper’s mode policy is:\n\n\nauto requests exact native capability from the runtime and falls back to cli when it is unavailable. piper emits one backendfallbackwarning for that automatic fallback.\n\n\nnative requires an exact-capable native runtime and never falls back.\n\n\ncli requests cli directly, never probes native through piper policy, and emits no fallback warning.\n\n\n\nphrasplit supplies robust best-effort sentence spans to the cli path through its exact-offset api. piperg2p requests mode=\"sentence\" with use_spacy=false, passing the espeak voice as the language. spac…"
+        },
+        {
+          "anchor": "",
+          "heading": "Configuration compatibility",
+          "text": "Runtime variables are ESPEAKNG_RUNTIME_EXECUTABLE, ESPEAKNG_RUNTIME_LIBRARY, and ESPEAKNG_RUNTIME_DATA. PiperG2P continues to support PIPERG2P_ESPEAK_EXECUTABLE, PIPERG2P_ESPEAK_LIBRARY, and PIPERG2P_ESPEAK_DATA as compatibility variables. Precedence is an explicit Piper constructor argument, a legacy Piper variable, a runtime variable, then runtime automatic discovery.\n\nFor bundled loader support:\n\npip install \"piperg2p[espeak-direct]\"",
+          "lower": "runtime variables are espeakng_runtime_executable, espeakng_runtime_library, and espeakng_runtime_data. piperg2p continues to support piperg2p_espeak_executable, piperg2p_espeak_library, and piperg2p_espeak_data as compatibility variables. precedence is an explicit piper constructor argument, a legacy piper variable, a runtime variable, then runtime automatic discovery.\n\nfor bundled loader support:\n\npip install \"piperg2p[espeak-direct]\""
+        },
+        {
+          "anchor": "",
+          "heading": "Capability inspection",
+          "text": "inspect_espeak() remains available as a Piper compatibility facade over runtime inspection. It does not initialize eSpeak or emit fallback warnings:\n\nfrom piperg2p import inspect_espeak\n\ninfo = inspect_espeak()\nprint(\"CLI available:\", info.cli_available)\nprint(\"exact native:\", info.exact_native_available)\nprint(\"selected:\", info.selected_exact_library)\n\nfor candidate in info.candidates:\n    print(\n        candidate.source,\n        candidate.library,\n        candidate.loadable,\n        candidate.exact_clause_api,\n        candidate.error,\n    )\n\n\n\n\nBackendDiagnostics maps runtime information to Piper’s stable fields, including implementation, parity, exact clause support, fallback reason/code, selected paths, discovery source, version, and native candidate probes. New fields include phoneme…",
+          "lower": "inspect_espeak() remains available as a piper compatibility facade over runtime inspection. it does not initialize espeak or emit fallback warnings:\n\nfrom piperg2p import inspect_espeak\n\ninfo = inspect_espeak()\nprint(\"cli available:\", info.cli_available)\nprint(\"exact native:\", info.exact_native_available)\nprint(\"selected:\", info.selected_exact_library)\n\nfor candidate in info.candidates:\n    print(\n        candidate.source,\n        candidate.library,\n        candidate.loadable,\n        candidate.exact_clause_api,\n        candidate.error,\n    )\n\n\n\n\nbackenddiagnostics maps runtime information to piper’s stable fields, including implementation, parity, exact clause support, fallback reason/code, selected paths, discovery source, version, and native candidate probes. new fields include phoneme…"
+        },
+        {
+          "anchor": "",
+          "heading": "Public compatibility classes",
+          "text": "EspeakCliBackend and NativeEspeakProvider remain available as thin wrappers for downstream code. They preserve their constructor shapes, use the runtime for eSpeak operations, and return Piper-local Clause records. Runtime clauses are converted explicitly, so runtime terminator_code does not alter Piper’s three-field public Clause.",
+          "lower": "espeakclibackend and nativeespeakprovider remain available as thin wrappers for downstream code. they preserve their constructor shapes, use the runtime for espeak operations, and return piper-local clause records. runtime clauses are converted explicitly, so runtime terminator_code does not alter piper’s three-field public clause."
+        },
+        {
+          "anchor": "",
+          "heading": "IPA3 benchmark identity",
+          "text": "For pronunciation correctness, benchmarks/benchmark_espeak.py invokes the external executable directly with -q --ipa=3 -v <voice> --stdin. The reference never calls PiperG2P’s backend or the runtime package. Select --candidate native, --candidate cli, or --candidate auto; native fallback is reported in diagnostics. Use --reference-source golden only with an explicitly captured golden file.",
+          "lower": "for pronunciation correctness, benchmarks/benchmark_espeak.py invokes the external executable directly with -q --ipa=3 -v <voice> --stdin. the reference never calls piperg2p’s backend or the runtime package. select --candidate native, --candidate cli, or --candidate auto; native fallback is reported in diagnostics. use --reference-source golden only with an explicitly captured golden file."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/",
+      "title": "piperg2p documentation",
+      "snippet": "Installation\n\n\nQuick start\n\n\nVoice configuration\n\n\nEncoding\n\n\neSpeak backends\n\n\nPronunciation lexicons\n\n\nCore API\n\n\nBackend API\n\n\nRaw phonem …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "piperg2p documentation",
+          "text": "Installation\n\n\nQuick start\n\n\nVoice configuration\n\n\nEncoding\n\n\neSpeak backends\n\n\nPronunciation lexicons\n\n\nCore API\n\n\nBackend API\n\n\nRaw phonemes\n\n\nPhoneme types\n\n\nCompatibility policy\n\n\nProvenance\n\n\n\nThe project is an independent phoneme and ID frontend. It accepts prepared, speakable text and does not synthesize audio or own written-to-spoken semantic normalization.\n\nApplications that need number, unit, currency, date, abbreviation, or other semantic expansion may prepare text with a separate package such as Spokenform before calling phonemize_prepared(). Spokenform is not a PiperG2P dependency.",
+          "lower": "installation\n\n\nquick start\n\n\nvoice configuration\n\n\nencoding\n\n\nespeak backends\n\n\npronunciation lexicons\n\n\ncore api\n\n\nbackend api\n\n\nraw phonemes\n\n\nphoneme types\n\n\ncompatibility policy\n\n\nprovenance\n\n\n\nthe project is an independent phoneme and id frontend. it accepts prepared, speakable text and does not synthesize audio or own written-to-spoken semantic normalization.\n\napplications that need number, unit, currency, date, abbreviation, or other semantic expansion may prepare text with a separate package such as spokenform before calling phonemize_prepared(). spokenform is not a piperg2p dependency."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/installation/",
+      "title": "piperg2p Installation",
+      "snippet": "The core package supports Python 3.10 and newer and depends on espeakng-runtime for eSpeak infrastructure. It has no dependency on semantic …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "The core package supports Python 3.10 and newer and depends on espeakng-runtime for eSpeak infrastructure. It has no dependency on semantic preparation packages.\n\npip install .",
+          "lower": "the core package supports python 3.10 and newer and depends on espeakng-runtime for espeak infrastructure. it has no dependency on semantic preparation packages.\n\npip install ."
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic preparation boundary",
+          "text": "PiperG2P consumes prepared, speakable text. It does not depend on Numeralform\nor Spokenform and does not own written-to-spoken semantic normalization.\nHigher-level applications should perform that preparation before calling\nPiperG2P.",
+          "lower": "piperg2p consumes prepared, speakable text. it does not depend on numeralform\nor spokenform and does not own written-to-spoken semantic normalization.\nhigher-level applications should perform that preparation before calling\npiperg2p."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional semantic preparation",
+          "text": "Spokenform is a separate package for applications that need written-to-spoken semantic expansion. Install it independently from PiperG2P:\n\npython -m pip install spokenform\n\n\n\n\nfrom spokenform import prepare_for_piperg2p\nfrom piperg2p import phonemize_prepared\n\nprepared = prepare_for_piperg2p(\n    \"Pay $12.50 for 2 kg.\",\n    language=\"en\",\n).spoken_text\n\nresult = phonemize_prepared(\n    prepared,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\n\n\n\nSpokenform is not a PiperG2P core, optional-extra, development, or core-test dependency.\nThe dev extra provides pytest, coverage, ruff, mypy, and build tooling. espeakng-runtime owns eSpeak discovery, native execution, CLI fallback, and lifetime management. Its executable, shared library, and data directory can be selected with Piper constr…",
+          "lower": "spokenform is a separate package for applications that need written-to-spoken semantic expansion. install it independently from piperg2p:\n\npython -m pip install spokenform\n\n\n\n\nfrom spokenform import prepare_for_piperg2p\nfrom piperg2p import phonemize_prepared\n\nprepared = prepare_for_piperg2p(\n    \"pay $12.50 for 2 kg.\",\n    language=\"en\",\n).spoken_text\n\nresult = phonemize_prepared(\n    prepared,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\n\n\n\nspokenform is not a piperg2p core, optional-extra, development, or core-test dependency.\nthe dev extra provides pytest, coverage, ruff, mypy, and build tooling. espeakng-runtime owns espeak discovery, native execution, cli fallback, and lifetime management. its executable, shared library, and data directory can be selected with piper constr…"
+        },
+        {
+          "anchor": "",
+          "heading": "Termux / Android",
+          "text": "On Termux, install the native package:\n\npkg install espeak\npython -m pip install piperg2p\n\n\n\n\nDo not use piperg2p[espeak-direct] merely to obtain eSpeak on Termux.\nThe bundled espeakng-loader backend targets supported desktop/server\nplatforms; Termux should use its system eSpeak installation.\n\nCurrent Termux packages eSpeak NG 1.52.0. That version does not expose\nespeak_TextToPhonemesWithTerminator, so Piper exact native clause\nparity is not available from the system library. mode=\"auto\" therefore\nuses the CLI best-effort fallback. Once Termux ships an eSpeak NG build\nthat exposes the terminator API, capability discovery will select it\nwithout a piperg2p version-specific change.",
+          "lower": "on termux, install the native package:\n\npkg install espeak\npython -m pip install piperg2p\n\n\n\n\ndo not use piperg2p[espeak-direct] merely to obtain espeak on termux.\nthe bundled espeakng-loader backend targets supported desktop/server\nplatforms; termux should use its system espeak installation.\n\ncurrent termux packages espeak ng 1.52.0. that version does not expose\nespeak_texttophonemeswithterminator, so piper exact native clause\nparity is not available from the system library. mode=\"auto\" therefore\nuses the cli best-effort fallback. once termux ships an espeak ng build\nthat exposes the terminator api, capability discovery will select it\nwithout a piperg2p version-specific change."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/lexicons/",
+      "title": "piperg2p Pronunciation lexicons",
+      "snippet": "piperg2p has two runtime modes for eSpeak voices:\n\n\neSpeak-only, the default, preserves the normal Piper-compatible eSpeak route.\n\n\nLexicon- …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Pronunciation lexicons",
+          "text": "piperg2p has two runtime modes for eSpeak voices:\n\n\neSpeak-only, the default, preserves the normal Piper-compatible eSpeak route.\n\n\nLexicon-first, an opt-in overlay that uses a pronunciation lexicon for source words and sends unresolved source intervals to PiperG2P’s own EspeakBackend.\n\n\n\nLexicon-first is a PiperG2P extension. It intentionally overrides selected eSpeak pronunciations and is not upstream Piper exact parity.",
+          "lower": "piperg2p has two runtime modes for espeak voices:\n\n\nespeak-only, the default, preserves the normal piper-compatible espeak route.\n\n\nlexicon-first, an opt-in overlay that uses a pronunciation lexicon for source words and sends unresolved source intervals to piperg2p’s own espeakbackend.\n\n\n\nlexicon-first is a piperg2p extension. it intentionally overrides selected espeak pronunciations and is not upstream piper exact parity."
+        },
+        {
+          "anchor": "",
+          "heading": "Managed Lexphon assets",
+          "text": "Install the optional dependency:\n\npip install 'piperg2p[lexphon]'\n\n\n\n\nThen select installed identifiers at runtime:\n\nfrom piperg2p import PiperFrontend\n\nfrontend = PiperFrontend.from_config(\n    \"voice.onnx.json\",\n    lexicons=(\"de-de:espeak-piper\",),\n)\n\n\n\n\nLexphon is used with fallback=None. It performs lexicon-only lookup. A miss is passed to PiperG2P’s eSpeak backend, not to Lexphon’s generic eSpeak provider. Data is never downloaded implicitly. Install and verify assets through Lexphon’s data tooling before inference.\n\nThe lexicon language defaults to VoiceConfig.espeak_voice.",
+          "lower": "install the optional dependency:\n\npip install 'piperg2p[lexphon]'\n\n\n\n\nthen select installed identifiers at runtime:\n\nfrom piperg2p import piperfrontend\n\nfrontend = piperfrontend.from_config(\n    \"voice.onnx.json\",\n    lexicons=(\"de-de:espeak-piper\",),\n)\n\n\n\n\nlexphon is used with fallback=none. it performs lexicon-only lookup. a miss is passed to piperg2p’s espeak backend, not to lexphon’s generic espeak provider. data is never downloaded implicitly. install and verify assets through lexphon’s data tooling before inference.\n\nthe lexicon language defaults to voiceconfig.espeak_voice."
+        },
+        {
+          "anchor": "",
+          "heading": "Direct local G2Lex assets",
+          "text": "Install the separate runtime and pass explicit files:\n\npip install 'piperg2p[g2lex]'\n\n\n\n\nfrom piperg2p import PiperFrontend\nfrom piperg2p.lexicons import G2LexLookup\n\nlookup = G2LexLookup([\"./build/custom.g2lex\"], language=\"de-DE\")\nfrontend = PiperFrontend.from_config(\n    \"voice.onnx.json\",\n    lexicon_backend=lookup,\n)\n\n\n\n\nThe direct adapter uses exact keys and configured path order. It is intended for local development before assets are installed into Lexphon. Built-in adapters read the modern phoneme_encoding metadata, accept generic IPA and espeak-ipa3, and reject unsupported kinds, languages, or encodings.\nInjected adapters are owned by the caller. Adapters created internally from lexicons= are closed by PiperFrontend.",
+          "lower": "install the separate runtime and pass explicit files:\n\npip install 'piperg2p[g2lex]'\n\n\n\n\nfrom piperg2p import piperfrontend\nfrom piperg2p.lexicons import g2lexlookup\n\nlookup = g2lexlookup([\"./build/custom.g2lex\"], language=\"de-de\")\nfrontend = piperfrontend.from_config(\n    \"voice.onnx.json\",\n    lexicon_backend=lookup,\n)\n\n\n\n\nthe direct adapter uses exact keys and configured path order. it is intended for local development before assets are installed into lexphon. built-in adapters read the modern phoneme_encoding metadata, accept generic ipa and espeak-ipa3, and reject unsupported kinds, languages, or encodings.\ninjected adapters are owned by the caller. adapters created internally from lexicons= are closed by piperfrontend."
+        },
+        {
+          "anchor": "",
+          "heading": "Precedence and composition",
+          "text": "The precedence order is:\n\n\nExplicit [[ raw phonemes ]] blocks.\n\n\nConfigured lexicons, in order.\n\n\nPiperG2P eSpeak fallback for unresolved source intervals.\n\n\nThe configured model missing-symbol policy during ID encoding.\n\n\n\nWords are scanned without discarding punctuation or source whitespace. Lookup is batched per ordinary source segment. Unresolved intervals are coalesced so eSpeak retains context, while explicit raw and lexical segments remain in source order. Generic IPA hits use NFD normalization. espeak-ipa3 hits are preserved as Piper raw phoneme content. Final IDs always use the voice-specific map and selected missing-symbol policy.\n\nA lexicon hit containing a symbol absent from the voice map is not silently replaced by eSpeak. error, warn, and ignore follow the normal encoder pol…",
+          "lower": "the precedence order is:\n\n\nexplicit [[ raw phonemes ]] blocks.\n\n\nconfigured lexicons, in order.\n\n\npiperg2p espeak fallback for unresolved source intervals.\n\n\nthe configured model missing-symbol policy during id encoding.\n\n\n\nwords are scanned without discarding punctuation or source whitespace. lookup is batched per ordinary source segment. unresolved intervals are coalesced so espeak retains context, while explicit raw and lexical segments remain in source order. generic ipa hits use nfd normalization. espeak-ipa3 hits are preserved as piper raw phoneme content. final ids always use the voice-specific map and selected missing-symbol policy.\n\na lexicon hit containing a symbol absent from the voice map is not silently replaced by espeak. error, warn, and ignore follow the normal encoder pol…"
+        },
+        {
+          "anchor": "",
+          "heading": "Diagnostics and reproducibility",
+          "text": "result.diagnostics.lexicon reports whether the overlay is enabled, its implementation, language, identifiers, encodings, immutable asset provenance, and compatibility label. The labels distinguish generic IPA overrides from Piper frozen eSpeak assets. Asset provenance should include data version, producer, transform, and generator identity when supplied. A frozen eSpeak-derived dictionary combined with a different live eSpeak version can produce mixed-version output, so lexicon-first output is an extension rather than an unqualified exactness claim.\n\nLexicon lookup/resource failures are errors, not normal misses. Optional packages are imported only when an adapter is selected. Core imports and eSpeak-only frontends do not require Lexphon or G2Lex.\n\nMixed lexicon/eSpeak sentences can diffe…",
+          "lower": "result.diagnostics.lexicon reports whether the overlay is enabled, its implementation, language, identifiers, encodings, immutable asset provenance, and compatibility label. the labels distinguish generic ipa overrides from piper frozen espeak assets. asset provenance should include data version, producer, transform, and generator identity when supplied. a frozen espeak-derived dictionary combined with a different live espeak version can produce mixed-version output, so lexicon-first output is an extension rather than an unqualified exactness claim.\n\nlexicon lookup/resource failures are errors, not normal misses. optional packages are imported only when an adapter is selected. core imports and espeak-only frontends do not require lexphon or g2lex.\n\nmixed lexicon/espeak sentences can diffe…"
+        },
+        {
+          "anchor": "",
+          "heading": "Discovery and evidence API",
+          "text": "Installed pronunciation assets can be inspected without network access:\n\nfrom piperg2p import available_lexicons, lexicon_info\n\nfor name in available_lexicons(\"de\"):\n    print(name, lexicon_info(\"de\", name))\n\n\n\n\ng2p.lexicon_evidence(word, tag=...) returns provenance for a selected hit. Set use_espeak_fallback=False to make a lexicon miss explicit instead of sending it to live eSpeak.",
+          "lower": "installed pronunciation assets can be inspected without network access:\n\nfrom piperg2p import available_lexicons, lexicon_info\n\nfor name in available_lexicons(\"de\"):\n    print(name, lexicon_info(\"de\", name))\n\n\n\n\ng2p.lexicon_evidence(word, tag=...) returns provenance for a selected hit. set use_espeak_fallback=false to make a lexicon miss explicit instead of sending it to live espeak."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/phoneme-types/",
+      "title": "piperg2p Phoneme types",
+      "snippet": "The configuration enum recognizes the six current Piper phoneme type names:\n\n\n\nType\n\nPhase 1 status\n\n\n\n\n\ntext\n\nimplemented in core\n\n\n\nespeak …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Phoneme types",
+          "text": "The configuration enum recognizes the six current Piper phoneme type names:\n\n\n\nType\n\nPhase 1 status\n\n\n\n\n\ntext\n\nimplemented in core\n\n\n\nespeak\n\nnative and CLI backends implemented\n\n\n\npinyin\n\nrecognized configuration value, unavailable\n\n\n\njapanese\n\nrecognized configuration value, unavailable\n\n\n\nthai\n\nrecognized configuration value, unavailable\n\n\n\nhebrew\n\nrecognized configuration value, unavailable\n\n\n\nArabic eSpeak voice\n\nexplicitly blocked until preprocessing is implemented\n\n\n\n\n\nSelecting a deferred type without a custom backend raises an actionable UnsupportedPhonemeTypeError. Arabic eSpeak profiles raise UnsupportedCompatibilityError. Optional language dependencies are not imported by the core package.",
+          "lower": "the configuration enum recognizes the six current piper phoneme type names:\n\n\n\ntype\n\nphase 1 status\n\n\n\n\n\ntext\n\nimplemented in core\n\n\n\nespeak\n\nnative and cli backends implemented\n\n\n\npinyin\n\nrecognized configuration value, unavailable\n\n\n\njapanese\n\nrecognized configuration value, unavailable\n\n\n\nthai\n\nrecognized configuration value, unavailable\n\n\n\nhebrew\n\nrecognized configuration value, unavailable\n\n\n\narabic espeak voice\n\nexplicitly blocked until preprocessing is implemented\n\n\n\n\n\nselecting a deferred type without a custom backend raises an actionable unsupportedphonemetypeerror. arabic espeak profiles raise unsupportedcompatibilityerror. optional language dependencies are not imported by the core package."
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/provenance/",
+      "title": "piperg2p Provenance and clean-room boundary",
+      "snippet": "This project is implemented independently under Apache-2.0. The compatibility requirements were derived from public Piper configuration and …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Provenance and clean-room boundary",
+          "text": "This project is implemented independently under Apache-2.0. The compatibility requirements were derived from public Piper configuration and behavior observations, the eSpeak NG public header/API, and the local 01_todo.md engineering guide.\n\n\n\nRequirement\n\nPublic or black-box basis\n\nIndependent decision\n\n\n\n\n\nVoice-specific ID maps\n\nPiper voice configuration shape\n\nKeep the loaded map authoritative and validate IDs locally.\n\n\n\nOrdinary BOS/PAD/EOS framing\n\nObserved frontend behavior\n\nImplement a small codec strategy with no universal map.\n\n\n\nNFD normalization\n\nExisting project behavior and compatibility requirement\n\nUse Python unicodedata.normalize at the frontend boundary.\n\n\n\nClause terminators\n\neSpeak NG public API and runtime contract\n\nUse the espeakng-runtime public clause API and conve…",
+          "lower": "this project is implemented independently under apache-2.0. the compatibility requirements were derived from public piper configuration and behavior observations, the espeak ng public header/api, and the local 01_todo.md engineering guide.\n\n\n\nrequirement\n\npublic or black-box basis\n\nindependent decision\n\n\n\n\n\nvoice-specific id maps\n\npiper voice configuration shape\n\nkeep the loaded map authoritative and validate ids locally.\n\n\n\nordinary bos/pad/eos framing\n\nobserved frontend behavior\n\nimplement a small codec strategy with no universal map.\n\n\n\nnfd normalization\n\nexisting project behavior and compatibility requirement\n\nuse python unicodedata.normalize at the frontend boundary.\n\n\n\nclause terminators\n\nespeak ng public api and runtime contract\n\nuse the espeakng-runtime public clause api and conve…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/quickstart/",
+      "title": "piperg2p Quick start",
+      "snippet": "The examples below pass prepared, speakable text. Semantic expansion belongs to the calling application, not PiperG2P.\n\nfrom piperg2p import …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quick start",
+          "text": "The examples below pass prepared, speakable text. Semantic expansion belongs to the calling application, not PiperG2P.\n\nfrom piperg2p import PiperFrontend\n\nwith PiperFrontend.from_config(\"voice.onnx.json\") as frontend:\n    result = frontend.phonemize(\"Hello world.\")\n    for sentence in result.sentences:\n        print(sentence.phoneme_string)\n        print(sentence.ids)\n\n\n\n\nFor a text voice, phonemize decomposes input with Unicode NFD and treats each resulting codepoint as a model phoneme. For an eSpeak voice, it selects the configured eSpeak voice and returns one result per detected sentence.\n\nUse frontend.diagnostics or result.diagnostics to inspect backend implementation and parity.\n\nFor sibling-style calls, use the explicit high-level facade:\n\nfrom piperg2p import phonemize_prepared\n\nr…",
+          "lower": "the examples below pass prepared, speakable text. semantic expansion belongs to the calling application, not piperg2p.\n\nfrom piperg2p import piperfrontend\n\nwith piperfrontend.from_config(\"voice.onnx.json\") as frontend:\n    result = frontend.phonemize(\"hello world.\")\n    for sentence in result.sentences:\n        print(sentence.phoneme_string)\n        print(sentence.ids)\n\n\n\n\nfor a text voice, phonemize decomposes input with unicode nfd and treats each resulting codepoint as a model phoneme. for an espeak voice, it selects the configured espeak voice and returns one result per detected sentence.\n\nuse frontend.diagnostics or result.diagnostics to inspect backend implementation and parity.\n\nfor sibling-style calls, use the explicit high-level facade:\n\nfrom piperg2p import phonemize_prepared\n\nr…"
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare semantics outside the core",
+          "text": "Semantic preparation belongs in the calling application when written forms need expansion:\n\nfrom spokenform import prepare_for_piperg2p\nfrom piperg2p import phonemize_prepared\n\nprepared = prepare_for_piperg2p(\n    \"Pay $12.50 for 2 kg.\",\n    language=\"en\",\n)\n\nresult = phonemize_prepared(\n    prepared.spoken_text,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\nprint(result.phonemes)\n\n\n\n\nThe semantic language and Piper voice are separate choices. Spokenform prepares one explicitly selected language; PiperG2P then phonemizes the prepared text using the explicitly selected voice configuration.\n\nThe optional preparation package is not imported by PiperG2P and is not required for a minimal PiperG2P installation.\n\nSpokenform language: \"en\"\nPiper voice/config:   \"en-us\" + voice.onnx.json…",
+          "lower": "semantic preparation belongs in the calling application when written forms need expansion:\n\nfrom spokenform import prepare_for_piperg2p\nfrom piperg2p import phonemize_prepared\n\nprepared = prepare_for_piperg2p(\n    \"pay $12.50 for 2 kg.\",\n    language=\"en\",\n)\n\nresult = phonemize_prepared(\n    prepared.spoken_text,\n    language=\"en-us\",\n    config=\"voice.onnx.json\",\n)\n\nprint(result.phonemes)\n\n\n\n\nthe semantic language and piper voice are separate choices. spokenform prepares one explicitly selected language; piperg2p then phonemizes the prepared text using the explicitly selected voice configuration.\n\nthe optional preparation package is not imported by piperg2p and is not required for a minimal piperg2p installation.\n\nspokenform language: \"en\"\npiper voice/config:   \"en-us\" + voice.onnx.json…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/raw-phonemes/",
+      "title": "piperg2p Raw phonemes",
+      "snippet": "In eSpeak mode, [[ ... ]] blocks are parsed before normal conversion. Their contents are inserted as phoneme characters and are not normaliz …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Raw phonemes",
+          "text": "In eSpeak mode, [[ ... ]] blocks are parsed before normal conversion. Their contents are inserted as phoneme characters and are not normalized or sent through eSpeak. Adjacent normal text is composed into the active sentence so a normal sentence immediately following a raw block joins that active group.",
+          "lower": "in espeak mode, [[ ... ]] blocks are parsed before normal conversion. their contents are inserted as phoneme characters and are not normalized or sent through espeak. adjacent normal text is composed into the active sentence so a normal sentence immediately following a raw block joins that active group."
+        },
+        {
+          "anchor": "",
+          "heading": "Semantic preparation and raw blocks",
+          "text": "PiperG2P owns raw blocks such as [[ tɛst ]]. Spokenform must not reinterpret text inside those blocks. Discover Piper raw blocks before semantic preparation and pass their source ranges to Spokenform as protected spans:\n\nfrom piperg2p import (\n    RawPhonemeSegment,\n    parse_raw_blocks,\n    phonemize_prepared,\n)\nfrom spokenform import ProtectedSpan, prepare_for_piperg2p\n\nsource = \"Use 2 kg [[ tɛst ]] and 3 kg.\"\n\nprotected = [\n    ProtectedSpan(\n        segment.source_start,\n        segment.source_end,\n        kind=\"piperg2p-raw-phonemes\",\n    )\n    for segment in parse_raw_blocks(source)\n    if isinstance(segment, RawPhonemeSegment)\n]\n\nprepared = prepare_for_piperg2p(\n    source,\n    language=\"en\",\n    protected_spans=protected,\n)\n\nresult = phonemize_prepared(\n    prepared.spoken_text,…",
+          "lower": "piperg2p owns raw blocks such as [[ tɛst ]]. spokenform must not reinterpret text inside those blocks. discover piper raw blocks before semantic preparation and pass their source ranges to spokenform as protected spans:\n\nfrom piperg2p import (\n    rawphonemesegment,\n    parse_raw_blocks,\n    phonemize_prepared,\n)\nfrom spokenform import protectedspan, prepare_for_piperg2p\n\nsource = \"use 2 kg [[ tɛst ]] and 3 kg.\"\n\nprotected = [\n    protectedspan(\n        segment.source_start,\n        segment.source_end,\n        kind=\"piperg2p-raw-phonemes\",\n    )\n    for segment in parse_raw_blocks(source)\n    if isinstance(segment, rawphonemesegment)\n]\n\nprepared = prepare_for_piperg2p(\n    source,\n    language=\"en\",\n    protected_spans=protected,\n)\n\nresult = phonemize_prepared(\n    prepared.spoken_text,…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/reference-benchmark/",
+      "title": "piperg2p Reference benchmark",
+      "snippet": "benchmarks/data/core.json records the pinned Piper Python 1.8.0 profile, commit, and minimum compatibility corpus. It covers text normalizat …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Reference benchmark",
+          "text": "benchmarks/data/core.json records the pinned Piper Python 1.8.0 profile, commit, and minimum compatibility corpus. It covers text normalization, punctuation, sentence boundaries, language switches, raw blocks, vowel clusters, missing symbols, IPA3 overlay hits and misses, mixed sentences, tie or joiner behavior, and the Arabic policy.\n\nInspect the corpus metadata without executing a voice configuration:\n\npython benchmarks/benchmark_reference.py\n\n\n\n\nExecute PiperG2P with a voice configuration and write a reproducible report:\n\npython benchmarks/benchmark_reference.py \\\n  --config voice.onnx.json \\\n  --output report.json\n\n\n\n\nReference Piper execution belongs in a separate pinned development environment. Its reviewed output can be compared with:\n\npython benchmarks/benchmark_reference.py \\\n  -…",
+          "lower": "benchmarks/data/core.json records the pinned piper python 1.8.0 profile, commit, and minimum compatibility corpus. it covers text normalization, punctuation, sentence boundaries, language switches, raw blocks, vowel clusters, missing symbols, ipa3 overlay hits and misses, mixed sentences, tie or joiner behavior, and the arabic policy.\n\ninspect the corpus metadata without executing a voice configuration:\n\npython benchmarks/benchmark_reference.py\n\n\n\n\nexecute piperg2p with a voice configuration and write a reproducible report:\n\npython benchmarks/benchmark_reference.py \\\n  --config voice.onnx.json \\\n  --output report.json\n\n\n\n\nreference piper execution belongs in a separate pinned development environment. its reviewed output can be compared with:\n\npython benchmarks/benchmark_reference.py \\\n  -…"
+        },
+        {
+          "anchor": "",
+          "heading": "eSpeak IPA3 primary benchmark",
+          "text": "eSpeak --ipa=3 is the pronunciation gold standard. The direct benchmark has separate core, sentence, composition, lexicon-overlay, and parity suites and reports exact matches plus symbol substitutions, insertions, deletions, edit distance, and error rate.\n\nThe parity suite (--suite parity) covers weak words, contractions, and phrase-context contrasts to detect stress and pronunciation differences between native and CLI modes. When Phonodist is available (--phonodist auto or --phonodist required), the benchmark also reports phonetic classification counts (exact, notation_only, stress_only, segmental) to explain structural differences.\n\nQuick live check:\n\npython benchmarks/benchmark_espeak.py --quick --suite core --candidate auto --format summary\n\n\n\n\nParity suite with Phonodist diagnostics:…",
+          "lower": "espeak --ipa=3 is the pronunciation gold standard. the direct benchmark has separate core, sentence, composition, lexicon-overlay, and parity suites and reports exact matches plus symbol substitutions, insertions, deletions, edit distance, and error rate.\n\nthe parity suite (--suite parity) covers weak words, contractions, and phrase-context contrasts to detect stress and pronunciation differences between native and cli modes. when phonodist is available (--phonodist auto or --phonodist required), the benchmark also reports phonetic classification counts (exact, notation_only, stress_only, segmental) to explain structural differences.\n\nquick live check:\n\npython benchmarks/benchmark_espeak.py --quick --suite core --candidate auto --format summary\n\n\n\n\nparity suite with phonodist diagnostics:…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/piperg2p/voice-config/",
+      "title": "piperg2p Voice configuration",
+      "snippet": "VoiceConfig.from_json reads a Piper .onnx.json file. Strict parsing is the default and requires num_symbols, num_speakers, audio.sample_rate …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Voice configuration",
+          "text": "VoiceConfig.from_json reads a Piper .onnx.json file. Strict parsing is the default and requires num_symbols, num_speakers, audio.sample_rate, and a non-empty phoneme_id_map.\n\nfrom piperg2p import VoiceConfig\n\nconfig = VoiceConfig.from_json(\"voice.onnx.json\")\nconfig = VoiceConfig.from_dict(config.to_dict())\n\n\n\n\nphoneme_type is a string-compatible PhonemeType enum with values text, espeak, pinyin, hebrew, japanese, and thai. This Phase 1 release implements text and espeak. strict=False is available for legacy configs and emits a compatibility warning when values are inferred.\n\nID values are normalized to immutable integer tuples. IDs must be non-negative and below num_symbols. Voice maps are never replaced by a universal vocabulary. Vowel clusters must have at least two elements and their m…",
+          "lower": "voiceconfig.from_json reads a piper .onnx.json file. strict parsing is the default and requires num_symbols, num_speakers, audio.sample_rate, and a non-empty phoneme_id_map.\n\nfrom piperg2p import voiceconfig\n\nconfig = voiceconfig.from_json(\"voice.onnx.json\")\nconfig = voiceconfig.from_dict(config.to_dict())\n\n\n\n\nphoneme_type is a string-compatible phonemetype enum with values text, espeak, pinyin, hebrew, japanese, and thai. this phase 1 release implements text and espeak. strict=false is available for legacy configs and emits a compatibility warning when values are inferred.\n\nid values are normalized to immutable integer tuples. ids must be non-negative and below num_symbols. voice maps are never replaced by a universal vocabulary. vowel clusters must have at least two elements and their m…"
+        }
+      ]
+    }
+  ]
+}

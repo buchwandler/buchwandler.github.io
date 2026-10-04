@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">18<span>focused tools</span></div>
+    <div class="hero-stat">19<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -105,6 +105,16 @@ permalink: /tools/
         <a href="/tools/kokorog2p/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p/releases/tag/v0.9.15" rel="external noopener">Latest release: v0.9.15 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/kokorog2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>piperg2p</h3>
+      <p>Independent Piper-compatible text/phoneme/id frontend for Piper ONNX voice configs.</p>
+      <div class="card-links">
+        <a href="/tools/piperg2p/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/piperg2p/releases/tag/v0.1.7" rel="external noopener">Latest release: v0.1.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/piperg2p" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
     <article class="card tool-card">
