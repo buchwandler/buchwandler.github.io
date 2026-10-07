@@ -26,6 +26,9 @@ permalink: /tools/
       <h2 id="tools-index-title">All tools</h2>
     </div>
   </div>
+  <div class="tool-groups catalog-tool-groups">
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-1">
+  <h3 id="tools-category-1">Books</h3>
   <div class="cards tool-cards">
     <article class="card tool-card">
       <p class="card-label">Tool</p>
@@ -49,6 +52,21 @@ permalink: /tools/
     </article>
     <article class="card tool-card">
       <p class="card-label">Tool</p>
+      <h3>text2epub</h3>
+      <p>Build EPUB ebooks from Markdown and text sources.</p>
+      <div class="card-links">
+        <a href="/tools/text2epub/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/text2epub/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/text2epub" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-2">
+  <h3 id="tools-category-2">Text</h3>
+  <div class="cards tool-cards">
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
       <h3>phrasplit</h3>
       <p>Split text into sentences, clauses, or paragraphs.</p>
       <div class="card-links">
@@ -59,14 +77,49 @@ permalink: /tools/
     </article>
     <article class="card tool-card">
       <p class="card-label">Tool</p>
-      <h3>text2epub</h3>
-      <p>Build EPUB ebooks from Markdown and text sources.</p>
+      <h3>ssmd</h3>
+      <p>A lightweight alternative syntax for SSML (Speech Synthesis Markdown).</p>
       <div class="card-links">
-        <a href="/tools/text2epub/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/text2epub/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/text2epub" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+        <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.9.3" rel="external noopener">Latest release: v0.9.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>abbr2words</h3>
+      <p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
+      <div class="card-links">
+        <a href="/tools/abbr2words/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.16" rel="external noopener">Latest release: v0.2.16 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/abbr2words" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>spokenform</h3>
+      <p>Single-language written-to-spoken text normalization for speech applications.</p>
+      <div class="card-links">
+        <a href="/tools/spokenform/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.4.5" rel="external noopener">Latest release: v0.4.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/spokenform" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>lexhint</h3>
+      <p>Compact lexical and dictionary-derived context hints for text normalization.</p>
+      <div class="card-links">
+        <a href="/tools/lexhint/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.4.7" rel="external noopener">Latest release: v0.4.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/lexhint" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-3">
+  <h3 id="tools-category-3">Infrastructure</h3>
+  <div class="cards tool-cards">
     <article class="card tool-card">
       <p class="card-label">Tool</p>
       <h3>sphinxpress</h3>
@@ -77,6 +130,11 @@ permalink: /tools/
         <a href="https://github.com/buchwandler/sphinxpress" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-4">
+  <h3 id="tools-category-4">Pronunciation</h3>
+  <div class="cards tool-cards">
     <article class="card tool-card">
       <p class="card-label">Tool</p>
       <h3>g2lex</h3>
@@ -119,96 +177,6 @@ permalink: /tools/
     </article>
     <article class="card tool-card">
       <p class="card-label">Tool</p>
-      <h3>pykokoro</h3>
-      <p>A Python library for Kokoro TTS using ONNX runtime.</p>
-      <div class="card-links">
-        <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.4" rel="external noopener">Latest release: v0.10.4 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>ssmd</h3>
-      <p>A lightweight alternative syntax for SSML (Speech Synthesis Markdown).</p>
-      <div class="card-links">
-        <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.9.2" rel="external noopener">Latest release: v0.9.2 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>utterplan</h3>
-      <p>Engine-independent text-to-speech planning compiler and interchange format.</p>
-      <div class="card-links">
-        <a href="/tools/utterplan/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/utterplan" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>ttsforge</h3>
-      <p>A Python-based TTS automation framework with multi-engine support.</p>
-      <div class="card-links">
-        <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.4.1" rel="external noopener">Latest release: v0.4.1 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>audiosig</h3>
-      <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
-      <div class="card-links">
-        <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.6" rel="external noopener">Latest release: v0.1.6 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>abbr2words</h3>
-      <p>Multilingual, context-aware abbreviation expansion for text normalization and speech.</p>
-      <div class="card-links">
-        <a href="/tools/abbr2words/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/abbr2words/releases/tag/v0.2.16" rel="external noopener">Latest release: v0.2.16 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/abbr2words" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>spokenform</h3>
-      <p>Single-language written-to-spoken text normalization for speech applications.</p>
-      <div class="card-links">
-        <a href="/tools/spokenform/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/spokenform/releases/tag/v0.4.5" rel="external noopener">Latest release: v0.4.5 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/spokenform" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>lexhint</h3>
-      <p>Compact lexical and dictionary-derived context hints for text normalization.</p>
-      <div class="card-links">
-        <a href="/tools/lexhint/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/lexhint/releases/tag/v0.4.7" rel="external noopener">Latest release: v0.4.7 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/lexhint" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
-      <h3>readio</h3>
-      <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
-      <div class="card-links">
-        <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
-      </div>
-    </article>
-    <article class="card tool-card">
-      <p class="card-label">Tool</p>
       <h3>phonodist</h3>
       <p>Language-aware, explainable distance metrics for IPA pronunciations.</p>
       <div class="card-links">
@@ -227,6 +195,68 @@ permalink: /tools/
         <a href="https://github.com/buchwandler/espeakng-runtime" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-5">
+  <h3 id="tools-category-5">Speech</h3>
+  <div class="cards tool-cards">
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>pykokoro</h3>
+      <p>A Python library for Kokoro TTS using ONNX runtime.</p>
+      <div class="card-links">
+        <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.4" rel="external noopener">Latest release: v0.10.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>utterplan</h3>
+      <p>Engine-independent text-to-speech planning compiler and interchange format.</p>
+      <div class="card-links">
+        <a href="/tools/utterplan/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.4.1" rel="external noopener">Latest release: v0.4.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>ttsforge</h3>
+      <p>A Python-based TTS automation framework with multi-engine support.</p>
+      <div class="card-links">
+        <a href="/tools/ttsforge/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge/releases/tag/v0.4.1" rel="external noopener">Latest release: v0.4.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsforge" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>readio</h3>
+      <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
+      <div class="card-links">
+        <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-6">
+  <h3 id="tools-category-6">Audio</h3>
+  <div class="cards tool-cards">
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>audiosig</h3>
+      <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
+      <div class="card-links">
+        <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.6" rel="external noopener">Latest release: v0.1.6 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+</section>
   </div>
 </section>
 

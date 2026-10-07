@@ -5,8 +5,8 @@ permalink: /tools/utterplan/cli/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0"
+docs_ref: "v0.4.1"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -549,7 +549,7 @@ html[data-theme="dark"] .sphinxpress-doc {
                          [--text-preparation {spokenform,identity}]
                          [--pause-mode {tts,manual,auto}]
                          [--spacy {auto,off,sm,md,lg,trf}] [-o OUTPUT]
-                         [--force] [--json]
+                         [--force] [--stdout] [--renderability {strict,repair}]
                          [text ...]
 </pre></div>
 </div>
@@ -591,31 +591,57 @@ utterplan<span class="w"> </span>compile<span class="w"> </span>plain.txt<span c
 utterplan<span class="w"> </span>compile<span class="w"> </span>migrated.ssmd<span class="w"> </span>--lang<span class="w"> </span>en-us
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> applies only to <code class="docutils literal notranslate"><span class="pre">.utterplan.json</span></code> schema versions. It cannot migrate SSMD source.</p>
+<p><code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> is the explicit JSON-plan import path: it applies supported schema migrations and writes canonical TOML. It cannot migrate SSMD source.</p>
 </section>
 <section id="output-and-errors">
 <h2>Output and errors</h2>
-<p>Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, compile writes the actual pretty plan JSON to stdout. With
-<code class="docutils literal notranslate"><span class="pre">--output</span></code>, the file is written and an existing file is refused unless
-<code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. Add <code class="docutils literal notranslate"><span class="pre">--json</span></code> with an output path to write the file and
-also emit the same plan JSON to stdout.</p>
-<p>Human status messages are written to stderr, never mixed into JSON stdout:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.json
+<p>Without <code class="docutils literal notranslate"><span class="pre">--output</span></code>, compile writes the pretty TOML plan to stdout. With
+<code class="docutils literal notranslate"><span class="pre">--output</span></code>, the TOML file is written and an existing file is refused unless
+<code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. Add <code class="docutils literal notranslate"><span class="pre">--stdout</span></code> with an output path to write the file and
+also emit the same TOML plan to stdout.</p>
+<p>Human status messages are written to stderr, never mixed into TOML stdout:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.toml
 <span class="c1"># status is written to stderr</span>
-utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.json<span class="w"> </span>--json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--stdout
 </pre></div>
 </div>
 <p>Argparse usage errors use exit code 2. Input, planning, file, and plan
 validation errors use exit code 1 and are reported without a traceback.</p>
 </section>
+<section id="compile-many-documents-incrementally">
+<h2>Compile many documents incrementally</h2>
+<p><code class="docutils literal notranslate"><span class="pre">compile-many</span></code> reads source files in the requested order, compiles each independently, and atomically saves each successful plan before reading the next. Ordinary input, planning, and write failures are reported per item and do not roll back earlier plans; processing continues unless <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> is set.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile-many<span class="w"> </span>chapters/*.ssmd<span class="w"> </span>--output-dir<span class="w"> </span>build/plans<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--language<span class="w"> </span>en-us<span class="w"> </span>--report<span class="w"> </span>build/compile-report.toml
+</pre></div>
+</div>
+<p>Source names determine output names: <code class="docutils literal notranslate"><span class="pre">chapter.ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">chapter.ssmd.md</span></code>, and <code class="docutils literal notranslate"><span class="pre">chapter.md</span></code> each map to <code class="docutils literal notranslate"><span class="pre">chapter.utterplan.toml</span></code>. Duplicate output names and a report path that collides with a plan output are rejected before any writes. Existing plans are protected unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. By default the command writes an atomically refreshed <code class="docutils literal notranslate"><span class="pre">compile-report.toml</span></code> in the output directory; the report is operational TOML, not a plan accepted by <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>.</p>
+<p>Shared planning options include <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">auto|plain|ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">--unit</span></code>, <code class="docutils literal notranslate"><span class="pre">--text-preparation</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, and <code class="docutils literal notranslate"><span class="pre">--renderability</span></code>. Progress, repair notices, actionable errors, and the final counts are written to stderr. Exit status is 0 if every input succeeds, 1 if any input fails, and 2 for usage errors such as output collisions. <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> skips later requests after the first failure but preserves all completed outputs and updates the report.</p>
+</section>
 <section id="explain-a-plan">
 <h2>Explain a plan</h2>
 <p>Explain an existing compiled plan as a human-readable speech narrative:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.json
-utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.json<span class="w"> </span>--details
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.toml
+utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--details
 </pre></div>
 </div>
 <p>The default output shows prepared wording, render units, ordered segments, languages, resolved pauses, headings, SSMD version/title/document language, effective typed directives, metadata, and warning/error codes with source locations. Add <code class="docutils literal notranslate"><span class="pre">--details</span></code> for IDs, offsets, provenance, hashes, plan identity, and token analysis beneath each segment. Use <code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--tokens</span></code> for a compact token/provenance view.</p>
+</section>
+<section id="inspect-a-persisted-planning-attempt">
+<h2>Inspect a persisted planning attempt</h2>
+<p><code class="docutils literal notranslate"><span class="pre">inspect</span></code> reads canonical plans. Persistable planning outcomes use the separate
+<code class="docutils literal notranslate"><span class="pre">utterplan.planning-attempt.v1</span></code> artifact and are opened with <code class="docutils literal notranslate"><span class="pre">inspect-attempt</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml
+utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml<span class="w"> </span>--issues
+utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml<span class="w"> </span>--segment<span class="w"> </span>seg-000001<span class="w"> </span>--unit<span class="w"> </span>unit-000001
+utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml<span class="w"> </span>--json
+</pre></div>
+</div>
+<p>The default view summarizes status, renderability, and candidate size. <code class="docutils literal notranslate"><span class="pre">--issues</span></code>
+shows source context and conservative repair assessments; segment and unit selectors
+accept an ID or zero-based index. <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits the complete artifact as JSON for
+inspection, but the persisted attempt itself remains TOML. A blocked candidate is an
+inspect-only draft, not a canonical plan, and is rejected by <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>.</p>
 </section>
 <section id="planning-controls">
 <h2>Planning controls</h2>
@@ -625,6 +651,7 @@ utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterpla
 <li><p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">tts|manual|auto</span></code> selects semantic pause policy.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off|auto|sm|md|lg|trf</span></code> selects deterministic fallback, automatic
 spaCy use, or a required model tier.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--renderability</span> <span class="pre">repair|strict</span></code> defaults to safe punctuation-only repair. Semantic blockers remain failures with source context and an actionable next step; strict mode reports safe repair opportunities without applying them.</p></li>
 </ul>
 <p>The default spaCy policy is <code class="docutils literal notranslate"><span class="pre">off</span></code>, so the CLI does not depend on whichever optional model happens to be installed.</p>
 <p>The complete defaults are <code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">tts</span></code>, and <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code>. <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> is the default text-preparation backend, while <code class="docutils literal notranslate"><span class="pre">tts</span></code> is the default pause mode. <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code> uses UtterPlan’s deterministic fallback tokenizer and analysis and does not require an installed spaCy model.</p>
@@ -633,27 +660,43 @@ spaCy use, or a required model tier.</p></li>
 <section id="other-commands">
 <h2>Other commands</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>--version
-utterplan<span class="w"> </span>validate<span class="w"> </span>chapter.utterplan.json
+utterplan<span class="w"> </span>validate<span class="w"> </span>chapter.utterplan.toml
 utterplan<span class="w"> </span>validate<span class="w"> </span>chapter.ssmd.md
 utterplan<span class="w"> </span>validate<span class="w"> </span>plain.txt<span class="w"> </span>--input-format<span class="w"> </span>plain<span class="w"> </span>--language<span class="w"> </span>en-us
-utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.json<span class="w"> </span>--segment<span class="w"> </span><span class="m">0</span>
-utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.json<span class="w"> </span>--unit<span class="w"> </span><span class="m">0</span><span class="w"> </span>--boundaries<span class="w"> </span>--tokens
-utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.json<span class="w"> </span>--preparation
+utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--segment<span class="w"> </span><span class="m">0</span>
+utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--unit<span class="w"> </span><span class="m">0</span><span class="w"> </span>--boundaries<span class="w"> </span>--tokens
+utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--preparation
+utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--semantic-boundaries
+utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml<span class="w"> </span>--issues
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--preparation</span></code> reports the preparation backend and version, structural and spoken text lengths, replacement count, and each replacement’s structural and spoken ranges and text. This is the supported human-facing preparation diagnostic; raw coordinate lookup tables are intentionally absent from plan JSON.</p>
+<p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--preparation</span></code> reports the preparation backend and version, structural and spoken text lengths, replacement count, and each replacement’s structural and spoken ranges and text. This is the supported human-facing preparation diagnostic; raw coordinate lookup tables are intentionally absent from the persisted TOML plan.</p>
 </section>
 <section id="migrate-a-saved-plan">
 <h2>Migrate a saved plan</h2>
-<p>Migrate a supported saved plan to the current schema without rerunning planning:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>-o<span class="w"> </span>current.utterplan.json
+<p>Import a supported legacy JSON plan to the current schema without rerunning
+planning. <code class="docutils literal notranslate"><span class="pre">migrate</span></code> is the only CLI path that reads saved plan JSON; its output is
+always canonical TOML:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>-o<span class="w"> </span>current.utterplan.toml
 utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>--check
-utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>.
+utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>&gt;<span class="w"> </span>current.utterplan.toml
 </pre></div>
 </div>
-<p>Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, migrated JSON is written to stdout. Status is written to stderr. Existing output files are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. <code class="docutils literal notranslate"><span class="pre">--check</span></code> validates the route and reports source schema, target schema, and whether migration is required without writing a file. A future schema version is rejected rather than guessed or downgraded.</p>
-<p>Schema migration is a separate operation from SSMD source migration. UtterPlan preserves released schema v1 and v2 and migrates v1 plans sequentially through v2 to current schema v3. It never reparses source or replans. Use <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code> for older SSMD source documents.</p>
-<p>For a saved JSON plan, <code class="docutils literal notranslate"><span class="pre">validate</span></code> performs the in-memory schema compatibility check and reports source/current schema versions without modifying the file. For an SSMD or plain-text source document, it runs the canonical one-document semantic compiler without writing a plan; plain input requires <code class="docutils literal notranslate"><span class="pre">--language</span></code>, while SSMD can use its header language or an explicit fallback.</p>
+<p>Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, TOML is written to stdout and status is written to stderr. Existing
+output files are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. <code class="docutils literal notranslate"><span class="pre">--check</span></code> validates the
+route and reports source schema, target schema, and whether migration is required
+without writing a file. A future schema version is rejected rather than guessed
+or downgraded.</p>
+<p>Schema migration is a separate operation from SSMD source migration. UtterPlan
+preserves released schemas v1, v2, and v3 and migrates supported plans through the
+registered chain to current schema v4. The v3-to-v4 step does not rerun parsing,
+NLP, or planning. Use <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code> for older SSMD source
+documents.</p>
+<p>For a saved TOML plan, <code class="docutils literal notranslate"><span class="pre">validate</span></code> verifies the current semantic schema and plan
+invariants; JSON plan paths are rejected outside <code class="docutils literal notranslate"><span class="pre">migrate</span></code>. For an SSMD or
+plain-text source document, it runs the canonical one-document semantic compiler
+without writing a plan; plain input requires <code class="docutils literal notranslate"><span class="pre">--language</span></code>, while SSMD can use its
+header language or an explicit fallback.</p>
 </section>
 </section>
 </div>

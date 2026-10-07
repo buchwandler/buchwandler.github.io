@@ -5,8 +5,8 @@ permalink: /tools/ssmd/spans/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.9.2"
-docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
+docs_ref: "v0.9.3"
+docs_commit: "fa097f3f5958160f215e304fd6437ecf7db27334"
 search_enabled: true
 ---
 

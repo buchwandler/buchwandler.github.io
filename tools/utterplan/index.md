@@ -5,8 +5,8 @@ permalink: /tools/utterplan/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0"
+docs_ref: "v0.4.1"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -554,21 +554,22 @@ speech plans. It stops before G2P and synthesis.</p>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#defaults-and-linguistic-resources">Defaults and linguistic resources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#compile-stdin-or-a-file">Compile stdin or a file</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#inspect-and-validate">Inspect and validate</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/#ssmd">SSMD</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command-line interface</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="cli/#input-resolution">Input resolution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#ssmd-source-compatibility">SSMD source compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#output-and-errors">Output and errors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#compile-many-documents-incrementally">Compile many documents incrementally</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#explain-a-plan">Explain a plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#inspect-a-persisted-planning-attempt">Inspect a persisted planning attempt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#planning-controls">Planning controls</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#other-commands">Other commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#migrate-a-saved-plan">Migrate a saved plan</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="consumer-guide/">Renderer consumer guide</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="consumer-guide/#migrating-from-utterplan-0-2-to-0-3">Migrating from UtterPlan 0.2 to 0.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="consumer-guide/#migrating-source-and-serialized-plans">Migrating source and serialized plans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#planning-defaults">Planning defaults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#consumer-contract">Consumer contract</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#stable-renderer-input-view">Stable renderer input view</a></li>
@@ -576,7 +577,8 @@ speech plans. It stops before G2P and synthesis.</p>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#what-is-intentionally-absent">What is intentionally absent</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="format/">UtterPlan format v3</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="format/">UtterPlan format v4</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="format/#toml-wire-format-and-json-compatibility">TOML wire format and JSON compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format/#coordinate-and-provenance-rules">Coordinate and provenance rules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format/#schema-versioning-and-migration">Schema versioning and migration</a></li>
 </ul>
@@ -601,8 +603,12 @@ speech plans. It stops before G2P and synthesis.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="python-api/">Python API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#canonical-single-document-compiler">Canonical single-document compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#persistable-planning-attempts">Persistable planning attempts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#toml-persistence">TOML persistence</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#incremental-batch-compilation">Incremental batch compilation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#planner-progress-callbacks">Planner progress callbacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#ssmd-input-and-semantic-plan">SSMD input and semantic plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#semantic-boundaries">Semantic boundaries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#audio-media-segments">Audio/media segments</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#planner-configuration">Planner configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#planning-and-plan-records">Planning and plan records</a></li>
@@ -613,22 +619,27 @@ speech plans. It stops before G2P and synthesis.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.3.4] - Unreleased</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.3.3] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.3.2] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.3.1] - 2026-09-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.3.0] - 2026-09-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.2.0] - 2026-09-22</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.1.3] - 2026-09-19</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.1.1] - 2026-09-16</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.1.0] - 2026-09-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.4.1] - 2026-10-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.4.0] - 2026-10-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.3.7] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.3.6] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.3.5] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id11">[0.3.4] - 2026-10-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id14">[0.3.3] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.3.2] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id19">[0.3.1] - 2026-09-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.3.0] - 2026-09-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id26">[0.2.0] - 2026-09-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.1.3] - 2026-09-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.1.1] - 2026-09-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id37">[0.1.0] - 2026-09-16</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>The package version and the UtterPlan schema version are independent. The first
-public package release is <code class="docutils literal notranslate"><span class="pre">0.1.0</span></code> and the current interchange schema is
-version <code class="docutils literal notranslate"><span class="pre">2</span></code>.</p>
+<p>The package version and the UtterPlan schema version are independent. The
+current interchange schema is version <code class="docutils literal notranslate"><span class="pre">4</span></code>; schemas v1, v2, and v3 remain
+available as immutable historical resources with sequential migration paths.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

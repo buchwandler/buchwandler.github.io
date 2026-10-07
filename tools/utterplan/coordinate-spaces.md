@@ -5,8 +5,8 @@ permalink: /tools/utterplan/coordinate-spaces/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0"
+docs_ref: "v0.4.1"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -542,7 +542,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="coordinate-spaces">
 <h1>Coordinate spaces</h1>
-<p>UtterPlan uses explicit coordinate names. <code class="docutils literal notranslate"><span class="pre">spoken_start</span></code>, <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code>, and <code class="docutils literal notranslate"><span class="pre">spoken_position</span></code> refer to half-open offsets into <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. Token, annotation-spoken, language-run, marker, unit, and segment ranges consumed by a renderer use this prepared/synthesis-space coordinate system.</p>
+<p>UtterPlan uses explicit coordinate names. <code class="docutils literal notranslate"><span class="pre">spoken_start</span></code>, <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code>, and <code class="docutils literal notranslate"><span class="pre">spoken_position</span></code> refer to half-open offsets into <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. Token, annotation-spoken, language-run, marker, unit, and segment ranges consumed by a renderer use this prepared/synthesis-space coordinate system.
+<code class="docutils literal notranslate"><span class="pre">SemanticBoundary.position</span></code> and the <code class="docutils literal notranslate"><span class="pre">semantic_boundaries_in_range()</span></code> /
+<code class="docutils literal notranslate"><span class="pre">semantic_boundaries_for_segment()</span></code> results use this same <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>
+coordinate space. They are stable semantic split opportunities, not pause
+timing events; <code class="docutils literal notranslate"><span class="pre">seconds</span></code>, pause activation, and renderer policy belong to
+<code class="docutils literal notranslate"><span class="pre">plan.boundaries</span></code> and resolved segment pauses.</p>
 <p><code class="docutils literal notranslate"><span class="pre">structural_start</span></code> and <code class="docutils literal notranslate"><span class="pre">structural_end</span></code> refer to half-open offsets into <code class="docutils literal notranslate"><span class="pre">texts.structural</span></code>. The source field contains exact caller input, which may include SSMD headers and markup; source offsets are not fabricated for renderer slicing.</p>
 <p>SSMD <code class="docutils literal notranslate"><span class="pre">source_start</span></code> and <code class="docutils literal notranslate"><span class="pre">source_end</span></code> are half-open Python string offsets (Unicode code points) into the exact original source, including any header and markup. They are source provenance only, not offsets into <code class="docutils literal notranslate"><span class="pre">texts.structural</span></code> or <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. Diagnostic <code class="docutils literal notranslate"><span class="pre">line</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> values are 1-based; columns count Python Unicode code points from the beginning of the source line.</p>
 <p>When written-to-spoken preparation changes text, the planner uses an exact transient source-to-spoken map to resolve annotations, boundaries, and markers. The serialized plan stores only preparation provenance and resolved coordinates. Renderers must use <code class="docutils literal notranslate"><span class="pre">AnnotationSpan.spoken_start</span></code> and <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code> when mapping annotations into <code class="docutils literal notranslate"><span class="pre">PlanSegment.text</span></code>; structural offsets must not be used to slice prepared text.</p>

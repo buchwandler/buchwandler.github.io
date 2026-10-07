@@ -5,8 +5,8 @@ permalink: /tools/ssmd/syntax/
 nav_tool: ssmd
 docs_project: "ssmd"
 docs_variant: "release"
-docs_ref: "v0.9.2"
-docs_commit: "a190d99f736160b9be36732ff5ebbbe43991fd0b"
+docs_ref: "v0.9.3"
+docs_commit: "fa097f3f5958160f215e304fd6437ecf7db27334"
 search_enabled: true
 ---
 
@@ -696,6 +696,18 @@ will be preserved as literal ellipsis in your text. :::</p>
 <li><p><code class="docutils literal notranslate"><span class="pre">s</span></code> - sentence (strong)</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">p</span></code> - paragraph (x-strong)</p></li>
 </ul>
+<p class="rubric" id="standalone-scene-separators">Standalone Scene Separators</p>
+<p>Strict SSMD 0.9 accepts a whole body line of exactly three hyphens, optionally
+surrounded by spaces or tabs, as a compatibility scene break. Front-matter delimiters
+are unaffected, and inline dashes such as <code class="docutils literal notranslate"><span class="pre">Before</span> <span class="pre">---</span> <span class="pre">after.</span></code> remain text. A separator
+contributes no spoken text and produces one x-strong break; repeated separators remain
+separate events, while leading and trailing events sit at the start and end of clean
+text. Canonical formatting writes <code class="docutils literal notranslate"><span class="pre">...p</span></code> instead of <code class="docutils literal notranslate"><span class="pre">---</span></code>.</p>
+<p>To speak a literal whole-line sequence of three hyphens, escape the first hyphen with a
+backslash:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>\---
+</pre></div>
+</div>
 <p class="rubric" id="paragraphs">Paragraphs</p>
 <p>Blank lines separate paragraphs:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;&quot;&quot;</span>

@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 0ceca50a26537efbf7a00e376638dddc36d497f3
+source_commit: 260803aa205479dfd9ab134e49f14f15835769b6
 source_url: https://github.com/buchwandler/readio/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/readio

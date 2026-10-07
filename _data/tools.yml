@@ -2,91 +2,370 @@
   description: Extract text from EPUB files with smart cleaning and navigation.
   docs_url: /tools/epub2text/
   repo_url: https://github.com/buchwandler/epub2text
+  category: books
+  role: extraction
+  stages:
+    - source
+    - structure
+  level: component
+  workflows:
+    - book-processing
+    - translation
+  outputs:
+    - markdown
+  depends_on:
+    - phrasplit
+  used_by:
+    - booktx
 - name: text2epub
   description: Build EPUB ebooks from Markdown and text sources.
   docs_url: /tools/text2epub/
   repo_url: https://github.com/buchwandler/text2epub
+  category: books
+  role: ebook-conversion
+  stages:
+    - output
+  level: component
+  workflows:
+    - book-processing
+    - translation
+  inputs:
+    - markdown
+  outputs:
+    - epub
+  used_by:
+    - booktx
 - name: phrasplit
   description: Split text into sentences, clauses, or paragraphs.
   docs_url: /tools/phrasplit/
   repo_url: https://github.com/buchwandler/phrasplit
+  category: text
+  role: segmentation
+  stages:
+    - structure
+  level: component
+  workflows:
+    - book-processing
+    - translation
+    - speech
+    - audiobook
+    - speech-development
+  used_by:
+    - epub2text
+    - booktx
+    - ssmd
+    - utterplan
+    - piperg2p
+    - pykokoro
 - name: booktx
   description: Profile-first translation toolchain for ebooks.
   docs_url: /tools/booktx/
   repo_url: https://github.com/buchwandler/booktx
+  category: books
+  role: translation
+  stages:
+    - source
+    - output
+  level: workflow
+  workflows:
+    - book-processing
+    - translation
+  inputs:
+    - epub
+    - markdown
+  outputs:
+    - epub
+    - markdown
+  depends_on:
+    - epub2text
+    - phrasplit
+    - text2epub
+  start_here: true
 - name: sphinxpress
   description: Publish multiple Sphinx documentation projects as one site and book.
   docs_url: /tools/sphinxpress/
   repo_url: https://github.com/buchwandler/sphinxpress
+  category: infrastructure
+  role: documentation-publishing
+  stages: []
+  level: infrastructure
+  workflows:
+    - documentation
+  inputs:
+    - sphinx
+  outputs:
+    - html
+    - pdf
+    - epub
 - name: g2lex
   description: Compile pronunciation dictionaries into deterministic, mmap-friendly binary lexicons.
   docs_url: /tools/g2lex/
   repo_url: https://github.com/buchwandler/g2lex
+  category: pronunciation
+  role: lexicon
+  stages:
+    - pronounce
+  level: library
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  used_by:
+    - lexphon
+    - kokorog2p
 - name: lexphon
   description: Lexicon-driven phonemizer and CLI built on G2Lex.
   docs_url: /tools/lexphon/
   repo_url: https://github.com/buchwandler/lexphon
+  category: pronunciation
+  role: phonemization
+  stages:
+    - pronounce
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - g2lex
+  used_by:
+    - kokorog2p
+    - pykokoro
   pypi_url: https://pypi.org/project/lexphon/
 - name: kokorog2p
   description: A unified multi-language G2P library for Kokoro TTS.
   docs_url: /tools/kokorog2p/
   repo_url: https://github.com/buchwandler/kokorog2p
+  category: pronunciation
+  role: g2p
+  stages:
+    - pronounce
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - g2lex
+    - lexphon
+    - espeakng-runtime
+  used_by:
+    - pykokoro
   pypi_url: https://pypi.org/project/kokorog2p/
 - name: piperg2p
   description: Independent Piper-compatible text/phoneme/id frontend for Piper ONNX voice configs.
   docs_url: /tools/piperg2p/
   repo_url: https://github.com/buchwandler/piperg2p
+  category: pronunciation
+  role: g2p
+  stages:
+    - pronounce
+  level: component
+  workflows:
+    - speech
+    - speech-development
+  depends_on:
+    - espeakng-runtime
+    - phrasplit
   pypi_url: https://pypi.org/project/piperg2p/
 - name: pykokoro
   description: A Python library for Kokoro TTS using ONNX runtime.
   docs_url: /tools/pykokoro/
   repo_url: https://github.com/buchwandler/pykokoro
+  category: speech
+  role: synthesis
+  stages:
+    - synthesize
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - kokorog2p
+    - lexphon
+    - phrasplit
+    - audiosig
+  related:
+    - readio
+    - ttsforge
   pypi_url: https://pypi.org/project/pykokoro/
 - name: ssmd
   description: A lightweight alternative syntax for SSML (Speech Synthesis Markdown).
   docs_url: /tools/ssmd/
   repo_url: https://github.com/buchwandler/ssmd
+  category: text
+  role: speech-markup
+  stages:
+    - normalize
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - phrasplit
+  used_by:
+    - utterplan
+    - readio
   pypi_url: https://pypi.org/project/ssmd/
 - name: utterplan
   description: Engine-independent text-to-speech planning compiler and interchange format.
   docs_url: /tools/utterplan/
   repo_url: https://github.com/buchwandler/utterplan
+  category: speech
+  role: speech-planning
+  stages:
+    - normalize
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - phrasplit
+    - ssmd
+    - spokenform
+  used_by:
+    - readio
   pypi_url: https://pypi.org/project/utterplan/
 - name: ttsforge
   description: A Python-based TTS automation framework with multi-engine support.
   docs_url: /tools/ttsforge/
   repo_url: https://github.com/buchwandler/ttsforge
+  category: speech
+  role: audiobook
+  stages:
+    - synthesize
+    - output
+  level: workflow
+  workflows:
+    - audiobook
+  inputs:
+    - book
+    - text
+  outputs:
+    - audio
+  depends_on:
+    - readio
+  start_here: true
 - name: audiosig
   description: Portable, dependency-light audio signal processing for NumPy arrays.
   docs_url: /tools/audiosig/
   repo_url: https://github.com/buchwandler/audiosig
+  category: audio
+  role: audio-processing
+  stages:
+    - output
+  level: library
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  used_by:
+    - pykokoro
   pypi_url: https://pypi.org/project/audiosig/
 - name: abbr2words
   description: Multilingual, context-aware abbreviation expansion for text normalization and speech.
   docs_url: /tools/abbr2words/
   repo_url: https://github.com/buchwandler/abbr2words
+  category: text
+  role: normalization
+  stages:
+    - normalize
+  level: library
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  used_by:
+    - spokenform
   pypi_url: https://pypi.org/project/abbr2words/
 - name: spokenform
   description: Written-to-spoken text normalizer for speech applications.
   docs_url: /tools/spokenform/
   repo_url: https://github.com/buchwandler/spokenform
+  category: text
+  role: normalization
+  stages:
+    - normalize
+  level: component
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  depends_on:
+    - abbr2words
+  related:
+    - lexhint
+  used_by:
+    - utterplan
   pypi_url: https://pypi.org/project/spokenform/
 - name: lexhint
   description: Compact lexical and dictionary-derived context hints for text normalization.
   docs_url: /tools/lexhint/
   repo_url: https://github.com/buchwandler/lexhint
+  category: text
+  role: normalization
+  stages:
+    - normalize
+  level: library
+  workflows:
+    - speech
+    - speech-development
+  related:
+    - spokenform
   pypi_url: https://pypi.org/project/lexhint/
 - name: readio
   description: Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.
   docs_url: /tools/readio/
   repo_url: https://github.com/buchwandler/readio
+  category: speech
+  role: playback
+  stages:
+    - synthesize
+    - output
+  level: application
+  workflows:
+    - speech
+    - audiobook
+  depends_on:
+    - utterplan
+    - ssmd
+  related:
+    - pykokoro
+    - ttsforge
+  start_here: true
+  used_by:
+    - ttsforge
 - name: phonodist
   description: Language-aware, explainable distance metrics for IPA pronunciations.
   docs_url: /tools/phonodist/
   repo_url: https://github.com/buchwandler/phonodist
+  category: pronunciation
+  role: pronunciation-analysis
+  stages:
+    - pronounce
+  level: library
+  workflows:
+    - speech-development
+  related:
+    - g2lex
 
 - name: espeakng-runtime
   description: Small Python runtime adapter for eSpeak NG phonemization.
   docs_url: /tools/espeakng-runtime/
   repo_url: https://github.com/buchwandler/espeakng-runtime
+  category: pronunciation
+  role: phonemization-runtime
+  stages:
+    - pronounce
+  level: library
+  workflows:
+    - speech
+    - audiobook
+    - speech-development
+  used_by:
+    - kokorog2p
+    - piperg2p
   pypi_url: https://pypi.org/project/espeakng-runtime/

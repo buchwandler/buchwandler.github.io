@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a19ceb434bd7277c6c78a91ad8e96ca840367600"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -574,48 +574,67 @@ phonemes, model tokens, or audio.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Doctor Smith bought 5 kg.&quot;</span><span class="w"> </span>--lang<span class="w"> </span>en-us
 </pre></div>
 </div>
-<p>Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, the complete plan JSON is written to stdout. This makes the
-result convenient for shell pipelines:</p>
+<p>Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, the complete canonical TOML plan is written to stdout. Status messages use stderr, so redirecting stdout creates a valid plan file:</p>
 </section>
 <section id="defaults-and-linguistic-resources">
 <h2>Defaults and linguistic resources</h2>
 <p>The default compile policy is <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> for text preparation, <code class="docutils literal notranslate"><span class="pre">tts</span></code> for pause mode, and <code class="docutils literal notranslate"><span class="pre">spacy</span> <span class="pre">off</span></code> for linguistic resources. The fallback path records <code class="docutils literal notranslate"><span class="pre">linguistic_runs[*].provider</span> <span class="pre">=</span> <span class="pre">&quot;fallback&quot;</span></code> and leaves POS, tag, and morph unavailable. It does not require an installed spaCy model.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">auto</span></code> is an explicit opt-in. With a compatible local model, final pass-B tokens may contain POS, tag, lemma, and morphology, and the plan records the actual provider, model, and known versions. <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, and <code class="docutils literal notranslate"><span class="pre">trf</span></code> require the requested local model. UtterPlan never downloads models automatically.
 Install the optional library with <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">pip</span> <span class="pre">install</span> <span class="pre">'utterplan[spacy]'</span></code> when needed. Language model packages remain explicit environment dependencies and are never downloaded by UtterPlan.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Hello world.&quot;</span><span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span><span class="s1">&#39;.segments&#39;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span><span class="s2">&quot;Hello world.&quot;</span><span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>-o<span class="w"> </span>hello.utterplan.toml
+utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.toml<span class="w"> </span>--segment<span class="w"> </span><span class="m">0</span>
 </pre></div>
 </div>
 </section>
 <section id="compile-stdin-or-a-file">
 <h2>Compile stdin or a file</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello world.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>utterplan<span class="w"> </span>compile<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>&gt;<span class="w"> </span>hello.utterplan.json
-utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.json
-utterplan<span class="w"> </span>compile<span class="w"> </span>--file<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;Hello world.&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>utterplan<span class="w"> </span>compile<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>&gt;<span class="w"> </span>hello.utterplan.toml
+utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.toml
+utterplan<span class="w"> </span>compile<span class="w"> </span>--file<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.toml
+
+A<span class="w"> </span>single<span class="w"> </span>existing<span class="w"> </span>positional<span class="w"> </span>path<span class="w"> </span>is<span class="w"> </span><span class="nb">read</span><span class="w"> </span>as<span class="w"> </span>a<span class="w"> </span>file.<span class="w"> </span>Use
+<span class="sb">`</span>--input-format<span class="w"> </span>text<span class="sb">`</span><span class="w"> </span>when<span class="w"> </span>a<span class="w"> </span>path-like<span class="w"> </span>value<span class="w"> </span>must<span class="w"> </span>remain<span class="w"> </span>literal<span class="w"> </span>text.
+
+<span class="c1">## Compile many documents</span>
+
+<span class="sb">`</span>compile-many<span class="sb">`</span><span class="w"> </span>writes<span class="w"> </span>one<span class="w"> </span>canonical<span class="w"> </span>plan<span class="w"> </span>per<span class="w"> </span><span class="nb">source</span><span class="w"> </span>and<span class="w"> </span>commits<span class="w"> </span>each<span class="w"> </span>successful<span class="w"> </span>result<span class="w"> </span>immediately.<span class="w"> </span>By<span class="w"> </span>default<span class="w"> </span>it<span class="w"> </span>continues<span class="w"> </span>after<span class="w"> </span>ordinary<span class="w"> </span>failures,<span class="w"> </span>preserving<span class="w"> </span>earlier<span class="w"> </span>outputs<span class="p">;</span><span class="w"> </span>progress,<span class="w"> </span>actionable<span class="w"> </span>diagnostics,<span class="w"> </span>repair<span class="w"> </span>notices,<span class="w"> </span>and<span class="w"> </span>a<span class="w"> </span>final<span class="w"> </span>summary<span class="w"> </span>go<span class="w"> </span>to<span class="w"> </span>stderr.
+
+<span class="sb">```</span>bash
+utterplan<span class="w"> </span>compile-many<span class="w"> </span>chapters/*.ssmd<span class="w"> </span>--output-dir<span class="w"> </span>build/plans
 </pre></div>
 </div>
-<p>A single existing positional path is read as a file. Use
-<code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">text</span></code> when a path-like value must remain literal text.</p>
+<p>Each output name is derived from its source (<code class="docutils literal notranslate"><span class="pre">chapter.ssmd</span></code> becomes <code class="docutils literal notranslate"><span class="pre">chapter.utterplan.toml</span></code>). The command atomically refreshes <code class="docutils literal notranslate"><span class="pre">build/plans/compile-report.toml</span></code>; use <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">PATH</span></code> to choose another location, <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> to skip later inputs after a failure, and <code class="docutils literal notranslate"><span class="pre">--force</span></code> to replace existing plans. Duplicate output names and report/output collisions are rejected before writing.</p>
+<p>Safe punctuation repair is enabled by default for both <code class="docutils literal notranslate"><span class="pre">compile</span></code> and <code class="docutils literal notranslate"><span class="pre">compile-many</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--renderability</span> <span class="pre">strict</span></code> to reject repair opportunities and inspect their explanation without modifying the plan.</p>
 </section>
 <section id="inspect-and-validate">
 <h2>Inspect and validate</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>validate<span class="w"> </span>hello.utterplan.json
-utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.json<span class="w"> </span>--segment<span class="w"> </span><span class="m">0</span>
-utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.json<span class="w"> </span>--unit<span class="w"> </span><span class="m">0</span><span class="w"> </span>--boundaries<span class="w"> </span>--tokens
-</pre></div>
-</div>
-</section>
-<section id="ssmd">
-<h2>SSMD</h2>
-<p>SSMD is selected by <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> suffixes, an SSMD version header in Markdown, or explicitly from stdin:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;[Hello]{lang=&quot;en-us&quot;} ...s [Bonjour]{lang=&quot;fr&quot;}.\n&#39;</span><span class="w"> </span><span class="se">\</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>validate<span class="w"> </span>hello.utterplan.toml
+utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.toml<span class="w"> </span>--segment<span class="w"> </span><span class="m">0</span>
+utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.toml<span class="w"> </span>--unit<span class="w"> </span><span class="m">0</span><span class="w"> </span>--boundaries<span class="w"> </span>--tokens
+
+<span class="c1">## SSMD</span>
+
+SSMD<span class="w"> </span>is<span class="w"> </span>selected<span class="w"> </span>by<span class="w"> </span><span class="sb">`</span>.ssmd<span class="sb">`</span><span class="w"> </span>or<span class="w"> </span><span class="sb">`</span>.ssmd.md<span class="sb">`</span><span class="w"> </span>suffixes,<span class="w"> </span>an<span class="w"> </span>SSMD<span class="w"> </span>version<span class="w"> </span>header<span class="w"> </span><span class="k">in</span><span class="w"> </span>Markdown,<span class="w"> </span>or<span class="w"> </span>explicitly<span class="w"> </span>from<span class="w"> </span>stdin:
+
+<span class="sb">```</span>bash
+<span class="nb">printf</span><span class="w"> </span><span class="s1">&#39;[Hello]{lang=&quot;en-us&quot;} ...s [Bonjour]{lang=&quot;fr&quot;}.\n&#39;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">  </span><span class="p">|</span><span class="w"> </span>utterplan<span class="w"> </span>compile<span class="w"> </span>--lang<span class="w"> </span>en-us<span class="w"> </span>--input-format<span class="w"> </span>ssmd
 </pre></div>
 </div>
-<p>UtterPlan parses SSMD dialect 0.9 only, including canonical fragments without a version header when explicitly selected. Older SSMD source must be converted first: <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">old.ssmd</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> is for historical UtterPlan JSON schemas, not source files.</p>
+<p>UtterPlan parses SSMD dialect 0.9 only, including canonical fragments without a version header when explicitly selected. Older SSMD source must be converted first: <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">old.ssmd</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> explicitly imports historical UtterPlan JSON plans into TOML; it does not migrate source files.</p>
 <p>The compiled plan preserves SSMD header metadata, declared annotations, structural events, and effective typed directives. Audio and extension references are descriptive data only; consumers decide how to interpret them.
 Structural text preserves the parsed document representation. Spoken text is
 the prepared text and is the coordinate space used by segments, tokens,
-markers, boundaries, and renderer-facing ranges.</p>
+markers, boundaries, and renderer-facing ranges.
+Inspect safe spoken-text subdivision opportunities separately from pause and
+timing events:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>inspect<span class="w"> </span>hello.utterplan.toml<span class="w"> </span>--semantic-boundaries
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">plan.semantic_boundaries</span></code> or the public
+<code class="docutils literal notranslate"><span class="pre">semantic_boundaries_for_segment()</span></code> / <code class="docutils literal notranslate"><span class="pre">semantic_boundaries_in_range()</span></code> helpers.
+They expose clause, parenthetical, sentence, and paragraph opportunities without
+requiring SSMD, spaCy, Phrasplit, or renderer-specific packages.</p>
 </section>
 </section>
 </div>

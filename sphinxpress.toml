@@ -1,5 +1,6 @@
 [site]
 root = "."
+catalog_data = "_data/tools.yml"
 base_url = "https://buchwandler.de"
 tools_dir = "tools"
 nav_data_dir = "_data/tool_nav"

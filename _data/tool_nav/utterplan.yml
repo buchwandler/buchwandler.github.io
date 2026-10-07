@@ -4,17 +4,17 @@ nav_key: utterplan
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.3.4
-source_commit: 938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0
-source_url: https://github.com/buchwandler/utterplan/releases/tag/v0.3.4
+source_ref: v0.4.1
+source_commit: 293fe7cd55f2ff61a3ce550946aa64855e3fca71
+source_url: https://github.com/buchwandler/utterplan/releases/tag/v0.4.1
 is_default: true
 repo_url: https://github.com/buchwandler/utterplan
-release_tag: v0.3.4
-release_url: https://github.com/buchwandler/utterplan/releases/tag/v0.3.4
+release_tag: v0.4.1
+release_url: https://github.com/buchwandler/utterplan/releases/tag/v0.4.1
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.4
+  ref: v0.4.1
   url: /tools/utterplan/
   current: true
 - name: main
@@ -36,7 +36,7 @@ entries:
   title: utterplan Renderer consumer guide
   url: /tools/utterplan/consumer-guide/
 - slug: format
-  title: UtterPlan format v3
+  title: UtterPlan format v4
   url: /tools/utterplan/format/
 - slug: coordinate-spaces
   title: utterplan Coordinate spaces

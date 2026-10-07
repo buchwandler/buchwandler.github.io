@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "0ceca50a26537efbf7a00e376638dddc36d497f3"
+docs_commit: "260803aa205479dfd9ab134e49f14f15835769b6"
 search_enabled: true
 ---
 
@@ -547,7 +547,7 @@ html[data-theme="dark"] .sphinxpress-doc {
       |
       | semantic policy and linguistic enrichment
       v
-UtterancePlan schema v3
+UtterancePlan schema v4
       |\
       | \
       |  +--&gt; resolved pauses, segment order, presentation directives
@@ -584,7 +584,9 @@ UtterancePlan schema v3
   .readio/                       # disposable Readio state
     project.json
     document/index.json          # chapter selection and local index
-    plan/                        # Utterplan artifacts
+    plan/                        # active plan and durable planning attempts
+      index.json                 # active, synthesis-eligible scopes
+      attempts/                  # isolated candidates and diagnostics
     synthesis/                   # cache and trace
     composition/                 # timeline and master
     output/
@@ -598,6 +600,7 @@ UtterancePlan schema v3
 resolved pauses and directives because those facts describe the semantic plan.
 Readio does not use a unit hash as its acoustic cache atom. Unit selectors are
 expanded to ordered, unique <code class="docutils literal notranslate"><span class="pre">PlanSegment</span></code> IDs before synthesis.</p>
+<p>Planning is transactional across scopes. Each build writes a durable attempt under <code class="docutils literal notranslate"><span class="pre">plan/attempts/</span></code>; completed candidates and renderability diagnostics remain inspectable even when another scope blocks the build. Only a fully renderable attempt atomically replaces the active plan index and canonical artifacts. Synthesis reads only that active index, never an attempt candidate. Repair retries compile current project documents, may reuse fingerprint-matching renderable scopes, and never rewrite source files. Safe repair is the default; strict mode remains available for auditing.</p>
 <p>Each canonical artifact is identified by <code class="docutils literal notranslate"><span class="pre">readio.canonical-speech.v1</span></code> segment
 input facts and a <code class="docutils literal notranslate"><span class="pre">readio.synthesis-segment.v2</span></code> key. The speech fingerprint
 includes segment text and language, synthesis directives, pronunciation data,
@@ -619,6 +622,12 @@ pauses, prosody, emphasis, fades, final loudness, and codec settings.</p>
 sample rate, channel count, and frame count. A plan re-run can therefore reuse
 speech artifacts even when its plan ID or trace changes. Missing or corrupt
 sidecars cause only the affected segment to render again.</p>
+</section>
+<section id="utterplan-persistence-and-semantic-capacity">
+<h2>UtterPlan persistence and semantic capacity</h2>
+<p>Readio targets UtterPlan 0.4 schema v4. Current project plans are stored as canonical <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> artifacts and loaded through <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>. An indexed legacy <code class="docutils literal notranslate"><span class="pre">.utterplan.json</span></code> artifact is stale and actionable; Readio re-plans from its source instead of silently migrating that file.</p>
+<p>During lowering, Readio rebases the public clause and parenthetical semantic boundaries once into request-local hints and retains linguistic token ranges independently of engine token support. These hints stay in <code class="docutils literal notranslate"><span class="pre">CapacityContext</span></code>; <code class="docutils literal notranslate"><span class="pre">SpeechRequest</span></code> and engine APIs remain UtterPlan-neutral.</p>
+<p>For planned content, capacity fitting prefers clause boundaries, then parenthetical boundaries, newlines, conservative clause punctuation, linguistic-token edges, and whitespace. It does not rediscover sentence boundaries from periods or split arbitrary codepoints. Live/raw text keeps a distinct unplanned compatibility policy. Engine-reported measurements remain authoritative (including PocketSynth’s model-token limit); Readio preserves exact text, never packs adjacent semantic sentences, and rebases child word timings to the original request. Atomic-lowering and capacity-fitting v2 manifests record split reason and boundary provenance.</p>
 </section>
 <section id="engine-boundary">
 <h2>Engine boundary</h2>

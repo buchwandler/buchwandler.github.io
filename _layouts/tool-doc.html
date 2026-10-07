@@ -8,6 +8,8 @@ page.nav_tool | append: ' ' %} {% if nav.versions and nav.versions.size > 0 %}
 endif %} {% if has_versions %} {% assign current_version_label = nil %} {% for v
 in nav.versions %} {% if v.current %} {% assign current_version_label = v.label
 %} {% endif %} {% endfor %} {% endif %}
+{% assign current_tool_name = page.nav_tool | split: "-main" | first %}
+{% assign current_tool = site.data.tools | where: "name", current_tool_name | first %}
 <div class="tool-layout">
   <aside
     class="tool-nav"
@@ -103,5 +105,59 @@ in nav.versions %} {% if v.current %} {% assign current_version_label = v.label
     </nav>
     {% endif %}
   </aside>
-  <article class="tool-content">{{ content }}</article>
+  <article class="tool-content">
+    {% if current_tool %}
+    <aside class="tool-context" aria-labelledby="tool-context-title">
+      <div class="tool-context-header">
+        <p class="eyebrow">In the buchwandler ecosystem</p>
+        <h2 id="tool-context-title">Where this tool fits</h2>
+        <p class="tool-context-role">{{ current_tool.role | replace: '-', ' ' | capitalize }} · {{ current_tool.category | replace: '-', ' ' | capitalize }} · {{ current_tool.level | replace: '-', ' ' | capitalize }}</p>
+      </div>
+      {% if current_tool.workflows and current_tool.workflows.size > 0 %}
+      <div class="tool-context-row">
+        <h3>Part of</h3>
+        <ul class="tool-context-links">
+          {% for workflow in current_tool.workflows %}
+          <li><span>{{ workflow | replace: '-', ' ' | capitalize }}</span></li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if current_tool.depends_on and current_tool.depends_on.size > 0 %}
+      <div class="tool-context-row">
+        <h3>Uses</h3>
+        <ul class="tool-context-links">
+          {% for dependency_name in current_tool.depends_on %}
+          {% assign dependency_tool = site.data.tools | where: "name", dependency_name | first %}
+          {% if dependency_tool %}<li><a href="{{ dependency_tool.docs_url | relative_url }}">{{ dependency_tool.name }}</a></li>{% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if current_tool.used_by and current_tool.used_by.size > 0 %}
+      <div class="tool-context-row">
+        <h3>Used by</h3>
+        <ul class="tool-context-links">
+          {% for consumer_name in current_tool.used_by %}
+          {% assign consumer_tool = site.data.tools | where: "name", consumer_name | first %}
+          {% if consumer_tool %}<li><a href="{{ consumer_tool.docs_url | relative_url }}">{{ consumer_tool.name }}</a></li>{% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+      {% if current_tool.related and current_tool.related.size > 0 %}
+      <div class="tool-context-row">
+        <h3>Related tools</h3>
+        <ul class="tool-context-links">
+          {% for related_name in current_tool.related %}
+          {% assign related_tool = site.data.tools | where: "name", related_name | first %}
+          {% if related_tool %}<li><a href="{{ related_tool.docs_url | relative_url }}">{{ related_tool.name }}</a></li>{% endif %}
+          {% endfor %}
+        </ul>
+      </div>
+      {% endif %}
+    </aside>
+    {% endif %}
+    {{ content }}
+  </article>
 </div>

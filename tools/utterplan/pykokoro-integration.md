@@ -5,8 +5,8 @@ permalink: /tools/utterplan/pykokoro-integration/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0"
+docs_ref: "v0.4.1"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 

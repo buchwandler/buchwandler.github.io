@@ -25,6 +25,8 @@ exclude:
   - Justfile
   - README.md
   - jekyll_starter.md
+  - plan.md
+  - 01_todo.md
   - scripts/vendor
 
 collections:

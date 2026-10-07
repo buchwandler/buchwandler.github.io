@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "0ceca50a26537efbf7a00e376638dddc36d497f3"
+docs_commit: "260803aa205479dfd9ab134e49f14f15835769b6"
 search_enabled: true
 ---
 
@@ -679,7 +679,7 @@ readio audiobook init SOURCE [--chapters SPEC] [-o PROJECT] [--json]
 </section>
 <section id="synthesis-progress-and-json">
 <h2>Synthesis progress and JSON</h2>
-<p>Project <code class="docutils literal notranslate"><span class="pre">synth</span></code> and <code class="docutils literal notranslate"><span class="pre">preview</span></code> accept the shared <code class="docutils literal notranslate"><span class="pre">--progress</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> option. Interactive progress is written to stderr and includes the resolved profile, cache counts, model-loading phase, and unit/segment preview. <code class="docutils literal notranslate"><span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> select the existing INFO and DEBUG logging levels; use them for bounded stage, runtime, timing, and cache diagnostics.</p>
+<p>Project <code class="docutils literal notranslate"><span class="pre">synth</span></code> and <code class="docutils literal notranslate"><span class="pre">preview</span></code> accept the shared <code class="docutils literal notranslate"><span class="pre">--progress</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code> option. Interactive progress is written to stderr and includes the resolved profile, cache counts, model-loading phase, and segment IDs with complete renderer text; audiobook synthesis also prints scope-transition headings. <code class="docutils literal notranslate"><span class="pre">-v</span></code> and <code class="docutils literal notranslate"><span class="pre">-vv</span></code> select the existing INFO and DEBUG logging levels; use them for bounded stage, runtime, timing, and cache diagnostics.</p>
 <p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">synth</span> <span class="pre">--json</span></code> emits one final JSON object on stdout. It includes the project, scope, plan ID, profile identity and engine/model/voice/language, selector/count, and cache reuse/render counts. Progress and logs remain on stderr, and automatic progress is disabled for JSON unless explicitly forced.</p>
 </section>
 <section id="mastering-profiles">
@@ -693,7 +693,7 @@ readio audiobook init SOURCE [--chapters SPEC] [-o PROJECT] [--json]
 <p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">compose</span> <span class="pre">PROJECT</span></code> shares the progress policy with synthesis, preview, render, and project rendering. Progress is enabled automatically on an interactive terminal, can be forced with <code class="docutils literal notranslate"><span class="pre">--progress</span></code>, and can be disabled with <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code>. All progress is written to stderr.</p>
 <p>Composition events identify the current speech segment and operation, show completed and total segments, and show an approximate ETA only after enough segment processing has completed. The ETA covers segment processing and does not predict assembly, complete-output loudness or true-peak processing, or artifact writing. Those stages are rendered separately so all segments reaching 100 percent does not imply that the master is complete.</p>
 <p>With <code class="docutils literal notranslate"><span class="pre">--json</span></code>, stdout remains one JSON document. Explicit progress remains on stderr, and progress callbacks are runtime observations only. They do not enter composition IDs, AudioJob serialization, timelines, or composition state identities.</p>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code> is a project command family: <code class="docutils literal notranslate"><span class="pre">build</span></code> creates semantic Utterplan artifacts, <code class="docutils literal notranslate"><span class="pre">roles</span></code> inspects SSMD roles, and <code class="docutils literal notranslate"><span class="pre">bind</span></code> / <code class="docutils literal notranslate"><span class="pre">unbind</span></code> manage project-local acoustic settings. It never selects an engine or loads TTS. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span> <span class="pre">--dry-run</span></code> to inspect the complete execution plan for one-shot input.</p>
+<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span></code> is a project command family: <code class="docutils literal notranslate"><span class="pre">build</span></code> creates semantic Utterplan artifacts (safe repair by default), <code class="docutils literal notranslate"><span class="pre">inspect</span></code> reviews active plans and persisted attempts, <code class="docutils literal notranslate"><span class="pre">repair</span></code> retries an attempt without editing source, <code class="docutils literal notranslate"><span class="pre">roles</span></code> inspects SSMD roles, and <code class="docutils literal notranslate"><span class="pre">bind</span></code> / <code class="docutils literal notranslate"><span class="pre">unbind</span></code> manage project-local acoustic settings. It never selects an engine or loads TTS. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">render</span> <span class="pre">--dry-run</span></code> to inspect the complete execution plan for one-shot input.</p>
 </section>
 <section id="planning-progress">
 <h2>Planning progress</h2>
@@ -704,6 +704,26 @@ readio<span class="w"> </span>plan<span class="w"> </span>build<span class="w"> 
 readio<span class="w"> </span>plan<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--json<span class="w"> </span>--progress
 </pre></div>
 </div>
+</section>
+<section id="planning-attempts-inspection-and-repair">
+<h2>Planning attempts, inspection, and repair</h2>
+<p>Planning writes each run to a durable per-scope attempt before activation. A blocked or interrupted attempt remains available for review, but its candidates never replace active plan artifacts and are never eligible for synthesis. Activation is transactional: only a complete, renderable attempt updates the active plan index. Safe renderability repair is the default; use <code class="docutils literal notranslate"><span class="pre">--renderability</span> <span class="pre">strict</span></code> when auditing the unmodified planner output.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Strict audit; any unrenderable segments are persisted for inspection.</span>
+readio<span class="w"> </span>plan<span class="w"> </span>build<span class="w"> </span>.<span class="w"> </span>--renderability<span class="w"> </span>strict
+
+<span class="c1"># Inspect the latest attempt, its issues, and suggested safe repairs.</span>
+readio<span class="w"> </span>plan<span class="w"> </span>inspect<span class="w"> </span>.<span class="w"> </span>--attempt<span class="w"> </span>latest<span class="w"> </span>--issues<span class="w"> </span>--repairs<span class="w"> </span>--json
+
+<span class="c1"># Inspect the active plan instead of the latest attempt.</span>
+readio<span class="w"> </span>plan<span class="w"> </span>inspect<span class="w"> </span>.<span class="w"> </span>--attempt<span class="w"> </span>active
+
+<span class="c1"># Preview, then retry a blocked/incomplete attempt without editing source files.</span>
+readio<span class="w"> </span>plan<span class="w"> </span>repair<span class="w"> </span>.<span class="w"> </span>--attempt<span class="w"> </span>ATTEMPT_ID<span class="w"> </span>--dry-run
+readio<span class="w"> </span>plan<span class="w"> </span>repair<span class="w"> </span>.<span class="w"> </span>--attempt<span class="w"> </span>ATTEMPT_ID
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">inspect</span></code> accepts <code class="docutils literal notranslate"><span class="pre">--scope</span></code>, <code class="docutils literal notranslate"><span class="pre">--unit</span></code>, <code class="docutils literal notranslate"><span class="pre">--segment</span></code>, and <code class="docutils literal notranslate"><span class="pre">--source-context</span></code> for focused semantic and source review. <code class="docutils literal notranslate"><span class="pre">--attempt</span></code> may be <code class="docutils literal notranslate"><span class="pre">latest</span></code>, <code class="docutils literal notranslate"><span class="pre">active</span></code>, or a concrete attempt ID. <code class="docutils literal notranslate"><span class="pre">repair</span></code> defaults to the latest attempt, supports dry-run, and compiles current project documents; it does not rewrite SSMD or other source files. Matching renderable scopes may be reused across retries. A failed repair leaves the prior active plan untouched.</p>
+<p>Attempts and candidates are stored under <code class="docutils literal notranslate"><span class="pre">plan/attempts/</span></code> within the project state root (<code class="docutils literal notranslate"><span class="pre">.readio/</span></code> for attached audiobooks). <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">status</span> <span class="pre">--json</span></code> reports a separate <code class="docutils literal notranslate"><span class="pre">planning_attempt</span></code> object and includes blocked/incomplete attempts in <code class="docutils literal notranslate"><span class="pre">issues</span></code> and the next action; this does not change the active plan’s stage state. The public Python API exposes the same operations as <code class="docutils literal notranslate"><span class="pre">app.projects.inspect_plan(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">app.projects.repair_plan(...)</span></code>.</p>
 </section>
 </section>
 </div>

@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "a19ceb434bd7277c6c78a91ad8e96ca840367600"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -573,16 +573,16 @@ is not renderer input, is not stored in the plan, and does not affect plan ident
 Legacy <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.plan</span></code> remains a compatibility API returning only the
 plan.</p>
 <p>The public <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> Python object is immutable in-process renderer input;
-the <code class="docutils literal notranslate"><span class="pre">.utterplan.json</span></code> schema is the portable persistence and semantic interchange
-contract. UtterPlan ends before G2P. Engine/model selection, synthesis, and audio
-composition happen downstream.</p>
+the <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> document is the portable persistence and semantic interchange
+format; it encodes semantic schema v4. UtterPlan ends before G2P. Engine/model
+selection, synthesis, and audio composition happen downstream.</p>
 <section id="ssmd-source-contract">
 <h2>SSMD source contract</h2>
 <p>The document parser calls SSMD with <code class="docutils literal notranslate"><span class="pre">dialect=&quot;0.9&quot;</span></code> for every SSMD source path,
 including unversioned fragments selected with <code class="docutils literal notranslate"><span class="pre">document_format=&quot;ssmd&quot;</span></code>. UtterPlan
 does not parse SSMD 0.8 or migrate source. Older documents must first be converted
-with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. The <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> command is reserved for
-serialized UtterPlan schema migrations.</p>
+with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. The <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> command explicitly
+imports legacy JSON plans and applies serialized schema migrations.</p>
 <p>SSMD header language is authoritative over a fallback language. The CLI can omit
 <code class="docutils literal notranslate"><span class="pre">--language</span></code> when the header declares a language; plain input always needs an
 explicit fallback. A fallback never forces or rewrites document semantics.</p>
@@ -599,7 +599,7 @@ these ranges when consuming <code class="docutils literal notranslate"><span cla
 text. Preparation-trace source offsets address SSMD-clean structural text, while
 its transformation output offsets address prepared spoken text.</p>
 <p>Linguistic analysis and provider documents are request-local. Returned plans
-contain JSON-compatible semantic results only: no live parser objects, spaCy
+contain plain, round-trippable semantic data only: no live parser objects, spaCy
 documents, models, sessions, provider caches, phonemes, engine token IDs, or audio.
 A reusable planner may share sequential resource caches, but concurrent use is not
 promised.</p>
@@ -608,41 +608,32 @@ Pass-A documents and tokens remain request-local because written-to-spoken
 preparation can invalidate their offsets.</p>
 <p>Pause events retain provenance and resolved event IDs. Pause defaults are
 normalized to finite seconds with explicit precedence, and segments expose
-resolved pauses directly. Logical voices are intent references; document
-<code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> metadata remains separate and no concrete engine voice is
-selected.</p>
-<p>Plan identity is deterministic and renderer-independent. It covers semantic
-source/configuration/metadata; it does not include renderer-only model, sample
+resolved pauses directly. Semantic boundaries are a separate immutable
+collection of stable spoken-text split opportunities; they have no duration,
+activation state, or renderer choice. Logical voices are intent references;
+document <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> metadata remains separate and no concrete engine
+voice is selected.</p>
+<p>Plan identity is deterministic and renderer-independent. It covers semantic source/configuration/metadata; it does not include renderer-only model, sample
 rate, or output-file settings. Unit hashes include ordered segment semantics,
 resolved pauses, marker content, and semantic token facts referenced by each
-segment. Diagnostics and producer metadata do not define unit identity. Package
-version is derived by setuptools-scm and is independent of the explicit UtterPlan
-<code class="docutils literal notranslate"><span class="pre">schema_version</span></code>.</p>
+segment. Semantic-boundary positions relative to each unit are part of the
+<code class="docutils literal notranslate"><span class="pre">utterplan-unit-v3</span></code> hash; diagnostics and producer metadata do not define unit
+identity. Package version is derived by setuptools-scm and is independent of
+the explicit UtterPlan <code class="docutils literal notranslate"><span class="pre">schema_version</span></code>.</p>
+<p>Current plans persist as deterministic <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> files; schema v4 remains the semantic contract, and <code class="docutils literal notranslate"><span class="pre">plan_id</span></code> is derived from canonical semantic data rather than TOML bytes. <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code> accepts TOML only. Legacy JSON plan import is an explicit migration command, never a normal load fallback.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compile-many</span></code> orchestrates independent source documents in order. Each successful plan is validated and atomically saved before the next source is processed; ordinary failures are reported and later inputs continue unless fail-fast is requested. Its atomically refreshed TOML report is operational data, not an <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code>.</p>
 </section>
 <section id="persistence-compatibility-boundary">
 <h2>Persistence compatibility boundary</h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>                         .utterplan.json
-                                |
-                                v
-                       inspect schema version
-                                |
-                    +-----------+-----------+
-                    |                       |
-                 current                    old
-                    |                       |
-                    |                 migration chain
-                    |                       |
-                    +-----------+-----------+
-                                |
-                                v
-                      current UtterancePlan
-                                |
-                                v
-                            renderer
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>current plan file:
+.utterplan.toml -- TOML decode / schema-v4 validation --&gt; UtterancePlan --&gt; renderer
+
+legacy saved plan:
+.utterplan.json -- explicit `utterplan migrate` --&gt; current .utterplan.toml
 </pre></div>
 </div>
 <p>Migration is not planning. UtterPlan owns persistence, schema validation, and migration. Renderers consume only the current in-memory <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> and do not implement historical schema branches.</p>
-<p>Schema v3 is current. Released schema v1 and v2 remain frozen; v1 migration proceeds sequentially through v2 to v3, while v2 plans migrate directly to v3. These migrations transform serialized data only and never reparse or replan source.</p>
+<p>Schema v4 is current. Released schemas v1, v2, and v3 remain frozen; supported plans migrate through the registered sequential chain to v4. The v3-to-v4 step transforms serialized data only and does not rerun parsing, NLP, planning, G2P, rendering, or audio processing. Consumers receive only the current in-memory model.</p>
 </section>
 </section>
 </div>

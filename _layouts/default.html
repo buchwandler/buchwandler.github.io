@@ -28,22 +28,26 @@
     <header class="site-header">
       <a class="brand" href="{{ '/' | relative_url }}">buchwandler</a>
       <nav class="site-nav" aria-label="Main navigation">
-        <a class="nav-home" href="{{ '/' | relative_url }}">Home</a>
+        {% assign tool_groups = site.data.tools | group_by: "category" %}
+        <a class="nav-home" href="{{ '/#workflows' | relative_url }}">Workflows</a>
         <details class="nav-dropdown">
           <summary>Tools</summary>
-          <div class="nav-dropdown-menu">
-            <a class="nav-dropdown-all" href="{{ '/tools/' | relative_url }}">All documentation <span aria-hidden="true">↗</span></a>
-            {% for tool in site.data.tools %}
-            {% if tool.docs_url %}
-            <a href="{{ tool.docs_url | relative_url }}">{{ tool.name }} <span class="nav-item-type">Docs</span></a>
-            {% else %}
-            <a href="{{ tool.repo_url }}" rel="external noopener">{{ tool.name }} <span class="nav-item-type">GitHub</span></a>
-            {% endif %}
+          <div class="nav-dropdown-menu" aria-label="Tools by category">
+            <a class="nav-dropdown-all" href="{{ '/tools/' | relative_url }}">All tools <span aria-hidden="true">↗</span></a>
+            {% for group in tool_groups %}
+            <section class="nav-category">
+              <h2>{{ group.name | replace: '-', ' ' | capitalize }}</h2>
+              <ul>
+                {% for tool in group.items %}
+                <li><a href="{{ tool.docs_url | relative_url }}">{{ tool.name }}</a></li>
+                {% endfor %}
+              </ul>
+            </section>
             {% endfor %}
           </div>
         </details>
-        <a href="{{ '/impressum/' | relative_url }}">Impressum</a>
-        <a href="{{ '/datenschutz/' | relative_url }}">Datenschutz</a>
+        <a href="{{ '/tools/' | relative_url }}">Docs</a>
+        <a href="https://github.com/buchwandler" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
         <button type="button" class="theme-toggle" aria-pressed="false" aria-label="Switch to dark mode" title="Switch to dark mode">
           <svg class="theme-icon-moon" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
           <svg class="theme-icon-sun" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" hidden><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
@@ -54,7 +58,26 @@
       {{ content }}
     </main>
     <footer class="site-footer">
-      <p>Book processing tools for ebook workflows. <a href="{{ '/tools/' | relative_url }}">Browse all tools</a> or <a href="https://github.com/buchwandler" rel="external noopener">follow buchwandler on GitHub</a>.</p>
+      <div class="footer-grid">
+      <div class="footer-brand">
+        <p class="footer-title">buchwandler</p>
+        <p>Open-source tools for turning books and text into structured content, translations, speech, and audio.</p>
+      </div>
+      <nav class="footer-group" aria-labelledby="footer-projects-title">
+        <h2 id="footer-projects-title">Projects</h2>
+        <ul>
+          <li><a href="{{ '/tools/' | relative_url }}">Tools and documentation</a></li>
+          <li><a href="https://github.com/buchwandler" rel="external noopener">GitHub</a></li>
+        </ul>
+      </nav>
+      <nav class="footer-group" aria-labelledby="footer-legal-title">
+        <h2 id="footer-legal-title">Legal</h2>
+        <ul>
+          <li><a href="{{ '/impressum/' | relative_url }}">Impressum</a></li>
+          <li><a href="{{ '/datenschutz/' | relative_url }}">Datenschutz</a></li>
+        </ul>
+      </nav>
+    </div>
     </footer>
   </body>
 </html>

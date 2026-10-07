@@ -5,8 +5,8 @@ permalink: /tools/utterplan/python-api/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.3.4"
-docs_commit: "938cb2c4ab8f6e9a1c4e87b9c4ebc043f78100b0"
+docs_ref: "v0.4.1"
+docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
 search_enabled: true
 ---
 
@@ -548,7 +548,7 @@ Its <code class="docutils literal notranslate"><span class="pre">plan</span></co
 its <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> explain compilation, and an optional <code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code> is
 separate diagnostic output. <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.plan</span></code> remains supported for
 compatibility and returns only the plan.</p>
-<p>The Python defaults are deliberately spaCy-free: <code class="docutils literal notranslate"><span class="pre">PlannerConfig</span></code> uses <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> text preparation, and <code class="docutils literal notranslate"><span class="pre">PauseConfig().mode</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;tts&quot;</span></code>. The CLI additionally defaults to the <code class="docutils literal notranslate"><span class="pre">spacy</span> <span class="pre">off</span></code> linguistic-resource policy, which uses deterministic fallback tokenization and analysis without requiring an installed spaCy model.</p>
+<p>The Python defaults are deliberately spaCy-free and repair-first: <code class="docutils literal notranslate"><span class="pre">PlannerConfig</span></code> uses <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> text preparation and <code class="docutils literal notranslate"><span class="pre">renderability_mode=&quot;repair&quot;</span></code>, while <code class="docutils literal notranslate"><span class="pre">PauseConfig().mode</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;tts&quot;</span></code>. The CLI additionally defaults to the <code class="docutils literal notranslate"><span class="pre">spacy</span> <span class="pre">off</span></code> linguistic-resource policy, which uses deterministic fallback tokenization and analysis without requiring an installed spaCy model.</p>
 <p>For an explicit contextual-G2P configuration, use <code class="docutils literal notranslate"><span class="pre">LinguisticsConfig(use_spacy=True,</span> <span class="pre">spacy_model=&quot;en_core_web_sm&quot;,</span> <span class="pre">require_spacy=True)</span></code>. The resulting plan records final pass-B token provenance in <code class="docutils literal notranslate"><span class="pre">linguistic_runs</span></code>; no provider document is retained.
 spaCy enrichment is opt-in through the CLI’s <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">auto</span></code> policy or an explicit <code class="docutils literal notranslate"><span class="pre">LinguisticsConfig</span></code> with a compatible local model. It may provide richer tokenization, POS tags, lemmas, and tags, but UtterPlan never downloads a model implicitly.</p>
 <section id="canonical-single-document-compiler">
@@ -578,6 +578,89 @@ the plan, is not renderer input, and does not change <code class="docutils liter
 ranges index SSMD-clean structural text; transformation output ranges index prepared
 spoken text, using Python string character offsets.</p>
 </section>
+<section id="persistable-planning-attempts">
+<h2>Persistable planning attempts</h2>
+<p><code class="docutils literal notranslate"><span class="pre">compile_attempt</span></code> and <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.compile_attempt</span></code> expose a finalized planning
+outcome without raising solely because a segment is not renderable. They still raise
+for input, configuration, and planning failures. The existing <code class="docutils literal notranslate"><span class="pre">compile_document</span></code>,
+<code class="docutils literal notranslate"><span class="pre">UtterancePlanner.compile</span></code>, and <code class="docutils literal notranslate"><span class="pre">plan</span></code> APIs remain strict and continue raising
+<code class="docutils literal notranslate"><span class="pre">PlanRenderabilityError</span></code> when renderability blocks completion.</p>
+<p>Attempts are separate from canonical plans. A blocked attempt retains an inspect-only
+candidate draft; it is not a valid <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> and cannot be loaded by
+<code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>. Persist it with <code class="docutils literal notranslate"><span class="pre">PlanningAttempt.save()</span></code> and restore it with
+<code class="docutils literal notranslate"><span class="pre">PlanningAttempt.load()</span></code>; the attempt TOML schema is
+<code class="docutils literal notranslate"><span class="pre">utterplan.planning-attempt.v1</span></code>, independent of canonical plan schema v4.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">utterplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlannerConfig</span><span class="p">,</span> <span class="n">compile_attempt</span>
+
+<span class="n">attempt</span> <span class="o">=</span> <span class="n">compile_attempt</span><span class="p">(</span>
+    <span class="s2">&quot;Hello.</span><span class="se">\n\n</span><span class="s2">.</span><span class="se">\n\n</span><span class="s2">World.&quot;</span><span class="p">,</span>
+    <span class="n">input_format</span><span class="o">=</span><span class="s2">&quot;plain&quot;</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">PlannerConfig</span><span class="p">(</span>
+        <span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">,</span>
+        <span class="n">renderability_mode</span><span class="o">=</span><span class="s2">&quot;strict&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="k">assert</span> <span class="n">attempt</span><span class="o">.</span><span class="n">status</span> <span class="o">==</span> <span class="s2">&quot;blocked&quot;</span>
+<span class="n">attempt</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;chapter.attempt.toml&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">issue</span> <span class="ow">in</span> <span class="n">attempt</span><span class="o">.</span><span class="n">renderability</span><span class="o">.</span><span class="n">issues</span><span class="p">:</span>
+    <span class="n">assessment</span> <span class="o">=</span> <span class="n">issue</span><span class="o">.</span><span class="n">repair_assessment</span>
+    <span class="k">if</span> <span class="n">assessment</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">issue</span><span class="o">.</span><span class="n">segment_id</span><span class="p">,</span> <span class="n">assessment</span><span class="o">.</span><span class="n">safe</span><span class="p">,</span> <span class="n">assessment</span><span class="o">.</span><span class="n">action</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">assessment</span><span class="o">.</span><span class="n">blockers</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Repair assessments report the existing conservative options; they do not rewrite
+text speculatively. In repair mode, only the planner’s established safe repairs are
+applied. <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">inspect-attempt</span> <span class="pre">chapter.attempt.toml</span> <span class="pre">--issues</span></code> shows issues,
+source locations, and repair assessments; <code class="docutils literal notranslate"><span class="pre">--segment</span></code> and <code class="docutils literal notranslate"><span class="pre">--unit</span></code> select candidate
+topology, and <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits the complete attempt as JSON for inspection.</p>
+</section>
+<section id="toml-persistence">
+<h2>TOML persistence</h2>
+<p>Schema v4 remains the semantic contract, while <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> is the canonical persisted format. <code class="docutils literal notranslate"><span class="pre">to_toml()</span></code> and <code class="docutils literal notranslate"><span class="pre">from_toml()</span></code> round-trip the complete plan; <code class="docutils literal notranslate"><span class="pre">save()</span></code> writes atomically, and <code class="docutils literal notranslate"><span class="pre">load()</span></code> accepts TOML only. Normal loading does not auto-detect or fall back to JSON.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">utterplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">UtterancePlan</span>
+
+<span class="n">toml_text</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">to_toml</span><span class="p">()</span>
+<span class="n">restored</span> <span class="o">=</span> <span class="n">UtterancePlan</span><span class="o">.</span><span class="n">from_toml</span><span class="p">(</span><span class="n">toml_text</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">restored</span> <span class="o">==</span> <span class="n">plan</span>
+<span class="n">plan</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="s2">&quot;chapter.utterplan.toml&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">UtterancePlan</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;chapter.utterplan.toml&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="n">plan</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">to_dict()</span></code> and <code class="docutils literal notranslate"><span class="pre">from_dict()</span></code> remain semantic mapping APIs. For a legacy JSON file, use the explicit <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span> <span class="pre">old.utterplan.json</span> <span class="pre">-o</span> <span class="pre">current.utterplan.toml</span></code> command; SSMD source migration is a separate operation.</p>
+</section>
+<section id="incremental-batch-compilation">
+<h2>Incremental batch compilation</h2>
+<p>The public batch API compiles independent requests one at a time, atomically commits each successful plan, and yields an outcome without retaining the plan object. Ordinary per-document read, planning, validation, serialization, and write failures become failed outcomes and processing continues by default. Set <code class="docutils literal notranslate"><span class="pre">fail_fast=True</span></code> to skip later requests after the first failure. Existing files are protected unless <code class="docutils literal notranslate"><span class="pre">force=True</span></code> is explicit. An optional TOML operational report is refreshed after each outcome.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">utterplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">CompileRequest</span><span class="p">,</span> <span class="n">PlannerConfig</span><span class="p">,</span> <span class="n">compile_to_files</span>
+
+<span class="n">requests</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">CompileRequest</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;chapter-1&quot;</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;chapters/one.ssmd&quot;</span><span class="p">),</span>
+        <span class="n">output</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;plans/one.utterplan.toml&quot;</span><span class="p">),</span>
+        <span class="n">input_format</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+    <span class="n">CompileRequest</span><span class="p">(</span>
+        <span class="nb">id</span><span class="o">=</span><span class="s2">&quot;chapter-2&quot;</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;chapters/two.ssmd&quot;</span><span class="p">),</span>
+        <span class="n">output</span><span class="o">=</span><span class="n">Path</span><span class="p">(</span><span class="s2">&quot;plans/two.utterplan.toml&quot;</span><span class="p">),</span>
+        <span class="n">input_format</span><span class="o">=</span><span class="s2">&quot;auto&quot;</span><span class="p">,</span>
+    <span class="p">),</span>
+<span class="p">]</span>
+<span class="k">for</span> <span class="n">outcome</span> <span class="ow">in</span> <span class="n">compile_to_files</span><span class="p">(</span>
+    <span class="n">requests</span><span class="p">,</span>
+    <span class="n">config</span><span class="o">=</span><span class="n">PlannerConfig</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-us&quot;</span><span class="p">),</span>
+    <span class="n">report_path</span><span class="o">=</span><span class="s2">&quot;plans/compile-report.toml&quot;</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">outcome</span><span class="o">.</span><span class="n">status</span><span class="p">,</span> <span class="n">outcome</span><span class="o">.</span><span class="n">source_label</span><span class="p">,</span> <span class="n">outcome</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The report is operational data, not a semantic plan, and must not be passed to <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>. Unexpected programming and progress-callback errors propagate rather than being converted to document failures.</p>
+</section>
 <section id="planner-progress-callbacks">
 <h2>Planner progress callbacks</h2>
 <p><code class="docutils literal notranslate"><span class="pre">UtterancePlanner.plan</span></code>, <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.compile</span></code>, and <code class="docutils literal notranslate"><span class="pre">compile_document</span></code> accept an optional keyword-only <code class="docutils literal notranslate"><span class="pre">on_progress</span></code> callback. It receives typed <code class="docutils literal notranslate"><span class="pre">PlannerProgressEvent</span></code> objects synchronously in the planner thread. Progress is operational only: it is not added to <code class="docutils literal notranslate"><span class="pre">PlannerConfig</span></code> or the plan, and enabling a callback does not change plan identity or serialization.</p>
@@ -604,7 +687,7 @@ spoken text, using Python string character offsets.</p>
 </section>
 <section id="ssmd-input-and-semantic-plan">
 <h2>SSMD input and semantic plan</h2>
-<p>The SSMD parser accepts dialect 0.9 only. Select SSMD explicitly for unversioned canonical fragments with <code class="docutils literal notranslate"><span class="pre">PlannerConfig(document_format=&quot;ssmd&quot;)</span></code>. Older SSMD source must be migrated with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>; <code class="docutils literal notranslate"><span class="pre">migrate_plan_data</span></code> and <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> apply to serialized UtterPlan JSON, not source documents.</p>
+<p>The SSMD parser accepts dialect 0.9 only. Select SSMD explicitly for unversioned canonical fragments with <code class="docutils literal notranslate"><span class="pre">PlannerConfig(document_format=&quot;ssmd&quot;)</span></code>. Older SSMD source must be migrated with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>; <code class="docutils literal notranslate"><span class="pre">migrate_plan_data</span></code> operates on serialized plan mappings, while <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> explicitly imports legacy JSON plan files into canonical TOML, not source documents.</p>
 <p><code class="docutils literal notranslate"><span class="pre">PlannerConfig.document_format</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">&quot;plain&quot;</span></code>, so SSMD syntax is never inferred for an ordinary Python string. Set <code class="docutils literal notranslate"><span class="pre">document_format=&quot;ssmd&quot;</span></code> for SSMD documents or fragments.</p>
 <p><code class="docutils literal notranslate"><span class="pre">SSMDConfig.parse_yaml_header</span></code> controls front-matter parsing. The ineffective <code class="docutils literal notranslate"><span class="pre">strict_header</span></code> and <code class="docutils literal notranslate"><span class="pre">unknown_header</span></code> options were removed because SSMD 0.9 owns header validation. Application pause settings use <code class="docutils literal notranslate"><span class="pre">SSMDConfig.pause_overrides</span></code>; this is distinct from the portable source-header key <code class="docutils literal notranslate"><span class="pre">pause_defaults</span></code>. At a shared boundary, an explicit SSMD break takes precedence, followed by the application override, document defaults, and planner defaults.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">utterplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">PlannerConfig</span><span class="p">,</span> <span class="n">UtterancePlanner</span>
@@ -630,6 +713,24 @@ spoken text, using Python string character offsets.</p>
 </pre></div>
 </div>
 <p>SSMD annotations preserve declared source spans. Segment directives hold effective typed semantics after scope and voice-default resolution. <code class="docutils literal notranslate"><span class="pre">document_metadata</span></code> preserves portable header data and the SSMD version; <code class="docutils literal notranslate"><span class="pre">plan.boundaries</span></code> preserves heading events. Audio references and extension names are not executed by UtterPlan. See the <a class="reference internal" href="../coordinate-spaces/"><span class="doc std std-doc">coordinate-space contract</span></a> for source offset units and the <a class="reference internal" href="../consumer-guide/"><span class="doc std std-doc">consumer guide</span></a> for renderer responsibilities.</p>
+</section>
+<section id="semantic-boundaries">
+<h2>Semantic boundaries</h2>
+<p><code class="docutils literal notranslate"><span class="pre">SemanticBoundary</span></code> is an immutable, engine-neutral split opportunity. Its
+<code class="docutils literal notranslate"><span class="pre">position</span></code> is always in <code class="docutils literal notranslate"><span class="pre">plan.texts.spoken</span></code>, and its <code class="docutils literal notranslate"><span class="pre">kind</span></code> distinguishes clause,
+parenthetical, sentence, and paragraph structure. It is intentionally separate
+from <code class="docutils literal notranslate"><span class="pre">BoundaryEvent</span></code>: semantic boundaries do not carry pause duration or depend
+on whether a pause policy activates an event.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">utterplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">SemanticBoundary</span>
+
+<span class="k">for</span> <span class="n">boundary</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">semantic_boundaries_for_segment</span><span class="p">(</span><span class="n">segment</span><span class="p">,</span> <span class="n">kinds</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;clause&quot;</span><span class="p">}):</span>
+    <span class="n">offset</span> <span class="o">=</span> <span class="n">boundary</span><span class="o">.</span><span class="n">position</span> <span class="o">-</span> <span class="n">segment</span><span class="o">.</span><span class="n">spoken_start</span>
+    <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">[:</span><span class="n">offset</span><span class="p">],</span> <span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">offset</span><span class="p">:]</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">semantic_boundaries_in_range(start,</span> <span class="pre">end)</span></code> when lowering a plan into a
+request-local renderer capacity. Do not import parser/provider documents or
+recompute clause analysis in the consumer.</p>
 </section>
 <section id="audio-media-segments">
 <h2>Audio/media segments</h2>
@@ -660,7 +761,7 @@ consumers do not need to inspect raw SSMD annotations to find media.</p>
 <code class="docutils literal notranslate"><span class="pre">tokens</span></code>, <code class="docutils literal notranslate"><span class="pre">markers</span></code>, <code class="docutils literal notranslate"><span class="pre">document_metadata</span></code>, and resolved segment pauses. See the
 <a class="reference internal" href="../consumer-guide/"><span class="doc std std-doc">consumer guide</span></a> for how a renderer uses these fields.</p>
 <p><code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code> contains <code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code>. Token text and offsets address <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>; <code class="docutils literal notranslate"><span class="pre">morph</span></code> is a compact provider string such as <code class="docutils literal notranslate"><span class="pre">Tense=Pres|VerbForm=Fin</span></code>. <code class="docutils literal notranslate"><span class="pre">LinguisticRun</span></code> records whether those facts came from spaCy, fallback tokenization, or unknown legacy provenance.</p>
-<p><code class="docutils literal notranslate"><span class="pre">TextPreparationInfo</span></code> exposes serializable provenance only. Exact source-to-spoken mapping is transient planner state and is not part of <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> or its JSON contract.</p>
+<p><code class="docutils literal notranslate"><span class="pre">TextPreparationInfo</span></code> exposes serializable provenance only. Exact source-to-spoken mapping is transient planner state and is not part of <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> or its TOML contract.</p>
 </section>
 <section id="errors">
 <h2>Errors</h2>
@@ -668,6 +769,7 @@ consumers do not need to inspect raw SSMD annotations to find media.</p>
 public subclasses include <code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code>, <code class="docutils literal notranslate"><span class="pre">PlanningError</span></code>,
 <code class="docutils literal notranslate"><span class="pre">PlanFormatError</span></code>, <code class="docutils literal notranslate"><span class="pre">PlanValidationError</span></code>, and <code class="docutils literal notranslate"><span class="pre">UnsupportedSchemaError</span></code>.
 <code class="docutils literal notranslate"><span class="pre">PlanMigrationError</span></code> and <code class="docutils literal notranslate"><span class="pre">MigrationPathError</span></code> report migration-specific failures. <code class="docutils literal notranslate"><span class="pre">UnsupportedSchemaError</span></code> remains reserved for a schema newer than the installed package understands.</p>
+<p><code class="docutils literal notranslate"><span class="pre">PlanRenderabilityError</span></code> presents the same actionable source and spoken context as the CLI, including safe repair opportunities, semantic blockers, and a next action. Safe punctuation-only repair is the default; choose <code class="docutils literal notranslate"><span class="pre">PlannerConfig(renderability_mode=&quot;strict&quot;)</span></code> when a caller needs to reject every repair opportunity. Symbols are never assigned guessed pronunciations.</p>
 </section>
 <section id="schema-migration-api">
 <h2>Schema migration API</h2>
@@ -677,7 +779,6 @@ public subclasses include <code class="docutils literal notranslate"><span class
     <span class="n">MigrationStep</span><span class="p">,</span>
     <span class="n">SUPPORTED_SCHEMA_VERSIONS</span><span class="p">,</span>
     <span class="n">migrate_plan_data</span><span class="p">,</span>
-    <span class="n">migrate_plan_json</span><span class="p">,</span>
  <span class="p">)</span>
 
 <span class="n">result</span><span class="p">:</span> <span class="n">MigrationResult</span> <span class="o">=</span> <span class="n">migrate_plan_data</span><span class="p">(</span><span class="n">serialized_mapping</span><span class="p">)</span>
