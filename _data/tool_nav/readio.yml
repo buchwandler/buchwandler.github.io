@@ -4,17 +4,17 @@ nav_key: readio
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.3.5
-source_commit: 630dc65f7594c79bc9adfd0d963dcd5cfdf2da34
-source_url: https://github.com/buchwandler/readio/releases/tag/v0.3.5
+source_ref: v0.4.0
+source_commit: 9ec90d52554625b53b7554f237e5f6bde4711526
+source_url: https://github.com/buchwandler/readio/releases/tag/v0.4.0
 is_default: true
 repo_url: https://github.com/buchwandler/readio
-release_tag: v0.3.5
-release_url: https://github.com/buchwandler/readio/releases/tag/v0.3.5
+release_tag: v0.4.0
+release_url: https://github.com/buchwandler/readio/releases/tag/v0.4.0
 versions:
 - name: release
   label: Latest release
-  ref: v0.3.5
+  ref: v0.4.0
   url: /tools/readio/
   current: true
 - name: main

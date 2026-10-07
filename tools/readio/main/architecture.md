@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "442a3d4bd81e53c598ad8a1df7e8ab7bb6161512"
+docs_commit: "0ceca50a26537efbf7a00e376638dddc36d497f3"
 search_enabled: true
 ---
 
@@ -575,6 +575,23 @@ UtterancePlan schema v3
                               codec-specific export
 </pre></div>
 </div>
+<section id="canonical-audiobook-workspace-and-readio-state">
+<h2>Canonical audiobook workspace and Readio state</h2>
+<p>An attached audiobook uses a dual-root layout:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Novel.ssmdbook/                  # canonical, editable book
+  manifest.json
+  chapters/*.ssmd.md
+  .readio/                       # disposable Readio state
+    project.json
+    document/index.json          # chapter selection and local index
+    plan/                        # Utterplan artifacts
+    synthesis/                   # cache and trace
+    composition/                 # timeline and master
+    output/
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">Project.root</span></code> and public project references identify the <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> workspace; <code class="docutils literal notranslate"><span class="pre">Project.state_root</span></code> is <code class="docutils literal notranslate"><span class="pre">.readio/</span></code>. Chapter scope paths resolve against the workspace, so Readio plans from current chapter bytes without copying them. The public ssmdconvert workspace API reports manifest/chapter dirtiness; Readio may refresh its local index but never rewrites canonical chapter files or manifest hashes. Run <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">refresh</span></code> explicitly after editing when you want a clean manifest. Portable <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> archives omit <code class="docutils literal notranslate"><span class="pre">.readio/</span></code>, and deleting that directory removes only Readio-derived state. Standalone schema-v3 document projects remain self-contained and retain their existing layout.</p>
+</section>
 <section id="semantic-plan-and-speech-cache">
 <h2>Semantic plan and speech cache</h2>
 <p>UtterPlan remains the owner of semantic identity. Its unit hashes may include

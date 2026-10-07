@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "442a3d4bd81e53c598ad8a1df7e8ab7bb6161512"
+docs_commit: "0ceca50a26537efbf7a00e376638dddc36d497f3"
 search_enabled: true
 ---
 

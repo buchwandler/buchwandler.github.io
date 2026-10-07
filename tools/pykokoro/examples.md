@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/examples/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.2"
-docs_commit: "287ada5cd53b45765bb7163d1b4b49f67e6306b1"
+docs_ref: "v0.10.4"
+docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
 search_enabled: true
 ---
 
@@ -600,9 +600,9 @@ group without running it.</p>
 <td><p><code class="docutils literal notranslate"><span class="pre">long_text.wav</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><a class="reference download internal" download="" href="../_downloads/b83bca77396ef1194572dbe7cfcab7cb/voice_blend.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">voice_blend.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/voice_blend.py</span></code></p></td>
-<td><p>Shows structured and parsed <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code> construction and synthesizes one blended voice.</p></td>
+<td><p>Compares linear and SLERP blends and synthesizes both outputs.</p></td>
 <td><p>First run may download assets for the selected model/voices; low-to-medium CPU cost.</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">voice_blend.wav</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">voice_blend.wav</span></code>, <code class="docutils literal notranslate"><span class="pre">voice_blend_slerp.wav</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><a class="reference download internal" download="" href="../_downloads/e0d3ec1986052b1bbc11c3dffac0631e/result_metadata.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">result_metadata.py</span></code></span></a><br><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/result_metadata.py</span></code></p></td>
 <td><p>Prints request/result fields, token IDs, diagnostics, trace summary, synthesis identity, word timings, and voice-level applications.</p></td>
@@ -655,6 +655,20 @@ group without running it.</p>
 </tr>
 </tbody>
 </table>
+</section>
+<section id="input-driven-example">
+<h2>Input-driven example</h2>
+<p><a class="reference download internal" download="" href="../_downloads/2209e3dd1cadddf62fac95b0650337e7/reference_voice.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">reference_voice.py</span></code></span></a> requires a user-supplied
+recording and its exact English transcript, so it is not run by the unattended example
+groups:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/reference_voice.py<span class="w"> </span>reference.wav<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;The exact words spoken in the reference.&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;New words spoken with the enrolled voice.&quot;</span>
+</pre></div>
+</div>
+<p>The script enrolls the recording, saves and reloads <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code>, then synthesizes
+the target text. The <a class="reference internal" href="../reference_voice/"><span class="std std-doc">reference voice guide</span></a> documents audio
+constraints, model binding, privacy, and permissions.</p>
 </section>
 <section id="language-showcase">
 <h2>Language showcase</h2>

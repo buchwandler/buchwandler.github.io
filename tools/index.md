@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">19<span>focused tools</span></div>
+    <div class="hero-stat">20<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -123,7 +123,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.2" rel="external noopener">Latest release: v0.10.2 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.4" rel="external noopener">Latest release: v0.10.4 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -135,6 +135,16 @@ permalink: /tools/
         <a href="/tools/ssmd/">Read docs <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd/releases/tag/v0.9.2" rel="external noopener">Latest release: v0.9.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmd" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>utterplan</h3>
+      <p>Engine-independent text-to-speech planning compiler and interchange format.</p>
+      <div class="card-links">
+        <a href="/tools/utterplan/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.3.4" rel="external noopener">Latest release: v0.3.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
     <article class="card tool-card">
@@ -193,7 +203,7 @@ permalink: /tools/
       <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
       <div class="card-links">
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.3.5" rel="external noopener">Latest release: v0.3.5 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

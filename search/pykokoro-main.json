@@ -52,8 +52,8 @@
         {
           "anchor": "",
           "heading": "Voice blends",
-          "text": "Pass a real voice ID or an explicit VoiceBlend as the request/config voice. The\nstructured form makes interpolation and weights visible; the compact form uses\npercentages:\n\nfrom pykokoro import VoiceBlend\n\nblend = VoiceBlend(\n    voices=[(\"af_sarah\", 0.6), (\"af_bella\", 0.4)],\n    interpolation=\"linear\",\n)\ncompact = VoiceBlend.parse(\"af_sarah:60,af_bella:40\")\n\n\n\n\nVoice IDs and valid combinations come from model profiles; inspect discover_models()\ninstead of assuming a voice is available for every language or model. See\nvoice_blend.py.",
-          "lower": "pass a real voice id or an explicit voiceblend as the request/config voice. the\nstructured form makes interpolation and weights visible; the compact form uses\npercentages:\n\nfrom pykokoro import voiceblend\n\nblend = voiceblend(\n    voices=[(\"af_sarah\", 0.6), (\"af_bella\", 0.4)],\n    interpolation=\"linear\",\n)\ncompact = voiceblend.parse(\"af_sarah:60,af_bella:40\")\n\n\n\n\nvoice ids and valid combinations come from model profiles; inspect discover_models()\ninstead of assuming a voice is available for every language or model. see\nvoice_blend.py."
+          "text": "Pass a real voice ID or an explicit VoiceBlend as the request/config voice. The\nstructured form makes interpolation and weights visible; the compact form uses\npercentages:\n\nfrom pykokoro import VoiceBlend\n\nblend = VoiceBlend(\n    voices=[(\"af_sarah\", 0.6), (\"af_bella\", 0.4)],\n    interpolation=\"linear\",\n)\ncompact = VoiceBlend.parse(\"af_sarah=60,af_bella=40\")\nslerp = VoiceBlend.parse(\"af_sarah=60,af_bella=40@slerp\")\nmulti = VoiceBlend.parse(\"af_sarah=50,af_bella=30,af_nicole=20\")\n\n\n\n\nLinear interpolation supports one or more voices. SLERP requires exactly two voices, and\nthe second voice’s weight is its interpolation parameter. Voice IDs and valid\ncombinations come from model profiles; inspect discover_models() instead of assuming a\nvoice is available for every language or model. See\nvoice…",
+          "lower": "pass a real voice id or an explicit voiceblend as the request/config voice. the\nstructured form makes interpolation and weights visible; the compact form uses\npercentages:\n\nfrom pykokoro import voiceblend\n\nblend = voiceblend(\n    voices=[(\"af_sarah\", 0.6), (\"af_bella\", 0.4)],\n    interpolation=\"linear\",\n)\ncompact = voiceblend.parse(\"af_sarah=60,af_bella=40\")\nslerp = voiceblend.parse(\"af_sarah=60,af_bella=40@slerp\")\nmulti = voiceblend.parse(\"af_sarah=50,af_bella=30,af_nicole=20\")\n\n\n\n\nlinear interpolation supports one or more voices. slerp requires exactly two voices, and\nthe second voice’s weight is its interpolation parameter. voice ids and valid\ncombinations come from model profiles; inspect discover_models() instead of assuming a\nvoice is available for every language or model. see\nvoice…"
         },
         {
           "anchor": "",
@@ -70,8 +70,8 @@
         {
           "anchor": "",
           "heading": "Related recipes",
-          "text": "Long text and capacity behavior\n\n\nShort-sentence quality and explicit modes\n\n\nFrontend, lexicon, cache, and asset progress configuration\n\n\nAll maintained example groups",
-          "lower": "long text and capacity behavior\n\n\nshort-sentence quality and explicit modes\n\n\nfrontend, lexicon, cache, and asset progress configuration\n\n\nall maintained example groups"
+          "text": "Long text and capacity behavior\n\n\nShort-sentence quality and explicit modes\n\n\nFrontend, lexicon, cache, and asset progress configuration\n\n\nAll maintained example groups\n\n\nEnglish reference voice enrollment and reuse",
+          "lower": "long text and capacity behavior\n\n\nshort-sentence quality and explicit modes\n\n\nfrontend, lexicon, cache, and asset progress configuration\n\n\nall maintained example groups\n\n\nenglish reference voice enrollment and reuse"
         }
       ]
     },
@@ -83,14 +83,20 @@
         {
           "anchor": "",
           "heading": "API reference",
-          "text": "PyKokoro’s supported API is exported by pykokoro and listed in pykokoro.__all__. It\nmodels prepared synthesis requests and their independent rendered results; document\nparsing, speech planning, and composition between requests remain caller-owned.\n\nfrom pykokoro import (\n    GenerationConfig,\n    KokoroSynthesizer,\n    SynthesisConfig,\n    SynthesisRequest,\n)",
-          "lower": "pykokoro’s supported api is exported by pykokoro and listed in pykokoro.__all__. it\nmodels prepared synthesis requests and their independent rendered results; document\nparsing, speech planning, and composition between requests remain caller-owned.\n\nfrom pykokoro import (\n    generationconfig,\n    kokorosynthesizer,\n    synthesisconfig,\n    synthesisrequest,\n)"
+          "text": "PyKokoro’s supported API is exported by pykokoro and listed in pykokoro.__all__. It\nmodels prepared synthesis requests and their independent rendered results; document\nparsing, speech planning, and composition between requests remain caller-owned.\n\nfrom pykokoro import (\n    GenerationConfig,\n    InnoEnrollmentOptions,\n    KokoroVoicePack,\n    ReferenceVoice,\n    VoiceEnrollerSpec,\n    KokoroSynthesizer,\n    SynthesisConfig,\n    SynthesisRequest,\n)",
+          "lower": "pykokoro’s supported api is exported by pykokoro and listed in pykokoro.__all__. it\nmodels prepared synthesis requests and their independent rendered results; document\nparsing, speech planning, and composition between requests remain caller-owned.\n\nfrom pykokoro import (\n    generationconfig,\n    innoenrollmentoptions,\n    kokorovoicepack,\n    referencevoice,\n    voiceenrollerspec,\n    kokorosynthesizer,\n    synthesisconfig,\n    synthesisrequest,\n)"
         },
         {
           "anchor": "",
           "heading": "Public root symbols",
-          "text": "Area\n\nRoot exports\n\n\n\n\n\nSynthesis\n\nKokoroSynthesizer, SynthesisRequest, SynthesisSegment, RenderedSegment\n\n\n\nSource context and timing\n\nPronunciationOverride, LinguisticToken, WordTiming\n\n\n\nConfiguration\n\nSynthesisConfig, GenerationConfig, LanguageRoutingConfig, TokenizerConfig, ShortSentenceConfig, LongTextSplitMode\n\n\n\nVoice level\n\nVoiceLevelConfig, VoiceLevelApplication, VoiceBlend\n\n\n\nModel discovery\n\nModelCapabilities, ModelDiscoveryResult, VoiceCapabilities, discover_models\n\n\n\nLexicon discovery\n\nLexiconCapabilities, LexiconDiscoveryResult, discover_lexicons\n\n\n\nAsset progress\n\nAssetProgressEvent, AssetProgressCallback, ConsoleAssetProgress\n\n\n\nSynthesis identity\n\nSynthesisIdentity, build_synthesis_identity\n\n\n\nErrors\n\nKokoroError, PyKokoroError, SynthesisError, ConfigurationError, Invali…",
-          "lower": "area\n\nroot exports\n\n\n\n\n\nsynthesis\n\nkokorosynthesizer, synthesisrequest, synthesissegment, renderedsegment\n\n\n\nsource context and timing\n\npronunciationoverride, linguistictoken, wordtiming\n\n\n\nconfiguration\n\nsynthesisconfig, generationconfig, languageroutingconfig, tokenizerconfig, shortsentenceconfig, longtextsplitmode\n\n\n\nvoice level\n\nvoicelevelconfig, voicelevelapplication, voiceblend\n\n\n\nmodel discovery\n\nmodelcapabilities, modeldiscoveryresult, voicecapabilities, discover_models\n\n\n\nlexicon discovery\n\nlexiconcapabilities, lexicondiscoveryresult, discover_lexicons\n\n\n\nasset progress\n\nassetprogressevent, assetprogresscallback, consoleassetprogress\n\n\n\nsynthesis identity\n\nsynthesisidentity, build_synthesis_identity\n\n\n\nerrors\n\nkokoroerror, pykokoroerror, synthesiserror, configurationerror, invali…"
+          "text": "Area\n\nRoot exports\n\n\n\n\n\nSynthesis\n\nKokoroSynthesizer, SynthesisRequest, SynthesisSegment, RenderedSegment\n\n\n\nSource context and timing\n\nPronunciationOverride, LinguisticToken, WordTiming\n\n\n\nConfiguration\n\nSynthesisConfig, GenerationConfig, LanguageRoutingConfig, TokenizerConfig, ShortSentenceConfig, LongTextSplitMode\n\n\n\nVoice level\n\nVoiceLevelConfig, VoiceLevelApplication, VoiceBlend\n\n\n\nVoice enrollment\n\nKokoroVoicePack, ReferenceVoice, InnoEnrollmentOptions, KokoroSynthesizer.enroll_voice()\n\n\n\nModel discovery\n\nModelCapabilities, ModelDiscoveryResult, VoiceCapabilities, VoiceEnrollerSpec, discover_models\n\n\n\nLexicon discovery\n\nLexiconCapabilities, LexiconDiscoveryResult, discover_lexicons\n\n\n\nAsset progress\n\nAssetProgressEvent, AssetProgressCallback, ConsoleAssetProgress\n\n\n\nSynthesis identi…",
+          "lower": "area\n\nroot exports\n\n\n\n\n\nsynthesis\n\nkokorosynthesizer, synthesisrequest, synthesissegment, renderedsegment\n\n\n\nsource context and timing\n\npronunciationoverride, linguistictoken, wordtiming\n\n\n\nconfiguration\n\nsynthesisconfig, generationconfig, languageroutingconfig, tokenizerconfig, shortsentenceconfig, longtextsplitmode\n\n\n\nvoice level\n\nvoicelevelconfig, voicelevelapplication, voiceblend\n\n\n\nvoice enrollment\n\nkokorovoicepack, referencevoice, innoenrollmentoptions, kokorosynthesizer.enroll_voice()\n\n\n\nmodel discovery\n\nmodelcapabilities, modeldiscoveryresult, voicecapabilities, voiceenrollerspec, discover_models\n\n\n\nlexicon discovery\n\nlexiconcapabilities, lexicondiscoveryresult, discover_lexicons\n\n\n\nasset progress\n\nassetprogressevent, assetprogresscallback, consoleassetprogress\n\n\n\nsynthesis identi…"
+        },
+        {
+          "anchor": "",
+          "heading": "Request API compatibility contract",
+          "text": "pykokoro.REQUEST_API_VERSION identifies the request API contract family. Call\npykokoro.request_api_contract() to inspect its stable capability declaration before\nconstructing an engine:\n\nimport pykokoro\n\ncontract = pykokoro.request_api_contract()\nassert contract.version == pykokoro.REQUEST_API_VERSION == 1\nassert contract.request_type == \"SynthesisRequest\"\nassert contract.result_type == \"RenderedSegment\"\n\n\n\n\nThe declaration is dependency-light: it does not initialize a G2P frontend, model\nregistry, ONNX session, or audio backend. Resolving pykokoro.KokoroSynthesizer loads\nthe class without constructing its G2P adapter; constructing the synthesizer or\nrendering a request is a separate runtime operation. This versioned declaration gives\nintegrations a stable compatibility probe instead of r…",
+          "lower": "pykokoro.request_api_version identifies the request api contract family. call\npykokoro.request_api_contract() to inspect its stable capability declaration before\nconstructing an engine:\n\nimport pykokoro\n\ncontract = pykokoro.request_api_contract()\nassert contract.version == pykokoro.request_api_version == 1\nassert contract.request_type == \"synthesisrequest\"\nassert contract.result_type == \"renderedsegment\"\n\n\n\n\nthe declaration is dependency-light: it does not initialize a g2p frontend, model\nregistry, onnx session, or audio backend. resolving pykokoro.kokorosynthesizer loads\nthe class without constructing its g2p adapter; constructing the synthesizer or\nrendering a request is a separate runtime operation. this versioned declaration gives\nintegrations a stable compatibility probe instead of r…"
         },
         {
           "anchor": "",
@@ -106,9 +112,9 @@
         },
         {
           "anchor": "",
-          "heading": "Configuration",
-          "text": "LongTextSplitMode is \"none\" | \"sentence\". The default \"none\" path raises\nSynthesisInputTooLongError for an oversized request. \"sentence\" lazily loads\nPhraseSplit only when a request exceeds capacity, then returns one result for the\noriginal request. long_text_use_spacy=False selects PhraseSplit’s simple mode without\nspaCy.\n\nGenerationConfig controls Kokoro acoustic speed, the default language for\nsynthesize_text(), inference random seed, and the per-request short-sentence override.\nShort-sentence handling is disabled unless explicitly enabled with ShortSentenceConfig\nor GenerationConfig.enable_short_sentence.",
-          "lower": "longtextsplitmode is \"none\" | \"sentence\". the default \"none\" path raises\nsynthesisinputtoolongerror for an oversized request. \"sentence\" lazily loads\nphrasesplit only when a request exceeds capacity, then returns one result for the\noriginal request. long_text_use_spacy=false selects phrasesplit’s simple mode without\nspacy.\n\ngenerationconfig controls kokoro acoustic speed, the default language for\nsynthesize_text(), inference random seed, and the per-request short-sentence override.\nshort-sentence handling is disabled unless explicitly enabled with shortsentenceconfig\nor generationconfig.enable_short_sentence."
+          "heading": "Voice enrollment and packs",
+          "text": "KokoroSynthesizer.enroll_voice() defaults to engine=\"inno\". It accepts reference\naudio without a transcript and returns a portable KokoroVoicePack for ordinary static\nKokoro synthesis. The versioned NPZ save/load format is pickle-free. Inno enrollment\nrequires a runtime-supported inno-v0.2 model capability. VoiceEnrollerSpec discovery\nmetadata reports its requirements and output format without loading model weights.\n\nAkinVox remains a separate, explicit path. Use engine=\"akinvox\" and provide the exact\ntranscript to return a model-bound ReferenceVoice. The voice pack and reference state\nare not interchangeable. See the voice enrollment guide for engine\nrequirements, audio limits, persistence, calibration limitations, privacy, and examples.\n\nLongTextSplitMode is \"none\" | \"sentence\". The def…",
+          "lower": "kokorosynthesizer.enroll_voice() defaults to engine=\"inno\". it accepts reference\naudio without a transcript and returns a portable kokorovoicepack for ordinary static\nkokoro synthesis. the versioned npz save/load format is pickle-free. inno enrollment\nrequires a runtime-supported inno-v0.2 model capability. voiceenrollerspec discovery\nmetadata reports its requirements and output format without loading model weights.\n\nakinvox remains a separate, explicit path. use engine=\"akinvox\" and provide the exact\ntranscript to return a model-bound referencevoice. the voice pack and reference state\nare not interchangeable. see the voice enrollment guide for engine\nrequirements, audio limits, persistence, calibration limitations, privacy, and examples.\n\nlongtextsplitmode is \"none\" | \"sentence\". the def…"
         },
         {
           "anchor": "",
@@ -119,8 +125,8 @@
         {
           "anchor": "",
           "heading": "Model and lexicon discovery",
-          "text": "Discovery reports metadata and runtime capability without loading synthesis weights or\ncreating an ONNX session. Offline discovery uses available local metadata; it does not\ninstall model or lexicon assets. Use the inventory to select an available\nmodel/language/voice rather than inferring compatibility from a voice name.",
-          "lower": "discovery reports metadata and runtime capability without loading synthesis weights or\ncreating an onnx session. offline discovery uses available local metadata; it does not\ninstall model or lexicon assets. use the inventory to select an available\nmodel/language/voice rather than inferring compatibility from a voice name."
+          "text": "Discovery reports metadata and runtime capability, including VoiceEnrollerSpec,\nwithout loading synthesis weights or creating an ONNX session. Offline discovery uses\navailable local metadata; it does not install model or lexicon assets. Use the inventory\nto select an available model/language/voice rather than inferring compatibility from a\nvoice name.",
+          "lower": "discovery reports metadata and runtime capability, including voiceenrollerspec,\nwithout loading synthesis weights or creating an onnx session. offline discovery uses\navailable local metadata; it does not install model or lexicon assets. use the inventory\nto select an available model/language/voice rather than inferring compatibility from a\nvoice name."
         },
         {
           "anchor": "",
@@ -267,13 +273,31 @@
     {
       "url": "/tools/pykokoro/main/changelog/",
       "title": "pykokoro Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nRaised PyKokoro’s m …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.\nAdded a versioned r …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger\nentries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger\nentries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added a versioned request API compatibility contract and installed-wheel checks",
+          "lower": "added a versioned request api compatibility contract and installed-wheel checks"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added transcript-guided English voice enrollment with reusable, model-bound\nreference-voice conditioning\n\n\nAdded transcript-free Inno voice enrollment that exports reusable Kokoro voice packs",
+          "lower": "added transcript-guided english voice enrollment with reusable, model-bound\nreference-voice conditioning\n\n\nadded transcript-free inno voice enrollment that exports reusable kokoro voice packs"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed voice blending to support canonical = syntax, multi-voice linear\ninterpolation, and row-wise SLERP fallback",
+          "lower": "changed voice blending to support canonical = syntax, multi-voice linear\ninterpolation, and row-wise slerp fallback"
         },
         {
           "anchor": "",
@@ -454,30 +478,6 @@
           "heading": "Changed",
           "text": "Changed German synthesis to default to the verified Martin v1.2 fp32 profile with\nexplicit legacy model compatibility\n\n\nBREAKING: Changed to require explicit document languages and SSMD spans for\nmixed-language synthesis\n\n\nChanged the locked dependency set to the v0.9 companion releases\n\n\nChanged the pipeline to prepare frontend text once and render multiple lexicon\nvariants through one acoustic backend\n\n\nChanged audio results to expose prepared and source text while allowing nested\nlanguage-span overrides\n\n\nChanged German lexicon provisioning to support automatic or installed-only Lexphon\ndata",
           "lower": "changed german synthesis to default to the verified martin v1.2 fp32 profile with\nexplicit legacy model compatibility\n\n\nbreaking: changed to require explicit document languages and ssmd spans for\nmixed-language synthesis\n\n\nchanged the locked dependency set to the v0.9 companion releases\n\n\nchanged the pipeline to prepare frontend text once and render multiple lexicon\nvariants through one acoustic backend\n\n\nchanged audio results to expose prepared and source text while allowing nested\nlanguage-span overrides\n\n\nchanged german lexicon provisioning to support automatic or installed-only lexphon\ndata"
-        },
-        {
-          "anchor": "",
-          "heading": "Fixed",
-          "text": "Fixed German named-lexicon output to remain within the Kokoro phoneme vocabulary",
-          "lower": "fixed german named-lexicon output to remain within the kokoro phoneme vocabulary"
-        },
-        {
-          "anchor": "",
-          "heading": "Documentation",
-          "text": "Documented explicit language configuration, isolated example artifacts, and sequential\nexample verification",
-          "lower": "documented explicit language configuration, isolated example artifacts, and sequential\nexample verification"
-        },
-        {
-          "anchor": "",
-          "heading": "Added",
-          "text": "Added registry-backed model discovery and verified distribution asset downloads\n\n\nAdded language profiles and split-layout Thai Wayu runtime support\n\n\nAdded maintained German model examples and a model and language registry inspection\nand synthesis example",
-          "lower": "added registry-backed model discovery and verified distribution asset downloads\n\n\nadded language profiles and split-layout thai wayu runtime support\n\n\nadded maintained german model examples and a model and language registry inspection\nand synthesis example"
-        },
-        {
-          "anchor": "",
-          "heading": "Changed",
-          "text": "Changed the pipeline to explicit Spokenform, Phrasplit, and prepared G2P stages with\nremapped offsets\n\n\nAdded ONNX input and waveform diagnostics with configurable invalid-output handling\n\n\nAdded named German G2P lexicon selection and profile-aware cache keys\n\n\nChanged the minimum Spokenform dependency to 0.3.5 for the explicit text-preparation\npipeline\n\n\nChanged German examples for optional lexicon audio and currency normalization with\ncents",
-          "lower": "changed the pipeline to explicit spokenform, phrasplit, and prepared g2p stages with\nremapped offsets\n\n\nadded onnx input and waveform diagnostics with configurable invalid-output handling\n\n\nadded named german g2p lexicon selection and profile-aware cache keys\n\n\nchanged the minimum spokenform dependency to 0.3.5 for the explicit text-preparation\npipeline\n\n\nchanged german examples for optional lexicon audio and currency normalization with\ncents"
         }
       ]
     },
@@ -509,6 +509,12 @@
           "heading": "Feature examples",
           "text": "Script / command\n\nPurpose and public API\n\nAssets, network, and cost\n\nExpected output\n\n\n\n\n\nenglish.py\npython examples/english.py\n\nSynthesizes prepared English text, calls prepare(), and reuses its phonemes in a whole-request phoneme request.\n\nFirst run may download model assets; two short inferences, low-to-medium CPU cost.\n\nenglish_demo.wav, english_phonemes_demo.wav\n\n\n\nlanguage_routing.py\npython examples/language_routing.py\n\nContrasts automatic G2P language routing with an explicit deterministic language override on the same source span. Acoustic model and voice remain explicit.\n\nFirst run may download model assets; low-to-medium cost for two short requests.\n\nautomatic-routing.wav, explicit-german-span.wav\n\n\n\nfrontend_and_lexicons.py\npython examples/frontend_and_lexicons.py\n\nRuns offline…",
           "lower": "script / command\n\npurpose and public api\n\nassets, network, and cost\n\nexpected output\n\n\n\n\n\nenglish.py\npython examples/english.py\n\nsynthesizes prepared english text, calls prepare(), and reuses its phonemes in a whole-request phoneme request.\n\nfirst run may download model assets; two short inferences, low-to-medium cpu cost.\n\nenglish_demo.wav, english_phonemes_demo.wav\n\n\n\nlanguage_routing.py\npython examples/language_routing.py\n\ncontrasts automatic g2p language routing with an explicit deterministic language override on the same source span. acoustic model and voice remain explicit.\n\nfirst run may download model assets; low-to-medium cost for two short requests.\n\nautomatic-routing.wav, explicit-german-span.wav\n\n\n\nfrontend_and_lexicons.py\npython examples/frontend_and_lexicons.py\n\nruns offline…"
+        },
+        {
+          "anchor": "",
+          "heading": "Input-driven example",
+          "text": "reference_voice.py requires a user-supplied\nrecording and its exact English transcript, so it is not run by the unattended example\ngroups:\n\npython examples/reference_voice.py reference.wav \\\n  \"The exact words spoken in the reference.\" \\\n  \"New words spoken with the enrolled voice.\"\n\n\n\n\nThe script enrolls the recording, saves and reloads ReferenceVoice, then synthesizes\nthe target text. The reference voice guide documents audio\nconstraints, model binding, privacy, and permissions.",
+          "lower": "reference_voice.py requires a user-supplied\nrecording and its exact english transcript, so it is not run by the unattended example\ngroups:\n\npython examples/reference_voice.py reference.wav \\\n  \"the exact words spoken in the reference.\" \\\n  \"new words spoken with the enrolled voice.\"\n\n\n\n\nthe script enrolls the recording, saves and reloads referencevoice, then synthesizes\nthe target text. the reference voice guide documents audio\nconstraints, model binding, privacy, and permissions."
         },
         {
           "anchor": "",
@@ -557,8 +563,8 @@
         {
           "anchor": "",
           "heading": "Feature guides",
-          "text": "Long-text capacity, splitting, and errors\n\n\n[Direct phonemes, language routing, VoiceBlend, and result metadata]\n(advanced_features.md)\n\n\nLanguage codes and acoustic-profile discovery\n\n\nFrontends, installed lexicons, cache location, and asset progress\n\n\nShort-sentence configuration and modes\n\n\n\nPyKokoro does not parse SSMD or YAML, create UtterPlans or AudioJobs, compose separate\ncaller requests, insert cross-request silence, or apply document-level effects. The\nv0.10.0 breaking boundary and migration examples are described in the\nrelease note.",
-          "lower": "long-text capacity, splitting, and errors\n\n\n[direct phonemes, language routing, voiceblend, and result metadata]\n(advanced_features.md)\n\n\nlanguage codes and acoustic-profile discovery\n\n\nfrontends, installed lexicons, cache location, and asset progress\n\n\nshort-sentence configuration and modes\n\n\n\npykokoro does not parse ssmd or yaml, create utterplans or audiojobs, compose separate\ncaller requests, insert cross-request silence, or apply document-level effects. the\nv0.10.0 breaking boundary and migration examples are described in the\nrelease note."
+          "text": "Long-text capacity, splitting, and errors\n\n\n[Direct phonemes, language routing, VoiceBlend, and result metadata]\n(advanced_features.md)\n\n\nEnglish reference voice enrollment and reuse\n\n\nLanguage codes and acoustic-profile discovery\n\n\nFrontends, installed lexicons, cache location, and asset progress\n\n\nShort-sentence configuration and modes\n\n\n\nPyKokoro does not parse SSMD or YAML, create UtterPlans or AudioJobs, compose separate\ncaller requests, insert cross-request silence, or apply document-level effects. The\nv0.10.0 breaking boundary and migration examples are described in the\nrelease note.",
+          "lower": "long-text capacity, splitting, and errors\n\n\n[direct phonemes, language routing, voiceblend, and result metadata]\n(advanced_features.md)\n\n\nenglish reference voice enrollment and reuse\n\n\nlanguage codes and acoustic-profile discovery\n\n\nfrontends, installed lexicons, cache location, and asset progress\n\n\nshort-sentence configuration and modes\n\n\n\npykokoro does not parse ssmd or yaml, create utterplans or audiojobs, compose separate\ncaller requests, insert cross-request silence, or apply document-level effects. the\nv0.10.0 breaking boundary and migration examples are described in the\nrelease note."
         },
         {
           "anchor": "",
@@ -649,8 +655,8 @@
         {
           "anchor": "",
           "heading": "Discover compatible model profiles and voices",
-          "text": "Use metadata-only discovery to check the profiles that the installed runtime can\nresolve. Do not hardcode voice compatibility from a voice name or from the G2P language\ntable:\n\nfrom pykokoro import discover_models\n\ninventory = discover_models(offline=True)\nfor profile in inventory.models:\n    print(profile.model_id, profile.languages, profile.voices, profile.status)\n\n\n\n\nDiscovery does not load model weights or create an ONNX inference session. It reports\nmodel profile metadata (including language and voice compatibility) and runtime status;\noffline mode avoids refreshing remote metadata. The result is a capability inventory,\nnot a synthesis guarantee if the required model assets are not installed or cannot be\nreached. See models_and_languages.py for\ninventory and optional selected-model s…",
-          "lower": "use metadata-only discovery to check the profiles that the installed runtime can\nresolve. do not hardcode voice compatibility from a voice name or from the g2p language\ntable:\n\nfrom pykokoro import discover_models\n\ninventory = discover_models(offline=true)\nfor profile in inventory.models:\n    print(profile.model_id, profile.languages, profile.voices, profile.status)\n\n\n\n\ndiscovery does not load model weights or create an onnx inference session. it reports\nmodel profile metadata (including language and voice compatibility) and runtime status;\noffline mode avoids refreshing remote metadata. the result is a capability inventory,\nnot a synthesis guarantee if the required model assets are not installed or cannot be\nreached. see models_and_languages.py for\ninventory and optional selected-model s…"
+          "text": "Use metadata-only discovery to check the profiles that the installed runtime can\nresolve. Do not hardcode voice compatibility from a voice name or from the G2P language\ntable:\n\nfrom pykokoro import discover_models\n\ninventory = discover_models(offline=True)\nfor profile in inventory.models:\n    print(\n        profile.model_id,\n        profile.languages,\n        profile.voices,\n        profile.voice_mode,\n        profile.supports_reference_enrollment,\n        profile.speed_supported,\n        profile.status,\n    )\n\n\n\n\nDiscovery does not load model weights or create an ONNX inference session. It reports\nmodel profile metadata (including language and voice compatibility) and runtime status;\noffline mode avoids refreshing remote metadata. The result is a capability inventory,\nnot a synthesis gua…",
+          "lower": "use metadata-only discovery to check the profiles that the installed runtime can\nresolve. do not hardcode voice compatibility from a voice name or from the g2p language\ntable:\n\nfrom pykokoro import discover_models\n\ninventory = discover_models(offline=true)\nfor profile in inventory.models:\n    print(\n        profile.model_id,\n        profile.languages,\n        profile.voices,\n        profile.voice_mode,\n        profile.supports_reference_enrollment,\n        profile.speed_supported,\n        profile.status,\n    )\n\n\n\n\ndiscovery does not load model weights or create an onnx inference session. it reports\nmodel profile metadata (including language and voice compatibility) and runtime status;\noffline mode avoids refreshing remote metadata. the result is a capability inventory,\nnot a synthesis gua…"
         }
       ]
     },
@@ -744,6 +750,43 @@
           "heading": "Where next?",
           "text": "Installation and model providers\n\n\nBasic request and configuration patterns\n\n\nPronunciation context, routing, and calibration\n\n\nPublic API reference\n\n\nBreaking change and migration note\n\n\nLanguage codes and supported model profiles\n\n\nFrontends, lexicons, asset progress, and cache installation\n\n\nMaintained categorized examples\n\n\nNeed long text? → basic usage\n\n\nNeed pronunciation control? → advanced features\n\n\nNeed a model/voice? → language profiles and the\ndiscovery example\n\n\nNeed diagnostics? →\nadvanced features and the\nresult metadata example\n\n\n\nSynthesisInputTooLongError is the expected default outcome for an oversized request;\nenable sentence splitting explicitly or catch the typed error and decide how the caller\nshould continue.",
           "lower": "installation and model providers\n\n\nbasic request and configuration patterns\n\n\npronunciation context, routing, and calibration\n\n\npublic api reference\n\n\nbreaking change and migration note\n\n\nlanguage codes and supported model profiles\n\n\nfrontends, lexicons, asset progress, and cache installation\n\n\nmaintained categorized examples\n\n\nneed long text? → basic usage\n\n\nneed pronunciation control? → advanced features\n\n\nneed a model/voice? → language profiles and the\ndiscovery example\n\n\nneed diagnostics? →\nadvanced features and the\nresult metadata example\n\n\n\nsynthesisinputtoolongerror is the expected default outcome for an oversized request;\nenable sentence splitting explicitly or catch the typed error and decide how the caller\nshould continue."
+        }
+      ]
+    },
+    {
+      "url": "/tools/pykokoro/main/reference_voice/",
+      "title": "pykokoro Voice enrollment",
+      "snippet": "PyKokoro exposes two distinct enrollment engines through\nKokoroSynthesizer.enroll_voice(). Inno creates a normal static Kokoro voice pack fr …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Voice enrollment",
+          "text": "PyKokoro exposes two distinct enrollment engines through\nKokoroSynthesizer.enroll_voice(). Inno creates a normal static Kokoro voice pack from\nreference audio only. AkinVox creates a transcript-conditioned ReferenceVoice for its\ncloning model. These outputs have separate formats and synthesis paths.",
+          "lower": "pykokoro exposes two distinct enrollment engines through\nkokorosynthesizer.enroll_voice(). inno creates a normal static kokoro voice pack from\nreference audio only. akinvox creates a transcript-conditioned referencevoice for its\ncloning model. these outputs have separate formats and synthesis paths."
+        },
+        {
+          "anchor": "",
+          "heading": "Inno voice tuning",
+          "text": "Inno v0.2 is a zero-shot voice tuner, not a strong identity cloner. It requires\nreference audio but no transcript, and returns a standard [510, 1, 256]\nKokoroVoicePack usable immediately with ordinary static Kokoro synthesis:\n\nfrom pykokoro import KokoroSynthesizer, KokoroVoicePack\n\nwith KokoroSynthesizer() as synthesizer:\n    pack = synthesizer.enroll_voice(\"reference.wav\", engine=\"inno\", language=\"en\")\n    pack.save(\"speaker.npz\")\n\n    rendered = synthesizer.synthesize_text(\n        \"New words in the tuned voice.\", language=\"en-us\", voice=pack\n    )\n    rendered.save_wav(\"tuned.wav\")\n\nreloaded = KokoroVoicePack.load(\"speaker.npz\")\n\n\n\n\nThe default engine is Inno, so omit reference_text. Supplying a transcript to Inno is\nan error. InnoEnrollmentOptions(fmax=...) can forward the supported…",
+          "lower": "inno v0.2 is a zero-shot voice tuner, not a strong identity cloner. it requires\nreference audio but no transcript, and returns a standard [510, 1, 256]\nkokorovoicepack usable immediately with ordinary static kokoro synthesis:\n\nfrom pykokoro import kokorosynthesizer, kokorovoicepack\n\nwith kokorosynthesizer() as synthesizer:\n    pack = synthesizer.enroll_voice(\"reference.wav\", engine=\"inno\", language=\"en\")\n    pack.save(\"speaker.npz\")\n\n    rendered = synthesizer.synthesize_text(\n        \"new words in the tuned voice.\", language=\"en-us\", voice=pack\n    )\n    rendered.save_wav(\"tuned.wav\")\n\nreloaded = kokorovoicepack.load(\"speaker.npz\")\n\n\n\n\nthe default engine is inno, so omit reference_text. supplying a transcript to inno is\nan error. innoenrollmentoptions(fmax=...) can forward the supported…"
+        },
+        {
+          "anchor": "",
+          "heading": "AkinVox reference cloning",
+          "text": "AkinVox requires reference audio and its exact transcript. Select it explicitly. The\nresult is a model-bound ReferenceVoice state, not a static voice pack:\n\nfrom pykokoro import KokoroSynthesizer, ReferenceVoice\n\nwith KokoroSynthesizer() as synthesizer:\n    voice = synthesizer.enroll_voice(\n        \"reference.wav\",\n        \"The exact words spoken in the reference.\",\n        engine=\"akinvox\",\n        language=\"en-us\",\n        name=\"speaker\",\n    )\n    voice.save(\"speaker-reference.npz\")\n\n    reusable = ReferenceVoice.load(\"speaker-reference.npz\")\n    rendered = synthesizer.synthesize_text(\n        \"New words with reference conditioning.\", language=\"en-us\", voice=reusable\n    )\n    rendered.save_wav(\"cloned.wav\")\n\n\n\n\nThe maintained reference_voice.py example accepts a\nreference-audio path,…",
+          "lower": "akinvox requires reference audio and its exact transcript. select it explicitly. the\nresult is a model-bound referencevoice state, not a static voice pack:\n\nfrom pykokoro import kokorosynthesizer, referencevoice\n\nwith kokorosynthesizer() as synthesizer:\n    voice = synthesizer.enroll_voice(\n        \"reference.wav\",\n        \"the exact words spoken in the reference.\",\n        engine=\"akinvox\",\n        language=\"en-us\",\n        name=\"speaker\",\n    )\n    voice.save(\"speaker-reference.npz\")\n\n    reusable = referencevoice.load(\"speaker-reference.npz\")\n    rendered = synthesizer.synthesize_text(\n        \"new words with reference conditioning.\", language=\"en-us\", voice=reusable\n    )\n    rendered.save_wav(\"cloned.wav\")\n\n\n\n\nthe maintained reference_voice.py example accepts a\nreference-audio path,…"
+        },
+        {
+          "anchor": "",
+          "heading": "Reference requirements and limits",
+          "text": "Version 1 supports English only. Use en or en-us for enrollment and synthesis.\n\n\nReference audio must be 3 to 30 seconds long, mono or multichannel, and supplied as a\nWAV/file path or NumPy waveform with an explicit sample rate.\n\n\nUse a clean, intelligible recording of one speaker. Avoid background speech, music,\nstrong reverberation, silence, and clipping.\n\n\nAudio is downmixed to mono and resampled with SoXR high-quality mode. The parity test\nagainst the upstream resampler checks relative RMS error below 5e-4 and maximum\nabsolute error below 3e-4 on its deterministic test signal.\n\n\nSupply the exact words spoken in the reference. The transcript is phonemized by the\nEnglish frontend to prepare enrollment tokens; it is not inferred by ASR.\n\n\nReferenceVoice is bound to its cloning model ID a…",
+          "lower": "version 1 supports english only. use en or en-us for enrollment and synthesis.\n\n\nreference audio must be 3 to 30 seconds long, mono or multichannel, and supplied as a\nwav/file path or numpy waveform with an explicit sample rate.\n\n\nuse a clean, intelligible recording of one speaker. avoid background speech, music,\nstrong reverberation, silence, and clipping.\n\n\naudio is downmixed to mono and resampled with soxr high-quality mode. the parity test\nagainst the upstream resampler checks relative rms error below 5e-4 and maximum\nabsolute error below 3e-4 on its deterministic test signal.\n\n\nsupply the exact words spoken in the reference. the transcript is phonemized by the\nenglish frontend to prepare enrollment tokens; it is not inferred by asr.\n\n\nreferencevoice is bound to its cloning model id a…"
+        },
+        {
+          "anchor": "",
+          "heading": "Saved state and privacy",
+          "text": "A ReferenceVoice NPZ stores model-bound conditioning tensors, their fingerprint, and\noptional SHA-256 metadata. It does not contain the original audio or transcript. A\nKokoroVoicePack stores only a normal static Kokoro style and metadata, not its source\naudio. Conditioning state is derived from a person’s voice and should be handled as\nsensitive data. Protect and share it only with the speaker’s permission. You must have\npermission to use reference voices for synthesis.\n\nThe runtime uses OnnxVoice and ONNX Runtime. PyKokoro does not require PyTorch,\ntorchaudio, Transformers, or the AkinVox Python package for these features. Reference\naudio and transcript content are not written into synthesis traces by default.\n\nSee the API reference for public enrollment types and\nmodel discovery for run…",
+          "lower": "a referencevoice npz stores model-bound conditioning tensors, their fingerprint, and\noptional sha-256 metadata. it does not contain the original audio or transcript. a\nkokorovoicepack stores only a normal static kokoro style and metadata, not its source\naudio. conditioning state is derived from a person’s voice and should be handled as\nsensitive data. protect and share it only with the speaker’s permission. you must have\npermission to use reference voices for synthesis.\n\nthe runtime uses onnxvoice and onnx runtime. pykokoro does not require pytorch,\ntorchaudio, transformers, or the akinvox python package for these features. reference\naudio and transcript content are not written into synthesis traces by default.\n\nsee the api reference for public enrollment types and\nmodel discovery for run…"
         }
       ]
     },

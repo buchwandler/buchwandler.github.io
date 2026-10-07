@@ -1,0 +1,503 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "utterplan-main",
+  "entries": [
+    {
+      "url": "/tools/utterplan/main/architecture/",
+      "title": "utterplan Architecture",
+      "snippet": "UtterPlan is the canonical renderer-independent compiler from one SSMD document\n(or explicitly selected plain-text document) to an executabl …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Architecture",
+          "text": "UtterPlan is the canonical renderer-independent compiler from one SSMD document\n(or explicitly selected plain-text document) to an executable semantic speech\nplan. Consumers compile each chapter/document separately; UtterPlan does not load\nbooks or manage .ssmdbook or Readio workspaces.\n\none SSMD document / explicit plain text\n                 |\n                 v\n        parse -> language semantics -> spokenform preparation\n                 -> segmentation -> directive/default resolution\n                 -> pause resolution -> units and semantic identity\n                 |\n                 v\n            UtterancePlan\n              /       \\\n     ttsready report   Readio lowering\n                         |\n                         v\n                G2P / renderer / audio\n\n\n\n\nThe dependenc…",
+          "lower": "utterplan is the canonical renderer-independent compiler from one ssmd document\n(or explicitly selected plain-text document) to an executable semantic speech\nplan. consumers compile each chapter/document separately; utterplan does not load\nbooks or manage .ssmdbook or readio workspaces.\n\none ssmd document / explicit plain text\n                 |\n                 v\n        parse -> language semantics -> spokenform preparation\n                 -> segmentation -> directive/default resolution\n                 -> pause resolution -> units and semantic identity\n                 |\n                 v\n            utteranceplan\n              /       \\\n     ttsready report   readio lowering\n                         |\n                         v\n                g2p / renderer / audio\n\n\n\n\nthe dependenc…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD source contract",
+          "text": "The document parser calls SSMD with dialect=\"0.9\" for every SSMD source path,\nincluding unversioned fragments selected with document_format=\"ssmd\". UtterPlan\ndoes not parse SSMD 0.8 or migrate source. Older documents must first be converted\nwith ssmd migrate FILE --to 0.9. The utterplan migrate command is reserved for\nserialized UtterPlan schema migrations.\n\nSSMD header language is authoritative over a fallback language. The CLI can omit\n--language when the header declares a language; plain input always needs an\nexplicit fallback. A fallback never forces or rewrites document semantics.\n\nDeclared annotations remain distinct from effective segment directives.\nplan.annotations preserves authored spans, document_metadata preserves\nportable header semantics, and segment.directives contains res…",
+          "lower": "the document parser calls ssmd with dialect=\"0.9\" for every ssmd source path,\nincluding unversioned fragments selected with document_format=\"ssmd\". utterplan\ndoes not parse ssmd 0.8 or migrate source. older documents must first be converted\nwith ssmd migrate file --to 0.9. the utterplan migrate command is reserved for\nserialized utterplan schema migrations.\n\nssmd header language is authoritative over a fallback language. the cli can omit\n--language when the header declares a language; plain input always needs an\nexplicit fallback. a fallback never forces or rewrites document semantics.\n\ndeclared annotations remain distinct from effective segment directives.\nplan.annotations preserves authored spans, document_metadata preserves\nportable header semantics, and segment.directives contains res…"
+        },
+        {
+          "anchor": "",
+          "heading": "Persistence compatibility boundary",
+          "text": ".utterplan.json\n                                |\n                                v\n                       inspect schema version\n                                |\n                    +-----------+-----------+\n                    |                       |\n                 current                    old\n                    |                       |\n                    |                 migration chain\n                    |                       |\n                    +-----------+-----------+\n                                |\n                                v\n                      current UtterancePlan\n                                |\n                                v\n                            renderer\n\n\n\n\nMigration is not planning. UtterPlan owns persistence, schema validation, and migr…",
+          "lower": ".utterplan.json\n                                |\n                                v\n                       inspect schema version\n                                |\n                    +-----------+-----------+\n                    |                       |\n                 current                    old\n                    |                       |\n                    |                 migration chain\n                    |                       |\n                    +-----------+-----------+\n                                |\n                                v\n                      current utteranceplan\n                                |\n                                v\n                            renderer\n\n\n\n\nmigration is not planning. utterplan owns persistence, schema validation, and migr…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/changelog/",
+      "title": "utterplan Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded typed planner …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added typed planner progress events and reused unchanged linguistic analyses",
+          "lower": "added typed planner progress events and reused unchanged linguistic analyses"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed renderer segmentation to retain adjacent neutral punctuation",
+          "lower": "fixed renderer segmentation to retain adjacent neutral punctuation"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added canonical single-document compilation with plain-text support and preparation traces",
+          "lower": "added canonical single-document compilation with plain-text support and preparation traces"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added SSMD sequence fallback mode controls for spoken-form preparation",
+          "lower": "added ssmd sequence fallback mode controls for spoken-form preparation"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed text preparation so authored SSMD substitutions and say-as annotations remain unchanged",
+          "lower": "fixed text preparation so authored ssmd substitutions and say-as annotations remain unchanged"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added renderer-neutral SSMD audio segments with opaque sources and optional spoken fallback",
+          "lower": "added renderer-neutral ssmd audio segments with opaque sources and optional spoken fallback"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added PEP 561 metadata and SSMD 0.9 package checks",
+          "lower": "added pep 561 metadata and ssmd 0.9 package checks"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "BREAKING: Changed source compatibility to SSMD 0.9 with typed schema v3 plans\n\n\nBREAKING: Changed Python input defaults and renamed SSMDConfig options\n\n\nChanged clause enrichment to reuse provider-owned spaCy docs",
+          "lower": "breaking: changed source compatibility to ssmd 0.9 with typed schema v3 plans\n\n\nbreaking: changed python input defaults and renamed ssmdconfig options\n\n\nchanged clause enrichment to reuse provider-owned spacy docs"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed precedence so authored SSMD breaks override generated pauses",
+          "lower": "fixed precedence so authored ssmd breaks override generated pauses"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the 0.2-to-0.3 migration paths",
+          "lower": "documented the 0.2-to-0.3 migration paths"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added schema version 2 with embedded token annotations, linguistic run provenance, and a v1-to-v2 migration",
+          "lower": "added schema version 2 with embedded token annotations, linguistic run provenance, and a v1-to-v2 migration"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved inspect and explain output with token annotations and linguistic run metadata",
+          "lower": "improved inspect and explain output with token annotations and linguistic run metadata"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed runnable examples with command-line arguments, path-safe outputs, and a dedicated SSMD example script",
+          "lower": "fixed runnable examples with command-line arguments, path-safe outputs, and a dedicated ssmd example script"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added explain CLI command that renders compiled plans as human-readable speech narratives\n\n\nAdded schema versioning with frozen v1 schema and migration framework",
+          "lower": "added explain cli command that renders compiled plans as human-readable speech narratives\n\n\nadded schema versioning with frozen v1 schema and migration framework"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved consumer contract with stable renderer input view and directive handling",
+          "lower": "improved consumer contract with stable renderer input view and directive handling"
+        },
+        {
+          "anchor": "",
+          "heading": "Removed",
+          "text": "Removed PyKokoro references and related test infrastructure",
+          "lower": "removed pykokoro references and related test infrastructure"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented changelog with release entries for v0.1.0, v0.1.1, and v0.1.2",
+          "lower": "documented changelog with release entries for v0.1.0, v0.1.1, and v0.1.2"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Fixed obsolete migration test for PyKokoro frontend dump",
+          "lower": "fixed obsolete migration test for pykokoro frontend dump"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Renamed package from wandler to utterplan",
+          "lower": "renamed package from wandler to utterplan"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added interactive text, stdin, SSMD, and file compilation workflows",
+          "lower": "added interactive text, stdin, ssmd, and file compilation workflows"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Aligned migration dependency floors and packaged typing metadata",
+          "lower": "aligned migration dependency floors and packaged typing metadata"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Added buildable MyST user and developer documentation for the public planning boundary",
+          "lower": "added buildable myst user and developer documentation for the public planning boundary"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Expanded renderer consumer tests and optional PyKokoro parity evidence",
+          "lower": "expanded renderer consumer tests and optional pykokoro parity evidence"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/cli/",
+      "title": "utterplan Command-line interface",
+      "snippet": "UtterPlan’s command-line compiler accepts literal text, stdin, and files:\n\nusage: utterplan compile [-h] [--file FILE] [--language LANGUAGE] …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Command-line interface",
+          "text": "UtterPlan’s command-line compiler accepts literal text, stdin, and files:\n\nusage: utterplan compile [-h] [--file FILE] [--language LANGUAGE]\n                         [--input-format {auto,text,plain,ssmd}]\n                         [--unit {paragraph,sentence}]\n                         [--text-preparation {spokenform,identity}]\n                         [--pause-mode {tts,manual,auto}]\n                         [--spacy {auto,off,sm,md,lg,trf}] [-o OUTPUT]\n                         [--force] [--json]\n                         [text ...]\n\n\n\n\n--lang is an alias for --language; the older --format spelling is accepted\nas an alias for --input-format. --language is a fallback language: it is\nrequired for plain input, optional for SSMD with a header language, and never\nforces a language over SSMD doc…",
+          "lower": "utterplan’s command-line compiler accepts literal text, stdin, and files:\n\nusage: utterplan compile [-h] [--file file] [--language language]\n                         [--input-format {auto,text,plain,ssmd}]\n                         [--unit {paragraph,sentence}]\n                         [--text-preparation {spokenform,identity}]\n                         [--pause-mode {tts,manual,auto}]\n                         [--spacy {auto,off,sm,md,lg,trf}] [-o output]\n                         [--force] [--json]\n                         [text ...]\n\n\n\n\n--lang is an alias for --language; the older --format spelling is accepted\nas an alias for --input-format. --language is a fallback language: it is\nrequired for plain input, optional for ssmd with a header language, and never\nforces a language over ssmd doc…"
+        },
+        {
+          "anchor": "",
+          "heading": "Input resolution",
+          "text": "The rules are deterministic:\n\n\n--file FILE reads exactly that UTF-8 file and cannot be combined with\npositional text.\n\n\nWith no positional text or --file, stdin is read. An empty terminal or\nempty stdin is an error.\n\n\n--input-format text and --input-format plain interpret positional tokens as literal text.\n\n\nOtherwise, one positional token naming an existing regular file is read.\n\n\nAll remaining positional tokens are joined with single spaces as literal\ntext.\n\n\n\nWith auto, .ssmd and .ssmd.md files are interpreted as SSMD. Markdown files\nwith an SSMD version header are also detected as SSMD; ordinary Markdown remains\nplain text; literal text and stdin default to plain. Use --input-format ssmd\nexplicitly for SSMD from stdin or unversioned canonical fragments. All SSMD inputs\nare parsed as s…",
+          "lower": "the rules are deterministic:\n\n\n--file file reads exactly that utf-8 file and cannot be combined with\npositional text.\n\n\nwith no positional text or --file, stdin is read. an empty terminal or\nempty stdin is an error.\n\n\n--input-format text and --input-format plain interpret positional tokens as literal text.\n\n\notherwise, one positional token naming an existing regular file is read.\n\n\nall remaining positional tokens are joined with single spaces as literal\ntext.\n\n\n\nwith auto, .ssmd and .ssmd.md files are interpreted as ssmd. markdown files\nwith an ssmd version header are also detected as ssmd; ordinary markdown remains\nplain text; literal text and stdin default to plain. use --input-format ssmd\nexplicitly for ssmd from stdin or unversioned canonical fragments. all ssmd inputs\nare parsed as s…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD source compatibility",
+          "text": "UtterPlan accepts SSMD 0.9 syntax only. It does not auto-migrate older source or provide a legacy parser. Convert an old SSMD file before compilation:\n\nssmd migrate old.ssmd --to 0.9 --output migrated.ssmd\nutterplan compile migrated.ssmd --lang en-us\n\n\n\n\nutterplan migrate applies only to .utterplan.json schema versions. It cannot migrate SSMD source.",
+          "lower": "utterplan accepts ssmd 0.9 syntax only. it does not auto-migrate older source or provide a legacy parser. convert an old ssmd file before compilation:\n\nssmd migrate old.ssmd --to 0.9 --output migrated.ssmd\nutterplan compile migrated.ssmd --lang en-us\n\n\n\n\nutterplan migrate applies only to .utterplan.json schema versions. it cannot migrate ssmd source."
+        },
+        {
+          "anchor": "",
+          "heading": "Output and errors",
+          "text": "Without --output, compile writes the actual pretty plan JSON to stdout. With\n--output, the file is written and an existing file is refused unless\n--force is supplied. Add --json with an output path to write the file and\nalso emit the same plan JSON to stdout.\n\nHuman status messages are written to stderr, never mixed into JSON stdout:\n\nutterplan compile chapter.ssmd.md -o chapter.utterplan.json\n# status is written to stderr\nutterplan compile chapter.ssmd.md -o chapter.utterplan.json --json | jq .\n\n\n\n\nArgparse usage errors use exit code 2. Input, planning, file, and plan\nvalidation errors use exit code 1 and are reported without a traceback.",
+          "lower": "without --output, compile writes the actual pretty plan json to stdout. with\n--output, the file is written and an existing file is refused unless\n--force is supplied. add --json with an output path to write the file and\nalso emit the same plan json to stdout.\n\nhuman status messages are written to stderr, never mixed into json stdout:\n\nutterplan compile chapter.ssmd.md -o chapter.utterplan.json\n# status is written to stderr\nutterplan compile chapter.ssmd.md -o chapter.utterplan.json --json | jq .\n\n\n\n\nargparse usage errors use exit code 2. input, planning, file, and plan\nvalidation errors use exit code 1 and are reported without a traceback."
+        },
+        {
+          "anchor": "",
+          "heading": "Explain a plan",
+          "text": "Explain an existing compiled plan as a human-readable speech narrative:\n\nutterplan explain chapter.utterplan.json\nutterplan explain chapter.utterplan.json --details\n\n\n\n\nThe default output shows prepared wording, render units, ordered segments, languages, resolved pauses, headings, SSMD version/title/document language, effective typed directives, metadata, and warning/error codes with source locations. Add --details for IDs, offsets, provenance, hashes, plan identity, and token analysis beneath each segment. Use inspect --tokens for a compact token/provenance view.",
+          "lower": "explain an existing compiled plan as a human-readable speech narrative:\n\nutterplan explain chapter.utterplan.json\nutterplan explain chapter.utterplan.json --details\n\n\n\n\nthe default output shows prepared wording, render units, ordered segments, languages, resolved pauses, headings, ssmd version/title/document language, effective typed directives, metadata, and warning/error codes with source locations. add --details for ids, offsets, provenance, hashes, plan identity, and token analysis beneath each segment. use inspect --tokens for a compact token/provenance view."
+        },
+        {
+          "anchor": "",
+          "heading": "Planning controls",
+          "text": "--unit paragraph|sentence chooses render-unit grouping.\n\n\n--text-preparation spokenform|identity chooses written-to-spoken handling.\n\n\n--pause-mode tts|manual|auto selects semantic pause policy.\n\n\n--spacy off|auto|sm|md|lg|trf selects deterministic fallback, automatic\nspaCy use, or a required model tier.\n\n\n\nThe default spaCy policy is off, so the CLI does not depend on whichever optional model happens to be installed.\n\nThe complete defaults are --text-preparation spokenform, --pause-mode tts, and --spacy off. spokenform is the default text-preparation backend, while tts is the default pause mode. --spacy off uses UtterPlan’s deterministic fallback tokenizer and analysis and does not require an installed spaCy model.\n\nUse --spacy auto only as an opt-in enrichment policy. If a compatible lo…",
+          "lower": "--unit paragraph|sentence chooses render-unit grouping.\n\n\n--text-preparation spokenform|identity chooses written-to-spoken handling.\n\n\n--pause-mode tts|manual|auto selects semantic pause policy.\n\n\n--spacy off|auto|sm|md|lg|trf selects deterministic fallback, automatic\nspacy use, or a required model tier.\n\n\n\nthe default spacy policy is off, so the cli does not depend on whichever optional model happens to be installed.\n\nthe complete defaults are --text-preparation spokenform, --pause-mode tts, and --spacy off. spokenform is the default text-preparation backend, while tts is the default pause mode. --spacy off uses utterplan’s deterministic fallback tokenizer and analysis and does not require an installed spacy model.\n\nuse --spacy auto only as an opt-in enrichment policy. if a compatible lo…"
+        },
+        {
+          "anchor": "",
+          "heading": "Other commands",
+          "text": "utterplan --version\nutterplan validate chapter.utterplan.json\nutterplan validate chapter.ssmd.md\nutterplan validate plain.txt --input-format plain --language en-us\nutterplan inspect chapter.utterplan.json --segment 0\nutterplan inspect chapter.utterplan.json --unit 0 --boundaries --tokens\nutterplan inspect chapter.utterplan.json --preparation\n\n\n\n\ninspect --preparation reports the preparation backend and version, structural and spoken text lengths, replacement count, and each replacement’s structural and spoken ranges and text. This is the supported human-facing preparation diagnostic; raw coordinate lookup tables are intentionally absent from plan JSON.",
+          "lower": "utterplan --version\nutterplan validate chapter.utterplan.json\nutterplan validate chapter.ssmd.md\nutterplan validate plain.txt --input-format plain --language en-us\nutterplan inspect chapter.utterplan.json --segment 0\nutterplan inspect chapter.utterplan.json --unit 0 --boundaries --tokens\nutterplan inspect chapter.utterplan.json --preparation\n\n\n\n\ninspect --preparation reports the preparation backend and version, structural and spoken text lengths, replacement count, and each replacement’s structural and spoken ranges and text. this is the supported human-facing preparation diagnostic; raw coordinate lookup tables are intentionally absent from plan json."
+        },
+        {
+          "anchor": "",
+          "heading": "Migrate a saved plan",
+          "text": "Migrate a supported saved plan to the current schema without rerunning planning:\n\nutterplan migrate old.utterplan.json -o current.utterplan.json\nutterplan migrate old.utterplan.json --check\nutterplan migrate old.utterplan.json | jq .\n\n\n\n\nWithout -o, migrated JSON is written to stdout. Status is written to stderr. Existing output files are refused unless --force is supplied. --check validates the route and reports source schema, target schema, and whether migration is required without writing a file. A future schema version is rejected rather than guessed or downgraded.\n\nSchema migration is a separate operation from SSMD source migration. UtterPlan preserves released schema v1 and v2 and migrates v1 plans sequentially through v2 to current schema v3. It never reparses source or replans. Us…",
+          "lower": "migrate a supported saved plan to the current schema without rerunning planning:\n\nutterplan migrate old.utterplan.json -o current.utterplan.json\nutterplan migrate old.utterplan.json --check\nutterplan migrate old.utterplan.json | jq .\n\n\n\n\nwithout -o, migrated json is written to stdout. status is written to stderr. existing output files are refused unless --force is supplied. --check validates the route and reports source schema, target schema, and whether migration is required without writing a file. a future schema version is rejected rather than guessed or downgraded.\n\nschema migration is a separate operation from ssmd source migration. utterplan preserves released schema v1 and v2 and migrates v1 plans sequentially through v2 to current schema v3. it never reparses source or replans. us…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/consumer-guide/",
+      "title": "utterplan Renderer consumer guide",
+      "snippet": "UtterPlan ends at a semantic planning boundary. A renderer consumes the public\nplan object and begins G2P after planning. It does not need a …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Renderer consumer guide",
+          "text": "UtterPlan ends at a semantic planning boundary. A renderer consumes the public\nplan object and begins G2P after planning. It does not need a JSON round trip\nwhen planner and renderer run in the same process.\n\nUtterPlan accepts SSMD source syntax at version 0.9 only. See migration from 0.2 to 0.3 for source and serialized-plan migration paths.",
+          "lower": "utterplan ends at a semantic planning boundary. a renderer consumes the public\nplan object and begins g2p after planning. it does not need a json round trip\nwhen planner and renderer run in the same process.\n\nutterplan accepts ssmd source syntax at version 0.9 only. see migration from 0.2 to 0.3 for source and serialized-plan migration paths."
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD source documents",
+          "text": "UtterPlan 0.3 accepts SSMD 0.9 only. Convert older source files before compilation:\n\nssmd migrate FILE --to 0.9\n\n\n\n\nThis is source-dialect migration. It does not convert serialized UtterPlan plans.",
+          "lower": "utterplan 0.3 accepts ssmd 0.9 only. convert older source files before compilation:\n\nssmd migrate file --to 0.9\n\n\n\n\nthis is source-dialect migration. it does not convert serialized utterplan plans."
+        },
+        {
+          "anchor": "",
+          "heading": "Python input format",
+          "text": "PlannerConfig.document_format now defaults to \"plain\". Plain-text callers need no change. Set document_format=\"ssmd\" when a Python string contains an SSMD document or fragment:\n\nplanner = UtterancePlanner(\n    PlannerConfig(language=\"en-us\", document_format=\"ssmd\")\n)\nplan = planner.plan(ssmd_source)",
+          "lower": "plannerconfig.document_format now defaults to \"plain\". plain-text callers need no change. set document_format=\"ssmd\" when a python string contains an ssmd document or fragment:\n\nplanner = utteranceplanner(\n    plannerconfig(language=\"en-us\", document_format=\"ssmd\")\n)\nplan = planner.plan(ssmd_source)"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD configuration",
+          "text": "SSMDConfig.strict_header and SSMDConfig.unknown_header were removed because SSMD 0.9 owns header validation. parse_header is now parse_yaml_header, and the application-level pause_defaults option is now pause_overrides. The portable SSMD source-header key remains pause_defaults. At a shared boundary, an explicit source break takes precedence over application overrides, document defaults, and planner defaults, including an authored 0ms break.",
+          "lower": "ssmdconfig.strict_header and ssmdconfig.unknown_header were removed because ssmd 0.9 owns header validation. parse_header is now parse_yaml_header, and the application-level pause_defaults option is now pause_overrides. the portable ssmd source-header key remains pause_defaults. at a shared boundary, an explicit source break takes precedence over application overrides, document defaults, and planner defaults, including an authored 0ms break."
+        },
+        {
+          "anchor": "",
+          "heading": "Existing UtterPlan JSON plans",
+          "text": "Serialized schema v1 and v2 plans remain supported. UtterPlan migrates v1 plans sequentially through v2 to current schema v3, and migrates v2 directly to v3. Migration converts serialized plan data only. It does not reparse source or replan. Package version and serialized schema version are independent.",
+          "lower": "serialized schema v1 and v2 plans remain supported. utterplan migrates v1 plans sequentially through v2 to current schema v3, and migrates v2 directly to v3. migration converts serialized plan data only. it does not reparse source or replan. package version and serialized schema version are independent."
+        },
+        {
+          "anchor": "",
+          "heading": "Planning defaults",
+          "text": "UtterPlan’s default text-preparation backend is spokenform, its default pause mode is tts, and the default CLI linguistic-resource policy is spacy off. The default path uses deterministic fallback tokenization and analysis and does not depend on an installed spaCy model.\nThe Python API defaults PlannerConfig.document_format to \"plain\"; choose \"ssmd\" explicitly for authored SSMD strings. In SSMDConfig, use parse_yaml_header and pause_overrides. SSMD 0.9 owns header diagnostics, and the source-header pause_defaults key remains separate from application overrides.\n\nspacy auto is an opt-in enrichment policy. When a compatible local model is available, it may expose richer tokenization, POS tags, lemmas, and tags. Consumers should not assume auto is enabled, and provider documents remain inter…",
+          "lower": "utterplan’s default text-preparation backend is spokenform, its default pause mode is tts, and the default cli linguistic-resource policy is spacy off. the default path uses deterministic fallback tokenization and analysis and does not depend on an installed spacy model.\nthe python api defaults plannerconfig.document_format to \"plain\"; choose \"ssmd\" explicitly for authored ssmd strings. in ssmdconfig, use parse_yaml_header and pause_overrides. ssmd 0.9 owns header diagnostics, and the source-header pause_defaults key remains separate from application overrides.\n\nspacy auto is an opt-in enrichment policy. when a compatible local model is available, it may expose richer tokenization, pos tags, lemmas, and tags. consumers should not assume auto is enabled, and provider documents remain inter…"
+        },
+        {
+          "anchor": "",
+          "heading": "Consumer contract",
+          "text": "Use these public fields:\n\n\nplan.texts.spoken is the prepared text sent toward G2P.\n\n\nsegment.text is exactly the slice of spoken text from\nsegment.spoken_start:segment.spoken_end.\n\n\nsegment.language identifies the language for the segment.\n\n\nplan.languages provides language runs.\n\n\nplan.annotations and segment.annotation_ids preserve declared semantic spans and source provenance.\n\n\nplan.tokens and segment.token_indices provide linguistic token metadata.\n\n\nplan.boundaries explains semantic boundary events, including headings.\n\n\nsegment.pause_before and segment.pause_after are already-resolved pauses.\n\n\nsegment.directives carries effective typed renderer-neutral intent, including voice, pronunciation, prosody, emphasis, say-as, substitution, audio reference, and extension reference.\n\n\nplan.…",
+          "lower": "use these public fields:\n\n\nplan.texts.spoken is the prepared text sent toward g2p.\n\n\nsegment.text is exactly the slice of spoken text from\nsegment.spoken_start:segment.spoken_end.\n\n\nsegment.language identifies the language for the segment.\n\n\nplan.languages provides language runs.\n\n\nplan.annotations and segment.annotation_ids preserve declared semantic spans and source provenance.\n\n\nplan.tokens and segment.token_indices provide linguistic token metadata.\n\n\nplan.boundaries explains semantic boundary events, including headings.\n\n\nsegment.pause_before and segment.pause_after are already-resolved pauses.\n\n\nsegment.directives carries effective typed renderer-neutral intent, including voice, pronunciation, prosody, emphasis, say-as, substitution, audio reference, and extension reference.\n\n\nplan.…"
+        },
+        {
+          "anchor": "",
+          "heading": "Stable renderer input view",
+          "text": "Consumers may rely on these plan-level fields: texts.spoken, preparation, languages, linguistic_runs, tokens, annotations, boundaries, segments, units, markers, and document_metadata. The SSMD version is in document_metadata[\"ssmd_version\"]; heading events are preserved in boundaries. Each segment additionally provides its ID, spoken text range, language, paragraph/sentence/clause ownership, resolved pauses, typed directives, token indices, and annotation IDs.\n\nA completed plan is immutable consumer input. Consumers may inspect and adapt the data for G2P or rendering, but must not rewrite planning decisions or mutate the plan. The canonical invariant is:\n\nbefore = plan.to_json(indent=None)\nplan_id = plan.plan_id\nconsume_plan(plan)\nassert plan.to_json(indent=None) == before\nassert plan.pla…",
+          "lower": "consumers may rely on these plan-level fields: texts.spoken, preparation, languages, linguistic_runs, tokens, annotations, boundaries, segments, units, markers, and document_metadata. the ssmd version is in document_metadata[\"ssmd_version\"]; heading events are preserved in boundaries. each segment additionally provides its id, spoken text range, language, paragraph/sentence/clause ownership, resolved pauses, typed directives, token indices, and annotation ids.\n\na completed plan is immutable consumer input. consumers may inspect and adapt the data for g2p or rendering, but must not rewrite planning decisions or mutate the plan. the canonical invariant is:\n\nbefore = plan.to_json(indent=none)\nplan_id = plan.plan_id\nconsume_plan(plan)\nassert plan.to_json(indent=none) == before\nassert plan.pla…"
+        },
+        {
+          "anchor": "",
+          "heading": "Renderer-neutral pseudocode",
+          "text": "plan = planner.plan(source_text)\n\nfor unit in plan.units:\n    for segment_id in unit.segment_ids:\n        segment = next(item for item in plan.segments if item.id == segment_id)\n        prepared_text = segment.text\n        language = segment.language\n        pause_before = segment.pause_before.seconds\n        pause_after = segment.pause_after.seconds\n        audio = segment.directives.audio\n        if audio is not None:\n            # One segment represents one media occurrence; resolve externally.\n            resolve_audio(audio.src, fallback_text=prepared_text)\n        else:\n            segment_tokens = plan.tokens_for_segment(segment)\n            # Pass tokens to contextual G2P without rerunning spaCy.\n            render_speech(prepared_text, language, segment_tokens, pause_before, paus…",
+          "lower": "plan = planner.plan(source_text)\n\nfor unit in plan.units:\n    for segment_id in unit.segment_ids:\n        segment = next(item for item in plan.segments if item.id == segment_id)\n        prepared_text = segment.text\n        language = segment.language\n        pause_before = segment.pause_before.seconds\n        pause_after = segment.pause_after.seconds\n        audio = segment.directives.audio\n        if audio is not none:\n            # one segment represents one media occurrence; resolve externally.\n            resolve_audio(audio.src, fallback_text=prepared_text)\n        else:\n            segment_tokens = plan.tokens_for_segment(segment)\n            # pass tokens to contextual g2p without rerunning spacy.\n            render_speech(prepared_text, language, segment_tokens, pause_before, paus…"
+        },
+        {
+          "anchor": "",
+          "heading": "What is intentionally absent",
+          "text": "Plans contain no phonemes, model token IDs, model sessions, audio, renderer\nconfiguration, or model-derived timings. Acoustic retries and renderer-level\nrandomness remain outside UtterPlan.",
+          "lower": "plans contain no phonemes, model token ids, model sessions, audio, renderer\nconfiguration, or model-derived timings. acoustic retries and renderer-level\nrandomness remain outside utterplan."
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/coordinate-spaces/",
+      "title": "utterplan Coordinate spaces",
+      "snippet": "UtterPlan uses explicit coordinate names. spoken_start, spoken_end, and spoken_position refer to half-open offsets into texts.spoken. Token, …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Coordinate spaces",
+          "text": "UtterPlan uses explicit coordinate names. spoken_start, spoken_end, and spoken_position refer to half-open offsets into texts.spoken. Token, annotation-spoken, language-run, marker, unit, and segment ranges consumed by a renderer use this prepared/synthesis-space coordinate system.\n\nstructural_start and structural_end refer to half-open offsets into texts.structural. The source field contains exact caller input, which may include SSMD headers and markup; source offsets are not fabricated for renderer slicing.\n\nSSMD source_start and source_end are half-open Python string offsets (Unicode code points) into the exact original source, including any header and markup. They are source provenance only, not offsets into texts.structural or texts.spoken. Diagnostic line and column values are 1-bas…",
+          "lower": "utterplan uses explicit coordinate names. spoken_start, spoken_end, and spoken_position refer to half-open offsets into texts.spoken. token, annotation-spoken, language-run, marker, unit, and segment ranges consumed by a renderer use this prepared/synthesis-space coordinate system.\n\nstructural_start and structural_end refer to half-open offsets into texts.structural. the source field contains exact caller input, which may include ssmd headers and markup; source offsets are not fabricated for renderer slicing.\n\nssmd source_start and source_end are half-open python string offsets (unicode code points) into the exact original source, including any header and markup. they are source provenance only, not offsets into texts.structural or texts.spoken. diagnostic line and column values are 1-bas…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/debugging/",
+      "title": "utterplan Debugging",
+      "snippet": "Start with the integrated plan explanation before inspecting audio:\n\nsource / SSMD -> document.utterplan.json -> renderer diagnostics -> aud …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Debugging",
+          "text": "Start with the integrated plan explanation before inspecting audio:\n\nsource / SSMD -> document.utterplan.json -> renderer diagnostics -> audio\n\n\n\n\nutterplan explain FILE shows prepared wording, render units, languages, resolved pauses, directives, markers, and warnings together. Use utterplan inspect when you need raw tokens, boundaries, coordinates, or a specific segment.\n\nFor SSMD plans, explain summarizes the parsed version, title and document language, heading events, effective typed directives, portable metadata, and warning/error codes with source locations. These are semantic plan diagnostics, not renderer execution results. UtterPlan parses SSMD 0.9 only. Migrate an older source file first with ssmd migrate FILE --to 0.9; utterplan migrate is for plan JSON schemas.\n\nUse inspect --…",
+          "lower": "start with the integrated plan explanation before inspecting audio:\n\nsource / ssmd -> document.utterplan.json -> renderer diagnostics -> audio\n\n\n\n\nutterplan explain file shows prepared wording, render units, languages, resolved pauses, directives, markers, and warnings together. use utterplan inspect when you need raw tokens, boundaries, coordinates, or a specific segment.\n\nfor ssmd plans, explain summarizes the parsed version, title and document language, heading events, effective typed directives, portable metadata, and warning/error codes with source locations. these are semantic plan diagnostics, not renderer execution results. utterplan parses ssmd 0.9 only. migrate an older source file first with ssmd migrate file --to 0.9; utterplan migrate is for plan json schemas.\n\nuse inspect --…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/format/",
+      "title": "UtterPlan format v3",
+      "snippet": "A plan is UTF-8 JSON with format: \"utterplan\" and the current schema_version: 3. Schemas v1 and v2 are frozen at their versioned paths under …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "UtterPlan format v3",
+          "text": "A plan is UTF-8 JSON with format: \"utterplan\" and the current schema_version: 3. Schemas v1 and v2 are frozen at their versioned paths under spec/schemas/ and utterplan/schemas/. The exact caller input is retained in source; texts.structural is parsed structure and texts.spoken is the prepared text sent toward G2P.\n\nThe top-level semantic categories include source, config, texts, preparation, languages, linguistic_runs, document_metadata, annotations, boundaries, tokens, segments, units, markers, warnings, diagnostics, and plan_id. document_metadata preserves SSMD header values, including the parsed version. Boundaries preserve structural events such as headings. Segments are the atomic renderer-facing records. Their ranges are half-open offsets into texts.spoken. Units group segments by…",
+          "lower": "a plan is utf-8 json with format: \"utterplan\" and the current schema_version: 3. schemas v1 and v2 are frozen at their versioned paths under spec/schemas/ and utterplan/schemas/. the exact caller input is retained in source; texts.structural is parsed structure and texts.spoken is the prepared text sent toward g2p.\n\nthe top-level semantic categories include source, config, texts, preparation, languages, linguistic_runs, document_metadata, annotations, boundaries, tokens, segments, units, markers, warnings, diagnostics, and plan_id. document_metadata preserves ssmd header values, including the parsed version. boundaries preserve structural events such as headings. segments are the atomic renderer-facing records. their ranges are half-open offsets into texts.spoken. units group segments by…"
+        },
+        {
+          "anchor": "",
+          "heading": "Coordinate and provenance rules",
+          "text": "Annotations retain structural_start and structural_end in texts.structural, nullable spoken_start and spoken_end in texts.spoken, and nullable source_start, source_end, and source_node_id provenance for SSMD source nodes. Source offsets are half-open Python string offsets measured in Unicode code points into the exact original input, including header and markup. They are not renderer slicing coordinates. Diagnostic source offsets use the same coordinate space; diagnostic line and column are 1-based. Preparation stores backend, version, language runs, replacement provenance, and warnings. It does not serialize the transient coordinate map. Boundary and marker positions are always spoken coordinates; segment ranges and renderer-facing annotation applicability are also spoken coordinates.\n\nA…",
+          "lower": "annotations retain structural_start and structural_end in texts.structural, nullable spoken_start and spoken_end in texts.spoken, and nullable source_start, source_end, and source_node_id provenance for ssmd source nodes. source offsets are half-open python string offsets measured in unicode code points into the exact original input, including header and markup. they are not renderer slicing coordinates. diagnostic source offsets use the same coordinate space; diagnostic line and column are 1-based. preparation stores backend, version, language runs, replacement provenance, and warnings. it does not serialize the transient coordinate map. boundary and marker positions are always spoken coordinates; segment ranges and renderer-facing annotation applicability are also spoken coordinates.\n\na…"
+        },
+        {
+          "anchor": "",
+          "heading": "Schema versioning and migration",
+          "text": "Schema version 3 is the current serialized format. The package version is independent from the plan schema version. Immutable definitions for v1, v2, and v3 are retained under spec/schemas/ and utterplan/schemas/. spec/utterplan.schema.json and utterplan/utterplan.schema.json are current schema v3 aliases.\n\nEvery supported historical plan is routed by its declared schema version before current-model construction. The v1-to-v2 and v2-to-v3 migrations are deterministic representation conversions over plain JSON data; v1 plans migrate sequentially through v2. They do not rerun SSMD parsing, spokenform, phrasplit, linguistic analysis, planning, G2P, or rendering. Legacy linguistic provenance remains unknown; missing POS/tag values are never inferred.\n\nUtterancePlan.from_dict, from_json, and l…",
+          "lower": "schema version 3 is the current serialized format. the package version is independent from the plan schema version. immutable definitions for v1, v2, and v3 are retained under spec/schemas/ and utterplan/schemas/. spec/utterplan.schema.json and utterplan/utterplan.schema.json are current schema v3 aliases.\n\nevery supported historical plan is routed by its declared schema version before current-model construction. the v1-to-v2 and v2-to-v3 migrations are deterministic representation conversions over plain json data; v1 plans migrate sequentially through v2. they do not rerun ssmd parsing, spokenform, phrasplit, linguistic analysis, planning, g2p, or rendering. legacy linguistic provenance remains unknown; missing pos/tag values are never inferred.\n\nutteranceplan.from_dict, from_json, and l…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/getting-started/",
+      "title": "utterplan Getting started",
+      "snippet": "Install the package from the distribution that matches your environment:\n\npython -m pip install utterplan\n\n\n\n\nFor development, install the t …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Install",
+          "text": "Install the package from the distribution that matches your environment:\n\npython -m pip install utterplan\n\n\n\n\nFor development, install the test and documentation extras from a checkout:\n\npython -m pip install -e '.[dev,docs]'",
+          "lower": "install the package from the distribution that matches your environment:\n\npython -m pip install utterplan\n\n\n\n\nfor development, install the test and documentation extras from a checkout:\n\npython -m pip install -e '.[dev,docs]'"
+        },
+        {
+          "anchor": "",
+          "heading": "Create a plan in Python",
+          "text": "from utterplan import PlannerConfig, UtterancePlanner\n\nplanner = UtterancePlanner(PlannerConfig(language=\"en-us\"))\nplan = planner.plan(\"Doctor Smith bought 5 kg of apples.\")\n\nprint(plan.texts.spoken)\nfor segment in plan.segments:\n    print(segment.text, segment.language)\n\n\n\n\nPython PlannerConfig defaults to plain input. Pass document_format=\"ssmd\" when planning SSMD source from Python.\nThe planner produces semantic information for a renderer. It does not produce\nphonemes, model tokens, or audio.",
+          "lower": "from utterplan import plannerconfig, utteranceplanner\n\nplanner = utteranceplanner(plannerconfig(language=\"en-us\"))\nplan = planner.plan(\"doctor smith bought 5 kg of apples.\")\n\nprint(plan.texts.spoken)\nfor segment in plan.segments:\n    print(segment.text, segment.language)\n\n\n\n\npython plannerconfig defaults to plain input. pass document_format=\"ssmd\" when planning ssmd source from python.\nthe planner produces semantic information for a renderer. it does not produce\nphonemes, model tokens, or audio."
+        },
+        {
+          "anchor": "",
+          "heading": "Compile literal text",
+          "text": "utterplan compile \"Doctor Smith bought 5 kg.\" --lang en-us\n\n\n\n\nWithout -o, the complete plan JSON is written to stdout. This makes the\nresult convenient for shell pipelines:",
+          "lower": "utterplan compile \"doctor smith bought 5 kg.\" --lang en-us\n\n\n\n\nwithout -o, the complete plan json is written to stdout. this makes the\nresult convenient for shell pipelines:"
+        },
+        {
+          "anchor": "",
+          "heading": "Defaults and linguistic resources",
+          "text": "The default compile policy is spokenform for text preparation, tts for pause mode, and spacy off for linguistic resources. The fallback path records linguistic_runs[*].provider = \"fallback\" and leaves POS, tag, and morph unavailable. It does not require an installed spaCy model.\n\n--spacy auto is an explicit opt-in. With a compatible local model, final pass-B tokens may contain POS, tag, lemma, and morphology, and the plan records the actual provider, model, and known versions. sm, md, lg, and trf require the requested local model. UtterPlan never downloads models automatically.\nInstall the optional library with python -m pip install 'utterplan[spacy]' when needed. Language model packages remain explicit environment dependencies and are never downloaded by UtterPlan.\n\nutterplan compile \"He…",
+          "lower": "the default compile policy is spokenform for text preparation, tts for pause mode, and spacy off for linguistic resources. the fallback path records linguistic_runs[*].provider = \"fallback\" and leaves pos, tag, and morph unavailable. it does not require an installed spacy model.\n\n--spacy auto is an explicit opt-in. with a compatible local model, final pass-b tokens may contain pos, tag, lemma, and morphology, and the plan records the actual provider, model, and known versions. sm, md, lg, and trf require the requested local model. utterplan never downloads models automatically.\ninstall the optional library with python -m pip install 'utterplan[spacy]' when needed. language model packages remain explicit environment dependencies and are never downloaded by utterplan.\n\nutterplan compile \"he…"
+        },
+        {
+          "anchor": "",
+          "heading": "Compile stdin or a file",
+          "text": "echo \"Hello world.\" | utterplan compile --lang en-us > hello.utterplan.json\nutterplan compile chapter.ssmd.md --lang en-us -o chapter.utterplan.json\nutterplan compile --file chapter.ssmd.md --lang en-us -o chapter.utterplan.json\n\n\n\n\nA single existing positional path is read as a file. Use\n--input-format text when a path-like value must remain literal text.",
+          "lower": "echo \"hello world.\" | utterplan compile --lang en-us > hello.utterplan.json\nutterplan compile chapter.ssmd.md --lang en-us -o chapter.utterplan.json\nutterplan compile --file chapter.ssmd.md --lang en-us -o chapter.utterplan.json\n\n\n\n\na single existing positional path is read as a file. use\n--input-format text when a path-like value must remain literal text."
+        },
+        {
+          "anchor": "",
+          "heading": "Inspect and validate",
+          "text": "utterplan validate hello.utterplan.json\nutterplan inspect hello.utterplan.json --segment 0\nutterplan inspect hello.utterplan.json --unit 0 --boundaries --tokens",
+          "lower": "utterplan validate hello.utterplan.json\nutterplan inspect hello.utterplan.json --segment 0\nutterplan inspect hello.utterplan.json --unit 0 --boundaries --tokens"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD",
+          "text": "SSMD is selected by .ssmd or .ssmd.md suffixes, an SSMD version header in Markdown, or explicitly from stdin:\n\nprintf '[Hello]{lang=\"en-us\"} ...s [Bonjour]{lang=\"fr\"}.\\n' \\\n  | utterplan compile --lang en-us --input-format ssmd\n\n\n\n\nUtterPlan parses SSMD dialect 0.9 only, including canonical fragments without a version header when explicitly selected. Older SSMD source must be converted first: ssmd migrate old.ssmd --to 0.9. utterplan migrate is for historical UtterPlan JSON schemas, not source files.\n\nThe compiled plan preserves SSMD header metadata, declared annotations, structural events, and effective typed directives. Audio and extension references are descriptive data only; consumers decide how to interpret them.\nStructural text preserves the parsed document representation. Spoken te…",
+          "lower": "ssmd is selected by .ssmd or .ssmd.md suffixes, an ssmd version header in markdown, or explicitly from stdin:\n\nprintf '[hello]{lang=\"en-us\"} ...s [bonjour]{lang=\"fr\"}.\\n' \\\n  | utterplan compile --lang en-us --input-format ssmd\n\n\n\n\nutterplan parses ssmd dialect 0.9 only, including canonical fragments without a version header when explicitly selected. older ssmd source must be converted first: ssmd migrate old.ssmd --to 0.9. utterplan migrate is for historical utterplan json schemas, not source files.\n\nthe compiled plan preserves ssmd header metadata, declared annotations, structural events, and effective typed directives. audio and extension references are descriptive data only; consumers decide how to interpret them.\nstructural text preserves the parsed document representation. spoken te…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/",
+      "title": "UtterPlan",
+      "snippet": "UtterPlan compiles text and SSMD into deterministic, engine-independent semantic\nspeech plans. It stops before G2P and synthesis.\n\n\nUser gui …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "UtterPlan",
+          "text": "UtterPlan compiles text and SSMD into deterministic, engine-independent semantic\nspeech plans. It stops before G2P and synthesis.\n\n\nUser guide\n\n\nGetting started\nInstall\n\nCreate a plan in Python\n\nCompile literal text\n\nDefaults and linguistic resources\n\nCompile stdin or a file\n\nInspect and validate\n\nSSMD\n\n\n\n\nCommand-line interface\nInput resolution\n\nSSMD source compatibility\n\nOutput and errors\n\nExplain a plan\n\nPlanning controls\n\nOther commands\n\nMigrate a saved plan\n\n\n\n\nRenderer consumer guide\nMigrating from UtterPlan 0.2 to 0.3\n\nPlanning defaults\n\nConsumer contract\n\nStable renderer input view\n\nRenderer-neutral pseudocode\n\nWhat is intentionally absent\n\n\n\n\nUtterPlan format v3\nCoordinate and provenance rules\n\nSchema versioning and migration\n\n\n\n\nCoordinate spaces\n\nDebugging\n\n\n\n\n\nDeveloper guide…",
+          "lower": "utterplan compiles text and ssmd into deterministic, engine-independent semantic\nspeech plans. it stops before g2p and synthesis.\n\n\nuser guide\n\n\ngetting started\ninstall\n\ncreate a plan in python\n\ncompile literal text\n\ndefaults and linguistic resources\n\ncompile stdin or a file\n\ninspect and validate\n\nssmd\n\n\n\n\ncommand-line interface\ninput resolution\n\nssmd source compatibility\n\noutput and errors\n\nexplain a plan\n\nplanning controls\n\nother commands\n\nmigrate a saved plan\n\n\n\n\nrenderer consumer guide\nmigrating from utterplan 0.2 to 0.3\n\nplanning defaults\n\nconsumer contract\n\nstable renderer input view\n\nrenderer-neutral pseudocode\n\nwhat is intentionally absent\n\n\n\n\nutterplan format v3\ncoordinate and provenance rules\n\nschema versioning and migration\n\n\n\n\ncoordinate spaces\n\ndebugging\n\n\n\n\n\ndeveloper guide…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/pykokoro-integration/",
+      "title": "utterplan PyKokoro integration boundary",
+      "snippet": "UtterPlan is an independent planning compiler. PyKokoro is an optional consumer,\nnot a runtime dependency of this package.\nThe intended migr …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "PyKokoro integration boundary",
+          "text": "UtterPlan is an independent planning compiler. PyKokoro is an optional consumer,\nnot a runtime dependency of this package.\nThe intended migration keeps the existing PyKokoro user API unchanged:\n\nKokoroPipeline.run(text)\n    -> map PipelineConfig and GenerationConfig to PlannerConfig\n    -> UtterancePlanner.plan(text)\n    -> adapt public PlanSegment records to PyKokoro's G2P input\n    -> PyKokoro G2P\n    -> phoneme processing\n    -> model inference\n    -> audio\n\n\n\n\nPyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions,\nacoustic behavior, audio, and any compatibility behavior specific to its\nrenderer. UtterPlan owns deterministic document parsing, language planning,\nwritten-to-spoken preparation, segmentation, semantic directives, boundaries,\npauses, markers, and ren…",
+          "lower": "utterplan is an independent planning compiler. pykokoro is an optional consumer,\nnot a runtime dependency of this package.\nthe intended migration keeps the existing pykokoro user api unchanged:\n\nkokoropipeline.run(text)\n    -> map pipelineconfig and generationconfig to plannerconfig\n    -> utteranceplanner.plan(text)\n    -> adapt public plansegment records to pykokoro's g2p input\n    -> pykokoro g2p\n    -> phoneme processing\n    -> model inference\n    -> audio\n\n\n\n\npykokoro owns model selection, voice assets, g2p, model tokens, onnx sessions,\nacoustic behavior, audio, and any compatibility behavior specific to its\nrenderer. utterplan owns deterministic document parsing, language planning,\nwritten-to-spoken preparation, segmentation, semantic directives, boundaries,\npauses, markers, and ren…"
+        },
+        {
+          "anchor": "",
+          "heading": "Thin adapter inputs",
+          "text": "A future adapter can use only public UtterancePlan fields:\n\n\nplan.texts.spoken;\n\n\nplan.languages;\n\n\nplan.tokens and plan.annotations;\n\n\nplan.boundaries;\n\n\nplan.segments and plan.units;\n\n\nplan.markers;\n\n\nplan.document_metadata;\n\n\nresolved segment pauses and typed directives.\n\n\n\nIt should pass PlanSegment.text and PlanSegment.language to the next\n\nFor contextual pronunciation, pass the segment token snapshot to G2P:\n\nsegment_tokens = plan.tokens_for_segment(segment)\nif linguistic_run.provider != \"spacy\":\n    # Fail clearly or use the consumer's documented non-contextual fallback.\n    ...\nphonemizer(segment.text, segment.language, segment_tokens)\n\n\n\n\nThe renderer must not rerun spaCy or infer missing POS/tag values.\nfrontend stage. No JSON serialization is required for in-process use.",
+          "lower": "a future adapter can use only public utteranceplan fields:\n\n\nplan.texts.spoken;\n\n\nplan.languages;\n\n\nplan.tokens and plan.annotations;\n\n\nplan.boundaries;\n\n\nplan.segments and plan.units;\n\n\nplan.markers;\n\n\nplan.document_metadata;\n\n\nresolved segment pauses and typed directives.\n\n\n\nit should pass plansegment.text and plansegment.language to the next\n\nfor contextual pronunciation, pass the segment token snapshot to g2p:\n\nsegment_tokens = plan.tokens_for_segment(segment)\nif linguistic_run.provider != \"spacy\":\n    # fail clearly or use the consumer's documented non-contextual fallback.\n    ...\nphonemizer(segment.text, segment.language, segment_tokens)\n\n\n\n\nthe renderer must not rerun spacy or infer missing pos/tag values.\nfrontend stage. no json serialization is required for in-process use."
+        },
+        {
+          "anchor": "",
+          "heading": "Pause behavior",
+          "text": "UtterPlan resolves deterministic base semantic pauses. PyKokoro may apply\nrenderer or acoustic variance after consuming the plan when legacy behavior\nrequires it. Such variance must remain outside semantic plan identity and must\nnot be added to UtterPlan merely to mirror renderer settings.",
+          "lower": "utterplan resolves deterministic base semantic pauses. pykokoro may apply\nrenderer or acoustic variance after consuming the plan when legacy behavior\nrequires it. such variance must remain outside semantic plan identity and must\nnot be added to utterplan merely to mirror renderer settings."
+        },
+        {
+          "anchor": "",
+          "heading": "Compatibility ownership",
+          "text": "Consumer-specific compatibility and integration tests belong in the PyKokoro\nrepository. UtterPlan’s own test suite validates the public semantic planning\ncontract using repository-owned fixtures and goldens only.",
+          "lower": "consumer-specific compatibility and integration tests belong in the pykokoro\nrepository. utterplan’s own test suite validates the public semantic planning\ncontract using repository-owned fixtures and goldens only."
+        }
+      ]
+    },
+    {
+      "url": "/tools/utterplan/main/python-api/",
+      "title": "utterplan Python API",
+      "snippet": "The canonical public entry point is compile_document, which compiles one SSMD\ndocument or explicitly configured plain-text document and retu …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "The canonical public entry point is compile_document, which compiles one SSMD\ndocument or explicitly configured plain-text document and returns a CompileResult.\nIts plan is the immutable, round-trippable renderer-independent UtterancePlan;\nits diagnostics explain compilation, and an optional PreparationTrace is\nseparate diagnostic output. UtterancePlanner.plan remains supported for\ncompatibility and returns only the plan.\n\nThe Python defaults are deliberately spaCy-free: PlannerConfig uses spokenform text preparation, and PauseConfig().mode is \"tts\". The CLI additionally defaults to the spacy off linguistic-resource policy, which uses deterministic fallback tokenization and analysis without requiring an installed spaCy model.\n\nFor an explicit contextual-G2P configuration, use LinguisticsC…",
+          "lower": "the canonical public entry point is compile_document, which compiles one ssmd\ndocument or explicitly configured plain-text document and returns a compileresult.\nits plan is the immutable, round-trippable renderer-independent utteranceplan;\nits diagnostics explain compilation, and an optional preparationtrace is\nseparate diagnostic output. utteranceplanner.plan remains supported for\ncompatibility and returns only the plan.\n\nthe python defaults are deliberately spacy-free: plannerconfig uses spokenform text preparation, and pauseconfig().mode is \"tts\". the cli additionally defaults to the spacy off linguistic-resource policy, which uses deterministic fallback tokenization and analysis without requiring an installed spacy model.\n\nfor an explicit contextual-g2p configuration, use linguisticsc…"
+        },
+        {
+          "anchor": "",
+          "heading": "Canonical single-document compiler",
+          "text": "compile_document is the shared semantic interpretation boundary for independent\nconsumers. It does not load books, traverse chapters, or manage consumer workspaces.\nSSMD header language takes precedence over a fallback; the explicit\nfallback_language keyword is a per-call fallback override, never a forced language.\nPlannerConfig.language remains required for compatibility and supplies the fallback\nwhen fallback_language is omitted. Plain input must have a language fallback.\n\nfrom utterplan import PlannerConfig, compile_document\n\nresult = compile_document(\n    ssmd_source,\n    input_format=\"ssmd\",\n    config=PlannerConfig(language=\"en-us\"),\n    trace=True,\n)\nplan = result.plan\nassert result.diagnostics == plan.diagnostics\nassert result.trace is not None\n\n\n\n\nUse input_format=\"plain\" only fo…",
+          "lower": "compile_document is the shared semantic interpretation boundary for independent\nconsumers. it does not load books, traverse chapters, or manage consumer workspaces.\nssmd header language takes precedence over a fallback; the explicit\nfallback_language keyword is a per-call fallback override, never a forced language.\nplannerconfig.language remains required for compatibility and supplies the fallback\nwhen fallback_language is omitted. plain input must have a language fallback.\n\nfrom utterplan import plannerconfig, compile_document\n\nresult = compile_document(\n    ssmd_source,\n    input_format=\"ssmd\",\n    config=plannerconfig(language=\"en-us\"),\n    trace=true,\n)\nplan = result.plan\nassert result.diagnostics == plan.diagnostics\nassert result.trace is not none\n\n\n\n\nuse input_format=\"plain\" only fo…"
+        },
+        {
+          "anchor": "",
+          "heading": "Planner progress callbacks",
+          "text": "UtterancePlanner.plan, UtterancePlanner.compile, and compile_document accept an optional keyword-only on_progress callback. It receives typed PlannerProgressEvent objects synchronously in the planner thread. Progress is operational only: it is not added to PlannerConfig or the plan, and enabling a callback does not change plan identity or serialization.\n\nfrom utterplan import PlannerConfig, PlannerProgressEvent, UtterancePlanner\n\n\ndef report(event: PlannerProgressEvent) -> None:\n    if event.kind == \"run.started\":\n        print(\n            event.phase,\n            event.pass_index,\n            event.language,\n            event.provider,\n            event.model,\n        )\n\n\nplanner = UtterancePlanner(PlannerConfig(language=\"en-us\"))\nplan = planner.plan(text, on_progress=report)\n\n\n\n\nThe ph…",
+          "lower": "utteranceplanner.plan, utteranceplanner.compile, and compile_document accept an optional keyword-only on_progress callback. it receives typed plannerprogressevent objects synchronously in the planner thread. progress is operational only: it is not added to plannerconfig or the plan, and enabling a callback does not change plan identity or serialization.\n\nfrom utterplan import plannerconfig, plannerprogressevent, utteranceplanner\n\n\ndef report(event: plannerprogressevent) -> none:\n    if event.kind == \"run.started\":\n        print(\n            event.phase,\n            event.pass_index,\n            event.language,\n            event.provider,\n            event.model,\n        )\n\n\nplanner = utteranceplanner(plannerconfig(language=\"en-us\"))\nplan = planner.plan(text, on_progress=report)\n\n\n\n\nthe ph…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD input and semantic plan",
+          "text": "The SSMD parser accepts dialect 0.9 only. Select SSMD explicitly for unversioned canonical fragments with PlannerConfig(document_format=\"ssmd\"). Older SSMD source must be migrated with ssmd migrate FILE --to 0.9; migrate_plan_data and utterplan migrate apply to serialized UtterPlan JSON, not source documents.\n\nPlannerConfig.document_format defaults to \"plain\", so SSMD syntax is never inferred for an ordinary Python string. Set document_format=\"ssmd\" for SSMD documents or fragments.\n\nSSMDConfig.parse_yaml_header controls front-matter parsing. The ineffective strict_header and unknown_header options were removed because SSMD 0.9 owns header validation. Application pause settings use SSMDConfig.pause_overrides; this is distinct from the portable source-header key pause_defaults. At a shared…",
+          "lower": "the ssmd parser accepts dialect 0.9 only. select ssmd explicitly for unversioned canonical fragments with plannerconfig(document_format=\"ssmd\"). older ssmd source must be migrated with ssmd migrate file --to 0.9; migrate_plan_data and utterplan migrate apply to serialized utterplan json, not source documents.\n\nplannerconfig.document_format defaults to \"plain\", so ssmd syntax is never inferred for an ordinary python string. set document_format=\"ssmd\" for ssmd documents or fragments.\n\nssmdconfig.parse_yaml_header controls front-matter parsing. the ineffective strict_header and unknown_header options were removed because ssmd 0.9 owns header validation. application pause settings use ssmdconfig.pause_overrides; this is distinct from the portable source-header key pause_defaults. at a shared…"
+        },
+        {
+          "anchor": "",
+          "heading": "Audio/media segments",
+          "text": "AudioDirective is already part of the public API. Inspect it on the segment; its\nsrc is an opaque renderer input, and segment.text is optional spoken fallback:\n\nsegment = plan.segments[0]\naudio = segment.directives.audio\nif audio is not None:\n    print(audio.src)  # Resolve externally; do not parse SFX URI syntax here.\n    fallback_text = segment.text  # May be \"\" when no spoken fallback exists.\nelse:\n    spoken_text = segment.text\n\n\n\n\nEach SSMD audio annotation is represented by one audio-bearing segment. Separate\noccurrences may have the same src; segment.text is not the media identity and\nconsumers do not need to inspect raw SSMD annotations to find media.",
+          "lower": "audiodirective is already part of the public api. inspect it on the segment; its\nsrc is an opaque renderer input, and segment.text is optional spoken fallback:\n\nsegment = plan.segments[0]\naudio = segment.directives.audio\nif audio is not none:\n    print(audio.src)  # resolve externally; do not parse sfx uri syntax here.\n    fallback_text = segment.text  # may be \"\" when no spoken fallback exists.\nelse:\n    spoken_text = segment.text\n\n\n\n\neach ssmd audio annotation is represented by one audio-bearing segment. separate\noccurrences may have the same src; segment.text is not the media identity and\nconsumers do not need to inspect raw ssmd annotations to find media."
+        },
+        {
+          "anchor": "",
+          "heading": "Renderer-neutral SSMD directives",
+          "text": "The public model also exposes languages, annotations, boundaries,\ntokens, markers, document_metadata, and resolved segment pauses. See the\nconsumer guide for how a renderer uses these fields.\n\nTokenAnnotation contains text, language, lemma, pos, tag, and morph. Token text and offsets address texts.spoken; morph is a compact provider string such as Tense=Pres|VerbForm=Fin. LinguisticRun records whether those facts came from spaCy, fallback tokenization, or unknown legacy provenance.\n\nTextPreparationInfo exposes serializable provenance only. Exact source-to-spoken mapping is transient planner state and is not part of UtterancePlan or its JSON contract.",
+          "lower": "the public model also exposes languages, annotations, boundaries,\ntokens, markers, document_metadata, and resolved segment pauses. see the\nconsumer guide for how a renderer uses these fields.\n\ntokenannotation contains text, language, lemma, pos, tag, and morph. token text and offsets address texts.spoken; morph is a compact provider string such as tense=pres|verbform=fin. linguisticrun records whether those facts came from spacy, fallback tokenization, or unknown legacy provenance.\n\ntextpreparationinfo exposes serializable provenance only. exact source-to-spoken mapping is transient planner state and is not part of utteranceplan or its json contract."
+        },
+        {
+          "anchor": "",
+          "heading": "Errors",
+          "text": "Planning and loading failures derive from utterplan.UtterPlanError. Important\npublic subclasses include ConfigurationError, PlanningError,\nPlanFormatError, PlanValidationError, and UnsupportedSchemaError.\nPlanMigrationError and MigrationPathError report migration-specific failures. UnsupportedSchemaError remains reserved for a schema newer than the installed package understands.",
+          "lower": "planning and loading failures derive from utterplan.utterplanerror. important\npublic subclasses include configurationerror, planningerror,\nplanformaterror, planvalidationerror, and unsupportedschemaerror.\nplanmigrationerror and migrationpatherror report migration-specific failures. unsupportedschemaerror remains reserved for a schema newer than the installed package understands."
+        },
+        {
+          "anchor": "",
+          "heading": "Schema migration API",
+          "text": "from utterplan import (\n    CURRENT_SCHEMA_VERSION,\n    MigrationResult,\n    MigrationStep,\n    SUPPORTED_SCHEMA_VERSIONS,\n    migrate_plan_data,\n    migrate_plan_json,\n )\n\nresult: MigrationResult = migrate_plan_data(serialized_mapping)\nassert result.target_version == CURRENT_SCHEMA_VERSION\nplan = UtterancePlan.from_dict(result.data)\n\n\n\n\nMigration functions operate on plain JSON-compatible mappings and never mutate their input. MigrationResult records source and target versions, sequential steps, and source and target plan IDs. Current-schema migration is an exact no-op.",
+          "lower": "from utterplan import (\n    current_schema_version,\n    migrationresult,\n    migrationstep,\n    supported_schema_versions,\n    migrate_plan_data,\n    migrate_plan_json,\n )\n\nresult: migrationresult = migrate_plan_data(serialized_mapping)\nassert result.target_version == current_schema_version\nplan = utteranceplan.from_dict(result.data)\n\n\n\n\nmigration functions operate on plain json-compatible mappings and never mutate their input. migrationresult records source and target versions, sequential steps, and source and target plan ids. current-schema migration is an exact no-op."
+        }
+      ]
+    }
+  ]
+}

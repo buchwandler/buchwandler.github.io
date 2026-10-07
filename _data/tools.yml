@@ -47,6 +47,11 @@
   docs_url: /tools/ssmd/
   repo_url: https://github.com/buchwandler/ssmd
   pypi_url: https://pypi.org/project/ssmd/
+- name: utterplan
+  description: Engine-independent text-to-speech planning compiler and interchange format.
+  docs_url: /tools/utterplan/
+  repo_url: https://github.com/buchwandler/utterplan
+  pypi_url: https://pypi.org/project/utterplan/
 - name: ttsforge
   description: A Python-based TTS automation framework with multi-engine support.
   docs_url: /tools/ttsforge/

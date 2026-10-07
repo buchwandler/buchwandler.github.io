@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -566,7 +566,7 @@ traceback after an error.</p>
 <td><p>Output format; default <code class="docutils literal notranslate"><span class="pre">m4b</span></code>. Use <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> for available formats.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--project</span> <span class="pre">PATH</span></code></p></td>
-<td><p>Project directory; default is <code class="docutils literal notranslate"><span class="pre">&lt;source-stem&gt;.readio</span></code> beside the EPUB.</p></td>
+<td><p>Project directory; default is <code class="docutils literal notranslate"><span class="pre">&lt;source-stem&gt;.ssmdbook</span></code> beside the EPUB.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTION</span></code></p></td>
 <td><p>Chapter scope for a new project, such as <code class="docutils literal notranslate"><span class="pre">1-5</span></code>, <code class="docutils literal notranslate"><span class="pre">1,3,5</span></code>, or <code class="docutils literal notranslate"><span class="pre">all</span></code>.</p></td>
@@ -575,7 +575,7 @@ traceback after an error.</p>
 <td><p>Deprecated compatibility flag; interactive terminals now prompt automatically.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--voice</span> <span class="pre">VOICE</span></code></p></td>
-<td><p>Engine voice/selector supported by Readio.</p></td>
+<td><p>Engine voice ID/reference supported by Readio.</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--language</span> <span class="pre">LANG</span></code></p></td>
 <td><p>Synthesis language/profile override.</p></td>
@@ -681,7 +681,7 @@ remains the sole owner of persisted project state.</p>
 Explicit CLI values pin and update only their corresponding settings. Changing language,
 engine, or model causes dependent unpinned choices to be selected again; CLI-pinned
 dependents remain.</p>
-<p>Interactive catalogs provide choices for the selected engine. PyKokoro uses model then
+<p>Interactive catalogs provide choices for the selected engine. Kokoro uses model then
 voice; Piper uses a target-bound voice bundle, and its matching canonical voice is
 selected automatically; Pocket uses a bundle followed by a predefined named voice.
 TTSForge stores these choices in Readio’s neutral <code class="docutils literal notranslate"><span class="pre">model</span></code> and <code class="docutils literal notranslate"><span class="pre">voice</span></code> request fields.
@@ -725,8 +725,8 @@ reuse and replacement safety.</p>
 <h2>Inspecting and managing projects</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
 ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
-ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
 <ul class="simple">

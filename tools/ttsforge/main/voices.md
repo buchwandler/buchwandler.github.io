@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -542,7 +542,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="voices-and-discovery">
 <h1>Voices and discovery</h1>
-<p>TTSForge does not ship a fixed voice list. The available voices, selectors, models, and
+<p>TTSForge does not ship a fixed voice list. The available voices, references, models, and
 runtime status come from Readio’s discovery catalog and depend on the installed engine
 integrations and selected model/profile.</p>
 <section id="list-voices">
@@ -557,11 +557,11 @@ ttsforge<span class="w"> </span>voices<span class="w"> </span>--engine<span clas
 avoid network discovery and <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> to refresh cached catalog data. <code class="docutils literal notranslate"><span class="pre">--json</span></code> returns
 catalog items together with discovery information.</p>
 <p>Human-readable output shows the canonical Readio voice ID (<code class="docutils literal notranslate"><span class="pre">VoiceInfo.id</span></code>) as the
-primary name, with the stable selector as a secondary alias when available. If a
-selector is not available, the qualified voice ID is shown instead. Voice listings may
-also include language/locale, model, engine, status, and runtime availability. Readio
-owns these identities; do not assume legacy Kokoro IDs or language-prefix conventions
-apply to every engine.</p>
+primary name, with the semantic reference (<code class="docutils literal notranslate"><span class="pre">VoiceInfo.ref</span></code>) when available. If no
+reference is available, the qualified voice ID can be used. also include
+language/locale, model, engine, status, and runtime availability. Readio owns these
+identities; do not assume legacy Kokoro IDs or language-prefix conventions apply to
+every engine.</p>
 </section>
 <section id="inspect-models-and-engines">
 <h2>Inspect models and engines</h2>
@@ -577,8 +577,8 @@ missing runtime dependencies and format availability.</p>
 </section>
 <section id="use-a-discovered-voice">
 <h2>Use a discovered voice</h2>
-<p>For explicit <code class="docutils literal notranslate"><span class="pre">--voice</span></code> values, use the canonical voice ID or selector reported by
-Readio:</p>
+<p>For explicit <code class="docutils literal notranslate"><span class="pre">--voice</span></code> values, use the canonical voice ID or semantic reference reported
+by Readio:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--engine<span class="w"> </span>kokoro<span class="w"> </span>--voice<span class="w"> </span>af_heart
 ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--engine<span class="w"> </span>kokoro<span class="w"> </span>--voice<span class="w"> </span>af_heart
 </pre></div>
@@ -588,14 +588,14 @@ ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span c
 <h2>Guided selection during conversion</h2>
 <p><code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">convert</span></code> uses the same Readio discovery services interactively on a TTY. It
 shows filtered choices as compact vertical lists. Enter a row number or exact
-identifier. Voice entries show the canonical Readio voice ID first and the stable
-selector as an alias. Guided voice prompts accept a row number, canonical voice ID,
-selector, or qualified ID, then keep the selected row’s canonical ID. Catalogs are
-filtered by language and engine, and by model for voices. Explicit <code class="docutils literal notranslate"><span class="pre">--model</span></code> and
-<code class="docutils literal notranslate"><span class="pre">--voice</span></code> options bypass matching prompts.</p>
+identifier. Voice entries show the canonical Readio voice ID first and the semantic
+reference (<code class="docutils literal notranslate"><span class="pre">VoiceInfo.ref</span></code>) when available. Guided voice prompts accept a row number,
+canonical voice ID, semantic reference, or qualified ID, then keep the selected row’s
+canonical ID. Catalogs are filtered by language and engine, and by model for voices.
+Explicit <code class="docutils literal notranslate"><span class="pre">--model</span></code> and <code class="docutils literal notranslate"><span class="pre">--voice</span></code> options bypass matching prompts.</p>
 <p>The engine-specific selection layouts are:</p>
 <ul class="simple">
-<li><p>PyKokoro: model, then voice.</p></li>
+<li><p>Kokoro: model, then voice.</p></li>
 <li><p>Piper: choose a voice-bundle target. The matching voice has the same canonical
 identity and is selected automatically, without a duplicate prompt.</p></li>
 <li><p>Pocket: choose a model bundle, then a predefined named voice.</p></li>
@@ -611,7 +611,7 @@ for the public discovery contract.</p>
 <section id="selection-layouts">
 <h2>Selection layouts</h2>
 <p>The interactive converter follows each engine’s public Readio catalog semantics:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>PyKokoro: model -&gt; voice
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Kokoro: model -&gt; voice
 Piper:    voice-bundle target
 Pocket:   bundle -&gt; predefined named voice
 </pre></div>

@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -547,13 +547,30 @@ for Readio’s public API, not the owner of an EPUB-to-audio rendering pipeline.
 owns projects, planning, synthesis, composition, resumability, invalidation, and export.</p>
 <section id="compatibility-and-installation">
 <h2>Compatibility and installation</h2>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, which provides the persisted project-settings API.</p>
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.4.0,&lt;0.5</span></code>, which provides the persisted project-settings
+API.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>ttsforge
 </pre></div>
 </div>
 <p>Install a supported Readio engine extra if you need synthesis. A sibling Readio checkout
 is needed only when developing against Readio source; see
 <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a>.</p>
+</section>
+<section id="readio-0-3-to-0-4-migration">
+<h2>Readio 0.3 to 0.4 migration</h2>
+<p>Readio 0.4 changes the configuration and project schemas. Migrate existing Readio-owned
+data explicitly before opening it with TTSForge:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>config<span class="w"> </span>migrate
+readio<span class="w"> </span>project<span class="w"> </span>migrate<span class="w"> </span>PROJECT
+</pre></div>
+</div>
+<p>TTSForge does not migrate or overwrite Readio configuration or project data
+automatically. Keep a backup before migrating.</p>
+<p>Readio 0.4 requires new EPUB project containers to use the <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> suffix, so
+TTSForge’s default changes from <code class="docutils literal notranslate"><span class="pre">.readio</span></code> to <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code>. Existing Readio projects are
+not renamed. After explicitly migrating an existing project, continue to use its path
+with <code class="docutils literal notranslate"><span class="pre">--project</span> <span class="pre">PATH</span></code>. Former TTSForge-owned renderer workspaces are not Readio projects
+and must not be passed to Readio’s migration command.</p>
 </section>
 <section id="what-changes">
 <h2>What changes</h2>
@@ -565,7 +582,7 @@ is needed only when developing against Readio source; see
 </thead>
 <tbody>
 <tr class="row-even"><td><p>TTSForge-owned conversion and resume workspaces</p></td>
-<td><p>Persistent Readio project, normally beside the EPUB as <code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;.readio</span></code></p></td>
+<td><p>Persistent Readio project, normally beside the EPUB as <code class="docutils literal notranslate"><span class="pre">&lt;stem&gt;.ssmdbook</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p>TTSForge-rendered M4B and generic audio output</p></td>
 <td><p>Readio project build plus the appropriate Readio export service</p></td>
@@ -597,7 +614,7 @@ workspace as a Readio project.</p>
 <p>Keep the old directory as a backup. Start a distinct project using either:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--fresh
 <span class="c1"># or choose an explicit path</span>
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-readio.readio
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-readio.ssmdbook
 </pre></div>
 </div>
 <p>A fresh project does not resume old TTSForge progress. Existing final audio is left
@@ -643,7 +660,7 @@ workflow and Readio discovery/configuration.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
 ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub
 ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
 <p>For API examples and exact project/export semantics, see

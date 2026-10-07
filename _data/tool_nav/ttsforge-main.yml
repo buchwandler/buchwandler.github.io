@@ -5,7 +5,7 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 2ea02744c4dd4352fcf2515ed58d1d59389f4a58
+source_commit: 4eb17c256831403c432b4822e8aeb6dd1a1700c1
 source_url: https://github.com/buchwandler/ttsforge/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/ttsforge
@@ -59,6 +59,9 @@ entries:
 - slug: testing
   title: ttsforge Testing and release checks
   url: /tools/ttsforge/main/testing/
+- slug: application-architecture
+  title: ttsforge Application architecture
+  url: /tools/ttsforge/main/application-architecture/
 - slug: changelog
   title: ttsforge Changelog
   url: /tools/ttsforge/main/changelog/

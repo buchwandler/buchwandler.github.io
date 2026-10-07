@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -561,7 +561,7 @@ Readio’s ownership rules.</p>
 <p>Project state and exported audio are different paths. Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> to place project
 data and <code class="docutils literal notranslate"><span class="pre">--output</span></code> to place the final audiobook:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--project<span class="w"> </span>novel-custom.readio<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--project<span class="w"> </span>novel-custom.ssmdbook<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>--output<span class="w"> </span>novel.m4b
 </pre></div>
 </div>

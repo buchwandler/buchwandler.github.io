@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "442a3d4bd81e53c598ad8a1df7e8ab7bb6161512"
+docs_commit: "0ceca50a26537efbf7a00e376638dddc36d497f3"
 search_enabled: true
 ---
 
@@ -602,7 +602,7 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 <p>Generic project export supports WAV, FLAC, MP3, M4A, Ogg/Vorbis, and Opus. <code class="docutils literal notranslate"><span class="pre">.ogg</span></code> stays Vorbis; <code class="docutils literal notranslate"><span class="pre">.opus</span></code> is a separate format. Readio defaults M4A to 192k and Opus to 96k; those are Readio defaults and do not assert TTSForge parity.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>flac
 readio<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>opus<span class="w"> </span>--bitrate<span class="w"> </span>96k
-readio<span class="w"> </span>audiobook<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.readio<span class="w"> </span>--format<span class="w"> </span>m4b<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
+readio<span class="w"> </span>audiobook<span class="w"> </span><span class="nb">export</span><span class="w"> </span>novel.ssmdbook<span class="w"> </span>--format<span class="w"> </span>m4b<span class="w"> </span>--cover<span class="w"> </span>cover.jpg
 </pre></div>
 </div>
 <p>M4B is available only for audiobook projects through <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">audiobook</span> <span class="pre">export</span></code>. It muxes AAC audio and embedded chapters; title/author default from project metadata and cover art is explicit-only (JPEG/PNG). Readio’s M4B AAC default is 192k.</p>
@@ -653,7 +653,7 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --unit UNIT               sentence or paragraph
 
 Readio&#39;s short-sentence default is `phrase`; Readio resolves the policy before engine adapters translate it to engine-native settings.
-Readio requires SSMD &gt;=0.9,&lt;0.10 and UtterPlan &gt;=0.3,&lt;0.4, persisting linguistic artifacts as UtterPlan schema v3 inside `readio.plan.v2`. It supports PyKokoro &gt;=0.10.2,&lt;0.11, PiperSynth &gt;=0.2.1,&lt;0.3, PocketSynth &gt;=0.2.3,&lt;0.3, SupertonicSynth &gt;=0.1.2,&lt;0.2, and KittenSynth &gt;=0.1.0,&lt;0.2; each engine package owns its own runtime dependencies and Readio does not require OnnxVoice. Canonical engine IDs are `kokoro`, `piper`, `pocket`, `supertonic`, and `kitten`. Install engines with the matching optional extra; `readio doctor` checks each installed package&#39;s public request API without downloading models.
+Readio requires SSMD &gt;=0.9,&lt;0.10 and UtterPlan &gt;=0.3.4,&lt;0.4, persisting linguistic artifacts as UtterPlan schema v3 inside `readio.plan.v2`. It supports PyKokoro &gt;=0.10.2,&lt;0.11, PiperSynth &gt;=0.2.1,&lt;0.3, PocketSynth &gt;=0.2.3,&lt;0.3, SupertonicSynth &gt;=0.1.2,&lt;0.2, and KittenSynth &gt;=0.1.1,&lt;0.2; each engine package owns its own runtime dependencies and Readio does not require OnnxVoice. Canonical engine IDs are `kokoro`, `piper`, `pocket`, `supertonic`, and `kitten`. Install engines with the matching optional extra; `readio doctor` checks each installed package&#39;s public request API without downloading models.
 Readio&#39;s built-in `pause_mode` is `auto`; an explicit `[reader] pause_mode` setting or `--pause-mode tts|manual|auto` override takes precedence.
 
 Speed is an engine synthesis multiplier, not a composition tempo. Kokoro receives the value directly, PiperSynth uses its reciprocal as `length_scale`, PocketSynth rejects explicit values other than `1.0`, and Supertonic forwards the multiplier to its atomic API.

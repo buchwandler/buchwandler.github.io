@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/languages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.2"
-docs_commit: "287ada5cd53b45765bb7163d1b4b49f67e6306b1"
+docs_ref: "v0.10.4"
+docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
 search_enabled: true
 ---
 
@@ -675,7 +675,15 @@ table:</p>
 
 <span class="n">inventory</span> <span class="o">=</span> <span class="n">discover_models</span><span class="p">(</span><span class="n">offline</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">profile</span> <span class="ow">in</span> <span class="n">inventory</span><span class="o">.</span><span class="n">models</span><span class="p">:</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">profile</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span> <span class="n">profile</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span> <span class="n">profile</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span> <span class="n">profile</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">model_id</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">languages</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">voices</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">voice_mode</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">supports_reference_enrollment</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">speed_supported</span><span class="p">,</span>
+        <span class="n">profile</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+    <span class="p">)</span>
 </pre></div>
 </div>
 <p>Discovery does not load model weights or create an ONNX inference session. It reports
@@ -684,6 +692,10 @@ offline mode avoids refreshing remote metadata. The result is a capability inven
 not a synthesis guarantee if the required model assets are not installed or cannot be
 reached. See <a class="reference download internal" download="" href="../_downloads/41c29e50a3c7ae275d8549488df9835e/models_and_languages.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">models_and_languages.py</span></code></span></a> for
 inventory and optional selected-model synthesis.</p>
+<p>Reference-only profiles report <code class="docutils literal notranslate"><span class="pre">voice_mode=&quot;reference&quot;</span></code>, an empty <code class="docutils literal notranslate"><span class="pre">voices</span></code> tuple, no
+default voice, <code class="docutils literal notranslate"><span class="pre">supports_reference_enrollment=True</span></code>, and <code class="docutils literal notranslate"><span class="pre">speed_supported=False</span></code>. Use
+<code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.enroll_voice()</span></code> before synthesis with such a profile. See the
+<a class="reference internal" href="../reference_voice/"><span class="std std-doc">English reference voice guide</span></a>.</p>
 </section>
 </section>
 </div>

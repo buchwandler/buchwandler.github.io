@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "287ada5cd53b45765bb7163d1b4b49f67e6306b1"
+docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
 search_enabled: true
 ---
 
@@ -547,6 +547,10 @@ models prepared synthesis requests and their independent rendered results; docum
 parsing, speech planning, and composition between requests remain caller-owned.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pykokoro</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">GenerationConfig</span><span class="p">,</span>
+    <span class="n">InnoEnrollmentOptions</span><span class="p">,</span>
+    <span class="n">KokoroVoicePack</span><span class="p">,</span>
+    <span class="n">ReferenceVoice</span><span class="p">,</span>
+    <span class="n">VoiceEnrollerSpec</span><span class="p">,</span>
     <span class="n">KokoroSynthesizer</span><span class="p">,</span>
     <span class="n">SynthesisConfig</span><span class="p">,</span>
     <span class="n">SynthesisRequest</span><span class="p">,</span>
@@ -574,17 +578,23 @@ parsing, speech planning, and composition between requests remain caller-owned.<
 <tr class="row-odd"><td><p>Voice level</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">VoiceLevelConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceLevelApplication</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Model discovery</p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ModelCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">ModelDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_models</span></code></p></td>
+<tr class="row-even"><td><p>Voice enrollment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">KokoroVoicePack</span></code>, <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code>, <code class="docutils literal notranslate"><span class="pre">InnoEnrollmentOptions</span></code>, <code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.enroll_voice()</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Lexicon discovery</p></td>
+<tr class="row-odd"><td><p>Model discovery</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ModelCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">ModelDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceEnrollerSpec</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_models</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Lexicon discovery</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">LexiconCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">LexiconDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_lexicons</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Asset progress</p></td>
+<tr class="row-odd"><td><p>Asset progress</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code>, <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Synthesis identity</p></td>
+<tr class="row-even"><td><p>Synthesis identity</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">SynthesisIdentity</span></code>, <code class="docutils literal notranslate"><span class="pre">build_synthesis_identity</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>API contract</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">REQUEST_API_VERSION</span></code>, <code class="docutils literal notranslate"><span class="pre">RequestApiContract</span></code>, <code class="docutils literal notranslate"><span class="pre">request_api_contract</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p>Errors</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisError</span></code>, <code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidRequestError</span></code>, <code class="docutils literal notranslate"><span class="pre">EmptyTextError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLanguageError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidVoiceError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidModelError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidPronunciationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLinguisticTokensError</span></code>, <code class="docutils literal notranslate"><span class="pre">UnsupportedFeatureError</span></code>, <code class="docutils literal notranslate"><span class="pre">CapabilityError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisStateError</span></code>, <code class="docutils literal notranslate"><span class="pre">AlignmentError</span></code>, <code class="docutils literal notranslate"><span class="pre">BackendError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code></p></td>
@@ -595,9 +605,32 @@ parsing, speech planning, and composition between requests remain caller-owned.<
 </tbody>
 </table>
 <p><code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code> is an alias of <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code>, and <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code> is a
-compatibility alias of <code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>. <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code> and <code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code>
-are type aliases; they describe accepted Python values rather than runtime record
-classes.</p>
+compatibility alias of <code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>. <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code>, <code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code>,
+<code class="docutils literal notranslate"><span class="pre">VoiceConditioning</span></code>, and <code class="docutils literal notranslate"><span class="pre">VoiceEnrollmentEngine</span></code> are type aliases; they describe
+accepted Python values rather than runtime record classes.</p>
+</section>
+<section id="request-api-compatibility-contract">
+<h2>Request API compatibility contract</h2>
+<p><code class="docutils literal notranslate"><span class="pre">pykokoro.REQUEST_API_VERSION</span></code> identifies the request API contract family. Call
+<code class="docutils literal notranslate"><span class="pre">pykokoro.request_api_contract()</span></code> to inspect its stable capability declaration before
+constructing an engine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pykokoro</span>
+
+<span class="n">contract</span> <span class="o">=</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">request_api_contract</span><span class="p">()</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">REQUEST_API_VERSION</span> <span class="o">==</span> <span class="mi">1</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">request_type</span> <span class="o">==</span> <span class="s2">&quot;SynthesisRequest&quot;</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">result_type</span> <span class="o">==</span> <span class="s2">&quot;RenderedSegment&quot;</span>
+</pre></div>
+</div>
+<p>The declaration is dependency-light: it does not initialize a G2P frontend, model
+registry, ONNX session, or audio backend. Resolving <code class="docutils literal notranslate"><span class="pre">pykokoro.KokoroSynthesizer</span></code> loads
+the class without constructing its G2P adapter; constructing the synthesizer or
+rendering a request is a separate runtime operation. This versioned declaration gives
+integrations a stable compatibility probe instead of requiring them to infer a contract
+from implementation details.</p>
+<p>Each <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> is one caller-prepared atomic text boundary. Parsing, shaping,
+and splitting documents remain caller-owned; the default strict token-capacity behavior
+raises <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> instead of silently changing that boundary.</p>
 </section>
 <section id="synthesizer">
 <h2>Synthesizer</h2>
@@ -620,6 +653,18 @@ them.</p>
 </section>
 <section id="configuration">
 <h2>Configuration</h2>
+</section>
+<section id="voice-enrollment-and-packs">
+<h2>Voice enrollment and packs</h2>
+<p><code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.enroll_voice()</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">engine=&quot;inno&quot;</span></code>. It accepts reference
+audio without a transcript and returns a portable <code class="docutils literal notranslate"><span class="pre">KokoroVoicePack</span></code> for ordinary static
+Kokoro synthesis. The versioned NPZ save/load format is pickle-free. Inno enrollment
+requires a runtime-supported <code class="docutils literal notranslate"><span class="pre">inno-v0.2</span></code> model capability. <code class="docutils literal notranslate"><span class="pre">VoiceEnrollerSpec</span></code> discovery
+metadata reports its requirements and output format without loading model weights.</p>
+<p>AkinVox remains a separate, explicit path. Use <code class="docutils literal notranslate"><span class="pre">engine=&quot;akinvox&quot;</span></code> and provide the exact
+transcript to return a model-bound <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code>. The voice pack and reference state
+are not interchangeable. See the <a class="reference internal" href="../reference_voice/"><span class="std std-doc">voice enrollment guide</span></a> for engine
+requirements, audio limits, persistence, calibration limitations, privacy, and examples.</p>
 <p><code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code> is <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span> <span class="pre">|</span> <span class="pre">&quot;sentence&quot;</span></code>. The default <code class="docutils literal notranslate"><span class="pre">&quot;none&quot;</span></code> path raises
 <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code> for an oversized request. <code class="docutils literal notranslate"><span class="pre">&quot;sentence&quot;</span></code> lazily loads
 PhraseSplit only when a request exceeds capacity, then returns one result for the
@@ -637,10 +682,11 @@ calibration is an engine-local option; it is not whole-program loudness masterin
 </section>
 <section id="model-and-lexicon-discovery">
 <h2>Model and lexicon discovery</h2>
-<p>Discovery reports metadata and runtime capability without loading synthesis weights or
-creating an ONNX session. Offline discovery uses available local metadata; it does not
-install model or lexicon assets. Use the inventory to select an available
-model/language/voice rather than inferring compatibility from a voice name.</p>
+<p>Discovery reports metadata and runtime capability, including <code class="docutils literal notranslate"><span class="pre">VoiceEnrollerSpec</span></code>,
+without loading synthesis weights or creating an ONNX session. Offline discovery uses
+available local metadata; it does not install model or lexicon assets. Use the inventory
+to select an available model/language/voice rather than inferring compatibility from a
+voice name.</p>
 </section>
 <section id="asset-progress">
 <h2>Asset progress</h2>

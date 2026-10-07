@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -546,8 +546,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 persistent project lifecycle, synthesis engines, composition, reuse, and exports;
 TTSForge presents an EPUB audiobook workflow and maps choices to Readio’s public
 services.</p>
-<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, whose public API supplies its audiobook project,
-expanded synthesis resolution, and persisted project settings. See
+<p>TTSForge requires Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.4.0,&lt;0.5</span></code>, whose public API supplies its audiobook
+project, expanded synthesis resolution, and persisted project settings. See
 <a class="reference internal" href="installation/"><span class="std std-doc">Installation</span></a> for user and development setup.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
@@ -562,6 +562,7 @@ expanded synthesis resolution, and persisted project settings. See
 </li>
 <li class="toctree-l1"><a class="reference internal" href="migration-readio/">Migrating to the Readio-backed TTSForge</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="migration-readio/#compatibility-and-installation">Compatibility and installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="migration-readio/#readio-0-3-to-0-4-migration">Readio 0.3 to 0.4 migration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="migration-readio/#what-changes">What changes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="migration-readio/#existing-workspaces-are-not-migrated">Existing workspaces are not migrated</a></li>
 <li class="toctree-l2"><a class="reference internal" href="migration-readio/#configuration-migration">Configuration migration</a></li>
@@ -631,6 +632,12 @@ expanded synthesis resolution, and persisted project settings. See
 <li class="toctree-l2"><a class="reference internal" href="testing/#publishing-checks">Publishing checks</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="application-architecture/">Application architecture</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="application-architecture/#dependency-direction">Dependency direction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="application-architecture/#conversion-lifecycle">Conversion lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="application-architecture/#scope">Scope</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.4.1] - 2026-09-29</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.4.0] - 2026-09-12</a></li>
@@ -665,10 +672,10 @@ expanded synthesis resolution, and persisted project settings. See
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>list<span class="w"> </span>novel.epub
 ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub
 ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
-<p>TTSForge creates or reuses a Readio project, normally <code class="docutils literal notranslate"><span class="pre">&lt;book-stem&gt;.readio</span></code> beside the
+<p>TTSForge creates or reuses a Readio project, normally <code class="docutils literal notranslate"><span class="pre">&lt;book-stem&gt;.ssmdbook</span></code> beside the
 EPUB. Readio manages project state and decides which work can be reused. M4B is produced
 through Readio’s audiobook export service; generic formats use its project export
 service.</p>

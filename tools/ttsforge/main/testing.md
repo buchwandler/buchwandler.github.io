@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -542,9 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="testing-and-release-checks">
 <h1>Testing and release checks</h1>
-<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>. The public API contract test checks
-that the installed Readio exposes persisted project settings, synthesis requests and
-resolutions, catalog types, and services required by the frontend. For development
+<p>TTSForge declares a dependency on Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.4.0,&lt;0.5</span></code>. The public API contract test
+checks that the installed Readio exposes persisted project settings, synthesis requests
+and resolutions, catalog types, and services required by the frontend. For development
 against a Readio checkout, install both projects editable:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>../readio<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
 </pre></div>
@@ -564,7 +564,7 @@ Readio installation.</p>
 <h2>Publishing checks</h2>
 <p>Before a TTSForge package release:</p>
 <ol class="arabic simple">
-<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.3.5</span></code>, and the newest supported Readio
+<li><p>Test against the declared Readio floor, <code class="docutils literal notranslate"><span class="pre">0.4.0</span></code>, and the newest supported Readio
 release.</p></li>
 <li><p>Install TTSForge into a clean environment, run <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">check</span></code>, and smoke-test
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">--help</span></code> and <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">doctor</span></code>.</p></li>

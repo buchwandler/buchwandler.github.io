@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -542,9 +542,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="quick-start">
 <h1>Quick start</h1>
-<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.3.5</span></code>, then install a supported Readio engine extra if
-you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform and
-development instructions.</p>
+<p>Install TTSForge with Readio <code class="docutils literal notranslate"><span class="pre">&gt;=0.4.0,&lt;0.5</span></code>, then install a supported Readio engine
+extra if you want to synthesize speech. See <a class="reference internal" href="../installation/"><span class="std std-doc">Installation</span></a> for platform
+and development instructions.</p>
 <section id="inspect-and-convert">
 <h2>Inspect and convert</h2>
 <p>List the chapters Readio detects in an EPUB:</p>
@@ -556,10 +556,10 @@ ttsforge<span class="w"> </span>info<span class="w"> </span>novel.epub
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
 </pre></div>
 </div>
-<p>The default project is <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> beside the source EPUB, and the default output is
-<code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Re-running the command uses the existing project’s saved chapter scope and
-reusable work. In an interactive terminal, TTSForge then guides you through synthesis
-choices and displays the resolved Readio settings before confirmation.</p>
+<p>The default project is <code class="docutils literal notranslate"><span class="pre">novel.ssmdbook</span></code> beside the source EPUB, and the default output
+is <code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Re-running the command uses the existing project’s saved chapter scope
+and reusable work. In an interactive terminal, TTSForge then guides you through
+synthesis choices and displays the resolved Readio settings before confirmation.</p>
 </section>
 <section id="select-chapters">
 <h2>Select chapters</h2>
@@ -581,7 +581,7 @@ setup for omitted synthesis values. It discovers catalog choices while the selec
 in progress, then asks Readio to strictly resolve the completed synthesis target.</p>
 <p>The selection differs by engine:</p>
 <ul class="simple">
-<li><p>PyKokoro: choose a model, then a voice.</p></li>
+<li><p>Kokoro: choose a model, then a voice.</p></li>
 <li><p>Piper: choose a voice-bundle target. Its matching canonical voice is selected
 automatically, so users do not choose the same bundle twice.</p></li>
 <li><p>Pocket: choose a bundle, then a predefined named voice. Pocket speed is fixed at <code class="docutils literal notranslate"><span class="pre">1.0</span></code>
@@ -620,8 +620,8 @@ progress. TTY build progress updates live by chapter. See
 <h2>Preview, plan, and status</h2>
 <p>A preview uses the same Readio project pipeline as a full conversion:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--selection<span class="w"> </span>first:3
-ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.ssmdbook
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">preview</span></code> creates or reuses the default project if necessary. <code class="docutils literal notranslate"><span class="pre">status</span></code> reports Readio’s

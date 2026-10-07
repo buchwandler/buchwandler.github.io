@@ -6,7 +6,7 @@ nav_tool: ttsforge-main
 docs_project: "ttsforge"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "2ea02744c4dd4352fcf2515ed58d1d59389f4a58"
+docs_commit: "4eb17c256831403c432b4822e8aeb6dd1a1700c1"
 search_enabled: true
 ---
 
@@ -548,10 +548,10 @@ invalidation, and output export. TTSForge does not maintain a second conversion
 workspace or duplicate Readio’s project schema.</p>
 <section id="default-project-and-reuse">
 <h2>Default project and reuse</h2>
-<p>For <code class="docutils literal notranslate"><span class="pre">novel.epub</span></code>, TTSForge uses a sibling project directory named <code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> unless
-<code class="docutils literal notranslate"><span class="pre">--project</span></code> supplies another path:</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">novel.epub</span></code>, TTSForge uses a sibling project directory named <code class="docutils literal notranslate"><span class="pre">novel.ssmdbook</span></code>
+unless <code class="docutils literal notranslate"><span class="pre">--project</span></code> supplies another path:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub
-ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
+ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
 <p>The first conversion creates the project and records its chapter scope. Later
@@ -580,7 +580,7 @@ dependent options remain unchanged.</p>
 values, with explicit CLI options taking precedence.</p>
 <p>Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> to choose an explicit project location. This is useful for multiple
 audiobook variants or when project files should live outside the source directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-en.readio
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel-en.ssmdbook
 </pre></div>
 </div>
 </section>
@@ -611,9 +611,9 @@ EPUB without creating a project.</p>
 <section id="fresh-projects-and-outputs">
 <h2>Fresh projects and outputs</h2>
 <p><code class="docutils literal notranslate"><span class="pre">--fresh</span></code> preserves the current project and chooses a new sibling project path. If
-<code class="docutils literal notranslate"><span class="pre">novel.readio</span></code> already exists, the fresh project is typically <code class="docutils literal notranslate"><span class="pre">novel.fresh.readio</span></code>; if
-that path exists, TTSForge chooses another available numbered path. Use <code class="docutils literal notranslate"><span class="pre">--project</span></code> when
-an exact path is required.</p>
+<code class="docutils literal notranslate"><span class="pre">novel.ssmdbook</span></code> already exists, the fresh project is typically <code class="docutils literal notranslate"><span class="pre">novel.fresh.ssmdbook</span></code>;
+if that path exists, TTSForge chooses another available numbered path. Use <code class="docutils literal notranslate"><span class="pre">--project</span></code>
+when an exact path is required.</p>
 <p>The default output for the default M4B format is <code class="docutils literal notranslate"><span class="pre">novel.m4b</span></code>. Supply <code class="docutils literal notranslate"><span class="pre">--output</span></code> to
 choose another path, or <code class="docutils literal notranslate"><span class="pre">--format</span></code> to select a generic Readio export format.
 <code class="docutils literal notranslate"><span class="pre">ttsforge</span> <span class="pre">formats</span></code> reports formats available in the current installation. M4B uses
@@ -636,10 +636,10 @@ replacement is requested.</p>
 <section id="status-and-planning">
 <h2>Status and planning</h2>
 <p>Use Readio-backed commands to inspect and advance project state:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>status<span class="w"> </span>novel.readio
-ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.readio
-ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.readio<span class="w"> </span>--selection<span class="w"> </span>first:3
-ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.readio
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ttsforge<span class="w"> </span>status<span class="w"> </span>novel.ssmdbook
+ttsforge<span class="w"> </span>plan<span class="w"> </span>novel.ssmdbook
+ttsforge<span class="w"> </span>preview<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--selection<span class="w"> </span>first:3
+ttsforge<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--project<span class="w"> </span>novel.ssmdbook
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">status</span></code> reports stage states and next actions. <code class="docutils literal notranslate"><span class="pre">plan</span></code> creates or refreshes Readio

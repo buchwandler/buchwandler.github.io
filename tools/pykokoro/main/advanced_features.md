@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "287ada5cd53b45765bb7163d1b4b49f67e6306b1"
+docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
 search_enabled: true
 ---
 
@@ -671,11 +671,15 @@ percentages:</p>
     <span class="n">voices</span><span class="o">=</span><span class="p">[(</span><span class="s2">&quot;af_sarah&quot;</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;af_bella&quot;</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)],</span>
     <span class="n">interpolation</span><span class="o">=</span><span class="s2">&quot;linear&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">compact</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_sarah:60,af_bella:40&quot;</span><span class="p">)</span>
+<span class="n">compact</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_sarah=60,af_bella=40&quot;</span><span class="p">)</span>
+<span class="n">slerp</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_sarah=60,af_bella=40@slerp&quot;</span><span class="p">)</span>
+<span class="n">multi</span> <span class="o">=</span> <span class="n">VoiceBlend</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="s2">&quot;af_sarah=50,af_bella=30,af_nicole=20&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Voice IDs and valid combinations come from model profiles; inspect <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code>
-instead of assuming a voice is available for every language or model. See
+<p>Linear interpolation supports one or more voices. SLERP requires exactly two voices, and
+the second voice’s weight is its interpolation parameter. Voice IDs and valid
+combinations come from model profiles; inspect <code class="docutils literal notranslate"><span class="pre">discover_models()</span></code> instead of assuming a
+voice is available for every language or model. See
 <a class="reference download internal" download="" href="../_downloads/b83bca77396ef1194572dbe7cfcab7cb/voice_blend.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">voice_blend.py</span></code></span></a>.</p>
 </section>
 <section id="prepared-phoneme-input">
@@ -714,6 +718,7 @@ Routing, G2P languages, and model/voice profiles are distinct: see
 <li><p><a class="reference internal" href="../short_sentence_quality/"><span class="std std-doc">Short-sentence quality and explicit modes</span></a></p></li>
 <li><p><a class="reference internal" href="../installation/"><span class="std std-doc">Frontend, lexicon, cache, and asset progress configuration</span></a></p></li>
 <li><p><a class="reference internal" href="../examples/"><span class="std std-doc">All maintained example groups</span></a></p></li>
+<li><p><a class="reference internal" href="../reference_voice/"><span class="std std-doc">English reference voice enrollment and reuse</span></a></p></li>
 </ul>
 </section>
 </section>
