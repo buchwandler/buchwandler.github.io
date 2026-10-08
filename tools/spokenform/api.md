@@ -544,6 +544,30 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1>API reference</h1>
 <section id="preparation">
 <h2>Preparation</h2>
+<p>.. py:function:: prepare(text, *, language=’en’, config=None, profile=None, annotations=None, nlp=None, protected_spans=None, lexical_evidence=None, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, context=True, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, strict=False)
+:module: spokenform</p>
+<p>Convert one-language written text into a readable form intended for speech.</p>
+<p>The caller selects the processing language. Language detection, mixed-language
+segmentation, and markup parsing belong outside spokenform.</p>
+<p>Structured values run before lexical abbreviation expansion and generic
+numbers so each complete expression receives one semantic replacement.</p>
+<p>.. py:function:: prepare_language(text, *, language, **kwargs)
+:module: spokenform</p>
+<p>Prepare one explicitly selected language run with generic policy.</p>
+<p>Unlike :func:<code class="docutils literal notranslate"><span class="pre">prepare</span></code>, this future-facing entry point intentionally has no
+compatibility default for <code class="docutils literal notranslate"><span class="pre">language</span></code>. The optional <code class="docutils literal notranslate"><span class="pre">config</span></code> must use the
+same language so the call cannot silently process a different language.</p>
+<p>.. py:function:: prepare_for_kokorog2p(text, language=’en’, *, config=None, profile=None, **kwargs)
+:module: spokenform</p>
+<p>Prepare one language with the kokorog2p-safe profile.</p>
+<p>.. py:function:: prepare_for_piperg2p(text, language=’en’, *, config=None, profile=None, **kwargs)
+:module: spokenform</p>
+<p>Prepare one language with the PiperG2P-safe profile.</p>
+<p>.. py:function:: normalize_spacing(text, *, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None)
+:module: spokenform</p>
+<p>Apply independently configurable Unicode and whitespace policies.</p>
+<p><code class="docutils literal notranslate"><span class="pre">number_policy</span></code> remains accepted for 0.2.x compatibility. Numeric policy
+selection belongs to :func:<code class="docutils literal notranslate"><span class="pre">prepare</span></code>; spacing itself does not consume it.</p>
 <p><code class="docutils literal notranslate"><span class="pre">normalize_unicode</span></code>, <code class="docutils literal notranslate"><span class="pre">strip_outer_whitespace</span></code>, <code class="docutils literal notranslate"><span class="pre">collapse_horizontal_whitespace</span></code>,
 <code class="docutils literal notranslate"><span class="pre">normalize_line_whitespace</span></code>, and <code class="docutils literal notranslate"><span class="pre">collapse_blank_lines</span></code> are independent policy
 controls. <code class="docutils literal notranslate"><span class="pre">normalize_whitespace=False</span></code> remains the compatibility switch for
@@ -657,10 +681,100 @@ abbreviation registry.</p>
 <p>For English, <code class="docutils literal notranslate"><span class="pre">prepare(&quot;844361</span> <span class="pre">items&quot;,</span> <span class="pre">language=&quot;en&quot;,</span> <span class="pre">long_number_mode=&quot;preserve&quot;)</span></code> keeps the
 digits, while <code class="docutils literal notranslate"><span class="pre">&quot;contextual&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;cardinal&quot;</span></code> produce
 <code class="docutils literal notranslate"><span class="pre">&quot;eight</span> <span class="pre">hundred</span> <span class="pre">forty</span> <span class="pre">four</span> <span class="pre">thousand</span> <span class="pre">three</span> <span class="pre">hundred</span> <span class="pre">sixty</span> <span class="pre">one</span> <span class="pre">items&quot;</span></code>.</p>
+<p>.. py:class:: PreparationConfig(language=’en’, use_spacy=None, spacy_model=None, expand_abbreviations=True, expand_structured=True, normalize_literals=False, expand_numbers=True, normalize_whitespace=True, normalize_unicode=True, strip_outer_whitespace=True, collapse_horizontal_whitespace=True, normalize_line_whitespace=True, collapse_blank_lines=True, number_policy=None, preserve_run_boundaries=False, model_punctuation=False, symbol_mode=’none’, keep_symbols=’’, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, long_number_mode=’preserve’, registered_acronym_mode=’expand’, interpretation_mode=InterpretationMode.CONTEXTUAL, sequence_fallback_mode=SequenceFallbackMode.PRESERVE, disabled_domains=frozenset({}), allowed_domains=None, context=True, strict=False)
+:module: spokenform
+:canonical: spokenform.config.PreparationConfig</p>
+<p>Immutable options controlling single-language written-to-spoken preparation.</p>
+<p>.. py:method:: PreparationConfig.for_kokorog2p(language)
+:module: spokenform
+:classmethod:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a one-language profile safe for kokorog2p adapters.
+</pre></div>
+</div>
+<p>.. py:method:: PreparationConfig.for_piperg2p(language)
+:module: spokenform
+:classmethod:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a one-language profile safe for piperg2p adapters.
+</pre></div>
+</div>
+<p>.. py:method:: PreparationConfig.for_speech(language)
+:module: spokenform
+:classmethod:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the generic one-language speech preparation preset.
+</pre></div>
+</div>
 </section>
 </section>
 <section id="result-models">
 <h2>Result models</h2>
+<p>.. py:class:: PreparedText(source_text, clean_text, spoken_text, language, stages=(), mapped_edits=(), source_replacements=(), protected_spans=(), reserved_spans=(), offset_map=None, warnings=())
+:module: spokenform
+:canonical: spokenform.models.PreparedText</p>
+<p>Readable spoken text with normalization provenance.</p>
+<p>The mapping describes coordinates only. It does not promise that source
+linguistic annotations remain valid for generated tokens in <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code>.
+Downstream POS or morphology analysis must run after preparation.</p>
+<p>.. py:property:: PreparedText.changed
+:module: spokenform
+:type: bool</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return whether preparation changed the source text.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.edits
+:module: spokenform
+:type: tuple[~spokenform.models.TextEdit, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the ordered edits from every stage.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.map_output_span(start, end)
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Map a final spoken-text span back to original source coordinates.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.map_source_span(start, end)
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Map an original source span to final spoken-text coordinates.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.render_changes()
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Render a compact, human-readable stage report.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.replacements
+:module: spokenform
+:type: tuple[~spokenform.models.SourceReplacement, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Stable adapter alias for composed source replacements.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.source_edits
+:module: spokenform
+:type: tuple[~spokenform.models.SourceReplacement, …]</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return edits in the documented source-to-final coordinate space.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.stage_report
+:module: spokenform
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the diagnostic stage report for adapter logging.
+</pre></div>
+</div>
+<p>.. py:property:: PreparedText.text
+:module: spokenform
+:type: str</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Alias for :attr:`spoken_text`.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.to_adapter_dict()
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return the stable downstream-adapter result projection.
+</pre></div>
+</div>
+<p>.. py:method:: PreparedText.to_dict()
+:module: spokenform</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return a JSON-serializable representation.
+</pre></div>
+</div>
 <p>All public source offsets refer to the original string passed to <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>;
 final offsets refer to <code class="docutils literal notranslate"><span class="pre">PreparedText.spoken_text</span></code>; stage-local offsets remain
 available only under each <code class="docutils literal notranslate"><span class="pre">PreparationStage</span></code>. <code class="docutils literal notranslate"><span class="pre">PreparedText.to_adapter_dict()</span></code>
@@ -697,9 +811,49 @@ structured-stage helpers, <code class="docutils literal notranslate"><span class
 conversion functions are advanced public APIs: they remain exported for
 compatibility and diagnostics, but downstream integrations should prefer the
 high-level preparation surface. No exported symbol is removed in 0.2.2.</p>
+<p>.. py:class:: PreparationStage(name, before, after, edits=(), mapped_edits=(), reserved=())
+:module: spokenform
+:canonical: spokenform.models.PreparationStage</p>
+<p>The before/after text and edits produced by one stage.</p>
+<p>.. py:property:: PreparationStage.changed
+:module: spokenform
+:type: bool</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Return whether this stage changed the text.
+</pre></div>
+</div>
+<p>.. py:class:: TextEdit(start, end, source, replacement, stage)
+:module: spokenform
+:canonical: spokenform.models.TextEdit</p>
+<p>One edit in a normalization stage.</p>
+<p>Offsets are relative to the input of that stage. This keeps every edit exact
+without pretending that all stages still share the original coordinate space.</p>
+<p>.. py:class:: MappedEdit(source_start, source_end, output_start, output_end, source, replacement, stage, language=None, kind=’replacement’, rule=None, recognition_domain=None, recognition_evidence=None, evidence_source=None, evidence_score=None, evidence_cues=())
+:module: spokenform
+:canonical: spokenform.models.MappedEdit</p>
+<p>A replacement with source and output coordinates.</p>
+<p>Coordinates and semantic metadata describe the generated text. Source
+linguistic annotations are not carried as a valid analysis of replacement
+text; downstream POS or morphology consumers must analyze the final text.</p>
 </section>
 <section id="annotation-adapters">
 <h2>Annotation adapters</h2>
+<p>.. py:class:: TokenAnnotation(start, end, text=None, pos=None, tag=None, lemma=None, language=None)
+:module: spokenform
+:canonical: spokenform.models.TokenAnnotation</p>
+<p>Provider-neutral lexical annotation aligned to one input text.</p>
+<p>.. py:function:: annotations_from_spacy(doc)
+:module: spokenform</p>
+<p>Convert a spaCy-like <code class="docutils literal notranslate"><span class="pre">Doc</span></code> into source-aligned annotations.</p>
+<p>The adapter imports no spaCy modules and can therefore be used with compatible
+providers or simple test doubles.</p>
+<p>.. py:function:: spacy_annotations(text, nlp)
+:module: spokenform</p>
+<p>Run an existing spaCy-compatible pipeline and convert its tokens.</p>
+<p>.. py:function:: validate_annotations(text, annotations)
+:module: spokenform</p>
+<p>Validate and materialize source-aligned annotations.</p>
+<p>Annotation spans must be ordered, non-overlapping, inside <code class="docutils literal notranslate"><span class="pre">text</span></code>, and match
+<code class="docutils literal notranslate"><span class="pre">annotation.text</span></code> when that optional value is supplied.</p>
 </section>
 <section id="number-normalization">
 <h2>Number normalization</h2>
@@ -707,6 +861,18 @@ high-level preparation surface. No exported symbol is removed in 0.2.2.</p>
 structured and structured-safe plain-number grammar. It verbalizes ordinary
 numbers, validated dates, quantities, temperatures, and canonical currencies;
 colon-time candidates remain unchanged for caller-managed handling.</p>
+<p>.. py:function:: normalize_numbers(text, *, language)
+:module: spokenform</p>
+<p>Verbalize common dates, times, currencies, ordinals, and numbers.</p>
+<p>URLs, email addresses, and semantic-version-like values are protected. The
+implementation is intentionally conservative and is an MVP, not a complete
+locale grammar.</p>
+<p>.. py:function:: normalize_structured(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, evidence=None, trace=None)
+:module: spokenform</p>
+<p>Normalize structured values and return exact semantic provenance.</p>
+<p>.. py:function:: iter_structured_replacements(text, *, language, protected_ranges=(), promote_literals=False, generic_acronym_mode=’known_only’, generic_acronym_case=’upper’, interpretation_mode=InterpretationMode.CONTEXTUAL, disabled_domains=frozenset({}), allowed_domains=None, evidence=None, trace=None)
+:module: spokenform</p>
+<p>Return exact, non-overlapping semantic replacements for one language.</p>
 </section>
 <section id="interpretation-policy">
 <h2>Interpretation policy</h2>

@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">20<span>focused tools</span></div>
+    <div class="hero-stat">21<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -243,7 +243,22 @@ permalink: /tools/
   </div>
 </section>
 <section class="tool-group catalog-tool-group" aria-labelledby="tools-category-6">
-  <h3 id="tools-category-6">Audio</h3>
+  <h3 id="tools-category-6">Tools</h3>
+  <div class="cards tool-cards">
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>ssmdconvert</h3>
+      <p>Convert documents and EPUB books into SSMD with analysis and book-bundle support.</p>
+      <div class="card-links">
+        <a href="/tools/ssmdconvert/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmdconvert/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmdconvert" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
+  </div>
+</section>
+<section class="tool-group catalog-tool-group" aria-labelledby="tools-category-7">
+  <h3 id="tools-category-7">Audio</h3>
   <div class="cards tool-cards">
     <article class="card tool-card">
       <p class="card-label">Tool</p>

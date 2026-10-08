@@ -1,0 +1,472 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "ssmdconvert",
+  "entries": [
+    {
+      "url": "/tools/ssmdconvert/analysis-cache/",
+      "title": "ssmdconvert Analysis cache",
+      "snippet": "ssmdconvert report stores versioned JSON analysis snapshots and reusable\nper-chapter preparation results in the user cache. Snapshots includ …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Analysis cache",
+          "text": "ssmdconvert report stores versioned JSON analysis snapshots and reusable\nper-chapter preparation results in the user cache. Snapshots include the selected\nsource/chapter fingerprints, effective analysis options, generic preparation\nresults, SSMD mapping records, report data, and TXT projection metadata. Records\nare checksummed and validated before reuse. The cache is local derived data, not\npart of an SSMD document or book bundle.",
+          "lower": "ssmdconvert report stores versioned json analysis snapshots and reusable\nper-chapter preparation results in the user cache. snapshots include the selected\nsource/chapter fingerprints, effective analysis options, generic preparation\nresults, ssmd mapping records, report data, and txt projection metadata. records\nare checksummed and validated before reuse. the cache is local derived data, not\npart of an ssmd document or book bundle."
+        },
+        {
+          "anchor": "",
+          "heading": "Location",
+          "text": "If XDG_CACHE_HOME is set: $XDG_CACHE_HOME/ssmdconvert\n\n\nWindows: %LOCALAPPDATA%\\Cache\\ssmdconvert\n\n\nOther platforms: ~/.cache/ssmdconvert\n\n\n\nThere is no cache-path CLI override. The cache uses separate chapters/,\nanalyses/, and index/ records beneath that root. A source index retains only a\nbounded history of recent analysis IDs.",
+          "lower": "if xdg_cache_home is set: $xdg_cache_home/ssmdconvert\n\n\nwindows: %localappdata%\\cache\\ssmdconvert\n\n\nother platforms: ~/.cache/ssmdconvert\n\n\n\nthere is no cache-path cli override. the cache uses separate chapters/,\nanalyses/, and index/ records beneath that root. a source index retains only a\nbounded history of recent analysis ids."
+        },
+        {
+          "anchor": "",
+          "heading": "Reuse and freshness",
+          "text": "Each report run recomputes SSMD-specific analysis and saves a source-level\nsnapshot. Compatible per-chapter preparation results are reused by default.\nssmdconvert report SOURCE --refresh bypasses cached per-chapter preparation and\nreruns preparation for the selected sections before saving a fresh snapshot.\nRe-running identical inputs may produce the same deterministic analysis ID.\n\nssmdconvert context SOURCE CHANGE_ID resolves a generic change ID from that\nsource’s saved analyses and verifies only the current bytes of the affected\nchapter. If those bytes differ from the cached chapter fingerprint, context fails\nas stale and recommends refreshing the report. Changes to unrelated chapters do\nnot invalidate the requested context. Missing analyses are not silently\nrecomputed by context; first…",
+          "lower": "each report run recomputes ssmd-specific analysis and saves a source-level\nsnapshot. compatible per-chapter preparation results are reused by default.\nssmdconvert report source --refresh bypasses cached per-chapter preparation and\nreruns preparation for the selected sections before saving a fresh snapshot.\nre-running identical inputs may produce the same deterministic analysis id.\n\nssmdconvert context source change_id resolves a generic change id from that\nsource’s saved analyses and verifies only the current bytes of the affected\nchapter. if those bytes differ from the cached chapter fingerprint, context fails\nas stale and recommends refreshing the report. changes to unrelated chapters do\nnot invalidate the requested context. missing analyses are not silently\nrecomputed by context; first…"
+        },
+        {
+          "anchor": "",
+          "heading": "Removing or sharing cache data",
+          "text": "To clear the cache, stop ssmdconvert and remove the ssmdconvert directory\nunder the location above. A later report recreates it. There is no command that\nclears the cache automatically.\n\nCache files can contain source and prepared unit text used to render context, as\nwell as SSMD-derived data and fingerprints. Treat them as sensitive local data;\nreview a requested context --bug-report payload before sharing it. Deleting the\ncache does not modify source SSMD, workspaces, or bundles.",
+          "lower": "to clear the cache, stop ssmdconvert and remove the ssmdconvert directory\nunder the location above. a later report recreates it. there is no command that\nclears the cache automatically.\n\ncache files can contain source and prepared unit text used to render context, as\nwell as ssmd-derived data and fingerprints. treat them as sensitive local data;\nreview a requested context --bug-report payload before sharing it. deleting the\ncache does not modify source ssmd, workspaces, or bundles."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/analysis-workflows/",
+      "title": "ssmdconvert SSMD analysis and speech workflows",
+      "snippet": "ssmdconvert owns SSMD-specific source loading, chapter selection, language/context\nsemantics, source mapping, reporting, TXT projection, and …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "SSMD analysis and speech workflows",
+          "text": "ssmdconvert owns SSMD-specific source loading, chapter selection, language/context\nsemantics, source mapping, reporting, TXT projection, and write-back. It uses the\npublic ttsready>=0.2,<0.3 Python API for source-neutral speech preparation and QA;\nttsready is a core dependency. Generic analysis IDs and change provenance are\nreported without exposing replacement identities as application-specific rules.\n\nConceptually, the layers are:\n\nspokenform → ttsready → ssmdconvert\n\n\n\n\nspokenform handles linguistic normalization; ttsready provides generic preparation\nand QA; ssmdconvert owns SSMD application semantics and write-back. ssmdconvert\ndepends directly on the public ttsready API, not on spokenform.\n\nThe commands accept a standalone .ssmd/.ssmd.md file, a validated\n.ssmdbook.zip, or an editab…",
+          "lower": "ssmdconvert owns ssmd-specific source loading, chapter selection, language/context\nsemantics, source mapping, reporting, txt projection, and write-back. it uses the\npublic ttsready>=0.2,<0.3 python api for source-neutral speech preparation and qa;\nttsready is a core dependency. generic analysis ids and change provenance are\nreported without exposing replacement identities as application-specific rules.\n\nconceptually, the layers are:\n\nspokenform → ttsready → ssmdconvert\n\n\n\n\nspokenform handles linguistic normalization; ttsready provides generic preparation\nand qa; ssmdconvert owns ssmd application semantics and write-back. ssmdconvert\ndepends directly on the public ttsready api, not on spokenform.\n\nthe commands accept a standalone .ssmd/.ssmd.md file, a validated\n.ssmdbook.zip, or an editab…"
+        },
+        {
+          "anchor": "",
+          "heading": "Report",
+          "text": "ssmdconvert report BOOK.ssmdbook.zip --chapters 2-8\nssmdconvert report chapter.ssmd --format json -o report.json\nssmdconvert report BOOK.ssmdbook --fail-on-warning --refresh\n\n\n\n\nMarkdown goes to stdout by default. Use --format md|json or let -o infer the\nformat from .md or .json. Reports use the selected chapters for preparation,\nstatistics, mapped changes, and TXT preview. --show-raw-spans adds raw SSMD\nmapping details to Markdown; --fail-on-warning emits the report and exits\nnon-zero if a warning or error was reported. Each report run saves a source-level\nsnapshot and may reuse compatible per-chapter preparation results. --refresh\nbypasses the chapter cache and reruns preparation for the selected sections.\n\n--language supplies an explicit language override. Without one, language is\nreso…",
+          "lower": "ssmdconvert report book.ssmdbook.zip --chapters 2-8\nssmdconvert report chapter.ssmd --format json -o report.json\nssmdconvert report book.ssmdbook --fail-on-warning --refresh\n\n\n\n\nmarkdown goes to stdout by default. use --format md|json or let -o infer the\nformat from .md or .json. reports use the selected chapters for preparation,\nstatistics, mapped changes, and txt preview. --show-raw-spans adds raw ssmd\nmapping details to markdown; --fail-on-warning emits the report and exits\nnon-zero if a warning or error was reported. each report run saves a source-level\nsnapshot and may reuse compatible per-chapter preparation results. --refresh\nbypasses the chapter cache and reruns preparation for the selected sections.\n\n--language supplies an explicit language override. without one, language is\nreso…"
+        },
+        {
+          "anchor": "",
+          "heading": "Context lookup",
+          "text": "First create a report so the generic change ID is in the local analysis cache,\nthen request that ID for the same source:\n\nssmdconvert report BOOK.ssmdbook.zip\nssmdconvert context BOOK.ssmdbook.zip chg:v1:0123456789abcdef0123456789abcdef\nssmdconvert context BOOK.ssmdbook.zip chg:v1:0123456789abcdef0123456789abcdef --paragraph --json\n\n\n\n\ncontext checks the current bytes of the affected chapter before returning a cached\nresult. Editing that chapter makes its old analysis stale; rerun the report with, for\nexample, ssmdconvert report SOURCE --refresh, and use the change ID from the new\nreport. Unrelated chapter edits do not invalidate a change’s chapter context.\nMixed-language paragraphs are shown as whole paragraphs so language boundaries\nremain clear. --bug-report adds reproducibility finger…",
+          "lower": "first create a report so the generic change id is in the local analysis cache,\nthen request that id for the same source:\n\nssmdconvert report book.ssmdbook.zip\nssmdconvert context book.ssmdbook.zip chg:v1:0123456789abcdef0123456789abcdef\nssmdconvert context book.ssmdbook.zip chg:v1:0123456789abcdef0123456789abcdef --paragraph --json\n\n\n\n\ncontext checks the current bytes of the affected chapter before returning a cached\nresult. editing that chapter makes its old analysis stale; rerun the report with, for\nexample, ssmdconvert report source --refresh, and use the change id from the new\nreport. unrelated chapter edits do not invalidate a change’s chapter context.\nmixed-language paragraphs are shown as whole paragraphs so language boundaries\nremain clear. --bug-report adds reproducibility finger…"
+        },
+        {
+          "anchor": "",
+          "heading": "TXT projection",
+          "text": "ssmdconvert txt BOOK.ssmdbook.zip --chapters 2-8 -o prepared.txt\nssmdconvert txt chapter.ssmd --no-include-titles\n\n\n\n\nThe output is the generic prepared plain-text projection used by the report\npreview and statistics. It is not a substitute for SSMD: it contains no SSMD\nannotations. Output goes to stdout unless -o is given. Existing destinations\nare refused unless --force is supplied; the input is never a valid output.",
+          "lower": "ssmdconvert txt book.ssmdbook.zip --chapters 2-8 -o prepared.txt\nssmdconvert txt chapter.ssmd --no-include-titles\n\n\n\n\nthe output is the generic prepared plain-text projection used by the report\npreview and statistics. it is not a substitute for ssmd: it contains no ssmd\nannotations. output goes to stdout unless -o is given. existing destinations\nare refused unless --force is supplied; the input is never a valid output."
+        },
+        {
+          "anchor": "",
+          "heading": "Speech audit, annotate, and freeze",
+          "text": "ssmdconvert speech audit chapter.ssmd --json\nssmdconvert speech annotate chapter.ssmd -o annotated.ssmd\nssmdconvert speech freeze BOOK.ssmdbook.zip --chapters 2-8 -o frozen.ssmdbook.zip\n\n\n\n\naudit is read-only and uses the same analysis pipeline and generic change IDs\nas report. annotate and freeze materialize eligible automatic decisions as\nexplicit SSMD substitutions. They share the validated mapping and write path;\nmaterialization verifies parser-owned source spans, rejects unsafe/overlapping\nedits, and preserves visible text. Existing authoritative SSMD speech semantics\nare not duplicated. Unresolved effective language or unsafe mapping prevents\nwrite-back.\n\nSpeech writes require a new destination by default. Standalone SSMD and book\noutputs are written atomically, existing destination…",
+          "lower": "ssmdconvert speech audit chapter.ssmd --json\nssmdconvert speech annotate chapter.ssmd -o annotated.ssmd\nssmdconvert speech freeze book.ssmdbook.zip --chapters 2-8 -o frozen.ssmdbook.zip\n\n\n\n\naudit is read-only and uses the same analysis pipeline and generic change ids\nas report. annotate and freeze materialize eligible automatic decisions as\nexplicit ssmd substitutions. they share the validated mapping and write path;\nmaterialization verifies parser-owned source spans, rejects unsafe/overlapping\nedits, and preserves visible text. existing authoritative ssmd speech semantics\nare not duplicated. unresolved effective language or unsafe mapping prevents\nwrite-back.\n\nspeech writes require a new destination by default. standalone ssmd and book\noutputs are written atomically, existing destination…"
+        },
+        {
+          "anchor": "",
+          "heading": "Cache and data handling",
+          "text": "Reports create checksummed, versioned analysis snapshots in the user cache.\nSee Analysis cache for the location, retention, freshness,\nand removal details.",
+          "lower": "reports create checksummed, versioned analysis snapshots in the user cache.\nsee analysis cache for the location, retention, freshness,\nand removal details."
+        },
+        {
+          "anchor": "",
+          "heading": "Command migration",
+          "text": "The old ttsready CLI is not part of this workflow. See\nMigration from the ttsready CLI for direct\ncommand replacements and commands that are intentionally not migrated.",
+          "lower": "the old ttsready cli is not part of this workflow. see\nmigration from the ttsready cli for direct\ncommand replacements and commands that are intentionally not migrated."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/api/",
+      "title": "ssmdconvert Python API",
+      "snippet": "The core names documented here are exported from ssmdconvert and listed in ssmdconvert.__all__.\n.. py:function:: convert(source: str | ~path …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "The core names documented here are exported from ssmdconvert and listed in ssmdconvert.__all__.",
+          "lower": "the core names documented here are exported from ssmdconvert and listed in ssmdconvert.__all__."
+        },
+        {
+          "anchor": "",
+          "heading": "Conversion",
+          "text": ".. py:function:: convert(source: str | ~pathlib.Path, *, title: str | None = None, author: str | None = None, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’) -> ~ssmdconvert.models.ConversionResult\n:module: ssmdconvert\n\nConvert a source path with the default adapters.\n\n.. py:class:: Converter(adapters: ~collections.abc.Iterable[~ssmdconvert.adapters.base.InputAdapter] | None = None)\n:module: ssmdconvert\n:canonical: ssmdconvert.converter.Converter\n\nBases: :py:class:object\n\nConvert source documents through the registered input adapters.\n\n.. py:method:: Converter.adapter_for(source: str | ~pathlib.Path) -> ~ssmdconvert.adapters.base.InputAdapter\n:module: ssmdc…",
+          "lower": ".. py:function:: convert(source: str | ~pathlib.path, *, title: str | none = none, author: str | none = none, language: str | none = none, metadata_overrides: ~collections.abc.mapping[str, ~typing.any] | none = none, sequence_fallback_mode: ~typing.literal[‘preserve’, ‘spell’] = ‘preserve’) -> ~ssmdconvert.models.conversionresult\n:module: ssmdconvert\n\nconvert a source path with the default adapters.\n\n.. py:class:: converter(adapters: ~collections.abc.iterable[~ssmdconvert.adapters.base.inputadapter] | none = none)\n:module: ssmdconvert\n:canonical: ssmdconvert.converter.converter\n\nbases: :py:class:object\n\nconvert source documents through the registered input adapters.\n\n.. py:method:: converter.adapter_for(source: str | ~pathlib.path) -> ~ssmdconvert.adapters.base.inputadapter\n:module: ssmdc…"
+        },
+        {
+          "anchor": "",
+          "heading": "Source-neutral models",
+          "text": ".. py:class:: SourceInfo(format: str, media_type: str | None = None, path: ~pathlib.Path | None = None, name: str | None = None)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.SourceInfo\n\nBases: :py:class:object\n\nSource format and provenance, with a path only when locally available.\n\n.. py:attribute:: SourceInfo.format\n:module: ssmdconvert\n:type: str\n\n.. py:attribute:: SourceInfo.media_type\n:module: ssmdconvert\n:type: str | None\n\n.. py:attribute:: SourceInfo.path\n:module: ssmdconvert\n:type: ~pathlib.Path | None\n\n.. py:attribute:: SourceInfo.name\n:module: ssmdconvert\n:type: str | None\n\n.. py:class:: Section(id: str, markdown: str, title: str | None = None, level: int = 1, source_ref: str | None = None)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.Section\n\nBases: :py:class:objec…",
+          "lower": ".. py:class:: sourceinfo(format: str, media_type: str | none = none, path: ~pathlib.path | none = none, name: str | none = none)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.sourceinfo\n\nbases: :py:class:object\n\nsource format and provenance, with a path only when locally available.\n\n.. py:attribute:: sourceinfo.format\n:module: ssmdconvert\n:type: str\n\n.. py:attribute:: sourceinfo.media_type\n:module: ssmdconvert\n:type: str | none\n\n.. py:attribute:: sourceinfo.path\n:module: ssmdconvert\n:type: ~pathlib.path | none\n\n.. py:attribute:: sourceinfo.name\n:module: ssmdconvert\n:type: str | none\n\n.. py:class:: section(id: str, markdown: str, title: str | none = none, level: int = 1, source_ref: str | none = none)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.section\n\nbases: :py:class:objec…"
+        },
+        {
+          "anchor": "",
+          "heading": "Books and chapters",
+          "text": ".. py:class:: Book(source: ~ssmdconvert.models.SourceInfo, metadata: ~collections.abc.Mapping[str, ~typing.Any], chapters: tuple[~ssmdconvert.models.BookChapter, …], source_sha256: str, source_chapter_count: int | None = None)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.Book\n\nBases: :py:class:object\n\nChapter-aware representation of a source book.\n\n.. py:attribute:: Book.source\n:module: ssmdconvert\n:type: ~ssmdconvert.models.SourceInfo\n\n.. py:attribute:: Book.metadata\n:module: ssmdconvert\n:type: ~collections.abc.Mapping[str, ~typing.Any]\n\n.. py:attribute:: Book.chapters\n:module: ssmdconvert\n:type: tuple[~ssmdconvert.models.BookChapter, …]\n\n.. py:attribute:: Book.source_sha256\n:module: ssmdconvert\n:type: str\n\n.. py:attribute:: Book.source_chapter_count\n:module: ssmdconvert\n:type: in…",
+          "lower": ".. py:class:: book(source: ~ssmdconvert.models.sourceinfo, metadata: ~collections.abc.mapping[str, ~typing.any], chapters: tuple[~ssmdconvert.models.bookchapter, …], source_sha256: str, source_chapter_count: int | none = none)\n:module: ssmdconvert\n:canonical: ssmdconvert.models.book\n\nbases: :py:class:object\n\nchapter-aware representation of a source book.\n\n.. py:attribute:: book.source\n:module: ssmdconvert\n:type: ~ssmdconvert.models.sourceinfo\n\n.. py:attribute:: book.metadata\n:module: ssmdconvert\n:type: ~collections.abc.mapping[str, ~typing.any]\n\n.. py:attribute:: book.chapters\n:module: ssmdconvert\n:type: tuple[~ssmdconvert.models.bookchapter, …]\n\n.. py:attribute:: book.source_sha256\n:module: ssmdconvert\n:type: str\n\n.. py:attribute:: book.source_chapter_count\n:module: ssmdconvert\n:type: in…"
+        },
+        {
+          "anchor": "",
+          "heading": "Bundles",
+          "text": ".. py:function:: write_book_bundle(book: ~ssmdconvert.models.Book, output: str | ~pathlib.Path, *, format: ~typing.Literal[‘directory’, ‘zip’], overwrite: bool = False) -> ~pathlib.Path\n:module: ssmdconvert\n\nWrite a complete directory or ZIP bundle atomically beside its destination.\n\n.. py:function:: load_book_bundle(source: str | ~pathlib.Path) -> ~ssmdconvert.models.Book\n:module: ssmdconvert\n\nLoad and strictly validate a directory or ZIP book bundle.\n\n.. py:function:: validate_book_bundle(source: str | ~pathlib.Path) -> None\n:module: ssmdconvert\n\nValidate a book bundle using the same strict loader as deserialization.\n\nThe writer requires format=\"directory\" or format=\"zip\". Existing destinations are refused unless overwrite=True is supplied. See Bundle format for atomic replacement, vali…",
+          "lower": ".. py:function:: write_book_bundle(book: ~ssmdconvert.models.book, output: str | ~pathlib.path, *, format: ~typing.literal[‘directory’, ‘zip’], overwrite: bool = false) -> ~pathlib.path\n:module: ssmdconvert\n\nwrite a complete directory or zip bundle atomically beside its destination.\n\n.. py:function:: load_book_bundle(source: str | ~pathlib.path) -> ~ssmdconvert.models.book\n:module: ssmdconvert\n\nload and strictly validate a directory or zip book bundle.\n\n.. py:function:: validate_book_bundle(source: str | ~pathlib.path) -> none\n:module: ssmdconvert\n\nvalidate a book bundle using the same strict loader as deserialization.\n\nthe writer requires format=\"directory\" or format=\"zip\". existing destinations are refused unless overwrite=true is supplied. see bundle format for atomic replacement, vali…"
+        },
+        {
+          "anchor": "",
+          "heading": "Errors",
+          "text": ".. py:class:: SSMDConvertError\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.SSMDConvertError\n\nBases: :py:class:Exception\n\nBase error.\n\n.. py:class:: UnsupportedInputError\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.UnsupportedInputError\n\nBases: :py:class:~ssmdconvert.errors.SSMDConvertError\n\nNo input adapter accepts the source.\n\n.. py:class:: MissingDependencyError\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.MissingDependencyError\n\nBases: :py:class:~ssmdconvert.errors.SSMDConvertError\n\nAn optional adapter/enricher dependency is not installed.\n\n.. py:class:: BookError\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.BookError\n\nBases: :py:class:~ssmdconvert.errors.SSMDConvertError\n\nA book inspection or conversion failed.\n\n.. py:class:: UnsupportedBookSourceError\n:m…",
+          "lower": ".. py:class:: ssmdconverterror\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.ssmdconverterror\n\nbases: :py:class:exception\n\nbase error.\n\n.. py:class:: unsupportedinputerror\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.unsupportedinputerror\n\nbases: :py:class:~ssmdconvert.errors.ssmdconverterror\n\nno input adapter accepts the source.\n\n.. py:class:: missingdependencyerror\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.missingdependencyerror\n\nbases: :py:class:~ssmdconvert.errors.ssmdconverterror\n\nan optional adapter/enricher dependency is not installed.\n\n.. py:class:: bookerror\n:module: ssmdconvert\n:canonical: ssmdconvert.errors.bookerror\n\nbases: :py:class:~ssmdconvert.errors.ssmdconverterror\n\na book inspection or conversion failed.\n\n.. py:class:: unsupportedbooksourceerror\n:m…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD analysis and speech workflows",
+          "text": "SSMD report, context lookup, TXT projection, speech audit, annotation, and freeze are\nuser-facing CLI workflows. The former optional SpeechPreparationOptions /\nprepare_ssmd_for_speech engine and its direct spokenform runtime dependency have\nbeen removed; ttsready>=0.2,<0.3 supplies generic preparation through its public\nPython API.\n\nSee SSMD analysis and speech workflows for command usage,\ncache ownership, source mapping, safe write-back, and migration from the removed\nttsready CLI.",
+          "lower": "ssmd report, context lookup, txt projection, speech audit, annotation, and freeze are\nuser-facing cli workflows. the former optional speechpreparationoptions /\nprepare_ssmd_for_speech engine and its direct spokenform runtime dependency have\nbeen removed; ttsready>=0.2,<0.3 supplies generic preparation through its public\npython api.\n\nsee ssmd analysis and speech workflows for command usage,\ncache ownership, source mapping, safe write-back, and migration from the removed\nttsready cli."
+        },
+        {
+          "anchor": "",
+          "heading": "Version",
+          "text": ".. py:data:: version\n:module: ssmdconvert\n:value: ‘0.1.4’\n\nstr(object=’’) -> str\nstr(bytes_or_buffer[, encoding[, errors]]) -> str\n\nCreate a new string object from the given object. If encoding or\nerrors is specified, then the object must expose a data buffer\nthat will be decoded using the given encoding and error handler.\nOtherwise, returns the result of object.str() (if defined)\nor repr(object).\nencoding defaults to ‘utf-8’.\nerrors defaults to ‘strict’.",
+          "lower": ".. py:data:: version\n:module: ssmdconvert\n:value: ‘0.1.4’\n\nstr(object=’’) -> str\nstr(bytes_or_buffer[, encoding[, errors]]) -> str\n\ncreate a new string object from the given object. if encoding or\nerrors is specified, then the object must expose a data buffer\nthat will be decoded using the given encoding and error handler.\notherwise, returns the result of object.str() (if defined)\nor repr(object).\nencoding defaults to ‘utf-8’.\nerrors defaults to ‘strict’."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/books/",
+      "title": "ssmdconvert EPUB chapters and book bundles",
+      "snippet": "The book API provides ordered EPUB chapter inspection, source-number selection, standalone SSMD chapter conversion, and directory or ZIP bun …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "EPUB chapters and book bundles",
+          "text": "The book API provides ordered EPUB chapter inspection, source-number selection, standalone SSMD chapter conversion, and directory or ZIP bundles. Combined EPUB conversion through ssmdconvert convert remains a single SSMD document.",
+          "lower": "the book api provides ordered epub chapter inspection, source-number selection, standalone ssmd chapter conversion, and directory or zip bundles. combined epub conversion through ssmdconvert convert remains a single ssmd document."
+        },
+        {
+          "anchor": "",
+          "heading": "Inspect chapters",
+          "text": "ssmdconvert book inspect novel.epub\nssmdconvert book inspect novel.epub --json\n\n\n\n\nInspection returns source metadata and the complete ordered chapter inventory. source_id and source_parent_id preserve identifiers from the EPUB navigation data. id is the stable canonical chapter-NNNN identity, and parent_id refers to the canonical ID of the parent chapter when it is present in the inventory.",
+          "lower": "ssmdconvert book inspect novel.epub\nssmdconvert book inspect novel.epub --json\n\n\n\n\ninspection returns source metadata and the complete ordered chapter inventory. source_id and source_parent_id preserve identifiers from the epub navigation data. id is the stable canonical chapter-nnnn identity, and parent_id refers to the canonical id of the parent chapter when it is present in the inventory."
+        },
+        {
+          "anchor": "",
+          "heading": "Select chapters",
+          "text": "ssmdconvert book convert novel.epub --chapters 1 -o chapter-one.ssmdbook\nssmdconvert book convert novel.epub --chapters 1,3-5 -o selected.ssmdbook\nssmdconvert book convert novel.epub --chapters 2-20 -o selected.ssmdbook\n\n\n\n\nSelectors use original 1-based source chapter numbers. They address the complete source inventory, even when the output contains only a subset. Selected chapters always remain in source order. Duplicate numbers do not duplicate chapters. Missing chapters, zero or negative numbers, reversed ranges, and malformed tokens raise ChapterSelectionError.\n\nNew book conversions default to sequence_fallback_mode=preserve; spell remains an explicit option. The selected policy is written to the book manifest and mirrored into each chapter so extracted chapters remain self-contained…",
+          "lower": "ssmdconvert book convert novel.epub --chapters 1 -o chapter-one.ssmdbook\nssmdconvert book convert novel.epub --chapters 1,3-5 -o selected.ssmdbook\nssmdconvert book convert novel.epub --chapters 2-20 -o selected.ssmdbook\n\n\n\n\nselectors use original 1-based source chapter numbers. they address the complete source inventory, even when the output contains only a subset. selected chapters always remain in source order. duplicate numbers do not duplicate chapters. missing chapters, zero or negative numbers, reversed ranges, and malformed tokens raise chapterselectionerror.\n\nnew book conversions default to sequence_fallback_mode=preserve; spell remains an explicit option. the selected policy is written to the book manifest and mirrored into each chapter so extracted chapters remain self-contained…"
+        },
+        {
+          "anchor": "",
+          "heading": "Write and validate bundles",
+          "text": "A directory ending in .ssmdbook/ is the editable canonical workspace. A .ssmdbook.zip is an immutable portable artifact. Both use the same manifest and chapter documents; strict bundle loading and validation require the recorded chapter hashes to match:\n\nssmdconvert book convert novel.epub -o novel.ssmdbook\nssmdconvert book convert novel.epub -o novel.ssmdbook.zip\nssmdconvert book validate novel.ssmdbook\nssmdconvert book validate novel.ssmdbook.zip --json",
+          "lower": "a directory ending in .ssmdbook/ is the editable canonical workspace. a .ssmdbook.zip is an immutable portable artifact. both use the same manifest and chapter documents; strict bundle loading and validation require the recorded chapter hashes to match:\n\nssmdconvert book convert novel.epub -o novel.ssmdbook\nssmdconvert book convert novel.epub -o novel.ssmdbook.zip\nssmdconvert book validate novel.ssmdbook\nssmdconvert book validate novel.ssmdbook.zip --json"
+        },
+        {
+          "anchor": "",
+          "heading": "Edit, refresh, and pack a workspace",
+          "text": "Editing a chapter in a directory workspace makes its manifest digest stale, but does not prevent workspace consumers from using the current chapter text. ssmdconvert book metadata reports whether the directory is clean or dirty and counts dirty chapters. Workspace loading does not rewrite the manifest; invalid SSMD, missing files, or unsafe paths remain errors.\n\nUse refresh when the edited source is ready to have its manifest hashes and character counts updated. The check form never mutates files and exits non-zero when the workspace is dirty or invalid. To create a portable artifact from the current edited content, use pack; this writes a strict ZIP with current chapter text and fresh hashes without modifying the directory workspace.\n\nssmdconvert book refresh novel.ssmdbook --check\nssmdc…",
+          "lower": "editing a chapter in a directory workspace makes its manifest digest stale, but does not prevent workspace consumers from using the current chapter text. ssmdconvert book metadata reports whether the directory is clean or dirty and counts dirty chapters. workspace loading does not rewrite the manifest; invalid ssmd, missing files, or unsafe paths remain errors.\n\nuse refresh when the edited source is ready to have its manifest hashes and character counts updated. the check form never mutates files and exits non-zero when the workspace is dirty or invalid. to create a portable artifact from the current edited content, use pack; this writes a strict zip with current chapter text and fresh hashes without modifying the directory workspace.\n\nssmdconvert book refresh novel.ssmdbook --check\nssmdc…"
+        },
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "from ssmdconvert import (\n    BookWorkspace,\n    WorkspaceChapterStatus,\n    convert_book,\n    inspect_book,\n    load_book_bundle,\n    load_book_workspace,\n    refresh_book_workspace,\n    validate_book_bundle,\n    write_book_bundle,\n)\n\ninspection = inspect_book(\"novel.epub\")\nbook = convert_book(\"novel.epub\", chapters=\"2-20\")\nwrite_book_bundle(book, \"selected.ssmdbook\", format=\"directory\")\nloaded = load_book_bundle(\"selected.ssmdbook\")\nworkspace: BookWorkspace = load_book_workspace(\"selected.ssmdbook\")\nworkspace_status: WorkspaceChapterStatus = workspace.chapters[0]\nrefreshed_workspace: BookWorkspace = refresh_book_workspace(\"selected.ssmdbook\")\nvalidate_book_bundle(\"selected.ssmdbook\")\n\n\n\n\nBook.source_sha256 is captured during conversion. Bundle writing persists that captured hash and doe…",
+          "lower": "from ssmdconvert import (\n    bookworkspace,\n    workspacechapterstatus,\n    convert_book,\n    inspect_book,\n    load_book_bundle,\n    load_book_workspace,\n    refresh_book_workspace,\n    validate_book_bundle,\n    write_book_bundle,\n)\n\ninspection = inspect_book(\"novel.epub\")\nbook = convert_book(\"novel.epub\", chapters=\"2-20\")\nwrite_book_bundle(book, \"selected.ssmdbook\", format=\"directory\")\nloaded = load_book_bundle(\"selected.ssmdbook\")\nworkspace: bookworkspace = load_book_workspace(\"selected.ssmdbook\")\nworkspace_status: workspacechapterstatus = workspace.chapters[0]\nrefreshed_workspace: bookworkspace = refresh_book_workspace(\"selected.ssmdbook\")\nvalidate_book_bundle(\"selected.ssmdbook\")\n\n\n\n\nbook.source_sha256 is captured during conversion. bundle writing persists that captured hash and doe…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/bundle-format/",
+      "title": "ssmdconvert Book bundle format",
+      "snippet": "A directory ending in .ssmdbook/ is the canonical editable book workspace; a .ssmdbook.zip is an immutable portable artifact. Both use the s …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Book bundle format",
+          "text": "A directory ending in .ssmdbook/ is the canonical editable book workspace; a .ssmdbook.zip is an immutable portable artifact. Both use the same versioned manifest model. load_book_bundle() and validate_book_bundle() remain strict for both formats, including recorded chapter digests. Use the separate workspace API to inspect edited directory chapters whose digests are stale.\n\nformat:         ssmdconvert.book\nschema_version: 1\nssmd_version:   0.9",
+          "lower": "a directory ending in .ssmdbook/ is the canonical editable book workspace; a .ssmdbook.zip is an immutable portable artifact. both use the same versioned manifest model. load_book_bundle() and validate_book_bundle() remain strict for both formats, including recorded chapter digests. use the separate workspace api to inspect edited directory chapters whose digests are stale.\n\nformat:         ssmdconvert.book\nschema_version: 1\nssmd_version:   0.9"
+        },
+        {
+          "anchor": "",
+          "heading": "Manifest example",
+          "text": "{\n  \"format\": \"ssmdconvert.book\",\n  \"schema_version\": 1,\n  \"ssmd_version\": \"0.9\",\n  \"metadata\": {\n    \"title\": \"Example Book\",\n    \"sequence_fallback_mode\": \"preserve\"\n  },\n  \"source\": {\n    \"format\": \"epub\",\n    \"media_type\": \"application/epub+zip\",\n    \"name\": \"example.epub\",\n    \"sha256\": \"<64 lowercase hex characters>\",\n    \"chapter_count\": 12\n  },\n  \"chapters\": [\n    {\n      \"id\": \"chapter-0001\",\n      \"source_number\": 1,\n      \"path\": \"chapters/chapter-0001.ssmd.md\",\n      \"title\": \"Chapter One\",\n      \"source_id\": \"nav:0:example\",\n      \"source_parent_id\": null,\n      \"href\": \"chapter-1.xhtml\",\n      \"parent_id\": null,\n      \"level\": 1,\n      \"char_count\": 1234,\n      \"sha256\": \"<64 lowercase hex characters>\",\n      \"diagnostics\": []\n    }\n  ]\n}\n\n\n\n\nmetadata.sequence_fallback_mode…",
+          "lower": "{\n  \"format\": \"ssmdconvert.book\",\n  \"schema_version\": 1,\n  \"ssmd_version\": \"0.9\",\n  \"metadata\": {\n    \"title\": \"example book\",\n    \"sequence_fallback_mode\": \"preserve\"\n  },\n  \"source\": {\n    \"format\": \"epub\",\n    \"media_type\": \"application/epub+zip\",\n    \"name\": \"example.epub\",\n    \"sha256\": \"<64 lowercase hex characters>\",\n    \"chapter_count\": 12\n  },\n  \"chapters\": [\n    {\n      \"id\": \"chapter-0001\",\n      \"source_number\": 1,\n      \"path\": \"chapters/chapter-0001.ssmd.md\",\n      \"title\": \"chapter one\",\n      \"source_id\": \"nav:0:example\",\n      \"source_parent_id\": null,\n      \"href\": \"chapter-1.xhtml\",\n      \"parent_id\": null,\n      \"level\": 1,\n      \"char_count\": 1234,\n      \"sha256\": \"<64 lowercase hex characters>\",\n      \"diagnostics\": []\n    }\n  ]\n}\n\n\n\n\nmetadata.sequence_fallback_mode…"
+        },
+        {
+          "anchor": "",
+          "heading": "Validation and resource limits",
+          "text": "The strict load_book_bundle() and validate_book_bundle() APIs validate directory bundles and ZIPs before returning chapter content. Both require all of the following:\n\n\nsupported manifest format, schema, and SSMD version;\n\n\nnormalized relative POSIX paths, with traversal, absolute, Windows-drive, and non-normalized paths rejected;\n\n\nduplicate chapter IDs, source numbers, paths, and ZIP member names rejected;\n\n\nZIP symlinks rejected;\n\n\nrequired manifest.json and chapter files;\n\n\nsource and chapter SHA-256 verification;\n\n\nUTF-8 decoding and standalone SSMD validation of every chapter.\n\n\n\nThe loader limits the manifest to 2 MiB, each referenced chapter to 64 MiB uncompressed, the total referenced chapter content to 512 MiB, and ZIP archives to 10,000 members. These bounds limit bundle conten…",
+          "lower": "the strict load_book_bundle() and validate_book_bundle() apis validate directory bundles and zips before returning chapter content. both require all of the following:\n\n\nsupported manifest format, schema, and ssmd version;\n\n\nnormalized relative posix paths, with traversal, absolute, windows-drive, and non-normalized paths rejected;\n\n\nduplicate chapter ids, source numbers, paths, and zip member names rejected;\n\n\nzip symlinks rejected;\n\n\nrequired manifest.json and chapter files;\n\n\nsource and chapter sha-256 verification;\n\n\nutf-8 decoding and standalone ssmd validation of every chapter.\n\n\n\nthe loader limits the manifest to 2 mib, each referenced chapter to 64 mib uncompressed, the total referenced chapter content to 512 mib, and zip archives to 10,000 members. these bounds limit bundle conten…"
+        },
+        {
+          "anchor": "",
+          "heading": "Editable workspace maintenance",
+          "text": "Editing a referenced chapter file makes a directory workspace dirty because its recorded SHA-256 no longer matches. Workspace loading validates the manifest, paths, UTF-8, and SSMD 0.9, then returns the actual current chapter text and explicit expected/actual digests without changing files. Invalid SSMD and unsafe or missing paths remain errors. ZIP artifacts never use this relaxed digest handling.\n\nRefresh is the explicit source-maintenance operation:\n\nssmdconvert book refresh novel.ssmdbook\nssmdconvert book refresh novel.ssmdbook --check\nssmdconvert book pack novel.ssmdbook -o novel.ssmdbook.zip\n\n\n\n\nrefresh validates the chapters and atomically updates manifest chapter digests and char_count values. --check performs no writes and exits successfully only when the workspace is valid and c…",
+          "lower": "editing a referenced chapter file makes a directory workspace dirty because its recorded sha-256 no longer matches. workspace loading validates the manifest, paths, utf-8, and ssmd 0.9, then returns the actual current chapter text and explicit expected/actual digests without changing files. invalid ssmd and unsafe or missing paths remain errors. zip artifacts never use this relaxed digest handling.\n\nrefresh is the explicit source-maintenance operation:\n\nssmdconvert book refresh novel.ssmdbook\nssmdconvert book refresh novel.ssmdbook --check\nssmdconvert book pack novel.ssmdbook -o novel.ssmdbook.zip\n\n\n\n\nrefresh validates the chapters and atomically updates manifest chapter digests and char_count values. --check performs no writes and exits successfully only when the workspace is valid and c…"
+        },
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "from ssmdconvert import (\n    BookWorkspace,\n    WorkspaceChapterStatus,\n    load_book_bundle,\n    load_book_workspace,\n    refresh_book_workspace,\n    validate_book_bundle,\n    write_book_bundle,\n)\n\nwrite_book_bundle(book, \"book.ssmdbook\", format=\"directory\")\nwrite_book_bundle(book, \"book.ssmdbook.zip\", format=\"zip\")\nwrite_book_bundle(book, \"replacement.ssmdbook\", format=\"directory\", overwrite=True)\nloaded = load_book_bundle(\"book.ssmdbook\")\nworkspace: BookWorkspace = load_book_workspace(\"book.ssmdbook\")\nchapter_status: WorkspaceChapterStatus = workspace.chapters[0]\nrefreshed = refresh_book_workspace(\"book.ssmdbook\")\nvalidate_book_bundle(\"book.ssmdbook\")",
+          "lower": "from ssmdconvert import (\n    bookworkspace,\n    workspacechapterstatus,\n    load_book_bundle,\n    load_book_workspace,\n    refresh_book_workspace,\n    validate_book_bundle,\n    write_book_bundle,\n)\n\nwrite_book_bundle(book, \"book.ssmdbook\", format=\"directory\")\nwrite_book_bundle(book, \"book.ssmdbook.zip\", format=\"zip\")\nwrite_book_bundle(book, \"replacement.ssmdbook\", format=\"directory\", overwrite=true)\nloaded = load_book_bundle(\"book.ssmdbook\")\nworkspace: bookworkspace = load_book_workspace(\"book.ssmdbook\")\nchapter_status: workspacechapterstatus = workspace.chapters[0]\nrefreshed = refresh_book_workspace(\"book.ssmdbook\")\nvalidate_book_bundle(\"book.ssmdbook\")"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/changelog/",
+      "title": "ssmdconvert Changelog",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded SSMD-aware re …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Changelog",
+          "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
+          "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added SSMD-aware reporting, context lookup, TXT projection, and safe speech audit and write-back workflows",
+          "lower": "added ssmd-aware reporting, context lookup, txt projection, and safe speech audit and write-back workflows"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed platform-independent analysis freshness by normalizing SSMD newlines and preserving workspace byte hashes\n\n\nFixed bundle workspace safety and newline-stable source checks during speech materialization",
+          "lower": "fixed platform-independent analysis freshness by normalizing ssmd newlines and preserving workspace byte hashes\n\n\nfixed bundle workspace safety and newline-stable source checks during speech materialization"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added native SSMD scene-break handling for Markdown, HTML, and EPUB conversions",
+          "lower": "added native ssmd scene-break handling for markdown, html, and epub conversions"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added adaptive CLI help, portable metadata overrides, book language selection, and bundle metadata inspection",
+          "lower": "added adaptive cli help, portable metadata overrides, book language selection, and bundle metadata inspection"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed the default for new conversions to sequence_fallback_mode=preserve while retaining explicit spell support",
+          "lower": "changed the default for new conversions to sequence_fallback_mode=preserve while retaining explicit spell support"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added in-memory conversion of text, Markdown, and HTML, with Markdown rendered as SSMD-safe spoken text\n\n\nAdded spell or preserve sequence fallback modes to document and book conversion, saved in SSMD and book metadata",
+          "lower": "added in-memory conversion of text, markdown, and html, with markdown rendered as ssmd-safe spoken text\n\n\nadded spell or preserve sequence fallback modes to document and book conversion, saved in ssmd and book metadata"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the boundary between ssmdconvert’s conversion role and ttsready’s downstream speech review",
+          "lower": "documented the boundary between ssmdconvert’s conversion role and ttsready’s downstream speech review"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added EPUB chapter inspection, source-number selection, and standalone SSMD chapter conversion\n\n\nAdded editable directory and portable ZIP bundles with manifest-defined chapter order\n\n\nAdded case-insensitive .ssmd.md detection as an SSMD input suffix",
+          "lower": "added epub chapter inspection, source-number selection, and standalone ssmd chapter conversion\n\n\nadded editable directory and portable zip bundles with manifest-defined chapter order\n\n\nadded case-insensitive .ssmd.md detection as an ssmd input suffix"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed EPUB chapter extraction to use epub2text while preserving combined conversion results\n\n\nAdded dedicated book inspect, convert, and validate CLI subcommands with JSON inspection and validation output\n\n\nMade book bundle formats explicit and writes atomic, deterministic, and non-overwriting unless requested\n\n\nRecorded source hashes at book conversion and separated original navigation parents from canonical chapter parents\n\n\nMoved speech preparation dependencies into the optional speech extra",
+          "lower": "changed epub chapter extraction to use epub2text while preserving combined conversion results\n\n\nadded dedicated book inspect, convert, and validate cli subcommands with json inspection and validation output\n\n\nmade book bundle formats explicit and writes atomic, deterministic, and non-overwriting unless requested\n\n\nrecorded source hashes at book conversion and separated original navigation parents from canonical chapter parents\n\n\nmoved speech preparation dependencies into the optional speech extra"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/context/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">context</span></code>",
+      "snippet": "Context lookup connects a generic change ID from a report to the corresponding\nsource and prepared text.\n\nssmdconvert report SOURCE\nssmdconv …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert context",
+          "text": "Context lookup connects a generic change ID from a report to the corresponding\nsource and prepared text.\n\nssmdconvert report SOURCE\nssmdconvert context SOURCE chg:v1:0123456789abcdef0123456789abcdef\nssmdconvert context SOURCE chg:v1:0123456789abcdef0123456789abcdef --paragraph --json\n\n\n\n\nThe requested source must match a source with a saved report analysis. Context\nchecks the current raw bytes of the affected chapter; if that chapter changed,\nrefresh with ssmdconvert report SOURCE --refresh and use the new report’s change\nID. It does not invalidate context for edits to unrelated chapters. Mixed-language\nparagraphs are rendered as whole paragraphs to keep language boundaries intact.\n\n--paragraph expands sentence context, --json returns the versioned context\nobject, and --bug-report adds re…",
+          "lower": "context lookup connects a generic change id from a report to the corresponding\nsource and prepared text.\n\nssmdconvert report source\nssmdconvert context source chg:v1:0123456789abcdef0123456789abcdef\nssmdconvert context source chg:v1:0123456789abcdef0123456789abcdef --paragraph --json\n\n\n\n\nthe requested source must match a source with a saved report analysis. context\nchecks the current raw bytes of the affected chapter; if that chapter changed,\nrefresh with ssmdconvert report source --refresh and use the new report’s change\nid. it does not invalidate context for edits to unrelated chapters. mixed-language\nparagraphs are rendered as whole paragraphs to keep language boundaries intact.\n\n--paragraph expands sentence context, --json returns the versioned context\nobject, and --bug-report adds re…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/freeze/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">speech</span> <span class=\"pr…",
+      "snippet": "Freeze selected eligible automatic speech decisions into explicit SSMD semantics\nin a destination document or book bundle.\n\nssmdconvert spee …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert speech freeze",
+          "text": "Freeze selected eligible automatic speech decisions into explicit SSMD semantics\nin a destination document or book bundle.\n\nssmdconvert speech freeze chapter.ssmd -o frozen.ssmd\nssmdconvert speech freeze BOOK.ssmdbook.zip --chapters 2-4 -o frozen.ssmdbook.zip\n\n\n\n\nfreeze uses the same fail-closed mapping, validation, and atomic writer as\nspeech annotate. It preserves visible text, does not\nduplicate authoritative SSMD substitutions, refuses unresolved effective\nlanguage, and never overwrites its input. Existing output requires --force.\n\nDirty directory workspaces may be read, but the output must be a new path outside\nthe workspace. Selected chapters are materialized in the output; unselected\nchapters remain unchanged. Bundle type is inferred from .ssmdbook or\n.ssmdbook.zip, or can be set w…",
+          "lower": "freeze selected eligible automatic speech decisions into explicit ssmd semantics\nin a destination document or book bundle.\n\nssmdconvert speech freeze chapter.ssmd -o frozen.ssmd\nssmdconvert speech freeze book.ssmdbook.zip --chapters 2-4 -o frozen.ssmdbook.zip\n\n\n\n\nfreeze uses the same fail-closed mapping, validation, and atomic writer as\nspeech annotate. it preserves visible text, does not\nduplicate authoritative ssmd substitutions, refuses unresolved effective\nlanguage, and never overwrites its input. existing output requires --force.\n\ndirty directory workspaces may be read, but the output must be a new path outside\nthe workspace. selected chapters are materialized in the output; unselected\nchapters remain unchanged. bundle type is inferred from .ssmdbook or\n.ssmdbook.zip, or can be set w…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/",
+      "title": "ssmdconvert Documentation",
+      "snippet": "ssmdconvert converts common local documents and EPUB books into SSMD 0.9. The\nbase package supports text, Markdown, HTML, EPUB, SSMD analysi …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert Documentation",
+          "text": "ssmdconvert converts common local documents and EPUB books into SSMD 0.9. The\nbase package supports text, Markdown, HTML, EPUB, SSMD analysis, and speech\naudit/annotation. PDF and DOCX adapters are optional extras; the public ttsready\npreparation API is a core dependency.\n\nConvert a document:\n\nssmdconvert convert manuscript.md -o manuscript.ssmd\n\n\n\n\nInspect EPUB chapters or create a chapter-aware bundle:\n\nssmdconvert book inspect novel.epub --json\nssmdconvert book convert novel.epub -o novel.ssmdbook\nssmdconvert book validate novel.ssmdbook\n\n\n\n\nThe CLI refuses to overwrite existing output unless --force is supplied. Output writes are atomic, and forced directory-bundle writes replace the complete prior bundle.",
+          "lower": "ssmdconvert converts common local documents and epub books into ssmd 0.9. the\nbase package supports text, markdown, html, epub, ssmd analysis, and speech\naudit/annotation. pdf and docx adapters are optional extras; the public ttsready\npreparation api is a core dependency.\n\nconvert a document:\n\nssmdconvert convert manuscript.md -o manuscript.ssmd\n\n\n\n\ninspect epub chapters or create a chapter-aware bundle:\n\nssmdconvert book inspect novel.epub --json\nssmdconvert book convert novel.epub -o novel.ssmdbook\nssmdconvert book validate novel.ssmdbook\n\n\n\n\nthe cli refuses to overwrite existing output unless --force is supplied. output writes are atomic, and forced directory-bundle writes replace the complete prior bundle."
+        },
+        {
+          "anchor": "",
+          "heading": "Ownership boundary",
+          "text": "ssmdconvert owns source ingestion, canonical SSMD conversion, chapter identity,\n.ssmdbook integrity, SSMD reports/context/TXT projection, and safe speech\nwrite-back. ttsready supplies generic preparation and QA through its public Python\nAPI; it is not a user-facing CLI or a source of SSMD-specific storage semantics.\nssmdconvert uses one analysis pipeline for reports and speech workflows and never\nmutates a directory workspace in place.\n\n\nUser guide\n\n\nInstallation\nRequirements\n\nBase package\n\nOptional extras\n\nSource installation\n\nVerify the installation\n\n\n\n\nCLI usage\nConvert a document\n\nInspect a source\n\nEPUB book commands\n\nSSMD analysis and speech commands\n\nHelp\n\n\n\n\nSSMD analysis and speech workflows\nReport\n\nContext lookup\n\nTXT projection\n\nSpeech audit, annotate, and freeze\n\nCache and data…",
+          "lower": "ssmdconvert owns source ingestion, canonical ssmd conversion, chapter identity,\n.ssmdbook integrity, ssmd reports/context/txt projection, and safe speech\nwrite-back. ttsready supplies generic preparation and qa through its public python\napi; it is not a user-facing cli or a source of ssmd-specific storage semantics.\nssmdconvert uses one analysis pipeline for reports and speech workflows and never\nmutates a directory workspace in place.\n\n\nuser guide\n\n\ninstallation\nrequirements\n\nbase package\n\noptional extras\n\nsource installation\n\nverify the installation\n\n\n\n\ncli usage\nconvert a document\n\ninspect a source\n\nepub book commands\n\nssmd analysis and speech commands\n\nhelp\n\n\n\n\nssmd analysis and speech workflows\nreport\n\ncontext lookup\n\ntxt projection\n\nspeech audit, annotate, and freeze\n\ncache and data…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/installation/",
+      "title": "ssmdconvert Installation",
+      "snippet": "Python 3.10 or newer\n\n\nAn operating system supported by Python\npython -m pip install ssmdconvert\n\n\n\n\nThe base install supports plain text, M …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Requirements",
+          "text": "Python 3.10 or newer\n\n\nAn operating system supported by Python",
+          "lower": "python 3.10 or newer\n\n\nan operating system supported by python"
+        },
+        {
+          "anchor": "",
+          "heading": "Base package",
+          "text": "python -m pip install ssmdconvert\n\n\n\n\nThe base install supports plain text, Markdown, HTML, EPUB, and SSMD inputs,\nincluding SSMD-aware report/context/TXT and speech audit/annotate/freeze commands.\nEPUB extraction uses the local epub2text dependency. ttsready>=0.2,<0.3 is a core\ndependency for source-neutral preparation and QA.",
+          "lower": "python -m pip install ssmdconvert\n\n\n\n\nthe base install supports plain text, markdown, html, epub, and ssmd inputs,\nincluding ssmd-aware report/context/txt and speech audit/annotate/freeze commands.\nepub extraction uses the local epub2text dependency. ttsready>=0.2,<0.3 is a core\ndependency for source-neutral preparation and qa."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional extras",
+          "text": "Install only the additional support you need:\n\npython -m pip install \"ssmdconvert[pdf]\"     # PDF text extraction\npython -m pip install \"ssmdconvert[docx]\"    # DOCX paragraphs and headings\npython -m pip install \"ssmdconvert[all]\"     # all optional extras\n\n\n\n\nPDF extraction does not perform OCR. DOCX extraction does not preserve complex\nfloating layout. Speech analysis commands operate on SSMD and are independent of\ndocument conversion. The former SpeechPreparationOptions /\nprepare_ssmd_for_speech engine is removed; see the workflow docs\nfor current CLI commands.",
+          "lower": "install only the additional support you need:\n\npython -m pip install \"ssmdconvert[pdf]\"     # pdf text extraction\npython -m pip install \"ssmdconvert[docx]\"    # docx paragraphs and headings\npython -m pip install \"ssmdconvert[all]\"     # all optional extras\n\n\n\n\npdf extraction does not perform ocr. docx extraction does not preserve complex\nfloating layout. speech analysis commands operate on ssmd and are independent of\ndocument conversion. the former speechpreparationoptions /\nprepare_ssmd_for_speech engine is removed; see the workflow docs\nfor current cli commands."
+        },
+        {
+          "anchor": "",
+          "heading": "Source installation",
+          "text": "git clone https://github.com/buchwandler/ssmdconvert.git\ncd ssmdconvert\npython -m pip install -e \".[dev]\"",
+          "lower": "git clone https://github.com/buchwandler/ssmdconvert.git\ncd ssmdconvert\npython -m pip install -e \".[dev]\""
+        },
+        {
+          "anchor": "",
+          "heading": "Verify the installation",
+          "text": "ssmdconvert --version\nssmdconvert --help\nssmdconvert book --help",
+          "lower": "ssmdconvert --version\nssmdconvert --help\nssmdconvert book --help"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/migration-from-ttsready-cli/",
+      "title": "ssmdconvert Migration from the ttsready CLI",
+      "snippet": "The ttsready command-line interface is not part of the new workflow. Install\nssmdconvert and use its SSMD-aware commands; ttsready remains t …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Migration from the ttsready CLI",
+          "text": "The ttsready command-line interface is not part of the new workflow. Install\nssmdconvert and use its SSMD-aware commands; ttsready remains the source-neutral\npreparation/QA API used internally by ssmdconvert.\n\n\n\nOld command\n\nReplacement\n\n\n\n\n\nttsready report SOURCE\n\nssmdconvert report SOURCE\n\n\n\nttsready context SOURCE ID\n\nssmdconvert context SOURCE ID\n\n\n\nttsready freeze SOURCE ...\n\nssmdconvert speech freeze SOURCE ... -o OUTPUT\n\n\n\nttsready txt SOURCE ...\n\nssmdconvert txt SOURCE ...\n\n\n\nttsready export SOURCE ...\n\nssmdconvert txt SOURCE ... -o OUTPUT.txt\n\n\n\nttsready convert SOURCE ...\n\nssmdconvert txt SOURCE ...\n\n\n\nttsready chapters EPUB\n\nssmdconvert book inspect EPUB\n\n\n\nttsready preflight SOURCE\n\nssmdconvert report SOURCE --fail-on-warning\n\n\n\n\n\nssmdconvert convert converts an input document…",
+          "lower": "the ttsready command-line interface is not part of the new workflow. install\nssmdconvert and use its ssmd-aware commands; ttsready remains the source-neutral\npreparation/qa api used internally by ssmdconvert.\n\n\n\nold command\n\nreplacement\n\n\n\n\n\nttsready report source\n\nssmdconvert report source\n\n\n\nttsready context source id\n\nssmdconvert context source id\n\n\n\nttsready freeze source ...\n\nssmdconvert speech freeze source ... -o output\n\n\n\nttsready txt source ...\n\nssmdconvert txt source ...\n\n\n\nttsready export source ...\n\nssmdconvert txt source ... -o output.txt\n\n\n\nttsready convert source ...\n\nssmdconvert txt source ...\n\n\n\nttsready chapters epub\n\nssmdconvert book inspect epub\n\n\n\nttsready preflight source\n\nssmdconvert report source --fail-on-warning\n\n\n\n\n\nssmdconvert convert converts an input document…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/report/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">report</span></code>",
+      "snippet": "Analyze SSMD with the same selected source sections, preparation options, and TXT\nprojection used by the other analysis commands.\n\nssmdconve …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert report",
+          "text": "Analyze SSMD with the same selected source sections, preparation options, and TXT\nprojection used by the other analysis commands.\n\nssmdconvert report SOURCE\nssmdconvert report BOOK.ssmdbook.zip --chapters 1,3-5 --format json -o report.json\nssmdconvert report SOURCE --refresh --fail-on-warning\n\n\n\n\nOutput is Markdown to stdout unless --format json is selected or -o names a\n.json file. File output can use --format md|json; Markdown output may include\n--show-raw-spans. Existing output paths are refused unless --force is given.\n\nCommon options:\n\n\n--chapters SELECTOR: source chapter numbers for SSMD books; defaults to all.\n\n\n--language LANG: explicit language override; unresolved language is reported,\nnever silently defaulted.\n\n\n--sequence-fallback-mode spell|preserve: preparation fallback poli…",
+          "lower": "analyze ssmd with the same selected source sections, preparation options, and txt\nprojection used by the other analysis commands.\n\nssmdconvert report source\nssmdconvert report book.ssmdbook.zip --chapters 1,3-5 --format json -o report.json\nssmdconvert report source --refresh --fail-on-warning\n\n\n\n\noutput is markdown to stdout unless --format json is selected or -o names a\n.json file. file output can use --format md|json; markdown output may include\n--show-raw-spans. existing output paths are refused unless --force is given.\n\ncommon options:\n\n\n--chapters selector: source chapter numbers for ssmd books; defaults to all.\n\n\n--language lang: explicit language override; unresolved language is reported,\nnever silently defaulted.\n\n\n--sequence-fallback-mode spell|preserve: preparation fallback poli…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/speech-annotations/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">speech</span> <span class=\"pr…",
+      "snippet": "Write selected eligible automatic speech changes as explicit SSMD substitutions\nin a new destination.\n\nssmdconvert speech annotate chapter.s …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert speech annotate",
+          "text": "Write selected eligible automatic speech changes as explicit SSMD substitutions\nin a new destination.\n\nssmdconvert speech annotate chapter.ssmd -o annotated.ssmd\nssmdconvert speech annotate BOOK.ssmdbook --chapters 2-4 -o annotated-copy.ssmdbook\n\n\n\n\nFor book sources, chapter selectors use original 1-based source numbers. Unselected\nchapters remain unchanged. Directory workspaces, including dirty workspaces, are\nread as-is, but the output destination must be outside the source workspace. Use\n.ssmdbook for a directory or .ssmdbook.zip for a ZIP; --format directory|zip overrides inference for another output name.\n\nWrites use parser-owned source spans, verify exact source slices, reject unsafe or\noverlapping changes, validate the resulting SSMD, and prove that visible text is\nunchanged. Exist…",
+          "lower": "write selected eligible automatic speech changes as explicit ssmd substitutions\nin a new destination.\n\nssmdconvert speech annotate chapter.ssmd -o annotated.ssmd\nssmdconvert speech annotate book.ssmdbook --chapters 2-4 -o annotated-copy.ssmdbook\n\n\n\n\nfor book sources, chapter selectors use original 1-based source numbers. unselected\nchapters remain unchanged. directory workspaces, including dirty workspaces, are\nread as-is, but the output destination must be outside the source workspace. use\n.ssmdbook for a directory or .ssmdbook.zip for a zip; --format directory|zip overrides inference for another output name.\n\nwrites use parser-owned source spans, verify exact source slices, reject unsafe or\noverlapping changes, validate the resulting ssmd, and prove that visible text is\nunchanged. exist…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/speech-audit/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">speech</span> <span class=\"pr…",
+      "snippet": "Audit automatic speech-preparation changes without modifying SSMD.\n\nssmdconvert speech audit SOURCE\nssmdconvert speech audit BOOK.ssmdbook.z …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert speech audit",
+          "text": "Audit automatic speech-preparation changes without modifying SSMD.\n\nssmdconvert speech audit SOURCE\nssmdconvert speech audit BOOK.ssmdbook.zip --chapters 3 --json\nssmdconvert speech audit SOURCE --language en-US --fail-on-warning\n\n\n\n\nAudit uses the same source loader, selected chapters, generic change IDs, and\nanalysis pipeline as report; it is a speech-focused view, not a separate\nnormalizer. --json emits a versioned JSON result. --fail-on-warning returns a\nnon-zero status when the audit contains warnings or errors. --language, chapter\nselection, fallback mode, and title inclusion control the analysis as in report.\n\nAudit is read-only. To materialize eligible changes into SSMD, use\nspeech annotate or speech freeze.",
+          "lower": "audit automatic speech-preparation changes without modifying ssmd.\n\nssmdconvert speech audit source\nssmdconvert speech audit book.ssmdbook.zip --chapters 3 --json\nssmdconvert speech audit source --language en-us --fail-on-warning\n\n\n\n\naudit uses the same source loader, selected chapters, generic change ids, and\nanalysis pipeline as report; it is a speech-focused view, not a separate\nnormalizer. --json emits a versioned json result. --fail-on-warning returns a\nnon-zero status when the audit contains warnings or errors. --language, chapter\nselection, fallback mode, and title inclusion control the analysis as in report.\n\naudit is read-only. to materialize eligible changes into ssmd, use\nspeech annotate or speech freeze."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/txt/",
+      "title": "ssmdconvert <code class=\"docutils literal notranslate\"><span class=\"pre\">ssmdconvert</span> <span class=\"pre\">txt</span></code>",
+      "snippet": "Project SSMD into generic prepared plain text for downstream TTS tools. The\nprojection uses the same selected sections and rendering logic a …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ssmdconvert txt",
+          "text": "Project SSMD into generic prepared plain text for downstream TTS tools. The\nprojection uses the same selected sections and rendering logic as the report’s\nTXT preview and statistics.\n\nssmdconvert txt SOURCE\nssmdconvert txt BOOK.ssmdbook.zip --chapters 2-8 -o prepared.txt\nssmdconvert txt SOURCE --language de-DE --no-include-titles\n\n\n\n\nText goes to stdout by default. -o writes a file atomically; an existing output\nrequires --force, and the input cannot be used as the output. --chapters,\n--language, --sequence-fallback-mode, --max-paragraph-chars, and title\noptions have the same meaning as in report. TXT is a projection only: it does\nnot contain SSMD source annotations and does not write back to the source.\n\nSee Report and SSMD analysis workflows.",
+          "lower": "project ssmd into generic prepared plain text for downstream tts tools. the\nprojection uses the same selected sections and rendering logic as the report’s\ntxt preview and statistics.\n\nssmdconvert txt source\nssmdconvert txt book.ssmdbook.zip --chapters 2-8 -o prepared.txt\nssmdconvert txt source --language de-de --no-include-titles\n\n\n\n\ntext goes to stdout by default. -o writes a file atomically; an existing output\nrequires --force, and the input cannot be used as the output. --chapters,\n--language, --sequence-fallback-mode, --max-paragraph-chars, and title\noptions have the same meaning as in report. txt is a projection only: it does\nnot contain ssmd source annotations and does not write back to the source.\n\nsee report and ssmd analysis workflows."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ssmdconvert/usage/",
+      "title": "ssmdconvert CLI usage",
+      "snippet": "ssmdconvert convert INPUT [-o OUTPUT] [--title TITLE] [--author AUTHOR] [-l|--language LANGUAGE] [--metadata-file PATH] [--sequence-fallback …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Convert a document",
+          "text": "ssmdconvert convert INPUT [-o OUTPUT] [--title TITLE] [--author AUTHOR] [-l|--language LANGUAGE] [--metadata-file PATH] [--sequence-fallback-mode spell|preserve]\n\n\n\n\nExamples:\n\nssmdconvert convert manuscript.txt -o manuscript.ssmd\nssmdconvert convert novel.md -o novel.ssmd\nssmdconvert convert page.html -o page.ssmd\nssmdconvert convert book.epub -o book.ssmd\nssmdconvert convert report.pdf -o report.ssmd\nssmdconvert convert manuscript.docx -o manuscript.ssmd\nssmdconvert convert existing.ssmd.md -o normalized.ssmd\n\n\n\n\nPDF and DOCX require the [pdf] and [docx] extras. SSMD detection accepts .ssmd and .ssmd.md case-insensitively. If -o is omitted, the output is written beside the input with a .ssmd suffix.\n\nWrites are atomic and refuse existing destinations unless --force is supplied. The inpu…",
+          "lower": "ssmdconvert convert input [-o output] [--title title] [--author author] [-l|--language language] [--metadata-file path] [--sequence-fallback-mode spell|preserve]\n\n\n\n\nexamples:\n\nssmdconvert convert manuscript.txt -o manuscript.ssmd\nssmdconvert convert novel.md -o novel.ssmd\nssmdconvert convert page.html -o page.ssmd\nssmdconvert convert book.epub -o book.ssmd\nssmdconvert convert report.pdf -o report.ssmd\nssmdconvert convert manuscript.docx -o manuscript.ssmd\nssmdconvert convert existing.ssmd.md -o normalized.ssmd\n\n\n\n\npdf and docx require the [pdf] and [docx] extras. ssmd detection accepts .ssmd and .ssmd.md case-insensitively. if -o is omitted, the output is written beside the input with a .ssmd suffix.\n\nwrites are atomic and refuse existing destinations unless --force is supplied. the inpu…"
+        },
+        {
+          "anchor": "",
+          "heading": "Inspect a source",
+          "text": "Inspect the selected local adapter and normalized document without writing output:\n\nssmdconvert inspect book.epub\nssmdconvert inspect book.epub --json\n\n\n\n\nJSON output includes the source path, selected adapter, normalized metadata, and section identifiers, titles, character counts, and source references.",
+          "lower": "inspect the selected local adapter and normalized document without writing output:\n\nssmdconvert inspect book.epub\nssmdconvert inspect book.epub --json\n\n\n\n\njson output includes the source path, selected adapter, normalized metadata, and section identifiers, titles, character counts, and source references."
+        },
+        {
+          "anchor": "",
+          "heading": "EPUB book commands",
+          "text": "The book CLI uses explicit subcommands:\n\nssmdconvert book inspect novel.epub [--json]\nssmdconvert book convert novel.epub [--chapters SELECTOR] [-o OUTPUT] [-l|--language LANGUAGE] [--metadata-file PATH] [--sequence-fallback-mode spell|preserve]\nssmdconvert book validate BUNDLE [--json]\nssmdconvert book metadata BUNDLE [--json]\n\n\n\n\nSelectors use original 1-based source chapter numbers. They accept a single number, a range, a comma-separated list, or a mixture such as 1,3-5. Selected chapters remain in original source order.\n\nBook output format is inferred only from .ssmdbook (directory) and .ssmdbook.zip (ZIP). For other names, specify --format directory or --format zip. Existing bundles are refused unless --force is supplied. A forced directory output replaces the complete previous direc…",
+          "lower": "the book cli uses explicit subcommands:\n\nssmdconvert book inspect novel.epub [--json]\nssmdconvert book convert novel.epub [--chapters selector] [-o output] [-l|--language language] [--metadata-file path] [--sequence-fallback-mode spell|preserve]\nssmdconvert book validate bundle [--json]\nssmdconvert book metadata bundle [--json]\n\n\n\n\nselectors use original 1-based source chapter numbers. they accept a single number, a range, a comma-separated list, or a mixture such as 1,3-5. selected chapters remain in original source order.\n\nbook output format is inferred only from .ssmdbook (directory) and .ssmdbook.zip (zip). for other names, specify --format directory or --format zip. existing bundles are refused unless --force is supplied. a forced directory output replaces the complete previous direc…"
+        },
+        {
+          "anchor": "",
+          "heading": "SSMD analysis and speech commands",
+          "text": "Use the shared SSMD-aware analysis commands for reports, context lookup, prepared TXT, and speech write-back:\n\nssmdconvert report SOURCE [--chapters SELECTOR] [--format md|json] [--refresh]\nssmdconvert context SOURCE CHANGE_ID [--paragraph] [--json]\nssmdconvert txt SOURCE [--chapters SELECTOR] [-o OUTPUT]\nssmdconvert speech audit SOURCE [--json]\nssmdconvert speech annotate SOURCE -o OUTPUT\nssmdconvert speech freeze SOURCE -o OUTPUT\n\n\n\n\nThe commands accept standalone SSMD, validated ZIP bundles, and directory workspaces. Reports and TXT share a projection; context resolves a generic change ID from a report cache. speech audit is read-only. Annotation and freeze write to a new destination by default, preserve visible text, and refuse to modify a source workspace in place. Existing output re…",
+          "lower": "use the shared ssmd-aware analysis commands for reports, context lookup, prepared txt, and speech write-back:\n\nssmdconvert report source [--chapters selector] [--format md|json] [--refresh]\nssmdconvert context source change_id [--paragraph] [--json]\nssmdconvert txt source [--chapters selector] [-o output]\nssmdconvert speech audit source [--json]\nssmdconvert speech annotate source -o output\nssmdconvert speech freeze source -o output\n\n\n\n\nthe commands accept standalone ssmd, validated zip bundles, and directory workspaces. reports and txt share a projection; context resolves a generic change id from a report cache. speech audit is read-only. annotation and freeze write to a new destination by default, preserve visible text, and refuse to modify a source workspace in place. existing output re…"
+        },
+        {
+          "anchor": "",
+          "heading": "Help",
+          "text": "ssmdconvert --help\nssmdconvert convert --help\nssmdconvert inspect --help\nssmdconvert book --help\nssmdconvert book inspect --help\nssmdconvert book convert --help\nssmdconvert book validate --help\nssmdconvert book metadata --help\nssmdconvert report --help\nssmdconvert context --help\nssmdconvert txt --help\nssmdconvert speech --help\nssmdconvert speech audit --help\nssmdconvert speech annotate --help\nssmdconvert speech freeze --help",
+          "lower": "ssmdconvert --help\nssmdconvert convert --help\nssmdconvert inspect --help\nssmdconvert book --help\nssmdconvert book inspect --help\nssmdconvert book convert --help\nssmdconvert book validate --help\nssmdconvert book metadata --help\nssmdconvert report --help\nssmdconvert context --help\nssmdconvert txt --help\nssmdconvert speech --help\nssmdconvert speech audit --help\nssmdconvert speech annotate --help\nssmdconvert speech freeze --help"
+        }
+      ]
+    }
+  ]
+}
