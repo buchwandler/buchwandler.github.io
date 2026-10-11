@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
 search_enabled: true
 ---
 
@@ -548,6 +548,7 @@ in a new destination.</p>
 ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>BOOK.ssmdbook<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>annotated-copy.ssmdbook
 </pre></div>
 </div>
+<p>For a new EPUB artifact, <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">convert</span></code> freezes eligible automatic decisions during conversion by default; choose <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for a structural-only result. This one-pass path uses the same analysis/materialization rules described here. <code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code> remains useful for existing SSMD sources and review workflows.</p>
 <p>For book sources, chapter selectors use original 1-based source numbers. Unselected
 chapters remain unchanged. Directory workspaces, including dirty workspaces, are
 read as-is, but the output destination must be outside the source workspace. Use

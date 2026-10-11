@@ -57,6 +57,7 @@ packages = [
   "ssmd==0.9.3",
   "abbr2words==0.2.16",
   "ssmdconvert==0.1.4",
+  "ttsready==0.2.3",
   "spokenform==0.4.5",
 ]
 
@@ -64,7 +65,7 @@ packages = [
 title = "buchwandler Tool Documentation"
 author = "buchwandler"
 language = "en"
-project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "piperg2p", "pykokoro", "ssmd", "ssmdconvert", "utterplan", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist", "espeakng-runtime"]
+project_order = ["booktx", "epub2text", "phrasplit", "text2epub", "sphinxpress", "g2lex", "lexphon", "kokorog2p", "piperg2p", "pykokoro", "ssmd", "ssmdconvert", "ttsready", "utterplan", "ttsforge", "audiosig", "abbr2words", "spokenform", "lexhint", "readio", "phonodist", "espeakng-runtime"]
 [pdf]
 builder = "weasyprint"
 output = "dist/buchwandler-tool-documentation.pdf"
@@ -331,6 +332,18 @@ conf_dir = "../espeakng-runtime/docs"
 root_doc = "index"
 repo_url = "https://github.com/buchwandler/espeakng-runtime"
 description = "Small Python runtime adapter for eSpeak NG phonemization."
+release_strategy = "git_tag"
+site_variants = ["release", "main"]
+version_refs = { main = "main" }
+
+[[projects]]
+name = "ttsready"
+title = "ttsready"
+docs_root = "../ttsready/docs"
+conf_dir = "../ttsready/docs"
+root_doc = "index"
+repo_url = "https://github.com/buchwandler/ttsready"
+description = "Source-neutral API for preparing text for speech."
 release_strategy = "git_tag"
 site_variants = ["release", "main"]
 version_refs = { main = "main" }

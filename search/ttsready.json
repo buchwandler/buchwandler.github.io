@@ -1,0 +1,413 @@
+{
+  "_generated_by": "sphinxpress",
+  "tool": "ttsready",
+  "entries": [
+    {
+      "url": "/tools/ttsready/changelog/",
+      "title": "ttsready Changelog",
+      "snippet": "Added SpokenChange.language for backend-reported per-replacement language\n\n\nAdded provider-neutral token hints and progress events to bulk p …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added SpokenChange.language for backend-reported per-replacement language\n\n\nAdded provider-neutral token hints and progress events to bulk preparation",
+          "lower": "added spokenchange.language for backend-reported per-replacement language\n\n\nadded provider-neutral token hints and progress events to bulk preparation"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Derive package versions from Git tags and use generated metadata for runtime fingerprints",
+          "lower": "derive package versions from git tags and use generated metadata for runtime fingerprints"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Require release tag and distribution versions to match before publication",
+          "lower": "require release tag and distribution versions to match before publication"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Document the root Python API, including lexical review and exact-slice chunking\n\n\nMatch documented Spokenform bounds to package metadata",
+          "lower": "document the root python api, including lexical review and exact-slice chunking\n\n\nmatch documented spokenform bounds to package metadata"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Guard root exports and packaged typing with tests and CI",
+          "lower": "guard root exports and packaged typing with tests and ci"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added compiler-facing run preparation with exact source/output maps and provider-neutral linguistic hints",
+          "lower": "added compiler-facing run preparation with exact source/output maps and provider-neutral linguistic hints"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added public preparation, residual QA, reproducibility fingerprint, and JSON serialization APIs",
+          "lower": "added public preparation, residual qa, reproducibility fingerprint, and json serialization apis"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "BREAKING: Changed ttsready to a source-neutral, in-memory preparation API for caller-owned text units",
+          "lower": "breaking: changed ttsready to a source-neutral, in-memory preparation api for caller-owned text units"
+        },
+        {
+          "anchor": "",
+          "heading": "Removed",
+          "text": "BREAKING: Removed the 0.1 SSMD and document workflows, CLI, caches, speaker tooling, and file-based state",
+          "lower": "breaking: removed the 0.1 ssmd and document workflows, cli, caches, speaker tooling, and file-based state"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented the migration, ownership boundary, Python API, packaging, and QA guidance for the 0.2 library boundary",
+          "lower": "documented the migration, ownership boundary, python api, packaging, and qa guidance for the 0.2 library boundary"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added canonical SSMD and SSMD book loading with cached analysis and reproducible preparation\n\n\nAdded SSMD book workspaces, chapter-aware output, utterplan preparation, and txt export",
+          "lower": "added canonical ssmd and ssmd book loading with cached analysis and reproducible preparation\n\n\nadded ssmd book workspaces, chapter-aware output, utterplan preparation, and txt export"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed residual sequence handling and improved narrow-terminal CLI help\n\n\nChanged sequence fallback settings for preparation, analysis, and reproducibility locks",
+          "lower": "changed residual sequence handling and improved narrow-terminal cli help\n\n\nchanged sequence fallback settings for preparation, analysis, and reproducibility locks"
+        },
+        {
+          "anchor": "",
+          "heading": "Fixed",
+          "text": "Fixed CRLF and CR normalization before SSMD parsing",
+          "lower": "fixed crlf and cr normalization before ssmd parsing"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented installation, CLI, API, review, reproducibility, and release workflows",
+          "lower": "documented installation, cli, api, review, reproducibility, and release workflows"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added per-artifact control for spelling or preserving residual sequences",
+          "lower": "added per-artifact control for spelling or preserving residual sequences"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Improved CLI help readability on narrow terminals",
+          "lower": "improved cli help readability on narrow terminals"
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added canonical SSMD 0.9 and .ssmdbook input support\n\n\nAdded reports, cached context, and explicit overrides for speech review\n\n\nAdded logical speaker review and materialization as SSMD voice annotations\n\n\nAdded locks, verification, and freeze output for reproducible preparation\n\n\nAdded preview and TXT export from the shared structured TTS plan\n\n\nAdded a public Python API for loading SSMD and preparing previews\n\n\nAdded optional lexical and speaker integrations as package extras\n\n\nAdded Python 3.14 to the Python 3.10 through 3.14 CI matrix",
+          "lower": "added canonical ssmd 0.9 and .ssmdbook input support\n\n\nadded reports, cached context, and explicit overrides for speech review\n\n\nadded logical speaker review and materialization as ssmd voice annotations\n\n\nadded locks, verification, and freeze output for reproducible preparation\n\n\nadded preview and txt export from the shared structured tts plan\n\n\nadded a public python api for loading ssmd and preparing previews\n\n\nadded optional lexical and speaker integrations as package extras\n\n\nadded python 3.14 to the python 3.10 through 3.14 ci matrix"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented installation, quickstart, CLI, review, reproducibility, speakers, and API boundaries",
+          "lower": "documented installation, quickstart, cli, review, reproducibility, speakers, and api boundaries"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/",
+      "title": "ttsready documentation",
+      "snippet": "ttsready is a source-neutral Python API for preparing caller-owned text for speech. It does not parse source formats, read or write files, e …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "ttsready documentation",
+          "text": "ttsready is a source-neutral Python API for preparing caller-owned text for speech. It does not parse source formats, read or write files, expose a CLI, or generate audio.\n\nStart with the installation guide and quickstart. The ownership boundary explains how callers adapt their data to and from the library.\n\n\nUser guide\n\n\nInstallation\n\nQuickstart\nCompiler-owned runs\n\nMultiple units\n\n\n\n\nPython API\nPublic API inventory\n\nPrepare one string\n\nPrepare a compiler-owned run\n\nPrepare ordered units\n\nProtected spans and profiles\n\nMapping and context\n\nText chunking\n\nPublic models and errors\n\nSerialization\n\n\n\n\nSpeech overrides\nGlobal and unit-scoped overrides\n\nExact occurrence\n\nPrecedence and conflicts\n\n\n\n\nResidual QA\n\nLexical review\nInputs\n\nResults\n\nCandidate reasons\n\nFiltering behavior\n\nOptional Lex…",
+          "lower": "ttsready is a source-neutral python api for preparing caller-owned text for speech. it does not parse source formats, read or write files, expose a cli, or generate audio.\n\nstart with the installation guide and quickstart. the ownership boundary explains how callers adapt their data to and from the library.\n\n\nuser guide\n\n\ninstallation\n\nquickstart\ncompiler-owned runs\n\nmultiple units\n\n\n\n\npython api\npublic api inventory\n\nprepare one string\n\nprepare a compiler-owned run\n\nprepare ordered units\n\nprotected spans and profiles\n\nmapping and context\n\ntext chunking\n\npublic models and errors\n\nserialization\n\n\n\n\nspeech overrides\nglobal and unit-scoped overrides\n\nexact occurrence\n\nprecedence and conflicts\n\n\n\n\nresidual qa\n\nlexical review\ninputs\n\nresults\n\ncandidate reasons\n\nfiltering behavior\n\noptional lex…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/installation/",
+      "title": "ttsready Installation",
+      "snippet": "ttsready 0.2 requires Python 3.10 or newer. Install it with pip:\n\npython -m pip install ttsready\n\n\n\n\nThe library’s runtime dependencies are …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Installation",
+          "text": "ttsready 0.2 requires Python 3.10 or newer. Install it with pip:\n\npython -m pip install ttsready\n\n\n\n\nThe library’s runtime dependencies are spokenform>=0.4.5,<0.5 and phrasplit>=0.3.9,<1. The package does not install format parsers, file readers, a CLI framework, or an audio renderer.\n\nInstall the optional lexical extra when using integrations that need the lexhint lexical-evidence package:\n\npython -m pip install 'ttsready[lexical]'\n\n\n\n\nFor development, install the development tools and tests:\n\npython -m pip install 'ttsready[dev]'\n\n\n\n\nContinue with the quickstart or the full Python API reference.",
+          "lower": "ttsready 0.2 requires python 3.10 or newer. install it with pip:\n\npython -m pip install ttsready\n\n\n\n\nthe library’s runtime dependencies are spokenform>=0.4.5,<0.5 and phrasplit>=0.3.9,<1. the package does not install format parsers, file readers, a cli framework, or an audio renderer.\n\ninstall the optional lexical extra when using integrations that need the lexhint lexical-evidence package:\n\npython -m pip install 'ttsready[lexical]'\n\n\n\n\nfor development, install the development tools and tests:\n\npython -m pip install 'ttsready[dev]'\n\n\n\n\ncontinue with the quickstart or the full python api reference."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/lexical-review/",
+      "title": "ttsready Lexical review",
+      "snippet": "review_lexicon() identifies caller-owned words that may deserve pronunciation or vocabulary review. It is an analysis helper only: it does n …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Lexical review",
+          "text": "review_lexicon() identifies caller-owned words that may deserve pronunciation or vocabulary review. It is an analysis helper only: it does not modify text, fetch a lexicon, or require an evidence provider. The operation and result types are exported from the root ttsready package.",
+          "lower": "review_lexicon() identifies caller-owned words that may deserve pronunciation or vocabulary review. it is an analysis helper only: it does not modify text, fetch a lexicon, or require an evidence provider. the operation and result types are exported from the root ttsready package."
+        },
+        {
+          "anchor": "",
+          "heading": "Inputs",
+          "text": "review_lexicon(units: Iterable[TextUnit] | PreparationResult, *, provider=None, max_frequency_rank=10_000, min_count=1, max_items=None, unknown_only=False, include_all_tokens=False) -> LexicalReviewResult accepts an iterable of caller-owned TextUnit values or a PreparationResult. The evidence provider is optional.\n\nfrom ttsready import TextUnit, review_lexicon\n\nunits = (TextUnit(\"chapter-1\", \"We met Siobhan.\", \"en\"),)\nreview = review_lexicon(\n    units,\n    max_frequency_rank=10_000,\n    min_count=1,\n    include_all_tokens=True,\n)\n\n\n\n\nPass an iterable of caller-owned TextUnit values or a PreparationResult. With no provider, lexical evidence fields (known, frequency_rank, and frequency_count) are None; the heuristic candidate reasons are still available. A provider is caller-owned and is v…",
+          "lower": "review_lexicon(units: iterable[textunit] | preparationresult, *, provider=none, max_frequency_rank=10_000, min_count=1, max_items=none, unknown_only=false, include_all_tokens=false) -> lexicalreviewresult accepts an iterable of caller-owned textunit values or a preparationresult. the evidence provider is optional.\n\nfrom ttsready import textunit, review_lexicon\n\nunits = (textunit(\"chapter-1\", \"we met siobhan.\", \"en\"),)\nreview = review_lexicon(\n    units,\n    max_frequency_rank=10_000,\n    min_count=1,\n    include_all_tokens=true,\n)\n\n\n\n\npass an iterable of caller-owned textunit values or a preparationresult. with no provider, lexical evidence fields (known, frequency_rank, and frequency_count) are none; the heuristic candidate reasons are still available. a provider is caller-owned and is v…"
+        },
+        {
+          "anchor": "",
+          "heading": "Results",
+          "text": "The returned LexicalReviewResult contains an ordered tuple of LexicalFinding values and units_reviewed.\n\nEach finding includes:\n\n\nid: deterministic for the normalized word and language;\n\n\nlanguage, surface, and normalized forms;\n\n\ncount and occurrences;\n\n\nknown, frequency_rank, and frequency_count from the provider, or None when no evidence is available;\n\n\nreasons: the candidate reasons that matched.\n\n\n\nA LexicalOccurrence identifies a unit_id, half-open start/end offsets into that original unit’s text, and a zero-based sentence_index when sentence segmentation identifies one (otherwise None). Offsets refer to the exact caller-supplied text; TTSReady does not normalize it before reporting positions.",
+          "lower": "the returned lexicalreviewresult contains an ordered tuple of lexicalfinding values and units_reviewed.\n\neach finding includes:\n\n\nid: deterministic for the normalized word and language;\n\n\nlanguage, surface, and normalized forms;\n\n\ncount and occurrences;\n\n\nknown, frequency_rank, and frequency_count from the provider, or none when no evidence is available;\n\n\nreasons: the candidate reasons that matched.\n\n\n\na lexicaloccurrence identifies a unit_id, half-open start/end offsets into that original unit’s text, and a zero-based sentence_index when sentence segmentation identifies one (otherwise none). offsets refer to the exact caller-supplied text; ttsready does not normalize it before reporting positions."
+        },
+        {
+          "anchor": "",
+          "heading": "Candidate reasons",
+          "text": "Current heuristic/evidence reasons are:\n\n\nunknown_to_lexicon: the provider reports the word as unknown;\n\n\nrare_word: provider frequency rank exceeds max_frequency_rank;\n\n\nproper_name_candidate: capitalization suggests a possible proper name;\n\n\nmixed_case: the spelling mixes upper- and lowercase letters outside ordinary title case;\n\n\nall_caps: the word is written in uppercase;\n\n\ncontains_unusual_graphemes: the spelling contains graphemes that may merit review.\n\n\n\nA token can have more than one reason. Finding order is deterministic and prioritizes candidate review rather than preserving source order.",
+          "lower": "current heuristic/evidence reasons are:\n\n\nunknown_to_lexicon: the provider reports the word as unknown;\n\n\nrare_word: provider frequency rank exceeds max_frequency_rank;\n\n\nproper_name_candidate: capitalization suggests a possible proper name;\n\n\nmixed_case: the spelling mixes upper- and lowercase letters outside ordinary title case;\n\n\nall_caps: the word is written in uppercase;\n\n\ncontains_unusual_graphemes: the spelling contains graphemes that may merit review.\n\n\n\na token can have more than one reason. finding order is deterministic and prioritizes candidate review rather than preserving source order."
+        },
+        {
+          "anchor": "",
+          "heading": "Filtering behavior",
+          "text": "URL, email, and domain-like spans are excluded from lexical review.\n\n\nTokens overlapping a TextUnit.protected_spans span are excluded.\n\n\nNumeric-only material is not treated as a lexical word.\n\n\nunknown_only=True retains only terms for which a provider explicitly returns known is False. Without that evidence, known is None and no term can satisfy this filter.\n\n\ninclude_all_tokens=True includes otherwise eligible tokens even when no review reason applies. By default, only terms with at least one reason are returned.\n\n\n\nFiltering never removes or changes text; it only controls which findings are returned.",
+          "lower": "url, email, and domain-like spans are excluded from lexical review.\n\n\ntokens overlapping a textunit.protected_spans span are excluded.\n\n\nnumeric-only material is not treated as a lexical word.\n\n\nunknown_only=true retains only terms for which a provider explicitly returns known is false. without that evidence, known is none and no term can satisfy this filter.\n\n\ninclude_all_tokens=true includes otherwise eligible tokens even when no review reason applies. by default, only terms with at least one reason are returned.\n\n\n\nfiltering never removes or changes text; it only controls which findings are returned."
+        },
+        {
+          "anchor": "",
+          "heading": "Optional Lexhint provider",
+          "text": "The lexhint integration is optional. Construct and manage the provider explicitly; TTSReady does not download datasets or select a lexicon on the caller’s behalf.\n\nfrom lexhint import Lexicon\nfrom ttsready import TextUnit, review_lexicon\n\nlexicon = Lexicon(\"en\", variant=\"runtime\")\nreview = review_lexicon(\n    (TextUnit(\"chapter-1\", \"We met Siobhan.\", \"en\"),),\n    provider=lexicon,\n)\n\nfor finding in review.findings:\n    print(finding.surface, finding.reasons, finding.known, finding.frequency_rank)\n\n\n\n\nInstall the optional extra with python -m pip install 'ttsready[lexical]' when using Lexhint. See installation and the Python API inventory.",
+          "lower": "the lexhint integration is optional. construct and manage the provider explicitly; ttsready does not download datasets or select a lexicon on the caller’s behalf.\n\nfrom lexhint import lexicon\nfrom ttsready import textunit, review_lexicon\n\nlexicon = lexicon(\"en\", variant=\"runtime\")\nreview = review_lexicon(\n    (textunit(\"chapter-1\", \"we met siobhan.\", \"en\"),),\n    provider=lexicon,\n)\n\nfor finding in review.findings:\n    print(finding.surface, finding.reasons, finding.known, finding.frequency_rank)\n\n\n\n\ninstall the optional extra with python -m pip install 'ttsready[lexical]' when using lexhint. see installation and the python api inventory."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/migration/",
+      "title": "ttsready Migration from 0.1.x",
+      "snippet": "Version 0.2 is a breaking release that narrows ttsready to a source-neutral preparation API. It does not preserve 0.1 application behavior b …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Migration from 0.1.x",
+          "text": "Version 0.2 is a breaking release that narrows ttsready to a source-neutral preparation API. It does not preserve 0.1 application behavior behind compatibility wrappers.",
+          "lower": "version 0.2 is a breaking release that narrows ttsready to a source-neutral preparation api. it does not preserve 0.1 application behavior behind compatibility wrappers."
+        },
+        {
+          "anchor": "",
+          "heading": "Removed ownership",
+          "text": "The following 0.1 areas are no longer part of ttsready:\n\n\nSSMD and document/book parsing, source-specific models, file readers, and writers.\n\n\nCLI commands, reporting workflows, caches, sidecars, planning, selection, and freeze/materialization.\n\n\nSpeaker/JEV scanning, registries, and speaker annotation workflows.\n\n\nFile-based locks, exports, and document-owned reproducibility operations.\n\n\n\nCallers now own source parsing and I/O, output formats, workflow state, and persistence. The library accepts only caller-owned text data and returns in-memory values.",
+          "lower": "the following 0.1 areas are no longer part of ttsready:\n\n\nssmd and document/book parsing, source-specific models, file readers, and writers.\n\n\ncli commands, reporting workflows, caches, sidecars, planning, selection, and freeze/materialization.\n\n\nspeaker/jev scanning, registries, and speaker annotation workflows.\n\n\nfile-based locks, exports, and document-owned reproducibility operations.\n\n\n\ncallers now own source parsing and i/o, output formats, workflow state, and persistence. the library accepts only caller-owned text data and returns in-memory values."
+        },
+        {
+          "anchor": "",
+          "heading": "Replace the 0.1 preparation flow",
+          "text": "A file- or document-oriented call such as load(...), load_ssmd(...), prepare_tts_plan(...), or a CLI command must be moved to the caller’s adapter. Pass the text and language directly to the library:\n\nfrom ttsready import TextUnit, prepare_text, prepare_units\n\n# One text unit:\nprepared = prepare_text(source_text, language=\"en-US\", unit_id=\"chapter-1\")\nprint(prepared.spoken_text)\n\n# Or an ordered set with per-unit language:\nresult = prepare_units(\n    (\n        TextUnit(\"chapter-1\", source_text, \"en-US\", role=\"body\"),\n        TextUnit(\"caption-1\", caption_text, \"fr-FR\", role=\"caption\"),\n    )\n)\n\n\n\n\nprepare_text() returns a PreparedUnit; prepare_units() returns a PreparationResult. Both expose exact source-relative changes, issues, and contexts. apply_changes() verifies and applies a change…",
+          "lower": "a file- or document-oriented call such as load(...), load_ssmd(...), prepare_tts_plan(...), or a cli command must be moved to the caller’s adapter. pass the text and language directly to the library:\n\nfrom ttsready import textunit, prepare_text, prepare_units\n\n# one text unit:\nprepared = prepare_text(source_text, language=\"en-us\", unit_id=\"chapter-1\")\nprint(prepared.spoken_text)\n\n# or an ordered set with per-unit language:\nresult = prepare_units(\n    (\n        textunit(\"chapter-1\", source_text, \"en-us\", role=\"body\"),\n        textunit(\"caption-1\", caption_text, \"fr-fr\", role=\"caption\"),\n    )\n)\n\n\n\n\nprepare_text() returns a preparedunit; prepare_units() returns a preparationresult. both expose exact source-relative changes, issues, and contexts. apply_changes() verifies and applies a change…"
+        },
+        {
+          "anchor": "",
+          "heading": "Policy and state",
+          "text": "Replace document annotations with caller-owned SpeechOverride values. Use global, unit, or occurrence scopes as appropriate; see overrides. Use check_units() and the issues attached to preparation results for residual QA. Use pure fingerprints and JSON serialization when building caller-owned records; ttsready no longer maintains caches, lock files, or persistent review state.",
+          "lower": "replace document annotations with caller-owned speechoverride values. use global, unit, or occurrence scopes as appropriate; see overrides. use check_units() and the issues attached to preparation results for residual qa. use pure fingerprints and json serialization when building caller-owned records; ttsready no longer maintains caches, lock files, or persistent review state."
+        },
+        {
+          "anchor": "",
+          "heading": "Dependency and packaging changes",
+          "text": "The 0.2 runtime dependencies are spokenform>=0.4.5,<0.5 and phrasplit>=0.3.9,<1. SSMD/SSMDConvert, CLI, PyYAML, Utterplan, and PyJEV are no longer runtime dependencies. The CLI and speaker extras were removed; ttsready[lexical] remains optional.\n\nUpdate imports to the source-neutral exports in ttsready.__all__, and pin the new major API boundary before upgrading. See Python API, ownership boundary, and reproducibility.",
+          "lower": "the 0.2 runtime dependencies are spokenform>=0.4.5,<0.5 and phrasplit>=0.3.9,<1. ssmd/ssmdconvert, cli, pyyaml, utterplan, and pyjev are no longer runtime dependencies. the cli and speaker extras were removed; ttsready[lexical] remains optional.\n\nupdate imports to the source-neutral exports in ttsready.__all__, and pin the new major api boundary before upgrading. see python api, ownership boundary, and reproducibility."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/overrides/",
+      "title": "ttsready Speech overrides",
+      "snippet": "A SpeechOverride maps a source surface to caller-chosen spoken text. It can match literal substrings or whole words, case-sensitively or cas …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Speech overrides",
+          "text": "A SpeechOverride maps a source surface to caller-chosen spoken text. It can match literal substrings or whole words, case-sensitively or case-insensitively, and can be scoped to all units, one unit, or one exact occurrence.",
+          "lower": "a speechoverride maps a source surface to caller-chosen spoken text. it can match literal substrings or whole words, case-sensitively or case-insensitively, and can be scoped to all units, one unit, or one exact occurrence."
+        },
+        {
+          "anchor": "",
+          "heading": "Global and unit-scoped overrides",
+          "text": "from ttsready import OverrideScope, SpeechOverride, TextUnit, prepare_units\n\nunit = TextUnit(\"chapter-1\", \"ACME ships 2 kg parcels.\", \"en-US\")\ncompany = SpeechOverride(\"ACME\", \"A C M E\")  # all units\nweight = SpeechOverride(\n    \"kg\",\n    \"kilograms\",\n    scope=OverrideScope(\"unit\", \"chapter-1\"),\n)\nresult = prepare_units((unit,), overrides=(company, weight))\n\n\n\n\nThe default match mode is word. Use match=\"literal\" to match a substring inside a larger token. The default is case-sensitive; set case_sensitive=False for case-insensitive matching.",
+          "lower": "from ttsready import overridescope, speechoverride, textunit, prepare_units\n\nunit = textunit(\"chapter-1\", \"acme ships 2 kg parcels.\", \"en-us\")\ncompany = speechoverride(\"acme\", \"a c m e\")  # all units\nweight = speechoverride(\n    \"kg\",\n    \"kilograms\",\n    scope=overridescope(\"unit\", \"chapter-1\"),\n)\nresult = prepare_units((unit,), overrides=(company, weight))\n\n\n\n\nthe default match mode is word. use match=\"literal\" to match a substring inside a larger token. the default is case-sensitive; set case_sensitive=false for case-insensitive matching."
+        },
+        {
+          "anchor": "",
+          "heading": "Exact occurrence",
+          "text": "For a correction that applies only to one occurrence, use source-relative half-open offsets:\n\nfrom ttsready import OverrideScope, SpeechOverride, TextUnit, prepare_units\n\nunit = TextUnit(\"caption-1\", \"Use ACME here, not ACME there.\", \"en-US\")\nfirst_start = unit.text.index(\"ACME\")\noverride = SpeechOverride(\n    \"ACME\",\n    \"A C M E\",\n    scope=OverrideScope(\n        \"occurrence\",\n        unit.id,\n        first_start,\n        first_start + len(\"ACME\"),\n    ),\n)\nresult = prepare_units((unit,), overrides=(override,))\n\n\n\n\nAn occurrence override must exactly select its declared source surface. It cannot overlap a protected span.",
+          "lower": "for a correction that applies only to one occurrence, use source-relative half-open offsets:\n\nfrom ttsready import overridescope, speechoverride, textunit, prepare_units\n\nunit = textunit(\"caption-1\", \"use acme here, not acme there.\", \"en-us\")\nfirst_start = unit.text.index(\"acme\")\noverride = speechoverride(\n    \"acme\",\n    \"a c m e\",\n    scope=overridescope(\n        \"occurrence\",\n        unit.id,\n        first_start,\n        first_start + len(\"acme\"),\n    ),\n)\nresult = prepare_units((unit,), overrides=(override,))\n\n\n\n\nan occurrence override must exactly select its declared source surface. it cannot overlap a protected span."
+        },
+        {
+          "anchor": "",
+          "heading": "Precedence and conflicts",
+          "text": "More specific overrides take precedence: occurrence-scoped overrides, then unit-scoped overrides, then global overrides. A higher-priority overlapping rule wins and a lower-priority rule is reported in result.issues. Equally ranked overlapping overrides with different spoken text raise OverrideConflictError; resolve that conflict in caller policy before preparation.\n\nOverride IDs are deterministic when omitted. They identify the policy and scope; change IDs identify source occurrences independently of the selected replacement. Override provenance can carry JSON-safe caller metadata.",
+          "lower": "more specific overrides take precedence: occurrence-scoped overrides, then unit-scoped overrides, then global overrides. a higher-priority overlapping rule wins and a lower-priority rule is reported in result.issues. equally ranked overlapping overrides with different spoken text raise overrideconflicterror; resolve that conflict in caller policy before preparation.\n\noverride ids are deterministic when omitted. they identify the policy and scope; change ids identify source occurrences independently of the selected replacement. override provenance can carry json-safe caller metadata."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/ownership-boundary/",
+      "title": "ttsready Ownership boundary",
+      "snippet": "ttsready owns speech-preparation policy and source-relative results. It is an API-only transformation library, not an application pipeline. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Ownership boundary",
+          "text": "ttsready owns speech-preparation policy and source-relative results. It is an API-only transformation library, not an application pipeline.\n\nTwo APIs serve different callers: prepare_run() is the low-level primitive for compilers that already own linguistic and sentence analysis; prepare_text() and prepare_units() provide review-oriented preparation with overrides, context, QA, and aggregate results. They share one TTSReady-owned Spokenform adapter.\n\ncaller-owned source or speech pipeline\n                │\n       ┌────────┴────────┐\n       ▼                 ▼\nprepare_run(...)   prepare_text()/prepare_units()\ncompiler-facing    review-oriented\n       │                 │\n       ▼                 ▼\nPreparedRun +      PreparedUnit / PreparationResult\nSourceOutputMap",
+          "lower": "ttsready owns speech-preparation policy and source-relative results. it is an api-only transformation library, not an application pipeline.\n\ntwo apis serve different callers: prepare_run() is the low-level primitive for compilers that already own linguistic and sentence analysis; prepare_text() and prepare_units() provide review-oriented preparation with overrides, context, qa, and aggregate results. they share one ttsready-owned spokenform adapter.\n\ncaller-owned source or speech pipeline\n                │\n       ┌────────┴────────┐\n       ▼                 ▼\nprepare_run(...)   prepare_text()/prepare_units()\ncompiler-facing    review-oriented\n       │                 │\n       ▼                 ▼\npreparedrun +      preparedunit / preparationresult\nsourceoutputmap"
+        },
+        {
+          "anchor": "",
+          "heading": "The caller owns",
+          "text": "Reading and writing files, network or database access, and serialization storage.\n\n\nParsing SSMD, Markdown, HTML, subtitles, books, or any other source format.\n\n\nMapping source structure and identifiers to ordered TextUnit values or source-relative run slices.\n\n\nLoading NLP providers, selecting models, detecting language, and segmenting mixed-language runs or sentences. TTSReady may consume supplied provider-neutral hints but never loads a provider.\n\n\nChoosing output formats, rendering, audio generation, and application/CLI behavior.\n\n\nPersisting overrides, reports, fingerprints, locks, or review decisions.",
+          "lower": "reading and writing files, network or database access, and serialization storage.\n\n\nparsing ssmd, markdown, html, subtitles, books, or any other source format.\n\n\nmapping source structure and identifiers to ordered textunit values or source-relative run slices.\n\n\nloading nlp providers, selecting models, detecting language, and segmenting mixed-language runs or sentences. ttsready may consume supplied provider-neutral hints but never loads a provider.\n\n\nchoosing output formats, rendering, audio generation, and application/cli behavior.\n\n\npersisting overrides, reports, fingerprints, locks, or review decisions."
+        },
+        {
+          "anchor": "",
+          "heading": "ttsready owns",
+          "text": "Direct spokenform integration, provider-neutral linguistic-hint validation and annotation conversion, generic normalization policy forwarding, and replacement validation through one internal adapter.\n\n\nSource-neutral TextUnit, protected-span, profile, and override models.\n\n\nExact run-level source/output maps, change provenance, generic issues, and the existing review-oriented context, aggregate statistics, QA, and fingerprints.\n\n\nJSON-ready result conversion without performing I/O.\n\n\nOptional synchronous source-neutral unit-progress callbacks that never write terminal output or alter preparation results.\n\n\n\nThe boundary is deliberate: the same preparation API can be used by a command-line application, service, editor, batch converter, or test without adding those behaviors to this package…",
+          "lower": "direct spokenform integration, provider-neutral linguistic-hint validation and annotation conversion, generic normalization policy forwarding, and replacement validation through one internal adapter.\n\n\nsource-neutral textunit, protected-span, profile, and override models.\n\n\nexact run-level source/output maps, change provenance, generic issues, and the existing review-oriented context, aggregate statistics, qa, and fingerprints.\n\n\njson-ready result conversion without performing i/o.\n\n\noptional synchronous source-neutral unit-progress callbacks that never write terminal output or alter preparation results.\n\n\n\nthe boundary is deliberate: the same preparation api can be used by a command-line application, service, editor, batch converter, or test without adding those behaviors to this package…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/python-api/",
+      "title": "ttsready Python API",
+      "snippet": "The supported Python API is the set exported from the root ttsready package via ttsready.__all__. It is source-neutral: callers provide text …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Python API",
+          "text": "The supported Python API is the set exported from the root ttsready package via ttsready.__all__. It is source-neutral: callers provide text and explicit language values, and TTSReady does not accept paths or format-specific document objects.\n\nThe public preparation surface has three levels: prepare_run(), prepare_text(), and prepare_units().",
+          "lower": "the supported python api is the set exported from the root ttsready package via ttsready.__all__. it is source-neutral: callers provide text and explicit language values, and ttsready does not accept paths or format-specific document objects.\n\nthe public preparation surface has three levels: prepare_run(), prepare_text(), and prepare_units()."
+        },
+        {
+          "anchor": "",
+          "heading": "Public API inventory",
+          "text": "The root ttsready.__all__ is the supported API boundary. The names below are the intentional exports; a helper that is available only from an implementation submodule is not thereby a supported public API.\n\n\n\nFamily\n\nRoot exports\n\n\n\n\n\nVersion\n\n__version__\n\n\n\nJSON and input/policy models\n\nJsonScalar, JsonValue, LinguisticToken, TextUnit, ProtectedSpan, PreparationProfile, OverrideScope, SpeechOverride\n\n\n\nPreparation\n\nprepare_run(), prepare_text(), prepare_units(), apply_changes(), split_prepared_text()\n\n\n\nResults and mapping\n\nSpokenChange, PreparationIssue, SourceOutputMap, PreparedRun, PreparedUnit, PreparationStats, PreparationResult, TextChunk\n\n\n\nContext\n\nSentenceSpan, UnitContext, ChangeContext, context_for_change()\n\n\n\nQA\n\ncheck_units(); see residual QA\n\n\n\nLexical review\n\nLexicalOccurr…",
+          "lower": "the root ttsready.__all__ is the supported api boundary. the names below are the intentional exports; a helper that is available only from an implementation submodule is not thereby a supported public api.\n\n\n\nfamily\n\nroot exports\n\n\n\n\n\nversion\n\n__version__\n\n\n\njson and input/policy models\n\njsonscalar, jsonvalue, linguistictoken, textunit, protectedspan, preparationprofile, overridescope, speechoverride\n\n\n\npreparation\n\nprepare_run(), prepare_text(), prepare_units(), apply_changes(), split_prepared_text()\n\n\n\nresults and mapping\n\nspokenchange, preparationissue, sourceoutputmap, preparedrun, preparedunit, preparationstats, preparationresult, textchunk\n\n\n\ncontext\n\nsentencespan, unitcontext, changecontext, context_for_change()\n\n\n\nqa\n\ncheck_units(); see residual qa\n\n\n\nlexical review\n\nlexicaloccurr…"
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare one string",
+          "text": "from ttsready import prepare_text\n\nprepared = prepare_text(\n    \"Use 2 kg of flour.\",\n    language=\"en-US\",\n    unit_id=\"recipe-step-1\",\n    role=\"body\",\n)\n\nprepared.unit_id\nprepared.source_text\nprepared.spoken_text\nprepared.changes\nprepared.issues\nprepared.context\n\n\n\n\nprepare_text() returns one PreparedUnit. Optional arguments include source-relative protected_spans, SpeechOverride values, JSON-safe caller metadata, a PreparationProfile, and strict=True.",
+          "lower": "from ttsready import prepare_text\n\nprepared = prepare_text(\n    \"use 2 kg of flour.\",\n    language=\"en-us\",\n    unit_id=\"recipe-step-1\",\n    role=\"body\",\n)\n\nprepared.unit_id\nprepared.source_text\nprepared.spoken_text\nprepared.changes\nprepared.issues\nprepared.context\n\n\n\n\nprepare_text() returns one preparedunit. optional arguments include source-relative protected_spans, speechoverride values, json-safe caller metadata, a preparationprofile, and strict=true."
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare a compiler-owned run",
+          "text": "prepare_run() is the low-level source-neutral primitive for a compiler or pipeline that already owns linguistic and sentence analysis. It returns a PreparedRun with source/output text, changes, generic issues, language, and an exact SourceOutputMap. It does not apply SpeechOverride, build UnitContext, split sentences, or create aggregate fingerprints.\n\nfrom ttsready import LinguisticToken, prepare_run\n\nsource = \"Dr. Smith uses 2 kg.\"\nrun = prepare_run(\n    source,\n    language=\"en-US\",\n    linguistic_tokens=(LinguisticToken(0, 3, text=\"Dr.\", pos=\"PROPN\", tag=\"NNP\"),),\n    preserve_run_boundaries=True,\n)\n\nrun.spoken_text\nrun.changes\nrun.source_map.map_source_span(0, 3)\nrun.source_map.to_dict()  # diagnostic representation; not result serialization\n\n\n\n\nToken offsets and optional token text…",
+          "lower": "prepare_run() is the low-level source-neutral primitive for a compiler or pipeline that already owns linguistic and sentence analysis. it returns a preparedrun with source/output text, changes, generic issues, language, and an exact sourceoutputmap. it does not apply speechoverride, build unitcontext, split sentences, or create aggregate fingerprints.\n\nfrom ttsready import linguistictoken, prepare_run\n\nsource = \"dr. smith uses 2 kg.\"\nrun = prepare_run(\n    source,\n    language=\"en-us\",\n    linguistic_tokens=(linguistictoken(0, 3, text=\"dr.\", pos=\"propn\", tag=\"nnp\"),),\n    preserve_run_boundaries=true,\n)\n\nrun.spoken_text\nrun.changes\nrun.source_map.map_source_span(0, 3)\nrun.source_map.to_dict()  # diagnostic representation; not result serialization\n\n\n\n\ntoken offsets and optional token text…"
+        },
+        {
+          "anchor": "",
+          "heading": "Prepare ordered units",
+          "text": "from ttsready import TextUnit, prepare_units\n\nunits = (\n    TextUnit(\"chapter-1\", \"2 kg\", \"en-US\", role=\"body\"),\n    TextUnit(\"caption-1\", \"Bonjour.\", \"fr-FR\", role=\"caption\"),\n)\nresult = prepare_units(units)\n\nresult.units  # ordered PreparedUnit values\nresult.changes  # flattened source-relative changes\nresult.issues  # flattened issues\nresult.stats  # aggregate PreparationStats\nresult.prepared_fingerprint  # digest of ordered prepared outputs\n\n\n\n\nUnit IDs must be unique within one result. A unit’s language is passed explicitly to spokenform; it is not inferred from a document. The caller controls the ID namespace and preserves any format-specific structure outside this library.\n\nTextUnit.linguistic_tokens accepts source-relative LinguisticToken hints. It normalizes them by (start, end)…",
+          "lower": "from ttsready import textunit, prepare_units\n\nunits = (\n    textunit(\"chapter-1\", \"2 kg\", \"en-us\", role=\"body\"),\n    textunit(\"caption-1\", \"bonjour.\", \"fr-fr\", role=\"caption\"),\n)\nresult = prepare_units(units)\n\nresult.units  # ordered preparedunit values\nresult.changes  # flattened source-relative changes\nresult.issues  # flattened issues\nresult.stats  # aggregate preparationstats\nresult.prepared_fingerprint  # digest of ordered prepared outputs\n\n\n\n\nunit ids must be unique within one result. a unit’s language is passed explicitly to spokenform; it is not inferred from a document. the caller controls the id namespace and preserves any format-specific structure outside this library.\n\ntextunit.linguistic_tokens accepts source-relative linguistictoken hints. it normalizes them by (start, end)…"
+        },
+        {
+          "anchor": "",
+          "heading": "Protected spans and profiles",
+          "text": "Protected spans are half-open offsets into the exact input string. They are not transformed, and an overlapping override is reported rather than applied:\n\nfrom ttsready import ProtectedSpan, prepare_text\n\nprepared = prepare_text(\n    \"Use SKU-42 now.\",\n    language=\"en-US\",\n    protected_spans=(ProtectedSpan(4, 10, reason=\"inventory identifier\"),),\n)\n\n\n\n\nPreparationProfile contains conservative backend and normalization options. Its defaults avoid whitespace/Unicode normalization and preserve residual sequences; number, abbreviation, and structured-value expansion remain enabled. Pass a profile explicitly when reproducibility requires a particular policy.",
+          "lower": "protected spans are half-open offsets into the exact input string. they are not transformed, and an overlapping override is reported rather than applied:\n\nfrom ttsready import protectedspan, prepare_text\n\nprepared = prepare_text(\n    \"use sku-42 now.\",\n    language=\"en-us\",\n    protected_spans=(protectedspan(4, 10, reason=\"inventory identifier\"),),\n)\n\n\n\n\npreparationprofile contains conservative backend and normalization options. its defaults avoid whitespace/unicode normalization and preserve residual sequences; number, abbreviation, and structured-value expansion remain enabled. pass a profile explicitly when reproducibility requires a particular policy."
+        },
+        {
+          "anchor": "",
+          "heading": "Mapping and context",
+          "text": "SpokenChange records a stable ID, unit ID, original and replacement text, source/output offsets, transformation stages, kind, and JSON-safe provenance. The offsets are half-open Python string indices. Apply a change set with apply_changes(source_text, changes); it verifies that every source span still selects the expected source text and rejects overlapping or stale changes.\n\nSpokenChange.language is the effective language reported by the preparation backend for that individual replacement. TTSReady preserves it exactly, even when its spelling or case differs from PreparedRun.language or PreparedUnit.language; if the backend supplies no per-change language, the value is None. TTSReady does not infer or substitute a value. Use this typed field for replacement-level language; the existing p…",
+          "lower": "spokenchange records a stable id, unit id, original and replacement text, source/output offsets, transformation stages, kind, and json-safe provenance. the offsets are half-open python string indices. apply a change set with apply_changes(source_text, changes); it verifies that every source span still selects the expected source text and rejects overlapping or stale changes.\n\nspokenchange.language is the effective language reported by the preparation backend for that individual replacement. ttsready preserves it exactly, even when its spelling or case differs from preparedrun.language or preparedunit.language; if the backend supplies no per-change language, the value is none. ttsready does not infer or substitute a value. use this typed field for replacement-level language; the existing p…"
+        },
+        {
+          "anchor": "",
+          "heading": "Text chunking",
+          "text": "split_prepared_text(text, *, language, max_chars) -> tuple[TextChunk, ...] chunks the string supplied by the caller; it does not prepare, normalize, or otherwise transform it. Splits prefer sentence boundaries and fall back to smaller pieces as needed to satisfy the character limit.\n\n\nEvery TextChunk.text is an exact slice of the original string, and start/end are source-relative half-open offsets.\n\n\npart is zero-based; chunks concatenate back to the exact input and each chunk has at most max_chars characters.\n\n\nEmpty input returns (). A max_chars value below 1 raises ValueError.\n\n\n\nfrom ttsready import split_prepared_text\n\nsource = \"First sentence. Second sentence.\"\nchunks = split_prepared_text(source, language=\"en-US\", max_chars=20)\nassert \"\".join(chunk.text for chunk in chunks) == sour…",
+          "lower": "split_prepared_text(text, *, language, max_chars) -> tuple[textchunk, ...] chunks the string supplied by the caller; it does not prepare, normalize, or otherwise transform it. splits prefer sentence boundaries and fall back to smaller pieces as needed to satisfy the character limit.\n\n\nevery textchunk.text is an exact slice of the original string, and start/end are source-relative half-open offsets.\n\n\npart is zero-based; chunks concatenate back to the exact input and each chunk has at most max_chars characters.\n\n\nempty input returns (). a max_chars value below 1 raises valueerror.\n\n\n\nfrom ttsready import split_prepared_text\n\nsource = \"first sentence. second sentence.\"\nchunks = split_prepared_text(source, language=\"en-us\", max_chars=20)\nassert \"\".join(chunk.text for chunk in chunks) == sour…"
+        },
+        {
+          "anchor": "",
+          "heading": "Public models and errors",
+          "text": "Input objects include TextUnit, ProtectedSpan, LinguisticToken, PreparationProfile, OverrideScope, and SpeechOverride. Returned objects include PreparedRun, PreparedUnit, PreparationResult, SpokenChange, PreparationIssue, SourceOutputMap, PreparationStats, TextChunk, SentenceSpan, UnitContext, and ChangeContext. Lexical review and progress return their own result/event types, described in the lexical review guide and the progress section above.\n\n\n\nException\n\nTypical origin\n\n\n\n\n\nTTSReadyError\n\nBase for TTSReady contract and preparation failures\n\n\n\nPreparationError\n\nA preparation operation cannot produce a consistent result\n\n\n\nMappingError\n\nBackend source/output mappings fail verification\n\n\n\nOverrideConflictError\n\nEqually ranked overlapping overrides disagree\n\n\n\nInvalidUnitError\n\nA text uni…",
+          "lower": "input objects include textunit, protectedspan, linguistictoken, preparationprofile, overridescope, and speechoverride. returned objects include preparedrun, preparedunit, preparationresult, spokenchange, preparationissue, sourceoutputmap, preparationstats, textchunk, sentencespan, unitcontext, and changecontext. lexical review and progress return their own result/event types, described in the lexical review guide and the progress section above.\n\n\n\nexception\n\ntypical origin\n\n\n\n\n\nttsreadyerror\n\nbase for ttsready contract and preparation failures\n\n\n\npreparationerror\n\na preparation operation cannot produce a consistent result\n\n\n\nmappingerror\n\nbackend source/output mappings fail verification\n\n\n\noverrideconflicterror\n\nequally ranked overlapping overrides disagree\n\n\n\ninvaliduniterror\n\na text uni…"
+        },
+        {
+          "anchor": "",
+          "heading": "Serialization",
+          "text": "PreparationResult.to_dict() and PreparationResult.from_dict() provide versioned, JSON-ready serialization. The module-level result_to_dict() and result_from_dict() functions are also exported. The library does not persist serialized values; choose storage and schema-retention policy in the calling application.\n\nSee overrides, residual QA, and reproducibility for the policy and QA APIs.",
+          "lower": "preparationresult.to_dict() and preparationresult.from_dict() provide versioned, json-ready serialization. the module-level result_to_dict() and result_from_dict() functions are also exported. the library does not persist serialized values; choose storage and schema-retention policy in the calling application.\n\nsee overrides, residual qa, and reproducibility for the policy and qa apis."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/qa/",
+      "title": "ttsready Residual QA",
+      "snippet": "Preparation includes non-mutating residual checks and attaches findings to each PreparedUnit.issues and aggregate PreparationResult.issues. …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Residual QA",
+          "text": "Preparation includes non-mutating residual checks and attaches findings to each PreparedUnit.issues and aggregate PreparationResult.issues. Findings identify a code, severity, unit, optional source span, text, message, and JSON-safe provenance.\n\nUse check_units() to inspect caller text without preparing or rewriting it:\n\nfrom ttsready import TextUnit, check_units\n\nissues = check_units((TextUnit(\"caption-1\", \"Meet at 10:30.\", \"en-US\"),))\nfor issue in issues:\n    print(issue.code, issue.severity, issue.text, issue.message)\n\n\n\n\nChecks flag residual digits when number expansion is enabled, date/time-like strings, uppercase initialisms, Roman numerals, operator-heavy text, suspicious symbols, and problematic Unicode/control characters. Protected spans are excluded. These are review signals, no…",
+          "lower": "preparation includes non-mutating residual checks and attaches findings to each preparedunit.issues and aggregate preparationresult.issues. findings identify a code, severity, unit, optional source span, text, message, and json-safe provenance.\n\nuse check_units() to inspect caller text without preparing or rewriting it:\n\nfrom ttsready import textunit, check_units\n\nissues = check_units((textunit(\"caption-1\", \"meet at 10:30.\", \"en-us\"),))\nfor issue in issues:\n    print(issue.code, issue.severity, issue.text, issue.message)\n\n\n\n\nchecks flag residual digits when number expansion is enabled, date/time-like strings, uppercase initialisms, roman numerals, operator-heavy text, suspicious symbols, and problematic unicode/control characters. protected spans are excluded. these are review signals, no…"
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/quickstart/",
+      "title": "ttsready Quickstart",
+      "snippet": "prepare_text() prepares one caller-owned string with an explicit language. It returns a PreparedUnit containing the original text, spoken te …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Quickstart",
+          "text": "prepare_text() prepares one caller-owned string with an explicit language. It returns a PreparedUnit containing the original text, spoken text, exact changes, issues, and sentence context.\n\nfrom ttsready import prepare_text\n\nprepared = prepare_text(\"A 2 kg parcel.\", language=\"en-US\", unit_id=\"parcel\")\nprint(prepared.spoken_text)\n\nfor change in prepared.changes:\n    print(\n        f\"{change.source!r} -> {change.replacement!r} \"\n        f\"(source {change.source_start}:{change.source_end}, \"\n        f\"output {change.output_start}:{change.output_end})\"\n    )\n\n\n\n\nBoth spans are half-open Python string offsets. The source span selects the original occurrence; the output span selects its replacement in spoken_text.",
+          "lower": "prepare_text() prepares one caller-owned string with an explicit language. it returns a preparedunit containing the original text, spoken text, exact changes, issues, and sentence context.\n\nfrom ttsready import prepare_text\n\nprepared = prepare_text(\"a 2 kg parcel.\", language=\"en-us\", unit_id=\"parcel\")\nprint(prepared.spoken_text)\n\nfor change in prepared.changes:\n    print(\n        f\"{change.source!r} -> {change.replacement!r} \"\n        f\"(source {change.source_start}:{change.source_end}, \"\n        f\"output {change.output_start}:{change.output_end})\"\n    )\n\n\n\n\nboth spans are half-open python string offsets. the source span selects the original occurrence; the output span selects its replacement in spoken_text."
+        },
+        {
+          "anchor": "",
+          "heading": "Compiler-owned runs",
+          "text": "If your pipeline already performs linguistic analysis and segmentation, use prepare_run() instead of wrapping the run in review-oriented TextUnit context:\n\nfrom ttsready import LinguisticToken, prepare_run\n\nsource = \"Dr. Smith measured 2 kg.\"\nrun = prepare_run(\n    source,\n    language=\"en-US\",\n    linguistic_tokens=(LinguisticToken(0, 3, text=\"Dr.\", pos=\"PROPN\"),),\n    preserve_run_boundaries=True,\n)\nprint(run.spoken_text)\noutput_start, output_end = run.source_map.map_source_span(0, 3)\n\n\n\n\nLinguisticToken offsets are relative to exactly this run. Hints can come from any analyzer; TTSReady does not load or receive its provider object. Source maps retain left/right bias at ambiguous replacements, and their span helpers use left bias for the start and right bias for the end. Concatenate map…",
+          "lower": "if your pipeline already performs linguistic analysis and segmentation, use prepare_run() instead of wrapping the run in review-oriented textunit context:\n\nfrom ttsready import linguistictoken, prepare_run\n\nsource = \"dr. smith measured 2 kg.\"\nrun = prepare_run(\n    source,\n    language=\"en-us\",\n    linguistic_tokens=(linguistictoken(0, 3, text=\"dr.\", pos=\"propn\"),),\n    preserve_run_boundaries=true,\n)\nprint(run.spoken_text)\noutput_start, output_end = run.source_map.map_source_span(0, 3)\n\n\n\n\nlinguistictoken offsets are relative to exactly this run. hints can come from any analyzer; ttsready does not load or receive its provider object. source maps retain left/right bias at ambiguous replacements, and their span helpers use left bias for the start and right bias for the end. concatenate map…"
+        },
+        {
+          "anchor": "",
+          "heading": "Multiple units",
+          "text": "Use TextUnit and prepare_units() for multiple text segments. Each unit supplies its own language and stable caller ID; order is preserved.\n\nfrom ttsready import TextUnit, prepare_units\n\nresult = prepare_units(\n    (\n        TextUnit(\"chapter-1\", \"2 kg\", \"en-US\", role=\"body\"),\n        TextUnit(\"caption-1\", \"Bonjour.\", \"fr-FR\", role=\"caption\"),\n    )\n)\n\nfor unit in result.units:\n    print(unit.unit_id, unit.language, unit.spoken_text)\nprint(result.stats.units_processed)\n\n\n\n\nThe aggregate result also exposes combined changes, issues, statistics, and profile/override/runtime/output fingerprints. No file, format object, or document wrapper is needed. See overrides, residual QA, and reproducibility for the rest of the API.",
+          "lower": "use textunit and prepare_units() for multiple text segments. each unit supplies its own language and stable caller id; order is preserved.\n\nfrom ttsready import textunit, prepare_units\n\nresult = prepare_units(\n    (\n        textunit(\"chapter-1\", \"2 kg\", \"en-us\", role=\"body\"),\n        textunit(\"caption-1\", \"bonjour.\", \"fr-fr\", role=\"caption\"),\n    )\n)\n\nfor unit in result.units:\n    print(unit.unit_id, unit.language, unit.spoken_text)\nprint(result.stats.units_processed)\n\n\n\n\nthe aggregate result also exposes combined changes, issues, statistics, and profile/override/runtime/output fingerprints. no file, format object, or document wrapper is needed. see overrides, residual qa, and reproducibility for the rest of the api."
+        }
+      ]
+    },
+    {
+      "url": "/tools/ttsready/reproducibility/",
+      "title": "ttsready Reproducibility and serialization",
+      "snippet": "prepare_units() returns fingerprints for the effective preparation profile, ordered override policy, semantic runtime versions, and ordered …",
+      "sections": [
+        {
+          "anchor": "",
+          "heading": "Reproducibility and serialization",
+          "text": "prepare_units() returns fingerprints for the effective preparation profile, ordered override policy, semantic runtime versions, and ordered prepared output:\n\nfrom ttsready import TextUnit, prepare_units\n\nresult = prepare_units((TextUnit(\"unit-1\", \"2 kg\", \"en-US\"),))\nprint(result.profile_fingerprint)\nprint(result.override_fingerprint)\nprint(result.runtime_fingerprint)\nprint(result.prepared_fingerprint)",
+          "lower": "prepare_units() returns fingerprints for the effective preparation profile, ordered override policy, semantic runtime versions, and ordered prepared output:\n\nfrom ttsready import textunit, prepare_units\n\nresult = prepare_units((textunit(\"unit-1\", \"2 kg\", \"en-us\"),))\nprint(result.profile_fingerprint)\nprint(result.override_fingerprint)\nprint(result.runtime_fingerprint)\nprint(result.prepared_fingerprint)"
+        },
+        {
+          "anchor": "",
+          "heading": "Runtime versions",
+          "text": "ttsready.__version__ is the package’s public runtime version. Builds derive it from Git tags with setuptools-scm, which generates ttsready/_version.py for installed distributions. A source checkout without generated version metadata reports 0+unknown; release artifacts must carry the exact tag-derived version, never this fallback. runtime_versions() returns the TTSReady, Spokenform, and Phrasplit versions used by the runtime fingerprint.\n\nThe runtime fingerprint covers ttsready, spokenform, and phrasplit. The prepared-output fingerprint covers ordered unit IDs and their spoken text. profile_fingerprint(), override_fingerprint(), runtime_fingerprint(), and unit_fingerprint() are available for caller-defined verification or record layouts. Change IDs identify the source occurrence (unit_id,…",
+          "lower": "ttsready.__version__ is the package’s public runtime version. builds derive it from git tags with setuptools-scm, which generates ttsready/_version.py for installed distributions. a source checkout without generated version metadata reports 0+unknown; release artifacts must carry the exact tag-derived version, never this fallback. runtime_versions() returns the ttsready, spokenform, and phrasplit versions used by the runtime fingerprint.\n\nthe runtime fingerprint covers ttsready, spokenform, and phrasplit. the prepared-output fingerprint covers ordered unit ids and their spoken text. profile_fingerprint(), override_fingerprint(), runtime_fingerprint(), and unit_fingerprint() are available for caller-defined verification or record layouts. change ids identify the source occurrence (unit_id,…"
+        },
+        {
+          "anchor": "",
+          "heading": "JSON round trips",
+          "text": "Preparation results can be serialized to built-in JSON values and restored:\n\nimport json\nfrom ttsready import TextUnit, prepare_units, result_from_dict, result_to_dict\n\nresult = prepare_units((TextUnit(\"unit-1\", \"2 kg\", \"en-US\"),))\nencoded = json.dumps(result_to_dict(result), sort_keys=True)\nrestored = result_from_dict(json.loads(encoded))\nassert restored == result\n\n\n\n\nNew ttsready.preparation.v2 payloads include SpokenChange.language as a string or null. Older v2 payloads without that key deserialize with language=None. This additive metadata does not change existing fingerprints.\nPreparationResult.to_dict() and .from_dict() provide the same contract. Serialization uses a versioned result schema; it does not write data to disk. JSON-safe metadata and provenance are required so serialized…",
+          "lower": "preparation results can be serialized to built-in json values and restored:\n\nimport json\nfrom ttsready import textunit, prepare_units, result_from_dict, result_to_dict\n\nresult = prepare_units((textunit(\"unit-1\", \"2 kg\", \"en-us\"),))\nencoded = json.dumps(result_to_dict(result), sort_keys=true)\nrestored = result_from_dict(json.loads(encoded))\nassert restored == result\n\n\n\n\nnew ttsready.preparation.v2 payloads include spokenchange.language as a string or null. older v2 payloads without that key deserialize with language=none. this additive metadata does not change existing fingerprints.\npreparationresult.to_dict() and .from_dict() provide the same contract. serialization uses a versioned result schema; it does not write data to disk. json-safe metadata and provenance are required so serialized…"
+        }
+      ]
+    }
+  ]
+}

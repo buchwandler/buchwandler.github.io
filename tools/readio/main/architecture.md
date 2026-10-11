@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "260803aa205479dfd9ab134e49f14f15835769b6"
+docs_commit: "6a36172da82dfd816b4c77ce3ca38ec739ecf343"
 search_enabled: true
 ---
 
@@ -635,6 +635,27 @@ sidecars cause only the affected segment to render again.</p>
 <p>A native adapter makes one strict synthesis call for a Readio-shaped request and never invokes the engine’s convenience splitter. Readio owns capacity fitting: it measures when supported, handles typed too-long responses, and recursively subdivides exact text at legal sentence, clause, token, or word boundaries. Protected linguistic and pronunciation ranges are not cut. Child audio is merged and child-local timings are rebased to the original request.</p>
 <p>Kokoro, Pocket, and Supertonic support request-scoped voice selection. Piper binds roles to voice-bundle targets. For target-bound execution, Readio validates every distinct target before opening sessions and reuses one session per target. Unsupported pronunciation overrides or other explicit semantics are rejected before runtime startup.</p>
 <p>Engine adapters own canonical synthesis-profile identity. The common <code class="docutils literal notranslate"><span class="pre">speed</span></code> option is a synthesis control included in speech identity and forwarded only to the engine. Kokoro receives it directly; PiperSynth maps it to <code class="docutils literal notranslate"><span class="pre">length_scale</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">speed</span></code>; PocketSynth supports only <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. Supertonic uses the validated model base language and forwards the speed multiplier to its atomic synthesis API. Composition rate remains separate, so synthesis speed is never applied twice.</p>
+<section id="inflectsynth-ownership-and-capabilities">
+<h3>InflectSynth ownership and capabilities</h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Engine</p></th>
+<th class="head"><p>G2P and synthesis owner</p></th>
+<th class="head"><p>Runtime layer</p></th>
+<th class="head"><p>Readio-owned boundary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">inflect</span></code></p></td>
+<td><p>InflectSynth, including G2P and model internals</p></td>
+<td><p>ONNXVoice, transitively through InflectSynth</p></td>
+<td><p>Request boundaries, selection, capacity policy, session lifecycle, audio validation, and synthesis identity</p></td>
+</tr>
+</tbody>
+</table>
+<p>InflectSynth’s public catalog currently discovers <code class="docutils literal notranslate"><span class="pre">nano-v2</span></code> and <code class="docutils literal notranslate"><span class="pre">micro-v2</span></code>, each with the fixed <code class="docutils literal notranslate"><span class="pre">default</span></code> voice. The adapter supports English only; speed, variation, seed, and calibrated voice-level handling are supported controls. Variation and seed are API engine options. Speaker selection, reference voices, pronunciation overrides, and native word timings are unsupported.</p>
+<p>The InflectSynth 0.1.1 public capacity contract reports <code class="docutils literal notranslate"><span class="pre">supports_known_maximum:</span> <span class="pre">false</span></code>. Readio therefore treats request capacity as unknown rather than inventing a token limit; it still translates typed native oversize errors and owns any legal-boundary lowering. InflectSynth owns G2P, model, and runtime details. ONNXVoice remains a transitive dependency: Readio does not import or manage it, InflectG2P, or the Inflect bundle catalog.</p>
+</section>
 </section>
 <section id="managed-and-catalog-voice-sources">
 <h2>Managed and catalog voice sources</h2>

@@ -5,8 +5,8 @@ permalink: /tools/utterplan/pykokoro-integration/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.4.1"
-docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
+docs_ref: "v0.5.1"
+docs_commit: "a06da00122bda9de70d345d91a97259bbda6b18a"
 search_enabled: true
 ---
 
@@ -542,61 +542,45 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="pykokoro-integration-boundary">
 <h1>PyKokoro integration boundary</h1>
-<p>UtterPlan is an independent planning compiler. PyKokoro is an optional consumer,
-not a runtime dependency of this package.
-The intended migration keeps the existing PyKokoro user API unchanged:</p>
+<p>UtterPlan is an independent planning compiler. PyKokoro is an optional consumer, not a runtime dependency of this package. A thin adapter can preserve the existing PyKokoro user API:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>KokoroPipeline.run(text)
     -&gt; map PipelineConfig and GenerationConfig to PlannerConfig
     -&gt; UtterancePlanner.plan(text)
-    -&gt; adapt public PlanSegment records to PyKokoro&#39;s G2P input
+    -&gt; adapt public FlowPlan segments to PyKokoro&#39;s G2P input
     -&gt; PyKokoro G2P
     -&gt; phoneme processing
     -&gt; model inference
     -&gt; audio
 </pre></div>
 </div>
-<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions,
-acoustic behavior, audio, and any compatibility behavior specific to its
-renderer. UtterPlan owns deterministic document parsing, language planning,
-written-to-spoken preparation, segmentation, semantic directives, boundaries,
-pauses, markers, and render units.</p>
+<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions, acoustic behavior, and audio. UtterPlan owns deterministic document parsing, language planning, written-to-spoken preparation, segmentation, typed directives, semantic pause intent, markers, and render units.</p>
 <section id="thin-adapter-inputs">
 <h2>Thin adapter inputs</h2>
-<p>A future adapter can use only public UtterancePlan fields:</p>
+<p>A future adapter can use only public v5 flow fields:</p>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.texts.spoken</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.languages</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.tokens</span></code> and <code class="docutils literal notranslate"><span class="pre">plan.annotations</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.boundaries</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.segments</span></code> and <code class="docutils literal notranslate"><span class="pre">plan.units</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.markers</span></code>;</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">plan.document_metadata</span></code>;</p></li>
-<li><p>resolved segment pauses and typed directives.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">plan.flow</span></code> in order, with each unit’s ordered <code class="docutils literal notranslate"><span class="pre">segments</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segment.text</span></code> and <code class="docutils literal notranslate"><span class="pre">segment.language</span></code>;</p></li>
+<li><p>local <code class="docutils literal notranslate"><span class="pre">segment.tokens</span></code> for optional linguistic context;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segment.directives</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_before</span></code>, and <code class="docutils literal notranslate"><span class="pre">pause_after</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segment.markers</span></code> and optional <code class="docutils literal notranslate"><span class="pre">segment.heading</span></code>;</p></li>
+<li><p>compact <code class="docutils literal notranslate"><span class="pre">plan.document</span></code> and <code class="docutils literal notranslate"><span class="pre">plan.linguistics</span></code> metadata.</p></li>
 </ul>
-<p>It should pass <code class="docutils literal notranslate"><span class="pre">PlanSegment.text</span></code> and <code class="docutils literal notranslate"><span class="pre">PlanSegment.language</span></code> to the next</p>
-<p>For contextual pronunciation, pass the segment token snapshot to G2P:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">segment_tokens</span> <span class="o">=</span> <span class="n">plan</span><span class="o">.</span><span class="n">tokens_for_segment</span><span class="p">(</span><span class="n">segment</span><span class="p">)</span>
-<span class="k">if</span> <span class="n">linguistic_run</span><span class="o">.</span><span class="n">provider</span> <span class="o">!=</span> <span class="s2">&quot;spacy&quot;</span><span class="p">:</span>
-    <span class="c1"># Fail clearly or use the consumer&#39;s documented non-contextual fallback.</span>
-    <span class="o">...</span>
-<span class="n">phonemizer</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">segment_tokens</span><span class="p">)</span>
+<p>Token offsets are local to the owning <code class="docutils literal notranslate"><span class="pre">segment.text</span></code>. A consumer must not use compiler source offsets or retokenize the document. Provider/model provenance is descriptive; when contextual G2P requires a specific provider, the adapter must fail clearly or use its documented non-contextual fallback.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">flow</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">unit</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
+        <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">token</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">token</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">tokens</span><span class="p">]</span>
+        <span class="n">phonemizer</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The renderer must not rerun spaCy or infer missing POS/tag values.
-frontend stage. No JSON serialization is required for in-process use.</p>
+<p>The renderer must not rerun spaCy or infer missing POS/tag values. No JSON serialization is required for in-process use.</p>
 </section>
 <section id="pause-behavior">
 <h2>Pause behavior</h2>
-<p>UtterPlan resolves deterministic base semantic pauses. PyKokoro may apply
-renderer or acoustic variance after consuming the plan when legacy behavior
-requires it. Such variance must remain outside semantic plan identity and must
-not be added to UtterPlan merely to mirror renderer settings.</p>
+<p>The flow carries semantic pause intents and exact authored timed breaks, not planner-invented renderer durations or a renderer activation mode. PyKokoro may interpret supported semantic intents according to its own behavior. Renderer/acoustic variance remains outside UtterPlan and plan identity.</p>
 </section>
 <section id="compatibility-ownership">
 <h2>Compatibility ownership</h2>
-<p>Consumer-specific compatibility and integration tests belong in the PyKokoro
-repository. UtterPlan’s own test suite validates the public semantic planning
-contract using repository-owned fixtures and goldens only.</p>
+<p>Consumer-specific compatibility and integration tests belong in the PyKokoro repository. UtterPlan’s own test suite validates the public FlowPlan contract using repository-owned fixtures and goldens only.</p>
 </section>
 </section>
 </div>

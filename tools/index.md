@@ -14,7 +14,7 @@ permalink: /tools/
   </div>
   <div class="hero-panel" aria-label="Toolkit summary">
     <div class="hero-panel-label">The toolkit</div>
-    <div class="hero-stat">21<span>focused tools</span></div>
+    <div class="hero-stat">22<span>focused tools</span></div>
     <p>File-based, reviewable state for each step of the pipeline.</p>
   </div>
 </section>
@@ -216,7 +216,7 @@ permalink: /tools/
       <p>Engine-independent text-to-speech planning compiler and interchange format.</p>
       <div class="card-links">
         <a href="/tools/utterplan/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.4.1" rel="external noopener">Latest release: v0.4.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.5.1" rel="external noopener">Latest release: v0.5.1 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/utterplan" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -255,6 +255,16 @@ permalink: /tools/
         <a href="https://github.com/buchwandler/ssmdconvert" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
+    <article class="card tool-card">
+      <p class="card-label">Tool</p>
+      <h3>ttsready</h3>
+      <p>Source-neutral API for preparing text for speech.</p>
+      <div class="card-links">
+        <a href="/tools/ttsready/">Read docs <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsready/releases/tag/v0.2.3" rel="external noopener">Latest release: v0.2.3 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ttsready" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
+      </div>
+    </article>
   </div>
 </section>
 <section class="tool-group catalog-tool-group" aria-labelledby="tools-category-7">
@@ -266,7 +276,7 @@ permalink: /tools/
       <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
       <div class="card-links">
         <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.6" rel="external noopener">Latest release: v0.1.6 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.7" rel="external noopener">Latest release: v0.1.7 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

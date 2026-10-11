@@ -5,8 +5,8 @@ permalink: /tools/utterplan/coordinate-spaces/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.4.1"
-docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
+docs_ref: "v0.5.1"
+docs_commit: "a06da00122bda9de70d345d91a97259bbda6b18a"
 search_enabled: true
 ---
 
@@ -542,16 +542,29 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="coordinate-spaces">
 <h1>Coordinate spaces</h1>
-<p>UtterPlan uses explicit coordinate names. <code class="docutils literal notranslate"><span class="pre">spoken_start</span></code>, <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code>, and <code class="docutils literal notranslate"><span class="pre">spoken_position</span></code> refer to half-open offsets into <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. Token, annotation-spoken, language-run, marker, unit, and segment ranges consumed by a renderer use this prepared/synthesis-space coordinate system.
-<code class="docutils literal notranslate"><span class="pre">SemanticBoundary.position</span></code> and the <code class="docutils literal notranslate"><span class="pre">semantic_boundaries_in_range()</span></code> /
-<code class="docutils literal notranslate"><span class="pre">semantic_boundaries_for_segment()</span></code> results use this same <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>
-coordinate space. They are stable semantic split opportunities, not pause
-timing events; <code class="docutils literal notranslate"><span class="pre">seconds</span></code>, pause activation, and renderer policy belong to
-<code class="docutils literal notranslate"><span class="pre">plan.boundaries</span></code> and resolved segment pauses.</p>
-<p><code class="docutils literal notranslate"><span class="pre">structural_start</span></code> and <code class="docutils literal notranslate"><span class="pre">structural_end</span></code> refer to half-open offsets into <code class="docutils literal notranslate"><span class="pre">texts.structural</span></code>. The source field contains exact caller input, which may include SSMD headers and markup; source offsets are not fabricated for renderer slicing.</p>
-<p>SSMD <code class="docutils literal notranslate"><span class="pre">source_start</span></code> and <code class="docutils literal notranslate"><span class="pre">source_end</span></code> are half-open Python string offsets (Unicode code points) into the exact original source, including any header and markup. They are source provenance only, not offsets into <code class="docutils literal notranslate"><span class="pre">texts.structural</span></code> or <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. Diagnostic <code class="docutils literal notranslate"><span class="pre">line</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> values are 1-based; columns count Python Unicode code points from the beginning of the source line.</p>
-<p>When written-to-spoken preparation changes text, the planner uses an exact transient source-to-spoken map to resolve annotations, boundaries, and markers. The serialized plan stores only preparation provenance and resolved coordinates. Renderers must use <code class="docutils literal notranslate"><span class="pre">AnnotationSpan.spoken_start</span></code> and <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code> when mapping annotations into <code class="docutils literal notranslate"><span class="pre">PlanSegment.text</span></code>; structural offsets must not be used to slice prepared text.</p>
-<p>Linguistic token fields (<code class="docutils literal notranslate"><span class="pre">spoken_start</span></code>, <code class="docutils literal notranslate"><span class="pre">spoken_end</span></code>, <code class="docutils literal notranslate"><span class="pre">text</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code>) are self-contained and refer to prepared text. <code class="docutils literal notranslate"><span class="pre">text</span></code> must equal the corresponding slice of <code class="docutils literal notranslate"><span class="pre">texts.spoken</span></code>. <code class="docutils literal notranslate"><span class="pre">segment.token_indices</span></code> is the stable membership relation, and <code class="docutils literal notranslate"><span class="pre">UtterancePlan.tokens_for_segment()</span></code> exposes it without retokenization. Provider documents are not part of the public plan.</p>
+<p>Schema v5 keeps the executable plan compact: token coordinates are local to each <code class="docutils literal notranslate"><span class="pre">FlowSegment.text</span></code>; document-global source and preparation coordinates live only in an optional <code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code> sidecar.</p>
+<section id="executable-plan-coordinates">
+<h2>Executable plan coordinates</h2>
+<p><code class="docutils literal notranslate"><span class="pre">FlowSegment.text</span></code> is the prepared speech text for that segment. Each <code class="docutils literal notranslate"><span class="pre">TokenView.start</span></code> and <code class="docutils literal notranslate"><span class="pre">TokenView.end</span></code> is a half-open Python-character offset into that segment’s text. Slice a token with <code class="docutils literal notranslate"><span class="pre">segment.text[token.start:token.end]</span></code>. Do not add a unit, segment, document, or compiler offset to these values. Token membership is stored locally in <code class="docutils literal notranslate"><span class="pre">segment.tokens</span></code>; there are no plan-global token indices or lookup joins.</p>
+<p>Pauses, directives, markers, and optional heading levels are attached directly to their owning flow-segment edge or segment. They have no independent text coordinate. Flow-unit and segment order is the render order.</p>
+</section>
+<section id="optional-trace-coordinates">
+<h2>Optional trace coordinates</h2>
+<p>Trace coordinates use Python string character boundaries (Unicode code points), not UTF-8 bytes or grapheme clusters:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">source_text</span></code> is the exact caller input, including SSMD front matter and markup.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_spans</span></code> maps original-source <code class="docutils literal notranslate"><span class="pre">[source_start,</span> <span class="pre">source_end)</span></code> ranges to parsed structural <code class="docutils literal notranslate"><span class="pre">[structural_start,</span> <span class="pre">structural_end)</span></code> ranges.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">structural_text</span></code> is SSMD-clean structural text before written-to-spoken preparation.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">spoken_text</span></code> is the prepared text used to construct executable segments.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">structural_to_spoken</span></code> maps structural character boundaries to spoken boundaries; <code class="docutils literal notranslate"><span class="pre">spoken_to_structural</span></code> maps spoken boundaries back to structural boundaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PreparationTraceUnit.source_start</span></code> / <code class="docutils literal notranslate"><span class="pre">source_end</span></code> address structural text. <code class="docutils literal notranslate"><span class="pre">PreparationChange.source_start</span></code> / <code class="docutils literal notranslate"><span class="pre">source_end</span></code> use structural coordinates; <code class="docutils literal notranslate"><span class="pre">output_start</span></code> / <code class="docutils literal notranslate"><span class="pre">output_end</span></code> use prepared spoken coordinates.</p></li>
+</ul>
+</section>
+<section id="compiler-only-segmentation-coordinates">
+<h2>Compiler-only segmentation coordinates</h2>
+<p>Paragraph, sentence, and sentence-part spans use half-open Python-character offsets into the prepared global <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code>. PhraseSplit offsets are run-local and are translated to global spoken coordinates exactly once before validation. Renderer segments retain the exact <code class="docutils literal notranslate"><span class="pre">spoken_text[start:end]</span></code> slice; language-run edges and other required renderer cuts do not change their owning paragraph, sentence, or part index. These spans are compiler topology, not fields in the v5 flow. Segmentation diagnostics map their spoken ranges back to exact source coordinates through the compiler’s source map.</p>
+<p>Diagnostic source offsets use the exact original-source coordinate space. Diagnostic <code class="docutils literal notranslate"><span class="pre">line</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> values are 1-based; columns count Python characters from the start of a line. The trace retains all these maps and source evidence. The executable FlowPlan intentionally does not.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

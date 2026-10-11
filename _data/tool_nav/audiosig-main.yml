@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 3addd4cbafca572dc9387caf88efaaa700080526
+source_commit: c9eff43212a96c0289795e4c7055300391219290
 source_url: https://github.com/buchwandler/audiosig/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/audiosig
-release_tag: v0.1.6
-release_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.6
+release_tag: v0.1.7
+release_url: https://github.com/buchwandler/audiosig/releases/tag/v0.1.7
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.6
+  ref: v0.1.7
   url: /tools/audiosig/
   current: false
 - name: main
@@ -38,3 +38,9 @@ entries:
 - slug: advanced
   title: audiosig Advanced Topics
   url: /tools/audiosig/main/advanced/
+- slug: quality-evaluation
+  title: audiosig Speech effects quality evaluation
+  url: /tools/audiosig/main/quality-evaluation/
+- slug: changelog
+  title: audiosig Changelog
+  url: /tools/audiosig/main/changelog/

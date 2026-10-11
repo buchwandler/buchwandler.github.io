@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
 search_enabled: true
 ---
 
@@ -764,7 +764,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>.. py:function:: inspect_book(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.models.BookInspection
 :module: ssmdconvert</p>
 <p>Return EPUB metadata and its ordered source chapter inventory.</p>
-<p>.. py:function:: convert_book(source: str | ~pathlib.Path, *, chapters: str | None = ‘all’, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’) -&gt; ~ssmdconvert.models.Book
+<p>.. py:function:: convert_book(source: str | ~pathlib.Path, *, chapters: str | None = ‘all’, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’, speech_semantics: ~typing.Literal[‘freeze’, ‘preserve’] = ‘freeze’) -&gt; ~ssmdconvert.models.Book
 :module: ssmdconvert</p>
 <p>Convert selected EPUB chapters to standalone SSMD in source order.</p>
 <p><code class="docutils literal notranslate"><span class="pre">BookChapter.id</span></code> is the canonical chapter identity. <code class="docutils literal notranslate"><span class="pre">source_id</span></code> and <code class="docutils literal notranslate"><span class="pre">source_parent_id</span></code> preserve source navigation identifiers; <code class="docutils literal notranslate"><span class="pre">parent_id</span></code> refers to the canonical parent chapter ID when present in the inventory. <code class="docutils literal notranslate"><span class="pre">Book.source_sha256</span></code> is captured during conversion.</p>

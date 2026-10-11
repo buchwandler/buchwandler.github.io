@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
 search_enabled: true
 ---
 
@@ -548,6 +548,7 @@ in a destination document or book bundle.</p>
 ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>frozen.ssmdbook.zip
 </pre></div>
 </div>
+<p>Fresh EPUB conversion applies this freeze automatically: <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">convert</span> <span class="pre">novel.epub</span> <span class="pre">-o</span> <span class="pre">novel.ssmdbook</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> to request the historical structural-only result. The conversion-time aliases come from <code class="docutils literal notranslate"><span class="pre">ttsready</span></code>/<code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, do not alter visible source text, and do not override author-owned annotations. A resolvable language is required for freeze; pass <code class="docutils literal notranslate"><span class="pre">--language</span></code> or use preserve when none is available.</p>
 <p><code class="docutils literal notranslate"><span class="pre">freeze</span></code> uses the same fail-closed mapping, validation, and atomic writer as
 <a class="reference internal" href="../speech-annotations/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code></span></a>. It preserves visible text, does not
 duplicate authoritative SSMD substitutions, refuses unresolved effective

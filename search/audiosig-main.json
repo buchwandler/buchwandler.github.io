@@ -328,52 +328,82 @@
         },
         {
           "anchor": "",
+          "heading": "Spectral and Pitch Analysis",
+          "text": "These stable submodule APIs are imported from audiosig.spectral and\naudiosig.pitch; they are intentionally not re-exported through the root\nnamespace.",
+          "lower": "these stable submodule apis are imported from audiosig.spectral and\naudiosig.pitch; they are intentionally not re-exported through the root\nnamespace."
+        },
+        {
+          "anchor": "",
+          "heading": "Spectral features (audiosig.spectral)",
+          "text": "stft(audio, *, n_fft, hop_length, center=True) returns the existing\nHann-windowed complex STFT with shape (..., n_fft // 2 + 1, frames).\nIt preserves the private spectral path’s conventions.\n\n\nistft(spectrum, *, n_fft, hop_length, length=None, center=True, dtype=np.float64) uses the existing overlap-add inverse and returns\nfloat32 or float64 samples.\n\n\npower_spectrogram(audio, *, n_fft, hop_length, center=True, power=2.0)\nreturns linear abs(STFT) ** power, without normalization or dB conversion.\n\n\nmel_filterbank(*, sample_rate, n_fft, n_mels, f_min=0.0, f_max=None, mel_scale='slaney', norm='slaney') creates Slaney mel triangles on exact\nreal-FFT bin centers. norm=None disables area normalization.\n\n\nmel_spectrogram(..., log=False, log_floor=1e-10) returns linear mel power\nby default. log=T…",
+          "lower": "stft(audio, *, n_fft, hop_length, center=true) returns the existing\nhann-windowed complex stft with shape (..., n_fft // 2 + 1, frames).\nit preserves the private spectral path’s conventions.\n\n\nistft(spectrum, *, n_fft, hop_length, length=none, center=true, dtype=np.float64) uses the existing overlap-add inverse and returns\nfloat32 or float64 samples.\n\n\npower_spectrogram(audio, *, n_fft, hop_length, center=true, power=2.0)\nreturns linear abs(stft) ** power, without normalization or db conversion.\n\n\nmel_filterbank(*, sample_rate, n_fft, n_mels, f_min=0.0, f_max=none, mel_scale='slaney', norm='slaney') creates slaney mel triangles on exact\nreal-fft bin centers. norm=none disables area normalization.\n\n\nmel_spectrogram(..., log=false, log_floor=1e-10) returns linear mel power\nby default. log=t…"
+        },
+        {
+          "anchor": "",
+          "heading": "Pitch tracking (audiosig.pitch)",
+          "text": "PitchTrack is a frozen, slotted result object with frame_times_s, f0_hz,\nvoiced, and confidence arrays. pitch_track(audio, *, sample_rate, hop_length=None, f0_min=60.0, f0_max=500.0) accepts only mono arrays shaped\n(samples,). The optional hop changes analysis geometry; None preserves the\nlegacy tracker default. Callers with multiple channels must explicitly select a\nchannel or downmix before analysis. Unvoiced frames are identified by voiced;\nconsult the track’s voicing mask rather than treating all F0 values as speech\npitch.",
+          "lower": "pitchtrack is a frozen, slotted result object with frame_times_s, f0_hz,\nvoiced, and confidence arrays. pitch_track(audio, *, sample_rate, hop_length=none, f0_min=60.0, f0_max=500.0) accepts only mono arrays shaped\n(samples,). the optional hop changes analysis geometry; none preserves the\nlegacy tracker default. callers with multiple channels must explicitly select a\nchannel or downmix before analysis. unvoiced frames are identified by voiced;\nconsult the track’s voicing mask rather than treating all f0 values as speech\npitch."
+        },
+        {
+          "anchor": "",
+          "heading": "Reference Metrics",
+          "text": "Import metrics from audiosig.metrics; intelligibility functions live in\naudiosig.intelligibility. Here, a reference is decoded reference waveform\nsamples, not a transcript or reference text. Each function returns a frozen,\nslotted MetricResult containing name, value, unit, higher_is_better,\nparameters, and diagnostics. Every feature and transformation parameter used\nby a metric is recorded in parameters. value is float | None; undefined\npitch RMSE is represented by None, not a fabricated zero.\n\nAll pairwise metrics require finite floating-point arrays with identical shape\nand sample count, and require estimate_sample_rate (when supplied) to equal\nsample_rate. The default alignment='none' is the only supported alignment.\nNo metric implicitly aligns, resamples, truncates, normalizes loudnes…",
+          "lower": "import metrics from audiosig.metrics; intelligibility functions live in\naudiosig.intelligibility. here, a reference is decoded reference waveform\nsamples, not a transcript or reference text. each function returns a frozen,\nslotted metricresult containing name, value, unit, higher_is_better,\nparameters, and diagnostics. every feature and transformation parameter used\nby a metric is recorded in parameters. value is float | none; undefined\npitch rmse is represented by none, not a fabricated zero.\n\nall pairwise metrics require finite floating-point arrays with identical shape\nand sample count, and require estimate_sample_rate (when supplied) to equal\nsample_rate. the default alignment='none' is the only supported alignment.\nno metric implicitly aligns, resamples, truncates, normalizes loudnes…"
+        },
+        {
+          "anchor": "",
+          "heading": "Formula conventions and comparability",
+          "text": "Let r be the reference waveform and y the estimate. SNR and this package’s\nexplicitly unscaled SDR both use\n\n10 * log10(sum(r**2) / sum((r - y)**2))\n\n\n\n\nThere is no gain fit or centering in these two metrics. A zero-energy reference\nis invalid; an exact reconstruction has zero residual and returns positive\ninfinity. SI-SDR optionally removes each lane’s mean first (default true), then\nflattens the remaining samples and fits one global scale\nalpha = dot(y, r) / dot(r, r). Its score is\n10 * log10(sum((alpha*r)**2) / sum((y - alpha*r)**2)).\n\nLet X_r and X_y be reference/estimate STFTs, and M_r and M_y their\nmel-power features. Means below cover every lane and frame (and, for log-mel,\nevery mel band); spectral distances take an RMS across frequency or mel bands\nbefore averaging lanes and fram…",
+          "lower": "let r be the reference waveform and y the estimate. snr and this package’s\nexplicitly unscaled sdr both use\n\n10 * log10(sum(r**2) / sum((r - y)**2))\n\n\n\n\nthere is no gain fit or centering in these two metrics. a zero-energy reference\nis invalid; an exact reconstruction has zero residual and returns positive\ninfinity. si-sdr optionally removes each lane’s mean first (default true), then\nflattens the remaining samples and fits one global scale\nalpha = dot(y, r) / dot(r, r). its score is\n10 * log10(sum((alpha*r)**2) / sum((y - alpha*r)**2)).\n\nlet x_r and x_y be reference/estimate stfts, and m_r and m_y their\nmel-power features. means below cover every lane and frame (and, for log-mel,\nevery mel band); spectral distances take an rms across frequency or mel bands\nbefore averaging lanes and fram…"
+        },
+        {
+          "anchor": "",
+          "heading": "STOI and ESTOI (audiosig.intelligibility)",
+          "text": "stoi(reference, estimate, *, sample_rate, estimate_sample_rate=None, alignment='none') and estoi(...) return higher-is-better scores. The\nreference is waveform audio, not a transcript. Both effective sample rates must\nbe exactly 10,000 Hz; when estimate_sample_rate is omitted it defaults to\nsample_rate. Inputs must be finite mono float32 or float64 arrays with\nidentical sample counts. Other rates, stereo, unequal lengths, unsupported\nalignment, and fewer than 30 active frames after silence removal are rejected.\nAll transformations are caller-owned: AudioSig does no file decoding, trimming,\nresampling, time alignment, truncation, loudness normalization, or downmixing.\n\nBoth implementations use complete 256-sample frames at a 128-sample hop,\nsymmetric Hann weighting, a 512-point FFT, 15 one…",
+          "lower": "stoi(reference, estimate, *, sample_rate, estimate_sample_rate=none, alignment='none') and estoi(...) return higher-is-better scores. the\nreference is waveform audio, not a transcript. both effective sample rates must\nbe exactly 10,000 hz; when estimate_sample_rate is omitted it defaults to\nsample_rate. inputs must be finite mono float32 or float64 arrays with\nidentical sample counts. other rates, stereo, unequal lengths, unsupported\nalignment, and fewer than 30 active frames after silence removal are rejected.\nall transformations are caller-owned: audiosig does no file decoding, trimming,\nresampling, time alignment, truncation, loudness normalization, or downmixing.\n\nboth implementations use complete 256-sample frames at a 128-sample hop,\nsymmetric hann weighting, a 512-point fft, 15 one…"
+        },
+        {
+          "anchor": "",
           "heading": "amplitude_to_db(amplitude, *, ref=1.0, amin=1e-5, top_db=None)",
           "text": "Convert amplitude to decibels.\n\nParameters:\n\n\namplitude (np.ndarray): Input amplitude values\n\n\nref (float or callable): Reference amplitude (default: 1.0)\n\n\namin (float): Minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): Clip to this range below peak\n\n\n\nReturns: np.ndarray - Decibel values",
           "lower": "convert amplitude to decibels.\n\nparameters:\n\n\namplitude (np.ndarray): input amplitude values\n\n\nref (float or callable): reference amplitude (default: 1.0)\n\n\namin (float): minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): clip to this range below peak\n\n\n\nreturns: np.ndarray - decibel values"
-        },
-        {
-          "anchor": "",
-          "heading": "power_to_db(power, *, ref=1.0, amin=1e-10, top_db=None)",
-          "text": "Convert power to decibels.\n\nParameters:\n\n\npower (np.ndarray): Input power values\n\n\nref (float or callable): Reference power (default: 1.0)\n\n\namin (float): Minimum power floor (default: 1e-10)\n\n\ntop_db (float, optional): Clip to this range below peak\n\n\n\nReturns: np.ndarray - Decibel values",
-          "lower": "convert power to decibels.\n\nparameters:\n\n\npower (np.ndarray): input power values\n\n\nref (float or callable): reference power (default: 1.0)\n\n\namin (float): minimum power floor (default: 1e-10)\n\n\ntop_db (float, optional): clip to this range below peak\n\n\n\nreturns: np.ndarray - decibel values"
-        },
-        {
-          "anchor": "",
-          "heading": "rms(audio, *, axis=-1)",
-          "text": "Compute overall RMS amplitude.\n\nReturns: np.ndarray - RMS value(s)",
-          "lower": "compute overall rms amplitude.\n\nreturns: np.ndarray - rms value(s)"
-        },
-        {
-          "anchor": "",
-          "heading": "abs2(values, *, dtype=None)",
-          "text": "Compute squared magnitude for real or complex values.\n\nReturns: np.ndarray - Squared values",
-          "lower": "compute squared magnitude for real or complex values.\n\nreturns: np.ndarray - squared values"
-        },
-        {
-          "anchor": "",
-          "heading": "frames_to_samples(frames, *, hop_length=512, n_fft=None)",
-          "text": "Convert frame indices to sample indices.\n\nReturns: int or np.ndarray - Sample indices",
-          "lower": "convert frame indices to sample indices.\n\nreturns: int or np.ndarray - sample indices"
-        },
-        {
-          "anchor": "",
-          "heading": "median_filter_numpy(values, size=3, *, window_size=None, mode='edge')",
-          "text": "Apply median filter along the final axis.\n\nParameters:\n\n\nmode (str): Boundary mode (‘edge’ or ‘truncate’)\n\n\n\nReturns: np.ndarray - Filtered values",
-          "lower": "apply median filter along the final axis.\n\nparameters:\n\n\nmode (str): boundary mode (‘edge’ or ‘truncate’)\n\n\n\nreturns: np.ndarray - filtered values"
         }
       ]
     },
     {
       "url": "/tools/audiosig/main/changelog/",
       "title": "audiosig Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded reusable sele …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded NumPy-only sp …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added NumPy-only spectral analysis, pitch tracking, reference metrics, and STOI/ESTOI APIs",
+          "lower": "added numpy-only spectral analysis, pitch tracking, reference metrics, and stoi/estoi apis"
+        },
+        {
+          "anchor": "",
+          "heading": "Changed",
+          "text": "Changed source distributions to exclude project-local ledger state",
+          "lower": "changed source distributions to exclude project-local ledger state"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented analysis APIs, metric formulas, validation rules, and quality-evaluation boundaries",
+          "lower": "documented analysis apis, metric formulas, validation rules, and quality-evaluation boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved regression and quality coverage for spectral, pitch, metric, intelligibility, and packaging behavior",
+          "lower": "improved regression and quality coverage for spectral, pitch, metric, intelligibility, and packaging behavior"
         },
         {
           "anchor": "",
@@ -841,13 +871,13 @@
     {
       "url": "/tools/audiosig/main/",
       "title": "AudioSig",
-      "snippet": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides gain and normalization, resampling, …",
+      "snippet": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides waveform effects, spectral and pitch …",
       "sections": [
         {
           "anchor": "",
           "heading": "AudioSig",
-          "text": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides gain and normalization, resampling, time and pitch\neffects, silence trimming, interval extraction, frame features, and explicit\nvoice-activity detection policies.",
-          "lower": "audiosig is a portable, numpy-only signal-processing layer for speech and tts\napplications. it provides gain and normalization, resampling, time and pitch\neffects, silence trimming, interval extraction, frame features, and explicit\nvoice-activity detection policies."
+          "text": "AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS\napplications. It provides waveform effects, spectral and pitch analysis, and\nreference metrics without model downloads or neural inference. STOI/ESTOI require\nexplicit equal-length mono input at 10 kHz.",
+          "lower": "audiosig is a portable, numpy-only signal-processing layer for speech and tts\napplications. it provides waveform effects, spectral and pitch analysis, and\nreference metrics without model downloads or neural inference. stoi/estoi require\nexplicit equal-length mono input at 10 khz."
         },
         {
           "anchor": "",
@@ -858,8 +888,8 @@
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSmooth Cut-Point Selection\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nTime-varying speech envelopes\n\nResampling Internals\n\nLoudness measurement\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Optimization\n\nIntegration with Other Libraries\n\nDe…",
-          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsmooth cut-point selection\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\ntime-varying speech envelopes\n\nresampling internals\n\nloudness measurement\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance optimization\n\nintegration with other libraries\n\nde…"
+          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nSpectral and Pitch Analysis\n\nReference Metrics\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSmooth Cut-Point Selection\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nTime-varying speech envelopes\n\nResampling Internals\n\nLoudness measurement\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Op…",
+          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nspectral and pitch analysis\n\nreference metrics\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsmooth cut-point selection\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\ntime-varying speech envelopes\n\nresampling internals\n\nloudness measurement\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance op…"
         },
         {
           "anchor": "",
@@ -897,6 +927,12 @@
           "heading": "Listening protocol",
           "text": "For the TD-PSOLA release check, use the corpus categories, randomized A/B or\nABX matrix, listener fields, and promotion gates in\ndocs/td-psola-listening-evaluation-2026-07-31.md.\nNo default change is justified by synthetic metrics alone.\n\nNative pitch shifting changes the spectral envelope along with F0 and therefore\ndoes not currently preserve vocal formants. Larger shifts are expected to be\nmore artifact-prone; this harness records metrics but does not turn them into a\nclaim of studio-grade perceptual quality.",
           "lower": "for the td-psola release check, use the corpus categories, randomized a/b or\nabx matrix, listener fields, and promotion gates in\ndocs/td-psola-listening-evaluation-2026-07-31.md.\nno default change is justified by synthetic metrics alone.\n\nnative pitch shifting changes the spectral envelope along with f0 and therefore\ndoes not currently preserve vocal formants. larger shifts are expected to be\nmore artifact-prone; this harness records metrics but does not turn them into a\nclaim of studio-grade perceptual quality."
+        },
+        {
+          "anchor": "",
+          "heading": "Deterministic reference metrics and intelligibility validation",
+          "text": "Reference metrics are deterministic comparisons of caller-supplied arrays, not\nperceptual ratings. Pairwise tests cover analytic waveform cases, strict shape\nand rate rejection, no hidden alignment/transformation, structured result\nmetadata, and synthetic degradation ordering. A seeded voiced synthetic fixture\nalso verifies that stronger added noise lowers both STOI and ESTOI; this is a\nregression check, not a listening-quality claim.\n\nSTOI and ESTOI were gated on a separate, independent black-box numerical check.\nThe golden fixture uses numpy.random.default_rng(20261008) to generate a\n40,000-sample standard-normal reference and an estimate equal to that reference\nplus 0.2 times an independent standard-normal sequence. With both rates at\n10 kHz, PySTOI 0.4.1 returned STOI 0.95899286891247…",
+          "lower": "reference metrics are deterministic comparisons of caller-supplied arrays, not\nperceptual ratings. pairwise tests cover analytic waveform cases, strict shape\nand rate rejection, no hidden alignment/transformation, structured result\nmetadata, and synthetic degradation ordering. a seeded voiced synthetic fixture\nalso verifies that stronger added noise lowers both stoi and estoi; this is a\nregression check, not a listening-quality claim.\n\nstoi and estoi were gated on a separate, independent black-box numerical check.\nthe golden fixture uses numpy.random.default_rng(20261008) to generate a\n40,000-sample standard-normal reference and an estimate equal to that reference\nplus 0.2 times an independent standard-normal sequence. with both rates at\n10 khz, pystoi 0.4.1 returned stoi 0.95899286891247…"
         }
       ]
     },

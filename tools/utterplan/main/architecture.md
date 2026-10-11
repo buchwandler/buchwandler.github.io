@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "293fe7cd55f2ff61a3ce550946aa64855e3fca71"
+docs_commit: "4abca5cfad32ac0f9c4987dbeadcbafa232c785b"
 search_enabled: true
 ---
 
@@ -542,98 +542,76 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="architecture">
 <h1>Architecture</h1>
-<p>UtterPlan is the canonical renderer-independent compiler from one SSMD document
-(or explicitly selected plain-text document) to an executable semantic speech
-plan. Consumers compile each chapter/document separately; UtterPlan does not load
-books or manage <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> or Readio workspaces.</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>one SSMD document / explicit plain text
-                 |
-                 v
-        parse -&gt; language semantics -&gt; spokenform preparation
-                 -&gt; segmentation -&gt; directive/default resolution
-                 -&gt; pause resolution -&gt; units and semantic identity
-                 |
-                 v
-            UtterancePlan
-              /       \
-     ttsready report   Readio lowering
-                         |
-                         v
-                G2P / renderer / audio
+<p>UtterPlan is an engine-independent compiler from one SSMD document (or explicitly selected plain-text document) to an executable speech plan. It owns document parsing, language runs, source linguistic analysis, SSMD annotation meanings, coordinate mapping, spoken-text analysis, segmentation, directives, pause intent, and FlowPlan construction. It uses TTSReady for reusable written-to-spoken preparation and stops before G2P, synthesis, and audio. Consumers compile documents independently; UtterPlan does not load books or manage workspaces.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SSMD / plain text
+       |
+       v
+UtterPlan parsing + language runs + source analysis
+       | provider-neutral token hints + protected spans + explicit profile
+       v
+TTSReady.prepare_run() -&gt; Spokenform normalization
+       |
+       v
+UtterPlan mapping + spoken analysis + segmentation + directives + pauses
+       |
+       v
+FlowPlan (ordered units and local segments)
+       |
+       v
+Readio / VoiceRender / other FlowPlan consumers
+       |
+       v
+G2P / synthesis / audio (downstream)
 </pre></div>
 </div>
-<p>The dependency direction is <code class="docutils literal notranslate"><span class="pre">ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, and <code class="docutils literal notranslate"><span class="pre">phrasplit</span></code> into UtterPlan,
-then from UtterPlan to consumer packages. UtterPlan must not depend on ttsready,
-Readio, ssmdconvert, engine registries, G2P packages, model runtimes, or audio
-packages. Book iteration belongs to consumers and conversion tools.</p>
-<p>The public <code class="docutils literal notranslate"><span class="pre">compile_document</span></code> entry point returns a <code class="docutils literal notranslate"><span class="pre">CompileResult</span></code> containing a
-portable <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code>, renderer-independent diagnostics, and an optional
-<code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code>. The trace explains preparation for reports/debugging only; it
-is not renderer input, is not stored in the plan, and does not affect plan identity.
-Legacy <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.plan</span></code> remains a compatibility API returning only the
-plan.</p>
-<p>The public <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> Python object is immutable in-process renderer input;
-the <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> document is the portable persistence and semantic interchange
-format; it encodes semantic schema v4. UtterPlan ends before G2P. Engine/model
-selection, synthesis, and audio composition happen downstream.</p>
-<section id="ssmd-source-contract">
-<h2>SSMD source contract</h2>
-<p>The document parser calls SSMD with <code class="docutils literal notranslate"><span class="pre">dialect=&quot;0.9&quot;</span></code> for every SSMD source path,
-including unversioned fragments selected with <code class="docutils literal notranslate"><span class="pre">document_format=&quot;ssmd&quot;</span></code>. UtterPlan
-does not parse SSMD 0.8 or migrate source. Older documents must first be converted
-with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. The <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> command explicitly
-imports legacy JSON plans and applies serialized schema migrations.</p>
-<p>SSMD header language is authoritative over a fallback language. The CLI can omit
-<code class="docutils literal notranslate"><span class="pre">--language</span></code> when the header declares a language; plain input always needs an
-explicit fallback. A fallback never forces or rewrites document semantics.</p>
-<p>Declared annotations remain distinct from effective segment directives.
-<code class="docutils literal notranslate"><span class="pre">plan.annotations</span></code> preserves authored spans, <code class="docutils literal notranslate"><span class="pre">document_metadata</span></code> preserves
-portable header semantics, and <code class="docutils literal notranslate"><span class="pre">segment.directives</span></code> contains resolved
-renderer-neutral values after scope and voice-default resolution. Audio references
-and extension names are preserved as data only. UtterPlan does not retrieve media
-or execute handlers.</p>
-<p>Preparation preserves structural and spoken coordinate spaces. <code class="docutils literal notranslate"><span class="pre">spoken_start</span></code>,
-<code class="docutils literal notranslate"><span class="pre">spoken_end</span></code>, and <code class="docutils literal notranslate"><span class="pre">spoken_position</span></code> refer to prepared text. Renderers must use
-these ranges when consuming <code class="docutils literal notranslate"><span class="pre">PlanSegment.text</span></code>, <code class="docutils literal notranslate"><span class="pre">AnnotationSpan</span></code>, and
-<code class="docutils literal notranslate"><span class="pre">TokenAnnotation</span></code>; structural/source offsets are not valid slices into prepared
-text. Preparation-trace source offsets address SSMD-clean structural text, while
-its transformation output offsets address prepared spoken text.</p>
-<p>Linguistic analysis and provider documents are request-local. Returned plans
-contain plain, round-trippable semantic data only: no live parser objects, spaCy
-documents, models, sessions, provider caches, phonemes, engine token IDs, or audio.
-A reusable planner may share sequential resource caches, but concurrent use is not
-promised.</p>
-<p>The persisted <code class="docutils literal notranslate"><span class="pre">linguistic_runs</span></code> collection describes final pass-B token ranges.
-Pass-A documents and tokens remain request-local because written-to-spoken
-preparation can invalidate their offsets.</p>
-<p>Pause events retain provenance and resolved event IDs. Pause defaults are
-normalized to finite seconds with explicit precedence, and segments expose
-resolved pauses directly. Semantic boundaries are a separate immutable
-collection of stable spoken-text split opportunities; they have no duration,
-activation state, or renderer choice. Logical voices are intent references;
-document <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> metadata remains separate and no concrete engine
-voice is selected.</p>
-<p>Plan identity is deterministic and renderer-independent. It covers semantic source/configuration/metadata; it does not include renderer-only model, sample
-rate, or output-file settings. Unit hashes include ordered segment semantics,
-resolved pauses, marker content, and semantic token facts referenced by each
-segment. Semantic-boundary positions relative to each unit are part of the
-<code class="docutils literal notranslate"><span class="pre">utterplan-unit-v3</span></code> hash; diagnostics and producer metadata do not define unit
-identity. Package version is derived by setuptools-scm and is independent of
-the explicit UtterPlan <code class="docutils literal notranslate"><span class="pre">schema_version</span></code>.</p>
-<p>Current plans persist as deterministic <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> files; schema v4 remains the semantic contract, and <code class="docutils literal notranslate"><span class="pre">plan_id</span></code> is derived from canonical semantic data rather than TOML bytes. <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code> accepts TOML only. Legacy JSON plan import is an explicit migration command, never a normal load fallback.</p>
-<p><code class="docutils literal notranslate"><span class="pre">compile-many</span></code> orchestrates independent source documents in order. Each successful plan is validated and atomically saved before the next source is processed; ordinary failures are reported and later inputs continue unless fail-fast is requested. Its atomically refreshed TOML report is operational data, not an <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code>.</p>
+<p>Dependency layering (each component uses the dependency above it):</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Spokenform
+    ^
+TTSReady
+    ^
+UtterPlan
+    ^
+Readio / VoiceRender / other FlowPlan consumers
+</pre></div>
+</div>
+<p>UtterPlan depends directly on SSMD, PhraseSplit, and TTSReady. TTSReady owns the direct Spokenform integration; production UtterPlan code does not import Spokenform. Readio, VoiceRender, and other consumers consume FlowPlan and may perform downstream G2P, synthesis, and audio work. UtterPlan must not depend on those consumer or engine packages, model runtimes, or audio libraries. Book iteration belongs to consumers and conversion tools.</p>
+<section id="compiler-and-public-plan-boundary">
+<h2>Compiler and public plan boundary</h2>
+<p><code class="docutils literal notranslate"><span class="pre">compile_document</span></code> returns a <code class="docutils literal notranslate"><span class="pre">CompileResult</span></code> containing the current immutable <code class="docutils literal notranslate"><span class="pre">FlowPlan</span></code>, renderer-independent diagnostics, and an optional <code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code>. <code class="docutils literal notranslate"><span class="pre">UtterancePlanner.plan</span></code> also returns <code class="docutils literal notranslate"><span class="pre">FlowPlan</span></code>. Compiler-only normalized graph state remains private. When requested, the trace retains source text/hash, coordinate maps, preparation provenance, diagnostics, and renderability evidence in a separate versioned TOML sidecar. Trace state is not renderer input and does not affect plan identity or TOML.</p>
+<p><code class="docutils literal notranslate"><span class="pre">FlowPlan</span></code> is the current v5 executable contract: ordered <code class="docutils literal notranslate"><span class="pre">FlowUnit</span></code> objects each own ordered <code class="docutils literal notranslate"><span class="pre">FlowSegment</span></code> records. Segments include prepared text, effective language, local tokens with authoritative linguistic facts, optional compact replacement views, semantic pause intents, directives, markers, and optional heading metadata. Replacement spans are local to the final prepared segment text; full source maps remain in the optional trace. <code class="docutils literal notranslate"><span class="pre">DocumentInfo</span></code> retains compact portable document information; <code class="docutils literal notranslate"><span class="pre">LinguisticProvenance</span></code> identifies providers without retaining their documents. UtterPlan ends before G2P. Engine/model selection, synthesis, and audio composition happen downstream.</p>
+</section>
+<section id="compiler-owned-segmentation-topology">
+<h2>Compiler-owned segmentation topology</h2>
+<p>Segmentation has four distinct layers: parser-owned paragraph events define paragraph regions; PhraseSplit supplies advisory sentence-boundary proposals; UtterPlan validates those proposals and owns canonical paragraph, sentence, and private sentence-part spans in prepared spoken-text coordinates; renderer-required language, directive, pause, marker, and media cuts subdivide a part into final segments. Positive-width atomic media spans protect their interiors from automatic sentence/part boundaries; zero-width media events remain renderer operations, not parts. The public v5 <code class="docutils literal notranslate"><span class="pre">FlowPlan</span></code> contains only the resulting compact ordered flow—there is no serialized sentence-parts table.</p>
+<p>PhraseSplit failure or an invalid proposal batch falls back to deterministic, conservative terminal scanning. Unsafe automatic cuts inside provider-aware lexical content are merged or dropped before projection; the final flow-projection token-edge check remains defense in depth. Exact surface and non-whitespace coverage checks run before and after applicable repairs. This normalization is independent of <code class="docutils literal notranslate"><span class="pre">renderability_mode</span></code>: strict and repair compilation use the same topology, while renderability mode governs only the existing punctuation-repair policy. See the <a class="reference internal" href="../coordinate-spaces/"><span class="doc std std-doc">coordinate-space contract</span></a> for offset ownership.</p>
+</section>
+<section id="ssmd-and-preparation">
+<h2>SSMD and preparation</h2>
+<p>The document parser calls SSMD with <code class="docutils literal notranslate"><span class="pre">dialect=&quot;0.9&quot;</span></code> for every SSMD source path, including unversioned fragments selected with <code class="docutils literal notranslate"><span class="pre">document_format=&quot;ssmd&quot;</span></code>. UtterPlan does not parse SSMD 0.8 or migrate source. Older documents must first be converted with <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code>. The <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> command imports serialized legacy plans and applies schema migrations only.</p>
+<p>SSMD header language is authoritative over a fallback. The CLI can omit <code class="docutils literal notranslate"><span class="pre">--language</span></code> when the header declares a language; plain input always needs a fallback. A fallback never forces or rewrites document semantics.</p>
+<p>Preparation creates structural and spoken representations internally. The executable FlowPlan retains prepared segment text and compact segment-local replacement views, but not the complete source string, structural text, full source-to-spoken maps, parser annotations, or global compiler token tables. Detailed diagnostics and complete provenance mappings remain in an optional trace. See the <a class="reference internal" href="../coordinate-spaces/"><span class="doc std std-doc">coordinate-space contract</span></a>.</p>
+</section>
+<section id="pause-and-directive-semantics">
+<h2>Pause and directive semantics</h2>
+<p>Authored SSMD breaks and semantic pause strengths project to local <code class="docutils literal notranslate"><span class="pre">PauseIntent</span></code> values on segment edges. The plan does not invent numeric durations or serialize an activation policy. Application pause mode controls which intents the compiler activates; consumer-specific timing policy remains downstream. Exact authored timed breaks remain exact. Ambiguous historical pause evidence fails migration rather than being guessed.</p>
+<p>Typed directives are renderer-neutral values resolved from SSMD scopes and voice defaults. Logical voice bindings remain references, not concrete engine voices. Audio references and extension names are data only; UtterPlan does not fetch media or execute handlers.</p>
+</section>
+<section id="identity-and-determinism">
+<h2>Identity and determinism</h2>
+<p>Plan identity is deterministic and renderer-independent. The v5 <code class="docutils literal notranslate"><span class="pre">plan_id</span></code> hashes executable flow and compact portable metadata rather than source text or TOML formatting. Flow-unit hashes use <code class="docutils literal notranslate"><span class="pre">utterplan-flow-v1</span></code> over local ordered segment semantics. Trace data, provider documents, model sessions, diagnostics, producer/package version, G2P output, and audio do not define executable identity. Package version is independent of explicit plan <code class="docutils literal notranslate"><span class="pre">schema_version</span></code>.</p>
 </section>
 <section id="persistence-compatibility-boundary">
 <h2>Persistence compatibility boundary</h2>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>current plan file:
-.utterplan.toml -- TOML decode / schema-v4 validation --&gt; UtterancePlan --&gt; renderer
+<p>Current plans persist as deterministic <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> files with schema v5; <code class="docutils literal notranslate"><span class="pre">FlowPlan.load()</span></code> accepts TOML only. The v5 TOML codec validates and constructs <code class="docutils literal notranslate"><span class="pre">FlowPlan</span></code>. Schema v5 deliberately has no JSON Schema resource or current JSON plan format. Frozen JSON Schema definitions for historical schemas v1–v4 remain under versioned resources.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>current plan:
+.utterplan.toml -- TOML decode / schema-v5 validation --&gt; FlowPlan --&gt; consumer
 
 legacy saved plan:
 .utterplan.json -- explicit `utterplan migrate` --&gt; current .utterplan.toml
 </pre></div>
 </div>
-<p>Migration is not planning. UtterPlan owns persistence, schema validation, and migration. Renderers consume only the current in-memory <code class="docutils literal notranslate"><span class="pre">UtterancePlan</span></code> and do not implement historical schema branches.</p>
-<p>Schema v4 is current. Released schemas v1, v2, and v3 remain frozen; supported plans migrate through the registered sequential chain to v4. The v3-to-v4 step transforms serialized data only and does not rerun parsing, NLP, planning, G2P, rendering, or audio processing. Consumers receive only the current in-memory model.</p>
+<p>Migration is not planning. Supported historical plans migrate through the registered sequential chain v1 -&gt; v2 -&gt; v3 -&gt; v4 -&gt; v5. Every step operates on serialized plain data and does not rerun source parsing, preparation, NLP, planning, G2P, rendering, or audio processing. The v4-to-v5 projection verifies token spans and pause evidence and fails rather than guessing. Downgrades are not supported.</p>
+<p><code class="docutils literal notranslate"><span class="pre">compile-many</span></code> orchestrates independent source documents in order. Each successful FlowPlan is validated and atomically saved before the next source is processed; ordinary failures are reported and later inputs continue unless fail-fast is requested. Its TOML report is operational data, not a FlowPlan.</p>
 </section>
 </section>
 </div>

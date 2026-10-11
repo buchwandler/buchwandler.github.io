@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "3addd4cbafca572dc9387caf88efaaa700080526"
+docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
 search_enabled: true
 ---
 
@@ -543,9 +543,9 @@ html[data-theme="dark"] .sphinxpress-doc {
 <section id="audiosig">
 <h1>AudioSig</h1>
 <p>AudioSig is a portable, NumPy-only signal-processing layer for speech and TTS
-applications. It provides gain and normalization, resampling, time and pitch
-effects, silence trimming, interval extraction, frame features, and explicit
-voice-activity detection policies.</p>
+applications. It provides waveform effects, spectral and pitch analysis, and
+reference metrics without model downloads or neural inference. STOI/ESTOI require
+explicit equal-length mono input at 10 kHz.</p>
 <section id="public-behavior">
 <h2>Public behavior</h2>
 <p>The package accepts <code class="docutils literal notranslate"><span class="pre">float32</span></code> and <code class="docutils literal notranslate"><span class="pre">float64</span></code> NumPy arrays and keeps the
@@ -576,6 +576,8 @@ audit status.</p>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#core-functions">Core Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#silence-detection">Silence Detection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#frame-analysis">Frame Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference/#spectral-and-pitch-analysis">Spectral and Pitch Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api-reference/#reference-metrics">Reference Metrics</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#utility-functions">Utility Functions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#exceptions">Exceptions</a></li>
 <li class="toctree-l2"><a class="reference internal" href="api-reference/#type-annotations">Type Annotations</a></li>
@@ -604,6 +606,25 @@ audit status.</p>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#performance-optimization">Performance Optimization</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#integration-with-other-libraries">Integration with Other Libraries</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#debugging-and-profiling">Debugging and Profiling</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="quality-evaluation/">Speech effects quality evaluation</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="quality-evaluation/#local-comparison-harness">Local comparison harness</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-evaluation/#time-varying-envelope-evaluation">Time-varying envelope evaluation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-evaluation/#listening-protocol">Listening protocol</a></li>
+<li class="toctree-l2"><a class="reference internal" href="quality-evaluation/#deterministic-reference-metrics-and-intelligibility-validation">Deterministic reference metrics and intelligibility validation</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.7] - 2026-10-08</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.6] - 2026-09-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.5] - 2026-09-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.4] - 2026-09-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.1.3] - 2026-09-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.2] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.1.1] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.0] - 2026-07-31</a></li>
 </ul>
 </li>
 </ul>

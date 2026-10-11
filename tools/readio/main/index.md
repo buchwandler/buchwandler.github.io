@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "260803aa205479dfd9ab134e49f14f15835769b6"
+docs_commit: "6a36172da82dfd816b4c77ce3ca38ec739ecf343"
 search_enabled: true
 ---
 
@@ -570,7 +570,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;readio[kokoro,gpu]&quot;</span>
 </pre></div>
 </div>
-<p>Install Piper, Pocket, Supertonic, or Kitten with <code class="docutils literal notranslate"><span class="pre">readio[piper,cpu]</span></code>, <code class="docutils literal notranslate"><span class="pre">readio[pocket]</span></code>, <code class="docutils literal notranslate"><span class="pre">readio[supertonic]</span></code>, or <code class="docutils literal notranslate"><span class="pre">readio[kitten]</span></code>. The <code class="docutils literal notranslate"><span class="pre">readio[all,cpu]</span></code> extra installs all engine packages for a CPU environment.</p>
+<p>Install Piper, Pocket, Supertonic, Kitten, or Inflect with <code class="docutils literal notranslate"><span class="pre">readio[piper,cpu]</span></code>, <code class="docutils literal notranslate"><span class="pre">readio[pocket]</span></code>, <code class="docutils literal notranslate"><span class="pre">readio[supertonic]</span></code>, <code class="docutils literal notranslate"><span class="pre">readio[kitten]</span></code>, or <code class="docutils literal notranslate"><span class="pre">readio[inflect]</span></code>. The <code class="docutils literal notranslate"><span class="pre">readio[all,cpu]</span></code> extra installs all engine packages for a CPU environment.</p>
 <p>Engine packages may download model, voice, or bundle assets on first use. Spotify publishing additionally requires the separately installed and authenticated <code class="docutils literal notranslate"><span class="pre">save-to-spotify</span></code> executable.</p>
 </section>
 <section id="quick-start">
@@ -630,7 +630,7 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>--voice VOICE             engine voice ID
 --voice-file PATH         PocketSynth reference WAV
 --voice-prompt REF        PocketSynth managed reference prompt
---engine ENGINE           kokoro, piper, pocket, supertonic, or kitten
+--engine ENGINE           kokoro, piper, pocket, supertonic, kitten, or inflect
 --model TARGET            model or engine-specific target ID
 --precision int8|fp32     PocketSynth bundle precision
 --temperature FLOAT       PocketSynth generation temperature
@@ -653,12 +653,16 @@ cat<span class="w"> </span>README.md<span class="w"> </span><span class="p">|</s
 --unit UNIT               sentence or paragraph
 
 Readio&#39;s short-sentence default is `phrase`; Readio resolves the policy before engine adapters translate it to engine-native settings.
-Readio requires SSMD &gt;=0.9.3,&lt;0.10 and UtterPlan &gt;=0.4.0,&lt;0.5. Project plans use canonical UtterPlan schema-v4 TOML artifacts; the `readio.plan.v2` response remains JSON. It supports PyKokoro &gt;=0.10.2,&lt;0.11, PiperSynth &gt;=0.2.1,&lt;0.3, PocketSynth &gt;=0.2.5,&lt;0.3, SupertonicSynth &gt;=0.1.2,&lt;0.2, and KittenSynth &gt;=0.1.1,&lt;0.2; each engine package owns its own runtime dependencies and Readio does not require OnnxVoice. Canonical engine IDs are `kokoro`, `piper`, `pocket`, `supertonic`, and `kitten`. Install engines with the matching optional extra; `readio doctor` checks each installed package&#39;s public request API without downloading models.
+Readio requires SSMD &gt;=0.9.3,&lt;0.10 and UtterPlan &gt;=0.4.0,&lt;0.5. Project plans use canonical UtterPlan schema-v4 TOML artifacts; the `readio.plan.v2` response remains JSON. It supports PyKokoro &gt;=0.10.2,&lt;0.11, PiperSynth &gt;=0.2.1,&lt;0.3, PocketSynth &gt;=0.2.5,&lt;0.3, SupertonicSynth &gt;=0.1.2,&lt;0.2, KittenSynth &gt;=0.1.1,&lt;0.2, and InflectSynth &gt;=0.1.1,&lt;0.2; each engine package owns its own runtime dependencies and Readio does not require OnnxVoice. Canonical engine IDs are `kokoro`, `piper`, `pocket`, `supertonic`, `kitten`, and `inflect`; package names such as `inflectsynth` are input aliases. Install engines with the matching optional extra; `readio doctor` checks each installed package&#39;s public request API without downloading models.
+
+
+InflectSynth uses public metadata discovery for current targets including `nano-v2` and `micro-v2`, each with the fixed `default` voice. It is English-only; unsupported languages and explicit speaker selection, reference voices, pronunciation overrides, or native word timings are rejected. Readio owns request boundaries and capacity policy; InflectSynth owns G2P and model/runtime internals, while ONNXVoice remains a transitive dependency rather than a Readio import. InflectSynth 0.1.1&#39;s public capacity contract does not report a trustworthy maximum, so Readio treats capacity as unknown and does not guess a token limit. Shared speed and voice-level calibration are available in the CLI; API clients can also pass variation and seed through `SynthesisRequest.engine_options`.
+
 Readio&#39;s built-in `pause_mode` is `auto`; an explicit `[reader] pause_mode` setting or `--pause-mode tts|manual|auto` override takes precedence.
 
-Speed is an engine synthesis multiplier, not a composition tempo. Kokoro receives the value directly, PiperSynth uses its reciprocal as `length_scale`, PocketSynth rejects explicit values other than `1.0`, and Supertonic forwards the multiplier to its atomic API.
+Speed is an engine synthesis multiplier, not a composition tempo. Kokoro receives the value directly, PiperSynth uses its reciprocal as `length_scale`, PocketSynth rejects explicit values other than `1.0`, and Supertonic and InflectSynth forward the multiplier to their native APIs.
 
-Readio, not the engine adapter, owns text-capacity fitting and exact-text subdivision. Adapters synthesize one strict request at a time and do not call native splitters. Readio preserves legal linguistic and pronunciation boundaries and fails when an oversized request has no legal split.
+Readio, not the engine adapter, owns text-capacity fitting and exact-text subdivision. Adapters synthesize one strict request at a time and do not call native splitters. Readio preserves legal linguistic and pronunciation boundaries and fails when an oversized request has no legal split. InflectSynth 0.1.1 does not advertise a known maximum, so Readio does not apply a guessed token limit.
 
 ```bash
 readio models list --language de --offline
@@ -672,13 +676,18 @@ readio render --lang de --file notes.md
 readio lexicons list --lang de --offline --json
 readio lexicons show crane --lang de --offline --json
 readio voices list --engine supertonic --lang en-us
+
+readio voices list --engine inflect --lang en-us
+readio voices show inflect:nano-v2/default
+readio render --engine inflect --model nano-v2 --voice default --lang en-us &quot;Hello from Inflect.&quot;
+
 readio voices prompts --engine pocket --dataset alba
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">--voice</span></code>, <code class="docutils literal notranslate"><span class="pre">--voice-file</span></code>, and <code class="docutils literal notranslate"><span class="pre">--voice-prompt</span></code> selectors are mutually exclusive. Managed prompts are Pocket-only and apply to the default synthesis voice, not per-role bindings.</p>
 <p><code class="docutils literal notranslate"><span class="pre">models</span></code>, <code class="docutils literal notranslate"><span class="pre">voices</span></code>, and <code class="docutils literal notranslate"><span class="pre">lexicons</span></code> enumerate targets from the unified engine registry. They are metadata-only and do not load model weights or instantiate ONNX runtimes. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">prompts</span></code> separately lists Pocket managed-prompt metadata without opening a model or fetching prompt audio. Offline mode uses cached catalogs; refresh updates catalog metadata only.
 <code class="docutils literal notranslate"><span class="pre">--model-source</span></code> applies only to engines that advertise distribution-source selection. Voice rosters are target-scoped where the engine exposes them, and lexicons are listed only for engines that support lexicon discovery. SSMD preflight validates role targets against the selected engine catalog.
-Readio uses <code class="docutils literal notranslate"><span class="pre">readio.engines</span></code> as its sole engine registry. The registered engines are <code class="docutils literal notranslate"><span class="pre">kokoro</span></code>, <code class="docutils literal notranslate"><span class="pre">piper</span></code>, <code class="docutils literal notranslate"><span class="pre">pocket</span></code>, <code class="docutils literal notranslate"><span class="pre">supertonic</span></code>, and <code class="docutils literal notranslate"><span class="pre">kitten</span></code>; aliases are normalized before target resolution. Lexicon operations reject engines that do not advertise lexicon support.</p>
+Readio uses <code class="docutils literal notranslate"><span class="pre">readio.engines</span></code> as its sole engine registry. The registered engines are <code class="docutils literal notranslate"><span class="pre">kokoro</span></code>, <code class="docutils literal notranslate"><span class="pre">piper</span></code>, <code class="docutils literal notranslate"><span class="pre">pocket</span></code>, <code class="docutils literal notranslate"><span class="pre">supertonic</span></code>, <code class="docutils literal notranslate"><span class="pre">kitten</span></code>, and <code class="docutils literal notranslate"><span class="pre">inflect</span></code>; aliases such as <code class="docutils literal notranslate"><span class="pre">inflectsynth</span></code> are normalized before target resolution. Lexicon operations reject engines that do not advertise lexicon support.</p>
 </section>
 <section id="synthesis-planning">
 <h2>Synthesis planning</h2>
@@ -739,45 +748,70 @@ readio<span class="w"> </span>config<span class="w"> </span>validate
 readio<span class="w"> </span>config<span class="w"> </span><span class="nb">set</span><span class="w"> </span>reader.pause_mode<span class="w"> </span>auto
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML schema 3; Readio does not silently load v0.3 provider-specific voice tables. Migrate existing files explicitly with <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">config</span> <span class="pre">migrate</span></code>; conflicts stop for review, and the source is backed up.</p>
-<p>The main sections are:</p>
+<p><code class="docutils literal notranslate"><span class="pre">READIO_CONFIG</span></code> overrides the default configuration file path. Configuration is TOML schema 3; Readio does not silently load v0.3 provider-specific voice tables. Migrate existing files explicitly with <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">config</span> <span class="pre">migrate</span></code>; conflicts stop for review, and the source is backed up. Legacy authoring keys (<code class="docutils literal notranslate"><span class="pre">paths.templates</span></code>, <code class="docutils literal notranslate"><span class="pre">paths.ingest</span></code>, and <code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code> validation/roundtrip options) warn, are ignored, and are omitted from new writes; Readio leaves existing authoring files and directories untouched.
+The main sections are:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">[reader]</span></code>: ordinary voice, language, speed, pause, unit, playback queue/device, and linguistic planning settings.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[ssmd]</span></code>: SSMD validation behavior.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: user template, ingest, and audio output directories.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[paths]</span></code>: runtime audio output directory.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[roles.&lt;role&gt;]</span></code>: engine-qualified role targets (<code class="docutils literal notranslate"><span class="pre">engine</span></code>, <code class="docutils literal notranslate"><span class="pre">voice</span></code>, and optional <code class="docutils literal notranslate"><span class="pre">target_id</span></code>).</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">[languages.&lt;locale&gt;]</span></code>: validated model, source, quality, voice, ordered lexicons, and language policies.</p></li>
 </ul>
 <p>Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">roles</span> <span class="pre">bind</span></code> to persist a global target, for example <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">roles</span> <span class="pre">bind</span> <span class="pre">analyst</span> <span class="pre">kokoro:v1.0/am_michael</span></code>. For a v0.3 project manifest, run <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">project</span> <span class="pre">migrate</span> <span class="pre">PROJECT</span></code> before opening the project; project migration also keeps a backup and rejects conflicting role bindings rather than guessing.</p>
 </section>
-<section id="templates-and-ingest-files">
-<h2>Templates and ingest files</h2>
-<p>Templates are copied from the package into the user template directory during initialization. User copies are not overwritten by normal initialization.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>template<span class="w"> </span>list
-readio<span class="w"> </span>template<span class="w"> </span>show<span class="w"> </span>podcast
-readio<span class="w"> </span>template<span class="w"> </span>validate<span class="w"> </span>--all
-readio<span class="w"> </span>template<span class="w"> </span>use<span class="w"> </span>podcast<span class="w"> </span>--name<span class="w"> </span>weekly-review.ssmd
+<section id="create-ssmd-with-ssmdstudio">
+<h2>Create SSMD with SSMDStudio</h2>
+<p>Readio consumes portable <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> and <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> files; SSMDStudio owns creation, starter templates, LLM prompts, portable binding materialization, and structural/roundtrip lint. SSMDStudio 0.1.1 is the verified authoring handoff. Install its authoring tools separately. If bundled starters are not in the user library, restore them intentionally with <code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">template</span> <span class="pre">reset</span> <span class="pre">--all</span></code>:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ssmdstudio[authoring]==0.1.1&quot;</span>
+ssmdstudio<span class="w"> </span>template<span class="w"> </span>list
+ssmdstudio<span class="w"> </span>template<span class="w"> </span>use<span class="w"> </span>podcast<span class="w"> </span>--output<span class="w"> </span>episode.ssmd.md
+ssmdstudio<span class="w"> </span>draft<span class="w"> </span>new<span class="w"> </span>--output<span class="w"> </span>draft.ssmd.md<span class="w"> </span>--template<span class="w"> </span>podcast
+ssmdstudio<span class="w"> </span>ssmd<span class="w"> </span>lint<span class="w"> </span>episode.ssmd.md<span class="w"> </span>--roundtrip<span class="w"> </span>--json
 </pre></div>
 </div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--roundtrip</span></code> with template validation for strict SSMD authoring checks. <code class="docutils literal notranslate"><span class="pre">template</span> <span class="pre">reset</span> <span class="pre">NAME</span></code> restores a packaged template intentionally.</p>
-<p>Ingest files are retained in the configured ingest directory for later editing or rendering:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>ingest<span class="w"> </span>path
-readio<span class="w"> </span>ingest<span class="w"> </span>new<span class="w"> </span>--name<span class="w"> </span>notes.txt
-readio<span class="w"> </span>ingest<span class="w"> </span>new<span class="w"> </span>--template<span class="w"> </span>podcast<span class="w"> </span>--name<span class="w"> </span>weekly-review.ssmd
-readio<span class="w"> </span>ingest<span class="w"> </span>list
+<p>Use <code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">FILE</span> <span class="pre">--provider</span> <span class="pre">PROVIDER</span> <span class="pre">--voice-bind</span> <span class="pre">ROLE=VOICE</span> <span class="pre">--output</span> <span class="pre">OUTPUT</span></code> to write explicit portable bindings. Then let Readio check local consumer compatibility and render readiness:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.bound.ssmd.md<span class="w"> </span>--json
+readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w"> </span>episode.bound.ssmd.md<span class="w"> </span>--dry-run<span class="w"> </span>--json
 </pre></div>
 </div>
-<p>Automatic artifact names contain a UTC timestamp and random suffix. Explicit ingest names must be single filenames below the ingest directory.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Former Readio command</p></th>
+<th class="head"><p>SSMDStudio 0.1.1 replacement / boundary</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">template</span> <span class="pre">list/show/add/remove/reset</span></code></p></td>
+<td><p>Corresponding <code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">template</span></code> command</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">template</span> <span class="pre">validate</span> <span class="pre">--all</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">template</span> <span class="pre">validate</span> <span class="pre">--all</span> <span class="pre">--roundtrip</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">template</span> <span class="pre">use</span> <span class="pre">NAME</span> <span class="pre">--name</span> <span class="pre">FILE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">template</span> <span class="pre">use</span> <span class="pre">NAME</span> <span class="pre">--output</span> <span class="pre">FILE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ingest</span> <span class="pre">new</span> <span class="pre">--name</span> <span class="pre">FILE</span> <span class="pre">[--template</span> <span class="pre">NAME]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">draft</span> <span class="pre">new</span> <span class="pre">--output</span> <span class="pre">FILE</span> <span class="pre">[--template</span> <span class="pre">NAME]</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ingest</span> <span class="pre">path/list</span></code></p></td>
+<td><p>No managed ingest directory; use filesystem paths. Existing data is untouched.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">...</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">...</span></code>; this writes the source but does not verify local voice availability.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ssmd</span> <span class="pre">check</span> <span class="pre">FILE</span> <span class="pre">--roundtrip</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">ssmd</span> <span class="pre">lint</span> <span class="pre">FILE</span> <span class="pre">--roundtrip</span></code>; Readio check remains consumer-only.</p></td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="ssmd-documents">
-<h2>SSMD documents</h2>
-<p>Files ending in <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> are parsed as SSMD. Readio runs consumer preflight before rendering when <code class="docutils literal notranslate"><span class="pre">ssmd.validate_before_render</span></code> is enabled:</p>
+<section id="ssmd-consumer-checks">
+<h2>SSMD consumer checks</h2>
+<p>Files ending in <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> are parsed as SSMD. Readio always performs consumer preflight during planning; <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ssmd</span> <span class="pre">check</span></code> is an explicit no-audio check of rendering compatibility and voice bindings:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd
 readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd<span class="w"> </span>--json
-readio<span class="w"> </span>ssmd<span class="w"> </span>check<span class="w"> </span>episode.ssmd<span class="w"> </span>--roundtrip
 </pre></div>
 </div>
-<p>Document-local SSMD <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> remain authoritative in their external namespace. Readio resolves missing references against explicit invocation bindings, engine-qualified project and global roles, and the selected engine’s configured voice. A document containing the same role in multiple namespaces is ambiguous and fails before model inference.</p>
+<p>Structural and roundtrip authoring lint belongs to SSMDStudio (<code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">ssmd</span> <span class="pre">lint</span> <span class="pre">FILE</span> <span class="pre">--roundtrip</span></code>). Document-local SSMD <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> remain authoritative in their external namespace. Readio resolves missing references against explicit invocation bindings, engine-qualified project and global roles, and the selected engine’s configured voice. A document containing the same role in multiple namespaces is ambiguous and fails before model inference.</p>
 <p>Plain text remains the default for one-voice narration. Use SSMD when the document needs multiple speakers, logical roles, marks, or chapters.</p>
 </section>
 <section id="spotify-publishing">
@@ -800,7 +834,7 @@ readio<span class="w"> </span>spotify<span class="w"> </span>doctor<span class="
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>doctor
 </pre></div>
 </div>
-<p>The local doctor is human-readable by default and supports <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code>. It reports configuration, directories, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">spotify</span> <span class="pre">doctor</span></code> for the explicit external integration check.
+<p>The local doctor is human-readable by default and supports <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code>. It reports configuration, Readio’s runtime output directory, dependencies, format availability, and the upstream executable/version probe without authentication or token access. Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">spotify</span> <span class="pre">doctor</span></code> for the explicit external integration check.
 Use <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">doctor</span> <span class="pre">--json</span></code> to inspect each engine’s structured API status (<code class="docutils literal notranslate"><span class="pre">adapter_unavailable</span></code>, <code class="docutils literal notranslate"><span class="pre">package_missing</span></code>, <code class="docutils literal notranslate"><span class="pre">api_incompatible</span></code>, <code class="docutils literal notranslate"><span class="pre">api_version_incompatible</span></code>, <code class="docutils literal notranslate"><span class="pre">api_probe_failed</span></code>, or <code class="docutils literal notranslate"><span class="pre">ready</span></code>), imported module version/path, missing public names, and captured error details. A transitive or lazy-import failure is reported separately from a genuinely missing symbol. Probing does not download models or run inference, and Readio does not fall back to a legacy pipeline when the published API is incompatible.</p>
 <p>Run the test suite and lint checks from a development checkout:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pytest
@@ -817,7 +851,7 @@ readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w">
 readio<span class="w"> </span>voices<span class="w"> </span>show<span class="w"> </span>kokoro:v1.0/af_heart<span class="w"> </span>--json
 readio<span class="w"> </span>roles<span class="w"> </span>list<span class="w"> </span>--engine<span class="w"> </span>kokoro
 
-For<span class="w"> </span>a<span class="w"> </span>selected<span class="w"> </span>model,<span class="w"> </span>inspect<span class="w"> </span>concrete<span class="w"> </span>voices<span class="w"> </span>with<span class="w"> </span><span class="sb">`</span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--lang<span class="w"> </span>LANG<span class="w"> </span>--json<span class="sb">`</span>.<span class="w"> </span>References<span class="w"> </span>use<span class="w"> </span><span class="sb">`</span>SYSTEM:TARGET<span class="o">[</span>/VOICE<span class="o">]</span><span class="sb">`</span>,<span class="w"> </span>such<span class="w"> </span>as<span class="w"> </span><span class="sb">`</span>kokoro:v1.0/af_heart<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>piper:en_US-amy-medium<span class="sb">`</span>,<span class="w"> </span>or<span class="w"> </span><span class="sb">`</span>pocket:english_2026-04/alba<span class="sb">`</span><span class="p">;</span><span class="w"> </span>numbered<span class="w"> </span>voice<span class="w"> </span>selectors<span class="w"> </span>are<span class="w"> </span>removed.<span class="w"> </span><span class="sb">`</span>--engine<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>--model<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>--lang<span class="sb">`</span>,<span class="w"> </span>and<span class="w"> </span><span class="sb">`</span>--gender<span class="sb">`</span><span class="w"> </span>filter<span class="w"> </span>catalog<span class="w"> </span>metadata.<span class="w"> </span>Native<span class="w"> </span>voice<span class="w"> </span>IDs<span class="w"> </span>need<span class="w"> </span>enough<span class="w"> </span>discovery<span class="w"> </span>context<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> </span>uniquely<span class="p">;</span><span class="w"> </span>prefer<span class="w"> </span>a<span class="w"> </span>semantic<span class="w"> </span>reference<span class="w"> </span>when<span class="w"> </span>the<span class="w"> </span>target<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>explicit.<span class="w"> </span>Document<span class="w"> </span>bindings<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>invocation<span class="w"> </span>bindings,<span class="w"> </span>which<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>configured<span class="w"> </span>portable<span class="w"> </span>roles.
+For<span class="w"> </span>a<span class="w"> </span>selected<span class="w"> </span>model,<span class="w"> </span>inspect<span class="w"> </span>concrete<span class="w"> </span>voices<span class="w"> </span>with<span class="w"> </span><span class="sb">`</span>readio<span class="w"> </span>voices<span class="w"> </span>list<span class="w"> </span>--model<span class="w"> </span>MODEL<span class="w"> </span>--lang<span class="w"> </span>LANG<span class="w"> </span>--json<span class="sb">`</span>.<span class="w"> </span>References<span class="w"> </span>use<span class="w"> </span><span class="sb">`</span>SYSTEM:TARGET<span class="o">[</span>/VOICE<span class="o">]</span><span class="sb">`</span>,<span class="w"> </span>such<span class="w"> </span>as<span class="w"> </span><span class="sb">`</span>kokoro:v1.0/af_heart<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>piper:en_US-amy-medium<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>pocket:english_2026-04/alba<span class="sb">`</span>,<span class="w"> </span>or<span class="w"> </span><span class="sb">`</span>inflect:nano-v2/default<span class="sb">`</span><span class="p">;</span><span class="w"> </span>numbered<span class="w"> </span>voice<span class="w"> </span>selectors<span class="w"> </span>are<span class="w"> </span>removed.<span class="w"> </span><span class="sb">`</span>--engine<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>--model<span class="sb">`</span>,<span class="w"> </span><span class="sb">`</span>--lang<span class="sb">`</span>,<span class="w"> </span>and<span class="w"> </span><span class="sb">`</span>--gender<span class="sb">`</span><span class="w"> </span>filter<span class="w"> </span>catalog<span class="w"> </span>metadata.<span class="w"> </span>Native<span class="w"> </span>voice<span class="w"> </span>IDs<span class="w"> </span>need<span class="w"> </span>enough<span class="w"> </span>discovery<span class="w"> </span>context<span class="w"> </span>to<span class="w"> </span>resolve<span class="w"> </span>uniquely<span class="p">;</span><span class="w"> </span>prefer<span class="w"> </span>a<span class="w"> </span>semantic<span class="w"> </span>reference<span class="w"> </span>when<span class="w"> </span>the<span class="w"> </span>target<span class="w"> </span>must<span class="w"> </span>be<span class="w"> </span>explicit.<span class="w"> </span>Document<span class="w"> </span>bindings<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>invocation<span class="w"> </span>bindings,<span class="w"> </span>which<span class="w"> </span>take<span class="w"> </span>precedence<span class="w"> </span>over<span class="w"> </span>configured<span class="w"> </span>portable<span class="w"> </span>roles.
 Use<span class="w"> </span><span class="sb">`</span>readio<span class="w"> </span>roles<span class="w"> </span><span class="nb">bind</span><span class="w"> </span>ROLE<span class="w"> </span>REF<span class="sb">`</span><span class="w"> </span><span class="k">for</span><span class="w"> </span>an<span class="w"> </span>explicit<span class="w"> </span>persistent<span class="w"> </span>mapping.<span class="w"> </span>Native<span class="w"> </span>voice<span class="w"> </span>IDs<span class="w"> </span>can<span class="w"> </span>be<span class="w"> </span>used<span class="w"> </span>when<span class="w"> </span>their<span class="w"> </span>engine<span class="w"> </span>and<span class="w"> </span>target<span class="w"> </span>resolve<span class="w"> </span>uniquely.<span class="w"> </span>For<span class="w"> </span>automation,<span class="w"> </span>pass<span class="w"> </span>missing<span class="w"> </span>logical<span class="w"> </span>roles<span class="w"> </span>only<span class="w"> </span><span class="k">for</span><span class="w"> </span>one<span class="w"> </span>invocation:
 
 <span class="sb">```</span>bash
@@ -826,7 +860,7 @@ readio<span class="w"> </span>render<span class="w"> </span>--file<span class="w
 <span class="w">  </span>--voice-bind<span class="w"> </span><span class="nv">architect</span><span class="o">=</span>kokoro:v1.0/am_michael
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is an explicit interactive convenience. It prompts once per unique missing role only on a usable TTY and never persists choices. JSON and non-TTY execution never prompts. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">FILE</span> <span class="pre">--voice-bind</span> <span class="pre">ROLE=REF</span> <span class="pre">-o</span> <span class="pre">OUTPUT.ssmd</span></code> is the explicit source-materialization workflow; ordinary <code class="docutils literal notranslate"><span class="pre">speak</span></code>, <code class="docutils literal notranslate"><span class="pre">render</span></code>, and <code class="docutils literal notranslate"><span class="pre">spotify</span></code> commands do not mutate SSMD.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--resolve-voices</span></code> is an explicit interactive convenience. It prompts once per unique missing role only on a usable TTY and never persists choices. JSON and non-TTY execution never prompts. For portable source binding materialization, use <code class="docutils literal notranslate"><span class="pre">ssmdstudio</span> <span class="pre">ssmd</span> <span class="pre">bind</span> <span class="pre">FILE</span> <span class="pre">--provider</span> <span class="pre">PROVIDER</span> <span class="pre">--voice-bind</span> <span class="pre">ROLE=REF</span> <span class="pre">--output</span> <span class="pre">OUTPUT</span></code>; Readio does not write SSMD source.</p>
 </section>
 </section>
 </div>

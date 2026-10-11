@@ -5,8 +5,8 @@ permalink: /tools/audiosig/api-reference/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.6"
-docs_commit: "3addd4cbafca572dc9387caf88efaaa700080526"
+docs_ref: "v0.1.7"
+docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
 search_enabled: true
 ---
 
@@ -1007,6 +1007,197 @@ higher pitched; values below one make it longer and lower pitched. Use
 <li><p><code class="docutils literal notranslate"><span class="pre">normalize</span></code> (bool): Normalize to [0, 1] range (default: False)</p></li>
 </ul>
 <p><strong>Returns:</strong> np.ndarray - Spectral flux values per frame</p>
+</section>
+</section>
+<hr class="docutils" />
+<section id="spectral-and-pitch-analysis">
+<h2>Spectral and Pitch Analysis</h2>
+<p>These stable submodule APIs are imported from <code class="docutils literal notranslate"><span class="pre">audiosig.spectral</span></code> and
+<code class="docutils literal notranslate"><span class="pre">audiosig.pitch</span></code>; they are intentionally not re-exported through the root
+namespace.</p>
+<section id="spectral-features-audiosig-spectral">
+<h3>Spectral features (<code class="docutils literal notranslate"><span class="pre">audiosig.spectral</span></code>)</h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">stft(audio,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">center=True)</span></code> returns the existing
+Hann-windowed complex STFT with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_fft</span> <span class="pre">//</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">frames)</span></code>.
+It preserves the private spectral path’s conventions.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">istft(spectrum,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">length=None,</span> <span class="pre">center=True,</span> <span class="pre">dtype=np.float64)</span></code> uses the existing overlap-add inverse and returns
+<code class="docutils literal notranslate"><span class="pre">float32</span></code> or <code class="docutils literal notranslate"><span class="pre">float64</span></code> samples.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">power_spectrogram(audio,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">center=True,</span> <span class="pre">power=2.0)</span></code>
+returns linear <code class="docutils literal notranslate"><span class="pre">abs(STFT)</span> <span class="pre">**</span> <span class="pre">power</span></code>, without normalization or dB conversion.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mel_filterbank(*,</span> <span class="pre">sample_rate,</span> <span class="pre">n_fft,</span> <span class="pre">n_mels,</span> <span class="pre">f_min=0.0,</span> <span class="pre">f_max=None,</span> <span class="pre">mel_scale='slaney',</span> <span class="pre">norm='slaney')</span></code> creates Slaney mel triangles on exact
+real-FFT bin centers. <code class="docutils literal notranslate"><span class="pre">norm=None</span></code> disables area normalization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mel_spectrogram(...,</span> <span class="pre">log=False,</span> <span class="pre">log_floor=1e-10)</span></code> returns linear mel power
+by default. <code class="docutils literal notranslate"><span class="pre">log=True</span></code> returns <code class="docutils literal notranslate"><span class="pre">ln(max(mel_power,</span> <span class="pre">log_floor))</span></code>; it does not
+apply a power-to-dB transform.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mfcc(...,</span> <span class="pre">n_fft=1024,</span> <span class="pre">hop_length=256,</span> <span class="pre">n_mfcc=13,</span> <span class="pre">n_mels=40,</span> <span class="pre">center=True,</span> <span class="pre">...)</span></code> computes an orthonormal DCT-II of natural-log mel power. Output shape is
+<code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_mfcc,</span> <span class="pre">frames)</span></code>; coefficient zero is included.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frame_times(n_frames,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">hop_length,</span> <span class="pre">frame_length=None,</span> <span class="pre">center=True)</span></code> returns frame-center times in seconds. For <code class="docutils literal notranslate"><span class="pre">center=False</span></code>,
+<code class="docutils literal notranslate"><span class="pre">frame_length</span></code> is required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_frames(reference,</span> <span class="pre">estimate,</span> <span class="pre">*,</span> <span class="pre">frame_axis=-1)</span></code> accepts only arrays with
+identical shape. It validates correspondence and never crops or aligns.</p></li>
+</ul>
+</section>
+<section id="pitch-tracking-audiosig-pitch">
+<h3>Pitch tracking (<code class="docutils literal notranslate"><span class="pre">audiosig.pitch</span></code>)</h3>
+<p><code class="docutils literal notranslate"><span class="pre">PitchTrack</span></code> is a frozen, slotted result object with <code class="docutils literal notranslate"><span class="pre">frame_times_s</span></code>, <code class="docutils literal notranslate"><span class="pre">f0_hz</span></code>,
+<code class="docutils literal notranslate"><span class="pre">voiced</span></code>, and <code class="docutils literal notranslate"><span class="pre">confidence</span></code> arrays. <code class="docutils literal notranslate"><span class="pre">pitch_track(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">hop_length=None,</span> <span class="pre">f0_min=60.0,</span> <span class="pre">f0_max=500.0)</span></code> accepts only mono arrays shaped
+<code class="docutils literal notranslate"><span class="pre">(samples,)</span></code>. The optional hop changes analysis geometry; <code class="docutils literal notranslate"><span class="pre">None</span></code> preserves the
+legacy tracker default. Callers with multiple channels must explicitly select a
+channel or downmix before analysis. Unvoiced frames are identified by <code class="docutils literal notranslate"><span class="pre">voiced</span></code>;
+consult the track’s voicing mask rather than treating all F0 values as speech
+pitch.</p>
+</section>
+</section>
+<section id="reference-metrics">
+<h2>Reference Metrics</h2>
+<p>Import metrics from <code class="docutils literal notranslate"><span class="pre">audiosig.metrics</span></code>; intelligibility functions live in
+<code class="docutils literal notranslate"><span class="pre">audiosig.intelligibility</span></code>. Here, a reference is decoded reference waveform
+samples, not a transcript or reference text. Each function returns a frozen,
+slotted <code class="docutils literal notranslate"><span class="pre">MetricResult</span></code> containing <code class="docutils literal notranslate"><span class="pre">name</span></code>, <code class="docutils literal notranslate"><span class="pre">value</span></code>, <code class="docutils literal notranslate"><span class="pre">unit</span></code>, <code class="docutils literal notranslate"><span class="pre">higher_is_better</span></code>,
+<code class="docutils literal notranslate"><span class="pre">parameters</span></code>, and <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code>. Every feature and transformation parameter used
+by a metric is recorded in <code class="docutils literal notranslate"><span class="pre">parameters</span></code>. <code class="docutils literal notranslate"><span class="pre">value</span></code> is <code class="docutils literal notranslate"><span class="pre">float</span> <span class="pre">|</span> <span class="pre">None</span></code>; undefined
+pitch RMSE is represented by <code class="docutils literal notranslate"><span class="pre">None</span></code>, not a fabricated zero.</p>
+<p>All pairwise metrics require finite floating-point arrays with identical shape
+and sample count, and require <code class="docutils literal notranslate"><span class="pre">estimate_sample_rate</span></code> (when supplied) to equal
+<code class="docutils literal notranslate"><span class="pre">sample_rate</span></code>. The default <code class="docutils literal notranslate"><span class="pre">alignment='none'</span></code> is the only supported alignment.
+No metric implicitly aligns, resamples, truncates, normalizes loudness, or
+converts channels. <code class="docutils literal notranslate"><span class="pre">axis</span></code> selects the sample dimension where supported. Any
+necessary preparation is the caller’s responsibility.</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Function</p></th>
+<th class="head"><p>Unit</p></th>
+<th class="head"><p>Direction</p></th>
+<th class="head"><p>Definition / notes</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">snr</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>higher</p></td>
+<td><p>Global reference energy over residual energy; no gain fitting.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sdr</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>higher</p></td>
+<td><p>Explicitly unscaled reference-residual SDR; numerically equal to SNR.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">si_sdr</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>higher</p></td>
+<td><p>Scale-invariant projection, with optional per-lane mean removal.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_spectral_distance</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>lower</p></td>
+<td><p>Mean per-frame RMS absolute log-magnitude STFT distance.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mel_spectral_distance</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>lower</p></td>
+<td><p>Mean per-frame RMS mel-power dB distance.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_mel_l1</span></code></p></td>
+<td><p>ln-power</p></td>
+<td><p>lower</p></td>
+<td><p>Global mean absolute natural-log mel-power difference.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mel_cepstral_distortion</span></code></p></td>
+<td><p>dB</p></td>
+<td><p>lower</p></td>
+<td><p>Orthonormal-DCT-II MFCC distance, with optional c0; no DTW.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log_f0_rmse</span></code></p></td>
+<td><p>ln-Hz</p></td>
+<td><p>lower</p></td>
+<td><p>Natural-log F0 RMSE on jointly voiced frames; <code class="docutils literal notranslate"><span class="pre">None</span></code> if there are none.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">voiced_unvoiced_error</span></code></p></td>
+<td><p>fraction</p></td>
+<td><p>lower</p></td>
+<td><p>Fraction of pitch frames with a voicing-decision mismatch.</p></td>
+</tr>
+</tbody>
+</table>
+<section id="formula-conventions-and-comparability">
+<h3>Formula conventions and comparability</h3>
+<p>Let <code class="docutils literal notranslate"><span class="pre">r</span></code> be the reference waveform and <code class="docutils literal notranslate"><span class="pre">y</span></code> the estimate. SNR and this package’s
+explicitly unscaled SDR both use</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>10 * log10(sum(r**2) / sum((r - y)**2))
+</pre></div>
+</div>
+<p>There is no gain fit or centering in these two metrics. A zero-energy reference
+is invalid; an exact reconstruction has zero residual and returns positive
+infinity. SI-SDR optionally removes each lane’s mean first (default true), then
+flattens the remaining samples and fits one global scale
+<code class="docutils literal notranslate"><span class="pre">alpha</span> <span class="pre">=</span> <span class="pre">dot(y,</span> <span class="pre">r)</span> <span class="pre">/</span> <span class="pre">dot(r,</span> <span class="pre">r)</span></code>. Its score is
+<code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">*</span> <span class="pre">log10(sum((alpha*r)**2)</span> <span class="pre">/</span> <span class="pre">sum((y</span> <span class="pre">-</span> <span class="pre">alpha*r)**2))</span></code>.</p>
+<p>Let <code class="docutils literal notranslate"><span class="pre">X_r</span></code> and <code class="docutils literal notranslate"><span class="pre">X_y</span></code> be reference/estimate STFTs, and <code class="docutils literal notranslate"><span class="pre">M_r</span></code> and <code class="docutils literal notranslate"><span class="pre">M_y</span></code> their
+mel-power features. Means below cover every lane and frame (and, for log-mel,
+every mel band); spectral distances take an RMS across frequency or mel bands
+before averaging lanes and frames.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>LSD = mean(lane, frame) sqrt(mean_bin(
+    (max(20*log10(abs(X_r)), db_floor)
+  - max(20*log10(abs(X_y)), db_floor))**2))
+
+mel_spectral_distance = mean(lane, frame) sqrt(mean_mel(
+    (max(10*log10(M_r), db_floor)
+  - max(10*log10(M_y), db_floor))**2))
+
+log_mel_l1 = mean(abs(ln(max(M_r, log_floor)) - ln(max(M_y, log_floor))))
+</pre></div>
+</div>
+<p>Defaults are <code class="docutils literal notranslate"><span class="pre">n_fft=1024</span></code>, <code class="docutils literal notranslate"><span class="pre">hop_length=256</span></code>, <code class="docutils literal notranslate"><span class="pre">center=True</span></code>, <code class="docutils literal notranslate"><span class="pre">n_mels=80</span></code>,
+<code class="docutils literal notranslate"><span class="pre">db_floor=-120.0</span></code>, and <code class="docutils literal notranslate"><span class="pre">log_floor=1e-10</span></code>, as applicable. Mel features use
+Slaney scaling and area normalization. The complete chosen recipe is recorded
+in <code class="docutils literal notranslate"><span class="pre">MetricResult.parameters</span></code>.</p>
+<p>For MFCC vectors <code class="docutils literal notranslate"><span class="pre">c_r</span></code> and <code class="docutils literal notranslate"><span class="pre">c_y</span></code>, MCD is</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>mean(lane, frame) (10*sqrt(2)/ln(10)) *
+    sqrt(sum_{k in K} (c_r[k] - c_y[k])**2)
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">K={1,...,n_mfcc-1}</span></code> by default and <code class="docutils literal notranslate"><span class="pre">K={0,...,n_mfcc-1}</span></code> with
+<code class="docutils literal notranslate"><span class="pre">include_c0=True</span></code>. There is no DTW. MCD scores are comparable only when the
+complete MFCC recipe, including sample rate, FFT/hop, mel scale and count,
+frequency limits, log floor, centering, coefficient count, and c0 policy,
+matches.</p>
+<p>For pitch, <code class="docutils literal notranslate"><span class="pre">log_f0_rmse</span></code> is
+<code class="docutils literal notranslate"><span class="pre">sqrt(mean((ln(f0_reference)</span> <span class="pre">-</span> <span class="pre">ln(f0_estimate))**2))</span></code> over jointly voiced
+frames. It returns <code class="docutils literal notranslate"><span class="pre">None</span></code> when there are no such frames. The V/UV error is the
+number of differing voiced/unvoiced decisions divided by all pitch frames.
+<code class="docutils literal notranslate"><span class="pre">MetricResult.higher_is_better</span></code> states the direction for each metric; values
+are not clipped to an arbitrary range.</p>
+<p>Spectral and pitch parameters, floors, feature geometry, and diagnostics are
+recorded in each result. Pitch metrics are mono-only. Log-F0 RMSE compares only
+jointly voiced frames; V/UV error compares the complete voicing masks.</p>
+</section>
+<section id="stoi-and-estoi-audiosig-intelligibility">
+<h3>STOI and ESTOI (<code class="docutils literal notranslate"><span class="pre">audiosig.intelligibility</span></code>)</h3>
+<p><code class="docutils literal notranslate"><span class="pre">stoi(reference,</span> <span class="pre">estimate,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">estimate_sample_rate=None,</span> <span class="pre">alignment='none')</span></code> and <code class="docutils literal notranslate"><span class="pre">estoi(...)</span></code> return higher-is-better scores. The
+reference is waveform audio, not a transcript. Both effective sample rates must
+be exactly 10,000 Hz; when <code class="docutils literal notranslate"><span class="pre">estimate_sample_rate</span></code> is omitted it defaults to
+<code class="docutils literal notranslate"><span class="pre">sample_rate</span></code>. Inputs must be finite mono <code class="docutils literal notranslate"><span class="pre">float32</span></code> or <code class="docutils literal notranslate"><span class="pre">float64</span></code> arrays with
+identical sample counts. Other rates, stereo, unequal lengths, unsupported
+alignment, and fewer than 30 active frames after silence removal are rejected.
+All transformations are caller-owned: AudioSig does no file decoding, trimming,
+resampling, time alignment, truncation, loudness normalization, or downmixing.</p>
+<p>Both implementations use complete 256-sample frames at a 128-sample hop,
+symmetric Hann weighting, a 512-point FFT, 15 one-third-octave bands beginning
+at 150 Hz, and contiguous 30-frame segments. Reference frames below -40 dB of
+the peak weighted RMS are removed and the remaining active frames are
+compressed. Band edges are assigned to nearest FFT bins. These fixed algorithm
+settings, the score-specific parameters, and input rates are recorded in each
+<code class="docutils literal notranslate"><span class="pre">MetricResult.parameters</span></code>.</p>
+<p>STOI norm-matches each estimate segment to its reference segment, clips the
+normalized estimate at <code class="docutils literal notranslate"><span class="pre">reference</span> <span class="pre">*</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">10**(15/20))</span></code>, computes mean-centered
+correlation for each band and segment, and averages those correlations. ESTOI
+centers and unit-normalizes each band’s 30-frame trajectory, then centers and
+unit-normalizes across bands at each frame; normalized segment inner products
+are averaged across frames and segments.</p>
+<p>These are signal-based intelligibility measures, not MOS prediction, human
+listening, or model inference. See the quality-evaluation notes for paper
+references and the independent numerical-oracle procedure.</p>
 </section>
 </section>
 <hr class="docutils" />

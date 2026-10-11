@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
 search_enabled: true
 ---
 
@@ -632,11 +632,12 @@ mutates a directory workspace in place.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.1.5] - Unreleased</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.4] - 2026-10-07</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.3] - 2026-10-05</a></li>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.2] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.1.1] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.0] - 2026-10-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id7">[0.1.1] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id9">[0.1.0] - 2026-10-01</a></li>
 </ul>
 </li>
 </ul>
