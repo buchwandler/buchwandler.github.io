@@ -4,17 +4,17 @@ nav_key: ssmdconvert
 variant: release
 variant_label: Latest release
 variant_kind: release
-source_ref: v0.1.4
-source_commit: 6a8b449f2b38555a38b8ec16b3b42adc62a135d1
-source_url: https://github.com/buchwandler/ssmdconvert/releases/tag/v0.1.4
+source_ref: v0.2.2
+source_commit: a50f2b6f9b148d86c701de70dc2a1269f284dda9
+source_url: https://github.com/buchwandler/ssmdconvert/releases/tag/v0.2.2
 is_default: true
 repo_url: https://github.com/buchwandler/ssmdconvert
-release_tag: v0.1.4
-release_url: https://github.com/buchwandler/ssmdconvert/releases/tag/v0.1.4
+release_tag: v0.2.2
+release_url: https://github.com/buchwandler/ssmdconvert/releases/tag/v0.2.2
 versions:
 - name: release
   label: Latest release
-  ref: v0.1.4
+  ref: v0.2.2
   url: /tools/ssmdconvert/
   current: true
 - name: main
@@ -24,14 +24,23 @@ versions:
   current: false
 entries:
 - slug: index
-  title: ssmdconvert Documentation
+  title: SSMDConvert User Guide
   url: /tools/ssmdconvert/
 - slug: installation
   title: ssmdconvert Installation
   url: /tools/ssmdconvert/installation/
+- slug: bundles
+  title: ssmdconvert SSMD bundle workspaces
+  url: /tools/ssmdconvert/bundles/
 - slug: usage
   title: ssmdconvert CLI usage
   url: /tools/ssmdconvert/usage/
+- slug: books
+  title: ssmdconvert EPUB source conversion
+  url: /tools/ssmdconvert/books/
+- slug: documents
+  title: ssmdconvert Document source conversion
+  url: /tools/ssmdconvert/documents/
 - slug: analysis-workflows
   title: ssmdconvert SSMD analysis and speech workflows
   url: /tools/ssmdconvert/analysis-workflows/
@@ -65,15 +74,15 @@ entries:
 - slug: migration-from-ttsready-cli
   title: ssmdconvert Migration from the ttsready CLI
   url: /tools/ssmdconvert/migration-from-ttsready-cli/
-- slug: books
-  title: ssmdconvert EPUB chapters and book bundles
-  url: /tools/ssmdconvert/books/
-- slug: bundle-format
-  title: ssmdconvert Book bundle format
-  url: /tools/ssmdconvert/bundle-format/
 - slug: api
   title: ssmdconvert Python API
   url: /tools/ssmdconvert/api/
+- slug: bundle-format
+  title: ssmdconvert Book manifest format (implementation detail)
+  url: /tools/ssmdconvert/bundle-format/
+- slug: document-bundle-format
+  title: ssmdconvert Document manifest format (implementation detail)
+  url: /tools/ssmdconvert/document-bundle-format/
 - slug: changelog
   title: ssmdconvert Changelog
   url: /tools/ssmdconvert/changelog/

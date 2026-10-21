@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "readio Incremental rendering"
-permalink: /tools/readio/main/incremental-rendering/
-nav_tool: readio-main
-docs_project: "readio"
-docs_variant: "main"
-docs_ref: "main"
-docs_commit: "6a36172da82dfd816b4c77ce3ca38ec739ecf343"
+title: "ssmdconvert Document manifest format (implementation detail)"
+permalink: /tools/ssmdconvert/document-bundle-format/
+nav_tool: ssmdconvert
+docs_project: "ssmdconvert"
+docs_variant: "release"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,58 +540,37 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="incremental-rendering">
-<h1>Incremental rendering</h1>
-<p>Readio projects are built as explicit stages:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source/document -&gt; UtterancePlan -&gt; unit WAV cache -&gt; master/timeline -&gt; output
+<section id="document-manifest-format-implementation-detail">
+<h1>Document manifest format (implementation detail)</h1>
+<p>This page documents the existing single-document manifest carried inside a
+canonical bundle. It is an implementation detail; users manage either source
+kind through the common lifecycle described in <a class="reference internal" href="../bundles/"><span class="std std-doc">Bundle workspaces</span></a>.</p>
+<p>The document manifest keeps its existing format identifier and schema version:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>format:         ssmdconvert.document
+schema_version: 1
+ssmd_version:   0.9
 </pre></div>
 </div>
-<p>The status command explains freshness from content identities rather than
-filesystem timestamps:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>status<span class="w"> </span>manuscript.readio
-readio<span class="w"> </span>status<span class="w"> </span>manuscript.readio<span class="w"> </span>--json
-</pre></div>
-</div>
-<p>A changed sentence changes its Utterplan unit content hash, so the next build
-reuses unchanged unit cache entries. Inserting text can shift positional unit
-IDs without defeating reuse because the cache key is the unit content hash plus
-acoustic profile identity. A complete synthesis cache hit does not open a TTS
-session.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>manuscript.readio<span class="w"> </span>--format<span class="w"> </span>mp3
-</pre></div>
-</div>
-<p>The high-level command rebuilds only stale stages. Typical decisions are:</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Change</p></th>
-<th class="head"><p>Rebuilt stages</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>source sentence</p></td>
-<td><p>plan, changed synthesis units, composition, export</p></td>
-</tr>
-<tr class="row-odd"><td><p>voice/model/engine</p></td>
-<td><p>synthesis units for the new profile, composition, export</p></td>
-</tr>
-<tr class="row-even"><td><p>target LUFS or peak policy</p></td>
-<td><p>composition, export</p></td>
-</tr>
-<tr class="row-odd"><td><p>Generic WAV/FLAC/MP3/M4A/Ogg/Vorbis/Opus settings</p></td>
-<td><p>export</p></td>
-</tr>
-</tbody>
-</table>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">export</span></code> tracks each output independently. Its identity includes the master, format, and normalized effective encoder options: M4A defaults to 192k and Opus defaults to 96k. WAV and FLAC do not accept bitrate options. <code class="docutils literal notranslate"><span class="pre">.ogg</span></code> remains Ogg/Vorbis; <code class="docutils literal notranslate"><span class="pre">.opus</span></code> is separate.</p>
-<p>Audiobook M4B is a separate output identity created by <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">audiobook</span> <span class="pre">export</span> <span class="pre">PROJECT</span> <span class="pre">--format</span> <span class="pre">m4b</span></code>. It includes the composition master and timeline, resolved title/author, explicit cover hash, and AAC bitrate (192k by default). Changing only metadata, cover, or bitrate requires a new M4B encode, not replanning, resynthesis, or recomposition. A master/timeline change follows the normal composition invalidation path. Automatic cover extraction is not supported; pass a JPEG/PNG with <code class="docutils literal notranslate"><span class="pre">--cover</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">preview</span> <span class="pre">PROJECT</span> <span class="pre">--select</span> <span class="pre">paragraph:1-3</span> <span class="pre">--voice</span> <span class="pre">VOICE</span> <span class="pre">-o</span> <span class="pre">preview.wav</span></code>
-uses the same synthesis and composition primitives for a selected range. It
-keeps audition profiles out of the active project trace unless <code class="docutils literal notranslate"><span class="pre">--activate</span></code> is
-provided.</p>
-<p>Composition writes a standard Audiocompose bundle under <code class="docutils literal notranslate"><span class="pre">composition/</span></code> and
-validates source hashes. Synthesis writes each cache WAV atomically and updates
-the trace only after all requested audio has been persisted, making interrupted
-runs resumable.</p>
+<p>The manifest contains JSON-compatible metadata, source provenance, and one
+canonical document entry with ID <code class="docutils literal notranslate"><span class="pre">document-0001</span></code>, path <code class="docutils literal notranslate"><span class="pre">document.ssmd.md</span></code>,
+character count, and content digest. Manifest JSON is UTF-8 and strict JSON;
+metadata must be JSON-compatible. The source digest is captured during
+conversion, and publication does not reread the source.</p>
+<section id="validation-and-workspace-behavior">
+<h2>Validation and workspace behavior</h2>
+<p>Strict loading checks manifest fields and versions, canonical paths, source and
+document digest shape and content, UTF-8, and SSMD 0.9 validity. ZIP duplicate
+members, symlinks, unsafe paths, oversized content, and excessive member counts
+are rejected.</p>
+<p>An editable directory workspace can expose valid current SSMD when its recorded
+digest is stale. It reports expected and actual digests without modifying the
+manifest. <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">refresh</span></code> explicitly updates the digest and character count;
+<code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">pack</span></code> writes a strict archive from current valid text without changing
+the source workspace. Unreferenced local files are not portable members.</p>
+<p>The existing manifest format, schema version, and document path remain
+unchanged by the unified outer artifact name. See <a class="reference internal" href="../bundles/"><span class="std std-doc">Bundle workspaces</span></a>
+for the common user-facing lifecycle.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4abca5cfad32ac0f9c4987dbeadcbafa232c785b"
+docs_commit: "a70e4a16603d00b42bfbdfb2b58a51cad2064d69"
 search_enabled: true
 ---
 
@@ -542,12 +542,12 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="coordinate-spaces">
 <h1>Coordinate spaces</h1>
-<p>Schema v5 keeps the executable plan compact: token coordinates are local to each <code class="docutils literal notranslate"><span class="pre">FlowSegment.text</span></code>; document-global source and preparation coordinates live only in an optional <code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code> sidecar.</p>
+<p>Schema v7 keeps the executable plan compact: token coordinates are local to each <code class="docutils literal notranslate"><span class="pre">FlowSegment.text</span></code>, and exact raw input is stored once in an optional <code class="docutils literal notranslate"><span class="pre">PlanSource</span></code>; document-global source and preparation coordinates remain in an optional <code class="docutils literal notranslate"><span class="pre">PreparationTrace</span></code> sidecar.</p>
 <section id="executable-plan-coordinates">
 <h2>Executable plan coordinates</h2>
 <p><code class="docutils literal notranslate"><span class="pre">FlowSegment.text</span></code> is the prepared speech text for that segment. Each <code class="docutils literal notranslate"><span class="pre">TokenView.start</span></code> and <code class="docutils literal notranslate"><span class="pre">TokenView.end</span></code> is a half-open Python-character offset into that segment’s text. Slice a token with <code class="docutils literal notranslate"><span class="pre">segment.text[token.start:token.end]</span></code>. Do not add a unit, segment, document, or compiler offset to these values. Token membership is stored locally in <code class="docutils literal notranslate"><span class="pre">segment.tokens</span></code>; there are no plan-global token indices or lookup joins.</p>
-<p>Optional <code class="docutils literal notranslate"><span class="pre">replacement.span</span></code> entries use this same segment-local coordinate space: they slice the final prepared text. The paired <code class="docutils literal notranslate"><span class="pre">replacement.source</span></code> value is the original spelling, not a source offset. Thus a prepared output such as <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">R</span> <span class="pre">T</span></code> can record source <code class="docutils literal notranslate"><span class="pre">ART</span></code> while the exact original source location and complete transformation maps remain available only in the optional trace sidecar.</p>
-<p>Pauses, directives, markers, and optional heading levels are attached directly to their owning flow-segment edge or segment. They have no independent text coordinate. Flow-unit and segment order is the render order.</p>
+<p>Optional <code class="docutils literal notranslate"><span class="pre">replacement.span</span></code> entries use this same segment-local coordinate space: they slice the final prepared text. The paired <code class="docutils literal notranslate"><span class="pre">replacement.source</span></code> value is the original spelling, not a source offset. Thus a prepared output such as <code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">R</span> <span class="pre">T</span></code> can record source <code class="docutils literal notranslate"><span class="pre">ART</span></code> while the exact original source location and complete transformation maps remain available only in the optional trace sidecar; the raw source text itself is retained in <code class="docutils literal notranslate"><span class="pre">FlowPlan.source</span></code> when available.</p>
+<p>Pauses, directives, markers, and optional heading levels are attached directly to their owning flow-segment edge or segment. They have no independent text coordinate. Flow-unit and segment order is the canonical flow order; downstream chunkers may group segments but preserve their order.</p>
 </section>
 <section id="optional-trace-coordinates">
 <h2>Optional trace coordinates</h2>
@@ -563,8 +563,8 @@ html[data-theme="dark"] .sphinxpress-doc {
 </section>
 <section id="compiler-only-segmentation-coordinates">
 <h2>Compiler-only segmentation coordinates</h2>
-<p>Paragraph, sentence, and sentence-part spans use half-open Python-character offsets into the prepared global <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code>. PhraseSplit offsets are run-local and are translated to global spoken coordinates exactly once before validation. Renderer segments retain the exact <code class="docutils literal notranslate"><span class="pre">spoken_text[start:end]</span></code> slice; language-run edges and other required renderer cuts do not change their owning paragraph, sentence, or part index. These spans are compiler topology, not fields in the v5 flow. Segmentation diagnostics map their spoken ranges back to exact source coordinates through the compiler’s source map.</p>
-<p>Diagnostic source offsets use the exact original-source coordinate space. Diagnostic <code class="docutils literal notranslate"><span class="pre">line</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> values are 1-based; columns count Python characters from the start of a line. The trace retains all these maps and source evidence. The executable FlowPlan intentionally does not.</p>
+<p>Paragraph, sentence, and sentence-part spans use half-open Python-character offsets into the prepared global <code class="docutils literal notranslate"><span class="pre">spoken_text</span></code>. PhraseSplit offsets are run-local and are translated to global spoken coordinates exactly once before validation. Renderer segments retain the exact <code class="docutils literal notranslate"><span class="pre">spoken_text[start:end]</span></code> slice; language-run edges and other compiler-required segment cuts do not change their owning paragraph, sentence, or part index. Sentence-part spans remain private; v7 flow segments expose canonical safe-boundary kinds instead of global offsets. Segmentation diagnostics map their spoken ranges back to exact source coordinates through the compiler’s source map.</p>
+<p>Diagnostic source offsets use the exact original-source coordinate space. Diagnostic <code class="docutils literal notranslate"><span class="pre">line</span></code> and <code class="docutils literal notranslate"><span class="pre">column</span></code> values are 1-based; columns count Python characters from the start of a line. The trace retains all these maps and source evidence. <code class="docutils literal notranslate"><span class="pre">FlowPlan.source</span></code> retains raw input when available, but the executable plan does not contain the maps or diagnostic source offsets.</p>
 </section>
 </section>
 </div>

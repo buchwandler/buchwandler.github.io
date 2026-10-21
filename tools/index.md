@@ -206,7 +206,7 @@ permalink: /tools/
       <p>A Python library for Kokoro TTS using ONNX runtime.</p>
       <div class="card-links">
         <a href="/tools/pykokoro/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.4" rel="external noopener">Latest release: v0.10.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/pykokoro/releases/tag/v0.10.5" rel="external noopener">Latest release: v0.10.5 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/pykokoro" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -216,7 +216,7 @@ permalink: /tools/
       <p>Engine-independent text-to-speech planning compiler and interchange format.</p>
       <div class="card-links">
         <a href="/tools/utterplan/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.5.1" rel="external noopener">Latest release: v0.5.1 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/utterplan/releases/tag/v0.6.6" rel="external noopener">Latest release: v0.6.6 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/utterplan" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -236,7 +236,7 @@ permalink: /tools/
       <p>Read text aloud in the terminal with streaming TTS and an Agent Skill for LLM invocation.</p>
       <div class="card-links">
         <a href="/tools/readio/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/readio/releases/tag/v0.4.0" rel="external noopener">Latest release: v0.4.0 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/readio/releases/tag/v0.5.0" rel="external noopener">Latest release: v0.5.0 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/readio" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -251,7 +251,7 @@ permalink: /tools/
       <p>Convert documents and EPUB books into SSMD with analysis and book-bundle support.</p>
       <div class="card-links">
         <a href="/tools/ssmdconvert/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/ssmdconvert/releases/tag/v0.1.4" rel="external noopener">Latest release: v0.1.4 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/ssmdconvert/releases/tag/v0.2.2" rel="external noopener">Latest release: v0.2.2 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/ssmdconvert" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>
@@ -276,7 +276,7 @@ permalink: /tools/
       <p>Portable, dependency-light audio signal processing for NumPy arrays.</p>
       <div class="card-links">
         <a href="/tools/audiosig/">Read docs <span aria-hidden="true">↗</span></a>
-        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.7" rel="external noopener">Latest release: v0.1.7 <span aria-hidden="true">↗</span></a>
+        <a href="https://github.com/buchwandler/audiosig/releases/tag/v0.1.8" rel="external noopener">Latest release: v0.1.8 <span aria-hidden="true">↗</span></a>
         <a href="https://github.com/buchwandler/audiosig" rel="external noopener">GitHub <span aria-hidden="true">↗</span></a>
       </div>
     </article>

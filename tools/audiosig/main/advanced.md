@@ -6,7 +6,7 @@ nav_tool: audiosig-main
 docs_project: "audiosig"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
+docs_commit: "fc87d829991d44b2ccc20685d4577019e628ee90"
 search_enabled: true
 ---
 
@@ -672,6 +672,86 @@ listening gates pass. See the <a class="reference internal" href="../td-psola-li
 </pre></div>
 </div>
 <p>The stable release contract for downstream PyKokoro code is <code class="docutils literal notranslate"><span class="pre">audiosig&gt;=0.1.3</span></code> for <code class="docutils literal notranslate"><span class="pre">LoudnessMetrics</span></code>, <code class="docutils literal notranslate"><span class="pre">integrated_loudness</span></code>, <code class="docutils literal notranslate"><span class="pre">sample_peak_dbfs</span></code>, <code class="docutils literal notranslate"><span class="pre">true_peak_dbtp</span></code>, and <code class="docutils literal notranslate"><span class="pre">measure_loudness</span></code>, plus the existing <code class="docutils literal notranslate"><span class="pre">apply_gain_db</span></code>. AudioSig supplies measurements and generic gain only; target LUFS and voice calibration remain application policy.</p>
+</section>
+<section id="compatibility-capable-numpy-dsp">
+<h2>Compatibility-capable NumPy DSP</h2>
+<p>The generic compatibility primitives reproduce selected reference DSP policies
+without changing the historical <code class="docutils literal notranslate"><span class="pre">resample()</span></code>, STFT, or mel defaults. Core runtime
+code depends on NumPy only; no Torch, Torchaudio, or SciPy implementation is
+loaded. These functions do not implement Sopro inference, model loading, or
+consumer-specific orchestration.</p>
+<section id="resampling-options">
+<h3>Resampling options</h3>
+<p><code class="docutils literal notranslate"><span class="pre">resample_windowed_sinc()</span></code> is the configurable, chunked primitive. Its default
+sample alignment, Kaiser window, anti-aliasing, zero boundary, normalized
+weights, and half-up rounded length are independent options. For the pinned
+half-sample raised-cosine reference, specify the compatibility recipe rather
+than changing <code class="docutils literal notranslate"><span class="pre">resample()</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">resample_windowed_sinc</span>
+
+<span class="n">waveform_16k</span> <span class="o">=</span> <span class="n">resample_windowed_sinc</span><span class="p">(</span>
+    <span class="n">waveform_24k</span><span class="p">,</span>
+    <span class="n">source_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span>
+    <span class="n">target_rate</span><span class="o">=</span><span class="mi">16_000</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="mi">16</span><span class="p">,</span>
+    <span class="n">alignment</span><span class="o">=</span><span class="s2">&quot;half_sample&quot;</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="s2">&quot;raised_cosine&quot;</span><span class="p">,</span>
+    <span class="n">antialias</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">normalize_weights</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="n">boundary</span><span class="o">=</span><span class="s2">&quot;zero&quot;</span><span class="p">,</span>
+    <span class="n">length_mode</span><span class="o">=</span><span class="s2">&quot;round&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="spectral-configuration-examples">
+<h3>Spectral configuration examples</h3>
+<p><code class="docutils literal notranslate"><span class="pre">stft</span></code>, <code class="docutils literal notranslate"><span class="pre">mel_filterbank</span></code>, and <code class="docutils literal notranslate"><span class="pre">mel_spectrogram</span></code> keep their prior defaults. The
+extra <code class="docutils literal notranslate"><span class="pre">win_length</span></code>, <code class="docutils literal notranslate"><span class="pre">pad_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">window</span></code>, <code class="docutils literal notranslate"><span class="pre">frame_count</span></code>, <code class="docutils literal notranslate"><span class="pre">mel_scale</span></code>, and <code class="docutils literal notranslate"><span class="pre">norm</span></code>
+options allow explicit feature recipes. For example, the documented semantic
+recipe uses a periodic 400-point Hann, 160-sample hop, 80 Slaney-normalized
+bands, and explicit frame count; the speaker recipe uses a 1024-point FFT with
+a 400-sample window; the acoustic recipe uses 100 HTK bands and no mel
+normalization:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">audiosig</span><span class="w"> </span><span class="kn">import</span> <span class="n">mel_spectrogram</span>
+
+<span class="n">semantic</span> <span class="o">=</span> <span class="n">mel_spectrogram</span><span class="p">(</span>
+    <span class="n">waveform_16k</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">16_000</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> <span class="n">win_length</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">hop_length</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">mel_scale</span><span class="o">=</span><span class="s2">&quot;slaney&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s2">&quot;slaney&quot;</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="s2">&quot;periodic&quot;</span><span class="p">,</span> <span class="n">frame_count</span><span class="o">=</span><span class="n">semantic_frames</span> <span class="o">+</span> <span class="mi">2</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">speaker_power</span> <span class="o">=</span> <span class="n">mel_spectrogram</span><span class="p">(</span>
+    <span class="n">waveform_16k</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">16_000</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">win_length</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span>
+    <span class="n">hop_length</span><span class="o">=</span><span class="mi">160</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">80</span><span class="p">,</span> <span class="n">f_min</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">f_max</span><span class="o">=</span><span class="mi">7_600</span><span class="p">,</span>
+    <span class="n">mel_scale</span><span class="o">=</span><span class="s2">&quot;slaney&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s2">&quot;slaney&quot;</span><span class="p">,</span> <span class="n">window</span><span class="o">=</span><span class="s2">&quot;periodic&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">acoustic_magnitude</span> <span class="o">=</span> <span class="n">mel_spectrogram</span><span class="p">(</span>
+    <span class="n">waveform_24k</span><span class="p">,</span> <span class="n">sample_rate</span><span class="o">=</span><span class="mi">24_000</span><span class="p">,</span> <span class="n">n_fft</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">win_length</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span>
+    <span class="n">hop_length</span><span class="o">=</span><span class="mi">256</span><span class="p">,</span> <span class="n">n_mels</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">power</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mel_scale</span><span class="o">=</span><span class="s2">&quot;htk&quot;</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">window</span><span class="o">=</span><span class="s2">&quot;periodic&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>These APIs compute generic spectra; callers remain responsible for any later
+log compression, per-frame normalization, interpolation, tokenization, or model
+input policy. Compatibility tests compare selected semantic, speaker, and
+acoustic feature samples against a pinned reference fixture.</p>
+</section>
+<section id="speech-level-pauses-and-output-conditioning">
+<h3>Speech level, pauses, and output conditioning</h3>
+<p><code class="docutils literal notranslate"><span class="pre">speech_level()</span></code> measures active-frame RMS in dB and is intentionally distinct
+from BS.1770 integrated LUFS. <code class="docutils literal notranslate"><span class="pre">normalize_reference_level()</span></code> applies a boost-only
+target, a maximum gain, and a peak ceiling. <code class="docutils literal notranslate"><span class="pre">crop_on_pause()</span></code> takes a
+<code class="docutils literal notranslate"><span class="pre">PauseCropConfig</span></code>; its default room-tone completion is zero-valued. To generate
+noise, pass a local <code class="docutils literal notranslate"><span class="pre">room_tone_seed</span></code> or an RNG explicitly. Neither path uses
+process-global randomness.</p>
+<p>The general boundary tools are <code class="docutils literal notranslate"><span class="pre">speech_onset</span></code>, <code class="docutils literal notranslate"><span class="pre">energy_onset</span></code>,
+<code class="docutils literal notranslate"><span class="pre">energy_fraction</span></code>, <code class="docutils literal notranslate"><span class="pre">trim_lead</span></code>, and <code class="docutils literal notranslate"><span class="pre">trim_trail</span></code>. Output conditioning provides
+<code class="docutils literal notranslate"><span class="pre">fade_edges</span></code>, <code class="docutils literal notranslate"><span class="pre">join_with_edge_fades</span></code>, <code class="docutils literal notranslate"><span class="pre">soft_limit</span></code>, and <code class="docutils literal notranslate"><span class="pre">gain_for_level</span></code>. Fades
+are linear; joining fades adjacent segment edges without overlap-add; the soft
+limiter follows a configurable tanh knee. These primitives preserve caller
+ownership and are policy-free building blocks for applications.</p>
+</section>
 </section>
 <section id="vad-algorithm-details">
 <h2>VAD Algorithm Details</h2>

@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -542,96 +542,82 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="cli-usage">
 <h1>CLI usage</h1>
-<section id="convert-a-document">
-<h2>Convert a document</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>convert<span class="w"> </span>INPUT<span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT<span class="o">]</span><span class="w"> </span><span class="o">[</span>--title<span class="w"> </span>TITLE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--author<span class="w"> </span>AUTHOR<span class="o">]</span><span class="w"> </span><span class="o">[</span>-l<span class="p">|</span>--language<span class="w"> </span>LANGUAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--metadata-file<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--sequence-fallback-mode<span class="w"> </span>spell<span class="p">|</span>preserve<span class="o">]</span>
+<p>SSMDConvert uses one bundle lifecycle for EPUB books, ordinary documents, and
+existing SSMD sources. Every editable workspace ends in <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle</span></code>; a packed
+archive ends in <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle.zip</span></code>.</p>
+<section id="convert-inspect-and-validate">
+<h2>Convert, inspect, and validate</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>novel.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>reviewed.ssmd.md
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>novel.ssmd-bundle
 </pre></div>
 </div>
-<p>Examples:</p>
+<p>When <code class="docutils literal notranslate"><span class="pre">-o</span></code> is omitted, <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">convert</span></code> creates an editable workspace beside the
+source. Existing outputs are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied; forced
+workspace publication replaces the complete directory atomically.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span></code> accepts original one-based book chapter numbers, as a number, a
+range, a comma-separated list, or a mixture such as <code class="docutils literal notranslate"><span class="pre">1,3-5</span></code>. It defaults to
+<code class="docutils literal notranslate"><span class="pre">all</span></code>. A non-default selector is not valid for a single-document source.</p>
+<p>The lifecycle group contains six commands:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>ssmdconvert bundle inspect SOURCE
+ssmdconvert bundle convert SOURCE
+ssmdconvert bundle metadata BUNDLE [--json]
+ssmdconvert bundle refresh WORKSPACE [--check]
+ssmdconvert bundle pack WORKSPACE [-o ARCHIVE]
+ssmdconvert bundle validate BUNDLE [--json]
+</pre></div>
+</div>
+<p>Only directory workspaces can be refreshed or packed. ZIP archives are
+read-only. <code class="docutils literal notranslate"><span class="pre">refresh</span> <span class="pre">--check</span></code> does not write; <code class="docutils literal notranslate"><span class="pre">pack</span></code> creates a deterministic
+archive without refreshing or otherwise changing the workspace.</p>
+</section>
+<section id="standalone-ssmd-conversion">
+<h2>Standalone SSMD conversion</h2>
+<p>The top-level converter remains available for writing one standalone SSMD file:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>convert<span class="w"> </span>manuscript.txt<span class="w"> </span>-o<span class="w"> </span>manuscript.ssmd
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>novel.md<span class="w"> </span>-o<span class="w"> </span>novel.ssmd
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>page.html<span class="w"> </span>-o<span class="w"> </span>page.ssmd
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>book.epub<span class="w"> </span>-o<span class="w"> </span>book.ssmd
 ssmdconvert<span class="w"> </span>convert<span class="w"> </span>report.pdf<span class="w"> </span>-o<span class="w"> </span>report.ssmd
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>manuscript.docx<span class="w"> </span>-o<span class="w"> </span>manuscript.ssmd
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>existing.ssmd.md<span class="w"> </span>-o<span class="w"> </span>normalized.ssmd
+ssmdconvert<span class="w"> </span>inspect<span class="w"> </span>manuscript.md<span class="w"> </span>--json
 </pre></div>
 </div>
-<p>PDF and DOCX require the <code class="docutils literal notranslate"><span class="pre">[pdf]</span></code> and <code class="docutils literal notranslate"><span class="pre">[docx]</span></code> extras. SSMD detection accepts <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> and <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> case-insensitively. If <code class="docutils literal notranslate"><span class="pre">-o</span></code> is omitted, the output is written beside the input with a <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> suffix.</p>
-<p>Writes are atomic and refuse existing destinations unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. The input path is never accepted as the output, even with <code class="docutils literal notranslate"><span class="pre">--force</span></code>. A failed write leaves a prior output intact.</p>
-<p>Optional metadata can be supplied during conversion:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>convert<span class="w"> </span>manuscript.txt<span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--title<span class="w"> </span><span class="s2">&quot;Example&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>--author<span class="w"> </span><span class="s2">&quot;A. Writer&quot;</span><span class="w"> </span><span class="se">\</span>
-<span class="w">  </span>-l<span class="w"> </span>en
-</pre></div>
-</div>
-<p>Pass a UTF-8 YAML mapping with <code class="docutils literal notranslate"><span class="pre">--metadata-file</span> <span class="pre">PATH</span></code> to either <code class="docutils literal notranslate"><span class="pre">convert</span></code> or <code class="docutils literal notranslate"><span class="pre">book</span> <span class="pre">convert</span></code> for nested portable metadata and bibliographic overrides. Values are JSON-compatible; only supported metadata keys are accepted. Metadata precedence is source, file, then explicit CLI values. The effective sequence fallback option is applied last.</p>
+<p>PDF and DOCX inputs require the matching optional extras. Writes are atomic and
+refuse existing outputs unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. The input file is never a
+valid output destination.</p>
+<p>Conversion commands accept <code class="docutils literal notranslate"><span class="pre">--metadata-file</span> <span class="pre">PATH</span></code> for a UTF-8 YAML mapping.
+Metadata precedence is source, file, and explicit CLI values. The sequence
+fallback mode defaults to <code class="docutils literal notranslate"><span class="pre">preserve</span></code>; the option is available when a caller
+needs <code class="docutils literal notranslate"><span class="pre">spell</span></code>.</p>
 <div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">language</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">de-DE</span>
 <span class="nt">voice_defaults</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">narrator</span><span class="p">:</span>
 <span class="w">    </span><span class="nt">rate</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">slow</span>
 </pre></div>
 </div>
-<p>The sequence fallback policy controls residual sequence handling for downstream speech preparation. New conversions default to <code class="docutils literal notranslate"><span class="pre">preserve</span></code>; pass <code class="docutils literal notranslate"><span class="pre">--sequence-fallback-mode</span> <span class="pre">spell</span></code> to select <code class="docutils literal notranslate"><span class="pre">spell</span></code> explicitly. The chosen value is persisted in SSMD front matter and, for books, in manifest metadata and every chapter. This writer default does not change consumer behavior for legacy files or bundles where the field is absent.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>convert<span class="w"> </span>manuscript.md<span class="w"> </span>-o<span class="w"> </span>manuscript.ssmd
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-l<span class="w"> </span>de-DE<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook
-</pre></div>
-</div>
 </section>
-<section id="inspect-a-source">
-<h2>Inspect a source</h2>
-<p>Inspect the selected local adapter and normalized document without writing output:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>inspect<span class="w"> </span>book.epub
-ssmdconvert<span class="w"> </span>inspect<span class="w"> </span>book.epub<span class="w"> </span>--json
+<section id="reports-and-speech-workflows">
+<h2>Reports and speech workflows</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>--format<span class="w"> </span>json
+ssmdconvert<span class="w"> </span>context<span class="w"> </span>novel.ssmd-bundle<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef
+ssmdconvert<span class="w"> </span>txt<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>-o<span class="w"> </span>prepared.txt
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>-o<span class="w"> </span>annotated.ssmd-bundle
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd-bundle.zip
 </pre></div>
 </div>
-<p>JSON output includes the source path, selected adapter, normalized metadata, and section identifiers, titles, character counts, and source references.</p>
-</section>
-<section id="epub-book-commands">
-<h2>EPUB book commands</h2>
-<p>The book CLI uses explicit subcommands:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span><span class="o">[</span>--chapters<span class="w"> </span>SELECTOR<span class="o">]</span><span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT<span class="o">]</span><span class="w"> </span><span class="o">[</span>-l<span class="p">|</span>--language<span class="w"> </span>LANGUAGE<span class="o">]</span><span class="w"> </span><span class="o">[</span>--metadata-file<span class="w"> </span>PATH<span class="o">]</span><span class="w"> </span><span class="o">[</span>--sequence-fallback-mode<span class="w"> </span>spell<span class="p">|</span>preserve<span class="o">]</span><span class="w"> </span><span class="o">[</span>--speech-semantics<span class="w"> </span>freeze<span class="p">|</span>preserve<span class="o">]</span>
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>validate<span class="w"> </span>BUNDLE<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>metadata<span class="w"> </span>BUNDLE<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-</pre></div>
-</div>
-<p>Selectors use original 1-based source chapter numbers. They accept a single number, a range, a comma-separated list, or a mixture such as <code class="docutils literal notranslate"><span class="pre">1,3-5</span></code>. Selected chapters remain in original source order.</p>
-<p>Book conversion defaults to <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">freeze</span></code>, using upstream speech decisions to add exact SSMD <code class="docutils literal notranslate"><span class="pre">sub</span></code> annotations without changing visible text. Freeze requires a resolvable language; provide <code class="docutils literal notranslate"><span class="pre">-l/--language</span></code> or select <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for structural-only output. Existing author-owned speech annotations remain authoritative.</p>
-<p>Book output format is inferred only from <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> (directory) and <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> (ZIP). For other names, specify <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">directory</span></code> or <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">zip</span></code>. Existing bundles are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. A forced directory output replaces the complete previous directory; stale files are not merged into the new bundle.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">metadata</span> <span class="pre">BUNDLE</span></code> to display validated metadata stored in either a directory or ZIP bundle. Add <code class="docutils literal notranslate"><span class="pre">--json</span></code> for a deterministic <code class="docutils literal notranslate"><span class="pre">{&quot;metadata&quot;:</span> <span class="pre">...}</span></code> object. The human form labels absent known values as <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">set</span></code> and renders nested values indented.</p>
-</section>
-<section id="ssmd-analysis-and-speech-commands">
-<h2>SSMD analysis and speech commands</h2>
-<p>Use the shared SSMD-aware analysis commands for reports, context lookup, prepared TXT, and speech write-back:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>SOURCE<span class="w"> </span><span class="o">[</span>--chapters<span class="w"> </span>SELECTOR<span class="o">]</span><span class="w"> </span><span class="o">[</span>--format<span class="w"> </span>md<span class="p">|</span>json<span class="o">]</span><span class="w"> </span><span class="o">[</span>--refresh<span class="o">]</span>
-ssmdconvert<span class="w"> </span>context<span class="w"> </span>SOURCE<span class="w"> </span>CHANGE_ID<span class="w"> </span><span class="o">[</span>--paragraph<span class="o">]</span><span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-ssmdconvert<span class="w"> </span>txt<span class="w"> </span>SOURCE<span class="w"> </span><span class="o">[</span>--chapters<span class="w"> </span>SELECTOR<span class="o">]</span><span class="w"> </span><span class="o">[</span>-o<span class="w"> </span>OUTPUT<span class="o">]</span>
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>SOURCE<span class="w"> </span><span class="o">[</span>--json<span class="o">]</span>
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>SOURCE<span class="w"> </span>-o<span class="w"> </span>OUTPUT
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>SOURCE<span class="w"> </span>-o<span class="w"> </span>OUTPUT
-</pre></div>
-</div>
-<p>The commands accept standalone SSMD, validated ZIP bundles, and directory workspaces. Reports and TXT share a projection; <code class="docutils literal notranslate"><span class="pre">context</span></code> resolves a generic change ID from a report cache. <code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">audit</span></code> is read-only. Annotation and freeze write to a new destination by default, preserve visible text, and refuse to modify a source workspace in place. Existing output requires <code class="docutils literal notranslate"><span class="pre">--force</span></code>; the input cannot be overwritten. See <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">SSMD analysis and speech workflows</span></a> for language handling, cache freshness, workspace policy, and migration from the removed <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> CLI.</p>
+<p>Analysis accepts standalone SSMD and canonical directory or ZIP bundles.
+Speech audit is read-only. Annotation and freeze publish a new destination and
+never modify a workspace in place. See <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">analysis and speech workflows</span></a>
+for cache freshness, language behavior, and output policy.</p>
 </section>
 <section id="help">
 <h2>Help</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>convert<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>inspect<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>inspect<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>validate<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>metadata<span class="w"> </span>--help
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>--help
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>--help
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>--help
 ssmdconvert<span class="w"> </span>report<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>context<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>txt<span class="w"> </span>--help
 ssmdconvert<span class="w"> </span>speech<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>--help
 </pre></div>
 </div>
 </section>

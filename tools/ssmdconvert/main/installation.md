@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -556,17 +556,25 @@ html[data-theme="dark"] .sphinxpress-doc {
 </div>
 <p>The base install supports plain text, Markdown, HTML, EPUB, and SSMD inputs,
 including SSMD-aware report/context/TXT and speech audit/annotate/freeze commands.
-EPUB extraction uses the local <code class="docutils literal notranslate"><span class="pre">epub2text</span></code> dependency. <code class="docutils literal notranslate"><span class="pre">ttsready&gt;=0.2,&lt;0.3</span></code> is a core
+EPUB extraction uses the local <code class="docutils literal notranslate"><span class="pre">epub2text</span></code> dependency. <code class="docutils literal notranslate"><span class="pre">ttsready&gt;=0.2.2,&lt;0.3</span></code> is a core
 dependency for source-neutral preparation and QA.</p>
+<p>The base CLI includes Rich for interactive terminal progress. spaCy is optional:
+install <code class="docutils literal notranslate"><span class="pre">ssmdconvert[spacy]</span></code>, then install desired language models separately.</p>
 </section>
 <section id="optional-extras">
 <h2>Optional extras</h2>
 <p>Install only the additional support you need:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ssmdconvert[pdf]&quot;</span><span class="w">     </span><span class="c1"># PDF text extraction</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ssmdconvert[docx]&quot;</span><span class="w">    </span><span class="c1"># DOCX paragraphs and headings</span>
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ssmdconvert[spacy]&quot;</span><span class="w">   </span><span class="c1"># optional spaCy provider</span>
 python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;ssmdconvert[all]&quot;</span><span class="w">     </span><span class="c1"># all optional extras</span>
 </pre></div>
 </div>
+<p>The <code class="docutils literal notranslate"><span class="pre">spacy</span></code> extra installs spaCy but no language model. Install one explicitly,
+for example <code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">spacy</span> <span class="pre">download</span> <span class="pre">en_core_web_sm</span></code>. SSMDConvert never downloads
+models during conversion. The default is <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code>; <code class="docutils literal notranslate"><span class="pre">auto</span></code> selects a
+compatible installed model for each language and otherwise warns and continues
+without hints. Explicit tiers require their corresponding local model.</p>
 <p>PDF extraction does not perform OCR. DOCX extraction does not preserve complex
 floating layout. Speech analysis commands operate on SSMD and are independent of
 document conversion. The former <code class="docutils literal notranslate"><span class="pre">SpeechPreparationOptions</span></code> /
@@ -585,7 +593,7 @@ python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </sp
 <h2>Verify the installation</h2>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>--version
 ssmdconvert<span class="w"> </span>--help
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>--help
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>--help
 </pre></div>
 </div>
 </section>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "utterplan Compiling chapters from an SSMDBook"
-permalink: /tools/utterplan/ssmdbook/
-nav_tool: utterplan
-docs_project: "utterplan"
-docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "a06da00122bda9de70d345d91a97259bbda6b18a"
+title: "ssmdconvert SSMD bundle workspaces"
+permalink: /tools/ssmdconvert/main/bundles/
+nav_tool: ssmdconvert-main
+docs_project: "ssmdconvert"
+docs_variant: "main"
+docs_ref: "main"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,67 +540,104 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="compiling-chapters-from-an-ssmdbook">
-<h1>Compiling chapters from an SSMDBook</h1>
-<p>UtterPlan’s <code class="docutils literal notranslate"><span class="pre">compile-book</span></code> command accepts an editable <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> workspace as a collection of independent SSMD 0.9 chapter sources. It reads the workspace manifest to discover chapter paths and source numbers, then delegates the selected documents to the existing incremental batch compiler. Each successful chapter becomes its own canonical UtterPlan v5 plan; UtterPlan does not create a combined book plan or modify the source workspace.</p>
-<section id="quick-start">
-<h2>Quick start</h2>
-<p>From the book root, select an inclusive source chapter range:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.ssmdbook&quot;</span>
+<section id="ssmd-bundle-workspaces">
+<h1>SSMD bundle workspaces</h1>
+<p>SSMDConvert stores converted books and single documents in one kind-neutral
+artifact lifecycle. The manifest identifies whether a bundle contains a book or
+a document; users do not choose a storage type.</p>
+<section id="canonical-names">
+<h2>Canonical names</h2>
+<p>An editable workspace is a directory named <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.ssmd-bundle/</span></code>. A portable,
+immutable archive is named <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.ssmd-bundle.zip</span></code>. Both contain the existing
+kind-specific manifest format and schema version; the outer artifact name is
+shared.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>novel.ssmd-bundle/
+novel.ssmd-bundle.zip
+notes.ssmd-bundle/
+notes.ssmd-bundle.zip
+</pre></div>
+</div>
+</section>
+<section id="convert-and-inspect">
+<h2>Convert and inspect</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>novel.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>reviewed.ssmd.md
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>novel.ssmd-bundle
+</pre></div>
+</div>
+<p>When the output is omitted, conversion creates a directory workspace beside the
+source using its filename stem. <code class="docutils literal notranslate"><span class="pre">--force</span></code> replaces the complete existing
+workspace atomically. <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">inspect</span></code> accepts a supported source or a canonical
+bundle and reports the detected kind.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span></code> selects original, one-based source chapter numbers for books. A
+single document accepts the default <code class="docutils literal notranslate"><span class="pre">all</span></code> value; another chapter selector is a
+usage error. Book chapters remain in source order.</p>
+</section>
+<section id="lifecycle-commands">
+<h2>Lifecycle commands</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">bundle</span></code> command group contains exactly these lifecycle operations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">SOURCE</span></code> inspects a supported source or bundle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">convert</span> <span class="pre">SOURCE</span></code> creates an editable workspace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">BUNDLE</span></code> displays stored metadata.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refresh</span> <span class="pre">WORKSPACE</span></code> updates recorded content digests; <code class="docutils literal notranslate"><span class="pre">--check</span></code> only checks
+whether the workspace is clean.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pack</span> <span class="pre">WORKSPACE</span></code> creates a deterministic <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle.zip</span></code> archive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">validate</span> <span class="pre">BUNDLE</span></code> strictly checks the manifest and referenced content.</p></li>
+</ul>
+<p>Only a directory workspace can be refreshed or packed. ZIP archives are
+read-only. <code class="docutils literal notranslate"><span class="pre">validate</span></code> and strict bundle loading verify manifest hashes; analysis
+workflows can read current valid content from a dirty directory workspace
+without silently refreshing it. Packing reads current valid workspace content
+and does not change the workspace manifest.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>metadata<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>refresh<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--check
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>refresh<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>pack<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>notes.ssmd-bundle.zip
+</pre></div>
+</div>
+</section>
+<section id="shared-downstream-workflows">
+<h2>Shared downstream workflows</h2>
+<p>Reports, cached context, plain-text projection, and speech workflows accept
+standalone SSMD or either canonical bundle storage form:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8
+ssmdconvert<span class="w"> </span>context<span class="w"> </span>novel.ssmd-bundle<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef
+ssmdconvert<span class="w"> </span>txt<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>-o<span class="w"> </span>notes.txt
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd-bundle.zip
+</pre></div>
+</div>
+<p>Speech writes publish to a new destination; they never mutate a workspace in
+place. Book conversion freezes eligible automatic speech decisions by default.
+Use <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for structural-only book conversion.</p>
+</section>
+<section id="python-api">
+<h2>Python API</h2>
+<p>The public storage API is kind-neutral. Internal manifest formats continue to
+dispatch to their existing validators.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_bundle</span><span class="p">,</span>
+    <span class="n">load_bundle</span><span class="p">,</span>
+    <span class="n">pack_bundle</span><span class="p">,</span>
+    <span class="n">refresh_bundle_workspace</span><span class="p">,</span>
+    <span class="n">validate_bundle</span><span class="p">,</span>
+<span class="p">)</span>
 
-utterplan<span class="w"> </span>compile-book<span class="w"> </span>chapters<span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span>-17
+<span class="n">result</span> <span class="o">=</span> <span class="n">convert_bundle</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">load_bundle</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">loaded</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;book&quot;</span>
+
+<span class="n">workspace</span> <span class="o">=</span> <span class="n">refresh_bundle_workspace</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="n">archive</span> <span class="o">=</span> <span class="n">pack_bundle</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">validate_bundle</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span> <span class="o">==</span> <span class="n">workspace</span><span class="o">.</span><span class="n">kind</span>
 </pre></div>
 </div>
-<p>The output defaults to <code class="docutils literal notranslate"><span class="pre">&lt;book-root&gt;/utterplan/</span></code>:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>utterplan/
-├── compile-report.toml
-├── chapter-0005.utterplan.toml
-├── chapter-0006.utterplan.toml
-├── ...
-└── chapter-0017.utterplan.toml
-</pre></div>
-</div>
-<p>The equivalent explicit-root form is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile-book<span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.ssmdbook&quot;</span><span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span>-17
-</pre></div>
-</div>
-<p>You may also run <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">compile-book</span> <span class="pre">chapters</span></code> to compile every chapter in the manifest, or select a non-contiguous set:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile-book<span class="w"> </span>chapters<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5
-</pre></div>
-</div>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--output-dir</span> <span class="pre">PATH</span></code> to choose another plan directory. The output directory and report path are preflighted for collisions. Plans are protected if they already exist unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. The normal batch behavior continues after a chapter failure; use <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> to skip later chapters after the first failure. The TOML <code class="docutils literal notranslate"><span class="pre">compile-report.toml</span></code> records each selected item and its outcome; it is operational metadata, not a FlowPlan.</p>
-</section>
-<section id="workspace-discovery-and-selection">
-<h2>Workspace discovery and selection</h2>
-<p><code class="docutils literal notranslate"><span class="pre">INPUT</span></code> must be either:</p>
-<ul class="simple">
-<li><p>an SSMDBook root containing <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>; or</p></li>
-<li><p>its canonical <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory, whose parent contains <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>.</p></li>
-</ul>
-<p>The manifest is the format authority; the root directory does not need a <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> suffix. UtterPlan accepts the SSMDBook v1 contract (<code class="docutils literal notranslate"><span class="pre">format:</span> <span class="pre">&quot;ssmdconvert.book&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">schema_version:</span> <span class="pre">1</span></code>, <code class="docutils literal notranslate"><span class="pre">ssmd_version:</span> <span class="pre">&quot;0.9&quot;</span></code>). Chapter selection uses each entry’s <code class="docutils literal notranslate"><span class="pre">source_number</span></code>, not the filename or position in the manifest. Supported selectors are:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">all</span></code> (default)</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">5</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">5-17</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">1,3-5,9</span></code></p></li>
-</ul>
-<p>Ranges are inclusive. Numbers must be positive and present in the manifest. Reversed or malformed ranges and missing source numbers are usage errors. Duplicate selected numbers are compiled once. Results follow authoritative manifest array order; they are not sorted by filename or number.</p>
-<p>Only selected chapter source files are opened by the compiler. A malformed or missing unselected chapter does not block a subset compilation. Selected source read, SSMD validation, planning, and write errors are handled as batch item failures, preserving successful outputs and the report.</p>
-</section>
-<section id="editable-workspace-behavior-and-safety">
-<h2>Editable workspace behavior and safety</h2>
-<p>An SSMDBook directory is an editable workspace. If a selected chapter was edited after the manifest was written, UtterPlan compiles the current file content even when its recorded <code class="docutils literal notranslate"><span class="pre">sha256</span></code> is stale. It never refreshes digests or edits <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> or chapter files. Chapter paths are checked as normalized relative POSIX paths below <code class="docutils literal notranslate"><span class="pre">chapters/</span></code>; absolute paths, drive prefixes, traversal, unsafe symlink escapes, and non-regular selected targets are rejected. Plans and reports may not be written into the source <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory or over the manifest.</p>
-<p><code class="docutils literal notranslate"><span class="pre">compile-book</span></code> shares these planning options with <code class="docutils literal notranslate"><span class="pre">compile-many</span></code>:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--language</span></code> / <code class="docutils literal notranslate"><span class="pre">--lang</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">paragraph|sentence</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">spokenform|identity</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">tts|manual|auto</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--renderability</span> <span class="pre">strict|repair</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">auto|off|sm|md|lg|trf</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--force</span></code>, <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code>, and <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">PATH</span></code></p></li>
-</ul>
-<p>Chapter input is SSMD by contract, so <code class="docutils literal notranslate"><span class="pre">compile-book</span></code> deliberately has no <code class="docutils literal notranslate"><span class="pre">--input-format</span></code> option. When no <code class="docutils literal notranslate"><span class="pre">--language</span></code> is supplied, a selected chapter must declare its language in SSMD metadata.</p>
+<p>See the <a class="reference internal" href="../api/"><span class="std std-doc">Python API reference</span></a>, <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">analysis workflows</span></a>,
+and <a class="reference internal" href="../bundle-format/"><span class="std std-doc">manifest implementation details</span></a> for further information.</p>
 </section>
 </section>
 </div>

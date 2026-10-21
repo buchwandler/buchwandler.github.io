@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -542,322 +542,249 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="python-api">
 <h1>Python API</h1>
-<p>The core names documented here are exported from <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> and listed in <code class="docutils literal notranslate"><span class="pre">ssmdconvert.__all__</span></code>.</p>
-<section id="conversion">
-<h2>Conversion</h2>
-<p>.. py:function:: convert(source: str | ~pathlib.Path, *, title: str | None = None, author: str | None = None, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’) -&gt; ~ssmdconvert.models.ConversionResult
-:module: ssmdconvert</p>
-<p>Convert a source path with the default adapters.</p>
-<p>.. py:class:: Converter(adapters: ~collections.abc.Iterable[~ssmdconvert.adapters.base.InputAdapter] | None = None)
-:module: ssmdconvert
-:canonical: ssmdconvert.converter.Converter</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Convert source documents through the registered input adapters.</p>
-<p>.. py:method:: Converter.adapter_for(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.adapters.base.InputAdapter
-:module: ssmdconvert</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Select the adapter that supports a source path.
-</pre></div>
-</div>
-<p>.. py:method:: Converter.load(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.models.Document
-:module: ssmdconvert</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Load a source into the normalized document model.
-</pre></div>
-</div>
-<p>.. py:method:: Converter.convert(source: str | ~pathlib.Path, *, title: str | None = None, author: str | None = None, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’) -&gt; ~ssmdconvert.models.ConversionResult
-:module: ssmdconvert</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Convert a source into one combined SSMD document.
-</pre></div>
-</div>
-<p>.. py:method:: Converter.convert_content(content: str, *, input_format: ~typing.Literal[‘text’, ‘markdown’, ‘html’], source_name: str = ‘<memory>’, title: str | None = None, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’) -&gt; ~ssmdconvert.models.ConversionResult
-:module: ssmdconvert</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>  Convert in-memory text, Markdown, or HTML into one SSMD document.
-</pre></div>
-</div>
-<p>.. py:class:: ConversionResult(document: ~ssmdconvert.models.Document, ssmd: str)
-:module: ssmdconvert
-:canonical: ssmdconvert.models.ConversionResult</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Rendered SSMD and its normalized document.</p>
-<p>.. py:attribute:: ConversionResult.document
-:module: ssmdconvert
-:type: ~ssmdconvert.models.Document</p>
-<p>.. py:attribute:: ConversionResult.ssmd
-:module: ssmdconvert
-:type: str</p>
-<p><code class="docutils literal notranslate"><span class="pre">Converter.convert()</span></code> returns one combined SSMD document. Input paths ending in <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> are recognized case-insensitively and parsed as SSMD before being rendered.</p>
-<p><code class="docutils literal notranslate"><span class="pre">Converter.convert()</span></code>, the convenience <code class="docutils literal notranslate"><span class="pre">convert()</span></code>, and <code class="docutils literal notranslate"><span class="pre">convert_content()</span></code> accept <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode</span></code>, which may be <code class="docutils literal notranslate"><span class="pre">spell</span></code> or <code class="docutils literal notranslate"><span class="pre">preserve</span></code>. New conversions default to <code class="docutils literal notranslate"><span class="pre">preserve</span></code>; the selected value is written to generated SSMD front matter and normalized document metadata. This writer default does not change how consumers handle legacy SSMD documents where the field is absent.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span><span class="s2">&quot;manuscript.md&quot;</span><span class="p">,</span> <span class="n">sequence_fallback_mode</span><span class="o">=</span><span class="s2">&quot;preserve&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">metadata_overrides</span></code> accepts a mapping of supported portable SSMD and bibliographic values in the Python conversion APIs. The CLI counterpart is <code class="docutils literal notranslate"><span class="pre">--metadata-file</span> <span class="pre">PATH</span></code>, a UTF-8 YAML mapping. Values merge in source, file, then explicit CLI order; the effective <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode</span></code> is applied last. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">convert</span><span class="p">(</span>
-    <span class="s2">&quot;manuscript.md&quot;</span><span class="p">,</span>
-    <span class="n">metadata_overrides</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;voice_defaults&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;narrator&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;rate&quot;</span><span class="p">:</span> <span class="s2">&quot;slow&quot;</span><span class="p">}}},</span>
+<p>The <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> package exposes typed conversion and analysis APIs. Bundle
+storage and lifecycle operations use a single kind-neutral facade; existing
+book and document manifest formats remain internal implementation details.</p>
+<section id="bundle-lifecycle">
+<h2>Bundle lifecycle</h2>
+<p><code class="docutils literal notranslate"><span class="pre">convert_bundle()</span></code> detects the source kind, converts the input, and writes a
+canonical directory workspace. <code class="docutils literal notranslate"><span class="pre">inspect_bundle_source()</span></code> inspects a source or
+bundle. <code class="docutils literal notranslate"><span class="pre">load_bundle()</span></code> and <code class="docutils literal notranslate"><span class="pre">validate_bundle()</span></code> strictly verify supported
+manifest content. <code class="docutils literal notranslate"><span class="pre">load_bundle_workspace()</span></code> reads current valid directory
+content and reports dirty state; <code class="docutils literal notranslate"><span class="pre">refresh_bundle_workspace()</span></code> updates recorded
+digests. <code class="docutils literal notranslate"><span class="pre">pack_bundle()</span></code> writes a canonical archive without changing the
+workspace.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_bundle</span><span class="p">,</span>
+    <span class="n">inspect_bundle_source</span><span class="p">,</span>
+    <span class="n">load_bundle</span><span class="p">,</span>
+    <span class="n">pack_bundle</span><span class="p">,</span>
+    <span class="n">refresh_bundle_workspace</span><span class="p">,</span>
+    <span class="n">validate_bundle</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">convert_bundle</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">result</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;book&quot;</span>
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">load_bundle</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">loaded</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="n">result</span><span class="o">.</span><span class="n">kind</span>
+
+<span class="n">inspection</span> <span class="o">=</span> <span class="n">inspect_bundle_source</span><span class="p">(</span><span class="s2">&quot;notes.md&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">inspection</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;document&quot;</span>
+<span class="n">workspace</span> <span class="o">=</span> <span class="n">refresh_bundle_workspace</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="n">archive</span> <span class="o">=</span> <span class="n">pack_bundle</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">validate_bundle</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span> <span class="o">==</span> <span class="n">workspace</span><span class="o">.</span><span class="n">kind</span>
 </pre></div>
 </div>
-</section>
-<section id="source-neutral-models">
-<h2>Source-neutral models</h2>
-<p>.. py:class:: SourceInfo(format: str, media_type: str | None = None, path: ~pathlib.Path | None = None, name: str | None = None)
+<p><code class="docutils literal notranslate"><span class="pre">convert_bundle()</span></code> accepts conversion options such as <code class="docutils literal notranslate"><span class="pre">chapters</span></code>, <code class="docutils literal notranslate"><span class="pre">language</span></code>,
+<code class="docutils literal notranslate"><span class="pre">metadata_overrides</span></code>, <code class="docutils literal notranslate"><span class="pre">speech_semantics</span></code>, and local spaCy policy. <code class="docutils literal notranslate"><span class="pre">chapters</span></code> is
+meaningful for books; a document accepts only the default <code class="docutils literal notranslate"><span class="pre">all</span></code> selector.</p>
+<p>.. py:function:: convert_bundle(source: str | Path, *, output: str | Path | None = None, chapters: str = ‘all’, language: str | None = None, metadata_overrides: Mapping[str, Any] | None = None, sequence_fallback_mode: SequenceFallbackMode | None = None, speech_semantics: Literal[‘freeze’, ‘preserve’] = ‘freeze’, spacy: SpacyPolicy = ‘off’, force: bool = False, on_progress: ProgressCallback | None = None) -&gt; BundleConversionResult
+:module: ssmdconvert</p>
+<p>Convert an EPUB or supported document and publish a canonical directory bundle.</p>
+<p>.. py:function:: inspect_bundle_source(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.bundle.BundleInspection
+:module: ssmdconvert</p>
+<p>Inspect a supported source or canonical bundle and include its detected kind.</p>
+<p>.. py:function:: load_bundle(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.bundle.LoadedBundle
+:module: ssmdconvert</p>
+<p>Load and strictly validate a packed or editable bundle by manifest kind.</p>
+<p>.. py:function:: load_bundle_workspace(path: str | ~pathlib.Path) -&gt; ~ssmdconvert.bundle.BundleWorkspace
+:module: ssmdconvert</p>
+<p>Load current editable workspace state without rejecting dirty content.</p>
+<p>.. py:function:: refresh_bundle_workspace(path: str | ~pathlib.Path) -&gt; ~ssmdconvert.bundle.BundleWorkspace
+:module: ssmdconvert</p>
+<p>Refresh kind-specific content digests in a canonical editable workspace.</p>
+<p>.. py:function:: pack_bundle(workspace: str | ~pathlib.Path, output: str | ~pathlib.Path | None = None) -&gt; ~pathlib.Path
+:module: ssmdconvert</p>
+<p>Write a deterministic canonical ZIP archive from an editable workspace.</p>
+<p>.. py:function:: validate_bundle(source: str | ~pathlib.Path) -&gt; ~typing.Literal[‘book’, ‘document’]
+:module: ssmdconvert</p>
+<p>Strictly validate a canonical directory or archive and return its kind.</p>
+<p>.. py:class:: BundleConversionResult(kind: ‘BundleKind’, value: ‘BookConversionResult | SsmdDocument’, output: ‘Path | None’ = None)
 :module: ssmdconvert
-:canonical: ssmdconvert.models.SourceInfo</p>
+:canonical: ssmdconvert.bundle.BundleConversionResult</p>
 <p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Source format and provenance, with a path only when locally available.</p>
-<p>.. py:attribute:: SourceInfo.format
+<p>.. py:attribute:: BundleConversionResult.kind
 :module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: SourceInfo.media_type
+:type: ~typing.Literal[‘book’, ‘document’]</p>
+<p>.. py:attribute:: BundleConversionResult.value
 :module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: SourceInfo.path
+:type: ~ssmdconvert.results.BookConversionResult | ~ssmdconvert.models.SsmdDocument</p>
+<p>.. py:attribute:: BundleConversionResult.output
 :module: ssmdconvert
 :type: ~pathlib.Path | None</p>
-<p>.. py:attribute:: SourceInfo.name
+<p>.. py:class:: BundleInspection(kind: ‘BundleKind’, value: ‘BundleInspectionValue’)
 :module: ssmdconvert
-:type: str | None</p>
-<p>.. py:class:: Section(id: str, markdown: str, title: str | None = None, level: int = 1, source_ref: str | None = None)
-:module: ssmdconvert
-:canonical: ssmdconvert.models.Section</p>
+:canonical: ssmdconvert.bundle.BundleInspection</p>
 <p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>A normalized, ordered portion of a source document.</p>
-<p>.. py:attribute:: Section.id
+<p>.. py:attribute:: BundleInspection.kind
 :module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: Section.markdown
+:type: ~typing.Literal[‘book’, ‘document’]</p>
+<p>.. py:attribute:: BundleInspection.value
 :module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: Section.title
+:type: ~ssmdconvert.models.BookInspection | ~ssmdconvert.models.Book | ~ssmdconvert.models.Document | ~ssmdconvert.models.SsmdDocument</p>
+<p>.. py:class:: LoadedBundle(kind: ‘BundleKind’, value: ‘BundleValue’)
 :module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: Section.level
-:module: ssmdconvert
-:type: int</p>
-<p>.. py:attribute:: Section.source_ref
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:class:: Document(source: ~ssmdconvert.models.SourceInfo, sections: list[~ssmdconvert.models.Section], metadata: dict[str, ~typing.Any] = <factory>)
-:module: ssmdconvert
-:canonical: ssmdconvert.models.Document</p>
+:canonical: ssmdconvert.bundle.LoadedBundle</p>
 <p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Source-neutral document model passed between adapters and renderers.</p>
-<p>.. py:attribute:: Document.source
+<p>.. py:attribute:: LoadedBundle.kind
 :module: ssmdconvert
-:type: ~ssmdconvert.models.SourceInfo</p>
-<p>.. py:attribute:: Document.sections
+:type: ~typing.Literal[‘book’, ‘document’]</p>
+<p>.. py:attribute:: LoadedBundle.value
 :module: ssmdconvert
-:type: list[~ssmdconvert.models.Section]</p>
-<p>.. py:attribute:: Document.metadata
-:module: ssmdconvert
-:type: dict[str, ~typing.Any]</p>
-<p><code class="docutils literal notranslate"><span class="pre">SourceInfo.path</span></code> is populated when the source is locally available. Bundle-loaded provenance keeps its source name, format, and media type, but has no local path.</p>
+:type: ~ssmdconvert.models.Book | ~ssmdconvert.models.SsmdDocument</p>
 </section>
-<section id="books-and-chapters">
-<h2>Books and chapters</h2>
-<p>.. py:class:: Book(source: ~ssmdconvert.models.SourceInfo, metadata: ~collections.abc.Mapping[str, ~typing.Any], chapters: tuple[~ssmdconvert.models.BookChapter, …], source_sha256: str, source_chapter_count: int | None = None)
-:module: ssmdconvert
-:canonical: ssmdconvert.models.Book</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Chapter-aware representation of a source book.</p>
-<p>.. py:attribute:: Book.source
-:module: ssmdconvert
-:type: ~ssmdconvert.models.SourceInfo</p>
-<p>.. py:attribute:: Book.metadata
-:module: ssmdconvert
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:attribute:: Book.chapters
-:module: ssmdconvert
-:type: tuple[~ssmdconvert.models.BookChapter, …]</p>
-<p>.. py:attribute:: Book.source_sha256
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: Book.source_chapter_count
-:module: ssmdconvert
-:type: int | None</p>
-<p>.. py:class:: BookChapter(id: str, source_number: int, title: str, ssmd: str, source_id: str | None = None, href: str | None = None, source_parent_id: str | None = None, parent_id: str | None = None, level: int = 1, char_count: int | None = None, diagnostics: tuple[~collections.abc.Mapping[str, ~typing.Any], …] = ())
-:module: ssmdconvert
-:canonical: ssmdconvert.models.BookChapter</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>One source chapter represented as a standalone SSMD document.</p>
-<p>.. py:attribute:: BookChapter.id
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: BookChapter.source_number
-:module: ssmdconvert
-:type: int</p>
-<p>.. py:attribute:: BookChapter.title
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: BookChapter.ssmd
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: BookChapter.source_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookChapter.href
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookChapter.source_parent_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookChapter.parent_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookChapter.level
-:module: ssmdconvert
-:type: int</p>
-<p>.. py:attribute:: BookChapter.char_count
-:module: ssmdconvert
-:type: int | None</p>
-<p>.. py:attribute:: BookChapter.diagnostics
-:module: ssmdconvert
-:type: tuple[~collections.abc.Mapping[str, ~typing.Any], …]</p>
-<p>.. py:class:: BookInspection(source: ~ssmdconvert.models.SourceInfo, metadata: ~collections.abc.Mapping[str, ~typing.Any], chapters: tuple[~ssmdconvert.models.BookInspectionChapter, …])
-:module: ssmdconvert
-:canonical: ssmdconvert.models.BookInspection</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Source metadata and ordered chapter inventory for a book.</p>
-<p>.. py:attribute:: BookInspection.source
-:module: ssmdconvert
-:type: ~ssmdconvert.models.SourceInfo</p>
-<p>.. py:attribute:: BookInspection.metadata
-:module: ssmdconvert
-:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
-<p>.. py:attribute:: BookInspection.chapters
-:module: ssmdconvert
-:type: tuple[~ssmdconvert.models.BookInspectionChapter, …]</p>
-<p>.. py:class:: BookInspectionChapter(id: str, source_number: int, title: str, source_id: str | None = None, href: str | None = None, source_parent_id: str | None = None, parent_id: str | None = None, level: int = 1, char_count: int | None = None, diagnostics: tuple[~collections.abc.Mapping[str, ~typing.Any], …] = ())
-:module: ssmdconvert
-:canonical: ssmdconvert.models.BookInspectionChapter</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
-<p>Inventory metadata for one source chapter.</p>
-<p>.. py:attribute:: BookInspectionChapter.id
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: BookInspectionChapter.source_number
-:module: ssmdconvert
-:type: int</p>
-<p>.. py:attribute:: BookInspectionChapter.title
-:module: ssmdconvert
-:type: str</p>
-<p>.. py:attribute:: BookInspectionChapter.source_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookInspectionChapter.href
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookInspectionChapter.source_parent_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookInspectionChapter.parent_id
-:module: ssmdconvert
-:type: str | None</p>
-<p>.. py:attribute:: BookInspectionChapter.level
-:module: ssmdconvert
-:type: int</p>
-<p>.. py:attribute:: BookInspectionChapter.char_count
-:module: ssmdconvert
-:type: int | None</p>
-<p>.. py:attribute:: BookInspectionChapter.diagnostics
-:module: ssmdconvert
-:type: tuple[~collections.abc.Mapping[str, ~typing.Any], …]</p>
-<p>.. py:function:: inspect_book(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.models.BookInspection
-:module: ssmdconvert</p>
-<p>Return EPUB metadata and its ordered source chapter inventory.</p>
-<p>.. py:function:: convert_book(source: str | ~pathlib.Path, *, chapters: str | None = ‘all’, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] | None = None, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’, speech_semantics: ~typing.Literal[‘freeze’, ‘preserve’] = ‘freeze’) -&gt; ~ssmdconvert.models.Book
-:module: ssmdconvert</p>
-<p>Convert selected EPUB chapters to standalone SSMD in source order.</p>
-<p><code class="docutils literal notranslate"><span class="pre">BookChapter.id</span></code> is the canonical chapter identity. <code class="docutils literal notranslate"><span class="pre">source_id</span></code> and <code class="docutils literal notranslate"><span class="pre">source_parent_id</span></code> preserve source navigation identifiers; <code class="docutils literal notranslate"><span class="pre">parent_id</span></code> refers to the canonical parent chapter ID when present in the inventory. <code class="docutils literal notranslate"><span class="pre">Book.source_sha256</span></code> is captured during conversion.</p>
-<p><code class="docutils literal notranslate"><span class="pre">convert_book()</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=preserve</span></code>, accepts an optional <code class="docutils literal notranslate"><span class="pre">language</span></code> override and <code class="docutils literal notranslate"><span class="pre">metadata_overrides</span></code> mapping, and records effective metadata in <code class="docutils literal notranslate"><span class="pre">Book.metadata</span></code> and portable keys in each generated chapter. Source language is retained by default; absent source language stays absent unless supplied. For example:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">book</span> <span class="o">=</span> <span class="n">convert_book</span><span class="p">(</span>
-    <span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span>
-    <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
-    <span class="n">metadata_overrides</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;voice_defaults&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;narrator&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;rate&quot;</span><span class="p">:</span> <span class="s2">&quot;slow&quot;</span><span class="p">}}},</span>
+<section id="in-memory-conversion">
+<h2>In-memory conversion</h2>
+<p>For callers that need in-memory models, <code class="docutils literal notranslate"><span class="pre">convert_document()</span></code> and
+<code class="docutils literal notranslate"><span class="pre">convert_content()</span></code> return a <code class="docutils literal notranslate"><span class="pre">ConversionResult</span></code>; <code class="docutils literal notranslate"><span class="pre">convert_book()</span></code> returns a
+<code class="docutils literal notranslate"><span class="pre">BookConversionResult</span></code> containing the converted book and speech outcome.
+Publication remains explicit with the neutral <code class="docutils literal notranslate"><span class="pre">write_bundle()</span></code> API.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BookConversionOptions</span><span class="p">,</span>
+    <span class="n">DocumentConversionOptions</span><span class="p">,</span>
+    <span class="n">SpeechOptions</span><span class="p">,</span>
+    <span class="n">convert_book</span><span class="p">,</span>
+    <span class="n">convert_content</span><span class="p">,</span>
+    <span class="n">convert_document</span><span class="p">,</span>
+    <span class="n">write_bundle</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">document</span> <span class="o">=</span> <span class="n">convert_document</span><span class="p">(</span>
+    <span class="s2">&quot;manuscript.md&quot;</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="n">DocumentConversionOptions</span><span class="p">(</span><span class="n">language</span><span class="o">=</span><span class="s2">&quot;en-US&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">content</span> <span class="o">=</span> <span class="n">convert_content</span><span class="p">(</span><span class="s2">&quot;# Notes</span><span class="se">\n\n</span><span class="s2">Read this.&quot;</span><span class="p">,</span> <span class="n">input_format</span><span class="o">=</span><span class="s2">&quot;markdown&quot;</span><span class="p">)</span>
+<span class="n">book_result</span> <span class="o">=</span> <span class="n">convert_book</span><span class="p">(</span>
+    <span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="n">BookConversionOptions</span><span class="p">(</span>
+        <span class="n">chapters</span><span class="o">=</span><span class="s2">&quot;2-20&quot;</span><span class="p">,</span>
+        <span class="n">language</span><span class="o">=</span><span class="s2">&quot;de-DE&quot;</span><span class="p">,</span>
+        <span class="n">speech</span><span class="o">=</span><span class="n">SpeechOptions</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;preserve&quot;</span><span class="p">),</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+<span class="n">write_bundle</span><span class="p">(</span><span class="n">book_result</span><span class="o">.</span><span class="n">book</span><span class="p">,</span> <span class="s2">&quot;selected.ssmd-bundle&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </section>
-<section id="bundles">
-<h2>Bundles</h2>
-<p>.. py:function:: write_book_bundle(book: ~ssmdconvert.models.Book, output: str | ~pathlib.Path, *, format: ~typing.Literal[‘directory’, ‘zip’], overwrite: bool = False) -&gt; ~pathlib.Path
+<section id="analysis-reports-and-speech">
+<h2>Analysis, reports, and speech</h2>
+<p><code class="docutils literal notranslate"><span class="pre">analyze_ssmd()</span></code> accepts standalone SSMD, either canonical bundle storage form,
+or an in-memory <code class="docutils literal notranslate"><span class="pre">Book</span></code> or <code class="docutils literal notranslate"><span class="pre">BookConversionResult</span></code>. Analysis and text projection
+are separate so the same projection can be reused in a report and downstream
+workflow. <code class="docutils literal notranslate"><span class="pre">analyze_ssmd()</span></code> does not write or read a persistent cache; use
+<code class="docutils literal notranslate"><span class="pre">analyze_cached()</span></code> and <code class="docutils literal notranslate"><span class="pre">lookup_cached_context()</span></code> for explicit cached analysis.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AnalysisOptions</span><span class="p">,</span>
+    <span class="n">TextProjectionOptions</span><span class="p">,</span>
+    <span class="n">analyze_ssmd</span><span class="p">,</span>
+    <span class="n">build_report</span><span class="p">,</span>
+    <span class="n">project_text</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">analyze_ssmd</span><span class="p">(</span><span class="s2">&quot;notes.ssmd-bundle&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">AnalysisOptions</span><span class="p">(</span><span class="n">spacy</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">))</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="n">project_text</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">TextProjectionOptions</span><span class="p">())</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">build_report</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">freeze_speech()</span></code> rewrites an existing analysis in memory and never writes to
+the source. An incomplete freeze raises <code class="docutils literal notranslate"><span class="pre">SpeechFreezeFailure</span></code> with partial
+evidence. See <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">analysis and speech workflows</span></a> for CLI
+usage, cache freshness, and safe publication.</p>
+<p>.. py:function:: analyze_ssmd(source: str | Path | Book | BookConversionResult, *, options: AnalysisOptions | None = None, on_progress: ProgressCallback | None = None) -&gt; SsmdAnalysis
 :module: ssmdconvert</p>
-<p>Write a complete directory or ZIP bundle atomically beside its destination.</p>
-<p>.. py:function:: load_book_bundle(source: str | ~pathlib.Path) -&gt; ~ssmdconvert.models.Book
+<p>Analyze SSMD or an in-memory book without writing temporary artifacts or caches.</p>
+<p>.. py:function:: project_text(analysis: SsmdAnalysis, *, options: TextProjectionOptions | None = None) -&gt; ProjectedText
 :module: ssmdconvert</p>
-<p>Load and strictly validate a directory or ZIP book bundle.</p>
-<p>.. py:function:: validate_book_bundle(source: str | ~pathlib.Path) -&gt; None
+<p>Project prepared text using the shared deterministic TXT rules.</p>
+<p>.. py:function:: build_report(analysis: SsmdAnalysis, *, projection: ProjectedText | None = None, options: TextProjectionOptions | None = None, analysis_id: str | None = None) -&gt; SsmdAnalysisReport
 :module: ssmdconvert</p>
-<p>Validate a book bundle using the same strict loader as deserialization.</p>
-<p>The writer requires <code class="docutils literal notranslate"><span class="pre">format=&quot;directory&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">format=&quot;zip&quot;</span></code>. Existing destinations are refused unless <code class="docutils literal notranslate"><span class="pre">overwrite=True</span></code> is supplied. See <a class="reference internal" href="../bundle-format/"><span class="std std-doc">Bundle format</span></a> for atomic replacement, validation, and resource limits.</p>
-</section>
-<section id="errors">
-<h2>Errors</h2>
-<p>.. py:class:: SSMDConvertError
+<p>Build a typed report from existing analysis and projection, without reanalysis.</p>
+<p>.. py:function:: freeze_speech(analysis: SsmdAnalysis) -&gt; SpeechFreezeResult
+:module: ssmdconvert</p>
+<p>Freeze an existing analysis in memory and return exact sections plus evidence.</p>
+<p>.. py:class:: AnalysisOptions(*, chapters: str = ‘all’, language: str | None = None, fallback_language: str | None = None, spacy: SpacyPolicy = ‘off’, include_titles: bool = True, sequence_fallback_mode: SequenceFallbackMode | None = None, profile: PreparationProfile | None = None, overrides: tuple[SpeechOverride, …] = (), pronunciations: Mapping[str, str] = <factory>)
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.SSMDConvertError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">Exception</span></code></p>
-<p>Base error.</p>
-<p>.. py:class:: UnsupportedInputError
+:canonical: ssmdconvert.options.AnalysisOptions</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>SSMD speech-preparation policy; analysis itself never writes source files.</p>
+<p>.. py:attribute:: AnalysisOptions.chapters
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.UnsupportedInputError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.SSMDConvertError</span></code></p>
-<p>No input adapter accepts the source.</p>
-<p>.. py:class:: MissingDependencyError
+:type: str</p>
+<p>.. py:attribute:: AnalysisOptions.language
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.MissingDependencyError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.SSMDConvertError</span></code></p>
-<p>An optional adapter/enricher dependency is not installed.</p>
-<p>.. py:class:: BookError
+:type: str | None</p>
+<p>.. py:attribute:: AnalysisOptions.fallback_language
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.BookError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.SSMDConvertError</span></code></p>
-<p>A book inspection or conversion failed.</p>
-<p>.. py:class:: UnsupportedBookSourceError
+:type: str | None</p>
+<p>.. py:attribute:: AnalysisOptions.spacy
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.UnsupportedBookSourceError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.BookError</span></code></p>
-<p>The book API does not support this source format.</p>
-<p>.. py:class:: ChapterSelectionError
+:type: SpacyPolicy</p>
+<p>.. py:attribute:: AnalysisOptions.include_titles
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.ChapterSelectionError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.BookError</span></code></p>
-<p>A chapter selection is malformed or unavailable.</p>
-<p>.. py:class:: BookBundleError
+:type: bool</p>
+<p>.. py:attribute:: AnalysisOptions.sequence_fallback_mode
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.BookBundleError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.BookError</span></code></p>
-<p>A book bundle could not be read or written.</p>
-<p>.. py:class:: BookBundleValidationError
+:type: SequenceFallbackMode | None</p>
+<p>.. py:attribute:: AnalysisOptions.profile
 :module: ssmdconvert
-:canonical: ssmdconvert.errors.BookBundleValidationError</p>
-<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">~ssmdconvert.errors.BookBundleError</span></code></p>
-<p>A book bundle has invalid structure or content.</p>
-</section>
-<section id="ssmd-analysis-and-speech-workflows">
-<h2>SSMD analysis and speech workflows</h2>
-<p>SSMD report, context lookup, TXT projection, speech audit, annotation, and freeze are
-user-facing CLI workflows. The former optional <code class="docutils literal notranslate"><span class="pre">SpeechPreparationOptions</span></code> /
-<code class="docutils literal notranslate"><span class="pre">prepare_ssmd_for_speech</span></code> engine and its direct <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> runtime dependency have
-been removed; <code class="docutils literal notranslate"><span class="pre">ttsready&gt;=0.2,&lt;0.3</span></code> supplies generic preparation through its public
-Python API.</p>
-<p>See <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">SSMD analysis and speech workflows</span></a> for command usage,
-cache ownership, source mapping, safe write-back, and migration from the removed
-<code class="docutils literal notranslate"><span class="pre">ttsready</span></code> CLI.</p>
-</section>
-<section id="version">
-<h2>Version</h2>
-<p>.. py:data:: <strong>version</strong>
+:type: PreparationProfile | None</p>
+<p>.. py:attribute:: AnalysisOptions.overrides
 :module: ssmdconvert
-:value: ‘0.1.4’</p>
-<p>str(object=’’) -&gt; str
-str(bytes_or_buffer[, encoding[, errors]]) -&gt; str</p>
-<p>Create a new string object from the given object. If encoding or
-errors is specified, then the object must expose a data buffer
-that will be decoded using the given encoding and error handler.
-Otherwise, returns the result of object.<strong>str</strong>() (if defined)
-or repr(object).
-encoding defaults to ‘utf-8’.
-errors defaults to ‘strict’.</p>
+:type: tuple[SpeechOverride, …]</p>
+<p>.. py:attribute:: AnalysisOptions.pronunciations
+:module: ssmdconvert
+:type: Mapping[str, str]</p>
+<p>.. py:class:: TextProjectionOptions(*, max_paragraph_chars: int | None = 1000, include_titles: bool = True)
+:module: ssmdconvert
+:canonical: ssmdconvert.options.TextProjectionOptions</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Options for deterministic prepared-text projection and paragraph splitting.</p>
+<p>.. py:attribute:: TextProjectionOptions.max_paragraph_chars
+:module: ssmdconvert
+:type: int | None</p>
+<p>.. py:attribute:: TextProjectionOptions.include_titles
+:module: ssmdconvert
+:type: bool</p>
+<p>.. py:class:: BookConversionOptions(*, chapters: str = ‘all’, language: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] = <factory>, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’, speech: ~ssmdconvert.options.SpeechOptions = <factory>)
+:module: ssmdconvert
+:canonical: ssmdconvert.options.BookConversionOptions</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Validated EPUB selection, metadata, and optional speech-freeze settings.</p>
+<p>.. py:attribute:: BookConversionOptions.chapters
+:module: ssmdconvert
+:type: str</p>
+<p>.. py:attribute:: BookConversionOptions.language
+:module: ssmdconvert
+:type: str | None</p>
+<p>.. py:attribute:: BookConversionOptions.metadata_overrides
+:module: ssmdconvert
+:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
+<p>.. py:attribute:: BookConversionOptions.sequence_fallback_mode
+:module: ssmdconvert
+:type: ~typing.Literal[‘preserve’, ‘spell’]</p>
+<p>.. py:attribute:: BookConversionOptions.speech
+:module: ssmdconvert
+:type: ~ssmdconvert.options.SpeechOptions</p>
+<p>.. py:class:: DocumentConversionOptions(*, language: str | None = None, title: str | None = None, author: str | None = None, metadata_overrides: ~collections.abc.Mapping[str, ~typing.Any] = <factory>, sequence_fallback_mode: ~typing.Literal[‘preserve’, ‘spell’] = ‘preserve’)
+:module: ssmdconvert
+:canonical: ssmdconvert.options.DocumentConversionOptions</p>
+<p>Bases: :py:class:<code class="docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Validated document conversion settings shared by Python callers and CLI.</p>
+<p>.. py:attribute:: DocumentConversionOptions.language
+:module: ssmdconvert
+:type: str | None</p>
+<p>.. py:attribute:: DocumentConversionOptions.title
+:module: ssmdconvert
+:type: str | None</p>
+<p>.. py:attribute:: DocumentConversionOptions.author
+:module: ssmdconvert
+:type: str | None</p>
+<p>.. py:attribute:: DocumentConversionOptions.metadata_overrides
+:module: ssmdconvert
+:type: ~collections.abc.Mapping[str, ~typing.Any]</p>
+<p>.. py:attribute:: DocumentConversionOptions.sequence_fallback_mode
+:module: ssmdconvert
+:type: ~typing.Literal[‘preserve’, ‘spell’]</p>
 </section>
 </section>
 </div>

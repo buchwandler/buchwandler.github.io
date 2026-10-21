@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -544,7 +544,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <h1><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">speech</span> <span class="pre">audit</span></code></h1>
 <p>Audit automatic speech-preparation changes without modifying SSMD.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>SOURCE
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>BOOK.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">3</span><span class="w"> </span>--json
 ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>SOURCE<span class="w"> </span>--language<span class="w"> </span>en-US<span class="w"> </span>--fail-on-warning
 </pre></div>
 </div>
@@ -553,6 +553,7 @@ analysis pipeline as <code class="docutils literal notranslate"><span class="pre
 normalizer. <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits a versioned JSON result. <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> returns a
 non-zero status when the audit contains warnings or errors. <code class="docutils literal notranslate"><span class="pre">--language</span></code>, chapter
 selection, fallback mode, and title inclusion control the analysis as in <code class="docutils literal notranslate"><span class="pre">report</span></code>.</p>
+<p>Human output and JSON include the same mapping counts: applied, already authoritative, author-owned, and unresolved. <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits <code class="docutils literal notranslate"><span class="pre">ssmdconvert.speech-audit.v2</span></code>, including each change’s final disposition and a <code class="docutils literal notranslate"><span class="pre">freeze_mapping</span></code> summary. The audit is read-only; an <code class="docutils literal notranslate"><span class="pre">applied</span></code> disposition means the exact mapping is safe to write, not that the audit changed the source.</p>
 <p>Audit is read-only. To materialize eligible changes into SSMD, use
 <a class="reference internal" href="../speech-annotations/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code></span></a> or <a class="reference internal" href="../freeze/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">freeze</span></code></span></a>.</p>
 </section>

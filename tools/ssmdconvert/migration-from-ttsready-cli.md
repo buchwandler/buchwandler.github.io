@@ -5,8 +5,8 @@ permalink: /tools/ssmdconvert/migration-from-ttsready-cli/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -571,7 +571,7 @@ preparation/QA API used internally by <code class="docutils literal notranslate"
 <td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">txt</span> <span class="pre">SOURCE</span> <span class="pre">...</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ttsready</span> <span class="pre">chapters</span> <span class="pre">EPUB</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">inspect</span> <span class="pre">EPUB</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">bundle</span> <span class="pre">inspect</span> <span class="pre">EPUB</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ttsready</span> <span class="pre">preflight</span> <span class="pre">SOURCE</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">report</span> <span class="pre">SOURCE</span> <span class="pre">--fail-on-warning</span></code></p></td>

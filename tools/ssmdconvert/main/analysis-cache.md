@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -566,6 +566,10 @@ snapshot. Compatible per-chapter preparation results are reused by default.
 <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">report</span> <span class="pre">SOURCE</span> <span class="pre">--refresh</span></code> bypasses cached per-chapter preparation and
 reruns preparation for the selected sections before saving a fresh snapshot.
 Re-running identical inputs may produce the same deterministic analysis ID.</p>
+<p>Chapter preparation fingerprints include the linguistics policy, selected
+provider/model, and their versions. Changing those values invalidates cached
+preparation, while a compatible hit reuses results without running NLP over the
+chapter.</p>
 <p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">context</span> <span class="pre">SOURCE</span> <span class="pre">CHANGE_ID</span></code> resolves a generic change ID from that
 source’s saved analyses and verifies only the current bytes of the affected
 chapter. If those bytes differ from the cached chapter fingerprint, context fails

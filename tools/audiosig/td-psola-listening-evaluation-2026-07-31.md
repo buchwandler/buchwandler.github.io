@@ -5,8 +5,8 @@ permalink: /tools/audiosig/td-psola-listening-evaluation-2026-07-31/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.7"
-docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
+docs_ref: "v0.1.8"
+docs_commit: "fc87d829991d44b2ccc20685d4577019e628ee90"
 search_enabled: true
 ---
 

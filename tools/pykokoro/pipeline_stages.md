@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/pipeline_stages/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.4"
-docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
+docs_ref: "v0.10.5"
+docs_commit: "3dabff8c7fb9efd8cc8bc15f99c41afd152ee088"
 search_enabled: true
 ---
 

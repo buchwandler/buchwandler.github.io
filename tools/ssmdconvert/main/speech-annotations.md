@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -545,14 +545,14 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>Write selected eligible automatic speech changes as explicit SSMD substitutions
 in a new destination.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>chapter.ssmd<span class="w"> </span>-o<span class="w"> </span>annotated.ssmd
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>BOOK.ssmdbook<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>annotated-copy.ssmdbook
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>BOOK.ssmd-bundle<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>annotated-copy.ssmd-bundle
 </pre></div>
 </div>
-<p>For a new EPUB artifact, <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">convert</span></code> freezes eligible automatic decisions during conversion by default; choose <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for a structural-only result. This one-pass path uses the same analysis/materialization rules described here. <code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code> remains useful for existing SSMD sources and review workflows.</p>
+<p>For a new EPUB artifact, <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">bundle</span> <span class="pre">convert</span></code> freezes eligible automatic decisions during conversion by default; choose <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for a structural-only result. This one-pass path uses the same analysis/materialization rules described here. <code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code> remains useful for existing SSMD sources and review workflows.</p>
 <p>For book sources, chapter selectors use original 1-based source numbers. Unselected
 chapters remain unchanged. Directory workspaces, including dirty workspaces, are
 read as-is, but the output destination must be outside the source workspace. Use
-<code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> for a directory or <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> for a ZIP; <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">directory|zip</span></code> overrides inference for another output name.</p>
+Use <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle</span></code> for directories and <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle.zip</span></code> for ZIP archives.</p>
 <p>Writes use parser-owned source spans, verify exact source slices, reject unsafe or
 overlapping changes, validate the resulting SSMD, and prove that visible text is
 unchanged. Existing authoritative speech annotations are not duplicated. If the

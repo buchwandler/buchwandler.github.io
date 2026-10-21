@@ -5,8 +5,8 @@ permalink: /tools/utterplan/pykokoro-integration/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "a06da00122bda9de70d345d91a97259bbda6b18a"
+docs_ref: "v0.6.6"
+docs_commit: "a70e4a16603d00b42bfbdfb2b58a51cad2064d69"
 search_enabled: true
 ---
 
@@ -553,30 +553,31 @@ html[data-theme="dark"] .sphinxpress-doc {
     -&gt; audio
 </pre></div>
 </div>
-<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions, acoustic behavior, and audio. UtterPlan owns deterministic document parsing, language planning, written-to-spoken preparation, segmentation, typed directives, semantic pause intent, markers, and render units.</p>
+<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions, acoustic behavior, and audio. UtterPlan owns deterministic document parsing, language planning, written-to-spoken preparation, canonical segmentation, safe boundary opportunities, authored pause intents, typed directives, markers, and paragraph-local flow units.</p>
 <section id="thin-adapter-inputs">
 <h2>Thin adapter inputs</h2>
-<p>A future adapter can use only public v5 flow fields:</p>
+<p>A future adapter can use only public v7 flow fields:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">plan.flow</span></code> in order, with each unit’s ordered <code class="docutils literal notranslate"><span class="pre">segments</span></code>;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.text</span></code> and <code class="docutils literal notranslate"><span class="pre">segment.language</span></code>;</p></li>
 <li><p>local <code class="docutils literal notranslate"><span class="pre">segment.tokens</span></code> for optional linguistic context;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.directives</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_before</span></code>, and <code class="docutils literal notranslate"><span class="pre">pause_after</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segment.boundary_before</span></code> / <code class="docutils literal notranslate"><span class="pre">boundary_after</span></code> for safe downstream cuts, separately from authored pause intents;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.markers</span></code> and optional <code class="docutils literal notranslate"><span class="pre">segment.heading</span></code>;</p></li>
 <li><p>compact <code class="docutils literal notranslate"><span class="pre">plan.document</span></code> and <code class="docutils literal notranslate"><span class="pre">plan.linguistics</span></code> metadata.</p></li>
 </ul>
-<p>Token offsets are local to the owning <code class="docutils literal notranslate"><span class="pre">segment.text</span></code>. A consumer must not use compiler source offsets or retokenize the document. Provider/model provenance is descriptive; when contextual G2P requires a specific provider, the adapter must fail clearly or use its documented non-contextual fallback.</p>
+<p>Token offsets are local to the owning <code class="docutils literal notranslate"><span class="pre">segment.text</span></code>. A consumer must not use compiler source offsets. Optional replacement spans slice prepared text and record original spellings; they are not source offsets. Preserve the trace sidecar for exact source locations and complete preparation mappings.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">unit</span> <span class="ow">in</span> <span class="n">plan</span><span class="o">.</span><span class="n">flow</span><span class="p">:</span>
     <span class="k">for</span> <span class="n">segment</span> <span class="ow">in</span> <span class="n">unit</span><span class="o">.</span><span class="n">segments</span><span class="p">:</span>
         <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">[</span><span class="n">token</span><span class="o">.</span><span class="n">start</span> <span class="p">:</span> <span class="n">token</span><span class="o">.</span><span class="n">end</span><span class="p">]</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">segment</span><span class="o">.</span><span class="n">tokens</span><span class="p">]</span>
         <span class="n">phonemizer</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The renderer must not rerun spaCy or infer missing POS/tag values. No JSON serialization is required for in-process use.</p>
+<p>Use the v7 linguistic token fields (not model-token IDs or counts) as authoritative context: pass available <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code> through unchanged rather than rerunning spaCy or inferring tags. Default <code class="docutils literal notranslate"><span class="pre">auto</span></code> uses installed compatible local models, preferring <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, <code class="docutils literal notranslate"><span class="pre">trf</span></code>, and safely falls back if unavailable; model packages are never downloaded. When fields are unavailable, follow the adapter’s documented non-contextual fallback.</p>
 </section>
 <section id="pause-behavior">
 <h2>Pause behavior</h2>
-<p>The flow carries semantic pause intents and exact authored timed breaks, not planner-invented renderer durations or a renderer activation mode. PyKokoro may interpret supported semantic intents according to its own behavior. Renderer/acoustic variance remains outside UtterPlan and plan identity.</p>
+<p>Schema v7 carries safe boundary opportunities separately from authored pause intents and exact timed breaks; neither selects a renderer activation policy or fixes a chunk. PyKokoro may choose its own chunking and native, automatic, or manual pause realization. A <code class="docutils literal notranslate"><span class="pre">FlowSegment</span></code> is not necessarily one TTS call, and renderer/acoustic variance remains outside UtterPlan and plan identity.</p>
 </section>
 <section id="compatibility-ownership">
 <h2>Compatibility ownership</h2>

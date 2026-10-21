@@ -5,8 +5,8 @@ permalink: /tools/ssmdconvert/context/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -555,9 +555,15 @@ refresh with <code class="docutils literal notranslate"><span class="pre">ssmdco
 ID. It does not invalidate context for edits to unrelated chapters. Mixed-language
 paragraphs are rendered as whole paragraphs to keep language boundaries intact.</p>
 <p><code class="docutils literal notranslate"><span class="pre">--paragraph</span></code> expands sentence context, <code class="docutils literal notranslate"><span class="pre">--json</span></code> returns the versioned context
-object, and <code class="docutils literal notranslate"><span class="pre">--bug-report</span></code> adds reproducibility fingerprints and unit text. The
-latter may contain source text; review it before sharing. See
-<a class="reference internal" href="../analysis-cache/"><span class="std std-doc">Analysis cache</span></a> for storage and freshness behavior.</p>
+object. <code class="docutils literal notranslate"><span class="pre">--bug-report</span></code> adds reproducibility fingerprints and unit text; review it
+for sensitive content before sharing. See <a class="reference internal" href="../analysis-cache/"><span class="std std-doc">Analysis cache</span></a> for
+storage and freshness behavior.</p>
+<p>In Python, <code class="docutils literal notranslate"><span class="pre">lookup_change_context(analysis_or_report,</span> <span class="pre">change_id)</span></code> uses typed
+in-memory evidence directly and needs no prior report/cache. For persistence, use
+<code class="docutils literal notranslate"><span class="pre">analyze_cached(...,</span> <span class="pre">cache_root=...)</span></code> and the separately named
+<code class="docutils literal notranslate"><span class="pre">lookup_cached_context(source,</span> <span class="pre">change_id,</span> <span class="pre">cache_root=...)</span></code>; the latter validates
+freshness against the affected source chapter. Plain <code class="docutils literal notranslate"><span class="pre">analyze_ssmd()</span></code> does not
+read or write a cache. See the <a class="reference internal" href="../api/"><span class="std std-doc">Python API reference</span></a> for both paths.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ssmdconvert Book bundle format"
+title: "ssmdconvert Book manifest format (implementation detail)"
 permalink: /tools/ssmdconvert/main/bundle-format/
 nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,105 +540,42 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="book-bundle-format">
-<h1>Book bundle format</h1>
-<p>A directory ending in <code class="docutils literal notranslate"><span class="pre">.ssmdbook/</span></code> is the canonical editable book workspace; a <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> is an immutable portable artifact. Both use the same versioned manifest model. <code class="docutils literal notranslate"><span class="pre">load_book_bundle()</span></code> and <code class="docutils literal notranslate"><span class="pre">validate_book_bundle()</span></code> remain strict for both formats, including recorded chapter digests. Use the separate workspace API to inspect edited directory chapters whose digests are stale.</p>
+<section id="book-manifest-format-implementation-detail">
+<h1>Book manifest format (implementation detail)</h1>
+<p>This page documents the existing book manifest carried inside a canonical
+bundle. It is an implementation detail; users manage either source kind through
+the common lifecycle described in <a class="reference internal" href="../bundles/"><span class="std std-doc">Bundle workspaces</span></a>.</p>
+<p>The book manifest keeps its existing format identifier and schema version:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>format:         ssmdconvert.book
 schema_version: 1
 ssmd_version:   0.9
 </pre></div>
 </div>
-<section id="manifest-example">
-<h2>Manifest example</h2>
-<div class="highlight-json notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
-<span class="w">  </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;ssmdconvert.book&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;schema_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;ssmd_version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;0.9&quot;</span><span class="p">,</span>
-<span class="w">  </span><span class="nt">&quot;metadata&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Example Book&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;sequence_fallback_mode&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;preserve&quot;</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;format&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;epub&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;media_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;application/epub+zip&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;example.epub&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;sha256&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;64 lowercase hex characters&gt;&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;chapter_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
-<span class="w">  </span><span class="p">},</span>
-<span class="w">  </span><span class="nt">&quot;chapters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">    </span><span class="p">{</span>
-<span class="w">      </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chapter-0001&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;source_number&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;path&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chapters/chapter-0001.ssmd.md&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Chapter One&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;source_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;nav:0:example&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;source_parent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;href&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;chapter-1.xhtml&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;parent_id&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;level&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;char_count&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1234</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;sha256&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&lt;64 lowercase hex characters&gt;&quot;</span><span class="p">,</span>
-<span class="w">      </span><span class="nt">&quot;diagnostics&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[]</span>
-<span class="w">    </span><span class="p">}</span>
-<span class="w">  </span><span class="p">]</span>
-<span class="p">}</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">metadata.sequence_fallback_mode</span></code> is application metadata with the values <code class="docutils literal notranslate"><span class="pre">spell</span></code> and <code class="docutils literal notranslate"><span class="pre">preserve</span></code>. New conversions always write it, defaulting to <code class="docutils literal notranslate"><span class="pre">preserve</span></code>; <code class="docutils literal notranslate"><span class="pre">spell</span></code> is still available explicitly. Each chapter mirrors the same setting in its SSMD front matter. Older bundles may omit the value and remain valid. The new writer default does not define or change consumer behavior for an absent legacy field.</p>
-<p><code class="docutils literal notranslate"><span class="pre">metadata</span></code> remains an open JSON object within schema version 1. Converters may store portable SSMD keys such as <code class="docutils literal notranslate"><span class="pre">language</span></code>, <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code>, <code class="docutils literal notranslate"><span class="pre">voice_defaults</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_defaults</span></code>, <code class="docutils literal notranslate"><span class="pre">prosody_transitions</span></code>, <code class="docutils literal notranslate"><span class="pre">language_detection</span></code>, and <code class="docutils literal notranslate"><span class="pre">requires</span></code>, along with bibliographic values. Readers do not require these optional keys and continue to accept unknown third-party metadata keys. Generated chapters mirror the portable SSMD keys and are validated as SSMD 0.9.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">metadata</span> <span class="pre">BUNDLE</span></code> to inspect stored metadata. For a directory workspace, metadata inspection uses current valid chapter text even when hashes are stale and prints <code class="docutils literal notranslate"><span class="pre">Workspace:</span> <span class="pre">directory</span></code>, <code class="docutils literal notranslate"><span class="pre">Status:</span> <span class="pre">clean|dirty</span></code>, and <code class="docutils literal notranslate"><span class="pre">Dirty</span> <span class="pre">chapters:</span> <span class="pre">N</span></code> before the stored metadata. For a ZIP artifact it first performs strict validation and reports <code class="docutils literal notranslate"><span class="pre">Workspace:</span> <span class="pre">no</span></code> and <code class="docutils literal notranslate"><span class="pre">Status:</span> <span class="pre">valid</span></code>. The optional <code class="docutils literal notranslate"><span class="pre">--json</span></code> form continues to emit a stable <code class="docutils literal notranslate"><span class="pre">{&quot;metadata&quot;:</span> <span class="pre">...}</span></code> object; nested values are rendered as indented JSON in human output.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">chapters</span></code> array order is authoritative for book order. Consumers must not sort directory entries or filenames to infer order. Chapter IDs are canonical <code class="docutils literal notranslate"><span class="pre">chapter-NNNN</span></code> identities; each bundle path is derived from the ID. <code class="docutils literal notranslate"><span class="pre">source_id</span></code> and <code class="docutils literal notranslate"><span class="pre">source_parent_id</span></code> preserve EPUB navigation identifiers, while <code class="docutils literal notranslate"><span class="pre">parent_id</span></code> refers to a canonical chapter ID when the parent appears in the book inventory.</p>
-<p>Each chapter file is an independently valid SSMD 0.9 document. Source and chapter SHA-256 values detect changed or corrupted data. The source hash is captured by <code class="docutils literal notranslate"><span class="pre">convert_book()</span></code> and stored with the resulting <code class="docutils literal notranslate"><span class="pre">Book</span></code>; writing a bundle does not reread or rehash the EPUB. Loading a bundle retains source name, format, and media type, but cannot provide a local source path.</p>
-</section>
-<section id="validation-and-resource-limits">
-<h2>Validation and resource limits</h2>
-<p>The strict <code class="docutils literal notranslate"><span class="pre">load_book_bundle()</span></code> and <code class="docutils literal notranslate"><span class="pre">validate_book_bundle()</span></code> APIs validate directory bundles and ZIPs before returning chapter content. Both require all of the following:</p>
-<ul class="simple">
-<li><p>supported manifest format, schema, and SSMD version;</p></li>
-<li><p>normalized relative POSIX paths, with traversal, absolute, Windows-drive, and non-normalized paths rejected;</p></li>
-<li><p>duplicate chapter IDs, source numbers, paths, and ZIP member names rejected;</p></li>
-<li><p>ZIP symlinks rejected;</p></li>
-<li><p>required <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> and chapter files;</p></li>
-<li><p>source and chapter SHA-256 verification;</p></li>
-<li><p>UTF-8 decoding and standalone SSMD validation of every chapter.</p></li>
-</ul>
-<p>The loader limits the manifest to 2 MiB, each referenced chapter to 64 MiB uncompressed, the total referenced chapter content to 512 MiB, and ZIP archives to 10,000 members. These bounds limit bundle content processed by the loader; they do not make bundle parsing a sandbox or establish general safety against every resource-exhaustion attack. Treat bundles as data and use the public validation API rather than reading archive paths directly.</p>
-<p>Directory readers load only <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> and its referenced chapter files. Arbitrary workspace-local files do not alter validation; <code class="docutils literal notranslate"><span class="pre">.readio/</span></code> is reserved for downstream local state. It is not part of the portable book format, and pack output never includes it.</p>
-<p>ZIP output uses fixed timestamps and deterministic member metadata. Bundle writes build and validate a complete temporary sibling before publication. Existing destinations are refused by default. With <code class="docutils literal notranslate"><span class="pre">overwrite=True</span></code>, a directory bundle replaces the complete prior directory and does not retain stale files.</p>
-</section>
-<section id="editable-workspace-maintenance">
-<h2>Editable workspace maintenance</h2>
-<p>Editing a referenced chapter file makes a directory workspace dirty because its recorded SHA-256 no longer matches. Workspace loading validates the manifest, paths, UTF-8, and SSMD 0.9, then returns the actual current chapter text and explicit expected/actual digests without changing files. Invalid SSMD and unsafe or missing paths remain errors. ZIP artifacts never use this relaxed digest handling.</p>
-<p>Refresh is the explicit source-maintenance operation:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>refresh<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>refresh<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--check
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>pack<span class="w"> </span>novel.ssmdbook<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook.zip
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">refresh</span></code> validates the chapters and atomically updates manifest chapter digests and <code class="docutils literal notranslate"><span class="pre">char_count</span></code> values. <code class="docutils literal notranslate"><span class="pre">--check</span></code> performs no writes and exits successfully only when the workspace is valid and clean. <code class="docutils literal notranslate"><span class="pre">pack</span></code> reads the current valid chapter contents and writes canonical ZIP members with fresh digests; it does not update the workspace manifest. The ZIP omits <code class="docutils literal notranslate"><span class="pre">.readio/</span></code> and other unreferenced local files. Rendering or inspecting a workspace never refreshes it automatically, and no Readio-specific metadata is stored in <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>.</p>
-</section>
-<section id="python-api">
-<h2>Python API</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BookWorkspace</span><span class="p">,</span>
-    <span class="n">WorkspaceChapterStatus</span><span class="p">,</span>
-    <span class="n">load_book_bundle</span><span class="p">,</span>
-    <span class="n">load_book_workspace</span><span class="p">,</span>
-    <span class="n">refresh_book_workspace</span><span class="p">,</span>
-    <span class="n">validate_book_bundle</span><span class="p">,</span>
-    <span class="n">write_book_bundle</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">write_book_bundle</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="s2">&quot;book.ssmdbook&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;directory&quot;</span><span class="p">)</span>
-<span class="n">write_book_bundle</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="s2">&quot;book.ssmdbook.zip&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;zip&quot;</span><span class="p">)</span>
-<span class="n">write_book_bundle</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="s2">&quot;replacement.ssmdbook&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;directory&quot;</span><span class="p">,</span> <span class="n">overwrite</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">loaded</span> <span class="o">=</span> <span class="n">load_book_bundle</span><span class="p">(</span><span class="s2">&quot;book.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">workspace</span><span class="p">:</span> <span class="n">BookWorkspace</span> <span class="o">=</span> <span class="n">load_book_workspace</span><span class="p">(</span><span class="s2">&quot;book.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">chapter_status</span><span class="p">:</span> <span class="n">WorkspaceChapterStatus</span> <span class="o">=</span> <span class="n">workspace</span><span class="o">.</span><span class="n">chapters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">refreshed</span> <span class="o">=</span> <span class="n">refresh_book_workspace</span><span class="p">(</span><span class="s2">&quot;book.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">validate_book_bundle</span><span class="p">(</span><span class="s2">&quot;book.ssmdbook&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
+<p>It stores JSON-compatible metadata, source provenance, and an ordered <code class="docutils literal notranslate"><span class="pre">chapters</span></code>
+array. Each chapter entry identifies the stable chapter ID, original source
+number, relative SSMD path, title, navigation references, character count, and
+SHA-256 digest. The array order is authoritative; directory filenames are not
+used to infer reading order. Chapter documents remain independently valid SSMD
+0.9.</p>
+<p>An optional <code class="docutils literal notranslate"><span class="pre">speech_semantics</span></code> object records speech-freeze provenance. Existing
+metadata fields and schema version are unchanged by the unified outer bundle
+name.</p>
+<section id="validation-and-workspace-behavior">
+<h2>Validation and workspace behavior</h2>
+<p>Strict loading and validation check the manifest format and versions, normalized
+relative paths, duplicate IDs and members, UTF-8, SSMD validity, and source and
+chapter digests. ZIP symlinks and unsafe paths are rejected. The loader applies
+bounds to manifest size, chapter sizes, total referenced content, and archive
+member count.</p>
+<p>An editable directory can be loaded as a workspace when chapter text is valid
+but its recorded digest is stale. The workspace reports dirty state and current
+content without rewriting the manifest. <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">refresh</span></code> is the explicit
+operation to update digests and character counts. <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">pack</span></code> writes a strict
+archive from current valid content without changing the directory workspace.
+Unreferenced local files are not portable bundle members.</p>
+<p>ZIP output uses fixed timestamps and deterministic member metadata. Forced
+publication replaces the complete directory rather than merging stale files.
+The separate document-manifest layout is described in <a class="reference internal" href="../document-bundle-format/"><span class="std std-doc">Document manifest format</span></a>.</p>
 </section>
 </section>
 </div>

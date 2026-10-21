@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -545,21 +545,41 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>Freeze selected eligible automatic speech decisions into explicit SSMD semantics
 in a destination document or book bundle.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>chapter.ssmd<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>frozen.ssmdbook.zip
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>BOOK.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-4<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd-bundle.zip
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>SOURCE<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>SOURCE<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd<span class="w"> </span>--report<span class="w"> </span>freeze-report.json
 </pre></div>
 </div>
-<p>Fresh EPUB conversion applies this freeze automatically: <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">convert</span> <span class="pre">novel.epub</span> <span class="pre">-o</span> <span class="pre">novel.ssmdbook</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> to request the historical structural-only result. The conversion-time aliases come from <code class="docutils literal notranslate"><span class="pre">ttsready</span></code>/<code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, do not alter visible source text, and do not override author-owned annotations. A resolvable language is required for freeze; pass <code class="docutils literal notranslate"><span class="pre">--language</span></code> or use preserve when none is available.</p>
+<p>Fresh EPUB conversion applies this freeze automatically: <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">bundle</span> <span class="pre">convert</span> <span class="pre">novel.epub</span> <span class="pre">-o</span> <span class="pre">novel.ssmd-bundle</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> to request the historical structural-only result. The conversion-time aliases come from <code class="docutils literal notranslate"><span class="pre">ttsready</span></code>/<code class="docutils literal notranslate"><span class="pre">spokenform</span></code>, do not alter visible source text, and do not override author-owned annotations. A resolvable language is required for freeze; use <code class="docutils literal notranslate"><span class="pre">--language</span></code> to set the base for unscoped text or use preserve when none is available. Inline SSMD language scopes remain authoritative.</p>
 <p><code class="docutils literal notranslate"><span class="pre">freeze</span></code> uses the same fail-closed mapping, validation, and atomic writer as
 <a class="reference internal" href="../speech-annotations/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">annotate</span></code></span></a>. It preserves visible text, does not
 duplicate authoritative SSMD substitutions, refuses unresolved effective
 language, and never overwrites its input. Existing output requires <code class="docutils literal notranslate"><span class="pre">--force</span></code>.</p>
-<p>Dirty directory workspaces may be read, but the output must be a new path outside
+<p>Successful freezes print terminal disposition counts. <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits the versioned <code class="docutils literal notranslate"><span class="pre">ssmdconvert-speech-freeze-report</span></code> (version 1) to stdout; <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">PATH</span></code> writes the same JSON report atomically. It records source/runtime provenance, narration-coverage evidence, exact per-change mappings, and applied, already-authoritative, author-owned, and unresolved totals. If freezing is incomplete, the command exits non-zero and does not publish the SSMD destination; when requested, its report is marked <code class="docutils literal notranslate"><span class="pre">incomplete</span></code> and includes the failure and unresolved changes.</p>
+<section id="in-memory-python-api">
+<h2>In-memory Python API</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisOptions</span><span class="p">,</span> <span class="n">analyze_ssmd</span><span class="p">,</span> <span class="n">freeze_speech</span>
+
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">analyze_ssmd</span><span class="p">(</span><span class="s2">&quot;chapter.ssmd&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">AnalysisOptions</span><span class="p">(</span><span class="n">spacy</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">))</span>
+<span class="n">frozen</span> <span class="o">=</span> <span class="n">freeze_speech</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">section_id</span><span class="p">,</span> <span class="n">updated_ssmd</span> <span class="ow">in</span> <span class="n">frozen</span><span class="o">.</span><span class="n">sections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="o">...</span>  <span class="c1"># explicitly decide whether and where to publish this text</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">frozen</span><span class="o">.</span><span class="n">speech</span><span class="o">.</span><span class="n">to_dict</span><span class="p">()</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">freeze_speech()</span></code> returns <code class="docutils literal notranslate"><span class="pre">SpeechFreezeResult</span></code> with complete rewritten section
+text and final mapping/issue evidence; it never writes the source or a bundle.
+An incomplete attempt raises <code class="docutils literal notranslate"><span class="pre">SpeechFreezeFailure</span></code> with a versioned partial
+report and unresolved change evidence. See the <a class="reference internal" href="../api/"><span class="std std-doc">Python API reference</span></a>
+for the options and result contract.</p>
+<p>Book bundles store this provenance in <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>, not in invented SSMD metadata. A successful default freeze records <code class="docutils literal notranslate"><span class="pre">status:</span> <span class="pre">complete</span></code>, TTSReady/Spokenform versions, and fingerprints. <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> records <code class="docutils literal notranslate"><span class="pre">status:</span> <span class="pre">preserved</span></code> and does not claim a completed freeze.
+Dirty directory workspaces may be read, but the output must be a new path outside
 the workspace. Selected chapters are materialized in the output; unselected
-chapters remain unchanged. Bundle type is inferred from <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> or
-<code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code>, or can be set with <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">directory|zip</span></code>.</p>
+chapters remain unchanged. Bundle outputs use the canonical <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle</span></code> workspace and <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle.zip</span></code> archive suffixes.</p>
 <p>To preview without writing, run <a class="reference internal" href="../speech-audit/"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">speech</span> <span class="pre">audit</span></code></span></a>. For the
 complete source, context, cache, and projection workflow, see
 <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">SSMD analysis workflows</span></a>.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

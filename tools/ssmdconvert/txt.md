@@ -5,8 +5,8 @@ permalink: /tools/ssmdconvert/txt/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -546,7 +546,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 projection uses the same selected sections and rendering logic as the report’s
 TXT preview and statistics.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>txt<span class="w"> </span>SOURCE
-ssmdconvert<span class="w"> </span>txt<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>prepared.txt
+ssmdconvert<span class="w"> </span>txt<span class="w"> </span>BOOK.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>prepared.txt
 ssmdconvert<span class="w"> </span>txt<span class="w"> </span>SOURCE<span class="w"> </span>--language<span class="w"> </span>de-DE<span class="w"> </span>--no-include-titles
 </pre></div>
 </div>
@@ -555,7 +555,24 @@ requires <code class="docutils literal notranslate"><span class="pre">--force</s
 <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--sequence-fallback-mode</span></code>, <code class="docutils literal notranslate"><span class="pre">--max-paragraph-chars</span></code>, and title
 options have the same meaning as in <code class="docutils literal notranslate"><span class="pre">report</span></code>. TXT is a projection only: it does
 not contain SSMD source annotations and does not write back to the source.</p>
+<section id="python-api">
+<h2>Python API</h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="n">AnalysisOptions</span><span class="p">,</span> <span class="n">TextProjectionOptions</span><span class="p">,</span> <span class="n">analyze_ssmd</span><span class="p">,</span> <span class="n">project_text</span>
+
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">analyze_ssmd</span><span class="p">(</span><span class="s2">&quot;chapter.ssmd&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">AnalysisOptions</span><span class="p">(</span><span class="n">spacy</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">))</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="n">project_text</span><span class="p">(</span>
+    <span class="n">analysis</span><span class="p">,</span>
+    <span class="n">options</span><span class="o">=</span><span class="n">TextProjectionOptions</span><span class="p">(</span><span class="n">max_paragraph_chars</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">include_titles</span><span class="o">=</span><span class="kc">True</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">prepared_text</span> <span class="o">=</span> <span class="n">projection</span><span class="o">.</span><span class="n">text</span>
+<span class="n">output_digest</span> <span class="o">=</span> <span class="n">projection</span><span class="o">.</span><span class="n">stats</span><span class="o">.</span><span class="n">prepared_output_sha256</span>
+</pre></div>
+</div>
+<p>Pass the same <code class="docutils literal notranslate"><span class="pre">projection</span></code> to <code class="docutils literal notranslate"><span class="pre">build_report(analysis,</span> <span class="pre">projection=projection)</span></code> to
+keep report statistics and the prepared-output digest tied to the exact TXT
+returned to the caller. No file is written by <code class="docutils literal notranslate"><span class="pre">project_text()</span></code>.</p>
 <p>See <a class="reference internal" href="../report/"><span class="std std-doc">Report</span></a> and <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">SSMD analysis workflows</span></a>.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -5,8 +5,8 @@ permalink: /tools/audiosig/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.7"
-docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
+docs_ref: "v0.1.8"
+docs_commit: "fc87d829991d44b2ccc20685d4577019e628ee90"
 search_enabled: true
 ---
 
@@ -599,6 +599,7 @@ audit status.</p>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#time-varying-speech-envelopes">Time-varying speech envelopes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#resampling-internals">Resampling Internals</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#loudness-measurement">Loudness measurement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="advanced/#compatibility-capable-numpy-dsp">Compatibility-capable NumPy DSP</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#vad-algorithm-details">VAD Algorithm Details</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#edge-cases-and-special-handling">Edge Cases and Special Handling</a></li>
 <li class="toctree-l2"><a class="reference internal" href="advanced/#multi-channel-and-batch-processing">Multi-Channel and Batch Processing</a></li>
@@ -617,14 +618,15 @@ audit status.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.7] - 2026-10-08</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.6] - 2026-09-29</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.5] - 2026-09-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.4] - 2026-09-15</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.1.3] - 2026-09-14</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.2] - 2026-08-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id18">[0.1.1] - 2026-08-01</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.0] - 2026-07-31</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.8] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.7] - 2026-10-08</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.1.6] - 2026-09-29</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.5] - 2026-09-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.1.4] - 2026-09-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.3] - 2026-09-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.1.2] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.1.1] - 2026-08-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id24">[0.1.0] - 2026-07-31</a></li>
 </ul>
 </li>
 </ul>

@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4abca5cfad32ac0f9c4987dbeadcbafa232c785b"
+docs_commit: "a70e4a16603d00b42bfbdfb2b58a51cad2064d69"
 search_enabled: true
 ---
 
@@ -553,39 +553,48 @@ speech plans. It stops before G2P and synthesis.</p>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#compile-literal-text">Compile literal text</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#defaults-and-linguistic-resources">Defaults and linguistic resources</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#compile-stdin-or-a-file">Compile stdin or a file</a></li>
-<li class="toctree-l2"><a class="reference internal" href="getting-started/#compile-chapters-from-an-ssmdbook">Compile chapters from an SSMDBook</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/#compile-from-a-bundle">Compile from a bundle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/#project-a-bundle-for-a-profile">Project a bundle for a profile</a></li>
 <li class="toctree-l2"><a class="reference internal" href="getting-started/#inspect-and-validate">Inspect and validate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="getting-started/#ssmd">SSMD</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="cli/">Command-line interface</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="cli/#renderer-independent-plan-contract">Renderer-independent plan contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#produce-or-replan-a-renderplan">Produce or replan a RenderPlan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#logical-roles-and-complete-profile-coverage">Logical roles and complete-profile coverage</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#input-resolution">Input resolution</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#ssmd-source-compatibility">SSMD source compatibility</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#output-and-errors">Output and errors</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#compile-many-documents-incrementally">Compile many documents incrementally</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#compile-chapters-from-an-ssmdbook-workspace">Compile chapters from an SSMDBook workspace</a></li>
-<li class="toctree-l2"><a class="reference internal" href="cli/#explain-a-plan">Explain a plan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#manifest-driven-bundle-lifecycle">Manifest-driven bundle lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="cli/#preview-a-saved-consumer-plan">Preview a saved consumer plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#inspect-a-persisted-planning-attempt">Inspect a persisted planning attempt</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#planning-controls">Planning controls</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#other-commands">Other commands</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cli/#migrate-a-saved-plan">Migrate a saved plan</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="ssmdbook/">Compiling chapters from an SSMDBook</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="ssmdbook/#quick-start">Quick start</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmdbook/#workspace-discovery-and-selection">Workspace discovery and selection</a></li>
-<li class="toctree-l2"><a class="reference internal" href="ssmdbook/#editable-workspace-behavior-and-safety">Editable workspace behavior and safety</a></li>
+<li class="toctree-l1"><a class="reference internal" href="bundles/">Manifest-driven SSMD bundles</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#manifest-kinds">Manifest kinds</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#compile">Compile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#render">Render</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#replan">Replan</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#safe-and-read-only-behavior">Safe and read-only behavior</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#python-api">Python API</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="consumer-guide/">Renderer consumer guide</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#importing-legacy-plans">Importing legacy plans</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#planning-defaults">Planning defaults</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#consumer-contract">Consumer contract</a></li>
+<li class="toctree-l2"><a class="reference internal" href="consumer-guide/#preview-consumer-chunks">Preview consumer chunks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#optional-compiler-trace">Optional compiler trace</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#directives-and-media">Directives and media</a></li>
 <li class="toctree-l2"><a class="reference internal" href="consumer-guide/#stable-renderer-input">Stable renderer input</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="format/">UtterPlan format v5</a><ul>
+<li class="toctree-l1"><a class="reference internal" href="format/">UtterPlan format v7</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="format/#compiler-only-segmentation-topology">Compiler-only segmentation topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format/#executable-flow">Executable flow</a></li>
 <li class="toctree-l2"><a class="reference internal" href="format/#toml-api-and-optional-compiler-trace">TOML API and optional compiler trace</a></li>
@@ -605,15 +614,65 @@ speech plans. It stops before G2P and synthesis.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">Developer guide</span></p>
 <ul>
-<li class="toctree-l1"><a class="reference internal" href="architecture/">Architecture</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#compiler-and-public-plan-boundary">Compiler and public plan boundary</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#compiler-owned-segmentation-topology">Compiler-owned segmentation topology</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#ssmd-and-preparation">SSMD and preparation</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#pause-and-directive-semantics">Pause and directive semantics</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#identity-and-determinism">Identity and determinism</a></li>
-<li class="toctree-l2"><a class="reference internal" href="architecture/#persistence-compatibility-boundary">Persistence compatibility boundary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/">Architecture Documentation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#introduction-and-goals">Introduction and Goals</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#quality-goals">Quality goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#pipeline-overview">Pipeline overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#manifest-driven-bundles">Manifest-driven bundles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#requirements-overview">Requirements Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#id1">Quality Goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#stakeholders">Stakeholders</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#architecture-constraints">Architecture Constraints</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#context-and-scope">Context and Scope</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#external-context">External context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#in-scope">In scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#out-of-scope">Out of scope</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#manifest-driven-bundle-inputs">Manifest-driven bundle inputs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#business-context">Business Context</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#technical-context">Technical Context</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#solution-strategy">Solution Strategy</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#strategy-items">Strategy Items</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#building-block-view">Building Block View</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#bundle-orchestration">Bundle orchestration</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#runtime-view">Runtime View</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-compile-one-document">Scenario: compile one document</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-incremental-batch-compile">Scenario: incremental batch compile</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-compile-from-a-bundle">Scenario: compile from a bundle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-bundle-renderplan-projection">Scenario: bundle RenderPlan projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-bundle-replan-refinement">Scenario: bundle replan refinement</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#scenario-deterministic-replan-refinement">Scenario: deterministic replan refinement</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#deployment-view">Deployment View</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#cross-cutting-concepts">Cross-cutting Concepts</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#coordinate-spaces">Coordinate spaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#compiler-owned-segmentation-topology">Compiler-owned segmentation topology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#pause-and-directive-semantics">Pause and directive semantics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#identity-and-determinism">Identity and determinism</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#preparation-and-source-retention">Preparation and source retention</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#persistence-and-atomic-io">Persistence and atomic IO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#renderability-policy">Renderability policy</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#architecture-decisions">Architecture Decisions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#quality-requirements">Quality Requirements</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#quality-requirements-overview">Quality Requirements Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#quality-scenarios">Quality Scenarios</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#risks-and-technical-debt">Risks and Technical Debt</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="architecture/#risk-overview">Risk Overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="architecture/#glossary">Glossary</a></li>
 <li class="toctree-l1"><a class="reference internal" href="pykokoro-integration/">PyKokoro integration boundary</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="pykokoro-integration/#thin-adapter-inputs">Thin adapter inputs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="pykokoro-integration/#pause-behavior">Pause behavior</a></li>
@@ -623,9 +682,12 @@ speech plans. It stops before G2P and synthesis.</p>
 <li class="toctree-l1"><a class="reference internal" href="python-api/">Python API</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#sentence-segmentation-and-private-topology">Sentence segmentation and private topology</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#canonical-single-document-compiler">Canonical single-document compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#build-and-replan-a-renderplan">Build and replan a RenderPlan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#persistable-planning-attempts">Persistable planning attempts</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#toml-persistence">TOML persistence</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#incremental-batch-compilation">Incremental batch compilation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#renderplan-batch-projection">RenderPlan batch projection</a></li>
+<li class="toctree-l2"><a class="reference internal" href="python-api/#unified-bundle-services">Unified bundle services</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#planner-progress-callbacks">Planner progress callbacks</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#ssmd-input-and-semantic-plan">SSMD input and semantic plan</a></li>
 <li class="toctree-l2"><a class="reference internal" href="python-api/#flow-segments-and-local-tokens">Flow segments and local tokens</a></li>
@@ -639,27 +701,35 @@ speech plans. It stops before G2P and synthesis.</p>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[Unreleased]</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.5.1] - 2026-10-10</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.5.0] - 2026-10-09</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.4.1] - 2026-10-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.4.0] - 2026-10-06</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id12">[0.3.7] - 2026-10-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.3.6] - 2026-10-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id15">[0.3.5] - 2026-10-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id17">[0.3.4] - 2026-10-04</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id20">[0.3.3] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id22">[0.3.2] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.3.1] - 2026-09-27</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id27">[0.3.0] - 2026-09-24</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id32">[0.2.0] - 2026-09-22</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id36">[0.1.3] - 2026-09-19</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id41">[0.1.1] - 2026-09-16</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id43">[0.1.0] - 2026-09-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-6-2026-10-21">[v0.6.6] - 2026-10-21</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-5-2026-10-19">[v0.6.5] - 2026-10-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-4-2026-10-19">[v0.6.4] - 2026-10-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-3-2026-10-15">[v0.6.3] - 2026-10-15</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-2-2026-10-14">[v0.6.2] - 2026-10-14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.6.1] - 2026-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#v0-6-0-2026-10-13">[v0.6.0] - 2026-10-13</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.5.1] - 2026-10-10</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.5.0] - 2026-10-09</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.4.1] - 2026-10-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id21">[0.4.0] - 2026-10-06</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id25">[0.3.7] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id26">[0.3.6] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id28">[0.3.5] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id30">[0.3.4] - 2026-10-04</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id33">[0.3.3] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id35">[0.3.2] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id38">[0.3.1] - 2026-09-27</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id40">[0.3.0] - 2026-09-24</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id45">[0.2.0] - 2026-09-22</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id49">[0.1.3] - 2026-09-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id54">[0.1.1] - 2026-09-16</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id56">[0.1.0] - 2026-09-16</a></li>
 </ul>
 </li>
 </ul>
 </div>
-<p>The package version and the UtterPlan schema version are independent. The current interchange schema is version <code class="docutils literal notranslate"><span class="pre">5</span></code>; schemas v1–v4 remain available as immutable historical resources with sequential migration paths.</p>
+<p>The <a class="reference internal" href="bundles/"><span class="std std-doc">bundle guide</span></a> documents canonical bundle roots, manifest dispatch, safe item paths, compilation, profile-specific RenderPlan projection, deterministic replanning, and the unified Python API.
+The package version and the UtterPlan schema version are independent. Schema v7 is the only version accepted by normal loading and execution. Schema-v5/v6 TOML and schemas v1–v4 remain immutable historical migration inputs; the sequential path reaches v6, while v6-to-v7 requires recompiling the original source.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

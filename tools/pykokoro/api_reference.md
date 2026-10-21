@@ -5,8 +5,8 @@ permalink: /tools/pykokoro/api_reference/
 nav_tool: pykokoro
 docs_project: "pykokoro"
 docs_variant: "release"
-docs_ref: "v0.10.4"
-docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
+docs_ref: "v0.10.5"
+docs_commit: "3dabff8c7fb9efd8cc8bc15f99c41afd152ee088"
 search_enabled: true
 ---
 
@@ -550,6 +550,7 @@ parsing, speech planning, and composition between requests remain caller-owned.<
     <span class="n">InnoEnrollmentOptions</span><span class="p">,</span>
     <span class="n">KokoroVoicePack</span><span class="p">,</span>
     <span class="n">ReferenceVoice</span><span class="p">,</span>
+    <span class="n">RequestMeasure</span><span class="p">,</span>
     <span class="n">VoiceEnrollerSpec</span><span class="p">,</span>
     <span class="n">KokoroSynthesizer</span><span class="p">,</span>
     <span class="n">SynthesisConfig</span><span class="p">,</span>
@@ -569,37 +570,40 @@ parsing, speech planning, and composition between requests remain caller-owned.<
 <tr class="row-even"><td><p>Synthesis</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisSegment</span></code>, <code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Source context and timing</p></td>
+<tr class="row-odd"><td><p>Request measurement</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">RequestMeasure</span></code>, <code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.measure_request()</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Source context and timing</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">PronunciationOverride</span></code>, <code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code>, <code class="docutils literal notranslate"><span class="pre">WordTiming</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Configuration</p></td>
+<tr class="row-odd"><td><p>Configuration</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">SynthesisConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">GenerationConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">LanguageRoutingConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">TokenizerConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">ShortSentenceConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">LongTextSplitMode</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Voice level</p></td>
+<tr class="row-even"><td><p>Voice level</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">VoiceLevelConfig</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceLevelApplication</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceBlend</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Voice enrollment</p></td>
+<tr class="row-odd"><td><p>Voice enrollment</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KokoroVoicePack</span></code>, <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code>, <code class="docutils literal notranslate"><span class="pre">InnoEnrollmentOptions</span></code>, <code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.enroll_voice()</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Model discovery</p></td>
+<tr class="row-even"><td><p>Model discovery</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ModelCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">ModelDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">VoiceEnrollerSpec</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_models</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Lexicon discovery</p></td>
+<tr class="row-odd"><td><p>Lexicon discovery</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">LexiconCapabilities</span></code>, <code class="docutils literal notranslate"><span class="pre">LexiconDiscoveryResult</span></code>, <code class="docutils literal notranslate"><span class="pre">discover_lexicons</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Asset progress</p></td>
+<tr class="row-even"><td><p>Asset progress</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">AssetProgressEvent</span></code>, <code class="docutils literal notranslate"><span class="pre">AssetProgressCallback</span></code>, <code class="docutils literal notranslate"><span class="pre">ConsoleAssetProgress</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Synthesis identity</p></td>
+<tr class="row-odd"><td><p>Synthesis identity</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">SynthesisIdentity</span></code>, <code class="docutils literal notranslate"><span class="pre">build_synthesis_identity</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>API contract</p></td>
+<tr class="row-even"><td><p>API contract</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">REQUEST_API_VERSION</span></code>, <code class="docutils literal notranslate"><span class="pre">RequestApiContract</span></code>, <code class="docutils literal notranslate"><span class="pre">request_api_contract</span></code></p></td>
 </tr>
-<tr class="row-even"><td><p>Errors</p></td>
+<tr class="row-odd"><td><p>Errors</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">KokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">PyKokoroError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisError</span></code>, <code class="docutils literal notranslate"><span class="pre">ConfigurationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidRequestError</span></code>, <code class="docutils literal notranslate"><span class="pre">EmptyTextError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLanguageError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidVoiceError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidModelError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidPronunciationError</span></code>, <code class="docutils literal notranslate"><span class="pre">InvalidLinguisticTokensError</span></code>, <code class="docutils literal notranslate"><span class="pre">UnsupportedFeatureError</span></code>, <code class="docutils literal notranslate"><span class="pre">CapabilityError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisStateError</span></code>, <code class="docutils literal notranslate"><span class="pre">AlignmentError</span></code>, <code class="docutils literal notranslate"><span class="pre">BackendError</span></code>, <code class="docutils literal notranslate"><span class="pre">SynthesisInputTooLongError</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Version</p></td>
+<tr class="row-even"><td><p>Version</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">__version__</span></code>, <code class="docutils literal notranslate"><span class="pre">__version_tuple__</span></code></p></td>
 </tr>
 </tbody>
@@ -620,6 +624,10 @@ constructing an engine:</p>
 <span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">version</span> <span class="o">==</span> <span class="n">pykokoro</span><span class="o">.</span><span class="n">REQUEST_API_VERSION</span> <span class="o">==</span> <span class="mi">1</span>
 <span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">request_type</span> <span class="o">==</span> <span class="s2">&quot;SynthesisRequest&quot;</span>
 <span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">result_type</span> <span class="o">==</span> <span class="s2">&quot;RenderedSegment&quot;</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">measurement_method</span> <span class="o">==</span> <span class="s2">&quot;measure_request&quot;</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">voice_enrollment_method</span> <span class="o">==</span> <span class="s2">&quot;enroll_voice&quot;</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">supports_request_measurement</span> <span class="ow">and</span> <span class="n">contract</span><span class="o">.</span><span class="n">supports_reference_voice</span>
+<span class="k">assert</span> <span class="n">contract</span><span class="o">.</span><span class="n">supports_voice_enrollment</span>
 </pre></div>
 </div>
 <p>The declaration is dependency-light: it does not initialize a G2P frontend, model
@@ -636,9 +644,12 @@ raises <code class="docutils literal notranslate"><span class="pre">SynthesisInp
 <h2>Synthesizer</h2>
 <p>Use it as a context manager or call <code class="docutils literal notranslate"><span class="pre">close()</span></code> when finished. <code class="docutils literal notranslate"><span class="pre">synthesize()</span></code> renders one
 request, <code class="docutils literal notranslate"><span class="pre">synthesize_text()</span></code> constructs and renders one prepared string, and
-<code class="docutils literal notranslate"><span class="pre">synthesize_segments()</span></code> yields independent results in input order. <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> runs the
-frontend and returns <code class="docutils literal notranslate"><span class="pre">PreparedSynthesis</span></code> (request ID, text, language, voice, phonemes,
-token IDs, alignment tokens, and diagnostics) without running ONNX inference.</p>
+<code class="docutils literal notranslate"><span class="pre">synthesize_segments()</span></code> yields independent results in input order. <code class="docutils literal notranslate"><span class="pre">measure_request()</span></code>
+runs the request frontend and returns a <code class="docutils literal notranslate"><span class="pre">RequestMeasure</span></code> token count without rendering;
+unlike <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>, it can resolve a reference-only target without a <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code>.
+<code class="docutils literal notranslate"><span class="pre">prepare()</span></code> runs the frontend and returns <code class="docutils literal notranslate"><span class="pre">PreparedSynthesis</span></code> (request ID, text,
+language, voice, phonemes, token IDs, alignment tokens, and diagnostics) without running
+ONNX inference.</p>
 </section>
 <section id="requests-results-and-source-alignment">
 <h2>Requests, results, and source alignment</h2>
@@ -646,6 +657,10 @@ token IDs, alignment tokens, and diagnostics) without running ONNX inference.</p
 Request language and voice are explicit. <code class="docutils literal notranslate"><span class="pre">PronunciationOverride</span></code> and <code class="docutils literal notranslate"><span class="pre">LinguisticToken</span></code>
 offsets are half-open character ranges into the exact <code class="docutils literal notranslate"><span class="pre">text</span></code> carried by that request;
 <code class="docutils literal notranslate"><span class="pre">tokens</span></code> is the canonical <code class="docutils literal notranslate"><span class="pre">SynthesisRequest</span></code> field.</p>
+<p><code class="docutils literal notranslate"><span class="pre">RequestMeasure.amount</span></code> is the exact frontend token count. <code class="docutils literal notranslate"><span class="pre">maximum</span></code> is an optional
+caller-provided limit, and <code class="docutils literal notranslate"><span class="pre">fits</span></code> is true when the amount is within that limit, false
+when it exceeds it, and <code class="docutils literal notranslate"><span class="pre">None</span></code> when no limit was supplied. Measurement does not imply
+that reference audio is valid or enrollment will succeed.</p>
 <p><code class="docutils literal notranslate"><span class="pre">RenderedSegment</span></code> contains one request’s waveform and metadata. <code class="docutils literal notranslate"><span class="pre">save_wav()</span></code> writes mono
 float32 WAV audio. <code class="docutils literal notranslate"><span class="pre">play()</span></code> uses the optional playback dependency. Results from a batch
 remain separate: this API does not join independent requests or insert silence between

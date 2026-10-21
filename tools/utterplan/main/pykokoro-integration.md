@@ -6,7 +6,7 @@ nav_tool: utterplan-main
 docs_project: "utterplan"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "4abca5cfad32ac0f9c4987dbeadcbafa232c785b"
+docs_commit: "a70e4a16603d00b42bfbdfb2b58a51cad2064d69"
 search_enabled: true
 ---
 
@@ -553,15 +553,16 @@ html[data-theme="dark"] .sphinxpress-doc {
     -&gt; audio
 </pre></div>
 </div>
-<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions, acoustic behavior, and audio. UtterPlan owns deterministic document parsing, language planning, written-to-spoken preparation, segmentation, typed directives, semantic pause intent, markers, and render units.</p>
+<p>PyKokoro owns model selection, voice assets, G2P, model tokens, ONNX sessions, acoustic behavior, and audio. UtterPlan owns deterministic document parsing, language planning, written-to-spoken preparation, canonical segmentation, safe boundary opportunities, authored pause intents, typed directives, markers, and paragraph-local flow units.</p>
 <section id="thin-adapter-inputs">
 <h2>Thin adapter inputs</h2>
-<p>A future adapter can use only public v5 flow fields:</p>
+<p>A future adapter can use only public v7 flow fields:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">plan.flow</span></code> in order, with each unit’s ordered <code class="docutils literal notranslate"><span class="pre">segments</span></code>;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.text</span></code> and <code class="docutils literal notranslate"><span class="pre">segment.language</span></code>;</p></li>
 <li><p>local <code class="docutils literal notranslate"><span class="pre">segment.tokens</span></code> for optional linguistic context;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.directives</span></code>, <code class="docutils literal notranslate"><span class="pre">pause_before</span></code>, and <code class="docutils literal notranslate"><span class="pre">pause_after</span></code>;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">segment.boundary_before</span></code> / <code class="docutils literal notranslate"><span class="pre">boundary_after</span></code> for safe downstream cuts, separately from authored pause intents;</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">segment.markers</span></code> and optional <code class="docutils literal notranslate"><span class="pre">segment.heading</span></code>;</p></li>
 <li><p>compact <code class="docutils literal notranslate"><span class="pre">plan.document</span></code> and <code class="docutils literal notranslate"><span class="pre">plan.linguistics</span></code> metadata.</p></li>
 </ul>
@@ -572,11 +573,11 @@ html[data-theme="dark"] .sphinxpress-doc {
         <span class="n">phonemizer</span><span class="p">(</span><span class="n">segment</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="n">segment</span><span class="o">.</span><span class="n">language</span><span class="p">,</span> <span class="n">tokens</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Use the V5 token fields as authoritative context: pass available <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code> through unchanged rather than rerunning spaCy or inferring tags. Default <code class="docutils literal notranslate"><span class="pre">auto</span></code> uses installed compatible local models, preferring <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, <code class="docutils literal notranslate"><span class="pre">trf</span></code>, and safely falls back if unavailable; model packages are never downloaded. When fields are unavailable, follow the adapter’s documented non-contextual fallback.</p>
+<p>Use the v7 linguistic token fields (not model-token IDs or counts) as authoritative context: pass available <code class="docutils literal notranslate"><span class="pre">pos</span></code>, <code class="docutils literal notranslate"><span class="pre">tag</span></code>, <code class="docutils literal notranslate"><span class="pre">lemma</span></code>, and <code class="docutils literal notranslate"><span class="pre">morph</span></code> through unchanged rather than rerunning spaCy or inferring tags. Default <code class="docutils literal notranslate"><span class="pre">auto</span></code> uses installed compatible local models, preferring <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, <code class="docutils literal notranslate"><span class="pre">trf</span></code>, and safely falls back if unavailable; model packages are never downloaded. When fields are unavailable, follow the adapter’s documented non-contextual fallback.</p>
 </section>
 <section id="pause-behavior">
 <h2>Pause behavior</h2>
-<p>The flow carries semantic pause intents and exact authored timed breaks, not planner-invented renderer durations or a renderer activation mode. PyKokoro may interpret supported semantic intents according to its own behavior. Renderer/acoustic variance remains outside UtterPlan and plan identity.</p>
+<p>Schema v7 carries safe boundary opportunities separately from authored pause intents and exact timed breaks; neither selects a renderer activation policy or fixes a chunk. PyKokoro may choose its own chunking and native, automatic, or manual pause realization. A <code class="docutils literal notranslate"><span class="pre">FlowSegment</span></code> is not necessarily one TTS call, and renderer/acoustic variance remains outside UtterPlan and plan identity.</p>
 </section>
 <section id="compatibility-ownership">
 <h2>Compatibility ownership</h2>

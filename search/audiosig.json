@@ -45,6 +45,30 @@
         },
         {
           "anchor": "",
+          "heading": "Compatibility-capable NumPy DSP",
+          "text": "The generic compatibility primitives reproduce selected reference DSP policies\nwithout changing the historical resample(), STFT, or mel defaults. Core runtime\ncode depends on NumPy only; no Torch, Torchaudio, or SciPy implementation is\nloaded. These functions do not implement Sopro inference, model loading, or\nconsumer-specific orchestration.",
+          "lower": "the generic compatibility primitives reproduce selected reference dsp policies\nwithout changing the historical resample(), stft, or mel defaults. core runtime\ncode depends on numpy only; no torch, torchaudio, or scipy implementation is\nloaded. these functions do not implement sopro inference, model loading, or\nconsumer-specific orchestration."
+        },
+        {
+          "anchor": "",
+          "heading": "Resampling options",
+          "text": "resample_windowed_sinc() is the configurable, chunked primitive. Its default\nsample alignment, Kaiser window, anti-aliasing, zero boundary, normalized\nweights, and half-up rounded length are independent options. For the pinned\nhalf-sample raised-cosine reference, specify the compatibility recipe rather\nthan changing resample():\n\nfrom audiosig import resample_windowed_sinc\n\nwaveform_16k = resample_windowed_sinc(\n    waveform_24k,\n    source_rate=24_000,\n    target_rate=16_000,\n    radius=16,\n    alignment=\"half_sample\",\n    window=\"raised_cosine\",\n    antialias=False,\n    normalize_weights=True,\n    boundary=\"zero\",\n    length_mode=\"round\",\n)",
+          "lower": "resample_windowed_sinc() is the configurable, chunked primitive. its default\nsample alignment, kaiser window, anti-aliasing, zero boundary, normalized\nweights, and half-up rounded length are independent options. for the pinned\nhalf-sample raised-cosine reference, specify the compatibility recipe rather\nthan changing resample():\n\nfrom audiosig import resample_windowed_sinc\n\nwaveform_16k = resample_windowed_sinc(\n    waveform_24k,\n    source_rate=24_000,\n    target_rate=16_000,\n    radius=16,\n    alignment=\"half_sample\",\n    window=\"raised_cosine\",\n    antialias=false,\n    normalize_weights=true,\n    boundary=\"zero\",\n    length_mode=\"round\",\n)"
+        },
+        {
+          "anchor": "",
+          "heading": "Spectral configuration examples",
+          "text": "stft, mel_filterbank, and mel_spectrogram keep their prior defaults. The\nextra win_length, pad_mode, window, frame_count, mel_scale, and norm\noptions allow explicit feature recipes. For example, the documented semantic\nrecipe uses a periodic 400-point Hann, 160-sample hop, 80 Slaney-normalized\nbands, and explicit frame count; the speaker recipe uses a 1024-point FFT with\na 400-sample window; the acoustic recipe uses 100 HTK bands and no mel\nnormalization:\n\nfrom audiosig import mel_spectrogram\n\nsemantic = mel_spectrogram(\n    waveform_16k, sample_rate=16_000, n_fft=400, win_length=400,\n    hop_length=160, n_mels=80, mel_scale=\"slaney\", norm=\"slaney\",\n    window=\"periodic\", frame_count=semantic_frames + 2,\n)\nspeaker_power = mel_spectrogram(\n    waveform_16k, sample_rate=16_000, n_fft=1024,…",
+          "lower": "stft, mel_filterbank, and mel_spectrogram keep their prior defaults. the\nextra win_length, pad_mode, window, frame_count, mel_scale, and norm\noptions allow explicit feature recipes. for example, the documented semantic\nrecipe uses a periodic 400-point hann, 160-sample hop, 80 slaney-normalized\nbands, and explicit frame count; the speaker recipe uses a 1024-point fft with\na 400-sample window; the acoustic recipe uses 100 htk bands and no mel\nnormalization:\n\nfrom audiosig import mel_spectrogram\n\nsemantic = mel_spectrogram(\n    waveform_16k, sample_rate=16_000, n_fft=400, win_length=400,\n    hop_length=160, n_mels=80, mel_scale=\"slaney\", norm=\"slaney\",\n    window=\"periodic\", frame_count=semantic_frames + 2,\n)\nspeaker_power = mel_spectrogram(\n    waveform_16k, sample_rate=16_000, n_fft=1024,…"
+        },
+        {
+          "anchor": "",
+          "heading": "Speech level, pauses, and output conditioning",
+          "text": "speech_level() measures active-frame RMS in dB and is intentionally distinct\nfrom BS.1770 integrated LUFS. normalize_reference_level() applies a boost-only\ntarget, a maximum gain, and a peak ceiling. crop_on_pause() takes a\nPauseCropConfig; its default room-tone completion is zero-valued. To generate\nnoise, pass a local room_tone_seed or an RNG explicitly. Neither path uses\nprocess-global randomness.\n\nThe general boundary tools are speech_onset, energy_onset,\nenergy_fraction, trim_lead, and trim_trail. Output conditioning provides\nfade_edges, join_with_edge_fades, soft_limit, and gain_for_level. Fades\nare linear; joining fades adjacent segment edges without overlap-add; the soft\nlimiter follows a configurable tanh knee. These primitives preserve caller\nownership and are policy-free buildi…",
+          "lower": "speech_level() measures active-frame rms in db and is intentionally distinct\nfrom bs.1770 integrated lufs. normalize_reference_level() applies a boost-only\ntarget, a maximum gain, and a peak ceiling. crop_on_pause() takes a\npausecropconfig; its default room-tone completion is zero-valued. to generate\nnoise, pass a local room_tone_seed or an rng explicitly. neither path uses\nprocess-global randomness.\n\nthe general boundary tools are speech_onset, energy_onset,\nenergy_fraction, trim_lead, and trim_trail. output conditioning provides\nfade_edges, join_with_edge_fades, soft_limit, and gain_for_level. fades\nare linear; joining fades adjacent segment edges without overlap-add; the soft\nlimiter follows a configurable tanh knee. these primitives preserve caller\nownership and are policy-free buildi…"
+        },
+        {
+          "anchor": "",
           "heading": "Normalized Energy VAD",
           "text": "The normalized energy VAD works by:\n\n\nFraming the audio into non-overlapping segments\n\n\nComputing RMS energy per frame\n\n\nNormalizing to [0, 1] range\n\n\nThresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# The algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=False,            # Discard trailing partial frame\n)",
           "lower": "the normalized energy vad works by:\n\n\nframing the audio into non-overlapping segments\n\n\ncomputing rms energy per frame\n\n\nnormalizing to [0, 1] range\n\n\nthresholding to detect activity\n\n\n\nfrom audiosig import normalized_energy_vad\n\n# the algorithm in detail\nactivity = normalized_energy_vad(\n    audio,\n    sample_rate=24000,\n    frame_duration_ms=10,     # 10ms frames = 240 samples\n    energy_threshold=0.15,    # 15% of max energy\n    pad_end=false,            # discard trailing partial frame\n)"
@@ -214,6 +238,12 @@
         },
         {
           "anchor": "",
+          "heading": "resample_windowed_sinc(audio, *, source_rate, target_rate, axis=-1, radius=16, alignment='sample', window='kaiser', rolloff=1.0, antialias=True, normalize_weights=True, boundary='zero', length_mode='round')",
+          "text": "The configurable NumPy windowed-sinc resampler. It preserves the input dtype,\naccepts arbitrary sample axes, and chunks its intermediate calculations. The\nradius selects 2 * radius source taps. alignment is sample or\nhalf_sample; window is kaiser or raised_cosine; boundary is zero or\nedge. Anti-alias filtering is enabled by default and uses rolloff; weight\nnormalization is enabled by default. length_mode='round' uses half-up sample\nsizing, while ceil rounds the requested output length upward. All options are\nindependent; existing resample() defaults and output remain unchanged.\n\nFor pinned half-sample behavior, explicitly choose radius=16,\nalignment='half_sample', window='raised_cosine', antialias=False,\nnormalize_weights=True, boundary='zero', and length_mode='round'.",
+          "lower": "the configurable numpy windowed-sinc resampler. it preserves the input dtype,\naccepts arbitrary sample axes, and chunks its intermediate calculations. the\nradius selects 2 * radius source taps. alignment is sample or\nhalf_sample; window is kaiser or raised_cosine; boundary is zero or\nedge. anti-alias filtering is enabled by default and uses rolloff; weight\nnormalization is enabled by default. length_mode='round' uses half-up sample\nsizing, while ceil rounds the requested output length upward. all options are\nindependent; existing resample() defaults and output remain unchanged.\n\nfor pinned half-sample behavior, explicitly choose radius=16,\nalignment='half_sample', window='raised_cosine', antialias=false,\nnormalize_weights=true, boundary='zero', and length_mode='round'."
+        },
+        {
+          "anchor": "",
           "heading": "apply_gain_db(audio, db, *, clip=False)",
           "text": "Apply a decibel gain to audio.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\ndb (float): Gain in decibels (negative = attenuation)\n\n\nclip (bool): If True, clip output to [-1.0, 1.0] (default: False)\n\n\n\nReturns: np.ndarray - Gain-adjusted audio\n\nExample:\n\nfrom audiosig import apply_gain_db\n\nlouder = apply_gain_db(audio, db=6.0)    # +6 dB gain\nquieter = apply_gain_db(audio, db=-3.0)  # -3 dB attenuation\nclipped = apply_gain_db(audio, db=12.0, clip=True)",
           "lower": "apply a decibel gain to audio.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\ndb (float): gain in decibels (negative = attenuation)\n\n\nclip (bool): if true, clip output to [-1.0, 1.0] (default: false)\n\n\n\nreturns: np.ndarray - gain-adjusted audio\n\nexample:\n\nfrom audiosig import apply_gain_db\n\nlouder = apply_gain_db(audio, db=6.0)    # +6 db gain\nquieter = apply_gain_db(audio, db=-3.0)  # -3 db attenuation\nclipped = apply_gain_db(audio, db=12.0, clip=true)"
@@ -223,6 +253,54 @@
           "heading": "peak_normalize(audio, *, peak=1.0, eps=1e-12)",
           "text": "Scale audio so its absolute peak equals the target value.\n\nParameters:\n\n\naudio (np.ndarray): Input audio array\n\n\npeak (float): Target peak amplitude (default: 1.0)\n\n\neps (float): Silence threshold (default: 1e-12)\n\n\n\nReturns: np.ndarray - Normalized audio\n\nExample:\n\nfrom audiosig import peak_normalize\n\n# Normalize to 0.9 peak\nnormalized = peak_normalize(audio, peak=0.9)\n\n# Silent audio is returned unchanged\nsilent = np.zeros(1000, dtype=np.float32)\nstill_silent = peak_normalize(silent)",
           "lower": "scale audio so its absolute peak equals the target value.\n\nparameters:\n\n\naudio (np.ndarray): input audio array\n\n\npeak (float): target peak amplitude (default: 1.0)\n\n\neps (float): silence threshold (default: 1e-12)\n\n\n\nreturns: np.ndarray - normalized audio\n\nexample:\n\nfrom audiosig import peak_normalize\n\n# normalize to 0.9 peak\nnormalized = peak_normalize(audio, peak=0.9)\n\n# silent audio is returned unchanged\nsilent = np.zeros(1000, dtype=np.float32)\nstill_silent = peak_normalize(silent)"
+        },
+        {
+          "anchor": "",
+          "heading": "fade_edges(audio, *, sample_rate, fade_in, fade_out, fade_seconds=0.01, axis=-1)",
+          "text": "Return an independent copy with linear ramps on the selected edges. Fade length is\nint(fade_seconds * sample_rate); segments no longer than twice that length are\nleft unchanged. Dtype and non-sample dimensions are preserved.",
+          "lower": "return an independent copy with linear ramps on the selected edges. fade length is\nint(fade_seconds * sample_rate); segments no longer than twice that length are\nleft unchanged. dtype and non-sample dimensions are preserved."
+        },
+        {
+          "anchor": "",
+          "heading": "join_with_edge_fades(parts, *, sample_rate, fade_seconds=0.01, axis=-1)",
+          "text": "Validate matching non-sample dimensions, fade the outgoing edge of every part\nexcept the last and the incoming edge of every part except the first, then\nconcatenate along the sample axis. This is edge-faded concatenation, not\ncrossfade overlap-add.",
+          "lower": "validate matching non-sample dimensions, fade the outgoing edge of every part\nexcept the last and the incoming edge of every part except the first, then\nconcatenate along the sample axis. this is edge-faded concatenation, not\ncrossfade overlap-add."
+        },
+        {
+          "anchor": "",
+          "heading": "soft_limit(audio, *, knee=0.9)",
+          "text": "Apply the smooth tanh limiter above the knee, preserving values at or below it:\nknee + (1-knee) * tanh((abs(x)-knee)/(1-knee)), with the original sign.\nThe knee must lie strictly between zero and one.",
+          "lower": "apply the smooth tanh limiter above the knee, preserving values at or below it:\nknee + (1-knee) * tanh((abs(x)-knee)/(1-knee)), with the original sign.\nthe knee must lie strictly between zero and one."
+        },
+        {
+          "anchor": "",
+          "heading": "gain_for_level(source_db, target_db)",
+          "text": "Return the linear multiplier 10 ** ((target_db - source_db) / 20); this helper\ndoes not apply the gain to audio.",
+          "lower": "return the linear multiplier 10 ** ((target_db - source_db) / 20); this helper\ndoes not apply the gain to audio."
+        },
+        {
+          "anchor": "",
+          "heading": "speech_level(audio, *, sample_rate, frame_seconds=0.025, hop_seconds=0.010, floor_quantile=0.20, activity_multiplier=1.5, floor_amplitude=1e-6)",
+          "text": "Return a SpeechLevel(level_db, active_seconds) from complete, uncentered frames.\nThe RMS floor and activity threshold select active frames, whose lower median is\nreported in dB. This is not integrated loudness or LUFS.",
+          "lower": "return a speechlevel(level_db, active_seconds) from complete, uncentered frames.\nthe rms floor and activity threshold select active frames, whose lower median is\nreported in db. this is not integrated loudness or lufs."
+        },
+        {
+          "anchor": "",
+          "heading": "normalize_reference_level(audio, *, sample_rate, target_db=-19.8, max_gain_db=30.0, peak_ceiling=0.95)",
+          "text": "Return ReferenceLevelResult(audio, measured_db, applied_gain_db, resulting_db).\nThe policy boosts only, limits gain, and protects the peak ceiling. It is a\nreference-preparation helper, not LUFS normalization.",
+          "lower": "return referencelevelresult(audio, measured_db, applied_gain_db, resulting_db).\nthe policy boosts only, limits gain, and protects the peak ceiling. it is a\nreference-preparation helper, not lufs normalization."
+        },
+        {
+          "anchor": "",
+          "heading": "crop_on_pause(audio, *, target_seconds, sample_rate, config=PauseCropConfig(), room_tone_rng=None, room_tone_seed=None, axis=-1)",
+          "text": "Select a nearby qualifying pause or fit the requested sample count. A seed or\nexplicit RNG enables room-tone completion; if neither is supplied, completion\nuses zeros and does not consult global random state. PauseCropConfig defaults\ndefine the 25-ms RMS frame, 10-ms hop, pause thresholds, search windows, 250-ms\nroom-tone tail, and 20-ms fade.",
+          "lower": "select a nearby qualifying pause or fit the requested sample count. a seed or\nexplicit rng enables room-tone completion; if neither is supplied, completion\nuses zeros and does not consult global random state. pausecropconfig defaults\ndefine the 25-ms rms frame, 10-ms hop, pause thresholds, search windows, 250-ms\nroom-tone tail, and 20-ms fade."
+        },
+        {
+          "anchor": "",
+          "heading": "speech_onset, energy_onset, energy_fraction, trim_lead, trim_trail",
+          "text": "These generic boundary helpers use 10-ms non-overlapping RMS frames by default.\nSpeech onset requires five active frames in a six-frame window; energy onset\nrequires three consecutive energetic frames. energy_fraction reports the\nactive-frame fraction in a sample interval. trim_lead retains 80 ms by default\nand caps trimming at a 20-ms onset safety margin; trim_trail retains 300 ms\nafter the last active frame. All trimming helpers preserve the selected sample\naxis and return independent arrays.",
+          "lower": "these generic boundary helpers use 10-ms non-overlapping rms frames by default.\nspeech onset requires five active frames in a six-frame window; energy onset\nrequires three consecutive energetic frames. energy_fraction reports the\nactive-frame fraction in a sample interval. trim_lead retains 80 ms by default\nand caps trimming at a 20-ms onset safety margin; trim_trail retains 300 ms\nafter the last active frame. all trimming helpers preserve the selected sample\naxis and return independent arrays."
         },
         {
           "anchor": "",
@@ -319,67 +397,37 @@
           "heading": "zero_crossing_rate(audio, *, frame_length=2048, hop_length=512, axis=-1, center=False, pad_end=False, normalize=False)",
           "text": "Calculate zero-crossing rate for each frame.\n\nParameters:\n\n\nnormalize (bool): Normalize to [0, 1] range (default: False)\n\n\n\nReturns: np.ndarray - Zero-crossing rates per frame",
           "lower": "calculate zero-crossing rate for each frame.\n\nparameters:\n\n\nnormalize (bool): normalize to [0, 1] range (default: false)\n\n\n\nreturns: np.ndarray - zero-crossing rates per frame"
-        },
-        {
-          "anchor": "",
-          "heading": "spectral_flux(audio, *, frame_length=2048, hop_length=512, axis=-1, center=False, pad_end=False, window='hann', normalize=False)",
-          "text": "Calculate spectral flux between adjacent frames.\n\nParameters:\n\n\nwindow (str): Window function (‘hann’ or ‘hamming’)\n\n\nnormalize (bool): Normalize to [0, 1] range (default: False)\n\n\n\nReturns: np.ndarray - Spectral flux values per frame",
-          "lower": "calculate spectral flux between adjacent frames.\n\nparameters:\n\n\nwindow (str): window function (‘hann’ or ‘hamming’)\n\n\nnormalize (bool): normalize to [0, 1] range (default: false)\n\n\n\nreturns: np.ndarray - spectral flux values per frame"
-        },
-        {
-          "anchor": "",
-          "heading": "Spectral and Pitch Analysis",
-          "text": "These stable submodule APIs are imported from audiosig.spectral and\naudiosig.pitch; they are intentionally not re-exported through the root\nnamespace.",
-          "lower": "these stable submodule apis are imported from audiosig.spectral and\naudiosig.pitch; they are intentionally not re-exported through the root\nnamespace."
-        },
-        {
-          "anchor": "",
-          "heading": "Spectral features (audiosig.spectral)",
-          "text": "stft(audio, *, n_fft, hop_length, center=True) returns the existing\nHann-windowed complex STFT with shape (..., n_fft // 2 + 1, frames).\nIt preserves the private spectral path’s conventions.\n\n\nistft(spectrum, *, n_fft, hop_length, length=None, center=True, dtype=np.float64) uses the existing overlap-add inverse and returns\nfloat32 or float64 samples.\n\n\npower_spectrogram(audio, *, n_fft, hop_length, center=True, power=2.0)\nreturns linear abs(STFT) ** power, without normalization or dB conversion.\n\n\nmel_filterbank(*, sample_rate, n_fft, n_mels, f_min=0.0, f_max=None, mel_scale='slaney', norm='slaney') creates Slaney mel triangles on exact\nreal-FFT bin centers. norm=None disables area normalization.\n\n\nmel_spectrogram(..., log=False, log_floor=1e-10) returns linear mel power\nby default. log=T…",
-          "lower": "stft(audio, *, n_fft, hop_length, center=true) returns the existing\nhann-windowed complex stft with shape (..., n_fft // 2 + 1, frames).\nit preserves the private spectral path’s conventions.\n\n\nistft(spectrum, *, n_fft, hop_length, length=none, center=true, dtype=np.float64) uses the existing overlap-add inverse and returns\nfloat32 or float64 samples.\n\n\npower_spectrogram(audio, *, n_fft, hop_length, center=true, power=2.0)\nreturns linear abs(stft) ** power, without normalization or db conversion.\n\n\nmel_filterbank(*, sample_rate, n_fft, n_mels, f_min=0.0, f_max=none, mel_scale='slaney', norm='slaney') creates slaney mel triangles on exact\nreal-fft bin centers. norm=none disables area normalization.\n\n\nmel_spectrogram(..., log=false, log_floor=1e-10) returns linear mel power\nby default. log=t…"
-        },
-        {
-          "anchor": "",
-          "heading": "Pitch tracking (audiosig.pitch)",
-          "text": "PitchTrack is a frozen, slotted result object with frame_times_s, f0_hz,\nvoiced, and confidence arrays. pitch_track(audio, *, sample_rate, hop_length=None, f0_min=60.0, f0_max=500.0) accepts only mono arrays shaped\n(samples,). The optional hop changes analysis geometry; None preserves the\nlegacy tracker default. Callers with multiple channels must explicitly select a\nchannel or downmix before analysis. Unvoiced frames are identified by voiced;\nconsult the track’s voicing mask rather than treating all F0 values as speech\npitch.",
-          "lower": "pitchtrack is a frozen, slotted result object with frame_times_s, f0_hz,\nvoiced, and confidence arrays. pitch_track(audio, *, sample_rate, hop_length=none, f0_min=60.0, f0_max=500.0) accepts only mono arrays shaped\n(samples,). the optional hop changes analysis geometry; none preserves the\nlegacy tracker default. callers with multiple channels must explicitly select a\nchannel or downmix before analysis. unvoiced frames are identified by voiced;\nconsult the track’s voicing mask rather than treating all f0 values as speech\npitch."
-        },
-        {
-          "anchor": "",
-          "heading": "Reference Metrics",
-          "text": "Import metrics from audiosig.metrics; intelligibility functions live in\naudiosig.intelligibility. Here, a reference is decoded reference waveform\nsamples, not a transcript or reference text. Each function returns a frozen,\nslotted MetricResult containing name, value, unit, higher_is_better,\nparameters, and diagnostics. Every feature and transformation parameter used\nby a metric is recorded in parameters. value is float | None; undefined\npitch RMSE is represented by None, not a fabricated zero.\n\nAll pairwise metrics require finite floating-point arrays with identical shape\nand sample count, and require estimate_sample_rate (when supplied) to equal\nsample_rate. The default alignment='none' is the only supported alignment.\nNo metric implicitly aligns, resamples, truncates, normalizes loudnes…",
-          "lower": "import metrics from audiosig.metrics; intelligibility functions live in\naudiosig.intelligibility. here, a reference is decoded reference waveform\nsamples, not a transcript or reference text. each function returns a frozen,\nslotted metricresult containing name, value, unit, higher_is_better,\nparameters, and diagnostics. every feature and transformation parameter used\nby a metric is recorded in parameters. value is float | none; undefined\npitch rmse is represented by none, not a fabricated zero.\n\nall pairwise metrics require finite floating-point arrays with identical shape\nand sample count, and require estimate_sample_rate (when supplied) to equal\nsample_rate. the default alignment='none' is the only supported alignment.\nno metric implicitly aligns, resamples, truncates, normalizes loudnes…"
-        },
-        {
-          "anchor": "",
-          "heading": "Formula conventions and comparability",
-          "text": "Let r be the reference waveform and y the estimate. SNR and this package’s\nexplicitly unscaled SDR both use\n\n10 * log10(sum(r**2) / sum((r - y)**2))\n\n\n\n\nThere is no gain fit or centering in these two metrics. A zero-energy reference\nis invalid; an exact reconstruction has zero residual and returns positive\ninfinity. SI-SDR optionally removes each lane’s mean first (default true), then\nflattens the remaining samples and fits one global scale\nalpha = dot(y, r) / dot(r, r). Its score is\n10 * log10(sum((alpha*r)**2) / sum((y - alpha*r)**2)).\n\nLet X_r and X_y be reference/estimate STFTs, and M_r and M_y their\nmel-power features. Means below cover every lane and frame (and, for log-mel,\nevery mel band); spectral distances take an RMS across frequency or mel bands\nbefore averaging lanes and fram…",
-          "lower": "let r be the reference waveform and y the estimate. snr and this package’s\nexplicitly unscaled sdr both use\n\n10 * log10(sum(r**2) / sum((r - y)**2))\n\n\n\n\nthere is no gain fit or centering in these two metrics. a zero-energy reference\nis invalid; an exact reconstruction has zero residual and returns positive\ninfinity. si-sdr optionally removes each lane’s mean first (default true), then\nflattens the remaining samples and fits one global scale\nalpha = dot(y, r) / dot(r, r). its score is\n10 * log10(sum((alpha*r)**2) / sum((y - alpha*r)**2)).\n\nlet x_r and x_y be reference/estimate stfts, and m_r and m_y their\nmel-power features. means below cover every lane and frame (and, for log-mel,\nevery mel band); spectral distances take an rms across frequency or mel bands\nbefore averaging lanes and fram…"
-        },
-        {
-          "anchor": "",
-          "heading": "STOI and ESTOI (audiosig.intelligibility)",
-          "text": "stoi(reference, estimate, *, sample_rate, estimate_sample_rate=None, alignment='none') and estoi(...) return higher-is-better scores. The\nreference is waveform audio, not a transcript. Both effective sample rates must\nbe exactly 10,000 Hz; when estimate_sample_rate is omitted it defaults to\nsample_rate. Inputs must be finite mono float32 or float64 arrays with\nidentical sample counts. Other rates, stereo, unequal lengths, unsupported\nalignment, and fewer than 30 active frames after silence removal are rejected.\nAll transformations are caller-owned: AudioSig does no file decoding, trimming,\nresampling, time alignment, truncation, loudness normalization, or downmixing.\n\nBoth implementations use complete 256-sample frames at a 128-sample hop,\nsymmetric Hann weighting, a 512-point FFT, 15 one…",
-          "lower": "stoi(reference, estimate, *, sample_rate, estimate_sample_rate=none, alignment='none') and estoi(...) return higher-is-better scores. the\nreference is waveform audio, not a transcript. both effective sample rates must\nbe exactly 10,000 hz; when estimate_sample_rate is omitted it defaults to\nsample_rate. inputs must be finite mono float32 or float64 arrays with\nidentical sample counts. other rates, stereo, unequal lengths, unsupported\nalignment, and fewer than 30 active frames after silence removal are rejected.\nall transformations are caller-owned: audiosig does no file decoding, trimming,\nresampling, time alignment, truncation, loudness normalization, or downmixing.\n\nboth implementations use complete 256-sample frames at a 128-sample hop,\nsymmetric hann weighting, a 512-point fft, 15 one…"
-        },
-        {
-          "anchor": "",
-          "heading": "amplitude_to_db(amplitude, *, ref=1.0, amin=1e-5, top_db=None)",
-          "text": "Convert amplitude to decibels.\n\nParameters:\n\n\namplitude (np.ndarray): Input amplitude values\n\n\nref (float or callable): Reference amplitude (default: 1.0)\n\n\namin (float): Minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): Clip to this range below peak\n\n\n\nReturns: np.ndarray - Decibel values",
-          "lower": "convert amplitude to decibels.\n\nparameters:\n\n\namplitude (np.ndarray): input amplitude values\n\n\nref (float or callable): reference amplitude (default: 1.0)\n\n\namin (float): minimum amplitude floor (default: 1e-5)\n\n\ntop_db (float, optional): clip to this range below peak\n\n\n\nreturns: np.ndarray - decibel values"
         }
       ]
     },
     {
       "url": "/tools/audiosig/changelog/",
       "title": "audiosig Changelog",
-      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded NumPy-only sp …",
+      "snippet": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.\nAdded configurable …",
       "sections": [
         {
           "anchor": "",
           "heading": "Changelog",
           "text": "Generated by releaseledger. Manual edits may be overwritten. Update releaseledger entries and rebuild this file instead.",
           "lower": "generated by releaseledger. manual edits may be overwritten. update releaseledger entries and rebuild this file instead."
+        },
+        {
+          "anchor": "",
+          "heading": "Added",
+          "text": "Added configurable NumPy DSP for resampling, spectral features, speech levels, pause cropping, and output conditioning",
+          "lower": "added configurable numpy dsp for resampling, spectral features, speech levels, pause cropping, and output conditioning"
+        },
+        {
+          "anchor": "",
+          "heading": "Documentation",
+          "text": "Documented DSP compatibility APIs, configuration policies, and application boundaries",
+          "lower": "documented dsp compatibility apis, configuration policies, and application boundaries"
+        },
+        {
+          "anchor": "",
+          "heading": "Quality",
+          "text": "Improved DSP regression fixtures and coverage for compatibility, boundaries, speech levels, and public APIs",
+          "lower": "improved dsp regression fixtures and coverage for compatibility, boundaries, speech levels, and public apis"
         },
         {
           "anchor": "",
@@ -888,8 +936,8 @@
         {
           "anchor": "",
           "heading": "Documentation",
-          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nSpectral and Pitch Analysis\n\nReference Metrics\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSmooth Cut-Point Selection\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nTime-varying speech envelopes\n\nResampling Internals\n\nLoudness measurement\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Handling Strategies\n\nPerformance Op…",
-          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nspectral and pitch analysis\n\nreference metrics\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsmooth cut-point selection\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\ntime-varying speech envelopes\n\nresampling internals\n\nloudness measurement\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror handling strategies\n\nperformance op…"
+          "text": "Contents:\n\n\nGetting Started with AudioSig\nInstallation\n\nQuick Start\n\nUnderstanding the API\n\nVoice Activity Detection (VAD)\n\nSilence Trimming\n\nError Handling\n\nNext Steps\n\n\n\n\nAudioSig API Reference\nCore Functions\n\nSilence Detection\n\nFrame Analysis\n\nSpectral and Pitch Analysis\n\nReference Metrics\n\nUtility Functions\n\nExceptions\n\nType Annotations\n\n\n\n\nAudioSig Examples\nBasic Audio Processing\n\nSmooth Cut-Point Selection\n\nSilence Detection and VAD\n\nSilence Trimming\n\nAmplitude Processing\n\nFrame Analysis\n\nReal-World Examples\n\nPerformance Tips\n\n\n\n\nAdvanced Topics\nChoosing a time-stretch backend\n\nTime-varying speech envelopes\n\nResampling Internals\n\nLoudness measurement\n\nCompatibility-capable NumPy DSP\n\nVAD Algorithm Details\n\nEdge Cases and Special Handling\n\nMulti-Channel and Batch Processing\n\nError Ha…",
+          "lower": "contents:\n\n\ngetting started with audiosig\ninstallation\n\nquick start\n\nunderstanding the api\n\nvoice activity detection (vad)\n\nsilence trimming\n\nerror handling\n\nnext steps\n\n\n\n\naudiosig api reference\ncore functions\n\nsilence detection\n\nframe analysis\n\nspectral and pitch analysis\n\nreference metrics\n\nutility functions\n\nexceptions\n\ntype annotations\n\n\n\n\naudiosig examples\nbasic audio processing\n\nsmooth cut-point selection\n\nsilence detection and vad\n\nsilence trimming\n\namplitude processing\n\nframe analysis\n\nreal-world examples\n\nperformance tips\n\n\n\n\nadvanced topics\nchoosing a time-stretch backend\n\ntime-varying speech envelopes\n\nresampling internals\n\nloudness measurement\n\ncompatibility-capable numpy dsp\n\nvad algorithm details\n\nedge cases and special handling\n\nmulti-channel and batch processing\n\nerror ha…"
         },
         {
           "anchor": "",

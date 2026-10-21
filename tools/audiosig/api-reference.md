@@ -5,8 +5,8 @@ permalink: /tools/audiosig/api-reference/
 nav_tool: audiosig
 docs_project: "audiosig"
 docs_variant: "release"
-docs_ref: "v0.1.7"
-docs_commit: "c9eff43212a96c0289795e4c7055300391219290"
+docs_ref: "v0.1.8"
+docs_commit: "fc87d829991d44b2ccc20685d4577019e628ee90"
 search_enabled: true
 ---
 
@@ -735,6 +735,20 @@ higher pitched; values below one make it longer and lower pitched. Use
 </pre></div>
 </div>
 </section>
+<section id="resample-windowed-sinc-audio-source-rate-target-rate-axis-1-radius-16-alignment-sample-window-kaiser-rolloff-1-0-antialias-true-normalize-weights-true-boundary-zero-length-mode-round">
+<h4><code class="docutils literal notranslate"><span class="pre">resample_windowed_sinc(audio,</span> <span class="pre">*,</span> <span class="pre">source_rate,</span> <span class="pre">target_rate,</span> <span class="pre">axis=-1,</span> <span class="pre">radius=16,</span> <span class="pre">alignment='sample',</span> <span class="pre">window='kaiser',</span> <span class="pre">rolloff=1.0,</span> <span class="pre">antialias=True,</span> <span class="pre">normalize_weights=True,</span> <span class="pre">boundary='zero',</span> <span class="pre">length_mode='round')</span></code></h4>
+<p>The configurable NumPy windowed-sinc resampler. It preserves the input dtype,
+accepts arbitrary sample axes, and chunks its intermediate calculations. The
+radius selects <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">radius</span></code> source taps. <code class="docutils literal notranslate"><span class="pre">alignment</span></code> is <code class="docutils literal notranslate"><span class="pre">sample</span></code> or
+<code class="docutils literal notranslate"><span class="pre">half_sample</span></code>; <code class="docutils literal notranslate"><span class="pre">window</span></code> is <code class="docutils literal notranslate"><span class="pre">kaiser</span></code> or <code class="docutils literal notranslate"><span class="pre">raised_cosine</span></code>; <code class="docutils literal notranslate"><span class="pre">boundary</span></code> is <code class="docutils literal notranslate"><span class="pre">zero</span></code> or
+<code class="docutils literal notranslate"><span class="pre">edge</span></code>. Anti-alias filtering is enabled by default and uses <code class="docutils literal notranslate"><span class="pre">rolloff</span></code>; weight
+normalization is enabled by default. <code class="docutils literal notranslate"><span class="pre">length_mode='round'</span></code> uses half-up sample
+sizing, while <code class="docutils literal notranslate"><span class="pre">ceil</span></code> rounds the requested output length upward. All options are
+independent; existing <code class="docutils literal notranslate"><span class="pre">resample()</span></code> defaults and output remain unchanged.</p>
+<p>For pinned half-sample behavior, explicitly choose <code class="docutils literal notranslate"><span class="pre">radius=16</span></code>,
+<code class="docutils literal notranslate"><span class="pre">alignment='half_sample'</span></code>, <code class="docutils literal notranslate"><span class="pre">window='raised_cosine'</span></code>, <code class="docutils literal notranslate"><span class="pre">antialias=False</span></code>,
+<code class="docutils literal notranslate"><span class="pre">normalize_weights=True</span></code>, <code class="docutils literal notranslate"><span class="pre">boundary='zero'</span></code>, and <code class="docutils literal notranslate"><span class="pre">length_mode='round'</span></code>.</p>
+</section>
 </section>
 <hr class="docutils" />
 <section id="amplitude-processing">
@@ -780,6 +794,63 @@ higher pitched; values below one make it longer and lower pitched. Use
 <span class="n">still_silent</span> <span class="o">=</span> <span class="n">peak_normalize</span><span class="p">(</span><span class="n">silent</span><span class="p">)</span>
 </pre></div>
 </div>
+</section>
+<section id="fade-edges-audio-sample-rate-fade-in-fade-out-fade-seconds-0-01-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">fade_edges(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">fade_in,</span> <span class="pre">fade_out,</span> <span class="pre">fade_seconds=0.01,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Return an independent copy with linear ramps on the selected edges. Fade length is
+<code class="docutils literal notranslate"><span class="pre">int(fade_seconds</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code>; segments no longer than twice that length are
+left unchanged. Dtype and non-sample dimensions are preserved.</p>
+</section>
+<section id="join-with-edge-fades-parts-sample-rate-fade-seconds-0-01-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">join_with_edge_fades(parts,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">fade_seconds=0.01,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Validate matching non-sample dimensions, fade the outgoing edge of every part
+except the last and the incoming edge of every part except the first, then
+concatenate along the sample axis. This is edge-faded concatenation, not
+crossfade overlap-add.</p>
+</section>
+<section id="soft-limit-audio-knee-0-9">
+<h4><code class="docutils literal notranslate"><span class="pre">soft_limit(audio,</span> <span class="pre">*,</span> <span class="pre">knee=0.9)</span></code></h4>
+<p>Apply the smooth tanh limiter above the knee, preserving values at or below it:
+<code class="docutils literal notranslate"><span class="pre">knee</span> <span class="pre">+</span> <span class="pre">(1-knee)</span> <span class="pre">*</span> <span class="pre">tanh((abs(x)-knee)/(1-knee))</span></code>, with the original sign.
+The knee must lie strictly between zero and one.</p>
+</section>
+<section id="gain-for-level-source-db-target-db">
+<h4><code class="docutils literal notranslate"><span class="pre">gain_for_level(source_db,</span> <span class="pre">target_db)</span></code></h4>
+<p>Return the linear multiplier <code class="docutils literal notranslate"><span class="pre">10</span> <span class="pre">**</span> <span class="pre">((target_db</span> <span class="pre">-</span> <span class="pre">source_db)</span> <span class="pre">/</span> <span class="pre">20)</span></code>; this helper
+does not apply the gain to audio.</p>
+</section>
+</section>
+<section id="speech-level-and-boundary-preparation">
+<h3>Speech Level and Boundary Preparation</h3>
+<section id="speech-level-audio-sample-rate-frame-seconds-0-025-hop-seconds-0-010-floor-quantile-0-20-activity-multiplier-1-5-floor-amplitude-1e-6">
+<h4><code class="docutils literal notranslate"><span class="pre">speech_level(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">frame_seconds=0.025,</span> <span class="pre">hop_seconds=0.010,</span> <span class="pre">floor_quantile=0.20,</span> <span class="pre">activity_multiplier=1.5,</span> <span class="pre">floor_amplitude=1e-6)</span></code></h4>
+<p>Return a <code class="docutils literal notranslate"><span class="pre">SpeechLevel(level_db,</span> <span class="pre">active_seconds)</span></code> from complete, uncentered frames.
+The RMS floor and activity threshold select active frames, whose lower median is
+reported in dB. This is not integrated loudness or LUFS.</p>
+</section>
+<section id="normalize-reference-level-audio-sample-rate-target-db-19-8-max-gain-db-30-0-peak-ceiling-0-95">
+<h4><code class="docutils literal notranslate"><span class="pre">normalize_reference_level(audio,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">target_db=-19.8,</span> <span class="pre">max_gain_db=30.0,</span> <span class="pre">peak_ceiling=0.95)</span></code></h4>
+<p>Return <code class="docutils literal notranslate"><span class="pre">ReferenceLevelResult(audio,</span> <span class="pre">measured_db,</span> <span class="pre">applied_gain_db,</span> <span class="pre">resulting_db)</span></code>.
+The policy boosts only, limits gain, and protects the peak ceiling. It is a
+reference-preparation helper, not LUFS normalization.</p>
+</section>
+<section id="crop-on-pause-audio-target-seconds-sample-rate-config-pausecropconfig-room-tone-rng-none-room-tone-seed-none-axis-1">
+<h4><code class="docutils literal notranslate"><span class="pre">crop_on_pause(audio,</span> <span class="pre">*,</span> <span class="pre">target_seconds,</span> <span class="pre">sample_rate,</span> <span class="pre">config=PauseCropConfig(),</span> <span class="pre">room_tone_rng=None,</span> <span class="pre">room_tone_seed=None,</span> <span class="pre">axis=-1)</span></code></h4>
+<p>Select a nearby qualifying pause or fit the requested sample count. A seed or
+explicit RNG enables room-tone completion; if neither is supplied, completion
+uses zeros and does not consult global random state. <code class="docutils literal notranslate"><span class="pre">PauseCropConfig</span></code> defaults
+define the 25-ms RMS frame, 10-ms hop, pause thresholds, search windows, 250-ms
+room-tone tail, and 20-ms fade.</p>
+</section>
+<section id="speech-onset-energy-onset-energy-fraction-trim-lead-trim-trail">
+<h4><code class="docutils literal notranslate"><span class="pre">speech_onset</span></code>, <code class="docutils literal notranslate"><span class="pre">energy_onset</span></code>, <code class="docutils literal notranslate"><span class="pre">energy_fraction</span></code>, <code class="docutils literal notranslate"><span class="pre">trim_lead</span></code>, <code class="docutils literal notranslate"><span class="pre">trim_trail</span></code></h4>
+<p>These generic boundary helpers use 10-ms non-overlapping RMS frames by default.
+Speech onset requires five active frames in a six-frame window; energy onset
+requires three consecutive energetic frames. <code class="docutils literal notranslate"><span class="pre">energy_fraction</span></code> reports the
+active-frame fraction in a sample interval. <code class="docutils literal notranslate"><span class="pre">trim_lead</span></code> retains 80 ms by default
+and caps trimming at a 20-ms onset safety margin; <code class="docutils literal notranslate"><span class="pre">trim_trail</span></code> retains 300 ms
+after the last active frame. All trimming helpers preserve the selected sample
+axis and return independent arrays.</p>
 </section>
 </section>
 <hr class="docutils" />
@@ -1012,30 +1083,19 @@ higher pitched; values below one make it longer and lower pitched. Use
 <hr class="docutils" />
 <section id="spectral-and-pitch-analysis">
 <h2>Spectral and Pitch Analysis</h2>
-<p>These stable submodule APIs are imported from <code class="docutils literal notranslate"><span class="pre">audiosig.spectral</span></code> and
-<code class="docutils literal notranslate"><span class="pre">audiosig.pitch</span></code>; they are intentionally not re-exported through the root
-namespace.</p>
-<section id="spectral-features-audiosig-spectral">
-<h3>Spectral features (<code class="docutils literal notranslate"><span class="pre">audiosig.spectral</span></code>)</h3>
+<p>The spectral feature functions below are available from both <code class="docutils literal notranslate"><span class="pre">audiosig.spectral</span></code>
+and the package root. Pitch tracking remains in <code class="docutils literal notranslate"><span class="pre">audiosig.pitch</span></code>.</p>
+<section id="spectral-features">
+<h3>Spectral features</h3>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">stft(audio,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">center=True)</span></code> returns the existing
-Hann-windowed complex STFT with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_fft</span> <span class="pre">//</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">frames)</span></code>.
-It preserves the private spectral path’s conventions.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">istft(spectrum,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">length=None,</span> <span class="pre">center=True,</span> <span class="pre">dtype=np.float64)</span></code> uses the existing overlap-add inverse and returns
-<code class="docutils literal notranslate"><span class="pre">float32</span></code> or <code class="docutils literal notranslate"><span class="pre">float64</span></code> samples.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">power_spectrogram(audio,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">center=True,</span> <span class="pre">power=2.0)</span></code>
-returns linear <code class="docutils literal notranslate"><span class="pre">abs(STFT)</span> <span class="pre">**</span> <span class="pre">power</span></code>, without normalization or dB conversion.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mel_filterbank(*,</span> <span class="pre">sample_rate,</span> <span class="pre">n_fft,</span> <span class="pre">n_mels,</span> <span class="pre">f_min=0.0,</span> <span class="pre">f_max=None,</span> <span class="pre">mel_scale='slaney',</span> <span class="pre">norm='slaney')</span></code> creates Slaney mel triangles on exact
-real-FFT bin centers. <code class="docutils literal notranslate"><span class="pre">norm=None</span></code> disables area normalization.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mel_spectrogram(...,</span> <span class="pre">log=False,</span> <span class="pre">log_floor=1e-10)</span></code> returns linear mel power
-by default. <code class="docutils literal notranslate"><span class="pre">log=True</span></code> returns <code class="docutils literal notranslate"><span class="pre">ln(max(mel_power,</span> <span class="pre">log_floor))</span></code>; it does not
-apply a power-to-dB transform.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">mfcc(...,</span> <span class="pre">n_fft=1024,</span> <span class="pre">hop_length=256,</span> <span class="pre">n_mfcc=13,</span> <span class="pre">n_mels=40,</span> <span class="pre">center=True,</span> <span class="pre">...)</span></code> computes an orthonormal DCT-II of natural-log mel power. Output shape is
-<code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_mfcc,</span> <span class="pre">frames)</span></code>; coefficient zero is included.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">frame_times(n_frames,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">hop_length,</span> <span class="pre">frame_length=None,</span> <span class="pre">center=True)</span></code> returns frame-center times in seconds. For <code class="docutils literal notranslate"><span class="pre">center=False</span></code>,
-<code class="docutils literal notranslate"><span class="pre">frame_length</span></code> is required.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">match_frames(reference,</span> <span class="pre">estimate,</span> <span class="pre">*,</span> <span class="pre">frame_axis=-1)</span></code> accepts only arrays with
-identical shape. It validates correspondence and never crops or aligns.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">stft(audio,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">center=True,</span> <span class="pre">win_length=None,</span> <span class="pre">pad_mode='reflect',</span> <span class="pre">window='symmetric',</span> <span class="pre">frame_count=None)</span></code> returns the Hann-windowed complex STFT with shape <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_fft</span> <span class="pre">//</span> <span class="pre">2</span> <span class="pre">+</span> <span class="pre">1,</span> <span class="pre">frames)</span></code>. The defaults preserve AudioSig’s historical symmetric Hann and reflect padding. <code class="docutils literal notranslate"><span class="pre">window='periodic'</span></code> selects the periodic Hann used by compatible frontends; <code class="docutils literal notranslate"><span class="pre">frame_count</span></code> truncates or zero-pads output frames.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">istft(spectrum,</span> <span class="pre">*,</span> <span class="pre">n_fft,</span> <span class="pre">hop_length,</span> <span class="pre">length=None,</span> <span class="pre">center=True,</span> <span class="pre">dtype=np.float64)</span></code> uses the existing overlap-add inverse and returns <code class="docutils literal notranslate"><span class="pre">float32</span></code> or <code class="docutils literal notranslate"><span class="pre">float64</span></code> samples.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">power_spectrogram(...,</span> <span class="pre">power=2.0,</span> <span class="pre">win_length=None,</span> <span class="pre">pad_mode='reflect',</span> <span class="pre">window='symmetric',</span> <span class="pre">frame_count=None)</span></code> returns linear <code class="docutils literal notranslate"><span class="pre">abs(STFT)</span> <span class="pre">**</span> <span class="pre">power</span></code>, without normalization or dB conversion.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mel_filterbank(*,</span> <span class="pre">sample_rate,</span> <span class="pre">n_fft,</span> <span class="pre">n_mels,</span> <span class="pre">f_min=0.0,</span> <span class="pre">f_max=None,</span> <span class="pre">mel_scale='slaney',</span> <span class="pre">norm='slaney')</span></code> creates mel triangles on exact real-FFT bin centers. Choose <code class="docutils literal notranslate"><span class="pre">mel_scale='htk'</span></code> for HTK frequencies; <code class="docutils literal notranslate"><span class="pre">norm=None</span></code> disables Slaney area normalization.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mel_spectrogram(...,</span> <span class="pre">mel_scale='slaney',</span> <span class="pre">norm='slaney',</span> <span class="pre">win_length=None,</span> <span class="pre">pad_mode='reflect',</span> <span class="pre">window='symmetric',</span> <span class="pre">frame_count=None,</span> <span class="pre">log=False,</span> <span class="pre">log_floor=1e-10)</span></code> returns linear mel power by default. <code class="docutils literal notranslate"><span class="pre">log=True</span></code> returns <code class="docutils literal notranslate"><span class="pre">ln(max(mel_power,</span> <span class="pre">log_floor))</span></code>; it does not apply a power-to-dB transform.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mfcc(...,</span> <span class="pre">n_fft=1024,</span> <span class="pre">hop_length=256,</span> <span class="pre">n_mfcc=13,</span> <span class="pre">n_mels=40,</span> <span class="pre">center=True,</span> <span class="pre">...)</span></code> computes an orthonormal DCT-II of natural-log mel power. Output shape is <code class="docutils literal notranslate"><span class="pre">(...,</span> <span class="pre">n_mfcc,</span> <span class="pre">frames)</span></code>; coefficient zero is included.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">frame_times(n_frames,</span> <span class="pre">*,</span> <span class="pre">sample_rate,</span> <span class="pre">hop_length,</span> <span class="pre">frame_length=None,</span> <span class="pre">center=True)</span></code> returns frame-center times in seconds. For <code class="docutils literal notranslate"><span class="pre">center=False</span></code>, <code class="docutils literal notranslate"><span class="pre">frame_length</span></code> is required.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">match_frames(reference,</span> <span class="pre">estimate,</span> <span class="pre">*,</span> <span class="pre">frame_axis=-1)</span></code> accepts only arrays with identical shape. It validates correspondence and never crops or aligns.</p></li>
 </ul>
 </section>
 <section id="pitch-tracking-audiosig-pitch">

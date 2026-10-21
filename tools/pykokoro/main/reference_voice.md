@@ -6,7 +6,7 @@ nav_tool: pykokoro-main
 docs_project: "pykokoro"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "62694ac586d0d21b877d2b6ac1b4703606edee16"
+docs_commit: "3dabff8c7fb9efd8cc8bc15f99c41afd152ee088"
 search_enabled: true
 ---
 
@@ -546,6 +546,31 @@ html[data-theme="dark"] .sphinxpress-doc {
 <code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.enroll_voice()</span></code>. Inno creates a normal static Kokoro voice pack from
 reference audio only. AkinVox creates a transcript-conditioned <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code> for its
 cloning model. These outputs have separate formats and synthesis paths.</p>
+<section id="frontend-measurement-before-reference-enrollment">
+<h2>Frontend measurement before reference enrollment</h2>
+<p>A reference-only target can be preflighted before its reference recording is loaded or
+enrolled:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>discover / validate target and request
+              ↓
+measure_request   # request frontend and model-token count only
+              ↓
+enroll_voice      # execution-time reference conditioning
+              ↓
+synthesize
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">KokoroSynthesizer.measure_request(request,</span> <span class="pre">maximum=...)</span></code> measures the narration request
+with the same G2P/tokenizer frontend as <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> and returns a <code class="docutils literal notranslate"><span class="pre">RequestMeasure</span></code>. It
+does not require a <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code> or reference audio, enroll a voice, or run
+acoustic/reference inference. The optional <code class="docutils literal notranslate"><span class="pre">maximum</span></code> lets the caller report whether the
+token count fits a known model limit.</p>
+<p>Measurement covers the narration request’s frontend/model-token size only. It does not
+download, inspect, or prove that a reference WAV is valid for enrollment; enrollment
+errors can still occur later. <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> remains synthesis-oriented and continues to
+require a compatible <code class="docutils literal notranslate"><span class="pre">ReferenceVoice</span></code> for reference-only targets. Resolve and validate
+reference audio in the application, then call <code class="docutils literal notranslate"><span class="pre">enroll_voice()</span></code> at execution time before
+synthesizing with the resulting voice.</p>
+</section>
 <section id="inno-voice-tuning">
 <h2>Inno voice tuning</h2>
 <p>Inno v0.2 is a zero-shot voice tuner, not a strong identity cloner. It requires

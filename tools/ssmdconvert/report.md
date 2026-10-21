@@ -5,8 +5,8 @@ permalink: /tools/ssmdconvert/report/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -545,7 +545,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>Analyze SSMD with the same selected source sections, preparation options, and TXT
 projection used by the other analysis commands.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>SOURCE
-ssmdconvert<span class="w"> </span>report<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>-o<span class="w"> </span>report.json
+ssmdconvert<span class="w"> </span>report<span class="w"> </span>BOOK.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>-o<span class="w"> </span>report.json
 ssmdconvert<span class="w"> </span>report<span class="w"> </span>SOURCE<span class="w"> </span>--refresh<span class="w"> </span>--fail-on-warning
 </pre></div>
 </div>
@@ -555,9 +555,13 @@ ssmdconvert<span class="w"> </span>report<span class="w"> </span>SOURCE<span cla
 <p>Common options:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">SELECTOR</span></code>: source chapter numbers for SSMD books; defaults to all.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--language</span> <span class="pre">LANG</span></code>: explicit language override; unresolved language is reported,
-never silently defaulted.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--language</span> <span class="pre">LANG</span></code>: base-language override for unscoped text; inline language scopes remain authoritative, with the innermost scope winning. Unresolved language is reported, never silently defaulted.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--sequence-fallback-mode</span> <span class="pre">spell|preserve</span></code>: preparation fallback policy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off|auto|sm|md|lg|trf</span></code>: optional local spaCy hints; default <code class="docutils literal notranslate"><span class="pre">off</span></code>.
+<code class="docutils literal notranslate"><span class="pre">auto</span></code> falls back without hints if no compatible installed model is available;
+explicit tiers require a local model. No model is downloaded during conversion.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--progress</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code>: control stderr progress UI; automatic mode is
+enabled only when stderr is a TTY.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--max-paragraph-chars</span> <span class="pre">N</span></code>: projection wrapping limit; default <code class="docutils literal notranslate"><span class="pre">1000</span></code>.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--include-titles</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-include-titles</span></code>: include or omit title units.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--refresh</span></code>: bypass cached per-chapter preparation, rerun the selected sections,

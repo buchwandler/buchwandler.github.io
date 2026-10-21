@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ssmdconvert EPUB chapters and book bundles"
+title: "ssmdconvert EPUB source conversion"
 permalink: /tools/ssmdconvert/books/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,86 +540,33 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="epub-chapters-and-book-bundles">
-<h1>EPUB chapters and book bundles</h1>
-<p>The book API provides ordered EPUB chapter inspection, source-number selection, standalone SSMD chapter conversion, and directory or ZIP bundles. Combined EPUB conversion through <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">convert</span></code> remains a single SSMD document.</p>
-<section id="inspect-chapters">
-<h2>Inspect chapters</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>inspect<span class="w"> </span>novel.epub
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+<section id="epub-source-conversion">
+<h1>EPUB source conversion</h1>
+<p>EPUB is the book source format. Use the shared bundle commands to inspect the
+navigation inventory and convert all or selected chapters:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>chapter-one.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5<span class="w"> </span>-o<span class="w"> </span>selected.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>selected.ssmd-bundle
 </pre></div>
 </div>
-<p>Inspection returns source metadata and the complete ordered chapter inventory. <code class="docutils literal notranslate"><span class="pre">source_id</span></code> and <code class="docutils literal notranslate"><span class="pre">source_parent_id</span></code> preserve identifiers from the EPUB navigation data. <code class="docutils literal notranslate"><span class="pre">id</span></code> is the stable canonical <code class="docutils literal notranslate"><span class="pre">chapter-NNNN</span></code> identity, and <code class="docutils literal notranslate"><span class="pre">parent_id</span></code> refers to the canonical ID of the parent chapter when it is present in the inventory.</p>
-</section>
-<section id="select-chapters">
-<h2>Select chapters</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span><span class="w"> </span>-o<span class="w"> </span>chapter-one.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5<span class="w"> </span>-o<span class="w"> </span>selected.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>selected.ssmdbook
-</pre></div>
-</div>
-<p>Selectors use original 1-based source chapter numbers. They address the complete source inventory, even when the output contains only a subset. Selected chapters always remain in source order. Duplicate numbers do not duplicate chapters. Missing chapters, zero or negative numbers, reversed ranges, and malformed tokens raise <code class="docutils literal notranslate"><span class="pre">ChapterSelectionError</span></code>.</p>
-<p>New book conversions default to <code class="docutils literal notranslate"><span class="pre">sequence_fallback_mode=preserve</span></code>; <code class="docutils literal notranslate"><span class="pre">spell</span></code> remains an explicit option. The selected policy is written to the book manifest and mirrored into each chapter so extracted chapters remain self-contained. Existing bundles may omit the field, and this writer default does not redefine how consumers handle that absence.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-l<span class="w"> </span>de-DE<span class="w"> </span>--metadata-file<span class="w"> </span>book-metadata.yaml<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">-l/--language</span></code> overrides the EPUB language. Without an override, the EPUB value is retained; if the source has no language, conversion leaves it absent. The effective language is stored in the bundle metadata and every chapter. <code class="docutils literal notranslate"><span class="pre">--metadata-file</span></code> accepts UTF-8 YAML with supported bibliographic and portable SSMD fields. Source metadata is overridden by the file, explicit CLI flags override the file, and the effective sequence policy takes final precedence.</p>
-<p>Inspect stored metadata in either bundle format. The command reports directory workspace status (including dirty chapters) before the metadata; ZIP inputs are strictly validated:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>metadata<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>metadata<span class="w"> </span>novel.ssmdbook.zip<span class="w"> </span>--json
-</pre></div>
-</div>
-</section>
-<section id="write-and-validate-bundles">
-<h2>Write and validate bundles</h2>
-<p>A directory ending in <code class="docutils literal notranslate"><span class="pre">.ssmdbook/</span></code> is the editable canonical workspace. A <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> is an immutable portable artifact. Both use the same manifest and chapter documents; strict bundle loading and validation require the recorded chapter hashes to match:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook.zip
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>validate<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>validate<span class="w"> </span>novel.ssmdbook.zip<span class="w"> </span>--json
-</pre></div>
-</div>
-</section>
-<section id="edit-refresh-and-pack-a-workspace">
-<h2>Edit, refresh, and pack a workspace</h2>
-<p>Editing a chapter in a directory workspace makes its manifest digest stale, but does not prevent workspace consumers from using the current chapter text. <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">metadata</span></code> reports whether the directory is clean or dirty and counts dirty chapters. Workspace loading does not rewrite the manifest; invalid SSMD, missing files, or unsafe paths remain errors.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">refresh</span></code> when the edited source is ready to have its manifest hashes and character counts updated. The check form never mutates files and exits non-zero when the workspace is dirty or invalid. To create a portable artifact from the current edited content, use <code class="docutils literal notranslate"><span class="pre">pack</span></code>; this writes a strict ZIP with current chapter text and fresh hashes without modifying the directory workspace.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>refresh<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--check
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>refresh<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>pack<span class="w"> </span>novel.ssmdbook<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook.zip
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">.readio/</span></code> is reserved for downstream local state. It is ignored by workspace and strict directory validation and is never included in a packed ZIP. Readio can consume edited text through <code class="docutils literal notranslate"><span class="pre">load_book_workspace()</span></code>; reading or rendering does not refresh the source manifest, and no Readio-specific fields are stored there.
-The CLI infers formats only from <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> and <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">directory</span></code> or <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">zip</span></code> for another output name. Existing outputs are refused by default. <code class="docutils literal notranslate"><span class="pre">--force</span></code> replaces the complete directory bundle or ZIP file atomically; directory output does not merge stale files.</p>
-</section>
-<section id="python-api">
-<h2>Python API</h2>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
-    <span class="n">BookWorkspace</span><span class="p">,</span>
-    <span class="n">WorkspaceChapterStatus</span><span class="p">,</span>
-    <span class="n">convert_book</span><span class="p">,</span>
-    <span class="n">inspect_book</span><span class="p">,</span>
-    <span class="n">load_book_bundle</span><span class="p">,</span>
-    <span class="n">load_book_workspace</span><span class="p">,</span>
-    <span class="n">refresh_book_workspace</span><span class="p">,</span>
-    <span class="n">validate_book_bundle</span><span class="p">,</span>
-    <span class="n">write_book_bundle</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">inspection</span> <span class="o">=</span> <span class="n">inspect_book</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">)</span>
-<span class="n">book</span> <span class="o">=</span> <span class="n">convert_book</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span> <span class="n">chapters</span><span class="o">=</span><span class="s2">&quot;2-20&quot;</span><span class="p">)</span>
-<span class="n">write_book_bundle</span><span class="p">(</span><span class="n">book</span><span class="p">,</span> <span class="s2">&quot;selected.ssmdbook&quot;</span><span class="p">,</span> <span class="nb">format</span><span class="o">=</span><span class="s2">&quot;directory&quot;</span><span class="p">)</span>
-<span class="n">loaded</span> <span class="o">=</span> <span class="n">load_book_bundle</span><span class="p">(</span><span class="s2">&quot;selected.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">workspace</span><span class="p">:</span> <span class="n">BookWorkspace</span> <span class="o">=</span> <span class="n">load_book_workspace</span><span class="p">(</span><span class="s2">&quot;selected.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">workspace_status</span><span class="p">:</span> <span class="n">WorkspaceChapterStatus</span> <span class="o">=</span> <span class="n">workspace</span><span class="o">.</span><span class="n">chapters</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-<span class="n">refreshed_workspace</span><span class="p">:</span> <span class="n">BookWorkspace</span> <span class="o">=</span> <span class="n">refresh_book_workspace</span><span class="p">(</span><span class="s2">&quot;selected.ssmdbook&quot;</span><span class="p">)</span>
-<span class="n">validate_book_bundle</span><span class="p">(</span><span class="s2">&quot;selected.ssmdbook&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">Book.source_sha256</span></code> is captured during conversion. Bundle writing persists that captured hash and does not reread the source file. After loading a bundle, source provenance remains available in <code class="docutils literal notranslate"><span class="pre">Book.source</span></code>, but its local <code class="docutils literal notranslate"><span class="pre">path</span></code> is <code class="docutils literal notranslate"><span class="pre">None</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">convert_book()</span></code> also accepts <code class="docutils literal notranslate"><span class="pre">language</span></code> and <code class="docutils literal notranslate"><span class="pre">metadata_overrides</span></code>. The explicit language wins over source and metadata-file values. The returned <code class="docutils literal notranslate"><span class="pre">Book.metadata</span></code> includes the effective language and portable metadata, and every chapter copies each supported portable SSMD key before SSMD 0.9 validation.</p>
-<p>See <a class="reference internal" href="../bundle-format/"><span class="std std-doc">Bundle format</span></a> for manifest fields, canonical paths, integrity checks, and resource limits.</p>
-</section>
+<p>Selectors use original one-based source chapter numbers. They refer to the
+complete source inventory even when the output contains a subset. Selected
+chapters remain in source order; duplicate numbers do not duplicate chapters.
+Missing chapters, zero or negative numbers, reversed ranges, and malformed
+tokens are rejected.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--language</span></code> for the base language and <code class="docutils literal notranslate"><span class="pre">--metadata-file</span></code> for supported
+bibliographic and SSMD metadata. Source metadata is overridden by the file, then
+explicit command-line values. Inline SSMD language spans remain authoritative.</p>
+<p>Book conversion freezes eligible automatic speech decisions by default. Freeze
+requires a resolvable language for each text run. Use
+<code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for structural-only conversion. Speech decisions
+preserve visible text and author-owned annotations. <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off|auto|sm|md|lg|trf</span></code>
+selects local enrichment; models are never downloaded automatically.</p>
+<p>The resulting workspace uses the common bundle lifecycle for validation,
+metadata, refresh, and packing. See <a class="reference internal" href="../bundles/"><span class="std std-doc">Bundle workspaces</span></a> for dirty
+chapter behavior and <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">analysis workflows</span></a> for reports and
+speech details.</p>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -5,16 +5,16 @@ variant: main
 variant_label: Current main
 variant_kind: git_ref
 source_ref: main
-source_commit: 4abca5cfad32ac0f9c4987dbeadcbafa232c785b
+source_commit: a70e4a16603d00b42bfbdfb2b58a51cad2064d69
 source_url: https://github.com/buchwandler/utterplan/tree/main
 is_default: false
 repo_url: https://github.com/buchwandler/utterplan
-release_tag: v0.5.1
-release_url: https://github.com/buchwandler/utterplan/releases/tag/v0.5.1
+release_tag: v0.6.6
+release_url: https://github.com/buchwandler/utterplan/releases/tag/v0.6.6
 versions:
 - name: release
   label: Latest release
-  ref: v0.5.1
+  ref: v0.6.6
   url: /tools/utterplan/
   current: false
 - name: main
@@ -32,14 +32,14 @@ entries:
 - slug: cli
   title: utterplan Command-line interface
   url: /tools/utterplan/main/cli/
-- slug: ssmdbook
-  title: utterplan Compiling chapters from an SSMDBook
-  url: /tools/utterplan/main/ssmdbook/
+- slug: bundles
+  title: utterplan Manifest-driven SSMD bundles
+  url: /tools/utterplan/main/bundles/
 - slug: consumer-guide
   title: utterplan Renderer consumer guide
   url: /tools/utterplan/main/consumer-guide/
 - slug: format
-  title: UtterPlan format v5
+  title: UtterPlan format v7
   url: /tools/utterplan/main/format/
 - slug: coordinate-spaces
   title: utterplan Coordinate spaces
@@ -48,7 +48,7 @@ entries:
   title: utterplan Debugging
   url: /tools/utterplan/main/debugging/
 - slug: architecture
-  title: utterplan Architecture
+  title: utterplan Architecture Documentation
   url: /tools/utterplan/main/architecture/
 - slug: pykokoro-integration
   title: utterplan PyKokoro integration boundary

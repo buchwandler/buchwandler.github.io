@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "readio Incremental rendering"
-permalink: /tools/readio/incremental-rendering/
-nav_tool: readio
-docs_project: "readio"
+title: "ssmdconvert SSMD bundle workspaces"
+permalink: /tools/ssmdconvert/bundles/
+nav_tool: ssmdconvert
+docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.4.0"
-docs_commit: "9ec90d52554625b53b7554f237e5f6bde4711526"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,58 +540,105 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="incremental-rendering">
-<h1>Incremental rendering</h1>
-<p>Readio projects are built as explicit stages:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source/document -&gt; UtterancePlan -&gt; unit WAV cache -&gt; master/timeline -&gt; output
+<section id="ssmd-bundle-workspaces">
+<h1>SSMD bundle workspaces</h1>
+<p>SSMDConvert stores converted books and single documents in one kind-neutral
+artifact lifecycle. The manifest identifies whether a bundle contains a book or
+a document; users do not choose a storage type.</p>
+<section id="canonical-names">
+<h2>Canonical names</h2>
+<p>An editable workspace is a directory named <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.ssmd-bundle/</span></code>. A portable,
+immutable archive is named <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.ssmd-bundle.zip</span></code>. Both contain the existing
+kind-specific manifest format and schema version; the outer artifact name is
+shared.</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>novel.ssmd-bundle/
+novel.ssmd-bundle.zip
+notes.ssmd-bundle/
+notes.ssmd-bundle.zip
 </pre></div>
 </div>
-<p>The status command explains freshness from content identities rather than
-filesystem timestamps:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>status<span class="w"> </span>manuscript.readio
-readio<span class="w"> </span>status<span class="w"> </span>manuscript.readio<span class="w"> </span>--json
+</section>
+<section id="convert-and-inspect">
+<h2>Convert and inspect</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>novel.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>reviewed.ssmd.md
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>novel.ssmd-bundle
 </pre></div>
 </div>
-<p>A changed sentence changes its Utterplan unit content hash, so the next build
-reuses unchanged unit cache entries. Inserting text can shift positional unit
-IDs without defeating reuse because the cache key is the unit content hash plus
-acoustic profile identity. A complete synthesis cache hit does not open a TTS
-session.</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>readio<span class="w"> </span>render<span class="w"> </span>manuscript.readio<span class="w"> </span>--format<span class="w"> </span>mp3
+<p>When the output is omitted, conversion creates a directory workspace beside the
+source using its filename stem. <code class="docutils literal notranslate"><span class="pre">--force</span></code> replaces the complete existing
+workspace atomically. <code class="docutils literal notranslate"><span class="pre">bundle</span> <span class="pre">inspect</span></code> accepts a supported source or a canonical
+bundle and reports the detected kind.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--chapters</span></code> selects original, one-based source chapter numbers for books. A
+single document accepts the default <code class="docutils literal notranslate"><span class="pre">all</span></code> value; another chapter selector is a
+usage error. Book chapters remain in source order.</p>
+</section>
+<section id="lifecycle-commands">
+<h2>Lifecycle commands</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">bundle</span></code> command group contains exactly these lifecycle operations:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">SOURCE</span></code> inspects a supported source or bundle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">convert</span> <span class="pre">SOURCE</span></code> creates an editable workspace.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">metadata</span> <span class="pre">BUNDLE</span></code> displays stored metadata.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">refresh</span> <span class="pre">WORKSPACE</span></code> updates recorded content digests; <code class="docutils literal notranslate"><span class="pre">--check</span></code> only checks
+whether the workspace is clean.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pack</span> <span class="pre">WORKSPACE</span></code> creates a deterministic <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle.zip</span></code> archive.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">validate</span> <span class="pre">BUNDLE</span></code> strictly checks the manifest and referenced content.</p></li>
+</ul>
+<p>Only a directory workspace can be refreshed or packed. ZIP archives are
+read-only. <code class="docutils literal notranslate"><span class="pre">validate</span></code> and strict bundle loading verify manifest hashes; analysis
+workflows can read current valid content from a dirty directory workspace
+without silently refreshing it. Packing reads current valid workspace content
+and does not change the workspace manifest.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>metadata<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>refresh<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--check
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>refresh<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>pack<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>notes.ssmd-bundle.zip
 </pre></div>
 </div>
-<p>The high-level command rebuilds only stale stages. Typical decisions are:</p>
-<table class="docutils align-default">
-<thead>
-<tr class="row-odd"><th class="head"><p>Change</p></th>
-<th class="head"><p>Rebuilt stages</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p>source sentence</p></td>
-<td><p>plan, changed synthesis units, composition, export</p></td>
-</tr>
-<tr class="row-odd"><td><p>voice/model/engine</p></td>
-<td><p>synthesis units for the new profile, composition, export</p></td>
-</tr>
-<tr class="row-even"><td><p>target LUFS or peak policy</p></td>
-<td><p>composition, export</p></td>
-</tr>
-<tr class="row-odd"><td><p>Generic WAV/FLAC/MP3/M4A/Ogg/Vorbis/Opus settings</p></td>
-<td><p>export</p></td>
-</tr>
-</tbody>
-</table>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">export</span></code> tracks each output independently. Its identity includes the master, format, and normalized effective encoder options: M4A defaults to 192k and Opus defaults to 96k. WAV and FLAC do not accept bitrate options. <code class="docutils literal notranslate"><span class="pre">.ogg</span></code> remains Ogg/Vorbis; <code class="docutils literal notranslate"><span class="pre">.opus</span></code> is separate.</p>
-<p>Audiobook M4B is a separate output identity created by <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">audiobook</span> <span class="pre">export</span> <span class="pre">PROJECT</span> <span class="pre">--format</span> <span class="pre">m4b</span></code>. It includes the composition master and timeline, resolved title/author, explicit cover hash, and AAC bitrate (192k by default). Changing only metadata, cover, or bitrate requires a new M4B encode, not replanning, resynthesis, or recomposition. A master/timeline change follows the normal composition invalidation path. Automatic cover extraction is not supported; pass a JPEG/PNG with <code class="docutils literal notranslate"><span class="pre">--cover</span></code>.</p>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">preview</span> <span class="pre">PROJECT</span> <span class="pre">--select</span> <span class="pre">paragraph:1-3</span> <span class="pre">--voice</span> <span class="pre">VOICE</span> <span class="pre">-o</span> <span class="pre">preview.wav</span></code>
-uses the same synthesis and composition primitives for a selected range. It
-keeps audition profiles out of the active project trace unless <code class="docutils literal notranslate"><span class="pre">--activate</span></code> is
-provided.</p>
-<p>Composition writes a standard Audiocompose bundle under <code class="docutils literal notranslate"><span class="pre">composition/</span></code> and
-validates source hashes. Synthesis writes each cache WAV atomically and updates
-the trace only after all requested audio has been persisted, making interrupted
-runs resumable.</p>
+</section>
+<section id="shared-downstream-workflows">
+<h2>Shared downstream workflows</h2>
+<p>Reports, cached context, plain-text projection, and speech workflows accept
+standalone SSMD or either canonical bundle storage form:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8
+ssmdconvert<span class="w"> </span>context<span class="w"> </span>novel.ssmd-bundle<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef
+ssmdconvert<span class="w"> </span>txt<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>-o<span class="w"> </span>notes.txt
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>notes.ssmd-bundle<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd-bundle.zip
+</pre></div>
+</div>
+<p>Speech writes publish to a new destination; they never mutate a workspace in
+place. Book conversion freezes eligible automatic speech decisions by default.
+Use <code class="docutils literal notranslate"><span class="pre">--speech-semantics</span> <span class="pre">preserve</span></code> for structural-only book conversion.</p>
+</section>
+<section id="python-api">
+<h2>Python API</h2>
+<p>The public storage API is kind-neutral. Internal manifest formats continue to
+dispatch to their existing validators.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">convert_bundle</span><span class="p">,</span>
+    <span class="n">load_bundle</span><span class="p">,</span>
+    <span class="n">pack_bundle</span><span class="p">,</span>
+    <span class="n">refresh_bundle_workspace</span><span class="p">,</span>
+    <span class="n">validate_bundle</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">convert_bundle</span><span class="p">(</span><span class="s2">&quot;novel.epub&quot;</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="n">loaded</span> <span class="o">=</span> <span class="n">load_bundle</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">output</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">loaded</span><span class="o">.</span><span class="n">kind</span> <span class="o">==</span> <span class="s2">&quot;book&quot;</span>
+
+<span class="n">workspace</span> <span class="o">=</span> <span class="n">refresh_bundle_workspace</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="n">archive</span> <span class="o">=</span> <span class="n">pack_bundle</span><span class="p">(</span><span class="s2">&quot;novel.ssmd-bundle&quot;</span><span class="p">)</span>
+<span class="k">assert</span> <span class="n">validate_bundle</span><span class="p">(</span><span class="n">archive</span><span class="p">)</span> <span class="o">==</span> <span class="n">workspace</span><span class="o">.</span><span class="n">kind</span>
+</pre></div>
+</div>
+<p>See the <a class="reference internal" href="../api/"><span class="std std-doc">Python API reference</span></a>, <a class="reference internal" href="../analysis-workflows/"><span class="std std-doc">analysis workflows</span></a>,
+and <a class="reference internal" href="../bundle-format/"><span class="std std-doc">manifest implementation details</span></a> for further information.</p>
+</section>
 </section>
 </div>
 <script data-sphinxpress-script="search" defer>

@@ -6,7 +6,7 @@ nav_tool: readio-main
 docs_project: "readio"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "6a36172da82dfd816b4c77ce3ca38ec739ecf343"
+docs_commit: "f07e94d37b4f7a4e6a65d3d605564e3c0c3dac6d"
 search_enabled: true
 ---
 
@@ -542,192 +542,98 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="readio-architecture">
 <h1>Readio architecture</h1>
-<p>Persistent projects separate semantic planning, canonical speech, editorial composition, and export:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source/document
-      |
-      | semantic policy and linguistic enrichment
-      v
-UtterancePlan schema v4
-      |\
-      | \
-      |  +--&gt; resolved pauses, segment order, presentation directives
-      |                 |
-      |                 v
-      |          Readio composition
-      |
-      +--&gt; canonical speech identity
-                    |
-                    v
-       Readio request lowering
-                    |
-                    v
-       engine session pool
-                    |
-                    v
-       content-addressed speech cache
-                    |
-                    v
-      canonical speech WAV + sidecar
-                    |
-                    +--&gt; composition timeline and master WAV
-                                      |
-                                      v
-                              codec-specific export
+<p>Readio is a thin orchestration layer over specialist public APIs. Each specialist package owns its domain schemas, validation, persisted artifacts, reports, and reuse rules. Readio owns workspace routing, request sequencing, CLI convenience, and small in-memory event/result adapters.</p>
+<section id="readio-orchestration">
+<h2>Readio orchestration</h2>
+<section id="document-workspaces">
+<h3>Document workspaces</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>source document
+  → SSMDConvert: convert to native .ssmdoc
+  → UtterPlan: compile semantic speech plan
+  → UtterPlan / RenderPlan: project a profile-specific variant
+  → VoiceRender: preflight and synthesize
+  → AudioCompose: compose WAV output
+  → AudioExport: optionally encode a delivery format
 </pre></div>
 </div>
-<section id="canonical-audiobook-workspace-and-readio-state">
-<h2>Canonical audiobook workspace and Readio state</h2>
-<p>An attached audiobook uses a dual-root layout:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Novel.ssmdbook/                  # canonical, editable book
-  manifest.json
-  chapters/*.ssmd.md
-  .readio/                       # disposable Readio state
-    project.json
-    document/index.json          # chapter selection and local index
-    plan/                        # active plan and durable planning attempts
-      index.json                 # active, synthesis-eligible scopes
-      attempts/                  # isolated candidates and diagnostics
-    synthesis/                   # cache and trace
-    composition/                 # timeline and master
-    output/
+</section>
+<section id="book-workspaces">
+<h3>Book workspaces</h3>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>EPUB
+  → SSMDConvert: convert to native .ssmdbook
+  → UtterPlan: compile chapters and project a variant
+  → VoiceRender: render selected chapters
+  → AudioCompose: compose book audio and chapter timeline
+  → AudioExport: optionally encode the book
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">Project.root</span></code> and public project references identify the <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> workspace; <code class="docutils literal notranslate"><span class="pre">Project.state_root</span></code> is <code class="docutils literal notranslate"><span class="pre">.readio/</span></code>. Chapter scope paths resolve against the workspace, so Readio plans from current chapter bytes without copying them. The public ssmdconvert workspace API reports manifest/chapter dirtiness; Readio may refresh its local index but never rewrites canonical chapter files or manifest hashes. Run <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">refresh</span></code> explicitly after editing when you want a clean manifest. Portable <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> archives omit <code class="docutils literal notranslate"><span class="pre">.readio/</span></code>, and deleting that directory removes only Readio-derived state. Standalone schema-v3 document projects remain self-contained and retain their existing layout.</p>
+<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">run</span></code> sequences the stages for either workspace kind. Its RenderPlan result supplies the exact variant sent to VoiceRender, AudioCompose, and AudioExport. The manual CLI and Python service expose the same specialist stages for workflows that need stage-by-stage control. Readio does not normalize or reconstruct the variant.</p>
 </section>
-<section id="semantic-plan-and-speech-cache">
-<h2>Semantic plan and speech cache</h2>
-<p>UtterPlan remains the owner of semantic identity. Its unit hashes may include
-resolved pauses and directives because those facts describe the semantic plan.
-Readio does not use a unit hash as its acoustic cache atom. Unit selectors are
-expanded to ordered, unique <code class="docutils literal notranslate"><span class="pre">PlanSegment</span></code> IDs before synthesis.</p>
-<p>Planning is transactional across scopes. Each build writes a durable attempt under <code class="docutils literal notranslate"><span class="pre">plan/attempts/</span></code>; completed candidates and renderability diagnostics remain inspectable even when another scope blocks the build. Only a fully renderable attempt atomically replaces the active plan index and canonical artifacts. Synthesis reads only that active index, never an attempt candidate. Repair retries compile current project documents, may reuse fingerprint-matching renderable scopes, and never rewrite source files. Safe repair is the default; strict mode remains available for auditing.</p>
-<p>Each canonical artifact is identified by <code class="docutils literal notranslate"><span class="pre">readio.canonical-speech.v1</span></code> segment
-input facts and a <code class="docutils literal notranslate"><span class="pre">readio.synthesis-segment.v2</span></code> key. The speech fingerprint
-includes segment text and language, synthesis directives, pronunciation data,
-linguistic token facts, the resolved voice/model, G2P and generation settings,
-cleanup policy, and calibration identity. It excludes plan IDs, unit grouping,
-pauses, prosody, emphasis, fades, final loudness, and codec settings.</p>
-<p>The cache is authoritative through its content-addressed WAV and sidecar:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>synthesis/
-  profile.json
-  cache/
-    &lt;synthesis-key&gt;.wav
-    &lt;synthesis-key&gt;.json
-  segments/
-    seg-000000.wav       # optional active segment view
-  trace.json             # provenance and progress only
-</pre></div>
-</div>
-<p>A sidecar records the speech hash, synthesis key, profile ID, audio digest,
-sample rate, channel count, and frame count. A plan re-run can therefore reuse
-speech artifacts even when its plan ID or trace changes. Missing or corrupt
-sidecars cause only the affected segment to render again.</p>
-</section>
-<section id="utterplan-persistence-and-semantic-capacity">
-<h2>UtterPlan persistence and semantic capacity</h2>
-<p>Readio targets UtterPlan 0.4 schema v4. Current project plans are stored as canonical <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> artifacts and loaded through <code class="docutils literal notranslate"><span class="pre">UtterancePlan.load()</span></code>. An indexed legacy <code class="docutils literal notranslate"><span class="pre">.utterplan.json</span></code> artifact is stale and actionable; Readio re-plans from its source instead of silently migrating that file.</p>
-<p>During lowering, Readio rebases the public clause and parenthetical semantic boundaries once into request-local hints and retains linguistic token ranges independently of engine token support. These hints stay in <code class="docutils literal notranslate"><span class="pre">CapacityContext</span></code>; <code class="docutils literal notranslate"><span class="pre">SpeechRequest</span></code> and engine APIs remain UtterPlan-neutral.</p>
-<p>For planned content, capacity fitting prefers clause boundaries, then parenthetical boundaries, newlines, conservative clause punctuation, linguistic-token edges, and whitespace. It does not rediscover sentence boundaries from periods or split arbitrary codepoints. Live/raw text keeps a distinct unplanned compatibility policy. Engine-reported measurements remain authoritative (including PocketSynth’s model-token limit); Readio preserves exact text, never packs adjacent semantic sentences, and rebases child word timings to the original request. Atomic-lowering and capacity-fitting v2 manifests record split reason and boundary provenance.</p>
-</section>
-<section id="engine-boundary">
-<h2>Engine boundary</h2>
-<p>Readio lowers each UtterPlan segment to a Readio-owned <code class="docutils literal notranslate"><span class="pre">SpeechRequest</span></code>; adapters receive requests and return <code class="docutils literal notranslate"><span class="pre">RenderedSpeech</span></code>. They do not receive UtterPlan documents or construct AudioCompose jobs. The engine runtime may perform engine-specific tokenization and acoustic inference, but semantic role binding, pause layout, markers, timing rebasing, timeline operations, and output remain Readio responsibilities.</p>
-<p>A native adapter makes one strict synthesis call for a Readio-shaped request and never invokes the engine’s convenience splitter. Readio owns capacity fitting: it measures when supported, handles typed too-long responses, and recursively subdivides exact text at legal sentence, clause, token, or word boundaries. Protected linguistic and pronunciation ranges are not cut. Child audio is merged and child-local timings are rebased to the original request.</p>
-<p>Kokoro, Pocket, and Supertonic support request-scoped voice selection. Piper binds roles to voice-bundle targets. For target-bound execution, Readio validates every distinct target before opening sessions and reuses one session per target. Unsupported pronunciation overrides or other explicit semantics are rejected before runtime startup.</p>
-<p>Engine adapters own canonical synthesis-profile identity. The common <code class="docutils literal notranslate"><span class="pre">speed</span></code> option is a synthesis control included in speech identity and forwarded only to the engine. Kokoro receives it directly; PiperSynth maps it to <code class="docutils literal notranslate"><span class="pre">length_scale</span> <span class="pre">=</span> <span class="pre">1</span> <span class="pre">/</span> <span class="pre">speed</span></code>; PocketSynth supports only <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. Supertonic uses the validated model base language and forwards the speed multiplier to its atomic synthesis API. Composition rate remains separate, so synthesis speed is never applied twice.</p>
-<section id="inflectsynth-ownership-and-capabilities">
-<h3>InflectSynth ownership and capabilities</h3>
+<section id="direct-speech-and-management">
+<h3>Direct speech and management</h3>
+<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">speak</span></code> is a separate literal-text path through VoiceRender and local playback; it does not create a workspace or invoke planning, composition, or export. Engine/model, voice/source, and RenderProfile operations delegate to VoiceRender’s public management APIs. Backend engines are installed through VoiceRender extras.</p>
 <table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>Engine</p></th>
-<th class="head"><p>G2P and synthesis owner</p></th>
-<th class="head"><p>Runtime layer</p></th>
-<th class="head"><p>Readio-owned boundary</p></th>
+<tr class="row-odd"><th class="head"><p>Concern</p></th>
+<th class="head"><p>Owner</p></th>
+<th class="head"><p>Readio’s role</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">inflect</span></code></p></td>
-<td><p>InflectSynth, including G2P and model internals</p></td>
-<td><p>ONNXVoice, transitively through InflectSynth</p></td>
-<td><p>Request boundaries, selection, capacity policy, session lifecycle, audio validation, and synthesis identity</p></td>
+<tr class="row-even"><td><p>Document/book conversion and native bundles</p></td>
+<td><p>SSMDConvert</p></td>
+<td><p>Select the workspace kind and forward conversion options</p></td>
+</tr>
+<tr class="row-odd"><td><p>Semantic plans and RenderPlan projection</p></td>
+<td><p>UtterPlan / RenderPlan</p></td>
+<td><p>Forward planner and profile requests; preserve the returned variant</p></td>
+</tr>
+<tr class="row-even"><td><p>Profiles, voices, engines, models, and synthesis</p></td>
+<td><p>VoiceRender</p></td>
+<td><p>Delegate management and render calls</p></td>
+</tr>
+<tr class="row-odd"><td><p>Composition and audio-job artifacts</p></td>
+<td><p>AudioCompose</p></td>
+<td><p>Forward options and return the native result</p></td>
+</tr>
+<tr class="row-even"><td><p>Encoding and export artifacts</p></td>
+<td><p>AudioExport</p></td>
+<td><p>Forward supported options; the export extra is optional</p></td>
+</tr>
+<tr class="row-odd"><td><p>CLI, sequencing, playback convenience</p></td>
+<td><p>Readio</p></td>
+<td><p>Coordinate public calls and adapt progress</p></td>
 </tr>
 </tbody>
 </table>
-<p>InflectSynth’s public catalog currently discovers <code class="docutils literal notranslate"><span class="pre">nano-v2</span></code> and <code class="docutils literal notranslate"><span class="pre">micro-v2</span></code>, each with the fixed <code class="docutils literal notranslate"><span class="pre">default</span></code> voice. The adapter supports English only; speed, variation, seed, and calibrated voice-level handling are supported controls. Variation and seed are API engine options. Speaker selection, reference voices, pronunciation overrides, and native word timings are unsupported.</p>
-<p>The InflectSynth 0.1.1 public capacity contract reports <code class="docutils literal notranslate"><span class="pre">supports_known_maximum:</span> <span class="pre">false</span></code>. Readio therefore treats request capacity as unknown rather than inventing a token limit; it still translates typed native oversize errors and owns any legal-boundary lowering. InflectSynth owns G2P, model, and runtime details. ONNXVoice remains a transitive dependency: Readio does not import or manage it, InflectG2P, or the Inflect bundle catalog.</p>
 </section>
 </section>
-<section id="managed-and-catalog-voice-sources">
-<h2>Managed and catalog voice sources</h2>
-<p>Supertonic discovery uses the engine’s public model metadata API, while synthesis uses one atomic native request for each Readio request. Readio resolves locale tags to supported base languages and retains its ownership of text splitting and composition.</p>
-<p>Pocket voices have three distinct sources: a predefined bundle voice, a local reference WAV identified by its content hash, or a managed prompt identified by its canonical reference, catalog SHA-256, source revision, and available provenance. <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">voices</span> <span class="pre">prompts</span></code> queries only PocketSynth’s public prompt metadata API; it neither opens a Pocket model nor downloads prompt audio. The render plan carries the managed source as typed metadata rather than a semantic Readio voice reference. At synthesis time, Readio verifies the prepared voice provenance and records PocketSynth’s normalized-audio fingerprint separately from the source hash. Managed prompts apply to the default synthesis voice and are not role bindings.</p>
-</section>
-<section id="composition-and-status-dependencies">
-<h2>Composition and status dependencies</h2>
-<p>Composition reads current segment keys and sidecars directly, without opening a
-TTS engine. It orders each segment as:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>resolved pause_before -&gt; canonical speech -&gt; resolved pause_after
+<section id="manual-specialist-workflow">
+<h2>Manual specialist workflow</h2>
+<p>Use specialist CLIs directly when package-specific controls or detailed diagnostics are needed. Preserve the exact variant returned by UtterPlan:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook
+utterplan<span class="w"> </span>compile-book<span class="w"> </span>novel.ssmdbook
+voicerender<span class="w"> </span>profile<span class="w"> </span>create<span class="w"> </span>--engine<span class="w"> </span>kokoro<span class="w"> </span>--target<span class="w"> </span>v1.0<span class="w"> </span>--voice<span class="w"> </span>af_heart<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--language<span class="w"> </span>en-US<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook/narrator.renderprofile.toml
+utterplan<span class="w"> </span>render-book<span class="w"> </span>novel.ssmdbook<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--profile<span class="w"> </span>novel.ssmdbook/narrator.renderprofile.toml
+
+<span class="nv">VARIANT</span><span class="o">=</span><span class="s2">&quot;&lt;exact variant returned by utterplan render-book&gt;&quot;</span>
+voicerender<span class="w"> </span>render-book<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--variant<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VARIANT</span><span class="s2">&quot;</span>
+audiocompose<span class="w"> </span>compose-book<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--variant<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VARIANT</span><span class="s2">&quot;</span>
+audioexport<span class="w"> </span>export-book<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--variant<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$VARIANT</span><span class="s2">&quot;</span><span class="w"> </span>--output<span class="w"> </span>novel.m4b
 </pre></div>
 </div>
-<p>Pause durations are converted to frames once with <code class="docutils literal notranslate"><span class="pre">round(seconds</span> <span class="pre">*</span> <span class="pre">sample_rate)</span></code>.
-The same frame value is used in the composition identity and the generated
-silence source. Composition resolves semantic prosody to numeric AudioCompose
-operations: <code class="docutils literal notranslate"><span class="pre">Tempo</span></code>, <code class="docutils literal notranslate"><span class="pre">PitchShift</span></code>, <code class="docutils literal notranslate"><span class="pre">Gain</span></code>, <code class="docutils literal notranslate"><span class="pre">FadeIn</span></code>, and <code class="docutils literal notranslate"><span class="pre">FadeOut</span></code>. It keeps
-semantic labels out of AudioCompose. Final LUFS and true-peak policy are also
-composition concerns.</p>
-<p>The v2 composition identity includes ordered speech and silence layout, speech
-hashes, audio digests, operation payloads, timing frames, and output policy.
-Consequently:</p>
-<ul class="simple">
-<li><p>pause or prosody edits rebuild composition but do not rerun speech synthesis;</p></li>
-<li><p>text, pronunciation, token, voice, speed, voice-level, G2P, model, target revision, or
-calibration changes rerender only affected canonical segments;</p></li>
-<li><p>loudness changes rebuild composition only;</p></li>
-<li><p>codec changes rebuild export only;</p></li>
-<li><p>trace plan IDs and trace hashes are provenance, not cache validity checks.</p></li>
-</ul>
-<p>Status derives synthesis currentness from current plan segment keys and valid
-sidecars. Composition currentness is derived from the current layout and policy.
-<code class="docutils literal notranslate"><span class="pre">compose</span></code> and preview can use the cache without a current-plan trace and do not
-load a TTS engine.</p>
+<p>For Readio’s equivalent orchestration, see the <a class="reference internal" href="../cli/"><span class="std std-doc">CLI reference</span></a>. For detailed specialist options, consult the owning package documentation.</p>
 </section>
-<section id="streaming-playback">
-<h2>Streaming playback</h2>
-<p><code class="docutils literal notranslate"><span class="pre">speak</span></code> and live playback use a persistent stateful <code class="docutils literal notranslate"><span class="pre">LayoutBuilder</span></code> and a Readio-owned bounded <code class="docutils literal notranslate"><span class="pre">sounddevice</span></code> queue. Each rendered segment is lowered and composed at the playback output rate, submitted before later segments are synthesized, then released promptly. Playback keeps pause, prosody, marker, and resampling state across chunks and disables whole-program mastering; file rendering remains the full-document mastered path.</p>
+<section id="persistent-state-and-compatibility">
+<h2>Persistent state and compatibility</h2>
+<p><code class="docutils literal notranslate"><span class="pre">.ssmdoc</span></code> and <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> bundles and all stage artifacts remain specialist-owned. Readio writes no parallel project state, project manifest, stage status, RenderPlan, render manifest, composition job, or export format. Its <code class="docutils literal notranslate"><span class="pre">WorkspaceRef</span></code>, progress events, and pipeline results are in-memory routing/adaptation values only.</p>
+<p>Version 0.5 is a clean break from Readio’s former project and pipeline formats. Old Readio project directories and settings are unsupported and are not read or attached. There is no migration command, compatibility alias, or runtime shim. Recreate work from source material with SSMDConvert, or use the specialist packages directly.</p>
 </section>
-<section id="input-conversion-and-provenance">
-<h2>Input conversion and provenance</h2>
-<p>Source conversion has one boundary: the public <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> API. Auto filesystem documents are converted with SSMDConvert unless the file is already canonical SSMD. Explicit or in-memory Markdown is converted through SSMDConvert <code class="docutils literal notranslate"><span class="pre">convert_content</span></code> to canonical SSMD. Explicit literal text remains text and explicit SSMD remains SSMD. Converted <code class="docutils literal notranslate"><span class="pre">InputDocument</span></code> values retain <code class="docutils literal notranslate"><span class="pre">DocumentProvenance</span></code> (source format, media type, source name, converter/version, and metadata). PDF and DOCX ingestion requires the <code class="docutils literal notranslate"><span class="pre">readio[documents]</span></code> extra.</p>
-</section>
-<section id="project-role-targets-and-resolution">
-<h2>Project role targets and resolution</h2>
-<p>New configuration and project records use schema 3. Global roles and project roles store the same structured <code class="docutils literal notranslate"><span class="pre">VoiceTarget</span></code>: canonical engine, voice ID, and optional target ID. Readio does not keep provider-specific runtime role rosters or project-wide provider selectors; SSMD’s own <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> namespace remains part of the external document format.</p>
-<p>v0.3 config and project files require explicit <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">config</span> <span class="pre">migrate</span></code> or <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">project</span> <span class="pre">migrate</span> <span class="pre">PROJECT</span></code>; normal runtime code rejects obsolete structures instead of applying scattered fallbacks. Migration preserves a backup and fails on conflicting role targets. Document-level SSMD <code class="docutils literal notranslate"><span class="pre">voice_bindings</span></code> stays provider-namespaced as defined by SSMD; when one role appears in several namespaces, Readio reports ambiguity.</p>
-<p><code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">plan</span> <span class="pre">roles</span></code> discovers references directly from editable SSMD scopes and reports per-scope locations and effective targets without requiring a generated plan index. The <code class="docutils literal notranslate"><span class="pre">--engine</span></code> inspection filter selects which effective targets to display; it does not override role resolution. Bindings are carried in the synthesis request and are never written into UtterPlan or SSMD source.</p>
-<p>Binding precedence is <code class="docutils literal notranslate"><span class="pre">document</span> <span class="pre">&gt;</span> <span class="pre">invocation</span> <span class="pre">CLI</span> <span class="pre">&gt;</span> <span class="pre">project</span> <span class="pre">&gt;</span> <span class="pre">global</span> <span class="pre">configured</span> <span class="pre">role</span> <span class="pre">&gt;</span> <span class="pre">direct</span> <span class="pre">concrete</span> <span class="pre">voice</span></code>. A document binding remains authoritative per scope. Project role changes affect synthesis only, so they do not alter semantic <code class="docutils literal notranslate"><span class="pre">plan_id</span></code> or invalidate plan artifacts.</p>
-</section>
-<section id="mixed-engine-synthesis-routing">
-<h2>Mixed-engine synthesis routing</h2>
-<p>For each selected segment, Readio resolves the symbolic role in that document scope to a <code class="docutils literal notranslate"><span class="pre">VoiceTarget</span></code>, then resolves the target engine adapter and engine selection. Unbound segments use the normal project synthesis selection. A project can therefore route one role through Kokoro and another through Piper, Pocket, or Kitten without selecting one project-wide provider or engine.</p>
-<p>Every distinct engine-target route is validated before synthesis sessions open. Readio groups routed segments, opens one reusable session per target, and writes ordinary canonical speech artifacts consumed by composition. The semantic plan retains symbolic role references and remains independent of casting. Changing role bindings leaves the plan current and makes only synthesis and downstream stages stale; cached audio is retained.</p>
-<p>Mixed-engine synthesis profiles use a deterministic, sorted set of route identities, per-scope role targets, and role-binding provenance. Speech cache identity includes the selected route, so changing a guest target does not invalidate unchanged host audio on another engine-target route. Status compares current role-target provenance with the active synthesis profile and reports <code class="docutils literal notranslate"><span class="pre">synthesis.stale.project_voice_bindings_changed</span></code> when bindings differ.</p>
-</section>
-<section id="end-to-end-acceptance-scenario">
-<h2>End-to-end acceptance scenario</h2>
-<p>For a multi-sentence document, normal sentence topology produces one reusable
-speech artifact per semantic segment. If only a sentence pause changes from
-180 ms to 250 ms:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>SOURCE       current
-DOCUMENT     current
-PLAN         current
-SYNTHESIS    current       # same segment speech hashes and sidecars
-COMPOSITION  stale         # silence frame layout changed
-OUTPUT       stale         # blocked by composition
-</pre></div>
-</div>
-<p>Running <code class="docutils literal notranslate"><span class="pre">readio</span> <span class="pre">compose</span></code> rebuilds the timeline and master audio. No TTS model is
-loaded. The synthesis trace may retain the previous plan ID as audit history,
-while the cache remains reusable by current segment key and sidecar.</p>
+<section id="dependency-boundary">
+<h2>Dependency boundary</h2>
+<p>Readio imports specialist package-root public APIs only: SSMDConvert, UtterPlan, VoiceRender, AudioCompose, and optional AudioExport. It does not import specialist private submodules or backend SDKs. The dependency-boundary tests enforce this rule and guard against reintroducing legacy persistence identifiers. Playback and audio I/O helpers unrelated to workspace stages remain in Readio.</p>
 </section>
 </section>
 </div>

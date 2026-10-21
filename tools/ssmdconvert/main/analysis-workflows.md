@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -542,102 +542,128 @@ html[data-theme="dark"] .sphinxpress-doc {
 <div class="sphinxpress-doc">
 <section id="ssmd-analysis-and-speech-workflows">
 <h1>SSMD analysis and speech workflows</h1>
-<p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> owns SSMD-specific source loading, chapter selection, language/context
-semantics, source mapping, reporting, TXT projection, and write-back. It uses the
-public <code class="docutils literal notranslate"><span class="pre">ttsready&gt;=0.2,&lt;0.3</span></code> Python API for source-neutral speech preparation and QA;
-<code class="docutils literal notranslate"><span class="pre">ttsready</span></code> is a core dependency. Generic analysis IDs and change provenance are
-reported without exposing replacement identities as application-specific rules.</p>
-<p>Conceptually, the layers are:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>spokenform → ttsready → ssmdconvert
+<p>SSMDConvert owns SSMD-specific source loading, chapter selection, language and
+context semantics, source mapping, reporting, text projection, and safe
+write-back. It uses the public <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> Python API for source-neutral speech
+preparation and QA.</p>
+<p>Reports, context lookup, TXT projection, and speech workflows accept standalone
+<code class="docutils literal notranslate"><span class="pre">.ssmd</span></code> or <code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> files and canonical <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle</span></code> directory or ZIP paths.
+The bundle manifest determines whether the source contains a book or document.
+Book chapter selection uses original one-based source numbers; a single document
+has the section ID <code class="docutils literal notranslate"><span class="pre">document-0001</span></code>.</p>
+<section id="python-api-and-cache-boundary">
+<h2>Python API and cache boundary</h2>
+<p>The root Python facade composes the same analysis, projection, report, and
+speech materialization services as the CLI:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">ssmdconvert</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">AnalysisOptions</span><span class="p">,</span>
+    <span class="n">TextProjectionOptions</span><span class="p">,</span>
+    <span class="n">analyze_ssmd</span><span class="p">,</span>
+    <span class="n">build_report</span><span class="p">,</span>
+    <span class="n">freeze_speech</span><span class="p">,</span>
+    <span class="n">lookup_change_context</span><span class="p">,</span>
+    <span class="n">project_text</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">analysis</span> <span class="o">=</span> <span class="n">analyze_ssmd</span><span class="p">(</span><span class="s2">&quot;notes.ssmd-bundle&quot;</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">AnalysisOptions</span><span class="p">(</span><span class="n">spacy</span><span class="o">=</span><span class="s2">&quot;off&quot;</span><span class="p">))</span>
+<span class="n">projection</span> <span class="o">=</span> <span class="n">project_text</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">options</span><span class="o">=</span><span class="n">TextProjectionOptions</span><span class="p">(</span><span class="n">max_paragraph_chars</span><span class="o">=</span><span class="mi">1000</span><span class="p">))</span>
+<span class="n">report</span> <span class="o">=</span> <span class="n">build_report</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">projection</span><span class="o">=</span><span class="n">projection</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">analysis</span><span class="o">.</span><span class="n">preparation</span><span class="o">.</span><span class="n">changes</span><span class="p">:</span>
+    <span class="n">context</span> <span class="o">=</span> <span class="n">lookup_change_context</span><span class="p">(</span><span class="n">analysis</span><span class="p">,</span> <span class="n">analysis</span><span class="o">.</span><span class="n">preparation</span><span class="o">.</span><span class="n">changes</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+<span class="n">frozen</span> <span class="o">=</span> <span class="n">freeze_speech</span><span class="p">(</span><span class="n">analysis</span><span class="p">)</span>  <span class="c1"># returns rewritten section text; writes nothing</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">spokenform</span></code> handles linguistic normalization; <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> provides generic preparation
-and QA; <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> owns SSMD application semantics and write-back. <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code>
-depends directly on the public <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> API, not on <code class="docutils literal notranslate"><span class="pre">spokenform</span></code>.</p>
-<p>The commands accept a standalone <code class="docutils literal notranslate"><span class="pre">.ssmd</span></code>/<code class="docutils literal notranslate"><span class="pre">.ssmd.md</span></code> file, a validated
-<code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code>, or an editable <code class="docutils literal notranslate"><span class="pre">.ssmdbook/</span></code> directory workspace. Chapter selectors
-are original 1-based source chapter numbers and preserve source order.</p>
-<section id="report">
-<h2>Report</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8
-ssmdconvert<span class="w"> </span>report<span class="w"> </span>chapter.ssmd<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>-o<span class="w"> </span>report.json
-ssmdconvert<span class="w"> </span>report<span class="w"> </span>BOOK.ssmdbook<span class="w"> </span>--fail-on-warning<span class="w"> </span>--refresh
+<p><code class="docutils literal notranslate"><span class="pre">analyze_ssmd()</span></code> accepts standalone SSMD, validated bundles, editable workspaces,
+and in-memory book models. It writes no temporary bundle or cache. Reusing a
+projection in <code class="docutils literal notranslate"><span class="pre">build_report()</span></code> keeps its statistics and prepared-output digest
+tied to the TXT result. <code class="docutils literal notranslate"><span class="pre">audit_speech()</span></code> and <code class="docutils literal notranslate"><span class="pre">freeze_speech()</span></code> consume existing
+analysis and do not prepare it again.</p>
+<p>Persistent analysis uses explicit controls. <code class="docutils literal notranslate"><span class="pre">analyze_cached(source,</span> <span class="pre">cache_root=...,</span> <span class="pre">refresh=...)</span></code> saves checksummed records; <code class="docutils literal notranslate"><span class="pre">lookup_cached_context()</span></code>
+checks the current content item before returning context. Use
+<code class="docutils literal notranslate"><span class="pre">lookup_change_context()</span></code> when evidence is already in memory and no cache lookup
+is wanted.</p>
+</section>
+<section id="reports-and-language">
+<h2>Reports and language</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8
+ssmdconvert<span class="w"> </span>report<span class="w"> </span>notes.ssmd<span class="w"> </span>--format<span class="w"> </span>json<span class="w"> </span>-o<span class="w"> </span>report.json
+ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle<span class="w"> </span>--fail-on-warning<span class="w"> </span>--refresh
 </pre></div>
 </div>
-<p>Markdown goes to stdout by default. Use <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">md|json</span></code> or let <code class="docutils literal notranslate"><span class="pre">-o</span></code> infer the
-format from <code class="docutils literal notranslate"><span class="pre">.md</span></code> or <code class="docutils literal notranslate"><span class="pre">.json</span></code>. Reports use the selected chapters for preparation,
-statistics, mapped changes, and TXT preview. <code class="docutils literal notranslate"><span class="pre">--show-raw-spans</span></code> adds raw SSMD
-mapping details to Markdown; <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> emits the report and exits
-non-zero if a warning or error was reported. Each report run saves a source-level
-snapshot and may reuse compatible per-chapter preparation results. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>
-bypasses the chapter cache and reruns preparation for the selected sections.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--language</span></code> supplies an explicit language override. Without one, language is
-resolved from SSMD and book metadata. Unresolved language is reported; the tool
-does not silently assume English. <code class="docutils literal notranslate"><span class="pre">--sequence-fallback-mode</span></code>,
-<code class="docutils literal notranslate"><span class="pre">--max-paragraph-chars</span></code>, and <code class="docutils literal notranslate"><span class="pre">--include-titles/--no-include-titles</span></code> control the
-same preparation/projection options used by <code class="docutils literal notranslate"><span class="pre">txt</span></code>.</p>
+<p>Markdown goes to stdout by default. <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">md|json</span></code> or <code class="docutils literal notranslate"><span class="pre">-o</span></code> selects output.
+Reports include selected-section statistics, mapped changes, and a TXT preview.
+<code class="docutils literal notranslate"><span class="pre">--show-raw-spans</span></code> adds mapping details. <code class="docutils literal notranslate"><span class="pre">--fail-on-warning</span></code> emits the report
+and returns a failing status when it contains a warning or error. <code class="docutils literal notranslate"><span class="pre">--refresh</span></code>
+bypasses cached preparation for selected sections and saves a fresh snapshot.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--language</span></code> sets the base language for unscoped text. Inline SSMD language
+spans remain authoritative, with the innermost scope winning. Without an
+explicit override, language is resolved from SSMD and bundle metadata. Unresolved
+language is reported rather than silently defaulted. <code class="docutils literal notranslate"><span class="pre">--sequence-fallback-mode</span></code>,
+<code class="docutils literal notranslate"><span class="pre">--max-paragraph-chars</span></code>, and <code class="docutils literal notranslate"><span class="pre">--include-titles</span></code> control preparation and
+projection.</p>
+</section>
+<section id="local-spacy-and-progress">
+<h2>Local spaCy and progress</h2>
+<p>Bundle conversion, reports, TXT, and speech-preparation commands accept
+<code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off|auto|sm|md|lg|trf</span></code>; the default is <code class="docutils literal notranslate"><span class="pre">off</span></code>. <code class="docutils literal notranslate"><span class="pre">auto</span></code> checks locally
+installed models for each effective language and continues without hints if no
+compatible model is available. Explicit tiers require their local model.
+SSMDConvert never downloads spaCy or models.</p>
+<p>Long-running commands accept <code class="docutils literal notranslate"><span class="pre">--progress</span></code> / <code class="docutils literal notranslate"><span class="pre">--no-progress</span></code>. Progress is
+automatic only when stderr is a terminal. Rich UI or concise plain status output
+is written to stderr; report, TXT, and JSON output remain on stdout. Python
+callbacks are synchronous and provider-neutral.</p>
 </section>
 <section id="context-lookup">
 <h2>Context lookup</h2>
 <p>First create a report so the generic change ID is in the local analysis cache,
 then request that ID for the same source:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>BOOK.ssmdbook.zip
-ssmdconvert<span class="w"> </span>context<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef
-ssmdconvert<span class="w"> </span>context<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef<span class="w"> </span>--paragraph<span class="w"> </span>--json
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>report<span class="w"> </span>novel.ssmd-bundle.zip
+ssmdconvert<span class="w"> </span>context<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef
+ssmdconvert<span class="w"> </span>context<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>chg:v1:0123456789abcdef0123456789abcdef<span class="w"> </span>--paragraph<span class="w"> </span>--json
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">context</span></code> checks the current bytes of the affected chapter before returning a cached
-result. Editing that chapter makes its old analysis stale; rerun the report with, for
-example, <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">report</span> <span class="pre">SOURCE</span> <span class="pre">--refresh</span></code>, and use the change ID from the new
-report. Unrelated chapter edits do not invalidate a change’s chapter context.
-Mixed-language paragraphs are shown as whole paragraphs so language boundaries
-remain clear. <code class="docutils literal notranslate"><span class="pre">--bug-report</span></code> adds reproducibility fingerprints and unit text; review
-it for sensitive content before sharing.</p>
+<p>Context checks the current bytes of the affected chapter or document before
+returning cached data. Editing that item makes its old analysis stale; rerun the
+report with <code class="docutils literal notranslate"><span class="pre">--refresh</span></code> and use the new change ID. Unrelated chapter edits do not
+invalidate another chapter’s context. Mixed-language paragraphs are shown as
+whole paragraphs. Review <code class="docutils literal notranslate"><span class="pre">--bug-report</span></code> output for sensitive text before sharing.</p>
 </section>
 <section id="txt-projection">
 <h2>TXT projection</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>txt<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>prepared.txt
-ssmdconvert<span class="w"> </span>txt<span class="w"> </span>chapter.ssmd<span class="w"> </span>--no-include-titles
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>txt<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>prepared.txt
+ssmdconvert<span class="w"> </span>txt<span class="w"> </span>notes.ssmd<span class="w"> </span>--no-include-titles
 </pre></div>
 </div>
-<p>The output is the generic prepared plain-text projection used by the report
-preview and statistics. It is not a substitute for SSMD: it contains no SSMD
-annotations. Output goes to stdout unless <code class="docutils literal notranslate"><span class="pre">-o</span></code> is given. Existing destinations
-are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied; the input is never a valid output.</p>
+<p>TXT is the generic prepared plain-text projection used by report previews and
+statistics, not a substitute for SSMD: annotations are not included. Output goes
+to stdout unless <code class="docutils literal notranslate"><span class="pre">-o</span></code> is given. Existing destinations require <code class="docutils literal notranslate"><span class="pre">--force</span></code>; the
+input is never a valid output path.</p>
 </section>
 <section id="speech-audit-annotate-and-freeze">
 <h2>Speech audit, annotate, and freeze</h2>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>chapter.ssmd<span class="w"> </span>--json
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>chapter.ssmd<span class="w"> </span>-o<span class="w"> </span>annotated.ssmd
-ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>BOOK.ssmdbook.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>frozen.ssmdbook.zip
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>speech<span class="w"> </span>audit<span class="w"> </span>notes.ssmd<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>annotate<span class="w"> </span>notes.ssmd<span class="w"> </span>-o<span class="w"> </span>annotated.ssmd
+ssmdconvert<span class="w"> </span>speech<span class="w"> </span>freeze<span class="w"> </span>novel.ssmd-bundle.zip<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-8<span class="w"> </span>-o<span class="w"> </span>frozen.ssmd-bundle.zip
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">audit</span></code> is read-only and uses the same analysis pipeline and generic change IDs
-as <code class="docutils literal notranslate"><span class="pre">report</span></code>. <code class="docutils literal notranslate"><span class="pre">annotate</span></code> and <code class="docutils literal notranslate"><span class="pre">freeze</span></code> materialize eligible automatic decisions as
-explicit SSMD substitutions. They share the validated mapping and write path;
-materialization verifies parser-owned source spans, rejects unsafe/overlapping
-edits, and preserves visible text. Existing authoritative SSMD speech semantics
-are not duplicated. Unresolved effective language or unsafe mapping prevents
+<p>Audit is read-only and uses the same analysis pipeline and generic change IDs as
+reporting. Annotation and freeze materialize eligible automatic decisions as
+explicit SSMD substitutions. They validate source spans, reject unsafe or
+overlapping edits, and preserve visible text. Existing authoritative
+annotations are not duplicated; unresolved language or unsafe mappings prevent
 write-back.</p>
-<p>Speech writes require a new destination by default. Standalone SSMD and book
-outputs are written atomically, existing destinations require <code class="docutils literal notranslate"><span class="pre">--force</span></code>, and the
-input cannot be overwritten even with <code class="docutils literal notranslate"><span class="pre">--force</span></code>. Dirty directory workspaces are
-read as-is, but output must be outside the source workspace; selected chapters
-are updated in the new bundle while unselected chapters remain unchanged. For
-bundle destinations use <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> for a directory or <code class="docutils literal notranslate"><span class="pre">.ssmdbook.zip</span></code> for a ZIP,
-or pass <code class="docutils literal notranslate"><span class="pre">--format</span> <span class="pre">directory|zip</span></code>.</p>
+<p>Speech writes require a new destination by default, use atomic publication, and
+never mutate a workspace in place. A dirty directory workspace can be read as-is;
+selected items are written to the new bundle and unselected book chapters remain
+unchanged. See <a class="reference internal" href="../bundles/"><span class="std std-doc">Bundle workspaces</span></a> for the canonical artifact and
+workspace rules.</p>
 </section>
 <section id="cache-and-data-handling">
 <h2>Cache and data handling</h2>
-<p>Reports create checksummed, versioned analysis snapshots in the user cache.
-See <a class="reference internal" href="../analysis-cache/"><span class="std std-doc">Analysis cache</span></a> for the location, retention, freshness,
-and removal details.</p>
-</section>
-<section id="command-migration">
-<h2>Command migration</h2>
-<p>The old <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> CLI is not part of this workflow. See
-<a class="reference internal" href="../migration-from-ttsready-cli/"><span class="std std-doc">Migration from the ttsready CLI</span></a> for direct
-command replacements and commands that are intentionally not migrated.</p>
+<p>Reports create checksummed, versioned analysis snapshots in the user cache. See
+<a class="reference internal" href="../analysis-cache/"><span class="std std-doc">Analysis cache</span></a> for the location, retention, freshness, and
+removal details.</p>
 </section>
 </section>
 </div>

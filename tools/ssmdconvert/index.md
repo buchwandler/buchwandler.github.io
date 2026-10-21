@@ -1,12 +1,12 @@
 ---
 layout: tool-doc
-title: "ssmdconvert Documentation"
+title: "SSMDConvert User Guide"
 permalink: /tools/ssmdconvert/
 nav_tool: ssmdconvert
 docs_project: "ssmdconvert"
 docs_variant: "release"
-docs_ref: "v0.1.4"
-docs_commit: "6a8b449f2b38555a38b8ec16b3b42adc62a135d1"
+docs_ref: "v0.2.2"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -540,31 +540,30 @@ html[data-theme="dark"] .sphinxpress-doc {
 </style>
 
 <div class="sphinxpress-doc">
-<section id="ssmdconvert-documentation">
-<h1>ssmdconvert Documentation</h1>
-<p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> converts common local documents and EPUB books into SSMD 0.9. The
-base package supports text, Markdown, HTML, EPUB, SSMD analysis, and speech
-audit/annotation. PDF and DOCX adapters are optional extras; the public <code class="docutils literal notranslate"><span class="pre">ttsready</span></code>
-preparation API is a core dependency.</p>
-<p>Convert a document:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>convert<span class="w"> </span>manuscript.md<span class="w"> </span>-o<span class="w"> </span>manuscript.ssmd
+<section id="ssmdconvert-user-guide">
+<h1>SSMDConvert User Guide</h1>
+<p>SSMDConvert converts local documents and EPUB books into SSMD 0.9, then provides
+analysis, reporting, plain-text projection, and safe speech write-back. The common
+bundle lifecycle stores books and documents in canonical directory workspaces or
+read-only ZIP archives.</p>
+<section id="quick-start">
+<h2>Quick start</h2>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>--chapters<span class="w"> </span><span class="m">2</span>-20<span class="w"> </span>-o<span class="w"> </span>novel.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>convert<span class="w"> </span>notes.md<span class="w"> </span>-o<span class="w"> </span>notes.ssmd-bundle
+ssmdconvert<span class="w"> </span>bundle<span class="w"> </span>validate<span class="w"> </span>novel.ssmd-bundle
 </pre></div>
 </div>
-<p>Inspect EPUB chapters or create a chapter-aware bundle:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ssmdconvert<span class="w"> </span>book<span class="w"> </span>inspect<span class="w"> </span>novel.epub<span class="w"> </span>--json
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>convert<span class="w"> </span>novel.epub<span class="w"> </span>-o<span class="w"> </span>novel.ssmdbook
-ssmdconvert<span class="w"> </span>book<span class="w"> </span>validate<span class="w"> </span>novel.ssmdbook
-</pre></div>
-</div>
-<p>The CLI refuses to overwrite existing output unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. Output writes are atomic, and forced directory-bundle writes replace the complete prior bundle.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">bundle</span> <span class="pre">metadata</span></code>, <code class="docutils literal notranslate"><span class="pre">refresh</span></code>, <code class="docutils literal notranslate"><span class="pre">pack</span></code>, and <code class="docutils literal notranslate"><span class="pre">validate</span></code> to manage an
+editable workspace and its archive. The manifest identifies the content kind;
+see <a class="reference internal" href="bundles/"><span class="std std-doc">Bundle workspaces</span></a> for the complete lifecycle.</p>
+</section>
 <section id="ownership-boundary">
 <h2>Ownership boundary</h2>
-<p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> owns source ingestion, canonical SSMD conversion, chapter identity,
-<code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> integrity, SSMD reports/context/TXT projection, and safe speech
-write-back. <code class="docutils literal notranslate"><span class="pre">ttsready</span></code> supplies generic preparation and QA through its public Python
-API; it is not a user-facing CLI or a source of SSMD-specific storage semantics.
-<code class="docutils literal notranslate"><span class="pre">ssmdconvert</span></code> uses one analysis pipeline for reports and speech workflows and never
-mutates a directory workspace in place.</p>
+<p>SSMDConvert owns source ingestion, SSMD semantics, chapter identity, analysis,
+reporting, text projection, and safe write-back. It uses the public <code class="docutils literal notranslate"><span class="pre">ttsready</span></code>
+Python API for source-neutral speech preparation and QA; it does not rely on a
+separate downstream CLI.</p>
 <div class="toctree-wrapper compound">
 <p class="caption" role="heading"><span class="caption-text">User guide</span></p>
 <ul>
@@ -576,29 +575,45 @@ mutates a directory workspace in place.</p>
 <li class="toctree-l2"><a class="reference internal" href="installation/#verify-the-installation">Verify the installation</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="bundles/">SSMD bundle workspaces</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#canonical-names">Canonical names</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#convert-and-inspect">Convert and inspect</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#lifecycle-commands">Lifecycle commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#shared-downstream-workflows">Shared downstream workflows</a></li>
+<li class="toctree-l2"><a class="reference internal" href="bundles/#python-api">Python API</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="usage/">CLI usage</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="usage/#convert-a-document">Convert a document</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/#inspect-a-source">Inspect a source</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/#epub-book-commands">EPUB book commands</a></li>
-<li class="toctree-l2"><a class="reference internal" href="usage/#ssmd-analysis-and-speech-commands">SSMD analysis and speech commands</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#convert-inspect-and-validate">Convert, inspect, and validate</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#standalone-ssmd-conversion">Standalone SSMD conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/#reports-and-speech-workflows">Reports and speech workflows</a></li>
 <li class="toctree-l2"><a class="reference internal" href="usage/#help">Help</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="books/">EPUB source conversion</a></li>
+<li class="toctree-l1"><a class="reference internal" href="documents/">Document source conversion</a></li>
 <li class="toctree-l1"><a class="reference internal" href="analysis-workflows/">SSMD analysis and speech workflows</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#report">Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#python-api-and-cache-boundary">Python API and cache boundary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#reports-and-language">Reports and language</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#local-spacy-and-progress">Local spaCy and progress</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#context-lookup">Context lookup</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#txt-projection">TXT projection</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#speech-audit-annotate-and-freeze">Speech audit, annotate, and freeze</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#cache-and-data-handling">Cache and data handling</a></li>
-<li class="toctree-l2"><a class="reference internal" href="analysis-workflows/#command-migration">Command migration</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="report/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">report</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="context/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">context</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="txt/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">txt</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="txt/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">txt</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="txt/#python-api">Python API</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="speech-audit/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">speech</span> <span class="pre">audit</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="speech-annotations/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">speech</span> <span class="pre">annotate</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="freeze/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">speech</span> <span class="pre">freeze</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="freeze/"><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">speech</span> <span class="pre">freeze</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="freeze/#in-memory-python-api">In-memory Python API</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="analysis-cache/">Analysis cache</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="analysis-cache/#location">Location</a></li>
 <li class="toctree-l2"><a class="reference internal" href="analysis-cache/#reuse-and-freshness">Reuse and freshness</a></li>
@@ -606,37 +621,29 @@ mutates a directory workspace in place.</p>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="migration-from-ttsready-cli/">Migration from the ttsready CLI</a></li>
-<li class="toctree-l1"><a class="reference internal" href="books/">EPUB chapters and book bundles</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="books/#inspect-chapters">Inspect chapters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="books/#select-chapters">Select chapters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="books/#write-and-validate-bundles">Write and validate bundles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="books/#edit-refresh-and-pack-a-workspace">Edit, refresh, and pack a workspace</a></li>
-<li class="toctree-l2"><a class="reference internal" href="books/#python-api">Python API</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="bundle-format/">Book bundle format</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="bundle-format/#manifest-example">Manifest example</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bundle-format/#validation-and-resource-limits">Validation and resource limits</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bundle-format/#editable-workspace-maintenance">Editable workspace maintenance</a></li>
-<li class="toctree-l2"><a class="reference internal" href="bundle-format/#python-api">Python API</a></li>
-</ul>
-</li>
 <li class="toctree-l1"><a class="reference internal" href="api/">Python API</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="api/#conversion">Conversion</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#source-neutral-models">Source-neutral models</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#books-and-chapters">Books and chapters</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#bundles">Bundles</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#errors">Errors</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#ssmd-analysis-and-speech-workflows">SSMD analysis and speech workflows</a></li>
-<li class="toctree-l2"><a class="reference internal" href="api/#version">Version</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#bundle-lifecycle">Bundle lifecycle</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#in-memory-conversion">In-memory conversion</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/#analysis-reports-and-speech">Analysis, reports, and speech</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="bundle-format/">Book manifest format (implementation detail)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="bundle-format/#validation-and-workspace-behavior">Validation and workspace behavior</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="document-bundle-format/">Document manifest format (implementation detail)</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="document-bundle-format/#validation-and-workspace-behavior">Validation and workspace behavior</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="changelog/">Changelog</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.1.4] - 2026-10-07</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.1.3] - 2026-10-05</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id4">[0.1.2] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id6">[0.1.1] - 2026-10-03</a></li>
-<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.0] - 2026-10-01</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#unreleased">[0.2.2] - Unreleased</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id1">[0.2.1] - 2026-10-19</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id2">[0.2.0] - 2026-10-11</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id5">[0.1.4] - 2026-10-07</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id8">[0.1.3] - 2026-10-05</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id10">[0.1.2] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id13">[0.1.1] - 2026-10-03</a></li>
+<li class="toctree-l2"><a class="reference internal" href="changelog/#id16">[0.1.0] - 2026-10-01</a></li>
 </ul>
 </li>
 </ul>

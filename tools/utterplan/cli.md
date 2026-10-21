@@ -5,8 +5,8 @@ permalink: /tools/utterplan/cli/
 nav_tool: utterplan
 docs_project: "utterplan"
 docs_variant: "release"
-docs_ref: "v0.5.1"
-docs_commit: "a06da00122bda9de70d345d91a97259bbda6b18a"
+docs_ref: "v0.6.6"
+docs_commit: "a70e4a16603d00b42bfbdfb2b58a51cad2064d69"
 search_enabled: true
 ---
 
@@ -545,9 +545,7 @@ html[data-theme="dark"] .sphinxpress-doc {
 <p>UtterPlan’s command-line compiler accepts literal text, stdin, and files:</p>
 <div class="highlight-text notranslate"><div class="highlight"><pre><span></span>usage: utterplan compile [-h] [--file FILE] [--language LANGUAGE]
                          [--input-format {auto,text,plain,ssmd}]
-                         [--unit {paragraph,sentence}]
-                         [--text-preparation {spokenform,identity}]
-                         [--pause-mode {tts,manual,auto}]
+                         [--text-preparation {auto,ssmd,spokenform,identity}]
                          [--spacy {auto,off,sm,md,lg,trf}] [-o OUTPUT]
                          [--trace TRACE] [--force] [--stdout]
                          [--renderability {strict,repair}]
@@ -558,6 +556,44 @@ html[data-theme="dark"] .sphinxpress-doc {
 as an alias for <code class="docutils literal notranslate"><span class="pre">--input-format</span></code>. <code class="docutils literal notranslate"><span class="pre">--language</span></code> is a fallback language: it is
 required for plain input, optional for SSMD with a header <code class="docutils literal notranslate"><span class="pre">language</span></code>, and never
 forces a language over SSMD document semantics.</p>
+<section id="renderer-independent-plan-contract">
+<h2>Renderer-independent plan contract</h2>
+<p>Compilation has no <code class="docutils literal notranslate"><span class="pre">--unit</span></code> or <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code> option. Schema v7 always stores paragraph-local flow units and canonical <code class="docutils literal notranslate"><span class="pre">boundary_before</span></code> / <code class="docutils literal notranslate"><span class="pre">boundary_after</span></code> opportunities (<code class="docutils literal notranslate"><span class="pre">clause</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code>, <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>, <code class="docutils literal notranslate"><span class="pre">parenthetical</span></code>, <code class="docutils literal notranslate"><span class="pre">voice_change</span></code>) separately from authored SSMD pause intents. One saved plan can support downstream sentence, paragraph, or renderer-token-budget chunking, and native, automatic, or manual pause realization. A <code class="docutils literal notranslate"><span class="pre">FlowSegment</span></code> is not necessarily a TTS call; its linguistic token views are not engine/model token counts.</p>
+</section>
+<section id="produce-or-replan-a-renderplan">
+<h2>Produce or replan a RenderPlan</h2>
+<p><code class="docutils literal notranslate"><span class="pre">render-plan</span></code> accepts only the current schema-v7 <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> file and a
+<code class="docutils literal notranslate"><span class="pre">RenderProfile</span></code> TOML file. It does not re-prepare text, infer semantic boundaries,
+call a renderer, or calculate backend model-token counts:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>render-plan<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--profile<span class="w"> </span>voice.renderprofile.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--output<span class="w"> </span>chapter.renderplan.toml
+</pre></div>
+</div>
+<p>Replanning requires both the exact previous RenderPlan and its matching preflight
+report. Only failed speech occurrences are refined; successful partitions remain:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>render-plan<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--profile<span class="w"> </span>voice.renderprofile.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--previous<span class="w"> </span>chapter.renderplan.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--preflight<span class="w"> </span>chapter.preflight.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--output<span class="w"> </span>chapter.next.renderplan.toml<span class="w"> </span><span class="se">\\</span>
+<span class="w">  </span>--explain
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--previous</span></code> and <code class="docutils literal notranslate"><span class="pre">--preflight</span></code> must be supplied together. Existing output files
+require <code class="docutils literal notranslate"><span class="pre">--force</span></code>. <code class="docutils literal notranslate"><span class="pre">--explain</span></code> formats the generated plan and replan decisions; it
+does not invoke planning a second time. <code class="docutils literal notranslate"><span class="pre">--json</span></code> emits a versioned JSON wrapper to
+stdout while the RenderPlan artifact remains TOML at <code class="docutils literal notranslate"><span class="pre">--output</span></code>.</p>
+</section>
+<section id="logical-roles-and-complete-profile-coverage">
+<h2>Logical roles and complete-profile coverage</h2>
+<p>Role coverage is validated before grouping or replanning. The selected profile must contain every explicit speech role and, when any speech omits a role reference, its <code class="docutils literal notranslate"><span class="pre">default_role</span></code>. Missing roles are reported together as <code class="docutils literal notranslate"><span class="pre">renderplan.role.missing</span></code>; extra profile roles are allowed. The check is renderer-independent and does not add role data to the RenderPlan schema.</p>
+<p>Use source-only role inspection without loading a RenderProfile:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>inspect<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--roles
+</pre></div>
+</div>
+<p>The human <code class="docutils literal notranslate"><span class="pre">render-plan</span></code> summary reports required roles and <code class="docutils literal notranslate"><span class="pre">coverage:</span> <span class="pre">complete</span></code>. With <code class="docutils literal notranslate"><span class="pre">--json</span></code>, the versioned CLI wrapper includes a <code class="docutils literal notranslate"><span class="pre">role_coverage</span></code> object (<code class="docutils literal notranslate"><span class="pre">default_role</span></code>, <code class="docutils literal notranslate"><span class="pre">required</span></code>, <code class="docutils literal notranslate"><span class="pre">available</span></code>, <code class="docutils literal notranslate"><span class="pre">missing</span></code>, and <code class="docutils literal notranslate"><span class="pre">uses_default_role</span></code>) alongside, but outside, the RenderPlan payload.</p>
+</section>
 <section id="input-resolution">
 <h2>Input resolution</h2>
 <p>The rules are deterministic:</p>
@@ -592,7 +628,7 @@ utterplan<span class="w"> </span>compile<span class="w"> </span>plain.txt<span c
 utterplan<span class="w"> </span>compile<span class="w"> </span>migrated.ssmd<span class="w"> </span>--lang<span class="w"> </span>en-us
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> is the explicit JSON-plan import path: it applies supported schema migrations and writes canonical TOML. It cannot migrate SSMD source.</p>
+<p><code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> handles serialized-plan migrations only; v6-to-v7 promotion returns <code class="docutils literal notranslate"><span class="pre">migration.recompile_required</span></code> instead of writing an incomplete current plan. It cannot migrate SSMD source.</p>
 </section>
 <section id="output-and-errors">
 <h2>Output and errors</h2>
@@ -600,7 +636,7 @@ utterplan<span class="w"> </span>compile<span class="w"> </span>migrated.ssmd<sp
 <code class="docutils literal notranslate"><span class="pre">--output</span></code>, the TOML file is written and an existing file is refused unless
 <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. Add <code class="docutils literal notranslate"><span class="pre">--stdout</span></code> with an output path to write the file and
 also emit the same TOML plan to stdout.</p>
-<p><code class="docutils literal notranslate"><span class="pre">--trace</span> <span class="pre">PATH</span></code> writes optional compiler provenance to a separate TOML sidecar. The trace is not embedded in, or hashed as part of, the executable plan. Keep and distribute the sidecar only when source text, preparation maps, diagnostics, or renderability evidence must be retained.
+<p><code class="docutils literal notranslate"><span class="pre">--trace</span> <span class="pre">PATH</span></code> writes optional compiler provenance to a separate TOML sidecar. The trace is not embedded in, or hashed as part of, the executable plan. The plan itself stores exact raw source when available; keep and distribute the sidecar when preparation maps, diagnostics, renderability evidence, or source-coordinate mappings must be retained.
 Human status messages are written to stderr, never mixed into TOML stdout:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<span class="w"> </span>-o<span class="w"> </span>chapter.utterplan.toml
 <span class="c1"># status is written to stderr</span>
@@ -618,34 +654,49 @@ validation errors use exit code 1 and are reported without a traceback.</p>
 </pre></div>
 </div>
 <p>Source names determine output names: <code class="docutils literal notranslate"><span class="pre">chapter.ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">chapter.ssmd.md</span></code>, and <code class="docutils literal notranslate"><span class="pre">chapter.md</span></code> each map to <code class="docutils literal notranslate"><span class="pre">chapter.utterplan.toml</span></code>. Duplicate output names and a report path that collides with a plan output are rejected before any writes. Existing plans are protected unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. By default the command writes an atomically refreshed <code class="docutils literal notranslate"><span class="pre">compile-report.toml</span></code> in the output directory; the report is operational TOML, not a plan accepted by <code class="docutils literal notranslate"><span class="pre">FlowPlan.load()</span></code>.</p>
-<p>Shared planning options include <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">auto|plain|ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">--unit</span></code>, <code class="docutils literal notranslate"><span class="pre">--text-preparation</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, and <code class="docutils literal notranslate"><span class="pre">--renderability</span></code>. Progress, repair notices, actionable errors, and the final counts are written to stderr. Exit status is 0 if every input succeeds, 1 if any input fails, and 2 for usage errors such as output collisions. <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> skips later requests after the first failure but preserves all completed outputs and updates the report.</p>
+<p>Compile reports use format version 2. Each successful item records its resolved <code class="docutils literal notranslate"><span class="pre">preparation_mode</span></code>, diagnostic/severity counts, a complete structured <code class="docutils literal notranslate"><span class="pre">diagnostics</span></code> list, <code class="docutils literal notranslate"><span class="pre">renderability_repair_count</span></code>, and a <code class="docutils literal notranslate"><span class="pre">degraded_linguistics</span></code> boolean. For compatibility, <code class="docutils literal notranslate"><span class="pre">repair_count</span></code> and <code class="docutils literal notranslate"><span class="pre">repairs</span></code> remain; they include segmentation diagnostics (including informational ones) as well as renderability repairs, so they are not the terminal warning/repair summary. Diagnostic source ranges use original-input Python-character coordinates where available. Failed or skipped items have no preparation result. Reports remain operational metadata and do not affect plan output or incremental write behavior.</p>
+<p>Shared planning options include <code class="docutils literal notranslate"><span class="pre">--language</span></code>, <code class="docutils literal notranslate"><span class="pre">--input-format</span> <span class="pre">auto|plain|ssmd</span></code>, <code class="docutils literal notranslate"><span class="pre">--text-preparation</span></code>, <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>, and <code class="docutils literal notranslate"><span class="pre">--renderability</span></code>. <code class="docutils literal notranslate"><span class="pre">--diagnostics</span> <span class="pre">warnings|all|none</span></code> controls terminal detail (default <code class="docutils literal notranslate"><span class="pre">warnings</span></code>): warnings mode suppresses informational diagnostics, all includes them, and none suppresses non-failure diagnostics. Failures are always reported, and the operational report always retains complete diagnostics. Progress, selected diagnostic details, actionable errors, and final counts are written to stderr. Exit status is 0 if every input succeeds, 1 if any input fails, and 2 for usage errors such as output collisions. <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> skips later requests after the first failure but preserves all completed outputs and updates the report.</p>
 </section>
-<section id="compile-chapters-from-an-ssmdbook-workspace">
-<h2>Compile chapters from an SSMDBook workspace</h2>
-<p><code class="docutils literal notranslate"><span class="pre">compile-book</span></code> discovers selected SSMD chapters from an editable <code class="docutils literal notranslate"><span class="pre">.ssmdbook</span></code> manifest and compiles each chapter independently through the batch compiler. Pass either the book directory or its canonical <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>compile-book<span class="w"> </span>novel.ssmdbook<span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span>-17
-utterplan<span class="w"> </span>compile-book<span class="w"> </span>novel.ssmdbook/chapters<span class="w"> </span>--chapters<span class="w"> </span><span class="m">1</span>,3-5
-</pre></div>
-</div>
-<p>The workflow used from inside the workspace is:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;Platform Decay - Martha Wells.ssmdbook&quot;</span>
+<section id="manifest-driven-bundle-lifecycle">
+<h2>Manifest-driven bundle lifecycle</h2>
+<p>The <code class="docutils literal notranslate"><span class="pre">bundle</span></code> command is the only workspace entry point. It requires the canonical <code class="docutils literal notranslate"><span class="pre">&lt;name&gt;.ssmd-bundle/</span></code> directory and dispatches from <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code>; chapter directories and document files are not accepted as alternate roots. Supported manifest kinds are book (<code class="docutils literal notranslate"><span class="pre">ssmdconvert.book</span></code>, schema 1) and document (<code class="docutils literal notranslate"><span class="pre">ssmdconvert.document</span></code>, schema 1).</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>utterplan bundle compile BUNDLE [--chapters SELECTOR]
+  [--output-dir PATH] [--language LANGUAGE]
+  [--text-preparation {auto,ssmd,spokenform,identity}]
+  [--renderability {strict,repair}] [--spacy {auto,off,sm,md,lg,trf}]
+  [--force] [--fail-fast] [--report PATH]
+  [--diagnostics {warnings,all,none}]
 
-utterplan<span class="w"> </span>compile-book<span class="w"> </span>chapters<span class="w"> </span>--chapters<span class="w"> </span><span class="m">5</span>-17
+utterplan bundle render BUNDLE --profile PROFILE [--chapters SELECTOR]
+  [--utterplan-dir PATH] [--output-root PATH] [--variant LABEL]
+  [--force] [--fail-fast] [--report PATH]
+
+utterplan bundle replan BUNDLE --variant VARIANT [--chapters SELECTOR]
+  [--renderplan-root PATH] [--voicerender-root PATH] [--report PATH]
+  [--dry-run] [--fail-fast] [--explain] [--json]
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">--chapters</span></code> selects manifest <code class="docutils literal notranslate"><span class="pre">source_number</span></code> values, not filenames or manifest indexes. It accepts <code class="docutils literal notranslate"><span class="pre">all</span></code> (the default), one number, inclusive ranges, or comma-separated combinations such as <code class="docutils literal notranslate"><span class="pre">1,3-5,9</span></code>. Duplicate selections do not duplicate work, and selected chapters always follow manifest array order. A selected missing source number or malformed selector is rejected before compilation.</p>
-<p>By default, plans and the operational report are written to <code class="docutils literal notranslate"><span class="pre">&lt;book-root&gt;/utterplan/</span></code>. Use <code class="docutils literal notranslate"><span class="pre">--output-dir</span> <span class="pre">PATH</span></code> to override the destination. One canonical v5 <code class="docutils literal notranslate"><span class="pre">.utterplan.toml</span></code> plan is written per selected chapter, plus <code class="docutils literal notranslate"><span class="pre">compile-report.toml</span></code>. Existing plans are protected unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is given; <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> skips later chapters after the first failure. <code class="docutils literal notranslate"><span class="pre">--report</span> <span class="pre">PATH</span></code> overrides the report location. Duplicate output names, report/plan collisions, and writes into the source <code class="docutils literal notranslate"><span class="pre">chapters/</span></code> directory or over <code class="docutils literal notranslate"><span class="pre">manifest.json</span></code> are rejected before writing.</p>
-<p>Shared planning options are <code class="docutils literal notranslate"><span class="pre">--language</span></code>/<code class="docutils literal notranslate"><span class="pre">--lang</span></code>, <code class="docutils literal notranslate"><span class="pre">--unit</span></code>, <code class="docutils literal notranslate"><span class="pre">--text-preparation</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span></code>, <code class="docutils literal notranslate"><span class="pre">--renderability</span></code>, and <code class="docutils literal notranslate"><span class="pre">--spacy</span></code>. Chapter documents are SSMD 0.9 by contract, so <code class="docutils literal notranslate"><span class="pre">compile-book</span></code> does not accept <code class="docutils literal notranslate"><span class="pre">--input-format</span></code>. The manifest is read-only: edited chapter content is compiled as it currently exists even if its recorded digest is stale, and UtterPlan never refreshes the manifest or chapter hashes. Only selected chapter files are opened, so an unrelated broken chapter outside the selection does not block the request.</p>
-<p>For the full editable-workspace behavior and examples, see the <a class="reference internal" href="../ssmdbook/"><span class="std std-doc">SSMDBook guide</span></a>.</p>
-</section>
-<section id="explain-a-plan">
-<h2>Explain a plan</h2>
+<p><code class="docutils literal notranslate"><span class="pre">BUNDLE</span></code> must be a <code class="docutils literal notranslate"><span class="pre">.ssmd-bundle/</span></code> root. <code class="docutils literal notranslate"><span class="pre">--chapters</span></code> defaults to <code class="docutils literal notranslate"><span class="pre">all</span></code>. Book selection uses manifest <code class="docutils literal notranslate"><span class="pre">source_number</span></code> values and accepts one number, an inclusive range, or comma-separated combinations such as <code class="docutils literal notranslate"><span class="pre">1,3-5,9</span></code>; selected items retain manifest order. Document bundles support only <code class="docutils literal notranslate"><span class="pre">--chapters</span> <span class="pre">all</span></code>. Source paths are validated against the bundle root, and symlinks or path escapes are rejected.</p>
+<p>Compilation writes one schema-v7 FlowPlan per selected item and an operational <code class="docutils literal notranslate"><span class="pre">compile-report.toml</span></code> under <code class="docutils literal notranslate"><span class="pre">&lt;bundle&gt;/utterplan/</span></code> by default. Rendering reads those saved plans and requires an explicit RenderProfile; it writes profile-fingerprinted RenderPlans, a profile snapshot, and an operational report (book bundles also maintain a set index) under <code class="docutils literal notranslate"><span class="pre">&lt;bundle&gt;/renderplan/</span></code>. Replanning refines active plans from matching VoiceRender preflight feedback and updates only the selected active entries. These commands never mutate the manifest or source documents. <code class="docutils literal notranslate"><span class="pre">render-plan</span></code> remains the low-level one-file projection/replan command.</p>
+<p>The diagnostics option controls compile terminal verbosity; failures are always reported and complete diagnostics remain in the operational report. <code class="docutils literal notranslate"><span class="pre">--fail-fast</span></code> skips later selected items after a failure. <code class="docutils literal notranslate"><span class="pre">--force</span></code> replaces selected plan artifacts but does not bypass unsafe paths, metadata collisions, or profile-identity checks. Exit status is 0 when all selected work succeeds, 1 when an item fails, and 2 for usage or shared-configuration errors. See the <a class="reference internal" href="../bundles/"><span class="std std-doc">bundle guide</span></a> for layouts, safety behavior, and Python examples.</p>
 <p>Explain an existing compiled plan as a human-readable speech narrative:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.toml
 utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--details
 </pre></div>
 </div>
-<p>The default output explains executable flow: prepared segment text, unit order, effective languages, semantic pause intents, headings, markers, and typed directives. Compiler source diagnostics and preparation provenance are intentionally absent from the plan unless a trace sidecar was saved. Add <code class="docutils literal notranslate"><span class="pre">--details</span></code> for local token offsets, flow hashes, plan identity, and trace preparation mappings. Pass <code class="docutils literal notranslate"><span class="pre">--trace</span> <span class="pre">PATH</span></code> to attach a matching sidecar; the TOML trace can also be read independently with <code class="docutils literal notranslate"><span class="pre">inspect-trace</span></code>.</p>
+<p>The explanation presents executable flow: prepared segment text, paragraph-local unit order, effective languages, canonical boundary opportunities, authored pause intents, headings, markers, and typed directives. The v7 plan retains exact raw source when available and compact replacement views show local prepared surfaces with original spellings. Complete compiler source diagnostics and preparation maps remain absent unless a trace sidecar was saved. Add <code class="docutils literal notranslate"><span class="pre">--details</span></code> for local token offsets, flow hashes, plan identity, and trace preparation mappings. Pass <code class="docutils literal notranslate"><span class="pre">--trace</span> <span class="pre">PATH</span></code> to attach a matching sidecar; the TOML trace can also be read independently with <code class="docutils literal notranslate"><span class="pre">inspect-trace</span></code>.</p>
+</section>
+<section id="preview-a-saved-consumer-plan">
+<h2>Preview a saved consumer plan</h2>
+<p><code class="docutils literal notranslate"><span class="pre">preview</span></code> projects chunk text and pause facts from a saved schema-v7 plan. It does not recompile the source, call linguistics providers, modify the plan, or cross into G2P/rendering:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>preview<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--segments<span class="w"> </span><span class="m">58</span>-62<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--chunk-by<span class="w"> </span>clause<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--pause-policy<span class="w"> </span>automatic
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--segments</span></code> accepts zero-based global flow-segment indexes: <code class="docutils literal notranslate"><span class="pre">N</span></code>, <code class="docutils literal notranslate"><span class="pre">N-M</span></code>, comma-separated combinations, or <code class="docutils literal notranslate"><span class="pre">all</span></code>. It is a focus selector: grouping is performed for the full plan first, so selecting one segment returns its complete containing chunk. <code class="docutils literal notranslate"><span class="pre">--chunk-by</span></code> is <code class="docutils literal notranslate"><span class="pre">segment</span></code>, <code class="docutils literal notranslate"><span class="pre">clause</span></code>, <code class="docutils literal notranslate"><span class="pre">sentence</span></code> (default), or <code class="docutils literal notranslate"><span class="pre">paragraph</span></code>; clause grouping closes on clause, sentence, and paragraph opportunities. Chunk text is the exact concatenation of stored <code class="docutils literal notranslate"><span class="pre">segment.text</span></code> values, including spaces at chunk edges.</p>
+<p><code class="docutils literal notranslate"><span class="pre">--pause-policy</span> <span class="pre">native</span></code> (default) shows authored pause intent but does not materialize ordinary boundary opportunities. <code class="docutils literal notranslate"><span class="pre">automatic</span></code> exposes saved clause/sentence/paragraph opportunities without inventing durations. <code class="docutils literal notranslate"><span class="pre">manual</span></code> displays authored pause intent and the automatic opportunity separately. These policies affect preview projection only; the saved plan and its identity remain unchanged. Use <code class="docutils literal notranslate"><span class="pre">--details</span></code> to show constituent segments, local spans, directives, and boundary facts, or <code class="docutils literal notranslate"><span class="pre">--json</span></code> for the versioned machine-readable preview object.</p>
 </section>
 <section id="inspect-a-persisted-planning-attempt">
 <h2>Inspect a persisted planning attempt</h2>
@@ -666,16 +717,14 @@ inspect-only draft, not a canonical plan, and is rejected by <code class="docuti
 <section id="planning-controls">
 <h2>Planning controls</h2>
 <ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">--unit</span> <span class="pre">paragraph|sentence</span></code> chooses render-unit grouping.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">spokenform|identity</span></code> chooses written-to-spoken handling.</p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">tts|manual|auto</span></code> selects semantic pause policy.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">auto|ssmd|spokenform|identity</span></code> chooses written-to-spoken handling.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off|auto|sm|md|lg|trf</span></code> selects deterministic fallback, automatic
 spaCy use, or a required model tier.</p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">--renderability</span> <span class="pre">repair|strict</span></code> defaults to safe punctuation-only repair. Semantic blockers remain failures with source context and an actionable next step; strict mode reports safe repair opportunities without applying them.</p></li>
 </ul>
-<p>The default spaCy policy is <code class="docutils literal notranslate"><span class="pre">off</span></code>, so the CLI does not depend on whichever optional model happens to be installed.</p>
-<p>The complete defaults are <code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">spokenform</span></code>, <code class="docutils literal notranslate"><span class="pre">--pause-mode</span> <span class="pre">tts</span></code>, and <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code>. <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> is the default text-preparation backend, while <code class="docutils literal notranslate"><span class="pre">tts</span></code> is the default pause mode. <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code> uses UtterPlan’s deterministic fallback tokenizer and analysis and does not require an installed spaCy model.</p>
-<p>Use <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">auto</span></code> only as an opt-in enrichment policy. If a compatible local model is available, it may provide richer tokenization, POS tags, lemmas, and tags; <code class="docutils literal notranslate"><span class="pre">auto</span></code> is not the default and no model is downloaded automatically.</p>
+<p>The default spaCy policy is <code class="docutils literal notranslate"><span class="pre">auto</span></code>: inspect only already-installed compatible local models in <code class="docutils literal notranslate"><span class="pre">sm</span></code>, <code class="docutils literal notranslate"><span class="pre">md</span></code>, <code class="docutils literal notranslate"><span class="pre">lg</span></code>, <code class="docutils literal notranslate"><span class="pre">trf</span></code> preference order. If spaCy or every compatible model is unavailable, compilation continues with deterministic fallback; no model is downloaded.</p>
+<p>The defaults are <code class="docutils literal notranslate"><span class="pre">--text-preparation</span> <span class="pre">auto</span></code> and <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">auto</span></code>. Preparation <code class="docutils literal notranslate"><span class="pre">auto</span></code> selects authoritative <code class="docutils literal notranslate"><span class="pre">ssmd</span></code> for SSMD input and TTSReady/Spokenform for plain text; explicit <code class="docutils literal notranslate"><span class="pre">spokenform</span></code> on SSMD is a warned legacy mode. SpaCy <code class="docutils literal notranslate"><span class="pre">auto</span></code> uses a compatible local model when available and otherwise falls back safely. Compilation does not select renderer chunking or pause realization: schema-v7 boundaries and authored pause intents are realized downstream.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">off</span></code> to force deterministic fallback. <code class="docutils literal notranslate"><span class="pre">--spacy</span> <span class="pre">sm|md|lg|trf</span></code> requires that local model tier and fails if it is unavailable. Token columns in v7 carry final prepared-text linguistic context, not model-token counts; the optional <code class="docutils literal notranslate"><span class="pre">replacement</span></code> fields describe local output spans, not source coordinates. Preserve the trace sidecar for full source maps and preparation diagnostics.</p>
 </section>
 <section id="other-commands">
 <h2>Other commands</h2>
@@ -689,26 +738,21 @@ utterplan<span class="w"> </span>compile<span class="w"> </span>chapter.ssmd.md<
 utterplan<span class="w"> </span>explain<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--trace<span class="w"> </span>chapter.trace.toml
 utterplan<span class="w"> </span>inspect-trace<span class="w"> </span>chapter.trace.toml<span class="w"> </span>--preparation<span class="w"> </span>--boundaries
 utterplan<span class="w"> </span>inspect-attempt<span class="w"> </span>chapter.attempt.toml<span class="w"> </span>--issues
+utterplan<span class="w"> </span>preview<span class="w"> </span>chapter.utterplan.toml<span class="w"> </span>--segments<span class="w"> </span><span class="m">58</span>-62<span class="w"> </span>--chunk-by<span class="w"> </span>clause<span class="w"> </span>--pause-policy<span class="w"> </span>automatic
 </pre></div>
 </div>
+<p><code class="docutils literal notranslate"><span class="pre">inspect</span> <span class="pre">--unit</span></code> selects a stored flow unit for inspection; it does not choose compilation grouping. Compilation always writes paragraph-local flow blocks, and downstream renderers choose their own chunk boundaries from the saved boundary opportunities.</p>
 <p><code class="docutils literal notranslate"><span class="pre">inspect-trace</span> <span class="pre">--preparation</span></code> reports source/prepared text lengths, maps, preparation changes, and repair/diagnostic evidence from the optional trace. <code class="docutils literal notranslate"><span class="pre">inspect-trace</span> <span class="pre">--boundaries</span></code> shows compiler-only boundary events and semantic candidates. These fields are intentionally absent from the executable plan TOML.</p>
 </section>
 <section id="migrate-a-saved-plan">
 <h2>Migrate a saved plan</h2>
-<p>Import a supported legacy JSON plan to the current schema without rerunning
-planning. <code class="docutils literal notranslate"><span class="pre">migrate</span></code> is the only CLI path that reads saved plan JSON; its output is
-always canonical TOML:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>-o<span class="w"> </span>current.utterplan.toml
-utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>--check
-utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>&gt;<span class="w"> </span>current.utterplan.toml
+<p>Use <code class="docutils literal notranslate"><span class="pre">utterplan</span> <span class="pre">migrate</span></code> to inspect sequential data-only migrations for legacy saved plans. Schema-v6 files cannot prove the complete v7 boundary inventory, so promotion intentionally fails with <code class="docutils literal notranslate"><span class="pre">migration.recompile_required</span></code>; recompiling the original source is the supported route to a current plan.</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>utterplan<span class="w"> </span>migrate<span class="w"> </span>old.utterplan.json<span class="w"> </span>--check
+utterplan<span class="w"> </span>compile<span class="w"> </span>source.ssmd.md<span class="w"> </span>-o<span class="w"> </span>current.utterplan.toml
 </pre></div>
 </div>
-<p>Without <code class="docutils literal notranslate"><span class="pre">-o</span></code>, TOML is written to stdout and status is written to stderr. Existing
-output files are refused unless <code class="docutils literal notranslate"><span class="pre">--force</span></code> is supplied. <code class="docutils literal notranslate"><span class="pre">--check</span></code> validates the
-route and reports source schema, target schema, and whether migration is required
-without writing a file. A future schema version is rejected rather than guessed
-or downgraded.</p>
-<p>Schema migration is separate from SSMD source migration. Frozen JSON schemas v1–v4 migrate through the registered sequential chain to current schema v5. The v4-to-v5 projection does not rerun parsing, text preparation, NLP, or planning, and refuses ambiguous token coordinates or pause meanings rather than guessing. Use <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code> for older SSMD source documents.</p>
+<p>When a migration is available, <code class="docutils literal notranslate"><span class="pre">-o</span></code> writes TOML to that path, while stdout and status messages remain separated; an existing output requires <code class="docutils literal notranslate"><span class="pre">--force</span></code>. <code class="docutils literal notranslate"><span class="pre">--check</span></code> reports source and target schema without writing. A historical plan that reaches schema v6 is rejected with <code class="docutils literal notranslate"><span class="pre">migration.recompile_required</span></code> because boundary opportunities cannot be recovered from serialized data; the CLI never silently reparses or replans. Future schema versions are rejected rather than guessed or downgraded.</p>
+<p>Schema migration is separate from SSMD source migration. Frozen JSON schemas v1–v4 and saved schema-v5 TOML use the registered sequential path through schema v6; v6-to-v7 conversion reports <code class="docutils literal notranslate"><span class="pre">migration.recompile_required</span></code> rather than fabricating boundaries. These migrations do not rerun parsing, text preparation, NLP, or planning; the v5-to-v6 step preserves compiled flow and leaves unavailable source provenance absent. The v4-to-v5 projection refuses ambiguous token coordinates or pause meanings rather than guessing. Use <code class="docutils literal notranslate"><span class="pre">ssmd</span> <span class="pre">migrate</span> <span class="pre">FILE</span> <span class="pre">--to</span> <span class="pre">0.9</span></code> for older SSMD source documents.</p>
 <p>For a saved TOML plan, <code class="docutils literal notranslate"><span class="pre">validate</span></code> verifies the current semantic schema and plan
 invariants; JSON plan paths are rejected outside <code class="docutils literal notranslate"><span class="pre">migrate</span></code>. For an SSMD or
 plain-text source document, it runs the canonical one-document semantic compiler

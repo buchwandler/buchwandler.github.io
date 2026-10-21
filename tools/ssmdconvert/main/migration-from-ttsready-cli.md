@@ -6,7 +6,7 @@ nav_tool: ssmdconvert-main
 docs_project: "ssmdconvert"
 docs_variant: "main"
 docs_ref: "main"
-docs_commit: "dd563959cea025ac300645056c77b1228f221ea7"
+docs_commit: "a50f2b6f9b148d86c701de70dc2a1269f284dda9"
 search_enabled: true
 ---
 
@@ -571,7 +571,7 @@ preparation/QA API used internally by <code class="docutils literal notranslate"
 <td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">txt</span> <span class="pre">SOURCE</span> <span class="pre">...</span></code></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ttsready</span> <span class="pre">chapters</span> <span class="pre">EPUB</span></code></p></td>
-<td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">book</span> <span class="pre">inspect</span> <span class="pre">EPUB</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">bundle</span> <span class="pre">inspect</span> <span class="pre">EPUB</span></code></p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ttsready</span> <span class="pre">preflight</span> <span class="pre">SOURCE</span></code></p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">ssmdconvert</span> <span class="pre">report</span> <span class="pre">SOURCE</span> <span class="pre">--fail-on-warning</span></code></p></td>
